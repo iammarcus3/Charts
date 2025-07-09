@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Artist Chart History</title>
+  <title>Artist Chart History + Features</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 2rem; }
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
@@ -46,22 +46,26 @@
 
     function showArtistSongs(name) {
       const allSongs = {};
+      const lowerName = name.toLowerCase();
 
       Object.values(weekData).forEach(weekEntries => {
         weekEntries.forEach(entry => {
-          if (entry.artist === name) {
-            const title = entry.title;
-            if (!allSongs[title]) {
-              allSongs[title] = {
-                title: title,
+          const artistLower = entry.artist.toLowerCase();
+          const titleLower = entry.title.toLowerCase();
+
+          if (artistLower.includes(lowerName) || titleLower.includes(lowerName)) {
+            const key = entry.title;
+            if (!allSongs[key]) {
+              allSongs[key] = {
+                title: entry.title,
                 peak: entry.rank,
                 total_sales: entry.sales,
                 weeks: 1
               };
             } else {
-              allSongs[title].peak = Math.min(allSongs[title].peak, entry.rank);
-              allSongs[title].total_sales += entry.sales;
-              allSongs[title].weeks += 1;
+              allSongs[key].peak = Math.min(allSongs[key].peak, entry.rank);
+              allSongs[key].total_sales += entry.sales;
+              allSongs[key].weeks += 1;
             }
           }
         });
@@ -70,7 +74,7 @@
       const container = document.getElementById("artistSongs");
       container.innerHTML = "";
 
-      Object.values(allSongs).forEach(song => {
+      Object.values(allSongs).sort((a, b) => a.peak - b.peak).forEach(song => {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${song.title}</td>
@@ -82,7 +86,7 @@
         container.appendChild(row);
       });
 
-      document.getElementById("artistHeader").textContent = `${name}'s Chart History`;
+      document.getElementById("artistHeader").textContent = `${name}'s Chart + Features`;
     }
 
     function sortTable(colIndex) {
@@ -100,7 +104,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      const name = getQueryParam("name") || "Beyoncé";
+      const name = getQueryParam("name") || "Drake";
       showArtistSongs(name);
     });
   </script>
