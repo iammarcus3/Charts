@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Artist Chart History</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+    h1 { margin-bottom: 0.5rem; }
+    .cert-cell { font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+  <h1 id="artistHeader">Artist</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Peak</th>
+        <th>Total Sales</th>
+        <th>Weeks</th>
+        <th>Certification</th>
+      </tr>
+    </thead>
+    <tbody id="artistSongs"></tbody>
+  </table>
+
+  <script src="weekdata.js"></script>
+  <script>
+    function getCertification(sales) {
+      if (sales >= 200) {
+        const count = Math.floor(sales / 200);
+        return `💿`.repeat(count) + "<br>Multi-Platinum (x" + count + ")";
+      } else if (sales >= 100) {
+        return "🥇<br>Gold";
+      }
+      return "";
+    }
+
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    function showArtistSongs(name) {
+      const allSongs = {};
+
+      Object.keys(weekData).forEach(week => {
+        weekData[week].forEach(entry => {
+          if (entry.artist === name) {
+            const key = entry.title;
+            if (!allSongs[key]) {
+              allSongs[key] = {
+                title: entry.title,
+                peak: entry.rank,
+                total_sales: entry.sales,
+                weeks: 1
+              };
+            } else {
+              allSongs[key].peak = Math.min(allSongs[key].peak, entry.rank);
+              allSongs[key].total_sales += entry.sales;
+              allSongs[key].weeks += 1;
+            }
+          }
+        });
+      });
+
+      const container = document.getElementById("artistSongs");
+      container.innerHTML = "";
+
+      Object.values(allSongs).forEach(song => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${song.title}</td>
+          <td>${song.peak}</td>
+          <td>${song.total_sales}</td>
+          <td>${song.weeks}</td>
+          <td class="cert-cell">${getCertification(song.total_sales)}</td>
+        `;
+        container.appendChild(row);
+      });
+
+      document.getElementById("artistHeader").textContent = `${name}'s Chart History`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const name = getQueryParam("name");
+      if (name && typeof weekData !== "undefined") {
+        showArtistSongs(name);
+      } else {
+        document.getElementById("artistSongs").innerHTML = "<tr><td colspan='5'>Artist not found or data missing.</td></tr>";
+      }
+    });
+  </script>
+</body>
+</html>
