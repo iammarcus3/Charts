@@ -7,20 +7,20 @@
   <style>
     body { font-family: Arial, sans-serif; padding: 2rem; }
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; cursor: pointer; }
     h1 { margin-bottom: 0.5rem; }
     .cert-cell { font-size: 1.2rem; }
   </style>
 </head>
 <body>
   <h1 id="artistHeader">Artist</h1>
-  <table>
+  <table id="artistTable">
     <thead>
       <tr>
-        <th>Title</th>
-        <th>Peak</th>
-        <th>Total Sales</th>
-        <th>Weeks</th>
+        <th onclick="sortTable(0)">Title</th>
+        <th onclick="sortTable(1)">Peak</th>
+        <th onclick="sortTable(2)">Total Sales</th>
+        <th onclick="sortTable(3)">Weeks</th>
         <th>Certification</th>
       </tr>
     </thead>
@@ -30,13 +30,13 @@
   <script src="weekdata.js"></script>
   <script>
     function getCertification(sales) {
-      if (sales >= 200) {
-        const count = Math.floor(sales / 200);
-        return `💿`.repeat(count) + "<br>Multi-Platinum (x" + count + ")";
-      } else if (sales >= 100) {
+      if (sales >= 100) {
+        const count = Math.floor(sales / 100);
+        return "💿".repeat(count) + "<br>" + (count > 1 ? "Multi-Platinum (x" + count + ")" : "Platinum");
+      } else if (sales >= 50) {
         return "🥇<br>Gold";
       }
-      return "";
+      return "—";
     }
 
     function getQueryParam(param) {
@@ -47,21 +47,21 @@
     function showArtistSongs(name) {
       const allSongs = {};
 
-      Object.keys(weekData).forEach(week => {
-        weekData[week].forEach(entry => {
+      Object.values(weekData).forEach(weekEntries => {
+        weekEntries.forEach(entry => {
           if (entry.artist === name) {
-            const key = entry.title;
-            if (!allSongs[key]) {
-              allSongs[key] = {
-                title: entry.title,
+            const title = entry.title;
+            if (!allSongs[title]) {
+              allSongs[title] = {
+                title: title,
                 peak: entry.rank,
                 total_sales: entry.sales,
                 weeks: 1
               };
             } else {
-              allSongs[key].peak = Math.min(allSongs[key].peak, entry.rank);
-              allSongs[key].total_sales += entry.sales;
-              allSongs[key].weeks += 1;
+              allSongs[title].peak = Math.min(allSongs[title].peak, entry.rank);
+              allSongs[title].total_sales += entry.sales;
+              allSongs[title].weeks += 1;
             }
           }
         });
@@ -85,13 +85,23 @@
       document.getElementById("artistHeader").textContent = `${name}'s Chart History`;
     }
 
+    function sortTable(colIndex) {
+      const table = document.getElementById("artistTable");
+      let rows = Array.from(table.rows).slice(1);
+      const asc = !table.sorted || table.sorted.col !== colIndex || !table.sorted.asc;
+      rows.sort((a, b) => {
+        const valA = isNaN(a.cells[colIndex].textContent) ? a.cells[colIndex].textContent : +a.cells[colIndex].textContent;
+        const valB = isNaN(b.cells[colIndex].textContent) ? b.cells[colIndex].textContent : +b.cells[colIndex].textContent;
+        return asc ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
+      });
+      table.sorted = { col: colIndex, asc: asc };
+      const tbody = table.tBodies[0];
+      rows.forEach(row => tbody.appendChild(row));
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
-      const name = getQueryParam("name");
-      if (name && typeof weekData !== "undefined") {
-        showArtistSongs(name);
-      } else {
-        document.getElementById("artistSongs").innerHTML = "<tr><td colspan='5'>Artist not found or data missing.</td></tr>";
-      }
+      const name = getQueryParam("name") || "Beyoncé";
+      showArtistSongs(name);
     });
   </script>
 </body>
