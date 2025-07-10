@@ -2,72 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Billboard Album Chart</title>
+  <title>Billboard Albums</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #f7f7f7; }
-    h1 { color: #2c3e50; }
+    body { font-family: sans-serif; padding: 2rem; background: #f4f4f4; }
+    h1, h2 { color: #333; }
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
-    th { background-color: #eee; }
-    #artistView, #albumView { display: none; background: #fff; padding: 1.5rem; margin-top: 2rem; border-radius: 10px; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; }
+    th { background: #eee; }
+    .view { display: none; background: #fff; padding: 1.5rem; border-radius: 10px; margin-top: 2rem; }
+    button { margin-top: 1rem; padding: 0.5rem 1rem; }
   </style>
 </head>
 <body>
-  <nav style="margin-bottom: 1.5rem;">
-    <a href="index.html">🏠 Main</a> |
-    <a href="albums.html">📀 Albums Chart</a> |
-    <a href="top_albums.html">📈 Top Albums</a> |
-    <a href="records.html">📊 Records</a>
-  </nav>
+  <h1>📀 Billboard Albums Chart</h1>
+  <label>Week:</label>
+  <select id="weekSelector"></select>
+  <button onclick="navigateWeek(-1)">⬅️</button>
+  <button onclick="navigateWeek(1)">➡️</button>
 
-  <h1>📀 Billboard Album Chart</h1>
+  <table id="chartTable">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Album</th>
+        <th>Artist</th>
+        <th>Plays</th>
+        <th>Weeks</th>
+        <th>Move</th>
+        <th>Peak</th>
+      </tr>
+    </thead>
+    <tbody id="chartBody"></tbody>
+  </table>
 
-  <div>
-    <select id="weekSelector"></select>
-    <button onclick="navigateWeek(-1)">⬅️</button>
-    <button onclick="navigateWeek(1)">➡️</button>
-    <table id="albumTable">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Album</th>
-          <th>Artist</th>
-          <th>Plays</th>
-          <th>Weeks</th>
-          <th>Move</th>
-          <th>Peak</th>
-        </tr>
-      </thead>
-      <tbody id="chartBody"></tbody>
-    </table>
-  </div>
-
-  <!-- Full Page Artist View -->
-  <div id="artistView">
-    <h2 id="artistViewTitle"></h2>
+  <div id="artistView" class="view">
+    <h2 id="artistName"></h2>
     <table>
       <thead>
         <tr>
-          <th>Album</th>
-          <th>Peak</th>
-          <th>Plays</th>
-          <th>Weeks</th>
-          <th>Certification</th>
+          <th>Album</th><th>Peak</th><th>Plays</th><th>Weeks</th><th>Certification</th>
         </tr>
       </thead>
-      <tbody id="artistAlbumsTable"></tbody>
+      <tbody id="artistAlbums"></tbody>
     </table>
     <button onclick="closeArtistView()">Close</button>
   </div>
 
-  <!-- Full Page Album View -->
-  <div id="albumView">
-    <h2 id="albumViewTitle"></h2>
-    <p id="albumViewArtist"></p>
-    <p id="albumViewPlays"></p>
-    <p id="albumViewWeeks"></p>
-    <p id="albumViewPeak"></p>
-    <p id="albumViewCert"></p>
+  <div id="albumView" class="view">
+    <h2 id="albumTitle"></h2>
+    <p id="albumArtist"></p>
+    <p id="albumPlays"></p>
+    <p id="albumWeeks"></p>
+    <p id="albumPeak"></p>
+    <p id="albumCert"></p>
     <button onclick="closeAlbumView()">Close</button>
   </div>
 
@@ -75,146 +62,116 @@
   <script>
     let sortedWeeks = [];
 
-    function normalizeAlbumName(name) {
-      return name.toLowerCase().replace(/\(.*?\)|\[.*?\]/g, '').replace(/[^a-z0-9]+/g, '').trim();
+    function normalize(name) {
+      return name.toLowerCase().replace(/\\(.*?\\)|\\[.*?\\]/g, '').replace(/[^a-z0-9]/g, '').trim();
     }
 
     function getCertification(plays) {
-      if (plays >= 100) {
-        const count = Math.floor(plays / 100);
-        return "💿".repeat(count) + "<br>" + (count > 1 ? "Multi-Platinum (x" + count + ")" : "Platinum");
-      } else if (plays >= 50) {
-        return "🥇<br>Gold";
-      }
+      if (plays >= 100) return "💿".repeat(Math.floor(plays / 100)) + " (Platinum)";
+      if (plays >= 50) return "🥇 (Gold)";
       return "—";
     }
 
     function getMovementIcon(move) {
       if (!move) return "➖";
-      const val = move.toUpperCase();
-      return val === "UP" ? "⬆️" : val === "DOWN" ? "⬇️" : val === "NEW" ? "🆕" : val.includes("RE") ? "🔁" : "➖";
+      move = move.toUpperCase();
+      return move === "UP" ? "⬆️" : move === "DOWN" ? "⬇️" : move === "NEW" ? "🆕" : move.includes("RE") ? "🔁" : "➖";
     }
 
     function populateWeeks() {
       const selector = document.getElementById("weekSelector");
-      sortedWeeks = Object.keys(albumData).sort((a,b) => parseInt(a.replace(/\D/g,'')) - parseInt(b.replace(/\D/g,'')));
-      selector.innerHTML = '';
-      sortedWeeks.forEach(week => {
+      sortedWeeks = Object.keys(albumData).sort((a,b) => parseInt(a.replace(/\\D/g,'')) - parseInt(b.replace(/\\D/g,'')));
+      sortedWeeks.forEach(w => {
         const opt = document.createElement("option");
-        opt.value = week;
-        opt.textContent = week;
+        opt.value = w;
+        opt.textContent = w;
         selector.appendChild(opt);
       });
-      selector.addEventListener("change", () => populateTable(selector.value));
       selector.value = sortedWeeks[0];
+      selector.addEventListener("change", () => populateTable(selector.value));
       populateTable(sortedWeeks[0]);
     }
 
     function populateTable(week) {
-      const tbody = document.getElementById("chartBody");
-      tbody.innerHTML = '';
       document.getElementById("artistView").style.display = "none";
       document.getElementById("albumView").style.display = "none";
+      const tbody = document.getElementById("chartBody");
+      tbody.innerHTML = "";
 
       const merged = {};
-      const claimedAlbums = new Set();
+      const claimed = {};
 
       albumData[week].forEach(entry => {
-        const normName = normalizeAlbumName(entry.album);
-        const key = normName;
-        if (claimedAlbums.has(normName) && !merged[key]) return;
-
-        if (!merged[key]) {
-          merged[key] = {
-            album: entry.album,
-            artist: entry.artist,
-            plays: entry.plays,
-            weeks: entry.weeks,
-            move: entry.move,
-            peak: entry.peak,
-            rank: entry.rank
-          };
-          claimedAlbums.add(normName);
-        } else if (merged[key].artist === entry.artist) {
-          merged[key].plays += entry.plays;
-          merged[key].weeks = Math.max(merged[key].weeks, entry.weeks);
-          merged[key].peak = Math.min(merged[key].peak, entry.peak);
+        const key = normalize(entry.album);
+        if (!claimed[key] || claimed[key] === entry.artist) {
+          claimed[key] = entry.artist;
+          if (!merged[key]) {
+            merged[key] = { ...entry };
+          } else {
+            merged[key].plays += entry.plays;
+            merged[key].weeks = Math.max(merged[key].weeks, entry.weeks);
+            merged[key].peak = Math.min(merged[key].peak, entry.peak);
+          }
         }
       });
 
-      const sorted = Object.values(merged).sort((a, b) =>
-        b.plays - a.plays || a.peak - b.peak || a.album.localeCompare(b.album)
-      );
-
-      sorted.forEach((row, index) => {
+      const sorted = Object.values(merged).sort((a,b) => b.plays - a.plays);
+      sorted.forEach((row, i) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${index + 1}</td>
-          <td><a href="#" onclick='showModal(${JSON.stringify(row)})'>${row.album}</a></td>
-          <td><a href="#" onclick='showArtistAlbums("${row.artist}")'>${row.artist}</a></td>
+          <td>${i+1}</td>
+          <td><a href="#" onclick='showAlbum(${JSON.stringify(row)})'>${row.album}</a></td>
+          <td><a href="#" onclick='showArtist("${row.artist}")'>${row.artist}</a></td>
           <td>${row.plays}</td>
           <td>${row.weeks}</td>
           <td>${getMovementIcon(row.move)}</td>
-          <td>${row.peak}</td>
-        `;
+          <td>${row.peak}</td>`;
         tbody.appendChild(tr);
       });
     }
 
-    function showArtistAlbums(name) {
+    function showArtist(name) {
       document.getElementById("artistView").style.display = "block";
       document.getElementById("albumView").style.display = "none";
-      const container = document.getElementById("artistAlbumsTable");
-      document.getElementById("artistViewTitle").textContent = name + "'s Albums";
-      container.innerHTML = '';
+      document.getElementById("artistName").textContent = name + "'s Albums";
 
-      const merged = {};
-      Object.values(albumData).forEach(weekEntries => {
-        weekEntries.forEach(entry => {
-          if (entry.artist === name) {
-            const normName = normalizeAlbumName(entry.album);
-            if (!merged[normName]) {
-              merged[normName] = {
-                album: entry.album,
-                plays: entry.plays,
-                weeks: entry.weeks,
-                peak: entry.peak
-              };
-            } else {
-              merged[normName].plays += entry.plays;
-              merged[normName].weeks = Math.max(merged[normName].weeks, entry.weeks);
-              merged[normName].peak = Math.min(merged[normName].peak, entry.peak);
-            }
+      const albums = {};
+      Object.values(albumData).flat().forEach(entry => {
+        if (entry.artist === name) {
+          const key = normalize(entry.album);
+          if (!albums[key]) {
+            albums[key] = { ...entry };
+          } else {
+            albums[key].plays += entry.plays;
+            albums[key].weeks = Math.max(albums[key].weeks, entry.weeks);
+            albums[key].peak = Math.min(albums[key].peak, entry.peak);
           }
-        });
+        }
       });
 
-      const sorted = Object.values(merged).sort((a, b) =>
-        b.plays - a.plays || a.peak - b.peak || a.album.localeCompare(b.album)
-      );
-
-      sorted.forEach(album => {
+      const tbody = document.getElementById("artistAlbums");
+      tbody.innerHTML = "";
+      Object.values(albums).forEach(a => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${album.album}</td>
-          <td>${album.peak}</td>
-          <td>${album.plays}</td>
-          <td>${album.weeks}</td>
-          <td>${getCertification(album.plays)}</td>
-        `;
-        container.appendChild(tr);
+          <td>${a.album}</td>
+          <td>${a.peak}</td>
+          <td>${a.plays}</td>
+          <td>${a.weeks}</td>
+          <td>${getCertification(a.plays)}</td>`;
+        tbody.appendChild(tr);
       });
     }
 
-    function showModal(album) {
+    function showAlbum(row) {
       document.getElementById("artistView").style.display = "none";
       document.getElementById("albumView").style.display = "block";
-      document.getElementById("albumViewTitle").textContent = album.album;
-      document.getElementById("albumViewArtist").textContent = "By " + album.artist;
-      document.getElementById("albumViewPlays").textContent = "Plays: " + album.plays;
-      document.getElementById("albumViewWeeks").textContent = "Weeks: " + album.weeks;
-      document.getElementById("albumViewPeak").textContent = "Peak: " + album.peak;
-      document.getElementById("albumViewCert").innerHTML = getCertification(album.plays);
+      document.getElementById("albumTitle").textContent = row.album;
+      document.getElementById("albumArtist").textContent = "By " + row.artist;
+      document.getElementById("albumPlays").textContent = "Plays: " + row.plays;
+      document.getElementById("albumWeeks").textContent = "Weeks: " + row.weeks;
+      document.getElementById("albumPeak").textContent = "Peak: " + row.peak;
+      document.getElementById("albumCert").innerHTML = "Certification: " + getCertification(row.plays);
     }
 
     function closeArtistView() {
@@ -225,12 +182,11 @@
     }
 
     function navigateWeek(offset) {
-      const selector = document.getElementById("weekSelector");
-      const currentIndex = sortedWeeks.indexOf(selector.value);
-      const newIndex = currentIndex + offset;
-      if (newIndex >= 0 && newIndex < sortedWeeks.length) {
-        selector.value = sortedWeeks[newIndex];
-        populateTable(sortedWeeks[newIndex]);
+      const sel = document.getElementById("weekSelector");
+      const i = sortedWeeks.indexOf(sel.value);
+      if (i + offset >= 0 && i + offset < sortedWeeks.length) {
+        sel.value = sortedWeeks[i + offset];
+        populateTable(sel.value);
       }
     }
 
