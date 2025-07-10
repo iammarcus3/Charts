@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +31,7 @@
   <table id="chartTable">
     <thead>
       <tr>
-        <th>Rank</th><th>Move</th>
+        <th>Rank</th>
         <th>Move</th>
         <th>Title</th>
         <th>Artist</th>
@@ -88,7 +87,7 @@
 
     function populateWeeks() {
       const selector = document.getElementById("weekSelector");
-      sortedWeeks = Object.keys(weekData).sort((a, b) => parseInt(a.replace(/\D/g,'')) - parseInt(b.replace(/\D/g,'')));
+      sortedWeeks = Object.keys(weekData).sort((a, b) => parseInt(a.replace(/\D/g, '')) - parseInt(b.replace(/\D/g, '')));
       selector.innerHTML = '';
       sortedWeeks.forEach(week => {
         const opt = document.createElement("option");
@@ -105,41 +104,41 @@
       const tbody = document.getElementById("chartBody");
       tbody.innerHTML = '';
       currentData = weekData[week];
-      
+
       currentData.forEach(row => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${row.rank}</td>
-          <td>${getMovementIcon(row.move)}</td>
-          <td><a href="#" onclick='showModal(${JSON.stringify(row)})'>${row.title}</a></td>
-          <td><a href="artist.html?name=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
-          <td>${row.sales}</td>
-          <td>${row.total_sales}</td>
-          <td>${row.weeks}</td>
-          <td>${row.peak}</td>`;
+        tr.innerHTML = \`
+          <td>\${row.rank}</td>
+          <td>\${getMovementIcon(row.move)}</td>
+          <td><a href="#" onclick='showModal(\${JSON.stringify(row)})'>\${row.title}</a></td>
+          <td><a href="artist.html?name=\${encodeURIComponent(row.artist)}">\${row.artist}</a></td>
+          <td>\${row.sales}</td>
+          <td>\${row.total_sales}</td>
+          <td>\${row.weeks}</td>
+          <td>\${row.peak}</td>
+        \`;
         tbody.appendChild(tr);
       });
-    
-    }
-
-    function navigateWeek(dir) {
-      const selector = document.getElementById("weekSelector");
-      const index = sortedWeeks.indexOf(selector.value);
-      const newIndex = index + dir;
-      if (newIndex >= 0 && newIndex < sortedWeeks.length) {
-        selector.value = sortedWeeks[newIndex];
-        populateTable(selector.value);
-      }
     }
 
     function showModal(song) {
       document.getElementById("modalTitle").textContent = song.title;
-      document.getElementById("modalArtist").textContent = "Artist: " + song.artist;
-      document.getElementById("modalSales").textContent = "Sales: " + song.sales;
-      document.getElementById("modalWeeks").textContent = "Weeks on Chart: " + song.weeks;
-      document.getElementById("modalPeak").textContent = "Peak Rank: " + song.peak;
+      document.getElementById("modalArtist").textContent = "By " + song.artist;
+      document.getElementById("modalSales").textContent = "This Week: " + song.sales;
+      document.getElementById("modalWeeks").textContent = "Weeks: " + song.weeks;
+      document.getElementById("modalPeak").textContent = "Peak: " + song.peak;
       document.getElementById("modalCert").innerHTML = getCertification(song.total_sales);
       document.getElementById("songModal").style.display = "flex";
+    }
+
+    window.navigateWeek = function (offset) {
+      const currentIndex = sortedWeeks.indexOf(document.getElementById("weekSelector").value);
+      const newIndex = currentIndex + offset;
+      if (newIndex >= 0 && newIndex < sortedWeeks.length) {
+        const newWeek = sortedWeeks[newIndex];
+        document.getElementById("weekSelector").value = newWeek;
+        populateTable(newWeek);
+      }
     }
 
     document.addEventListener("DOMContentLoaded", populateWeeks);
