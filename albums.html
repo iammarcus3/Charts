@@ -12,7 +12,8 @@
     td img { height: 40px; display: block; }
     td .cert-text { font-size: 0.9em; margin-top: 0.2em; }
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; }
-    .modal-content { background: #fff; padding: 2rem; border-radius: 8px; width: 320px; }
+    .modal-content { background: #fff; padding: 2rem; border-radius: 8px; width: 400px; max-height: 80vh; overflow-y: auto; }
+    ul { padding-left: 1.2rem; }
   </style>
 </head>
 <body>
@@ -48,15 +49,15 @@
     </table>
   </div>
 
+  <!-- MODAL -->
   <div class="modal" id="albumModal">
     <div class="modal-content">
       <h3 id="modalAlbum"></h3>
       <p id="modalArtist"></p>
-      <p id="modalPlays"></p>
-      <p id="modalSales"></p>
       <p id="modalWeeks"></p>
-      <p id="modalPeak"></p>
-      <p id="modalCert"></p>
+      <p id="modalTop10"></p>
+      <p id="modalNo1"></p>
+      <div id="modalTracks"></div>
       <button onclick="document.getElementById('albumModal').style.display='none'">Close</button>
     </div>
   </div>
@@ -96,7 +97,7 @@
     function populateWeeks() {
       const selector = document.getElementById("weekSelector");
       sortedWeeks = Object.keys(albumData)
-        .sort((a,b) => parseInt(b.replace(/\D/g,'')) - parseInt(a.replace(/\D/g,'')));
+        .sort((a,b) => parseInt(b.replace(/\\D/g,'')) - parseInt(a.replace(/\\D/g,'')));
       selector.innerHTML = '';
       sortedWeeks.forEach(week => {
         const opt = document.createElement("option");
@@ -112,14 +113,12 @@
     function populateTable(currentWeek) {
       const tbody = document.getElementById("chartBody");
       tbody.innerHTML = '';
-
       const merged = {};
       salesTotals = {};
 
-      const currentWeekNum = parseInt(currentWeek.replace(/\D/g, ''));
-
+      const currentWeekNum = parseInt(currentWeek.replace(/\\D/g, ''));
       for (const week of sortedWeeks) {
-        const weekNum = parseInt(week.replace(/\D/g, ''));
+        const weekNum = parseInt(week.replace(/\\D/g, ''));
         if (weekNum > currentWeekNum) break;
 
         const raw = albumData[week];
@@ -178,13 +177,37 @@
     }
 
     function showModal(album) {
+      const key = album.artist.trim() + "|" + album.album.trim().toLowerCase();
+      let weeks = 0, top10 = 0, no1 = 0;
+      const trackSales = {};
+
+      for (const week of sortedWeeks) {
+        const raw = albumData[week];
+        raw.forEach(row => {
+          const rowKey = row.artist.trim() + "|" + row.album.trim().toLowerCase();
+          if (rowKey === key) {
+            weeks++;
+            if (row.rank === 1) no1++;
+            if (row.rank <= 10) top10++;
+            if (row.title) {
+              const title = row.title.trim();
+              if (!trackSales[title]) trackSales[title] = 0;
+              trackSales[title] += row.sales || row.plays || 0;
+            }
+          }
+        });
+      }
+
+      const trackList = Object.keys(trackSales).sort().map(song =>
+        `<li>• ${song} — ${getCertText(trackSales[song])}</li>`
+      ).join("");
+
       document.getElementById("modalAlbum").textContent = album.album;
       document.getElementById("modalArtist").textContent = "Artist: " + album.artist;
-      document.getElementById("modalPlays").textContent = "This Week: " + album.plays;
-      document.getElementById("modalSales").textContent = "Sales: " + album.sales;
-      document.getElementById("modalWeeks").textContent = "Weeks on Chart: " + album.weeks;
-      document.getElementById("modalPeak").textContent = "Peak Rank: " + album.peak;
-      document.getElementById("modalCert").textContent = "Certification: " + getCertText(album.sales);
+      document.getElementById("modalWeeks").textContent = "Total Weeks on Chart: " + weeks;
+      document.getElementById("modalTop10").textContent = "Top 10 Weeks: " + top10;
+      document.getElementById("modalNo1").textContent = "#1 Weeks: " + no1;
+      document.getElementById("modalTracks").innerHTML = "<p><b>Tracks:</b></p><ul>" + trackList + "</ul>";
       document.getElementById("albumModal").style.display = "flex";
     }
 
