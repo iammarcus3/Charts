@@ -106,8 +106,8 @@
         selector.appendChild(opt);
       });
       selector.addEventListener("change", () => populateTable(selector.value));
-      selector.value = sortedWeeks[0];
-      populateTable(sortedWeeks[0]);
+      selector.value = sortedWeeks[sortedWeeks.length - 1];
+populateTable(sortedWeeks[sortedWeeks.length - 1]);
     }
 
     function populateTable(currentWeek) {
