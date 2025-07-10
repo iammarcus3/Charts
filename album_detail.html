@@ -3,15 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Album Details</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #f9f9f9; }
-    h1, h2 { color: #2c3e50; }
-    nav a { margin-right: 1rem; text-decoration: none; color: #0074cc; font-weight: bold; }
-    nav a:hover { text-decoration: underline; }
-    .cert-box { display: flex; align-items: center; gap: 0.5rem; }
-    .cert-box img { height: 20px; }
-    ul { margin-left: 1.5rem; }
-  </style>
+  <link rel="stylesheet" href="billboard-style.css" />
 </head>
 <body>
   <nav>
@@ -34,30 +26,30 @@
   <ul id="trackList"></ul>
 
   <script src="albumdata.js"></script>
-  <script src="trackandalbumdata.js"></script>
+  <script src="weekdata.js"></script>
   <script>
-    function normalize(name) {
-      return name.toUpperCase().replace(/[^A-Z0-9 ]+/g, '').trim();
+    function normalize(str) {
+      return str.toUpperCase()
+        .replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|BONUS|EP|VERSION/gi, "")
+        .replace(/[^A-Z0-9 ]/g, "")
+        .trim();
     }
 
     const params = new URLSearchParams(location.search);
-    const albumName = params.get('album');
-    const artistName = params.get('artist');
+    const albumName = params.get("album");
+    const artistName = params.get("artist");
 
     document.getElementById('albumTitle').textContent = albumName;
     document.getElementById('artistName').textContent = artistName;
 
     const albumKey = normalize(artistName) + "|" + normalize(albumName);
 
-    let totalWeeks = 0;
-    let top10 = 0;
-    let no1 = 0;
-    let peak = 999;
-    let maxPlays = 0;
-    let debut = null;
-    let sales = 0;
+    let totalWeeks = 0, top10 = 0, no1 = 0, peak = 999, maxPlays = 0, sales = 0, debut = null;
+    const trackSales = {};
 
+    // Pull stats from album chart
     for (const week in albumData) {
+      const weekNum = parseInt(week.replace(/\D/g, ""));
       albumData[week].forEach(row => {
         const key = normalize(row.artist) + "|" + normalize(row.album);
         if (key === albumKey) {
@@ -66,34 +58,31 @@
           if (row.rank <= 10) top10++;
           if (row.rank < peak) peak = row.rank;
           if (row.plays > maxPlays) maxPlays = row.plays;
-          if (debut === null || parseInt(week.replace(/\D/g,'')) < debut.week) {
-            debut = { week: parseInt(week.replace(/\D/g,'')), peak: row.rank };
-          }
           sales += row.plays;
+          if (debut === null || weekNum < debut.week) {
+            debut = { week: weekNum, peak: row.rank };
+          }
         }
       });
     }
 
-    const trackCert = {};
-
-    for (const week in trackAndAlbumData) {
-      trackAndAlbumData[week].forEach(row => {
-        const key = normalize(row.artist) + "|" + normalize(row.album);
-        if (key === albumKey) {
-          const songKey = normalize(row.title);
-          if (!trackCert[songKey]) trackCert[songKey] = 0;
-          trackCert[songKey] = Math.max(trackCert[songKey], row.sales || 0);
+    // Pull track sales from Hot 100
+    for (const week in weekData) {
+      weekData[week].forEach(row => {
+        if (!row.album) return;
+        const songKey = normalize(row.title);
+        const albumMatch = normalize(row.album);
+        const artistMatch = normalize(row.artist);
+        if (albumMatch === normalize(albumName) && artistMatch === normalize(artistName)) {
+          if (!trackSales[songKey]) trackSales[songKey] = 0;
+          trackSales[songKey] += row.sales || 0;
         }
       });
     }
 
     function certText(sales) {
-      if (sales >= 100) {
-        const count = Math.floor(sales / 100);
-        return count > 1 ? `Multi-Platinum x${count}` : "Platinum";
-      } else if (sales >= 50) {
-        return "Gold";
-      }
+      if (sales >= 100) return "Platinum x" + Math.floor(sales / 100);
+      if (sales >= 50) return "Gold";
       return "None";
     }
 
@@ -112,18 +101,16 @@
     document.getElementById("salesTotal").textContent = sales;
 
     const list = document.getElementById("trackList");
-    for (const [title, plays] of Object.entries(trackCert)) {
-      const li = document.createElement("li");
+    for (const [title, plays] of Object.entries(trackSales)) {
       const cert = certImage(plays);
-      if (cert) {
-        li.innerHTML = `<div class="cert-box">
-          <strong>${title}</strong>
-          <img src="${cert}" alt="cert">
-          <span>${certText(plays)}</span>
-        </div>`;
-      } else {
-        li.textContent = title + " — None";
-      }
+      const url = `track_detail.html?title=${encodeURIComponent(title)}&artist=${encodeURIComponent(artistName)}`;
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div class="cert-box">
+          <a href="${url}"><strong>${title}</strong></a>
+          ${cert ? `<img src="${cert}" alt="cert"><span>${certText(plays)}</span>` : `<span>None</span>`}
+        </div>
+      `;
       list.appendChild(li);
     }
   </script>
