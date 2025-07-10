@@ -9,14 +9,7 @@
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
     th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
     th { background-color: #eee; }
-    .modal {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5); display: none;
-      align-items: center; justify-content: center;
-    }
-    .modal-content {
-      background: #fff; padding: 2rem; border-radius: 8px; width: 340px;
-    }
+    #artistView, #albumView { display: none; background: #fff; padding: 1.5rem; margin-top: 2rem; border-radius: 10px; }
   </style>
 </head>
 <body>
@@ -49,24 +42,33 @@
     </table>
   </div>
 
-  <div class="modal" id="artistModal">
-    <div class="modal-content">
-      <h3 id="artistModalTitle"></h3>
-      <div id="artistAlbums"></div>
-      <button onclick="document.getElementById('artistModal').style.display='none'">Close</button>
-    </div>
+  <!-- Full Page Artist View -->
+  <div id="artistView">
+    <h2 id="artistViewTitle"></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Album</th>
+          <th>Peak</th>
+          <th>Plays</th>
+          <th>Weeks</th>
+          <th>Certification</th>
+        </tr>
+      </thead>
+      <tbody id="artistAlbumsTable"></tbody>
+    </table>
+    <button onclick="closeArtistView()">Close</button>
   </div>
 
-  <div class="modal" id="albumModal">
-    <div class="modal-content">
-      <h3 id="modalAlbum"></h3>
-      <p id="modalArtist"></p>
-      <p id="modalPlays"></p>
-      <p id="modalWeeks"></p>
-      <p id="modalPeak"></p>
-      <p id="modalCert"></p>
-      <button onclick="document.getElementById('albumModal').style.display='none'">Close</button>
-    </div>
+  <!-- Full Page Album View -->
+  <div id="albumView">
+    <h2 id="albumViewTitle"></h2>
+    <p id="albumViewArtist"></p>
+    <p id="albumViewPlays"></p>
+    <p id="albumViewWeeks"></p>
+    <p id="albumViewPeak"></p>
+    <p id="albumViewCert"></p>
+    <button onclick="closeAlbumView()">Close</button>
   </div>
 
   <script src="albumdata.js"></script>
@@ -74,11 +76,7 @@
     let sortedWeeks = [];
 
     function normalizeAlbumName(name) {
-      return name
-        .toLowerCase()
-        .replace(/\(.*?\)|\[.*?\]/g, '')
-        .replace(/[^a-z0-9]+/g, '')
-        .trim();
+      return name.toLowerCase().replace(/\(.*?\)|\[.*?\]/g, '').replace(/[^a-z0-9]+/g, '').trim();
     }
 
     function getCertification(plays) {
@@ -115,6 +113,8 @@
     function populateTable(week) {
       const tbody = document.getElementById("chartBody");
       tbody.innerHTML = '';
+      document.getElementById("artistView").style.display = "none";
+      document.getElementById("albumView").style.display = "none";
 
       const merged = {};
       const claimedAlbums = new Set();
@@ -122,7 +122,6 @@
       albumData[week].forEach(entry => {
         const normName = normalizeAlbumName(entry.album);
         const key = normName;
-
         if (claimedAlbums.has(normName) && !merged[key]) return;
 
         if (!merged[key]) {
@@ -162,24 +161,14 @@
       });
     }
 
-    function showModal(album) {
-      document.getElementById("modalAlbum").textContent = album.album;
-      document.getElementById("modalArtist").textContent = "By " + album.artist;
-      document.getElementById("modalPlays").textContent = "Plays: " + album.plays;
-      document.getElementById("modalWeeks").textContent = "Weeks: " + album.weeks;
-      document.getElementById("modalPeak").textContent = "Peak: " + album.peak;
-      document.getElementById("modalCert").innerHTML = getCertification(album.plays);
-      document.getElementById("albumModal").style.display = "flex";
-    }
-
     function showArtistAlbums(name) {
-      const modal = document.getElementById("artistModal");
-      const container = document.getElementById("artistAlbums");
-      container.innerHTML = "";
+      document.getElementById("artistView").style.display = "block";
+      document.getElementById("albumView").style.display = "none";
+      const container = document.getElementById("artistAlbumsTable");
+      document.getElementById("artistViewTitle").textContent = name + "'s Albums";
+      container.innerHTML = '';
 
       const merged = {};
-      const claimed = new Set();
-
       Object.values(albumData).forEach(weekEntries => {
         weekEntries.forEach(entry => {
           if (entry.artist === name) {
@@ -191,7 +180,6 @@
                 weeks: entry.weeks,
                 peak: entry.peak
               };
-              claimed.add(normName);
             } else {
               merged[normName].plays += entry.plays;
               merged[normName].weeks = Math.max(merged[normName].weeks, entry.weeks);
@@ -205,32 +193,35 @@
         b.plays - a.plays || a.peak - b.peak || a.album.localeCompare(b.album)
       );
 
-      const table = document.createElement("table");
-      table.innerHTML = `
-        <thead>
-          <tr>
-            <th>Album</th>
-            <th>Peak</th>
-            <th>Plays</th>
-            <th>Weeks</th>
-            <th>Certification</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${sorted.map(album => `
-            <tr>
-              <td>${album.album}</td>
-              <td>${album.peak}</td>
-              <td>${album.plays}</td>
-              <td>${album.weeks}</td>
-              <td>${getCertification(album.plays)}</td>
-            </tr>
-          `).join("")}
-        </tbody>
-      `;
-      container.appendChild(table);
-      document.getElementById("artistModalTitle").textContent = name + "'s Albums";
-      modal.style.display = "flex";
+      sorted.forEach(album => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${album.album}</td>
+          <td>${album.peak}</td>
+          <td>${album.plays}</td>
+          <td>${album.weeks}</td>
+          <td>${getCertification(album.plays)}</td>
+        `;
+        container.appendChild(tr);
+      });
+    }
+
+    function showModal(album) {
+      document.getElementById("artistView").style.display = "none";
+      document.getElementById("albumView").style.display = "block";
+      document.getElementById("albumViewTitle").textContent = album.album;
+      document.getElementById("albumViewArtist").textContent = "By " + album.artist;
+      document.getElementById("albumViewPlays").textContent = "Plays: " + album.plays;
+      document.getElementById("albumViewWeeks").textContent = "Weeks: " + album.weeks;
+      document.getElementById("albumViewPeak").textContent = "Peak: " + album.peak;
+      document.getElementById("albumViewCert").innerHTML = getCertification(album.plays);
+    }
+
+    function closeArtistView() {
+      document.getElementById("artistView").style.display = "none";
+    }
+    function closeAlbumView() {
+      document.getElementById("albumView").style.display = "none";
     }
 
     function navigateWeek(offset) {
