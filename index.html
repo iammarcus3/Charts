@@ -87,7 +87,7 @@
 
     function populateWeeks() {
       const selector = document.getElementById("weekSelector");
-      sortedWeeks = Object.keys(weekData).sort((a, b) => parseInt(a.replace(/\D/g, '')) - parseInt(b.replace(/\D/g, '')));
+      sortedWeeks = Object.keys(weekData).sort((a, b) => parseInt(a.replace(/\D/g,'')) - parseInt(b.replace(/\D/g,'')));
       selector.innerHTML = '';
       sortedWeeks.forEach(week => {
         const opt = document.createElement("option");
@@ -103,9 +103,31 @@
     function populateTable(week) {
       const tbody = document.getElementById("chartBody");
       tbody.innerHTML = '';
-      currentData = weekData[week];
+      const weekIndex = sortedWeeks.indexOf(week);
 
+      const cumulativeStats = {};
+      for (let i = 0; i <= weekIndex; i++) {
+        const currentWeek = sortedWeeks[i];
+        weekData[currentWeek].forEach(entry => {
+          const key = entry.title + "|" + entry.artist;
+          if (!cumulativeStats[key]) {
+            cumulativeStats[key] = {
+              total_sales: entry.sales,
+              peak: entry.rank
+            };
+          } else {
+            cumulativeStats[key].total_sales += entry.sales;
+            cumulativeStats[key].peak = Math.min(cumulativeStats[key].peak, entry.rank);
+          }
+        });
+      }
+
+      currentData = weekData[week];
       currentData.forEach(row => {
+        const key = row.title + "|" + row.artist;
+        const total = cumulativeStats[key]?.total_sales || row.sales;
+        const peak = cumulativeStats[key]?.peak || row.rank;
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.rank}</td>
@@ -113,11 +135,14 @@
           <td><a href="#" onclick='showModal(${JSON.stringify(row)})'>${row.title}</a></td>
           <td><a href="artist.html?name=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
           <td>${row.sales}</td>
-          <td>${row.total_sales}</td>
+          <td>${total}</td>
           <td>${row.weeks}</td>
-          <td>${row.peak}</td>
+          <td>${peak}</td>
         `;
         tbody.appendChild(tr);
+
+        row.total_sales = total;
+        row.peak = peak;
       });
     }
 
@@ -131,7 +156,7 @@
       document.getElementById("songModal").style.display = "flex";
     }
 
-    window.navigateWeek = function (offset) {
+    function navigateWeek(offset) {
       const currentIndex = sortedWeeks.indexOf(document.getElementById("weekSelector").value);
       const newIndex = currentIndex + offset;
       if (newIndex >= 0 && newIndex < sortedWeeks.length) {
