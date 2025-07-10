@@ -6,10 +6,20 @@
   <style>
     body { font-family: Arial, sans-serif; padding: 2rem; background: #f9f9f9; }
     h1, h2 { color: #2c3e50; }
-    ul { margin-left: 1rem; }
+    nav a { margin-right: 1rem; text-decoration: none; color: #0074cc; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+    .cert-box { display: flex; align-items: center; gap: 0.5rem; }
+    .cert-box img { height: 20px; }
+    ul { margin-left: 1.5rem; }
   </style>
 </head>
 <body>
+  <nav>
+    <a href="top_albums.html">⬅️ Back to Top Albums</a>
+    <a href="index.html">🏠 Billboard Hot 100</a>
+    <a href="albums.html">📀 Album Chart</a>
+  </nav>
+
   <h1 id="albumTitle">Album Details</h1>
   <p><strong>Artist:</strong> <span id="artistName"></span></p>
   <p><strong>Total Weeks on Chart:</strong> <span id="weeksTotal"></span></p>
@@ -20,9 +30,10 @@
   <p><strong>Debut Peak:</strong> <span id="debutPeak"></span></p>
   <p><strong>Total Sales:</strong> <span id="salesTotal"></span></p>
 
-  <h2>Tracks and Certifications</h2>
+  <h2>Tracks and Certifications (from Hot 100)</h2>
   <ul id="trackList"></ul>
 
+  <script src="albumdata.js"></script>
   <script src="trackandalbumdata.js"></script>
   <script>
     function normalize(name) {
@@ -46,33 +57,50 @@
     let debut = null;
     let sales = 0;
 
-    const trackCert = {};
-
-    for (const week in trackAndAlbumData) {
-      trackAndAlbumData[week].forEach(row => {
+    for (const week in albumData) {
+      albumData[week].forEach(row => {
         const key = normalize(row.artist) + "|" + normalize(row.album);
         if (key === albumKey) {
           totalWeeks++;
           if (row.rank === 1) no1++;
           if (row.rank <= 10) top10++;
           if (row.rank < peak) peak = row.rank;
-          if (row.sales > maxPlays) maxPlays = row.sales;
-          if (debut === null || parseInt(week.replace(/\D/g, '')) < debut.week) {
-            debut = { week: parseInt(week.replace(/\D/g, '')), peak: row.rank };
+          if (row.plays > maxPlays) maxPlays = row.plays;
+          if (debut === null || parseInt(week.replace(/\D/g,'')) < debut.week) {
+            debut = { week: parseInt(week.replace(/\D/g,'')), peak: row.rank };
           }
-          sales += row.sales;
+          sales += row.plays;
+        }
+      });
+    }
 
+    const trackCert = {};
+
+    for (const week in trackAndAlbumData) {
+      trackAndAlbumData[week].forEach(row => {
+        const key = normalize(row.artist) + "|" + normalize(row.album);
+        if (key === albumKey) {
           const songKey = normalize(row.title);
           if (!trackCert[songKey]) trackCert[songKey] = 0;
-          trackCert[songKey] = Math.max(trackCert[songKey], row.sales);
+          trackCert[songKey] = Math.max(trackCert[songKey], row.sales || 0);
         }
       });
     }
 
     function certText(sales) {
-      if (sales >= 100) return "Platinum x" + Math.floor(sales / 100);
-      if (sales >= 50) return "Gold";
+      if (sales >= 100) {
+        const count = Math.floor(sales / 100);
+        return count > 1 ? `Multi-Platinum x${count}` : "Platinum";
+      } else if (sales >= 50) {
+        return "Gold";
+      }
       return "None";
+    }
+
+    function certImage(sales) {
+      if (sales >= 100) return "platinum.png";
+      if (sales >= 50) return "gold.png";
+      return null;
     }
 
     document.getElementById("weeksTotal").textContent = totalWeeks;
@@ -86,7 +114,16 @@
     const list = document.getElementById("trackList");
     for (const [title, plays] of Object.entries(trackCert)) {
       const li = document.createElement("li");
-      li.textContent = title + " — " + certText(plays);
+      const cert = certImage(plays);
+      if (cert) {
+        li.innerHTML = `<div class="cert-box">
+          <strong>${title}</strong>
+          <img src="${cert}" alt="cert">
+          <span>${certText(plays)}</span>
+        </div>`;
+      } else {
+        li.textContent = title + " — None";
+      }
       list.appendChild(li);
     }
   </script>
