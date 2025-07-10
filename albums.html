@@ -76,36 +76,10 @@
     let currentData = [];
     let salesTotals = {};
 
-    function getMoveIcon(move) {
-      if (!move) return "➖";
-      move = move.toUpperCase();
-      if (move === "UP") return "⬆️";
-      if (move === "DOWN") return "⬇️";
-      if (move === "NEW") return "🆕";
-      if (move.includes("RE")) return "🔁";
-      return "➖";
-    }
-
-    function getCertImage(sales) {
-      if (sales >= 100) return "platinum.png";
-      if (sales >= 50) return "gold.png";
-      return null;
-    }
-
-    function getCertText(sales) {
-      if (sales >= 100) {
-        const count = Math.floor(sales / 100);
-        return count > 1 ? "Multi-Platinum x" + count : "Platinum";
-      } else if (sales >= 50) {
-        return "Gold";
-      }
-      return "None";
-    }
-
     function populateWeeks() {
       const selector = document.getElementById("weekSelector");
       sortedWeeks = Object.keys(albumData)
-        .sort((a,b) => parseInt(b.replace(/\D/g,'')) - parseInt(a.replace(/\D/g,'')));
+        .sort((a, b) => parseInt(a.replace(/\D/g, '')) - parseInt(b.replace(/\D/g, '')));
       selector.innerHTML = '';
       sortedWeeks.forEach(week => {
         const opt = document.createElement("option");
@@ -113,9 +87,13 @@
         opt.textContent = week;
         selector.appendChild(opt);
       });
-      selector.addEventListener("change", () => populateTable(selector.value));
+
+      selector.addEventListener("change", () => {
+        populateTable(selector.value);
+      });
+
       selector.value = sortedWeeks[sortedWeeks.length - 1];
-      populateTable(sortedWeeks[sortedWeeks.length - 1]);
+      populateTable(selector.value);
     }
 
     function populateTable(currentWeek) {
@@ -182,6 +160,32 @@
           <td>${certHTML}</td>`;
         tbody.appendChild(tr);
       });
+    }
+
+    function getMoveIcon(move) {
+      if (!move) return "➖";
+      move = move.toUpperCase();
+      if (move === "UP") return "⬆️";
+      if (move === "DOWN") return "⬇️";
+      if (move === "NEW") return "🆕";
+      if (move.includes("RE")) return "🔁";
+      return "➖";
+    }
+
+    function getCertImage(sales) {
+      if (sales >= 100) return "platinum.png";
+      if (sales >= 50) return "gold.png";
+      return null;
+    }
+
+    function getCertText(sales) {
+      if (sales >= 100) {
+        const count = Math.floor(sales / 100);
+        return count > 1 ? "Multi-Platinum x" + count : "Platinum";
+      } else if (sales >= 50) {
+        return "Gold";
+      }
+      return "None";
     }
 
     function showModal(album) {
