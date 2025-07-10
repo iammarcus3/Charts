@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Album Detail</title>
+  <title>Album Details</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 2rem; background: #f9f9f9; }
     h1, h2 { color: #2c3e50; }
@@ -20,9 +19,10 @@
   <p><strong>Largest Single Week Plays:</strong> <span id="largestPlays"></span></p>
   <p><strong>Debut Peak:</strong> <span id="debutPeak"></span></p>
   <p><strong>Total Sales:</strong> <span id="salesTotal"></span></p>
+
   <h2>Tracks and Certifications</h2>
   <ul id="trackList"></ul>
-  <script src="albumdata.js"></script>
+
   <script src="trackandalbumdata.js"></script>
   <script>
     function normalize(name) {
@@ -36,35 +36,35 @@
     document.getElementById('albumTitle').textContent = albumName;
     document.getElementById('artistName').textContent = artistName;
 
-    const albumKey = artistName.trim().toUpperCase() + "|" + normalize(albumName);
+    const albumKey = normalize(artistName) + "|" + normalize(albumName);
 
-    let totalWeeks = 0, top10 = 0, no1 = 0, peak = 999, maxPlays = 0, debut = null, sales = 0;
+    let totalWeeks = 0;
+    let top10 = 0;
+    let no1 = 0;
+    let peak = 999;
+    let maxPlays = 0;
+    let debut = null;
+    let sales = 0;
+
     const trackCert = {};
 
-    for (const week of Object.keys(albumData)) {
-      albumData[week].forEach(row => {
-        const key = row.artist.trim().toUpperCase() + "|" + normalize(row.album);
+    for (const week in trackAndAlbumData) {
+      trackAndAlbumData[week].forEach(row => {
+        const key = normalize(row.artist) + "|" + normalize(row.album);
         if (key === albumKey) {
           totalWeeks++;
           if (row.rank === 1) no1++;
           if (row.rank <= 10) top10++;
           if (row.rank < peak) peak = row.rank;
-          if (row.plays > maxPlays) maxPlays = row.plays;
-          if (debut === null || parseInt(week.replace(/\D/g,'')) < debut.week) {
-            debut = { week: parseInt(week.replace(/\D/g,'')), peak: row.rank };
+          if (row.sales > maxPlays) maxPlays = row.sales;
+          if (debut === null || parseInt(week.replace(/\D/g, '')) < debut.week) {
+            debut = { week: parseInt(week.replace(/\D/g, '')), peak: row.rank };
           }
-          sales += row.plays;
-        }
-      });
-    }
+          sales += row.sales;
 
-    for (const week in trackAndAlbumData) {
-      trackAndAlbumData[week].forEach(entry => {
-        if (entry.album && normalize(entry.album) === normalize(albumName) &&
-            normalize(entry.artist) === normalize(artistName)) {
-          const key = normalize(entry.title);
-          if (!trackCert[key]) trackCert[key] = 0;
-          trackCert[key] = Math.max(trackCert[key], entry.sales || 0);
+          const songKey = normalize(row.title);
+          if (!trackCert[songKey]) trackCert[songKey] = 0;
+          trackCert[songKey] = Math.max(trackCert[songKey], row.sales);
         }
       });
     }
@@ -78,7 +78,7 @@
     document.getElementById("weeksTotal").textContent = totalWeeks;
     document.getElementById("weeksNo1").textContent = no1;
     document.getElementById("weeksTop10").textContent = top10;
-    document.getElementById("highestPeak").textContent = peak;
+    document.getElementById("highestPeak").textContent = peak === 999 ? "-" : peak;
     document.getElementById("largestPlays").textContent = maxPlays;
     document.getElementById("debutPeak").textContent = debut ? debut.peak : "-";
     document.getElementById("salesTotal").textContent = sales;
