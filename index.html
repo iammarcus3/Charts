@@ -45,13 +45,11 @@
     <tbody id="chartBody"></tbody>
   </table>
 
-  <!-- 🎖 Certified Songs List -->
   <div id="certifiedList">
     <h2>🏅 Certified This Week</h2>
     <ul id="certifiedSongs"></ul>
   </div>
 
-  <!-- Song Modal -->
   <div class="modal" id="songModal">
     <div class="modal-content">
       <h3 id="modalTitle"></h3>
@@ -64,19 +62,26 @@
     </div>
   </div>
 
-  <!-- Artist Modal -->
-  <div class="modal" id="artistModal">
-    <div class="modal-content">
-      <h3 id="artistModalTitle"></h3>
-      <div id="artistSongs"></div>
-      <button onclick="document.getElementById('artistModal').style.display='none'">Close</button>
-    </div>
-  </div>
-
   <script src="weekdata.js"></script>
   <script>
     let sortedWeeks = [];
     let currentData = [];
+    let totals = {}; // To hold cumulative sales
+
+    function getKey(title, artist) {
+      return title.toLowerCase().trim() + '||' + artist.toLowerCase().trim();
+    }
+
+    function calculateTotalSales() {
+      totals = {};
+      for (const week of Object.keys(weekData)) {
+        for (const row of weekData[week]) {
+          const key = getKey(row.title, row.artist);
+          totals[key] = (totals[key] || 0) + row.sales;
+          row.total_sales = totals[key];
+        }
+      }
+    }
 
     function getCertification(sales) {
       if (sales >= 100) {
@@ -116,6 +121,7 @@
       });
       selector.value = sortedWeeks[0];
       selector.addEventListener("change", () => populateTable(selector.value));
+      calculateTotalSales(); // compute once before first render
       populateTable(selector.value);
     }
 
@@ -123,6 +129,7 @@
       const tbody = document.getElementById("chartBody");
       tbody.innerHTML = '';
       currentData = weekData[week];
+
       const certified = [];
 
       currentData.forEach(row => {
@@ -135,7 +142,7 @@
           <td>${row.sales}</td>
           <td>${row.total_sales}</td>
           <td>${row.weeks}</td>
-          <td>${row.peak}</td>
+          <td>${row.peak || "—"}</td>
         `;
         tbody.appendChild(tr);
 
@@ -172,7 +179,7 @@
       document.getElementById("modalArtist").textContent = "By " + song.artist;
       document.getElementById("modalSales").textContent = "This Week: " + song.sales;
       document.getElementById("modalWeeks").textContent = "Weeks: " + song.weeks;
-      document.getElementById("modalPeak").textContent = "Peak: " + song.peak;
+      document.getElementById("modalPeak").textContent = "Peak: " + (song.peak || "—");
       document.getElementById("modalCert").innerHTML = getCertification(song.total_sales);
       document.getElementById("songModal").style.display = "flex";
     }
