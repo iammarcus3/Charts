@@ -10,17 +10,23 @@
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
     th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; cursor: pointer; }
     th { background-color: #eee; }
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; }
-    .modal-content { background: #fff; padding: 2rem; border-radius: 8px; width: 320px; }
+    .modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: none;
+      align-items: center; justify-content: center;
+    }
+    .modal-content {
+      background: #fff; padding: 2rem; border-radius: 8px; width: 320px;
+    }
   </style>
 </head>
 <body>
-<nav style="margin-bottom: 1.5rem;">
-  <a href="index.html">🏠 Main</a> |
-  <a href="albums.html">📀 Albums Chart</a> |
-  <a href="top_albums.html">📈 Top Albums</a> |
-  <a href="records.html">📊 Records</a>
-</nav>
+  <nav style="margin-bottom: 1.5rem;">
+    <a href="index.html">🏠 Main</a> |
+    <a href="albums.html">📀 Albums Chart</a> |
+    <a href="top_albums.html">📈 Top Albums</a> |
+    <a href="records.html">📊 Records</a>
+  </nav>
 
   <h1>📀 Billboard Album Chart</h1>
 
@@ -52,7 +58,6 @@
     </div>
   </div>
 
-
   <div class="modal" id="albumModal">
     <div class="modal-content">
       <h3 id="modalAlbum"></h3>
@@ -69,6 +74,14 @@
   <script>
     let sortedWeeks = [];
     let currentData = [];
+
+    function normalizeAlbumName(name) {
+      return name
+        .toLowerCase()
+        .replace(/\s*\(.*?\)|\[.*?\]|-*\s*ep|\s+deluxe|\s+bonus|\s+edition|\s+version/g, '')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+    }
 
     function getCertification(plays) {
       if (plays >= 100) {
@@ -98,101 +111,111 @@
     function populateTable(week) {
       const tbody = document.getElementById("chartBody");
       tbody.innerHTML = '';
-      currentData = albumData[week].slice().sort((a, b) => 
-      b.plays - a.plays || a.peak - b.peak || a.album.localeCompare(b.album)
-    );
-      currentData.forEach(row => {
+
+      const merged = {};
+      albumData[week].forEach(entry => {
+        const key = normalizeAlbumName(entry.album) + "|" + entry.artist;
+        if (!merged[key]) {
+          merged[key] = {
+            album: entry.album,
+            artist: entry.artist,
+            plays: entry.plays,
+            weeks: entry.weeks,
+            move: entry.move,
+            peak: entry.peak,
+            rank: entry.rank
+          };
+        } else {
+          merged[key].plays += entry.plays;
+          merged[key].weeks = Math.max(merged[key].weeks, entry.weeks);
+          merged[key].peak = Math.min(merged[key].peak, entry.peak);
+        }
+      });
+
+      const sorted = Object.values(merged).sort((a, b) =>
+        b.plays - a.plays || a.peak - b.peak || a.album.localeCompare(b.album)
+      );
+
+      sorted.forEach((row, index) => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${row.rank}</td>
-                        <td><a href="#" onclick='showModal(${JSON.stringify(row)})'>${row.album}</a></td>
-                        <td><a href='#' onclick='showArtistAlbums(row.artist)'>${row.artist}</a></td>
-                        <td>${row.plays}</td>
-                        <td>${row.weeks}</td>
-                        <td>${row.move}</td>
-                        <td>${row.peak}</td>`;
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td><a href="#" onclick='showModal(${JSON.stringify(row)})'>${row.album}</a></td>
+          <td><a href="#" onclick='showArtistAlbums("${row.artist}")'>${row.artist}</a></td>
+          <td>${row.plays}</td>
+          <td>${row.weeks}</td>
+          <td>${row.move}</td>
+          <td>${row.peak}</td>
+        `;
         tbody.appendChild(tr);
       });
     }
 
     function showModal(album) {
       document.getElementById("modalAlbum").textContent = album.album;
-      document.getElementById("modalArtist").textContent = "Artist: " + album.artist;
-      document.getElementById("modalPlays").textContent = "Total Plays: " + album.plays;
-      document.getElementById("modalWeeks").textContent = "Weeks on Chart: " + album.weeks;
-      document.getElementById("modalPeak").textContent = "Peak Rank: " + album.peak;
+      document.getElementById("modalArtist").textContent = "By " + album.artist;
+      document.getElementById("modalPlays").textContent = "Plays: " + album.plays;
+      document.getElementById("modalWeeks").textContent = "Weeks: " + album.weeks;
+      document.getElementById("modalPeak").textContent = "Peak: " + album.peak;
       document.getElementById("modalCert").innerHTML = getCertification(album.plays);
       document.getElementById("albumModal").style.display = "flex";
     }
 
-    function navigateWeek(dir) {
-      const selector = document.getElementById("weekSelector");
-      const idx = sortedWeeks.indexOf(selector.value);
-      const newIdx = idx + dir;
-      if (newIdx >= 0 && newIdx < sortedWeeks.length) {
-        selector.value = sortedWeeks[newIdx];
-        populateTable(sortedWeeks[newIdx]);
-      }
-    }
+    function showArtistAlbums(name) {
+      const modal = document.getElementById("artistModal");
+      const container = document.getElementById("artistAlbums");
+      container.innerHTML = "";
 
-    function sortTable(colIndex) {
-      const table = document.getElementById("albumTable");
-      const tbody = table.tBodies[0];
-      const rows = Array.from(tbody.rows);
-      const asc = !table.sorted || table.sorted.col !== colIndex || !table.sorted.asc;
-      rows.sort((a, b) => {
-        const valA = isNaN(a.cells[colIndex].textContent) ? a.cells[colIndex].textContent : +a.cells[colIndex].textContent;
-        const valB = isNaN(b.cells[colIndex].textContent) ? b.cells[colIndex].textContent : +b.cells[colIndex].textContent;
-        return asc ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
-      });
-      table.sorted = { col: colIndex, asc: asc };
-      rows.forEach(row => tbody.appendChild(row));
-    }
-
-    
-    function getAlbumCertification(plays) {
-      if (plays >= 100) {
-        const count = Math.floor(plays / 100);
-        return "💿".repeat(count) + "<br>" + (count > 1 ? "Multi-Platinum (x" + count + ")" : "Platinum");
-      } else if (plays >= 50) {
-        return "🥇<br>Gold";
-      }
-      return "—";
-    }
-
-    function showArtistAlbums(artist) {
-      const allAlbums = {};
-
+      const merged = {};
       Object.values(albumData).forEach(weekEntries => {
         weekEntries.forEach(entry => {
-          if (entry.artist === artist) {
-            const normTitle = entry.album.toLowerCase().replace(/\(.*?\)|\[.*?\]|[-–_:]+.*/g, "").trim();
-            const key = normTitle + "|" + artist;
-            if (!allAlbums[key]) {
-              allAlbums[key] = {
+          if (entry.artist === name) {
+            const key = normalizeAlbumName(entry.album) + "|" + entry.artist;
+            if (!merged[key]) {
+              merged[key] = {
                 album: entry.album,
+                artist: entry.artist,
                 plays: entry.plays,
-                peak: entry.rank,
-                weeks: 1
+                weeks: entry.weeks,
+                peak: entry.peak
               };
             } else {
-              allAlbums[key].plays += entry.plays;
-              allAlbums[key].weeks += 1;
-              allAlbums[key].peak = Math.min(allAlbums[key].peak, entry.rank);
+              merged[key].plays += entry.plays;
+              merged[key].weeks = Math.max(merged[key].weeks, entry.weeks);
+              merged[key].peak = Math.min(merged[key].peak, entry.peak);
             }
           }
         });
       });
 
-      const container = document.getElementById("artistAlbums");
-      const entries = Object.values(allAlbums).sort((a, b) => b.plays - a.plays);
-      container.innerHTML = entries.map(row =>
-        `<p><strong>${row.album}</strong> — Plays: ${row.plays}, Peak: ${row.peak}, Weeks: ${row.weeks}, ${getAlbumCertification(row.plays)}</p>`
-      ).join('') || "<p>No albums found.</p>";
-      document.getElementById("artistModalTitle").textContent = artist + "'s Album Chart History";
-      document.getElementById("artistModal").style.display = "flex";
+      const sorted = Object.values(merged).sort((a, b) =>
+        b.plays - a.plays || a.peak - b.peak || a.album.localeCompare(b.album)
+      );
+
+      sorted.forEach(album => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <strong>${album.album}</strong><br>
+          Plays: ${album.plays} | Peak: ${album.peak} | Weeks: ${album.weeks}<br><br>
+        `;
+        container.appendChild(div);
+      });
+
+      document.getElementById("artistModalTitle").textContent = name + "'s Albums";
+      modal.style.display = "flex";
     }
 
-document.addEventListener("DOMContentLoaded", populateWeeks);
+    function navigateWeek(offset) {
+      const selector = document.getElementById("weekSelector");
+      const currentIndex = sortedWeeks.indexOf(selector.value);
+      const newIndex = currentIndex + offset;
+      if (newIndex >= 0 && newIndex < sortedWeeks.length) {
+        selector.value = sortedWeeks[newIndex];
+        populateTable(sortedWeeks[newIndex]);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", populateWeeks);
   </script>
 </body>
 </html>
