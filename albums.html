@@ -93,7 +93,14 @@
       }
       return "None";
     }
-
+    
+    function normalize(name) {
+     return name.toUpperCase()
+    .replace(/\(.*?\)|\[.*?\]|DELUXE|SPECIAL|VERSION|REMIX|BONUS|EDITION|SINGLE|EP/gi, '')
+    .replace(/[^A-Z0-9 ]/gi, '')
+    .trim();
+}
+    
     function populateWeeks() {
       const selector = document.getElementById("weekSelector");
       sortedWeeks = Object.keys(albumData)
@@ -123,8 +130,7 @@ populateTable(sortedWeeks[sortedWeeks.length - 1]);
 
         const raw = albumData[week];
         raw.forEach(row => {
-          const artist = row.artist.trim();
-          const album = row.album.trim().toLowerCase();
+          const album = normalize(row.album);
           const key = artist + "|" + album;
           salesTotals[key] = (salesTotals[key] || 0) + row.plays;
 
