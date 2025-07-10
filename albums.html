@@ -57,20 +57,11 @@
     </div>
   </div>
 
+  <!-- ✅ Correct file: using albumdata.js -->
   <script src="albumdata.js"></script>
   <script>
     let sortedWeeks = [];
     let currentData = [];
-
-    function normalizeTitle(title) {
-      return title
-        .replace(/\(.*?\)|\[.*?\]/g, "")                             // Remove parentheses and brackets
-        .replace(/deluxe|bonus|track|edition|version|remix|ep|expanded|explicit/gi, "") // Remove edition keywords
-        .replace(/[^a-zA-Z\s]/g, "")                                 // Remove all non-letter characters
-        .replace(/\s+/g, " ")                                        // Collapse extra spaces
-        .trim()
-        .toLowerCase();
-    }
 
     function getMoveIcon(move) {
       if (!move) return "➖";
@@ -117,13 +108,13 @@
 
       raw.forEach(row => {
         const artist = row.artist.trim();
-        const normAlbum = normalizeTitle(row.album);
-        const key = artist + "|" + normAlbum;
+        const normalized = row.normalized?.trim().toLowerCase() || "";
+        const key = artist + "|" + normalized;
 
         if (!merged[key]) {
           merged[key] = {
             artist: artist,
-            album: row.album, // original name preserved
+            album: row.album,
             plays: row.plays,
             peak: row.rank,
             weeks: row.weeks,
