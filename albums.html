@@ -116,36 +116,13 @@
       const merged = {};
       salesTotals = {};
 
-     const currentWeekNum = parseInt(currentWeek.replace(/\D/g, ''));
-for (const week of sortedWeeks) {
-  const weekNum = parseInt(week.replace(/\D/g, ''));
-  if (weekNum > currentWeekNum) break;
+      const currentWeekNum = parseInt(currentWeek.replace(/\D/g, ''));
 
-  const raw = albumData[week];
-  raw.forEach(row => {
-    const artist = row.artist.trim();
-    const album = row.album.trim().toLowerCase();
-    const key = artist + "|" + album;
-    salesTotals[key] = (salesTotals[key] || 0) + row.plays;
+      for (const week of sortedWeeks) {
+        const weekNum = parseInt(week.replace(/\D/g, ''));
+        if (weekNum > currentWeekNum) break;
 
-    if (week === currentWeek) {
-      if (!merged[key]) {
-        merged[key] = {
-          artist: artist,
-          album: row.album,
-          plays: row.plays,
-          weeks: row.weeks,
-          peak: row.rank,
-          move: row.move
-        };
-      } else {
-        merged[key].plays += row.plays;
-        merged[key].weeks += row.weeks;
-        merged[key].peak = Math.min(merged[key].peak, row.rank);
-      }
-    }
-  });
-}
+        const raw = albumData[week];
         raw.forEach(row => {
           const artist = row.artist.trim();
           const album = row.album.trim().toLowerCase();
