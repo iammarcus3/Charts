@@ -7,69 +7,97 @@
     body { font-family: Arial, sans-serif; padding: 2rem; background: #f9f9f9; }
     h1 { text-align: center; }
     table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
-    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; cursor: pointer; }
     th { background-color: #eee; }
     a { text-decoration: none; color: #0066cc; }
     a:hover { text-decoration: underline; }
+    .cert { font-size: 0.9em; color: #333; }
   </style>
 </head>
 <body>
-  <h1>🎵 Top 200 Albums of All Time</h1>
+  <h1>🎵 Top 200 Albums (by Total Plays)</h1>
   <table>
     <thead>
       <tr>
         <th>Rank</th>
-        <th>Album</th>
-        <th>Artist</th>
-        <th>Total Sales</th>
+        <th onclick="sortBy('album')">Album ⬍</th>
+        <th onclick="sortBy('artist')">Artist ⬍</th>
+        <th onclick="sortBy('plays')">Total Plays ⬍</th>
+        <th>Certification</th>
       </tr>
     </thead>
     <tbody id="albumTable"></tbody>
   </table>
 
-  <script src="trackandalbumdata.js"></script>
+  <script src="albumdata.js"></script>
   <script>
-    function normalize(str) {
-      return str.toUpperCase().replace(/[^A-Z0-9 ]+/g, '').trim();
+    function normalize(name) {
+      return name.toUpperCase()
+        .replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|VERSION|BONUS|SINGLE|EP/gi, '')
+        .replace(/[^A-Z0-9 ]/g, '')
+        .trim();
+    }
+
+    function getCertification(plays) {
+      if (plays >= 100) {
+        const count = Math.floor(plays / 100);
+        return count > 1 ? "Multi-Platinum x" + count : "Platinum";
+      } else if (plays >= 50) {
+        return "Gold";
+      } else {
+        return "—";
+      }
     }
 
     const albumMap = {};
+    for (const week in albumData) {
+      albumData[week].forEach(row => {
+        const artist = row.artist.trim();
+        const album = normalize(row.album);
+        const key = artist.toUpperCase() + "|" + album;
 
-    for (const week in trackAndAlbumData) {
-      trackAndAlbumData[week].forEach(row => {
-        if (!row.album || !row.artist) return;
-        const key = normalize(row.artist) + "|" + normalize(row.album);
         if (!albumMap[key]) {
           albumMap[key] = {
             album: row.album,
             artist: row.artist,
-            sales: 0
+            plays: 0
           };
         }
-        albumMap[key].sales += row.sales || 0;
+
+        albumMap[key].plays += row.plays || 0;
       });
     }
 
-    const sortedAlbums = Object.values(albumMap)
-      .sort((a, b) => b.sales - a.sales)
+    let albums = Object.values(albumMap)
+      .sort((a, b) => b.plays - a.plays)
       .slice(0, 200);
 
-    const tableBody = document.getElementById("albumTable");
+    function renderTable() {
+      const tbody = document.getElementById("albumTable");
+      tbody.innerHTML = '';
+      albums.forEach((album, i) => {
+        const url = `album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}`;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td><a href="${url}">${album.album}</a></td>
+          <td>${album.artist}</td>
+          <td>${album.plays}</td>
+          <td class="cert">${getCertification(album.plays)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-    sortedAlbums.forEach((row, index) => {
-      const tr = document.createElement("tr");
+    function sortBy(field) {
+      albums.sort((a, b) => {
+        if (field === 'plays') return b.plays - a.plays;
+        return a[field].localeCompare(b[field]);
+      });
+      renderTable();
+    }
 
-      const albumLink = `album_detail.html?album=${encodeURIComponent(row.album)}&artist=${encodeURIComponent(row.artist)}`;
-
-      tr.innerHTML = `
-        <td>${index + 1}</td>
-        <td><a href="${albumLink}">${row.album}</a></td>
-        <td>${row.artist}</td>
-        <td>${row.sales}</td>
-      `;
-
-      tableBody.appendChild(tr);
-    });
+    renderTable();
   </script>
 </body>
 </html>
