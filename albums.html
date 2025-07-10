@@ -9,7 +9,8 @@
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
     th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; vertical-align: middle; }
     th { background-color: #eee; }
-    td img { height: 40px; }
+    td img { height: 40px; display: block; }
+    td .cert-text { font-size: 0.9em; margin-top: 0.2em; }
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; }
     .modal-content { background: #fff; padding: 2rem; border-radius: 8px; width: 320px; }
   </style>
@@ -36,7 +37,8 @@
           <th>Move</th>
           <th>Album</th>
           <th>Artist</th>
-          <th>Total Plays</th>
+          <th>This Week</th>
+          <th>Sales</th>
           <th>Weeks</th>
           <th>Peak</th>
           <th>Certification</th>
@@ -46,12 +48,12 @@
     </table>
   </div>
 
-  <!-- Album Modal -->
   <div class="modal" id="albumModal">
     <div class="modal-content">
       <h3 id="modalAlbum"></h3>
       <p id="modalArtist"></p>
       <p id="modalPlays"></p>
+      <p id="modalSales"></p>
       <p id="modalWeeks"></p>
       <p id="modalPeak"></p>
       <p id="modalCert"></p>
@@ -63,6 +65,7 @@
   <script>
     let sortedWeeks = [];
     let currentData = [];
+    let salesTotals = {};
 
     function getMoveIcon(move) {
       if (!move) return "➖";
@@ -74,17 +77,19 @@
       return "➖";
     }
 
-    function getCertificationImage(plays) {
-      if (plays >= 2500) return '<img src="diamond.png" alt="Diamond" title="Diamond">';
-      if (plays >= 100) return '<img src="platinum.png" alt="Platinum" title="Platinum">';
-      if (plays >= 50) return '<img src="gold.png" alt="Gold" title="Gold">';
-      return '—';
+    function getCertImage(sales) {
+      if (sales >= 100) return "platinum.png";
+      if (sales >= 50) return "gold.png";
+      return null;
     }
 
-    function getCertificationText(plays) {
-      if (plays >= 2500) return "Diamond";
-      if (plays >= 100) return "Platinum";
-      if (plays >= 50) return "Gold";
+    function getCertText(sales) {
+      if (sales >= 100) {
+        const count = Math.floor(sales / 100);
+        return count > 1 ? "Multi-Platinum x" + count : "Platinum";
+      } else if (sales >= 50) {
+        return "Gold";
+      }
       return "None";
     }
 
@@ -104,41 +109,55 @@
       populateTable(sortedWeeks[0]);
     }
 
-    function populateTable(week) {
+    function populateTable(currentWeek) {
       const tbody = document.getElementById("chartBody");
       tbody.innerHTML = '';
 
-      const raw = albumData[week];
       const merged = {};
+      salesTotals = {};
 
-      raw.forEach(row => {
-        const artist = row.artist.trim();
-        const album = row.album.trim().toLowerCase();
-        const key = artist + "|" + album;
+      for (const week of sortedWeeks) {
+        if (week > currentWeek) break;
+        const raw = albumData[week];
+        raw.forEach(row => {
+          const artist = row.artist.trim();
+          const album = row.album.trim().toLowerCase();
+          const key = artist + "|" + album;
+          salesTotals[key] = (salesTotals[key] || 0) + row.plays;
 
-        if (!merged[key]) {
-          merged[key] = {
-            artist: artist,
-            album: row.album,
-            plays: row.plays,
-            peak: row.rank,
-            weeks: row.weeks,
-            move: row.move
-          };
-        } else {
-          merged[key].plays += row.plays;
-          merged[key].weeks += row.weeks;
-          merged[key].peak = Math.min(merged[key].peak, row.rank);
-        }
-      });
+          if (week === currentWeek) {
+            if (!merged[key]) {
+              merged[key] = {
+                artist: artist,
+                album: row.album,
+                plays: row.plays,
+                weeks: row.weeks,
+                peak: row.rank,
+                move: row.move
+              };
+            } else {
+              merged[key].plays += row.plays;
+              merged[key].weeks += row.weeks;
+              merged[key].peak = Math.min(merged[key].peak, row.rank);
+            }
+          }
+        });
+      }
 
-      const sorted = Object.values(merged)
-        .sort((a, b) => b.plays - a.plays || a.peak - b.peak || a.album.localeCompare(b.album))
-        .map((item, i) => ({ ...item, rank: i + 1 }));
+      const sorted = Object.entries(merged).map(([key, val]) => {
+        val.sales = salesTotals[key];
+        return val;
+      }).sort((a, b) => b.sales - a.sales).map((row, i) => ({ ...row, rank: i + 1 }));
 
       currentData = sorted;
 
       currentData.forEach(row => {
+        const certImg = getCertImage(row.sales);
+        const certText = getCertText(row.sales);
+        const certHTML = certImg
+          ? `<img src="${certImg}" alt="${certText}"><div class="cert-text">${certText}</div>`
+          : "—";
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.rank}</td>
@@ -146,9 +165,10 @@
           <td><a href="#" onclick='showModal(${JSON.stringify(row)})'>${row.album}</a></td>
           <td>${row.artist}</td>
           <td>${row.plays}</td>
+          <td>${row.sales}</td>
           <td>${row.weeks}</td>
           <td>${row.peak}</td>
-          <td>${getCertificationImage(row.plays)}</td>`;
+          <td>${certHTML}</td>`;
         tbody.appendChild(tr);
       });
     }
@@ -156,10 +176,11 @@
     function showModal(album) {
       document.getElementById("modalAlbum").textContent = album.album;
       document.getElementById("modalArtist").textContent = "Artist: " + album.artist;
-      document.getElementById("modalPlays").textContent = "Total Plays: " + album.plays;
+      document.getElementById("modalPlays").textContent = "This Week: " + album.plays;
+      document.getElementById("modalSales").textContent = "Sales: " + album.sales;
       document.getElementById("modalWeeks").textContent = "Weeks on Chart: " + album.weeks;
       document.getElementById("modalPeak").textContent = "Peak Rank: " + album.peak;
-      document.getElementById("modalCert").textContent = "Certification: " + getCertificationText(album.plays);
+      document.getElementById("modalCert").textContent = "Certification: " + getCertText(album.sales);
       document.getElementById("albumModal").style.display = "flex";
     }
 
