@@ -57,7 +57,7 @@
     </div>
   </div>
 
-  <!-- ✅ Correct file: using albumdata.js -->
+  <!-- ✅ Uses final cleaned file -->
   <script src="albumdata.js"></script>
   <script>
     let sortedWeeks = [];
@@ -108,13 +108,13 @@
 
       raw.forEach(row => {
         const artist = row.artist.trim();
-        const normalized = row.normalized?.trim().toLowerCase() || "";
-        const key = artist + "|" + normalized;
+        const album = row.album.trim().toLowerCase(); // already normalized
+        const key = artist + "|" + album;
 
         if (!merged[key]) {
           merged[key] = {
             artist: artist,
-            album: row.album,
+            album: row.album, // display as-is
             plays: row.plays,
             peak: row.rank,
             weeks: row.weeks,
