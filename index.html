@@ -2,44 +2,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Billboard Top 100 Insights</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8" />
+  <title>Billboard Top 100</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #f7f7f7; }
-    h1, h2 { color: #2c3e50; }
-    .chart-container, .table-container, .card { width: 90%; margin: 2rem auto; background: #fff; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    input[type="text"], select { padding: 0.5rem; margin-bottom: 1rem; width: 100%; max-width: 400px; }
+    body { font-family: Arial, sans-serif; padding: 2rem; background: #f5f5f5; }
+    nav { margin-bottom: 1.5rem; }
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
     th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
-    th { background-color: #ecf0f1; }
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; }
-    .modal-content { background: #fff; padding: 2rem; border-radius: 10px; width: 300px; text-align: center; }
-    .close-btn { cursor: pointer; margin-top: 1rem; color: #007bff; }
-    .highlight-top { background-color: #fff9c4; font-weight: bold; }
+    th { background-color: #eee; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 1rem; border-radius: 10px; width: 300px; text-align: center; }
   </style>
 </head>
 <body>
-<nav style="margin-bottom: 1.5rem;">
-  <a href="index.html">🏠 Main</a> |
-  <a href="albums.html">📀 Albums Chart</a> |
-  <a href="top_albums.html">📈 Top Albums</a> |
-  <a href="records.html">📊 Records</a>
-</nav>
+  <nav>
+    <a href="index.html">🏠 Main</a> |
+    <a href="albums.html">📀 Albums Chart</a> |
+    <a href="top_albums.html">📈 Top Albums</a> |
+    <a href="records.html">📊 Records</a>
+  </nav>
 
-  <h1>🎵 Billboard Top 100 Dashboard</h1>
-  <div>
-    <input type="text" id="searchInput" placeholder="Type to filter Hot 100 table...">
-    <select id="weekSelector"></select>
-    <table id="hot100Table"><thead><tr><th>Rank</th><th>Title</th><th>Artist</th><th>Sales</th><th>Weeks</th><th>Move</th></tr></thead><tbody id="chartBody"></tbody></table>
+  <h1>🎵 Billboard Top 100</h1>
+
+  <label for="weekSelector">Select a week:</label>
+  <select id="weekSelector"></select>
+  <button onclick="navigateWeek(-1)">⬅️</button>
+  <button onclick="navigateWeek(1)">➡️</button>
+
+  <table id="chartTable">
+    <thead>
+      <tr>
+        <th>Rank</th><th>Move</th>
+        <th>Move</th>
+        <th>Title</th>
+        <th>Artist</th>
+        <th>Sales</th>
+        <th>Total Sales</th>
+        <th>Weeks</th>
+        <th>Peak</th>
+      </tr>
+    </thead>
+    <tbody id="chartBody"></tbody>
+  </table>
+
+  <div class="modal" id="songModal">
+    <div class="modal-content">
+      <h3 id="modalTitle"></h3>
+      <p id="modalArtist"></p>
+      <p id="modalSales"></p>
+      <p id="modalWeeks"></p>
+      <p id="modalPeak"></p>
+      <p id="modalCert"></p>
+      <button onclick="document.getElementById('songModal').style.display='none'">Close</button>
+    </div>
   </div>
-  <div class="modal" id="songModal"><div class="modal-content"><h3 id="modalTitle"></h3><p id="modalArtist"></p><p id="modalSales"></p><p id="modalWeeks"></p><p id="modalPeak"></p><div class="close-btn" onclick="closeModal()">Close</div></div></div>
-  <div class="modal" id="artistModal"><div class="modal-content"><h3 id="artistModalTitle"></h3><div id="artistSongs"></div><div class="close-btn" onclick="closeArtistModal()">Close</div></div></div>
+
+  <div class="modal" id="artistModal">
+    <div class="modal-content">
+      <h3 id="artistModalTitle"></h3>
+      <div id="artistSongs"></div>
+      <button onclick="document.getElementById('artistModal').style.display='none'">Close</button>
+    </div>
+  </div>
+
   <script src="weekdata.js"></script>
   <script>
-    const chartBody = document.getElementById("chartBody");
-    const weekSelector = document.getElementById("weekSelector");
+    let sortedWeeks = [];
+    let currentData = [];
+
+    function getCertification(sales) {
+      if (sales >= 100) {
+        const count = Math.floor(sales / 100);
+        return "💿".repeat(count) + "<br>" + (count > 1 ? "Multi-Platinum (x" + count + ")" : "Platinum");
+      } else if (sales >= 50) {
+        return "🥇<br>Gold";
+      }
+      return "—";
+    }
 
     function getMovementIcon(move) {
       if (!move) return "➖";
@@ -47,57 +86,63 @@
       return val === "UP" ? "⬆️" : val === "DOWN" ? "⬇️" : val === "NEW" ? "🆕" : val.includes("RE") ? "🔁" : "➖";
     }
 
-    function populateTable(week) {
-      chartBody.innerHTML = '';
-      weekData[week].forEach(row => {
-        const tr = document.createElement('tr');
-        if (row.rank === 1 && row.move && row.move.toUpperCase() === "NEW") tr.classList.add('highlight-top');
-        tr.innerHTML = `<td>${row.rank}</td><td><a href="#" onclick='showModal(${JSON.stringify(row)})'>${row.title}</a></td><td><a href="#" onclick='showArtist("${row.artist}")'>${row.artist}</a></td><td>${row.sales}</td><td>${row.weeks}</td><td>${getMovementIcon(row.move)}</td>`;
-        chartBody.appendChild(tr);
+    function populateWeeks() {
+      const selector = document.getElementById("weekSelector");
+      sortedWeeks = Object.keys(weekData).sort((a, b) => parseInt(a.replace(/\D/g,'')) - parseInt(b.replace(/\D/g,'')));
+      selector.innerHTML = '';
+      sortedWeeks.forEach(week => {
+        const opt = document.createElement("option");
+        opt.value = week;
+        opt.textContent = week;
+        selector.appendChild(opt);
       });
+      selector.value = sortedWeeks[0];
+      selector.addEventListener("change", () => populateTable(selector.value));
+      populateTable(selector.value);
     }
 
-    function populateWeeks() {
-      const weeks = Object.keys(weekData).sort((a, b) => new Date(b) - new Date(a));
-      weeks.forEach(week => {
-        const option = document.createElement("option");
-        option.value = week;
-        option.textContent = week;
-        weekSelector.appendChild(option);
+    function populateTable(week) {
+      const tbody = document.getElementById("chartBody");
+      tbody.innerHTML = '';
+      currentData = weekData[week];
+      
+      currentData.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.rank}</td>
+          <td>${getMovementIcon(row.move)}</td>
+          <td><a href="#" onclick='showModal(${JSON.stringify(row)})'>${row.title}</a></td>
+          <td><a href="artist.html?name=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
+          <td>${row.sales}</td>
+          <td>${row.total_sales}</td>
+          <td>${row.weeks}</td>
+          <td>${row.peak}</td>`;
+        tbody.appendChild(tr);
       });
-      weekSelector.value = weeks[0];
+    
+    }
+
+    function navigateWeek(dir) {
+      const selector = document.getElementById("weekSelector");
+      const index = sortedWeeks.indexOf(selector.value);
+      const newIndex = index + dir;
+      if (newIndex >= 0 && newIndex < sortedWeeks.length) {
+        selector.value = sortedWeeks[newIndex];
+        populateTable(selector.value);
+      }
     }
 
     function showModal(song) {
       document.getElementById("modalTitle").textContent = song.title;
-      document.getElementById("modalArtist").textContent = `Artist: ${song.artist}`;
-      document.getElementById("modalSales").textContent = `Sales: ${song.sales}`;
-      document.getElementById("modalWeeks").textContent = `Weeks on Chart: ${song.weeks}`;
-      document.getElementById("modalPeak").textContent = `Peak Rank: ${song.rank}`;
-      document.getElementById("songModal").style.display = 'flex';
+      document.getElementById("modalArtist").textContent = "Artist: " + song.artist;
+      document.getElementById("modalSales").textContent = "Sales: " + song.sales;
+      document.getElementById("modalWeeks").textContent = "Weeks on Chart: " + song.weeks;
+      document.getElementById("modalPeak").textContent = "Peak Rank: " + song.peak;
+      document.getElementById("modalCert").innerHTML = getCertification(song.total_sales);
+      document.getElementById("songModal").style.display = "flex";
     }
 
-    function closeModal() { document.getElementById("songModal").style.display = 'none'; }
-    function showArtist(artist) {
-      document.getElementById("artistModalTitle").textContent = `${artist}'s Chart History`;
-      const artistSongs = [];
-      Object.keys(weekData).forEach(week => {
-        weekData[week].forEach(entry => {
-          if (entry.artist === artist) artistSongs.push(`<p><strong>${entry.title}</strong> - Week: ${week}, Rank: ${entry.rank}, Sales: ${entry.sales}</p>`);
-        });
-      });
-      document.getElementById("artistSongs").innerHTML = artistSongs.join('') || '<p>No history found.</p>';
-      document.getElementById("artistModal").style.display = 'flex';
-    }
-    function closeArtistModal() { document.getElementById("artistModal").style.display = 'none'; }
-    document.getElementById('searchInput').addEventListener('input', function () {
-      const filter = this.value.toLowerCase();
-      const rows = document.querySelectorAll('#hot100Table tbody tr');
-      rows.forEach(row => row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none');
-    });
-    weekSelector.addEventListener("change", () => populateTable(weekSelector.value));
-    populateWeeks();
-    populateTable(weekSelector.value);
+    document.addEventListener("DOMContentLoaded", populateWeeks);
   </script>
 </body>
 </html>
