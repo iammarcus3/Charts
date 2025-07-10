@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,13 +72,12 @@
   <script src="albumdata.js"></script>
   <script>
     let sortedWeeks = [];
-    let currentData = [];
 
     function normalizeAlbumName(name) {
       return name
         .toLowerCase()
-        .replace(/\s*\(.*?\)|\[.*?\]|-*\s*ep|\s+deluxe|\s+bonus|\s+edition|\s+version/g, '')
-        .replace(/[^a-z0-9]+/g, ' ')
+        .replace(/\(.*?\)|\[.*?\]/g, '')
+        .replace(/[^a-z0-9]+/g, '')
         .trim();
     }
 
@@ -113,8 +111,14 @@
       tbody.innerHTML = '';
 
       const merged = {};
+      const claimedAlbums = new Set();
+
       albumData[week].forEach(entry => {
-        const key = normalizeAlbumName(entry.album) + "|" + entry.artist;
+        const normName = normalizeAlbumName(entry.album);
+        const key = normName;
+
+        if (claimedAlbums.has(normName) && !merged[key]) return;
+
         if (!merged[key]) {
           merged[key] = {
             album: entry.album,
@@ -125,7 +129,8 @@
             peak: entry.peak,
             rank: entry.rank
           };
-        } else {
+          claimedAlbums.add(normName);
+        } else if (merged[key].artist === entry.artist) {
           merged[key].plays += entry.plays;
           merged[key].weeks = Math.max(merged[key].weeks, entry.weeks);
           merged[key].peak = Math.min(merged[key].peak, entry.peak);
@@ -167,22 +172,24 @@
       container.innerHTML = "";
 
       const merged = {};
+      const claimed = new Set();
+
       Object.values(albumData).forEach(weekEntries => {
         weekEntries.forEach(entry => {
           if (entry.artist === name) {
-            const key = normalizeAlbumName(entry.album) + "|" + entry.artist;
-            if (!merged[key]) {
-              merged[key] = {
+            const normName = normalizeAlbumName(entry.album);
+            if (!merged[normName]) {
+              merged[normName] = {
                 album: entry.album,
-                artist: entry.artist,
                 plays: entry.plays,
                 weeks: entry.weeks,
                 peak: entry.peak
               };
+              claimed.add(normName);
             } else {
-              merged[key].plays += entry.plays;
-              merged[key].weeks = Math.max(merged[key].weeks, entry.weeks);
-              merged[key].peak = Math.min(merged[key].peak, entry.peak);
+              merged[normName].plays += entry.plays;
+              merged[normName].weeks = Math.max(merged[normName].weeks, entry.weeks);
+              merged[normName].peak = Math.min(merged[normName].peak, entry.peak);
             }
           }
         });
