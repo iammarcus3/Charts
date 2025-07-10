@@ -66,19 +66,28 @@
   <script>
     let sortedWeeks = [];
     let currentData = [];
-    let totals = {}; // To hold cumulative sales
+    let totals = {};
+    let peaks = {};
 
     function getKey(title, artist) {
       return title.toLowerCase().trim() + '||' + artist.toLowerCase().trim();
     }
 
-    function calculateTotalSales() {
+    function calculateStats() {
       totals = {};
+      peaks = {};
+
       for (const week of Object.keys(weekData)) {
         for (const row of weekData[week]) {
           const key = getKey(row.title, row.artist);
           totals[key] = (totals[key] || 0) + row.sales;
           row.total_sales = totals[key];
+
+          const rank = parseInt(row.rank);
+          if (!peaks[key] || rank < peaks[key]) {
+            peaks[key] = rank;
+          }
+          row.peak = peaks[key];
         }
       }
     }
@@ -111,7 +120,8 @@
 
     function populateWeeks() {
       const selector = document.getElementById("weekSelector");
-      sortedWeeks = Object.keys(weekData).sort((a, b) => parseInt(a.replace(/\D/g, '')) - parseInt(b.replace(/\D/g, '')));
+      sortedWeeks = Object.keys(weekData)
+        .sort((a, b) => parseInt(b.replace(/\D/g, '')) - parseInt(a.replace(/\D/g, ''))); // sort DESC
       selector.innerHTML = '';
       sortedWeeks.forEach(week => {
         const opt = document.createElement("option");
@@ -119,9 +129,9 @@
         opt.textContent = week;
         selector.appendChild(opt);
       });
-      selector.value = sortedWeeks[0];
+      selector.value = sortedWeeks[0]; // newest week first
       selector.addEventListener("change", () => populateTable(selector.value));
-      calculateTotalSales(); // compute once before first render
+      calculateStats();
       populateTable(selector.value);
     }
 
@@ -142,7 +152,7 @@
           <td>${row.sales}</td>
           <td>${row.total_sales}</td>
           <td>${row.weeks}</td>
-          <td>${row.peak || "—"}</td>
+          <td>${row.peak}</td>
         `;
         tbody.appendChild(tr);
 
@@ -179,12 +189,12 @@
       document.getElementById("modalArtist").textContent = "By " + song.artist;
       document.getElementById("modalSales").textContent = "This Week: " + song.sales;
       document.getElementById("modalWeeks").textContent = "Weeks: " + song.weeks;
-      document.getElementById("modalPeak").textContent = "Peak: " + (song.peak || "—");
+      document.getElementById("modalPeak").textContent = "Peak: " + song.peak;
       document.getElementById("modalCert").innerHTML = getCertification(song.total_sales);
       document.getElementById("songModal").style.display = "flex";
     }
 
-    window.navigateWeek = function (offset) {
+    function navigateWeek(offset) {
       const currentIndex = sortedWeeks.indexOf(document.getElementById("weekSelector").value);
       const newIndex = currentIndex + offset;
       if (newIndex >= 0 && newIndex < sortedWeeks.length) {
