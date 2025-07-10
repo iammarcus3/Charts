@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Track Details</title>
+  <link rel="stylesheet" href="billboard-style.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html">⬅️ Back to Hot 100</a>
+    <a href="top_albums.html">🏆 Top Albums</a>
+  </nav>
+
+  <h1 id="trackTitle">Track Title</h1>
+  <p><strong>Artist:</strong> <span id="trackArtist"></span></p>
+  <p><strong>Debut Week:</strong> <span id="debutWeek"></span></p>
+  <p><strong>Peak Rank:</strong> <span id="peakRank"></span></p>
+  <p><strong>Total Weeks on Chart:</strong> <span id="weeksOnChart"></span></p>
+  <p><strong>Total Sales:</strong> <span id="totalSales"></span></p>
+  <h2>Weekly Chart History</h2>
+  <ul id="chartHistory"></ul>
+
+  <script src="weekdata.js"></script>
+  <script>
+    function normalize(str) {
+      return str.toUpperCase().replace(/[^A-Z0-9 ]/g, "").trim();
+    }
+
+    const params = new URLSearchParams(location.search);
+    const titleParam = params.get("title");
+    const artistParam = params.get("artist");
+
+    document.getElementById("trackTitle").textContent = titleParam;
+    document.getElementById("trackArtist").textContent = artistParam;
+
+    const songKey = normalize(titleParam);
+    const artistKey = normalize(artistParam);
+
+    let debut = null, peak = 999, weeks = 0, totalSales = 0;
+    const history = [];
+
+    for (const week in weekData) {
+      const entries = weekData[week];
+      entries.forEach(row => {
+        if (normalize(row.title) === songKey && normalize(row.artist) === artistKey) {
+          const rank = row.rank;
+          if (!debut || parseInt(week.replace(/\D/g,'')) < debut.week) {
+            debut = { week: parseInt(week.replace(/\D/g,'')), date: week };
+          }
+          if (rank < peak) peak = rank;
+          weeks++;
+          totalSales += row.sales || 0;
+          history.push({ week: week, rank: rank, sales: row.sales || 0 });
+        }
+      });
+    }
+
+    document.getElementById("debutWeek").textContent = debut ? debut.date : "-";
+    document.getElementById("peakRank").textContent = peak === 999 ? "-" : peak;
+    document.getElementById("weeksOnChart").textContent = weeks;
+    document.getElementById("totalSales").textContent = totalSales;
+
+    const ul = document.getElementById("chartHistory");
+    history.sort((a, b) => parseInt(a.week.replace(/\D/g,'')) - parseInt(b.week.replace(/\D/g,'')))
+      .forEach(entry => {
+        const li = document.createElement("li");
+        li.textContent = `${entry.week} — Rank #${entry.rank} — Sales: ${entry.sales}`;
+        ul.appendChild(li);
+      });
+  </script>
+</body>
+</html>
