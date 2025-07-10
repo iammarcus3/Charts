@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8"/>
   <title>Billboard Album Chart</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 2rem; background: #f7f7f7; }
@@ -64,6 +64,14 @@
 
   <script src="albumdata.js"></script>
   <script>
+    function normalizeAlbumName(name) {
+      return name
+        .toUpperCase()
+        .replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|VERSION|BONUS|SINGLE|EP/gi, '')
+        .replace(/[^A-Z0-9 ]/gi, '')
+        .trim();
+    }
+
     let sortedWeeks = [];
     let currentData = [];
     let salesTotals = {};
@@ -93,18 +101,11 @@
       }
       return "None";
     }
-    
-    function normalize(name) {
-     return name.toUpperCase()
-    .replace(/\(.*?\)|\[.*?\]|DELUXE|SPECIAL|VERSION|REMIX|BONUS|EDITION|SINGLE|EP/gi, '')
-    .replace(/[^A-Z0-9 ]/gi, '')
-    .trim();
-}
-    
+
     function populateWeeks() {
       const selector = document.getElementById("weekSelector");
       sortedWeeks = Object.keys(albumData)
-        .sort((a,b) => parseInt(b.replace(/\\D/g,'')) - parseInt(a.replace(/\\D/g,'')));
+        .sort((a,b) => parseInt(b.replace(/\D/g,'')) - parseInt(a.replace(/\D/g,'')));
       selector.innerHTML = '';
       sortedWeeks.forEach(week => {
         const opt = document.createElement("option");
@@ -114,7 +115,7 @@
       });
       selector.addEventListener("change", () => populateTable(selector.value));
       selector.value = sortedWeeks[sortedWeeks.length - 1];
-populateTable(sortedWeeks[sortedWeeks.length - 1]);
+      populateTable(sortedWeeks[sortedWeeks.length - 1]);
     }
 
     function populateTable(currentWeek) {
@@ -123,14 +124,15 @@ populateTable(sortedWeeks[sortedWeeks.length - 1]);
       const merged = {};
       salesTotals = {};
 
-      const currentWeekNum = parseInt(currentWeek.replace(/\\D/g, ''));
+      const currentWeekNum = parseInt(currentWeek.replace(/\D/g, ''));
       for (const week of sortedWeeks) {
-        const weekNum = parseInt(week.replace(/\\D/g, ''));
+        const weekNum = parseInt(week.replace(/\D/g, ''));
         if (weekNum > currentWeekNum) break;
 
         const raw = albumData[week];
         raw.forEach(row => {
-          const album = normalize(row.album);
+          const artist = row.artist.trim();
+          const album = normalizeAlbumName(row.album);
           const key = artist + "|" + album;
           salesTotals[key] = (salesTotals[key] || 0) + row.plays;
 
@@ -183,14 +185,14 @@ populateTable(sortedWeeks[sortedWeeks.length - 1]);
     }
 
     function showModal(album) {
-      const key = album.artist.trim() + "|" + album.album.trim().toLowerCase();
+      const key = album.artist.trim() + "|" + normalizeAlbumName(album.album);
       let weeks = 0, top10 = 0, no1 = 0;
       const trackSales = {};
 
       for (const week of sortedWeeks) {
         const raw = albumData[week];
         raw.forEach(row => {
-          const rowKey = row.artist.trim() + "|" + row.album.trim().toLowerCase();
+          const rowKey = row.artist.trim() + "|" + normalizeAlbumName(row.album);
           if (rowKey === key) {
             weeks++;
             if (row.rank === 1) no1++;
@@ -231,3 +233,4 @@ populateTable(sortedWeeks[sortedWeeks.length - 1]);
   </script>
 </body>
 </html>
+
