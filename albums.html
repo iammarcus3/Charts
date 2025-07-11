@@ -64,7 +64,6 @@
     let peaks = {};
     let history = {};
 
-    // ✅ SAFE normalize() to fix TypeError
     function normalize(str) {
       if (typeof str !== 'string') return '';
       return str.toUpperCase()
@@ -77,6 +76,7 @@
       return normalize(album) + "||" + normalize(artist);
     }
 
+    // ✅ FIXED CERTIFICATION LOGIC
     function getCertification(sales) {
       if (sales >= 500) {
         const count = Math.floor(sales / 500);
@@ -167,8 +167,8 @@
         tr.innerHTML = `
           <td>${i + 1}</td>
           <td>${getMovementIcon(move)}</td>
-          <td><a href="#" class="album-link" data-album="${encodeURIComponent(entry.album)}" data-artist="${encodeURIComponent(entry.artist)}">${entry.album}</a></td>
-          <td>${entry.artist}</td>
+          <td><a href="album_detail.html?album=${encodeURIComponent(entry.album)}&artist=${encodeURIComponent(entry.artist)}">${entry.album}</a></td>
+          <td><a href="track_detail.html?artist=${encodeURIComponent(entry.artist)}">${entry.artist}</a></td>
           <td>${entry.sales}</td>
           <td>${total}</td>
           <td>${weeks}</td>
