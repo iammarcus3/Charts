@@ -16,6 +16,7 @@
 </head>
 <body>
   <h1>🎵 Top 200 Albums (by Total Plays)</h1>
+
   <table>
     <thead>
       <tr>
@@ -29,7 +30,7 @@
     <tbody id="albumTable"></tbody>
   </table>
 
-  <script src="albumdata.js"></script>
+  <script src="weekdata.js"></script>
   <script>
     function normalize(name) {
       return name.toUpperCase()
@@ -50,8 +51,10 @@
     }
 
     const albumMap = {};
-    for (const week in albumData) {
-      albumData[week].forEach(row => {
+
+    for (const week in weekData) {
+      weekData[week].forEach(row => {
+        if (!row.album) return;
         const artist = row.artist.trim();
         const album = normalize(row.album);
         const key = artist.toUpperCase() + "|" + album;
@@ -64,7 +67,7 @@
           };
         }
 
-        albumMap[key].plays += row.plays || 0;
+        albumMap[key].plays += row.sales || 0;
       });
     }
 
