@@ -131,9 +131,10 @@
       if (song.num1s > 0) num1s++;
 
       const cert = getCertIcon(song.totalSales);
+      const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${song.title}</td>
+        <td><a href="${url}">${song.title}</a></td>
         <td>${cert}</td>
         <td>${song.weeks}</td>
         <td>#${song.peak}</td>
@@ -145,9 +146,10 @@
     });
 
     Object.values(albumsMap).forEach(album => {
+      const url = `album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}`;
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td><strong>${album.album}</strong></td>
+        <td><a href="${url}"><strong>${album.album}</strong></a></td>
         <td>${album.certIcon} ${album.certLabel}</td>
         <td>${album.totalPlays}</td>
         <td>#${album.peak}</td>
