@@ -63,24 +63,49 @@
       return str.toUpperCase().replace(/[^A-Z0-9 ]/g, "").trim();
     }
 
+    // ✅ Certification logic for songs and albums
+    function getCertIcon(count, isAlbum = false) {
+      if (isAlbum) {
+        if (count >= 500) {
+          const certs = Math.floor(count / 500);
+          return '<img src="platinum.png" class="album-cert-icon">'.repeat(certs);
+        } else if (count >= 250) {
+          return '<img src="gold.png" class="album-cert-icon">';
+        }
+      } else {
+        if (count >= 200) {
+          const certs = Math.floor(count / 200);
+          return '<img src="platinum.png" class="cert-icon">'.repeat(certs);
+        } else if (count >= 100) {
+          return '<img src="gold.png" class="cert-icon">';
+        }
+      }
+      return '';
+    }
+
+    function getCertLabel(count, isAlbum = false) {
+      if (isAlbum) {
+        if (count >= 500) {
+          const multi = Math.floor(count / 500);
+          return multi === 1 ? "Platinum" : `Multi-Platinum (x${multi})`;
+        } else if (count >= 250) {
+          return "Gold";
+        }
+      } else {
+        if (count >= 200) {
+          const multi = Math.floor(count / 200);
+          return multi === 1 ? "Platinum" : `Multi-Platinum (x${multi})`;
+        } else if (count >= 100) {
+          return "Gold";
+        }
+      }
+      return "";
+    }
+
     const albumsMap = {};
     const songsMap = {};
     const certCount = {};
     let num1s = 0, debuts = 0, songCount = 0, top10s = 0;
-
-    function getCertIcon(count) {
-      if (count < 50) return "";
-      const certs = Math.floor(count / 100);
-      const isGold = count >= 50 && count < 100;
-      const img = isGold ? '<img src="gold.png" class="cert-icon">' : '<img src="platinum.png" class="cert-icon">';
-      return isGold ? img : img.repeat(certs);
-    }
-
-    function getCertLabel(count) {
-      if (count < 50) return "";
-      if (count >= 50 && count < 100) return "Gold";
-      return `${Math.floor(count / 100)}x Platinum`;
-    }
 
     albumData.forEach(row => {
       if (normalize(row.artist) === normArtist) {
@@ -91,8 +116,8 @@
           totalPlays: row.totalPlays,
           weeks: row.totalWeeks,
           peak: row.rank,
-          certLabel: getCertLabel(row.totalPlays),
-          certIcon: getCertIcon(row.totalPlays)
+          certLabel: getCertLabel(row.totalPlays, true),
+          certIcon: getCertIcon(row.totalPlays, true)
         };
       }
     });
@@ -130,8 +155,10 @@
       if (song.peak <= 10) top10s++;
       if (song.num1s > 0) num1s++;
 
-      const cert = getCertIcon(song.totalSales);
+      const cert = getCertIcon(song.totalSales, false);
+      const label = getCertLabel(song.totalSales, false);
       const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
+
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td><a href="${url}">${song.title}</a></td>
@@ -141,7 +168,6 @@
         <td>${song.num1s}</td>`;
       songsTable.appendChild(tr);
 
-      const label = getCertLabel(song.totalSales);
       if (label) certCount[label] = (certCount[label] || 0) + 1;
     });
 
