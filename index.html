@@ -115,7 +115,10 @@
     function getMovementIcon(move) {
       if (!move) return "➖";
       const val = move.toUpperCase();
-      return val === "UP" ? "⬆️" : val === "DOWN" ? "⬇️" : val === "NEW" ? "🆕" : val.includes("RE") ? "🔁" : "➖";
+      return val === "UP" ? "⬆️" :
+             val === "DOWN" ? "⬇️" :
+             val === "NEW" ? "🆕" :
+             val.includes("RE") ? "🔁" : "➖";
     }
 
     function populateWeeks() {
@@ -146,9 +149,9 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.rank}</td>
-          <td>${getMovementIcon(row.move)}</td>
-          <td><a href="#" onclick='showModal(${JSON.stringify(row)})'>${row.title}</a></td>
-          <td><a href="artist.html?name=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
+          <td>${getMovementIcon(row.movement)}</td>
+          <td><a href="#" class="song-link" data-title="${encodeURIComponent(row.title)}" data-artist="${encodeURIComponent(row.artist)}">${row.title}</a></td>
+          <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
           <td>${row.sales}</td>
           <td>${row.total_sales}</td>
           <td>${row.weeks}</td>
@@ -203,6 +206,17 @@
         populateTable(newWeek);
       }
     }
+
+    // ✅ Event listener for clicking song title
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.contains("song-link")) {
+        e.preventDefault();
+        const title = decodeURIComponent(e.target.dataset.title);
+        const artist = decodeURIComponent(e.target.dataset.artist);
+        const song = currentData.find(row => row.title === title && row.artist === artist);
+        if (song) showModal(song);
+      }
+    });
 
     document.addEventListener("DOMContentLoaded", populateWeeks);
   </script>
