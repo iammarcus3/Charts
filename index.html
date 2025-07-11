@@ -93,20 +93,20 @@
     }
 
     function getCertification(sales) {
-      if (sales >= 100) {
-        const count = Math.floor(sales / 100);
-        return "💿".repeat(count) + "<br>" + (count > 1 ? "Multi-Platinum (x" + count + ")" : "Platinum");
-      } else if (sales >= 50) {
-        return "🥇<br>Gold";
+      if (sales >= 200) {
+        const count = Math.floor(sales / 200);
+        return "💿".repeat(count) + "<br>" + (count === 1 ? "Platinum" : `Multi-Platinum (x${count})`);
+      } else if (sales >= 100) {
+        return "🥈<br>Gold";
       }
       return "—";
     }
 
     function getCertificationText(sales) {
-      if (sales >= 100) {
-        const count = Math.floor(sales / 100);
-        return count > 1 ? `Multi-Platinum (x${count})` : "Platinum";
-      } else if (sales >= 50) {
+      if (sales >= 200) {
+        const count = Math.floor(sales / 200);
+        return count === 1 ? "Platinum" : `Multi-Platinum (x${count})`;
+      } else if (sales >= 100) {
         return "Gold";
       }
       return null;
@@ -159,7 +159,7 @@
         `;
         tbody.appendChild(tr);
 
-        if (row.total_sales >= 50) {
+        if (row.total_sales >= 100) {
           certified.push({
             title: row.title,
             artist: row.artist,
@@ -207,7 +207,6 @@
       }
     }
 
-    // ✅ Event listener for clicking song title
     document.addEventListener("click", function (e) {
       if (e.target.classList.contains("song-link")) {
         e.preventDefault();
