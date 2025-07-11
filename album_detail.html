@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <title>Album Details</title>
-  <link rel="stylesheet" href="billboard-style.css" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; background: #f8f8f8; }
+    nav a { margin-right: 1rem; }
+    h1 { margin-bottom: 0.5rem; }
+    .cert-box { margin: 0.5rem 0; }
+    .cert-box img { height: 20px; vertical-align: middle; margin-left: 0.5rem; }
+    ul { padding-left: 1.5rem; }
+  </style>
 </head>
 <body>
   <nav>
@@ -22,75 +29,61 @@
   <p><strong>Debut Peak:</strong> <span id="debutPeak"></span></p>
   <p><strong>Total Sales:</strong> <span id="salesTotal"></span></p>
 
-  <h2>Tracks and Certifications (from Hot 100)</h2>
+  <h2>Tracks from this Album</h2>
   <ul id="trackList"></ul>
 
-  <script src="albumdata.js"></script>
   <script src="weekdata.js"></script>
   <script>
     function normalize(str) {
-      return str.toUpperCase()
-        .replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|BONUS|EP|VERSION/gi, "")
-        .replace(/[^A-Z0-9 ]/g, "")
-        .trim();
+      return str.toUpperCase().replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|BONUS|EP|VERSION/gi, "")
+        .replace(/[^A-Z0-9 ]/g, "").trim();
     }
 
     const params = new URLSearchParams(location.search);
     const albumName = params.get("album");
     const artistName = params.get("artist");
+    const normAlbum = normalize(albumName);
+    const normArtist = normalize(artistName);
 
-    document.getElementById('albumTitle').textContent = albumName;
-    document.getElementById('artistName').textContent = artistName;
+    document.getElementById("albumTitle").textContent = albumName;
+    document.getElementById("artistName").textContent = artistName;
 
-    const albumKey = normalize(artistName) + "|" + normalize(albumName);
-    let totalWeeks = 0, top10 = 0, no1 = 0, peak = 999, maxPlays = 0, sales = 0, debut = null;
-    const trackSales = {};
-    const allTrackNames = new Set();
+    let totalWeeks = 0, weeksAt1 = 0, weeksTop10 = 0, peak = 999, debut = null, maxPlays = 0, totalSales = 0;
+    const tracksMap = {};
 
-    // 1. Build list of tracks from albumdata.js
-    for (const week in albumData) {
-      const weekNum = parseInt(week.replace(/\D/g, ""));
-      albumData[week].forEach(row => {
-        const key = normalize(row.artist) + "|" + normalize(row.album);
-        if (key === albumKey) {
-          if (row.tracks) {
-            row.tracks.forEach(track => allTrackNames.add(normalize(track)));
-          }
-          totalWeeks++;
-          if (row.rank === 1) no1++;
-          if (row.rank <= 10) top10++;
-          if (row.rank < peak) peak = row.rank;
-          if (row.plays > maxPlays) maxPlays = row.plays;
-          sales += row.plays;
-          if (debut === null || weekNum < debut.week) {
-            debut = { week: weekNum, peak: row.rank };
-          }
-        }
-      });
-    }
-
-    // 2. Search weekdata.js to find track sales by title
     for (const week in weekData) {
       weekData[week].forEach(row => {
-        const songKey = normalize(row.title);
-        const artistKey = normalize(row.artist);
-        if (artistKey === normalize(artistName) && allTrackNames.has(songKey)) {
-          if (!trackSales[songKey]) trackSales[songKey] = 0;
-          trackSales[songKey] += row.sales || 0;
+        if (!row.album || !row.artist || !row.title) return;
+        if (normalize(row.album) === normAlbum && normalize(row.artist) === normArtist) {
+          totalWeeks++;
+          totalSales += row.sales || 0;
+          if (row.rank === 1) weeksAt1++;
+          if (row.rank <= 10) weeksTop10++;
+          if (row.rank < peak) peak = row.rank;
+          if ((row.sales || 0) > maxPlays) maxPlays = row.sales;
+          const weekNum = parseInt(week.replace(/\D/g, ""));
+          if (!debut || weekNum < debut.week) debut = { week: weekNum, peak: row.rank };
+
+          const songKey = normalize(row.title);
+          if (!tracksMap[songKey]) {
+            tracksMap[songKey] = {
+              title: row.title,
+              sales: 0
+            };
+          }
+          tracksMap[songKey].sales += row.sales || 0;
         }
       });
     }
 
-    // 3. Display album info
     document.getElementById("weeksTotal").textContent = totalWeeks;
-    document.getElementById("weeksNo1").textContent = no1;
-    document.getElementById("weeksTop10").textContent = top10;
+    document.getElementById("weeksNo1").textContent = weeksAt1;
+    document.getElementById("weeksTop10").textContent = weeksTop10;
     document.getElementById("highestPeak").textContent = peak === 999 ? "-" : peak;
     document.getElementById("largestPlays").textContent = maxPlays;
     document.getElementById("debutPeak").textContent = debut ? debut.peak : "-";
-    document.getElementById("salesTotal").textContent = sales;
+    document.getElementById("salesTotal").textContent = totalSales;
 
-    // 4. Show track list with certs
     function certText(sales) {
       if (sales >= 100) return "Platinum x" + Math.floor(sales / 100);
       if (sales >= 50) return "Gold";
@@ -104,18 +97,17 @@
     }
 
     const list = document.getElementById("trackList");
-    for (const trackName of allTrackNames) {
-      const sales = trackSales[trackName] || 0;
-      const cert = certImage(sales);
-      const url = `track_detail.html?title=${encodeURIComponent(trackName)}&artist=${encodeURIComponent(artistName)}`;
+    Object.values(tracksMap).sort((a, b) => b.sales - a.sales).forEach(track => {
+      const cert = certImage(track.sales);
+      const url = `track_detail.html?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(artistName)}`;
       const li = document.createElement("li");
       li.innerHTML = `
         <div class="cert-box">
-          <a href="${url}"><strong>${trackName}</strong></a>
-          ${cert ? `<img src="${cert}" alt="cert"><span>${certText(sales)}</span>` : `<span>None</span>`}
+          <a href="${url}"><strong>${track.title}</strong></a>
+          ${cert ? `<img src="${cert}" alt="cert"><span> ${certText(track.sales)}</span>` : `<span> None</span>`}
         </div>`;
       list.appendChild(li);
-    }
+    });
   </script>
 </body>
 </html>
