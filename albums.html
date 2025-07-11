@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="="en">
 <head>
   <meta charset="UTF-8" />
   <title>Albums Chart</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #f9f9f9; }
-    nav a { margin-right: 1rem; text-decoration: none; color: #0077cc; font-weight: bold; }
-    h1 { text-align: center; margin-bottom: 1rem; }
-    table { width: 100%; border-collapse: collapse; background: white; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 0.6rem; text-align: left; }
-    th { background-color: #eee; }
-    .move { text-align: center; }
+    body { font-family: Arial, sans-serif; padding: 2rem; background: #fff; }
+    nav { text-align: center; margin-bottom: 1.5rem; }
+    nav a { margin: 0 1rem; font-weight: bold; text-decoration: none; color: #0077cc; }
+    h1 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: 0.6rem; border: 1px solid #ccc; text-align: left; }
+    th { background: #eee; }
+    .move { text-align: center; font-size: 1.2em; }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-             background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
-    .modal-content { background: white; padding: 2rem; border-radius: 10px; width: 400px; text-align: center; }
+             background: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; }
+    .modal-content { background: #fff; padding: 2rem; border-radius: 8px; width: 400px; text-align: center; }
   </style>
 </head>
 <body>
@@ -26,12 +27,10 @@
 
   <h1>📀 Albums Chart</h1>
 
-  <div>
-    <label for="weekSelector">Week:</label>
-    <select id="weekSelector"></select>
-    <button onclick="changeWeek(-1)">⬅️</button>
-    <button onclick="changeWeek(1)">➡️</button>
-  </div>
+  <label for="weekSelector">Week:</label>
+  <select id="weekSelector"></select>
+  <button onclick="changeWeek(-1)">⬅️</button>
+  <button onclick="changeWeek(1)">➡️</button>
 
   <table>
     <thead>
@@ -54,7 +53,7 @@
       <h2 id="modalAlbum"></h2>
       <p><strong>Artist:</strong> <span id="modalArtist"></span></p>
       <p><strong>Sales:</strong> <span id="modalSales"></span></p>
-      <p><strong>Total Sales:</strong> <span id="modalTotalSales"></span></p>
+      <p><strong>Total Sales:</strong> <span id="modalTotal"></span></p>
       <p><strong>Weeks:</strong> <span id="modalWeeks"></span></p>
       <p><strong>Peak:</strong> <span id="modalPeak"></span></p>
       <button onclick="document.getElementById('albumModal').style.display='none'">Close</button>
@@ -69,33 +68,33 @@
     let currentWeekIndex = 0;
 
     function normalize(str) {
-      return str ? str.toUpperCase().replace(/\\(.*?\\)|\\[.*?\\]|DELUXE|BONUS|REMIX|VERSION|EP/gi, "")
+      return str ? str.toUpperCase().replace(/\\(.*?\\)|\\[.*?\\]|DELUXE|REMIX|BONUS|VERSION|EP/gi, "")
         .replace(/[^A-Z0-9 ]/g, "").trim() : "";
     }
 
-    function getMoveIcon(curr, prev) {
-      if (prev === undefined) return "🆕";
-      if (curr < prev) return "⬆️";
-      if (curr > prev) return "⬇️";
+    function getMoveIcon(current, previous) {
+      if (previous === undefined) return "🆕";
+      if (current < previous) return "⬆️";
+      if (current > previous) return "⬇️";
       return "➖";
     }
 
-    function buildHistory() {
+    function buildAlbumHistory() {
       const history = {};
       for (const week in weekData) {
-        for (const row of weekData[week]) {
-          if (!row.album || !row.artist) continue;
+        weekData[week].forEach(row => {
+          if (!row.album || !row.artist || !row.sales) return;
           const key = normalize(row.album) + "|" + normalize(row.artist);
           if (!history[key]) history[key] = [];
-          history[key].push({ rank: row.rank, sales: row.sales, week });
-        }
+          history[key].push({ week, rank: row.rank, sales: row.sales });
+        });
       }
       return history;
     }
 
-    const albumHistory = buildHistory();
+    const albumHistory = buildAlbumHistory();
 
-    function populateWeeks() {
+    function populateWeekSelector() {
       weeks = Object.keys(weekData).sort((a, b) => parseInt(a) - parseInt(b));
       weeks.forEach(w => {
         const opt = document.createElement("option");
@@ -103,94 +102,94 @@
         opt.textContent = w;
         weekSelector.appendChild(opt);
       });
+      weekSelector.value = weeks[0];
+      currentWeekIndex = 0;
       weekSelector.addEventListener("change", () => {
         currentWeekIndex = weeks.indexOf(weekSelector.value);
         renderChart();
       });
-      weekSelector.value = weeks[0];
+      renderChart();
+    }
+
+    function changeWeek(offset) {
+      currentWeekIndex = Math.max(0, Math.min(weeks.length - 1, currentWeekIndex + offset));
+      weekSelector.value = weeks[currentWeekIndex];
       renderChart();
     }
 
     function renderChart() {
       const week = weeks[currentWeekIndex];
-      const currentData = weekData[week];
-      const grouped = {};
+      const current = weekData[week];
+      const albums = {};
 
-      currentData.forEach(row => {
-        if (!row.album || !row.artist) return;
+      current.forEach(row => {
+        if (!row.album || !row.artist || !row.sales) return;
         const key = normalize(row.album) + "|" + normalize(row.artist);
-        if (!grouped[key]) {
-          grouped[key] = {
+        if (!albums[key]) {
+          albums[key] = {
             album: row.album,
             artist: row.artist,
             sales: 0
           };
         }
-        grouped[key].sales += row.sales || 0;
+        albums[key].sales += row.sales;
       });
 
-      const entries = Object.values(grouped).sort((a, b) => b.sales - a.sales);
+      const entries = Object.values(albums).sort((a, b) => b.sales - a.sales);
       chartBody.innerHTML = "";
 
-      entries.forEach((entry, index) => {
+      entries.forEach((entry, i) => {
+        const rank = i + 1;
         const key = normalize(entry.album) + "|" + normalize(entry.artist);
         const history = albumHistory[key] || [];
         const totalSales = history.reduce((sum, r) => sum + r.sales, 0);
         const peak = Math.min(...history.map(r => r.rank));
-        const weeksOnChart = history.length;
+        const weeksOn = history.length;
 
         const prevWeek = weeks[currentWeekIndex - 1];
         const prevEntry = weekData[prevWeek]?.find(r =>
           normalize(r.album) === normalize(entry.album) &&
           normalize(r.artist) === normalize(entry.artist)
         );
-        const move = getMoveIcon(index + 1, prevEntry?.rank);
+        const move = getMoveIcon(rank, prevEntry?.rank);
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${index + 1}</td>
+          <td>${rank}</td>
           <td class="move">${move}</td>
           <td><a href="#" class="album-link" data-album="${entry.album}" data-artist="${entry.artist}">${entry.album}</a></td>
           <td>${entry.artist}</td>
           <td>${entry.sales}</td>
           <td>${totalSales}</td>
-          <td>${weeksOnChart}</td>
+          <td>${weeksOn}</td>
           <td>${peak}</td>
         `;
         chartBody.appendChild(tr);
       });
     }
 
-    function changeWeek(offset) {
-      currentWeekIndex += offset;
-      if (currentWeekIndex < 0) currentWeekIndex = 0;
-      if (currentWeekIndex >= weeks.length) currentWeekIndex = weeks.length - 1;
-      weekSelector.value = weeks[currentWeekIndex];
-      renderChart();
-    }
-
-    document.addEventListener("click", e => {
+    document.addEventListener("click", function(e) {
       if (e.target.classList.contains("album-link")) {
         e.preventDefault();
         const album = e.target.dataset.album;
         const artist = e.target.dataset.artist;
         const key = normalize(album) + "|" + normalize(artist);
         const history = albumHistory[key] || [];
-        const totalSales = history.reduce((sum, r) => sum + r.sales, 0);
+        const week = weeks[currentWeekIndex];
+        const current = history.find(h => h.week === week);
         const peak = Math.min(...history.map(r => r.rank));
-        const currentSales = history.find(r => r.week === weeks[currentWeekIndex])?.sales || 0;
 
         document.getElementById("modalAlbum").textContent = album;
         document.getElementById("modalArtist").textContent = artist;
-        document.getElementById("modalSales").textContent = currentSales;
-        document.getElementById("modalTotalSales").textContent = totalSales;
+        document.getElementById("modalSales").textContent = current?.sales || 0;
+        document.getElementById("modalTotal").textContent = history.reduce((s, r) => s + r.sales, 0);
         document.getElementById("modalWeeks").textContent = history.length;
         document.getElementById("modalPeak").textContent = peak;
         document.getElementById("albumModal").style.display = "flex";
       }
     });
 
-    document.addEventListener("DOMContentLoaded", populateWeeks);
+    document.addEventListener("DOMContentLoaded", populateWeekSelector);
   </script>
 </body>
 </html>
