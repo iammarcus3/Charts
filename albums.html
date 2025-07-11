@@ -111,7 +111,7 @@
 
     function populateWeekSelector() {
       const selector = document.getElementById("weekSelector");
-      sortedWeeks = Object.keys(weekData).sort((a, b) => parseInt(b.replace(/\D/g,'')) - parseInt(a.replace(/\D/g,''))).reverse(); // newest first
+      sortedWeeks = Object.keys(weekData).sort((a, b) => parseInt(b.replace(/\D/g,'')) - parseInt(a.replace(/\D/g,''))).reverse();
       selector.innerHTML = '';
       sortedWeeks.forEach(week => {
         const option = document.createElement("option");
@@ -119,7 +119,7 @@
         option.textContent = week;
         selector.appendChild(option);
       });
-      selector.value = sortedWeeks[0]; // Most recent week
+      selector.value = sortedWeeks[0];
       selector.addEventListener("change", () => populateTable(selector.value));
       calculateHistory();
       populateTable(selector.value);
@@ -146,17 +146,17 @@
       });
 
       const entries = Object.values(grouped).sort((a, b) => b.sales - a.sales);
+      const currentIndex = sortedWeeks.indexOf(week);
 
       entries.forEach((entry, i) => {
         const key = getKey(entry.album, entry.artist);
-        const currentIndex = sortedWeeks.indexOf(week);
 
-        const total = history[key]?.filter(h => sortedWeeks.indexOf(h.week) <= currentIndex)
+        const total = history[key]?.filter(h => sortedWeeks.indexOf(h.week) >= currentIndex)
           .reduce((sum, h) => sum + h.sales, 0) || 0;
 
-        const weeks = history[key]?.filter(h => sortedWeeks.indexOf(h.week) <= currentIndex).length || 0;
+        const weeks = history[key]?.filter(h => sortedWeeks.indexOf(h.week) >= currentIndex).length || 0;
 
-        const peak = history[key]?.filter(h => sortedWeeks.indexOf(h.week) <= currentIndex)
+        const peak = history[key]?.filter(h => sortedWeeks.indexOf(h.week) >= currentIndex)
           .reduce((min, h) => Math.min(min, h.rank), Infinity) || '-';
 
         const prevWeek = sortedWeeks[currentIndex + 1];
@@ -186,12 +186,12 @@
       const sales = weekData[currentWeek]?.filter(r => getKey(r.album, r.artist) === key)
         .reduce((sum, r) => sum + r.sales, 0) || 0;
 
-      const weeks = history[key]?.filter(h => sortedWeeks.indexOf(h.week) <= currentIndex).length || 0;
+      const weeks = history[key]?.filter(h => sortedWeeks.indexOf(h.week) >= currentIndex).length || 0;
 
-      const total = history[key]?.filter(h => sortedWeeks.indexOf(h.week) <= currentIndex)
+      const total = history[key]?.filter(h => sortedWeeks.indexOf(h.week) >= currentIndex)
         .reduce((sum, h) => sum + h.sales, 0) || 0;
 
-      const peak = history[key]?.filter(h => sortedWeeks.indexOf(h.week) <= currentIndex)
+      const peak = history[key]?.filter(h => sortedWeeks.indexOf(h.week) >= currentIndex)
         .reduce((min, h) => Math.min(min, h.rank), Infinity) || '-';
 
       document.getElementById("modalTitle").textContent = album;
