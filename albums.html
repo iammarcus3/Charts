@@ -9,7 +9,8 @@
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
     th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
     th { background-color: #eee; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+             background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
     .modal-content { background: white; padding: 1rem; border-radius: 10px; width: 300px; text-align: center; }
   </style>
 </head>
@@ -64,7 +65,8 @@
     let history = {};
 
     function normalize(str) {
-      return str?.toUpperCase().replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|REMIX|VERSION|EP/gi, "")
+      return str?.toUpperCase()
+        .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|REMIX|VERSION|EP/gi, "")
         .replace(/[^A-Z0-9 ]/g, "").trim() || "";
     }
 
@@ -86,7 +88,8 @@
       if (!move) return "➖";
       return move === "UP" ? "⬆️" :
              move === "DOWN" ? "⬇️" :
-             move === "NEW" ? "🆕" : "➖";
+             move === "NEW" ? "🆕" :
+             move.includes("RE") ? "🔁" : "➖";
     }
 
     function calculateHistory() {
@@ -96,12 +99,12 @@
 
       for (const week in weekData) {
         weekData[week].forEach(row => {
-          if (!row.album || !row.artist) return;
+          if (!row.album || !row.artist || !row.sales) return;
           const key = getKey(row.album, row.artist);
           totals[key] = (totals[key] || 0) + row.sales;
-          peaks[key] = peaks[key] === undefined ? parseInt(row.rank) : Math.min(peaks[key], parseInt(row.rank));
+          peaks[key] = peaks[key] !== undefined ? Math.min(peaks[key], row.rank) : row.rank;
           history[key] = history[key] || [];
-          history[key].push({ week, rank: parseInt(row.rank), sales: row.sales });
+          history[key].push({ week, rank: row.rank, sales: row.sales });
         });
       }
     }
@@ -123,28 +126,28 @@
     }
 
     function populateTable(week) {
-      const body = document.getElementById("chartBody");
-      body.innerHTML = '';
+      const tbody = document.getElementById("chartBody");
+      tbody.innerHTML = '';
 
       const current = weekData[week];
-      const albums = {};
+      const grouped = {};
 
       current.forEach(row => {
-        if (!row.album || !row.artist) return;
+        if (!row.album || !row.artist || !row.sales) return;
         const key = getKey(row.album, row.artist);
-        if (!albums[key]) {
-          albums[key] = {
+        if (!grouped[key]) {
+          grouped[key] = {
             album: row.album,
             artist: row.artist,
             sales: 0
           };
         }
-        albums[key].sales += row.sales;
+        grouped[key].sales += row.sales;
       });
 
-      const entries = Object.values(albums).sort((a, b) => b.sales - a.sales);
+      const albums = Object.values(grouped).sort((a, b) => b.sales - a.sales);
 
-      entries.forEach((entry, index) => {
+      albums.forEach((entry, i) => {
         const key = getKey(entry.album, entry.artist);
         const total = totals[key] || 0;
         const peak = peaks[key] || '-';
@@ -154,12 +157,12 @@
         let move = "NEW";
         if (prevWeek && weekData[prevWeek]) {
           const found = weekData[prevWeek].some(r => getKey(r.album, r.artist) === key);
-          move = found ? (entry.sales > 0 ? "UP" : "DOWN") : "NEW";
+          move = found ? "DOWN" : "NEW";
         }
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${index + 1}</td>
+          <td>${i + 1}</td>
           <td>${getMovementIcon(move)}</td>
           <td><a href="#" class="album-link" data-album="${encodeURIComponent(entry.album)}" data-artist="${encodeURIComponent(entry.artist)}">${entry.album}</a></td>
           <td>${entry.artist}</td>
@@ -168,7 +171,7 @@
           <td>${weeks}</td>
           <td>${peak}</td>
         `;
-        body.appendChild(tr);
+        tbody.appendChild(tr);
       });
     }
 
@@ -178,13 +181,12 @@
       const peak = peaks[key] || '-';
       const weeks = history[key]?.length || 0;
       const currentWeek = document.getElementById("weekSelector").value;
-      const thisWeekSales = weekData[currentWeek]
-        ?.filter(row => getKey(row.album, row.artist) === key)
+      const currentSales = weekData[currentWeek]?.filter(row => getKey(row.album, row.artist) === key)
         .reduce((sum, r) => sum + r.sales, 0) || 0;
 
       document.getElementById("modalTitle").textContent = album;
       document.getElementById("modalArtist").textContent = "By " + artist;
-      document.getElementById("modalSales").textContent = "This Week: " + thisWeekSales;
+      document.getElementById("modalSales").textContent = "This Week: " + currentSales;
       document.getElementById("modalWeeks").textContent = "Weeks: " + weeks;
       document.getElementById("modalPeak").textContent = "Peak: " + peak;
       document.getElementById("modalCert").innerHTML = getCertification(total);
@@ -192,18 +194,17 @@
     }
 
     function navigateWeek(offset) {
-      const current = sortedWeeks.indexOf(document.getElementById("weekSelector").value);
-      const next = current + offset;
-      if (next >= 0 && next < sortedWeeks.length) {
-        const week = sortedWeeks[next];
-        document.getElementById("weekSelector").value = week;
-        populateTable(week);
+      const currentIndex = sortedWeeks.indexOf(document.getElementById("weekSelector").value);
+      const newIndex = currentIndex + offset;
+      if (newIndex >= 0 && newIndex < sortedWeeks.length) {
+        const newWeek = sortedWeeks[newIndex];
+        document.getElementById("weekSelector").value = newWeek;
+        populateTable(newWeek);
       }
     }
 
     document.addEventListener("DOMContentLoaded", populateWeekSelector);
-
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", function (e) {
       if (e.target.classList.contains("album-link")) {
         e.preventDefault();
         const album = decodeURIComponent(e.target.dataset.album);
