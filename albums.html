@@ -1,3 +1,4 @@
+<!-- Save this as albums.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,8 +101,7 @@
         for (const row of weekData[week]) {
           if (!row.album || !row.artist) continue;
           const key = getKey(row.album, row.artist);
-          if (!totals[key]) totals[key] = 0;
-          totals[key] += row.sales;
+          totals[key] = (totals[key] || 0) + row.sales;
           if (!peaks[key] || parseInt(row.rank) < peaks[key]) {
             peaks[key] = parseInt(row.rank);
           }
@@ -121,7 +121,7 @@
         opt.textContent = week;
         selector.appendChild(opt);
       });
-      selector.value = sortedWeeks[sortedWeeks.length - 1]; // Week 1
+      selector.value = sortedWeeks[sortedWeeks.length - 1]; // Week 1 by default
       selector.addEventListener("change", () => populateTable(selector.value));
       calculateAlbumHistory();
       populateTable(selector.value);
@@ -162,10 +162,7 @@
         else {
           const prevSales = weekData[prevWeek]
             .filter(r => r.album && r.artist)
-            .reduce((acc, r) => {
-              const rk = getKey(r.album, r.artist);
-              return rk === key ? acc + r.sales : acc;
-            }, 0);
+            .reduce((acc, r) => getKey(r.album, r.artist) === key ? acc + r.sales : acc, 0);
           move = (entry.sales > prevSales) ? "UP" : (entry.sales < prevSales ? "DOWN" : "—");
         }
 
