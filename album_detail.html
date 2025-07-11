@@ -9,6 +9,7 @@
     .error { color: red; font-weight: bold; }
     ul { padding-left: 1.5rem; }
     li { margin-bottom: 0.3rem; }
+    .cert-line { margin-top: 1rem; font-size: 1.1rem; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -18,6 +19,7 @@
   <p><strong>Total Weeks:</strong> <span id="weeks">0</span></p>
   <p><strong>Peak Rank:</strong> <span id="peak">-</span></p>
   <p><strong>Debut Week:</strong> <span id="debut">-</span></p>
+  <p class="cert-line"><strong>Certification:</strong> <span id="certification">—</span></p>
 
   <h2>Tracks</h2>
   <ul id="trackList"></ul>
@@ -30,6 +32,16 @@
         .replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|VERSION|BONUS|EP/gi, '')
         .replace(/[^A-Z0-9 ]/g, '')
         .trim() : '';
+    }
+
+    function getCertification(sales) {
+      if (sales >= 500) {
+        const count = Math.floor(sales / 500);
+        return "💿".repeat(count) + " " + (count === 1 ? "Platinum" : `Multi-Platinum (x${count})`);
+      } else if (sales >= 250) {
+        return "🥇 Gold";
+      }
+      return "—";
     }
 
     const params = new URLSearchParams(location.search);
@@ -47,6 +59,7 @@
     const weeksEl = document.getElementById("weeks");
     const peakEl = document.getElementById("peak");
     const debutEl = document.getElementById("debut");
+    const certEl = document.getElementById("certification");
     const trackList = document.getElementById("trackList");
 
     albumTitle.textContent = albumParam;
@@ -86,11 +99,12 @@
       }
     }
 
-    // Output to page
+    // Output
     totalSalesEl.textContent = totalSales;
     weeksEl.textContent = totalWeeks;
     peakEl.textContent = peak === 999 ? "-" : peak;
     debutEl.textContent = debutWeek || "-";
+    certEl.textContent = getCertification(totalSales);
 
     if (totalWeeks === 0) {
       document.getElementById("error").textContent = "⚠️ No chart data found for this album and artist.";
