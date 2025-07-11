@@ -33,7 +33,8 @@
   <script src="weekdata.js"></script>
   <script>
     function normalize(name) {
-      return name.toUpperCase()
+      return (name || "")
+        .toUpperCase()
         .replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|VERSION|BONUS|SINGLE|EP/gi, '')
         .replace(/[^A-Z0-9 ]/g, '')
         .trim();
@@ -52,27 +53,33 @@
 
     const albumMap = {};
 
-    // ✅ Loop through weekData and build album stats
+    if (typeof weekData === 'undefined') {
+      document.body.innerHTML = '<h2 style="color:red">Error: weekdata.js not loaded</h2>';
+      throw new Error("weekData is not defined. Check if weekdata.js is loaded correctly.");
+    }
+
     for (const week in weekData) {
       weekData[week].forEach(row => {
-        if (!row.album || !row.artist) return;
+        if (!row.album || !row.artist || typeof row.sales === 'undefined') return;
+
         const artist = row.artist.trim();
         const albumKey = normalize(row.album);
-        const mapKey = artist.toUpperCase() + "|" + albumKey;
+        const key = artist.toUpperCase() + "|" + albumKey;
 
-        if (!albumMap[mapKey]) {
-          albumMap[mapKey] = {
+        if (!albumMap[key]) {
+          albumMap[key] = {
             album: row.album,
             artist: row.artist,
             plays: 0
           };
         }
 
-        albumMap[mapKey].plays += row.sales || 0;
+        albumMap[key].plays += row.sales || 0;
       });
     }
 
     let albums = Object.values(albumMap)
+      .filter(a => a.plays > 0)
       .sort((a, b) => b.plays - a.plays)
       .slice(0, 200);
 
@@ -84,8 +91,8 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${i + 1}</td>
-          <td><a href="${url}">${album.album}</a></td>
-          <td>${album.artist}</td>
+          <td><a href="${url}">${album.album || 'Unknown Album'}</a></td>
+          <td>${album.artist || 'Unknown Artist'}</td>
           <td>${album.plays}</td>
           <td class="cert">${getCertification(album.plays)}</td>
         `;
@@ -96,12 +103,18 @@
     function sortBy(field) {
       albums.sort((a, b) => {
         if (field === 'plays') return b.plays - a.plays;
-        return a[field].localeCompare(b[field]);
+        return (a[field] || '').localeCompare(b[field] || '');
       });
       renderTable();
     }
 
-    renderTable();
+    // DEBUG
+    console.log("✅ Loaded albums:", albums.length);
+    if (albums.length === 0) {
+      document.getElementById("albumTable").innerHTML = "<tr><td colspan='5'>No albums found. Check weekdata.js structure.</td></tr>";
+    } else {
+      renderTable();
+    }
   </script>
 </body>
 </html>
