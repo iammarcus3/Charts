@@ -78,10 +78,10 @@
     }
 
     function getCertification(sales) {
-      if (sales >= 100) {
-        const count = Math.floor(sales / 100);
-        return "💿".repeat(count) + "<br>" + (count > 1 ? `Multi-Platinum (x${count})` : "Platinum");
-      } else if (sales >= 50) {
+      if (sales >= 500) {
+        const count = Math.floor(sales / 500);
+        return "💿".repeat(count) + "<br>" + (count === 1 ? "Platinum" : `Multi-Platinum (x${count})`);
+      } else if (sales >= 250) {
         return "🥇<br>Gold";
       }
       return "—";
