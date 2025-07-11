@@ -59,7 +59,7 @@
   <script>
     const params = new URLSearchParams(location.search);
     const artistName = params.get("artist");
-    const normArtist = artistName.toUpperCase().replace(/[^A-Z0-9 ]/g, "").trim();
+    const normArtist = normalize(artistName);
     document.getElementById("artistNameTitle").textContent = artistName;
 
     function normalize(str) {
@@ -71,29 +71,22 @@
     let num1s = 0, debuts = 0, songCount = 0;
     const tableRows = [];
 
-    for (const week in albumData) {
-      albumData[week].forEach(row => {
-        if (normalize(row.artist) === normArtist) {
-          const key = normalize(row.album);
-          if (!albumsMap[key]) {
-            albumsMap[key] = {
-              album: row.album,
-              artist: row.artist,
-              totalPlays: 0,
-              weeks: 0,
-              peak: row.rank,
-              debutWeek: parseInt(week.replace(/\D/g,'')),
-              num1s: 0
-            };
-          }
-          albumsMap[key].weeks++;
-          albumsMap[key].totalPlays += row.plays;
-          if (row.rank === 1) albumsMap[key].num1s++;
-          if (row.rank < albumsMap[key].peak) albumsMap[key].peak = row.rank;
-        }
-      });
-    }
+    // ✅ Correct albumData usage (filtered)
+    albumData.forEach(row => {
+      if (normalize(row.artist) === normArtist) {
+        const key = normalize(row.album);
+        albumsMap[key] = {
+          album: row.album,
+          artist: row.artist,
+          totalPlays: row.totalPlays,
+          weeks: row.totalWeeks,
+          peak: row.rank,
+          num1s: row.rank === 1 ? 1 : 0
+        };
+      }
+    });
 
+    // ✅ Process songs from weekData (weekly entries)
     for (const week in weekData) {
       weekData[week].forEach(row => {
         if (normalize(row.artist) === normArtist) {
@@ -102,7 +95,7 @@
             songsMap[key] = {
               title: row.title,
               artist: row.artist,
-              debut: parseInt(week.replace(/\D/g,'')),
+              debut: parseInt(week.replace(/\D/g, '')),
               peak: row.rank,
               totalSales: 0,
               weeks: 0,
@@ -114,7 +107,6 @@
           if (row.rank < songsMap[key].peak) songsMap[key].peak = row.rank;
           if (row.rank === 1) songsMap[key].num1 = 1;
 
-          // For chart table
           tableRows.push([week, row.title, row.rank, row.sales || 0]);
         }
       });
@@ -135,7 +127,7 @@
       .forEach(album => {
         const li = document.createElement("li");
         const url = `album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}`;
-        li.innerHTML = `<a href="${url}"><strong>${album.album}</strong></a> — Plays: ${album.totalPlays}, Peak: #${album.peak}, Weeks: ${album.weeks}, #1s: ${album.num1s}`;
+        li.innerHTML = `<a href="${url}"><strong>${album.album}</strong></a> — Plays: ${album.totalPlays}, Peak: #${album.peak}, Weeks: ${album.weeks}`;
         albumsList.appendChild(li);
       });
 
