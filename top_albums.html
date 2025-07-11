@@ -52,22 +52,23 @@
 
     const albumMap = {};
 
+    // ✅ Loop through weekData and build album stats
     for (const week in weekData) {
       weekData[week].forEach(row => {
-        if (!row.album) return;
+        if (!row.album || !row.artist) return;
         const artist = row.artist.trim();
-        const album = normalize(row.album);
-        const key = artist.toUpperCase() + "|" + album;
+        const albumKey = normalize(row.album);
+        const mapKey = artist.toUpperCase() + "|" + albumKey;
 
-        if (!albumMap[key]) {
-          albumMap[key] = {
+        if (!albumMap[mapKey]) {
+          albumMap[mapKey] = {
             album: row.album,
             artist: row.artist,
             plays: 0
           };
         }
 
-        albumMap[key].plays += row.sales || 0;
+        albumMap[mapKey].plays += row.sales || 0;
       });
     }
 
