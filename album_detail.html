@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Album Detail</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #fafafa; }
-    h1, h2 { margin-top: 1.5rem; }
-    p { margin: 0.5rem 0; }
+    body { font-family: Arial, sans-serif; padding: 2rem; background: #fff; }
+    h1 { margin-bottom: 0.5rem; }
     .error { color: red; font-weight: bold; }
     ul { padding-left: 1.5rem; }
-    li { margin: 0.3rem 0; }
+    li { margin-bottom: 0.3rem; }
   </style>
 </head>
 <body>
   <h1 id="albumTitle">Album Detail</h1>
   <p><strong>Artist:</strong> <span id="artistName"></span></p>
-  <p><strong>Total Sales:</strong> <span id="totalSales">-</span></p>
-  <p><strong>Total Weeks:</strong> <span id="weeks">-</span></p>
+  <p><strong>Total Sales:</strong> <span id="totalSales">0</span></p>
+  <p><strong>Total Weeks:</strong> <span id="weeks">0</span></p>
   <p><strong>Peak Rank:</strong> <span id="peak">-</span></p>
   <p><strong>Debut Week:</strong> <span id="debut">-</span></p>
 
-  <h2>Tracks on this Album</h2>
+  <h2>Tracks</h2>
   <ul id="trackList"></ul>
   <p id="error" class="error"></p>
 
@@ -28,70 +27,85 @@
   <script>
     function normalize(str) {
       return str ? str.toUpperCase()
-        .replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|VERSION|BONUS|EP/gi, "")
-        .replace(/[^A-Z0-9 ]/g, "")
-        .trim() : "";
+        .replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|VERSION|BONUS|EP/gi, '')
+        .replace(/[^A-Z0-9 ]/g, '')
+        .trim() : '';
     }
 
-    const album = new URLSearchParams(location.search).get("album");
-    const artist = new URLSearchParams(location.search).get("artist");
-    const normAlbum = normalize(album);
-    const normArtist = normalize(artist);
+    const params = new URLSearchParams(location.search);
+    const albumParam = params.get("album");
+    const artistParam = params.get("artist");
 
-    document.getElementById("albumTitle").textContent = album || "Missing album param";
-    document.getElementById("artistName").textContent = artist || "Missing artist param";
+    if (!albumParam || !artistParam) {
+      document.getElementById("error").textContent = "❌ URL is missing album or artist parameter.";
+      throw new Error("Missing ?album=...&artist=...");
+    }
+
+    const albumTitle = document.getElementById("albumTitle");
+    const artistName = document.getElementById("artistName");
+    const totalSalesEl = document.getElementById("totalSales");
+    const weeksEl = document.getElementById("weeks");
+    const peakEl = document.getElementById("peak");
+    const debutEl = document.getElementById("debut");
+    const trackList = document.getElementById("trackList");
+
+    albumTitle.textContent = albumParam;
+    artistName.textContent = artistParam;
 
     if (typeof weekData === "undefined") {
-      document.getElementById("error").textContent = "❌ weekdata.js not loaded. Make sure it's included before this script.";
-      throw new Error("Missing weekdata.js");
+      document.getElementById("error").textContent = "❌ weekdata.js is missing.";
+      throw new Error("weekdata.js not loaded.");
     }
 
-    if (!album || !artist) {
-      document.getElementById("error").textContent = "❌ Missing album or artist in URL. Example: album_detail.html?album=1989&artist=Taylor Swift";
-      throw new Error("Missing parameters");
-    }
+    const normAlbum = normalize(albumParam);
+    const normArtist = normalize(artistParam);
 
     let totalSales = 0;
     let totalWeeks = 0;
     let peak = 999;
-    let debut = null;
-    const trackMap = {};
+    let debutWeek = null;
+    const tracks = {};
 
     for (const week in weekData) {
-      weekData[week].forEach(row => {
-        if (!row.album || !row.artist || !row.title) return;
-        if (normalize(row.album) === normAlbum && normalize(row.artist) === normArtist) {
-          totalSales += row.sales || 0;
-          totalWeeks++;
-          if (row.rank < peak) peak = row.rank;
+      const weekNum = parseInt(week.replace(/\D/g, ""));
+      for (const row of weekData[week]) {
+        if (!row.album || !row.artist || !row.title || typeof row.sales === "undefined") continue;
 
-          const weekNum = parseInt(week.replace(/\D/g, ""));
-          if (!debut || weekNum < debut) debut = weekNum;
+        if (normalize(row.album) === normAlbum && normalize(row.artist) === normArtist) {
+          totalWeeks++;
+          totalSales += row.sales || 0;
+          if (row.rank < peak) peak = row.rank;
+          if (!debutWeek || weekNum < debutWeek) debutWeek = weekNum;
 
           const trackKey = normalize(row.title);
-          if (!trackMap[trackKey]) {
-            trackMap[trackKey] = { title: row.title, sales: 0 };
+          if (!tracks[trackKey]) {
+            tracks[trackKey] = { title: row.title, sales: 0 };
           }
-          trackMap[trackKey].sales += row.sales || 0;
+          tracks[trackKey].sales += row.sales || 0;
         }
-      });
+      }
     }
+
+    // Output to page
+    totalSalesEl.textContent = totalSales;
+    weeksEl.textContent = totalWeeks;
+    peakEl.textContent = peak === 999 ? "-" : peak;
+    debutEl.textContent = debutWeek || "-";
 
     if (totalWeeks === 0) {
-      document.getElementById("error").textContent = "⚠️ No matching album found in weekdata.js";
+      document.getElementById("error").textContent = "⚠️ No chart data found for this album and artist.";
     }
 
-    document.getElementById("totalSales").textContent = totalSales;
-    document.getElementById("weeks").textContent = totalWeeks;
-    document.getElementById("peak").textContent = peak === 999 ? "-" : peak;
-    document.getElementById("debut").textContent = debut || "-";
-
-    const list = document.getElementById("trackList");
-    Object.values(trackMap).sort((a, b) => b.sales - a.sales).forEach(track => {
+    const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
+    sortedTracks.forEach(track => {
       const li = document.createElement("li");
       li.textContent = `${track.title} (${track.sales})`;
-      list.appendChild(li);
+      trackList.appendChild(li);
     });
+
+    console.log("✅ Album loaded:", albumParam, "| Artist:", artistParam);
+    console.log("✅ Matches found:", totalWeeks, "weeks");
+    console.log("✅ Tracks:", sortedTracks);
   </script>
 </body>
 </html>
