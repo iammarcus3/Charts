@@ -64,10 +64,13 @@
     let peaks = {};
     let history = {};
 
+    // ✅ SAFE normalize() to fix TypeError
     function normalize(str) {
-      return str?.toUpperCase()
+      if (typeof str !== 'string') return '';
+      return str.toUpperCase()
         .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|REMIX|VERSION|EP/gi, "")
-        .replace(/[^A-Z0-9 ]/g, "").trim() || "";
+        .replace(/[^A-Z0-9 ]/g, "")
+        .trim();
     }
 
     function getKey(album, artist) {
