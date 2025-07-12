@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Album Detail</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #fff; color: #000; }
+    body { font-family: Arial, sans-serif; background: #fff; padding: 2rem; color: #000; }
     h1 { margin-bottom: 0.5rem; }
     .error { color: red; font-weight: bold; }
     .cert { font-weight: bold; margin-top: 1rem; }
@@ -32,15 +32,18 @@
     const albumParam = params.get("album");
     const artistParam = params.get("artist");
 
-    const norm = str => str ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim() : "";
+    const normalize = str =>
+      str ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim() : "";
 
-    const normalizeAlbum = str => str
-      ? str.toUpperCase()
-          .replace(/\(.*?\)|\[.*?\]/g, "")
-          .replace(/DELUXE|BONUS|REMIX|VERSION|EP/gi, "")
-          .replace(/[^A-Z0-9]/g, "")
-          .trim()
-      : "";
+    const normalizeAlbum = str =>
+      str
+        ? str
+            .toUpperCase()
+            .replace(/\(.*?\)|\[.*?\]/g, "")
+            .replace(/DELUXE|BONUS|VERSION|REMIX|EP/gi, "")
+            .replace(/[^A-Z0-9]/g, "")
+            .trim()
+        : "";
 
     function getCertification(sales) {
       if (sales >= 500) {
@@ -52,7 +55,7 @@
       return "—";
     }
 
-    // Elements
+    // DOM elements
     const albumLink = document.getElementById("albumLink");
     const artistLink = document.getElementById("artistLink");
     const totalSalesEl = document.getElementById("totalSales");
@@ -63,61 +66,59 @@
     const trackList = document.getElementById("trackList");
     const errorEl = document.getElementById("error");
 
-    // Set text
     albumLink.textContent = albumParam;
-    albumLink.href = `album_detail.html?album=${encodeURIComponent(albumParam)}&artist=${encodeURIComponent(artistParam)}`;
     artistLink.textContent = artistParam;
+    albumLink.href = `album_detail.html?album=${encodeURIComponent(albumParam)}&artist=${encodeURIComponent(artistParam)}`;
     artistLink.href = `artist.html?artist=${encodeURIComponent(artistParam)}`;
 
-    if (!window.weekData) {
-      errorEl.textContent = "❌ weekdata.js is missing or not loaded.";
-      throw new Error("Missing weekdata.js");
-    }
-
-    const normArtist = norm(artistParam);
-    const normAlbumKey = normalizeAlbum(albumParam);
+    const normArtist = normalize(artistParam);
+    const normAlbum = normalizeAlbum(albumParam);
 
     let totalSales = 0;
     let totalWeeks = 0;
-    let peak = 999;
     let debutWeek = null;
+    let peak = Infinity;
     const tracks = {};
 
     for (const week in weekData) {
       const weekNum = parseInt(week.replace(/\D/g, ""));
       weekData[week].forEach(entry => {
-        if (!entry.album || !entry.artist) return;
-        const entryArtist = norm(entry.artist);
-        const entryAlbumKey = normalizeAlbum(entry.album);
-        if (entryArtist === normArtist && entryAlbumKey === normAlbumKey) {
-          totalSales += entry.sales || 0;
+        if (!entry.album || !entry.artist || !entry.title) return;
+
+        const entryArtist = normalize(entry.artist);
+        const entryAlbum = normalizeAlbum(entry.album);
+        const entryTitle = entry.title;
+        const entrySales = entry.sales || 0;
+
+        if (entryArtist === normArtist && entryAlbum === normAlbum) {
+          totalSales += entrySales;
           totalWeeks++;
           if (entry.rank && entry.rank < peak) peak = entry.rank;
           if (!debutWeek || weekNum < debutWeek) debutWeek = weekNum;
 
-          const trackKey = norm(entry.title);
+          const trackKey = normalize(entryTitle);
           if (!tracks[trackKey]) {
-            tracks[trackKey] = { title: entry.title, sales: 0 };
+            tracks[trackKey] = { title: entryTitle, sales: 0 };
           }
-          tracks[trackKey].sales += entry.sales || 0;
+          tracks[trackKey].sales += entrySales;
         }
       });
     }
 
+    // Show stats
     totalSalesEl.textContent = totalSales;
     totalWeeksEl.textContent = totalWeeks;
-    peakEl.textContent = peak === 999 ? "-" : `#${peak}`;
     debutEl.textContent = debutWeek || "-";
+    peakEl.textContent = peak === Infinity ? "-" : `#${peak}`;
     certEl.textContent = getCertification(totalSales);
 
-    const trackArray = Object.values(tracks).sort((a, b) => b.sales - a.sales);
-
-    if (trackArray.length === 0) {
-      errorEl.textContent = "⚠️ No tracks found. Check album and artist name match weekly data.";
+    const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
+    if (sortedTracks.length === 0) {
+      errorEl.textContent = "⚠️ No matching album data found in weekdata.js.";
     } else {
-      trackArray.forEach(track => {
+      sortedTracks.forEach(track => {
         const li = document.createElement("li");
-        li.textContent = `${track.title} (${track.sales})`;
+        li.textContent = `${track.title} (${track.sales} sales)`;
         trackList.appendChild(li);
       });
     }
