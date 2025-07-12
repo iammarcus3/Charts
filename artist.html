@@ -11,16 +11,8 @@
       margin: 0;
       padding: 2rem;
     }
-
-    a {
-      color: #00f0ff;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
+    a { color: #00f0ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
     nav {
       background-color: #111;
       padding: 1rem;
@@ -28,30 +20,21 @@
       border-radius: 8px;
       text-align: center;
     }
-
     nav a {
       margin: 0 1rem;
       font-weight: bold;
     }
-
     h1 {
       font-size: 2.5rem;
       color: #ff007f;
       margin-bottom: 1rem;
     }
-
     h2 {
       color: #00f0ff;
       border-bottom: 2px solid #ff007f;
       padding-bottom: 0.3rem;
       margin-top: 2rem;
     }
-
-    section p {
-      font-size: 1rem;
-      margin: 0.2rem 0;
-    }
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -60,43 +43,22 @@
       border-radius: 8px;
       overflow: hidden;
     }
-
     th, td {
       padding: 0.75rem;
       text-align: left;
     }
-
     th {
       background-color: #222;
       color: #ff007f;
       text-transform: uppercase;
       font-size: 0.85rem;
     }
-
-    tr:nth-child(even) {
-      background-color: #2a2a2a;
-    }
-
-    tr:hover {
-      background-color: #333;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    ul li {
-      padding: 0.2rem 0;
-    }
-
-    .cert-icon {
-      height: 20px;
-    }
-
-    .album-cert-icon {
-      height: 32px;
-    }
+    tr:nth-child(even) { background-color: #2a2a2a; }
+    tr:hover { background-color: #333; }
+    ul { list-style: none; padding-left: 0; }
+    ul li { padding: 0.2rem 0; }
+    .cert-icon { height: 20px; }
+    .album-cert-icon { height: 32px; }
   </style>
 </head>
 <body>
@@ -164,43 +126,27 @@
     document.getElementById("artistNameTitle").textContent = artistName;
 
     function normalize(str) {
-      return str.toUpperCase().replace(/[^A-Z0-9 ]/g, "").trim();
+      return str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
     }
 
     function getCertIcon(count, isAlbum = false) {
       if (isAlbum) {
-        if (count >= 500) {
-          const certs = Math.floor(count / 500);
-          return '<img src="platinum.png" class="album-cert-icon">'.repeat(certs);
-        } else if (count >= 250) {
-          return '<img src="gold.png" class="album-cert-icon">';
-        }
+        if (count >= 500) return '<img src="platinum.png" class="album-cert-icon">'.repeat(Math.floor(count / 500));
+        if (count >= 250) return '<img src="gold.png" class="album-cert-icon">';
       } else {
-        if (count >= 200) {
-          const certs = Math.floor(count / 200);
-          return '<img src="platinum.png" class="cert-icon">'.repeat(certs);
-        } else if (count >= 100) {
-          return '<img src="gold.png" class="cert-icon">';
-        }
+        if (count >= 200) return '<img src="platinum.png" class="cert-icon">'.repeat(Math.floor(count / 200));
+        if (count >= 100) return '<img src="gold.png" class="cert-icon">';
       }
       return '';
     }
 
     function getCertLabel(count, isAlbum = false) {
       if (isAlbum) {
-        if (count >= 500) {
-          const multi = Math.floor(count / 500);
-          return multi === 1 ? "Platinum" : `Multi-Platinum (x${multi})`;
-        } else if (count >= 250) {
-          return "Gold";
-        }
+        if (count >= 500) return Math.floor(count / 500) === 1 ? "Platinum" : `Multi-Platinum (x${Math.floor(count / 500)})`;
+        if (count >= 250) return "Gold";
       } else {
-        if (count >= 200) {
-          const multi = Math.floor(count / 200);
-          return multi === 1 ? "Platinum" : `Multi-Platinum (x${multi})`;
-        } else if (count >= 100) {
-          return "Gold";
-        }
+        if (count >= 200) return Math.floor(count / 200) === 1 ? "Platinum" : `Multi-Platinum (x${Math.floor(count / 200)})`;
+        if (count >= 100) return "Gold";
       }
       return "";
     }
@@ -210,26 +156,38 @@
     const certCount = {};
     let num1s = 0, debuts = 0, songCount = 0, top10s = 0;
 
+    // Group Albums
     albumData.forEach(row => {
       if (normalize(row.artist) === normArtist) {
         const key = normalize(row.album);
-        albumsMap[key] = {
-          album: row.album,
-          artist: row.artist,
-          totalPlays: row.totalPlays,
-          weeks: row.totalWeeks,
-          peak: row.rank,
-          certLabel: getCertLabel(row.totalPlays, true),
-          certIcon: getCertIcon(row.totalPlays, true)
-        };
+        if (!albumsMap[key]) {
+          albumsMap[key] = {
+            album: row.album,
+            artist: row.artist,
+            totalPlays: 0,
+            weeks: 0,
+            peak: row.rank
+          };
+        }
+        albumsMap[key].totalPlays += row.totalPlays || 0;
+        albumsMap[key].weeks += row.totalWeeks || 0;
+        if (row.rank < albumsMap[key].peak) albumsMap[key].peak = row.rank;
       }
     });
 
+    // Apply certs to merged albums
+    for (const key in albumsMap) {
+      const album = albumsMap[key];
+      album.certLabel = getCertLabel(album.totalPlays, true);
+      album.certIcon = getCertIcon(album.totalPlays, true);
+    }
+
+    // Group Songs
     for (const week in weekData) {
       weekData[week].forEach(row => {
         const normRowArtist = normalize(row.artist);
         if (!row.title || !row.rank) return;
-        if (!normRowArtist.includes(normArtist) && !normalize(row.title + " " + row.artist).includes(normArtist)) return;
+        if (!normRowArtist.includes(normArtist) && !normalize(row.title + row.artist).includes(normArtist)) return;
 
         const key = normalize(row.title);
         if (!songsMap[key]) {
@@ -249,9 +207,8 @@
       });
     }
 
+    // Render Songs
     const songsTable = document.querySelector("#songsTable tbody");
-    const albumsTable = document.querySelector("#albumsTable tbody");
-
     Object.values(songsMap).forEach(song => {
       songCount++;
       if (song.weeks === 1) debuts++;
@@ -274,6 +231,8 @@
       if (label) certCount[label] = (certCount[label] || 0) + 1;
     });
 
+    // Render Albums
+    const albumsTable = document.querySelector("#albumsTable tbody");
     Object.values(albumsMap).forEach(album => {
       const url = `album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}`;
       const tr = document.createElement("tr");
@@ -286,6 +245,7 @@
       albumsTable.appendChild(tr);
     });
 
+    // Stats
     document.getElementById("songCount").textContent = songCount;
     document.getElementById("debuts").textContent = debuts;
     document.getElementById("numOnes").textContent = num1s;
