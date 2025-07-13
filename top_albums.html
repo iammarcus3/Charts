@@ -81,7 +81,7 @@
           .trim();
       }
 
-      // ✅ Correct certification logic for albums
+      // ✅ Album-specific certification logic
       function getCert(plays) {
         if (plays >= 1000) return `Multi-Platinum x${Math.floor(plays / 500)}`;
         if (plays >= 500) return "Platinum";
@@ -129,7 +129,7 @@
         tr.innerHTML = `
           <td>${index + 1}</td>
           <td><a href="album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}">${album.album}</a></td>
-          <td><a href="artist.html?name=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
+          <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
           <td>${album.totalPlays}</td>
           <td class="cert">${getCert(album.totalPlays)}</td>
         `;
