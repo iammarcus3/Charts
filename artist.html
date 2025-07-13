@@ -132,9 +132,17 @@
     function normalizeAlbumName(name) {
       return name
         .toUpperCase()
-        .replace(/\([^)]*\)/g, "")     // Remove (Deluxe)
-        .replace(/\[[^\]]*\]/g, "")    // Remove [Bonus]
-        .replace(/[^A-Z0-9]/g, "")     // Remove special characters
+        .replace(/\([^)]*\)/g, "")
+        .replace(/\[[^\]]*\]/g, "")
+        .replace(/[^A-Z0-9]/g, "")
+        .trim();
+    }
+
+    function normalizeTitle(title) {
+      return (title || "")
+        .toUpperCase()
+        .replace(/\(.*?\)|\[.*?\]|REMIX|VERSION|FEAT|FEATURING|FT\.?/gi, "")
+        .replace(/[^A-Z0-9]/g, "")
         .trim();
     }
 
@@ -202,14 +210,16 @@
       album.certIcon = getCertIcon(album.totalPlays, true);
     }
 
-    // Step 4: Group songs
+    // Step 4: Group similar songs
     for (const week in weekData) {
       weekData[week].forEach(row => {
+        if (!row.title || !row.rank || !row.artist) return;
         const normRowArtist = normalize(row.artist);
-        if (!row.title || !row.rank) return;
+        const normTitle = normalizeTitle(row.title);
+
         if (!normRowArtist.includes(normArtist) && !normalize(row.title + row.artist).includes(normArtist)) return;
 
-        const key = normalize(row.title);
+        const key = normTitle;
         if (!songsMap[key]) {
           songsMap[key] = {
             title: row.title,
@@ -220,10 +230,17 @@
             num1s: 0
           };
         }
+
         songsMap[key].totalSales += row.sales || 0;
         songsMap[key].weeks++;
         if (row.rank < songsMap[key].peak) songsMap[key].peak = row.rank;
         if (row.rank === 1) songsMap[key].num1s++;
+
+        if (row.sales > (songsMap[key].latestSales || 0)) {
+          songsMap[key].title = row.title;
+          songsMap[key].artist = row.artist;
+          songsMap[key].latestSales = row.sales;
+        }
       });
     }
 
