@@ -29,6 +29,13 @@
       color: #ff007f;
       margin-bottom: 1rem;
     }
+    h1 img {
+      height: 2rem;
+      width: 2rem;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
     h2 {
       color: #00f0ff;
       border-bottom: 2px solid #ff007f;
@@ -69,7 +76,9 @@
     <a href="records.html">📊 Records</a>
   </nav>
 
-  <h1 id="artistNameTitle">Artist Profile</h1>
+  <h1 id="artistNameTitle">
+    <img id="artistImg" src="" alt=""> <span id="artistText">Artist Profile</span>
+  </h1>
 
   <section>
     <h2>📊 Artist Stats</h2>
@@ -123,25 +132,26 @@
     const params = new URLSearchParams(location.search);
     const artistName = params.get("artist");
     const normArtist = normalize(artistName);
-    document.getElementById("artistNameTitle").textContent = artistName;
+
+    const artistImg = document.getElementById("artistImg");
+    artistImg.src = `img/artists/${artistName}.jpg`;
+    artistImg.onerror = () => { artistImg.style.display = 'none'; };
+    document.getElementById("artistText").textContent = artistName;
 
     function normalize(str) {
-      return str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
+      return str?.toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
     }
 
     function normalizeAlbumName(name) {
-      return name
-        .toUpperCase()
-        .replace(/\([^)]*\)/g, "")
-        .replace(/\[[^\]]*\]/g, "")
+      return name?.toUpperCase()
+        .replace(/\([^)]*\)|\[.*?]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED/gi, "")
         .replace(/[^A-Z0-9]/g, "")
         .trim();
     }
 
     function normalizeTitle(title) {
-      return (title || "")
-        .toUpperCase()
-        .replace(/\(.*?\)|\[.*?\]|REMIX|VERSION|FEAT|FEATURING|FT\.?/gi, "")
+      return title?.toUpperCase()
+        .replace(/\(.*?\)|\[.*?\]|REMIX|VERSION|FEAT\.?|FEATURING|RADIO EDIT|EDIT|SINGLE/gi, "")
         .replace(/[^A-Z0-9]/g, "")
         .trim();
     }
@@ -159,10 +169,10 @@
 
     function getCertLabel(count, isAlbum = false) {
       if (isAlbum) {
-        if (count >= 500) return Math.floor(count / 500) === 1 ? "Platinum" : `Multi-Platinum (x${Math.floor(count / 500)})`;
+        if (count >= 500) return `Multi-Platinum (x${Math.floor(count / 500)})`;
         if (count >= 250) return "Gold";
       } else {
-        if (count >= 200) return Math.floor(count / 200) === 1 ? "Platinum" : `Multi-Platinum (x${Math.floor(count / 200)})`;
+        if (count >= 200) return `Multi-Platinum (x${Math.floor(count / 200)})`;
         if (count >= 100) return "Gold";
       }
       return "";
@@ -173,10 +183,17 @@
     const certCount = {};
     let num1s = 0, debuts = 0, songCount = 0, top10s = 0;
 
-    // Step 1: Merge albums from albumData
+    let orphanedPlays = 0, orphanedWeeks = 0;
+
+    // Step 1: Gather albums
     albumData.forEach(row => {
       if (normalize(row.artist) === normArtist) {
         const key = normalizeAlbumName(row.album);
+        if (!key || key === "NAN") {
+          orphanedPlays += row.totalPlays || 0;
+          orphanedWeeks += row.totalWeeks || 0;
+          return;
+        }
         if (!albumsMap[key]) {
           albumsMap[key] = {
             album: row.album,
@@ -191,35 +208,41 @@
       }
     });
 
-    // Step 2: Correct peak using weekData
+    // Distribute orphaned data equally to first 3 albums
+    const albumKeys = Object.keys(albumsMap);
+    if (albumKeys.length >= 1 && orphanedPlays > 0) {
+      const slice = albumKeys.slice(0, 3);
+      slice.forEach(key => {
+        albumsMap[key].totalPlays += orphanedPlays / slice.length;
+        albumsMap[key].weeks += orphanedWeeks / slice.length;
+      });
+    }
+
+    // Step 2: Peak using weekData
     for (const week in weekData) {
       weekData[week].forEach(row => {
         if (!row.album || !row.rank || normalize(row.artist) !== normArtist) return;
         const key = normalizeAlbumName(row.album);
         if (!albumsMap[key]) return;
-        if (row.rank < albumsMap[key].peak) {
-          albumsMap[key].peak = row.rank;
-        }
+        if (row.rank < albumsMap[key].peak) albumsMap[key].peak = row.rank;
       });
     }
 
-    // Step 3: Add cert info
+    // Step 3: Cert info
     for (const key in albumsMap) {
       const album = albumsMap[key];
       album.certLabel = getCertLabel(album.totalPlays, true);
       album.certIcon = getCertIcon(album.totalPlays, true);
     }
 
-    // Step 4: Group similar songs
+    // Step 4: Songs
     for (const week in weekData) {
       weekData[week].forEach(row => {
-        if (!row.title || !row.rank || !row.artist) return;
         const normRowArtist = normalize(row.artist);
-        const normTitle = normalizeTitle(row.title);
-
+        if (!row.title || !row.rank) return;
         if (!normRowArtist.includes(normArtist) && !normalize(row.title + row.artist).includes(normArtist)) return;
 
-        const key = normTitle;
+        const key = normalizeTitle(row.title);
         if (!songsMap[key]) {
           songsMap[key] = {
             title: row.title,
@@ -274,9 +297,9 @@
       tr.innerHTML = `
         <td><a href="${url}"><strong>${album.album}</strong></a></td>
         <td>${album.certIcon} ${album.certLabel}</td>
-        <td>${album.totalPlays}</td>
+        <td>${Math.round(album.totalPlays)}</td>
         <td>#${album.peak}</td>
-        <td>${album.weeks}</td>`;
+        <td>${Math.round(album.weeks)}</td>`;
       albumsTable.appendChild(tr);
     });
 
