@@ -40,7 +40,8 @@
     }
 
     function getCertification(sales) {
-      if (sales >= 100) return sales >= 200 ? "Multi-Platinum x" + Math.floor(sales / 100) : "Platinum";
+      if (sales >= 200) return "Multi-Platinum x" + Math.floor(sales / 100);
+      if (sales >= 100) return "Platinum";
       if (sales >= 50) return "Gold";
       return "—";
     }
@@ -73,7 +74,7 @@
       row.innerHTML = `
         <td>${i + 1}</td>
         <td><a href="album_detail.html?album=${encodeURIComponent(a.album)}&artist=${encodeURIComponent(a.artist)}">${a.album}</a></td>
-        <td>${a.artist}</td>
+        <td><a href="artist.html?name=${encodeURIComponent(a.artist)}">${a.artist}</a></td>
         <td>${a.totalPlays}</td>
         <td class="cert">${getCertification(a.totalPlays)}</td>
       `;
