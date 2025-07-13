@@ -61,19 +61,16 @@
     </tbody>
   </table>
 
-  <!-- Ensure this file exists and defines: weekData = { ... } -->
   <script src="weekdata.js"></script>
   <script>
     window.addEventListener("DOMContentLoaded", () => {
       const tableBody = document.getElementById("albumTable");
 
-      // Show error if weekdata.js is not loaded
       if (typeof weekData !== "object") {
         tableBody.innerHTML = `<tr><td colspan="5">❌ weekdata.js not found or not formatted correctly.</td></tr>`;
         return;
       }
 
-      // Safely normalize album names
       function normalizeAlbum(name) {
         if (typeof name !== "string") return "";
         return name
@@ -84,17 +81,16 @@
           .trim();
       }
 
-      // Get certification based on total plays
+      // ✅ Correct certification logic for albums
       function getCert(plays) {
-        if (plays >= 200) return "Multi-Platinum x" + Math.floor(plays / 100);
-        if (plays >= 100) return "Platinum";
-        if (plays >= 50) return "Gold";
+        if (plays >= 1000) return `Multi-Platinum x${Math.floor(plays / 500)}`;
+        if (plays >= 500) return "Platinum";
+        if (plays >= 250) return "Gold";
         return "—";
       }
 
       const albumMap = {};
 
-      // Aggregate all albums across weeks
       for (const week in weekData) {
         const entries = weekData[week];
         if (!Array.isArray(entries)) continue;
@@ -117,13 +113,11 @@
         });
       }
 
-      // Sort and filter Top 100
       const topAlbums = Object.values(albumMap)
         .filter(a => a.totalPlays > 0)
         .sort((a, b) => b.totalPlays - a.totalPlays)
         .slice(0, 100);
 
-      // Render the table
       if (topAlbums.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="5">⚠️ No albums found in weekdata.js.</td></tr>`;
         return;
