@@ -6,40 +6,46 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fff;
+      background-color: #f9f9f9;
       padding: 2rem;
     }
     h1 {
       text-align: center;
+      color: #333;
       margin-bottom: 2rem;
     }
     table {
       width: 100%;
       border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
     th, td {
-      padding: 0.6rem;
+      padding: 0.8rem;
       border: 1px solid #ccc;
       text-align: left;
     }
     th {
-      background-color: #f2f2f2;
+      background-color: #eee;
+      text-transform: uppercase;
+      font-size: 0.9rem;
     }
     a {
-      color: #0077cc;
+      color: #0066cc;
       text-decoration: none;
     }
     a:hover {
       text-decoration: underline;
     }
     .cert {
-      font-size: 0.85em;
-      color: #666;
+      color: #555;
+      font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
   <h1>🏆 Top 100 Albums by Total Plays</h1>
+
   <table>
     <thead>
       <tr>
@@ -51,74 +57,87 @@
       </tr>
     </thead>
     <tbody id="albumTable">
-      <tr><td colspan="5">Loading...</td></tr>
+      <tr><td colspan="5">Loading data...</td></tr>
     </tbody>
   </table>
 
-  <!-- IMPORTANT: weekdata.js must be included before script runs -->
+  <!-- Ensure this points to your actual weekdata.js -->
   <script src="weekdata.js"></script>
   <script>
     window.addEventListener("DOMContentLoaded", () => {
-      const albumTable = document.getElementById("albumTable");
-      const albumMap = {};
+      const tableBody = document.getElementById("albumTable");
 
-      function normalize(name) {
+      // Validate weekData is loaded
+      if (typeof weekData !== "object") {
+        tableBody.innerHTML = `<tr><td colspan="5">❌ weekdata.js not found or not formatted correctly.</td></tr>`;
+        return;
+      }
+
+      // Normalize function to merge albums with similar names
+      function normalizeAlbum(name) {
         return (name || "")
           .toUpperCase()
-          .replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|VERSION|BONUS|SINGLE|EP/gi, "")
+          .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMIX|SINGLE|EP/gi, "")
           .replace(/[^A-Z0-9 ]/g, "")
           .replace(/\s+/g, " ")
           .trim();
       }
 
-      function getCertification(plays) {
+      // Determine certification
+      function getCert(plays) {
         if (plays >= 200) return "Multi-Platinum x" + Math.floor(plays / 100);
         if (plays >= 100) return "Platinum";
         if (plays >= 50) return "Gold";
         return "—";
       }
 
-      if (typeof weekData !== "object") {
-        albumTable.innerHTML = `<tr><td colspan="5">❌ weekdata.js not loaded.</td></tr>`;
-        return;
-      }
+      const albumMap = {};
 
-      // Aggregate sales for each album+artist combo
+      // Loop through each week and group album plays
       for (const week in weekData) {
-        weekData[week].forEach(entry => {
-          const album = entry.album || "";
-          const artist = entry.artist || "";
-          const sales = parseFloat(entry.sales) || 0;
-          if (!album || !artist || sales <= 0) return;
+        const entries = weekData[week];
+        if (!Array.isArray(entries)) continue;
 
-          const key = normalize(album) + "|" + artist.toUpperCase();
-          if (!albumMap[key]) {
-            albumMap[key] = {
-              album: album,
-              artist: artist,
-              totalSales: 0
+        entries.forEach(entry => {
+          if (!entry.album || !entry.artist || isNaN(entry.sales)) return;
+
+          const albumKey = normalizeAlbum(entry.album) + "|" + entry.artist.toUpperCase();
+          const plays = parseFloat(entry.sales) || 0;
+
+          if (!albumMap[albumKey]) {
+            albumMap[albumKey] = {
+              album: entry.album,
+              artist: entry.artist,
+              totalPlays: 0
             };
           }
-          albumMap[key].totalSales += sales;
+
+          albumMap[albumKey].totalPlays += plays;
         });
       }
 
+      // Convert and sort albums by total plays
       const topAlbums = Object.values(albumMap)
-        .sort((a, b) => b.totalSales - a.totalSales)
+        .sort((a, b) => b.totalPlays - a.totalPlays)
         .slice(0, 100);
 
-      // Render table
-      albumTable.innerHTML = "";
-      topAlbums.forEach((a, i) => {
+      // Render the table
+      if (topAlbums.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5">⚠️ No albums found in data.</td></tr>`;
+        return;
+      }
+
+      tableBody.innerHTML = "";
+      topAlbums.forEach((album, index) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${i + 1}</td>
-          <td><a href="album_detail.html?album=${encodeURIComponent(a.album)}&artist=${encodeURIComponent(a.artist)}">${a.album}</a></td>
-          <td><a href="artist.html?name=${encodeURIComponent(a.artist)}">${a.artist}</a></td>
-          <td>${a.totalSales}</td>
-          <td class="cert">${getCertification(a.totalSales)}</td>
+          <td>${index + 1}</td>
+          <td><a href="album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}">${album.album}</a></td>
+          <td><a href="artist.html?name=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
+          <td>${album.totalPlays}</td>
+          <td class="cert">${getCert(album.totalPlays)}</td>
         `;
-        albumTable.appendChild(tr);
+        tableBody.appendChild(tr);
       });
     });
   </script>
