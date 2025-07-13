@@ -61,21 +61,22 @@
     </tbody>
   </table>
 
-  <!-- Ensure this points to your actual weekdata.js -->
+  <!-- Ensure this file exists and defines: weekData = { ... } -->
   <script src="weekdata.js"></script>
   <script>
     window.addEventListener("DOMContentLoaded", () => {
       const tableBody = document.getElementById("albumTable");
 
-      // Validate weekData is loaded
+      // Show error if weekdata.js is not loaded
       if (typeof weekData !== "object") {
         tableBody.innerHTML = `<tr><td colspan="5">❌ weekdata.js not found or not formatted correctly.</td></tr>`;
         return;
       }
 
-      // Normalize function to merge albums with similar names
+      // Safely normalize album names
       function normalizeAlbum(name) {
-        return (name || "")
+        if (typeof name !== "string") return "";
+        return name
           .toUpperCase()
           .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMIX|SINGLE|EP/gi, "")
           .replace(/[^A-Z0-9 ]/g, "")
@@ -83,7 +84,7 @@
           .trim();
       }
 
-      // Determine certification
+      // Get certification based on total plays
       function getCert(plays) {
         if (plays >= 200) return "Multi-Platinum x" + Math.floor(plays / 100);
         if (plays >= 100) return "Platinum";
@@ -93,7 +94,7 @@
 
       const albumMap = {};
 
-      // Loop through each week and group album plays
+      // Aggregate all albums across weeks
       for (const week in weekData) {
         const entries = weekData[week];
         if (!Array.isArray(entries)) continue;
@@ -101,7 +102,7 @@
         entries.forEach(entry => {
           if (!entry.album || !entry.artist || isNaN(entry.sales)) return;
 
-          const albumKey = normalizeAlbum(entry.album) + "|" + entry.artist.toUpperCase();
+          const albumKey = normalizeAlbum(entry.album) + "|" + entry.artist.toUpperCase().trim();
           const plays = parseFloat(entry.sales) || 0;
 
           if (!albumMap[albumKey]) {
@@ -116,14 +117,15 @@
         });
       }
 
-      // Convert and sort albums by total plays
+      // Sort and filter Top 100
       const topAlbums = Object.values(albumMap)
+        .filter(a => a.totalPlays > 0)
         .sort((a, b) => b.totalPlays - a.totalPlays)
         .slice(0, 100);
 
       // Render the table
       if (topAlbums.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5">⚠️ No albums found in data.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="5">⚠️ No albums found in weekdata.js.</td></tr>`;
         return;
       }
 
