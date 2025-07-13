@@ -16,7 +16,7 @@
 <body>
   <h1><a id="albumLink" href="#">Album Detail</a></h1>
   <p><strong>Artist:</strong> <a id="artistLink" href="#">Artist</a></p>
-  <p><strong>Total Sales:</strong> <span id="totalSales">0</span></p>
+  <p><strong>Total Plays:</strong> <span id="totalSales">0</span></p>
   <p><strong>Total Weeks:</strong> <span id="totalWeeks">0</span></p>
   <p><strong>Peak Rank:</strong> <span id="peak">-</span></p>
   <p><strong>Debut Week:</strong> <span id="debutWeek">-</span></p>
@@ -40,22 +40,28 @@
         ? str
             .toUpperCase()
             .replace(/\(.*?\)|\[.*?\]/g, "")
-            .replace(/DELUXE|BONUS|VERSION|REMIX|EP/gi, "")
+            .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
+            .replace(/[^A-Z0-9]/g, "")
+            .trim()
+        : "";
+
+    const normalizeTitle = str =>
+      str
+        ? str
+            .toUpperCase()
+            .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
             .replace(/[^A-Z0-9]/g, "")
             .trim()
         : "";
 
     function getCertification(sales) {
-      if (sales >= 500) {
-        const count = Math.floor(sales / 500);
-        return "💿".repeat(count) + " " + (count === 1 ? "Platinum" : `Multi-Platinum (x${count})`);
-      } else if (sales >= 250) {
-        return "🥇 Gold";
-      }
+      if (sales >= 1000) return "💿 Multi-Platinum (x" + Math.floor(sales / 500) + ")";
+      if (sales >= 500) return "💿 Platinum";
+      if (sales >= 250) return "🥇 Gold";
       return "—";
     }
 
-    // DOM elements
+    // DOM targets
     const albumLink = document.getElementById("albumLink");
     const artistLink = document.getElementById("artistLink");
     const totalSalesEl = document.getElementById("totalSales");
@@ -66,6 +72,7 @@
     const trackList = document.getElementById("trackList");
     const errorEl = document.getElementById("error");
 
+    // Basic page setup
     albumLink.textContent = albumParam;
     artistLink.textContent = artistParam;
     albumLink.href = `album_detail.html?album=${encodeURIComponent(albumParam)}&artist=${encodeURIComponent(artistParam)}`;
@@ -75,7 +82,7 @@
     const normAlbum = normalizeAlbum(albumParam);
 
     let totalSales = 0;
-    let totalWeeks = 0;
+    const weekSet = new Set();
     let debutWeek = null;
     let peak = Infinity;
     const tracks = {};
@@ -88,15 +95,15 @@
         const entryArtist = normalize(entry.artist);
         const entryAlbum = normalizeAlbum(entry.album);
         const entryTitle = entry.title;
-        const entrySales = entry.sales || 0;
+        const entrySales = parseFloat(entry.sales) || 0;
 
         if (entryArtist === normArtist && entryAlbum === normAlbum) {
           totalSales += entrySales;
-          totalWeeks++;
-          if (entry.rank && entry.rank < peak) peak = entry.rank;
+          weekSet.add(week);
           if (!debutWeek || weekNum < debutWeek) debutWeek = weekNum;
+          if (entry.rank && entry.rank < peak) peak = entry.rank;
 
-          const trackKey = normalize(entryTitle);
+          const trackKey = normalizeTitle(entryTitle);
           if (!tracks[trackKey]) {
             tracks[trackKey] = { title: entryTitle, sales: 0 };
           }
@@ -105,20 +112,21 @@
       });
     }
 
-    // Show stats
+    // Fill in album stats
     totalSalesEl.textContent = totalSales;
-    totalWeeksEl.textContent = totalWeeks;
+    totalWeeksEl.textContent = weekSet.size;
     debutEl.textContent = debutWeek || "-";
     peakEl.textContent = peak === Infinity ? "-" : `#${peak}`;
     certEl.textContent = getCertification(totalSales);
 
+    // Render track list
     const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
     if (sortedTracks.length === 0) {
       errorEl.textContent = "⚠️ No matching album data found in weekdata.js.";
     } else {
       sortedTracks.forEach(track => {
         const li = document.createElement("li");
-        li.textContent = `${track.title} (${track.sales} sales)`;
+        li.textContent = `${track.title} (${track.sales} plays)`;
         trackList.appendChild(li);
       });
     }
