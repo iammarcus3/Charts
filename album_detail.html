@@ -4,7 +4,12 @@
   <meta charset="UTF-8" />
   <title>Album Detail</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #fff; padding: 2rem; color: #000; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      padding: 2rem;
+      color: #000;
+    }
     h1 { margin-bottom: 0.5rem; }
     .error { color: red; font-weight: bold; }
     .cert { font-weight: bold; margin-top: 1rem; }
@@ -33,10 +38,10 @@
     const artistParam = params.get("artist");
 
     const normalize = str =>
-      str ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim() : "";
+      typeof str === "string" ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim() : "";
 
     const normalizeAlbum = str =>
-      str
+      typeof str === "string"
         ? str
             .toUpperCase()
             .replace(/\(.*?\)|\[.*?\]/g, "")
@@ -46,7 +51,7 @@
         : "";
 
     const normalizeTitle = str =>
-      str
+      typeof str === "string"
         ? str
             .toUpperCase()
             .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
@@ -72,7 +77,7 @@
     const trackList = document.getElementById("trackList");
     const errorEl = document.getElementById("error");
 
-    // Basic page setup
+    // Page setup
     albumLink.textContent = albumParam;
     artistLink.textContent = artistParam;
     albumLink.href = `album_detail.html?album=${encodeURIComponent(albumParam)}&artist=${encodeURIComponent(artistParam)}`;
@@ -90,8 +95,6 @@
     for (const week in weekData) {
       const weekNum = parseInt(week.replace(/\D/g, ""));
       weekData[week].forEach(entry => {
-        if (!entry.album || !entry.artist || !entry.title) return;
-
         const entryArtist = normalize(entry.artist);
         const entryAlbum = normalizeAlbum(entry.album);
         const entryTitle = entry.title;
@@ -113,7 +116,7 @@
     }
 
     // Fill in album stats
-    totalSalesEl.textContent = totalSales;
+    totalSalesEl.textContent = Math.round(totalSales);
     totalWeeksEl.textContent = weekSet.size;
     debutEl.textContent = debutWeek || "-";
     peakEl.textContent = peak === Infinity ? "-" : `#${peak}`;
@@ -126,7 +129,7 @@
     } else {
       sortedTracks.forEach(track => {
         const li = document.createElement("li");
-        li.textContent = `${track.title} (${track.sales} plays)`;
+        li.textContent = `${track.title} (${Math.round(track.sales)} plays)`;
         trackList.appendChild(li);
       });
     }
