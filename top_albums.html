@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,38 +49,44 @@
 
     const albumMap = {};
 
-    for (const week in weekData) {
-      for (const row of weekData[week]) {
-        if (!row.album || !row.artist || !row.sales) continue;
-        const key = normalize(row.album) + "|" + row.artist.toUpperCase().trim();
-        if (!albumMap[key]) {
-          albumMap[key] = {
-            album: row.album,
-            artist: row.artist,
-            totalPlays: 0
-          };
+    if (typeof weekData === "undefined") {
+      console.error("weekData.js is not loaded. Ensure the script is included and correct.");
+    } else {
+      for (const week in weekData) {
+        for (const row of weekData[week]) {
+          const sales = parseFloat(row.sales) || 0;
+          if (!row.album || !row.artist || sales === 0) continue;
+
+          const key = normalize(row.album) + "|" + row.artist.toUpperCase().trim();
+          if (!albumMap[key]) {
+            albumMap[key] = {
+              album: row.album,
+              artist: row.artist,
+              totalPlays: 0
+            };
+          }
+          albumMap[key].totalPlays += sales;
         }
-        albumMap[key].totalPlays += row.sales;
       }
+
+      const albums = Object.values(albumMap)
+        .filter(a => a.totalPlays > 0)
+        .sort((a, b) => b.totalPlays - a.totalPlays)
+        .slice(0, 200);
+
+      const tbody = document.getElementById("albumTable");
+      albums.forEach((a, i) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${i + 1}</td>
+          <td><a href="album_detail.html?album=${encodeURIComponent(a.album)}&artist=${encodeURIComponent(a.artist)}">${a.album}</a></td>
+          <td><a href="artist.html?name=${encodeURIComponent(a.artist)}">${a.artist}</a></td>
+          <td>${a.totalPlays}</td>
+          <td class="cert">${getCertification(a.totalPlays)}</td>
+        `;
+        tbody.appendChild(row);
+      });
     }
-
-    const albums = Object.values(albumMap)
-      .filter(a => a.totalPlays > 0)
-      .sort((a, b) => b.totalPlays - a.totalPlays)
-      .slice(0, 200);
-
-    const tbody = document.getElementById("albumTable");
-    albums.forEach((a, i) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${i + 1}</td>
-        <td><a href="album_detail.html?album=${encodeURIComponent(a.album)}&artist=${encodeURIComponent(a.artist)}">${a.album}</a></td>
-        <td><a href="artist.html?name=${encodeURIComponent(a.artist)}">${a.artist}</a></td>
-        <td>${a.totalPlays}</td>
-        <td class="cert">${getCertification(a.totalPlays)}</td>
-      `;
-      tbody.appendChild(row);
-    });
   </script>
 </body>
 </html>
