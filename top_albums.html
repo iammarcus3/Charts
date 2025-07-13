@@ -1,22 +1,47 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Top Albums (from weekdata.js)</title>
+  <meta charset="UTF-8">
+  <title>Top 100 Albums (All Time)</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #fff; }
-    h1 { text-align: center; margin-bottom: 2rem; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 0.6rem; border: 1px solid #ccc; text-align: left; }
-    th { background-color: #f0f0f0; cursor: pointer; }
-    a { color: #0077cc; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .cert { font-size: 0.85em; color: #444; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #f9f9f9;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+    a {
+      color: #0077cc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .cert {
+      font-size: 0.85em;
+      color: #444;
+    }
   </style>
 </head>
 <body>
-  <h1>🏆 Top Albums (by Total Plays)</h1>
+  <h1>🏆 Top 100 Albums (by Total Plays)</h1>
   <table>
     <thead>
       <tr>
@@ -32,61 +57,69 @@
 
   <script src="weekdata.js"></script>
   <script>
-    function normalize(str) {
-      return (str || "")
+    function normalizeAlbumName(name) {
+      return (name || "")
         .toUpperCase()
         .replace(/\(.*?\)|\[.*?\]|DELUXE|REMIX|VERSION|BONUS|SINGLE|EP/gi, "")
         .replace(/[^A-Z0-9 ]/g, "")
+        .replace(/\s+/g, " ")
         .trim();
     }
 
-    function getCertification(sales) {
-      if (sales >= 200) return "Multi-Platinum x" + Math.floor(sales / 100);
-      if (sales >= 100) return "Platinum";
-      if (sales >= 50) return "Gold";
+    function getCertification(plays) {
+      if (plays >= 200) return "Multi-Platinum x" + Math.floor(plays / 100);
+      if (plays >= 100) return "Platinum";
+      if (plays >= 50) return "Gold";
       return "—";
     }
 
     const albumMap = {};
 
-    if (typeof weekData === "undefined") {
-      console.error("weekData.js is not loaded. Ensure the script is included and correct.");
-    } else {
-      for (const week in weekData) {
-        for (const row of weekData[week]) {
-          const sales = parseFloat(row.sales) || 0;
-          if (!row.album || !row.artist || sales === 0) continue;
+    if (typeof weekData !== "object") {
+      alert("weekdata.js is missing or malformed.");
+      throw new Error("Missing weekdata.js or weekData variable.");
+    }
 
-          const key = normalize(row.album) + "|" + row.artist.toUpperCase().trim();
-          if (!albumMap[key]) {
-            albumMap[key] = {
-              album: row.album,
-              artist: row.artist,
-              totalPlays: 0
-            };
-          }
-          albumMap[key].totalPlays += sales;
+    // Combine album entries across all weeks
+    for (const week in weekData) {
+      weekData[week].forEach(row => {
+        if (!row.album || !row.artist || !row.sales) return;
+
+        const normName = normalizeAlbumName(row.album);
+        const key = normName + "|" + row.artist.toUpperCase().trim();
+        const sales = parseFloat(row.sales) || 0;
+
+        if (!albumMap[key]) {
+          albumMap[key] = {
+            album: row.album,
+            artist: row.artist,
+            totalSales: 0
+          };
         }
-      }
 
-      const albums = Object.values(albumMap)
-        .filter(a => a.totalPlays > 0)
-        .sort((a, b) => b.totalPlays - a.totalPlays)
-        .slice(0, 200);
-
-      const tbody = document.getElementById("albumTable");
-      albums.forEach((a, i) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${i + 1}</td>
-          <td><a href="album_detail.html?album=${encodeURIComponent(a.album)}&artist=${encodeURIComponent(a.artist)}">${a.album}</a></td>
-          <td><a href="artist.html?name=${encodeURIComponent(a.artist)}">${a.artist}</a></td>
-          <td>${a.totalPlays}</td>
-          <td class="cert">${getCertification(a.totalPlays)}</td>
-        `;
-        tbody.appendChild(row);
+        albumMap[key].totalSales += sales;
       });
     }
+
+    // Sort and take top 100
+    const topAlbums = Object.values(albumMap)
+      .filter(a => a.totalSales > 0)
+      .sort((a, b) => b.totalSales - a.totalSales)
+      .slice(0, 100);
+
+    // Render to table
+    const tbody = document.getElementById("albumTable");
+    topAlbums.forEach((album, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td><a href="album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}">${album.album}</a></td>
+        <td><a href="artist.html?name=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
+        <td>${album.totalSales}</td>
+        <td class="cert">${getCertification(album.totalSales)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
   </script>
 </body>
 </html>
