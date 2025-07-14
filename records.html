@@ -5,49 +5,85 @@
   <title>Top 100 Artists</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
+      font-family: 'Arial Black', sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
       padding: 2rem;
     }
+
     nav {
-      text-align: center;
+      background-color: #111;
+      padding: 1rem;
       margin-bottom: 2rem;
+      border-radius: 8px;
+      text-align: center;
     }
+
     nav a {
       margin: 0 1rem;
-      text-decoration: none;
       font-weight: bold;
-      color: #333;
+      color: #00f0ff;
+      text-decoration: none;
     }
+
     nav a:hover {
-      color: #007acc;
+      color: #ff007f;
     }
+
     h1 {
       text-align: center;
-      color: #333;
-      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      color: #ff007f;
+      margin-bottom: 1.5rem;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #fff;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      background-color: #1c1c1c;
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 0.95rem;
     }
+
     th, td {
-      padding: 0.8rem;
-      border: 1px solid #ccc;
+      padding: 0.75rem;
       text-align: left;
+    }
+
+    th {
+      background-color: #222;
+      color: #ff007f;
+      text-transform: uppercase;
       cursor: pointer;
     }
-    th {
-      background-color: #eee;
-      text-transform: uppercase;
-      font-size: 0.9rem;
+
+    td {
+      color: #fff;
     }
+
+    tr:nth-child(even) {
+      background-color: #2a2a2a;
+    }
+
+    tr:hover {
+      background-color: #333;
+    }
+
+    th.asc::after {
+      content: " 🔼";
+    }
+
+    th.desc::after {
+      content: " 🔽";
+    }
+
     a {
-      color: #0066cc;
+      color: #00f0ff;
       text-decoration: none;
     }
+
     a:hover {
       text-decoration: underline;
     }
@@ -56,10 +92,10 @@
 <body>
 
   <nav>
-    <a href="index.html">🔥 Home</a>
-    <a href="top_albums.html">💿 Top Albums</a>
-    <a href="top_songs.html">🎵 Top Songs</a>
-    <a href="top_artists.html">🎤 Top Artists</a>
+    <a href="index.html">🔥 Hot 100</a>
+    <a href="albums.html">📀 Albums</a>
+    <a href="top_albums.html">🏆 Top Albums</a>
+    <a href="records.html">📊 Records</a>
   </nav>
 
   <h1>🎤 Top 100 Artists</h1>
