@@ -50,6 +50,7 @@
     .cert-icon {
       height: 20px;
       vertical-align: middle;
+      margin-right: 3px;
     }
     .summary {
       margin-top: 2rem;
@@ -115,19 +116,31 @@
       return n.toString();
     }
 
-    function getAlbumCertImage(sales) {
-      if (sales >= 10_000_000) return `<img src="images/diamond.png" class="cert-icon" title="Diamond">`;
-      if (sales >= 1_000_000) return `<img src="images/multi.png" class="cert-icon" title="Multi-Platinum"> x${Math.floor(sales / 500_000)}`;
-      if (sales >= 500_000) return `<img src="images/platinum.png" class="cert-icon" title="Platinum">`;
-      if (sales >= 250_000) return `<img src="images/gold.png" class="cert-icon" title="Gold">`;
+    function getSongCertImages(sales) {
+      if (sales >= 1_000_000) {
+        return `<img src="images/diamond.png" class="cert-icon" title="Diamond">`;
+      }
+      if (sales >= 100_000) {
+        const count = Math.floor(sales / 100_000);
+        return Array(count).fill(`<img src="images/platinum.png" class="cert-icon" title="Platinum">`).join('');
+      }
+      if (sales >= 50_000) {
+        return `<img src="images/gold.png" class="cert-icon" title="Gold">`;
+      }
       return "—";
     }
 
-    function getSongCertImage(sales) {
-      if (sales >= 1_000_000) return `<img src="images/diamond.png" class="cert-icon" title="Diamond">`;
-      if (sales >= 400_000) return `<img src="images/multi.png" class="cert-icon" title="Multi-Platinum"> x${Math.floor(sales / 200_000)}`;
-      if (sales >= 200_000) return `<img src="images/platinum.png" class="cert-icon" title="Platinum">`;
-      if (sales >= 100_000) return `<img src="images/gold.png" class="cert-icon" title="Gold">`;
+    function getAlbumCertImages(sales) {
+      if (sales >= 10_000_000) {
+        return `<img src="images/diamond.png" class="cert-icon" title="Diamond">`;
+      }
+      if (sales >= 1_000_000) {
+        const count = Math.floor(sales / 1_000_000);
+        return Array(count).fill(`<img src="images/platinum.png" class="cert-icon" title="Platinum">`).join('');
+      }
+      if (sales >= 500_000) {
+        return `<img src="images/gold.png" class="cert-icon" title="Gold">`;
+      }
       return "—";
     }
 
@@ -144,11 +157,11 @@
 
         const normAlbum = normalizeAlbum(entry.album || "");
         const normTitle = normalizeTitle(entry.title || "");
-        const sales = (parseFloat(entry.sales) || 0) * 1000; // ✅ scale raw sales
+        const salesRaw = parseFloat(entry.sales) || 0;
+        const sales = salesRaw * 1000;
         const rank = parseInt(entry.rank);
-        const totalSales = (parseFloat(entry.totalSales) || 0);
+        const totalSales = parseFloat(entry.totalSales) || 0;
 
-        // Albums
         if (entry.album && normAlbum !== "NAN") {
           if (!albumsMap[normAlbum]) {
             albumsMap[normAlbum] = {
@@ -163,7 +176,6 @@
           realAlbums.forEach(album => album.sales += portion);
         }
 
-        // Songs
         if (!songsMap[normTitle]) {
           songsMap[normTitle] = {
             title: entry.title,
@@ -187,7 +199,7 @@
     // Albums Table
     const albumsTable = document.querySelector("#albumsTable tbody");
     Object.values(albumsMap).sort((a, b) => b.sales - a.sales).forEach(album => {
-      const certHTML = getAlbumCertImage(album.sales);
+      const certHTML = getAlbumCertImages(album.sales);
       const url = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
       const tr = document.createElement("tr");
       tr.innerHTML = `<td><a href="${url}">${album.name}</a></td><td>${certHTML}</td>`;
@@ -197,9 +209,9 @@
     // Songs Table
     const songsTable = document.querySelector("#songsTable tbody");
     Object.values(songsMap).sort((a, b) => b.sales - a.sales).forEach(song => {
-      const certHTML = getSongCertImage(song.sales);
+      const certHTML = getSongCertImages(song.sales);
       const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
-      const streams = song.totalSales * 2.2567 * 1_000_000;
+      const streams = (song.sales / 1000) * 2.2567 * 1_000_000;
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td><a href="${url}">${song.title}</a></td>
@@ -215,7 +227,7 @@
     const certTotals = document.getElementById("certTotals");
     const certCounts = {};
     Object.values(albumsMap).forEach(album => {
-      const label = getAlbumCertImage(album.sales).replace(/<[^>]*>/g, "").trim();
+      const label = getAlbumCertImages(album.sales).replace(/<[^>]*>/g, "").trim();
       if (!certCounts[label]) certCounts[label] = 0;
       certCounts[label]++;
     });
@@ -225,7 +237,7 @@
       .map(([label, count]) => `${label}: ${count}`)
       .join(" | ");
 
-    // Stats line
+    // Stats
     const statsEl = document.getElementById("artistStats");
     const songList = Object.values(songsMap);
     const num1s = songList.filter(s => s.peak === 1).length;
@@ -235,4 +247,5 @@
   </script>
 </body>
 </html>
+
 
