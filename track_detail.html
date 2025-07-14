@@ -32,7 +32,7 @@
   <p><strong>Debut Week:</strong> <span id="debutWeek"></span></p>
   <p><strong>Peak Rank:</strong> <span id="peakRank"></span></p>
   <p><strong>Total Weeks on Chart:</strong> <span id="weeksOnChart"></span></p>
-  <p><strong>Total Sales:</strong> <span id="totalSales"></span></p>
+  <p><strong>Total Sales:</strong> <span id="totalSales"></span> <small>(x1,000)</small></p>
   <p><strong>Total Streams:</strong> <span id="totalStreams"></span></p>
 
   <h2>📀 Appears On Albums</h2>
@@ -63,6 +63,7 @@
     }
 
     const streamMultiplier = 2.567; // 1 totalSales = 2.567M streams
+    const saleUnit = 1000; // 1 sale = 1,000 units
 
     const trackTitleEl = document.getElementById("trackTitle");
     const trackArtistEl = document.getElementById("trackArtist");
@@ -136,8 +137,11 @@
     debutEl.textContent = debut ? debut.label : "—";
     peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
     weeksEl.textContent = weeks;
-    totalSalesEl.textContent = Math.round(totalSales);
 
+    // Format total sales as unit × 1,000
+    totalSalesEl.textContent = (totalSales * saleUnit).toLocaleString();
+
+    // Format adjusted streams
     const adjustedStreams = maxTotalStreams * streamMultiplier;
     totalStreamsEl.textContent = adjustedStreams >= 1000
       ? `${(adjustedStreams / 1000).toFixed(1)}B`
@@ -153,7 +157,7 @@
         const cert = getAlbumCertLabel(album.sales);
         const albumUrl = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
         const li = document.createElement("li");
-        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${Math.round(album.sales)} <span class="cert-icon">${cert}</span>`;
+        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${(album.sales * saleUnit).toLocaleString()} <span class="cert-icon">${cert}</span>`;
         albumList.appendChild(li);
       });
     }
