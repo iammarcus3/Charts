@@ -93,7 +93,7 @@
     }
 
     function normalize(str) {
-      return str?.toUpperCase().replace(/[^A-Z0-9]/g, '').trim();
+      return (str || '').toUpperCase().replace(/[^A-Z0-9]/g, '').trim();
     }
 
     window.addEventListener("DOMContentLoaded", () => {
@@ -133,7 +133,7 @@
             if (rank <= 10) artistStats.top10Songs++;
           }
 
-          if (album && album.toUpperCase() !== "NAN") {
+          if (typeof album === 'string' && normalize(album) !== "NAN") {
             const key = `${normalize(album)}|${normArtist}`;
             if (!albumPeakMap[key]) albumPeakMap[key] = rank;
             else if (rank < albumPeakMap[key]) albumPeakMap[key] = rank;
@@ -141,7 +141,6 @@
         });
       }
 
-      // Handle album peaks for each artist
       for (const key in albumPeakMap) {
         const [albumKey, normArtist] = key.split('|');
         const peak = albumPeakMap[key];
@@ -190,7 +189,6 @@
 
       renderTable(artistList);
 
-      // Sorting
       const headers = document.querySelectorAll("th[data-sort]");
       headers.forEach(header => {
         header.addEventListener("click", () => {
