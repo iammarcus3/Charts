@@ -125,6 +125,9 @@
     const trackList = document.getElementById("trackList");
     const errorEl = document.getElementById("error");
 
+    const saleMultiplier = 1000;
+    const streamMultiplier = 2.2567;
+
     albumLink.textContent = albumParam;
     artistLink.textContent = artistParam;
     albumLink.href = `album_detail.html?album=${encodeURIComponent(albumParam)}&artist=${encodeURIComponent(artistParam)}`;
@@ -133,8 +136,7 @@
     const normArtist = normalize(artistParam);
     const normAlbum = normalizeAlbum(albumParam);
 
-    let totalStreams = 0;
-    let totalSales = 0;
+    let rawSales = 0;
     const weekSet = new Set();
     let debutWeek = null;
     let peakRank = Infinity;
@@ -150,12 +152,10 @@
         const entryAlbum = normalizeAlbum(entry.album);
         const entryTitle = entry.title;
         const entrySales = parseFloat(entry.sales) || 0;
-        const entryStreams = parseFloat(entry.totalSales) || 0;
         const entryRank = parseInt(entry.rank);
 
         if (entryArtist === normArtist && entryAlbum === normAlbum) {
-          totalSales += entrySales;
-          totalStreams += entryStreams;
+          rawSales += entrySales;
           weekSet.add(week);
           if (!debutWeek || weekNum < debutWeek) debutWeek = weekNum;
           if (entryRank && entryRank < peakRank) peakRank = entryRank;
@@ -174,13 +174,16 @@
       });
     }
 
-    totalStreamsEl.textContent = formatNumber(Math.round(totalStreams));
-    totalSalesEl.textContent = formatNumber(Math.round(totalSales));
+    const actualSales = rawSales * saleMultiplier;
+    const estimatedStreams = rawSales * streamMultiplier * 1_000_000;
+
+    totalStreamsEl.textContent = formatNumber(estimatedStreams);
+    totalSalesEl.textContent = formatNumber(actualSales);
     totalWeeksEl.textContent = weekSet.size;
     weeksAt1El.textContent = weeksAt1;
     debutEl.textContent = debutWeek || "—";
     peakEl.textContent = peakRank === Infinity ? "—" : `#${peakRank}`;
-    albumCertEl.textContent = getAlbumCertLabel(totalSales);
+    albumCertEl.textContent = getAlbumCertLabel(rawSales);
 
     const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
     if (sortedTracks.length === 0) {
