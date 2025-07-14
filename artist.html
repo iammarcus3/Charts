@@ -95,9 +95,21 @@
   <script>
     const params = new URLSearchParams(location.search);
     const artistParam = params.get("artist");
+
     const normalize = str => (str || "").toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
-    const normalizeAlbum = str => str?.toUpperCase().replace(/\(.*?\)|\[.*?\]/g, "").replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "").replace(/[^A-Z0-9]/g, "").trim();
-    const normalizeTitle = str => str?.toUpperCase().replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "").replace(/[^A-Z0-9]/g, "").trim();
+
+    const normalizeAlbum = str => String(str || '')
+      .toUpperCase()
+      .replace(/\(.*?\)|\[.*?\]/g, "")
+      .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
+      .replace(/[^A-Z0-9]/g, "")
+      .trim();
+
+    const normalizeTitle = str => String(str || '')
+      .toUpperCase()
+      .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+      .replace(/[^A-Z0-9]/g, "")
+      .trim();
 
     function formatNumber(n) {
       if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + "B";
@@ -131,8 +143,8 @@
 
       weekData[week].forEach(entry => {
         const normArtist = normalize(entry.artist);
-        const normTitle = normalizeTitle(entry.title || "");
-        const normAlbum = normalizeAlbum(entry.album || "");
+        const normTitle = normalizeTitle(entry.title);
+        const normAlbum = normalizeAlbum(entry.album);
         const titleLower = (entry.title || '').toLowerCase();
         const artistLower = (artistParam || '').toLowerCase();
 
