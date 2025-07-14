@@ -99,12 +99,18 @@
     document.getElementById("artistName").textContent = artistParam;
 
     const normalize = str => String(str || "").toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
-    const normalizeTitle = str => String(str || "").toUpperCase()
-      .replace(/\(.*?\)|\[.*?\]|REMIX|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
-      .replace(/[^A-Z0-9]/g, "").trim();
-    const normalizeAlbum = str => String(str || "").toUpperCase()
-      .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
-      .replace(/[^A-Z0-9]/g, "").trim();
+    const normalizeTitle = str => normalize(
+      str.replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+         .replace(/AND|&|N/gi, "AND")
+    );
+    const normalizeAlbum = str => normalize(
+      str.replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
+    );
+
+    const splitArtists = str => String(str || "")
+      .split(/,|&| and | with | feat\.? | featuring /i)
+      .map(a => normalize(a))
+      .filter(Boolean);
 
     const formatNumber = n => {
       if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + "B";
@@ -133,29 +139,24 @@
 
     for (const week in weekData) {
       weekData[week].forEach(entry => {
-        const artist = normalize(entry.artist);
-        const title = normalizeTitle(entry.title);
-        const album = normalizeAlbum(entry.album);
-        const rawSales = parseFloat(entry.sales) || 0;
-        const sales = rawSales * 1000;
-        const totalSales = parseFloat(entry.totalSales) || 0;
-        const rank = parseInt(entry.rank);
-        const titleText = entry.title || "";
-        const artistText = entry.artist || "";
-
-        const isMatch = artist === artistKey || (titleText.toLowerCase().includes(artistParam.toLowerCase()));
-
+        const allArtists = splitArtists(entry.artist);
+        const isMatch = allArtists.includes(artistKey) || String(entry.title || "").toLowerCase().includes(artistParam.toLowerCase());
         if (!isMatch) return;
 
-        if (album && album !== "NAN") {
-          if (!albumsMap[album]) {
-            albumsMap[album] = { name: entry.album, sales: 0 };
-          }
-          albumsMap[album].sales += sales;
+        const titleKey = normalizeTitle(entry.title);
+        const albumKey = normalizeAlbum(entry.album);
+        const salesRaw = parseFloat(entry.sales) || 0;
+        const sales = salesRaw * 1000;
+        const totalSales = parseFloat(entry.totalSales) || 0;
+        const rank = parseInt(entry.rank);
+
+        if (albumKey && albumKey !== "NAN") {
+          if (!albumsMap[albumKey]) albumsMap[albumKey] = { name: entry.album, sales: 0 };
+          albumsMap[albumKey].sales += sales;
         }
 
-        if (!songsMap[title]) {
-          songsMap[title] = {
+        if (!songsMap[titleKey]) {
+          songsMap[titleKey] = {
             title: entry.title,
             artist: entry.artist,
             sales: 0,
@@ -166,46 +167,39 @@
           };
         }
 
-        const song = songsMap[title];
+        const song = songsMap[titleKey];
         song.sales += sales;
         song.totalSales += totalSales;
-        song.weeks += 1;
+        song.weeks++;
         if (rank < song.peak) song.peak = rank;
-        if (rank === 1) song.num1s += 1;
+        if (rank === 1) song.num1s++;
       });
     }
 
-    // Albums
     const albumsTable = document.querySelector("#albumsTable tbody");
     Object.values(albumsMap).sort((a, b) => b.sales - a.sales).forEach(album => {
       const cert = getAlbumCertImages(album.sales);
       const url = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td><a href="${url}">${album.name}</a></td><td>${cert}</td>`;
-      albumsTable.appendChild(tr);
+      albumsTable.innerHTML += `<tr><td><a href="${url}">${album.name}</a></td><td>${cert}</td></tr>`;
     });
 
-    // Songs (sorted by total sales)
     const songsTable = document.querySelector("#songsTable tbody");
-    Object.values(songsMap)
-      .sort((a, b) => b.sales - a.sales)
-      .forEach(song => {
-        const cert = getSongCertImages(song.sales);
-        const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
-        const streams = (song.sales / 1000) * 2.2567 * 1_000_000;
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
+    Object.values(songsMap).sort((a, b) => b.sales - a.sales).forEach(song => {
+      const cert = getSongCertImages(song.sales);
+      const streams = (song.sales / 1000) * 2.2567 * 1_000_000;
+      const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
+      songsTable.innerHTML += `
+        <tr>
           <td><a href="${url}">${song.title}</a></td>
           <td>${cert}</td>
           <td>${formatNumber(streams)}</td>
           <td>${formatNumber(song.sales)}</td>
           <td>${song.weeks}</td>
           <td>#${song.peak}</td>
-          <td>${song.num1s}</td>`;
-        songsTable.appendChild(tr);
-      });
+          <td>${song.num1s}</td>
+        </tr>`;
+    });
 
-    // Summary Stats
     const statsEl = document.getElementById("artistStats");
     const allSongs = Object.values(songsMap);
     const num1s = allSongs.filter(s => s.peak === 1).length;
@@ -227,6 +221,7 @@
   </script>
 </body>
 </html>
+
 
 
 
