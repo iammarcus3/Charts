@@ -10,44 +10,15 @@
       color: #000;
       padding: 2rem;
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.2rem;
-    }
-    h2 {
-      margin-top: 2rem;
-      font-size: 1.5rem;
-      border-bottom: 2px solid #000;
-      padding-bottom: 0.3rem;
-    }
-    p {
-      font-size: 1rem;
-      margin: 0.4rem 0;
-    }
-    a {
-      color: blue;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    ul {
-      list-style: none;
-      padding-left: 0;
-      margin-top: 1rem;
-    }
-    ul li {
-      margin-bottom: 0.4rem;
-    }
-    .cert-icon {
-      font-size: 0.9rem;
-      margin-left: 0.3rem;
-      color: #666;
-    }
-    .error {
-      color: red;
-      font-weight: bold;
-    }
+    h1 { font-size: 2rem; margin-bottom: 0.2rem; }
+    h2 { margin-top: 2rem; font-size: 1.5rem; border-bottom: 2px solid #000; padding-bottom: 0.3rem; }
+    p { font-size: 1rem; margin: 0.4rem 0; }
+    a { color: blue; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    ul { list-style: none; padding-left: 0; margin-top: 1rem; }
+    ul li { margin-bottom: 0.4rem; }
+    .cert-icon { font-size: 0.9rem; margin-left: 0.3rem; color: #666; }
+    .error { color: red; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -91,6 +62,8 @@
       return "—";
     }
 
+    const streamMultiplier = 2.567; // 1 totalSales = 2.567M streams
+
     const trackTitleEl = document.getElementById("trackTitle");
     const trackArtistEl = document.getElementById("trackArtist");
     const debutEl = document.getElementById("debutWeek");
@@ -110,7 +83,7 @@
         peak = 999,
         weeks = 0,
         totalSales = 0,
-        totalStreams = 0;
+        maxTotalStreams = 0;
 
     const albumMap = {};
 
@@ -119,13 +92,19 @@
       const weekNum = parseInt(week.replace(/\D/g, ""));
 
       entries.forEach(row => {
-        if (normalize(row.artist) === artistKey && normalizeTitle(row.title) === songKey) {
+        const normArtist = normalize(row.artist);
+        const normTitle = normalizeTitle(row.title);
+
+        if (normArtist === artistKey && normTitle === songKey) {
           const rank = row.rank;
           const sales = parseFloat(row.sales) || 0;
-          const streams = parseFloat(row.totalSales) || 0;
+          const totalStreamValue = parseFloat(row.totalSales) || 0;
 
           totalSales += sales;
-          totalStreams += streams;
+          if (totalStreamValue > maxTotalStreams) {
+            maxTotalStreams = totalStreamValue;
+          }
+
           weeks++;
 
           if (!debut || weekNum < debut.week) {
@@ -153,22 +132,27 @@
       });
     }
 
+    // Render basic track stats
     debutEl.textContent = debut ? debut.label : "—";
     peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
     weeksEl.textContent = weeks;
     totalSalesEl.textContent = Math.round(totalSales);
-    totalStreamsEl.textContent = Math.round(totalStreams);
 
+    const adjustedStreams = maxTotalStreams * streamMultiplier;
+    totalStreamsEl.textContent = adjustedStreams >= 1000
+      ? `${(adjustedStreams / 1000).toFixed(1)}B`
+      : `${adjustedStreams.toFixed(1)}M`;
+
+    // Render albums
     const albums = Object.values(albumMap);
-
     if (albums.length === 0) {
       albumList.innerHTML = '<li class="error">No album data found for this track.</li>';
     } else {
       albums.sort((a, b) => b.sales - a.sales);
       albums.forEach(album => {
-        const li = document.createElement("li");
         const cert = getAlbumCertLabel(album.sales);
         const albumUrl = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
+        const li = document.createElement("li");
         li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${Math.round(album.sales)} <span class="cert-icon">${cert}</span>`;
         albumList.appendChild(li);
       });
