@@ -62,8 +62,8 @@
       return "—";
     }
 
-    const streamMultiplier = 2.567; // 1 totalSales = 2.567M streams
-    const saleUnit = 1000; // 1 sale = 1,000 units
+    const streamMultiplier = 2.567;
+    const saleUnit = 1000;
 
     const trackTitleEl = document.getElementById("trackTitle");
     const trackArtistEl = document.getElementById("trackArtist");
@@ -99,11 +99,11 @@
         if (normArtist === artistKey && normTitle === songKey) {
           const rank = row.rank;
           const sales = parseFloat(row.sales) || 0;
-          const totalStreamValue = parseFloat(row.totalSales) || 0;
+          const streamTotal = parseFloat(row.totalSales) || 0;
 
           totalSales += sales;
-          if (totalStreamValue > maxTotalStreams) {
-            maxTotalStreams = totalStreamValue;
+          if (streamTotal > maxTotalStreams) {
+            maxTotalStreams = streamTotal;
           }
 
           weeks++;
@@ -133,21 +133,16 @@
       });
     }
 
-    // Render basic track stats
     debutEl.textContent = debut ? debut.label : "—";
     peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
     weeksEl.textContent = weeks;
-
-    // Format total sales as unit × 1,000
     totalSalesEl.textContent = (totalSales * saleUnit).toLocaleString();
 
-    // Format adjusted streams
     const adjustedStreams = maxTotalStreams * streamMultiplier;
     totalStreamsEl.textContent = adjustedStreams >= 1000
       ? `${(adjustedStreams / 1000).toFixed(1)}B`
       : `${adjustedStreams.toFixed(1)}M`;
 
-    // Render albums
     const albums = Object.values(albumMap);
     if (albums.length === 0) {
       albumList.innerHTML = '<li class="error">No album data found for this track.</li>';
