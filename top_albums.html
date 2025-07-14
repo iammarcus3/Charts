@@ -24,6 +24,7 @@
       padding: 0.8rem;
       border: 1px solid #ccc;
       text-align: left;
+      cursor: pointer;
     }
     th {
       background-color: #eee;
@@ -41,56 +42,68 @@
       color: #555;
       font-size: 0.85rem;
     }
+    img.album-img {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body>
-  <h1>🏆 Top 100 Albums by Total Plays</h1>
+  <h1>🏆 Top 100 Albums by Sales</h1>
 
   <table>
     <thead>
       <tr>
-        <th>Rank</th>
-        <th>Album</th>
-        <th>Artist</th>
-        <th>Total Plays</th>
-        <th>Certification</th>
+        <th data-sort="rank">Rank</th>
+        <th data-sort="album">Album</th>
+        <th data-sort="artist">Artist</th>
+        <th data-sort="sales">Total Sales</th>
+        <th data-sort="streams">Total Streams</th>
+        <th data-sort="cert">Certification</th>
       </tr>
     </thead>
     <tbody id="albumTable">
-      <tr><td colspan="5">Loading data...</td></tr>
+      <tr><td colspan="6">Loading data...</td></tr>
     </tbody>
   </table>
 
   <script src="weekdata.js"></script>
   <script>
+    function formatNumber(n) {
+      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
+      return n.toString();
+    }
+
+    function getCert(sales) {
+      if (sales >= 1000) return `💿 Multi-Platinum x${Math.floor(sales / 500)}`;
+      if (sales >= 500) return "💿 Platinum";
+      if (sales >= 250) return "🥇 Gold";
+      return "—";
+    }
+
+    function normalizeAlbum(name) {
+      if (typeof name !== "string") return "";
+      return name
+        .toUpperCase()
+        .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMIX|SINGLE|EP/gi, "")
+        .replace(/[^A-Z0-9 ]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
       const tableBody = document.getElementById("albumTable");
 
       if (typeof weekData !== "object") {
-        tableBody.innerHTML = `<tr><td colspan="5">❌ weekdata.js not found or not formatted correctly.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6">❌ weekdata.js not found or not formatted correctly.</td></tr>`;
         return;
       }
 
-      function normalizeAlbum(name) {
-        if (typeof name !== "string") return "";
-        return name
-          .toUpperCase()
-          .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMIX|SINGLE|EP/gi, "")
-          .replace(/[^A-Z0-9 ]/g, "")
-          .replace(/\s+/g, " ")
-          .trim();
-      }
-
-      // ✅ Album-specific certification logic
-      function getCert(plays) {
-        if (plays >= 1000) return `Multi-Platinum x${Math.floor(plays / 500)}`;
-        if (plays >= 500) return "Platinum";
-        if (plays >= 250) return "Gold";
-        return "—";
-      }
-
       const albumMap = {};
-
       for (const week in weekData) {
         const entries = weekData[week];
         if (!Array.isArray(entries)) continue;
@@ -99,41 +112,74 @@
           if (!entry.album || !entry.artist || isNaN(entry.sales)) return;
 
           const albumKey = normalizeAlbum(entry.album) + "|" + entry.artist.toUpperCase().trim();
-          const plays = parseFloat(entry.sales) || 0;
+          const sales = parseFloat(entry.sales) || 0;
 
           if (!albumMap[albumKey]) {
             albumMap[albumKey] = {
               album: entry.album,
               artist: entry.artist,
-              totalPlays: 0
+              rawSales: 0
             };
           }
 
-          albumMap[albumKey].totalPlays += plays;
+          albumMap[albumKey].rawSales += sales;
         });
       }
 
-      const topAlbums = Object.values(albumMap)
-        .filter(a => a.totalPlays > 0)
-        .sort((a, b) => b.totalPlays - a.totalPlays)
+      let albumList = Object.values(albumMap)
+        .filter(a => a.rawSales > 0)
+        .map((a, i) => ({
+          ...a,
+          totalSales: a.rawSales * 1000,
+          totalStreams: a.rawSales * 2.2567 * 1_000_000,
+          cert: getCert(a.rawSales),
+          rank: i + 1
+        }))
+        .sort((a, b) => b.totalSales - a.totalSales)
         .slice(0, 100);
 
-      if (topAlbums.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5">⚠️ No albums found in weekdata.js.</td></tr>`;
-        return;
+      function renderTable(data) {
+        tableBody.innerHTML = "";
+        data.forEach((album, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>
+              <img src="https://via.placeholder.com/40?text=🎵" class="album-img" />
+              <a href="album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}">${album.album}</a>
+            </td>
+            <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
+            <td>${formatNumber(album.totalSales)}</td>
+            <td>${formatNumber(album.totalStreams)}</td>
+            <td class="cert">${album.cert}</td>
+          `;
+          tableBody.appendChild(tr);
+        });
       }
 
-      tableBody.innerHTML = "";
-      topAlbums.forEach((album, index) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${index + 1}</td>
-          <td><a href="album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}">${album.album}</a></td>
-          <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
-          <td>${album.totalPlays}</td>
-          <td class="cert">${getCert(album.totalPlays)}</td>
-        `;
-        tableBody.appendChild(tr);
+      renderTable(albumList);
+
+      // Sorting functionality
+      const headers = document.querySelectorAll("th[data-sort]");
+      headers.forEach(header => {
+        header.addEventListener("click", () => {
+          const key = header.getAttribute("data-sort");
+          const isAsc = header.classList.contains("asc");
+          headers.forEach(h => h.classList.remove("asc", "desc"));
+          header.classList.add(isAsc ? "desc" : "asc");
+
+          albumList.sort((a, b) => {
+            if (key === "album" || key === "artist") {
+              return isAsc
+                ? a[key].localeCompare(b[key])
+                : b[key].localeCompare(a[key]);
+            } else {
+              return isAsc ? a[key] - b[key] : b[key] - a[key];
+            }
+          });
+
+          renderTable(albumList);
+        });
       });
     });
   </script>
