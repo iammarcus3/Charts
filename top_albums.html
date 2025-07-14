@@ -9,10 +9,23 @@
       background-color: #f9f9f9;
       padding: 2rem;
     }
+    nav {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+      color: #333;
+    }
+    nav a:hover {
+      color: #007acc;
+    }
     h1 {
       text-align: center;
       color: #333;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
     table {
       width: 100%;
@@ -38,19 +51,21 @@
     a:hover {
       text-decoration: underline;
     }
-    .cert {
-      color: #555;
-      font-size: 0.85rem;
-    }
-    img.album-img {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
+    .cert img {
+      height: 20px;
       vertical-align: middle;
+      margin-right: 3px;
     }
   </style>
 </head>
 <body>
+
+  <nav>
+    <a href="index.html">🔥 Home</a>
+    <a href="top_albums.html">💿 Top Albums</a>
+    <a href="top_songs.html">🎵 Top Songs</a>
+  </nav>
+
   <h1>🏆 Top 100 Albums by Sales</h1>
 
   <table>
@@ -78,14 +93,21 @@
       return n.toString();
     }
 
-    function getCert(sales) {
-      if (sales >= 1000) return `💿 Multi-Platinum x${Math.floor(sales / 500)}`;
-      if (sales >= 500) return "💿 Platinum";
-      if (sales >= 250) return "🥇 Gold";
+    function getAlbumCertIcons(sales) {
+      const scaled = sales * 1000;
+      if (scaled >= 10_000_000) {
+        return `<img src="diamond.png" title="Diamond">`;
+      }
+      if (scaled >= 1_000_000) {
+        const count = Math.floor(scaled / 1_000_000);
+        return Array(count).fill(`<img src="platinum.png" title="Platinum">`).join('');
+      }
+      if (scaled >= 500_000) {
+        return `<img src="gold.png" title="Gold">`;
+      }
       return "—";
     }
 
-    // ✅ FIXED: safer version
     function normalizeAlbum(name) {
       if (typeof name !== "string") return "";
       return name.toUpperCase()
@@ -132,7 +154,7 @@
           ...a,
           totalSales: a.rawSales * 1000,
           totalStreams: a.rawSales * 2.2567 * 1_000_000,
-          cert: getCert(a.rawSales),
+          cert: getAlbumCertIcons(a.rawSales),
           rank: i + 1
         }))
         .sort((a, b) => b.totalSales - a.totalSales)
@@ -145,7 +167,6 @@
           tr.innerHTML = `
             <td>${index + 1}</td>
             <td>
-              <img src="https://via.placeholder.com/40?text=🎵" class="album-img" />
               <a href="album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}">${album.album}</a>
             </td>
             <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
@@ -159,7 +180,6 @@
 
       renderTable(albumList);
 
-      // Sorting functionality
       const headers = document.querySelectorAll("th[data-sort]");
       headers.forEach(header => {
         header.addEventListener("click", () => {
