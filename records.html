@@ -1,49 +1,219 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Billboard Records</title>
+  <title>Top 100 Artists</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #f9f9f9; }
-    h2 { margin-top: 2rem; color: #2c3e50; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
-    th { background: #eaeaea; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 2rem;
+    }
+    nav {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+      color: #333;
+    }
+    nav a:hover {
+      color: #007acc;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      text-align: left;
+      cursor: pointer;
+    }
+    th {
+      background-color: #eee;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-<nav style="margin-bottom: 1.5rem;">
-  <a href="index.html">🏠 Main</a> |
-  <a href="albums.html">📀 Albums Chart</a> |
-  <a href="top_albums.html">📈 Top Albums</a> |
-  <a href="records.html">📊 Records</a>
-</nav>
 
-  <h1>🏆 Billboard Records</h1>
+  <nav>
+    <a href="index.html">🔥 Home</a>
+    <a href="top_albums.html">💿 Top Albums</a>
+    <a href="top_songs.html">🎵 Top Songs</a>
+    <a href="top_artists.html">🎤 Top Artists</a>
+  </nav>
 
-  <h2>Top Artists by Total Sales</h2>
+  <h1>🎤 Top 100 Artists</h1>
+
   <table>
-    <thead><tr><th>Rank</th><th>Artist</th><th>Total Sales</th><th>Charted Songs</th></tr></thead>
-    <tbody>
-<tr><td>1</td><td>Nicki Minaj</td><td>27185</td><td>116</td></tr><tr><td>2</td><td>Mariah Carey</td><td>24233</td><td>152</td></tr><tr><td>3</td><td>Beyoncé</td><td>18497</td><td>165</td></tr><tr><td>4</td><td>Chris Brown</td><td>16025</td><td>175</td></tr><tr><td>5</td><td>The Weeknd</td><td>14115</td><td>111</td></tr><tr><td>6</td><td>Madonna</td><td>13276</td><td>114</td></tr><tr><td>7</td><td>Doja Cat</td><td>12196</td><td>72</td></tr><tr><td>8</td><td>Janet Jackson</td><td>11171</td><td>135</td></tr><tr><td>9</td><td>Omar Apollo</td><td>9925</td><td>42</td></tr><tr><td>10</td><td>Drake</td><td>8188</td><td>95</td></tr><tr><td>11</td><td>Ella Mai</td><td>7635</td><td>38</td></tr><tr><td>12</td><td>Rihanna</td><td>7507</td><td>88</td></tr><tr><td>13</td><td>Khalid</td><td>7198</td><td>49</td></tr><tr><td>14</td><td>Jenevieve</td><td>5743</td><td>19</td></tr><tr><td>15</td><td>Michael Jackson</td><td>5649</td><td>59</td></tr><tr><td>16</td><td>Ava Max</td><td>5608</td><td>40</td></tr><tr><td>17</td><td>Ariana Grande</td><td>5470</td><td>55</td></tr><tr><td>18</td><td>Sam Smith</td><td>5425</td><td>35</td></tr><tr><td>19</td><td>Whitney Houston</td><td>5382</td><td>43</td></tr><tr><td>20</td><td>Muni Long</td><td>4733</td><td>19</td></tr><tr><td>21</td><td>Mariah the Scientist</td><td>4235</td><td>18</td></tr><tr><td>22</td><td>Céline Dion</td><td>4194</td><td>53</td></tr><tr><td>23</td><td>Tems</td><td>4071</td><td>20</td></tr><tr><td>24</td><td>SZA</td><td>3910</td><td>39</td></tr><tr><td>25</td><td>Jacquees</td><td>3861</td><td>29</td></tr>
+    <thead>
+      <tr>
+        <th data-sort="rank">Rank</th>
+        <th data-sort="artist">Artist</th>
+        <th data-sort="streams">Total Streams</th>
+        <th data-sort="monthly">Avg Monthly Streams</th>
+        <th data-sort="sales">Total Sales</th>
+        <th data-sort="num1songs">#1 Songs</th>
+        <th data-sort="top10songs">Top 10 Songs</th>
+        <th data-sort="num1albums">#1 Albums</th>
+        <th data-sort="top10albums">Top 10 Albums</th>
+      </tr>
+    </thead>
+    <tbody id="artistTable">
+      <tr><td colspan="9">Loading data...</td></tr>
     </tbody>
   </table>
 
-  <h2>Artists with the Most #1 Hits (Including Features)</h2>
-  <table>
-    <thead><tr><th>Rank</th><th>Artist</th><th>#1 Hits</th></tr></thead>
-    <tbody>
-<tr><td>1</td><td>Nicki Minaj</td><td>35</td></tr><tr><td>2</td><td>Mariah Carey</td><td>20</td></tr><tr><td>3</td><td>The Weeknd</td><td>18</td></tr><tr><td>4</td><td>ID</td><td>16</td></tr><tr><td>5</td><td>Eve</td><td>14</td></tr><tr><td>6</td><td>Beyoncé</td><td>11</td></tr><tr><td>7</td><td>Chris Brown</td><td>11</td></tr><tr><td>8</td><td>Madonna</td><td>11</td></tr><tr><td>9</td><td>Doja Cat</td><td>11</td></tr><tr><td>10</td><td>Kabza De Small</td><td>10</td></tr><tr><td>11</td><td>Omar Apollo</td><td>7</td></tr><tr><td>12</td><td>Drake</td><td>6</td></tr><tr><td>13</td><td>Janet Jackson</td><td>6</td></tr><tr><td>14</td><td>Cardi B</td><td>6</td></tr><tr><td>15</td><td>Ella Mai</td><td>6</td></tr><tr><td>16</td><td>Ava Max</td><td>6</td></tr><tr><td>17</td><td>Kabza De Small & DJ Maphorisa</td><td>6</td></tr><tr><td>18</td><td>Blue</td><td>6</td></tr><tr><td>19</td><td>Tyla</td><td>6</td></tr><tr><td>20</td><td>Rihanna</td><td>5</td></tr><tr><td>21</td><td>Khalid</td><td>5</td></tr><tr><td>22</td><td>AKA</td><td>5</td></tr><tr><td>23</td><td>Ariana Grande</td><td>5</td></tr><tr><td>24</td><td>Whitney Houston</td><td>5</td></tr><tr><td>25</td><td>Simply Red</td><td>5</td></tr>
-    </tbody>
-  </table>
+  <script src="weekdata.js"></script>
+  <script>
+    function formatNumber(n) {
+      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
+      return n.toString();
+    }
 
-  <h2>Top Songs of All Time (by Sales)</h2>
-  <table>
-    <thead><tr><th>Rank</th><th>Title</th><th>Artist</th><th>Sales</th><th>Peak</th><th>Weeks</th></tr></thead>
-    <tbody>
-<tr><td>1</td><td>Whatchamacallit (feat. Chris Brown)</td><td>Ella Mai</td><td>1519</td><td>1</td><td>49</td></tr><tr><td>2</td><td>One Of The Girls</td><td>The Weeknd, JENNIE & Lily Rose Depp</td><td>1408</td><td>1</td><td>29</td></tr><tr><td>3</td><td>Baby Powder</td><td>Jenevieve</td><td>1281</td><td>1</td><td>66</td></tr><tr><td>4</td><td>Fly Like a Bird</td><td>Mariah Carey</td><td>1213</td><td>2</td><td>38</td></tr><tr><td>5</td><td>I Still Believe</td><td>Mariah Carey</td><td>1127</td><td>4</td><td>62</td></tr><tr><td>6</td><td>Agora Hills</td><td>Doja Cat</td><td>1119</td><td>1</td><td>39</td></tr><tr><td>7</td><td>Chun-Li</td><td>Nicki Minaj</td><td>1114</td><td>2</td><td>39</td></tr><tr><td>8</td><td>If</td><td>Janet Jackson</td><td>1071</td><td>2</td><td>56</td></tr><tr><td>9</td><td>Vegas</td><td>Doja Cat</td><td>1067</td><td>2</td><td>28</td></tr><tr><td>10</td><td>Bad Habit</td><td>Steve Lacy</td><td>1050</td><td>1</td><td>25</td></tr><tr><td>11</td><td>Your Peace (feat. Lil Baby)</td><td>Jacquees</td><td>1045</td><td>1</td><td>39</td></tr><tr><td>12</td><td>Outta My Head (with John Mayer)</td><td>Khalid</td><td>1029</td><td>1</td><td>49</td></tr><tr><td>13</td><td>Majesty (feat. Eminem)</td><td>Nicki Minaj & Labrinth</td><td>1019</td><td>1</td><td>22</td></tr><tr><td>14</td><td>Casio</td><td>Jungle</td><td>962</td><td>1</td><td>36</td></tr><tr><td>15</td><td>Fallin 4 U</td><td>Nicki Minaj</td><td>953</td><td>1</td><td>27</td></tr><tr><td>16</td><td>Top Off (feat. JAY Z, Future & Beyoncé)</td><td>DJ Khaled</td><td>942</td><td>1</td><td>21</td></tr><tr><td>17</td><td>Alalahi (feat. Bontle Smith & Vyno Miller)</td><td>Kabza De Small & DJ Maphorisa</td><td>928</td><td>1</td><td>29</td></tr><tr><td>18</td><td>Demons</td><td>Doja Cat</td><td>910</td><td>1</td><td>28</td></tr><tr><td>19</td><td>The Air That I Breathe (Reprise)</td><td>Simply Red</td><td>905</td><td>1</td><td>33</td></tr><tr><td>20</td><td>Boo'd Up</td><td>Ella Mai</td><td>882</td><td>3</td><td>38</td></tr><tr><td>21</td><td>Want U Around (feat. Ruel)</td><td>Omar Apollo</td><td>873</td><td>1</td><td>28</td></tr><tr><td>22</td><td>Rendezvous</td><td>Craig David</td><td>861</td><td>1</td><td>67</td></tr><tr><td>23</td><td>Kiss It Better</td><td>Rihanna</td><td>857</td><td>1</td><td>35</td></tr><tr><td>24</td><td>Roman's Revenge (feat. Eminem)</td><td>Eminem & Nicki Minaj</td><td>845</td><td>2</td><td>34</td></tr><tr><td>25</td><td>Before I Let Go (Homecoming Live Bonus Track)</td><td>Beyoncé</td><td>819</td><td>1</td><td>37</td></tr>
-    </tbody>
-  </table>
+    function normalize(str) {
+      return str?.toUpperCase().replace(/[^A-Z0-9]/g, '').trim();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const tableBody = document.getElementById("artistTable");
+      const artistMap = {};
+      const albumPeakMap = {};
+
+      for (const week in weekData) {
+        const entries = weekData[week];
+
+        entries.forEach(entry => {
+          const artist = entry.artist;
+          const normArtist = normalize(artist);
+          const album = entry.album || "";
+          const title = entry.title;
+          const rank = parseInt(entry.rank);
+          const sales = parseFloat(entry.sales) || 0;
+
+          if (!artistMap[normArtist]) {
+            artistMap[normArtist] = {
+              name: artist,
+              rawSales: 0,
+              weeks: new Set(),
+              num1Songs: 0,
+              top10Songs: 0,
+              num1Albums: 0,
+              top10Albums: 0
+            };
+          }
+
+          const artistStats = artistMap[normArtist];
+          artistStats.rawSales += sales;
+          artistStats.weeks.add(week);
+
+          if (title) {
+            if (rank === 1) artistStats.num1Songs++;
+            if (rank <= 10) artistStats.top10Songs++;
+          }
+
+          if (album && album.toUpperCase() !== "NAN") {
+            const key = `${normalize(album)}|${normArtist}`;
+            if (!albumPeakMap[key]) albumPeakMap[key] = rank;
+            else if (rank < albumPeakMap[key]) albumPeakMap[key] = rank;
+          }
+        });
+      }
+
+      // Handle album peaks for each artist
+      for (const key in albumPeakMap) {
+        const [albumKey, normArtist] = key.split('|');
+        const peak = albumPeakMap[key];
+        if (!artistMap[normArtist]) continue;
+        if (peak === 1) artistMap[normArtist].num1Albums++;
+        if (peak <= 10) artistMap[normArtist].top10Albums++;
+      }
+
+      const artistList = Object.values(artistMap)
+        .map(a => {
+          const totalStreams = a.rawSales * 2.2567 * 1_000_000;
+          const totalSales = a.rawSales * 1000;
+          const months = a.weeks.size / 4.33;
+          return {
+            name: a.name,
+            totalStreams,
+            totalSales,
+            monthlyStreams: totalStreams / (months || 1),
+            num1Songs: a.num1Songs,
+            top10Songs: a.top10Songs,
+            num1Albums: a.num1Albums,
+            top10Albums: a.top10Albums
+          };
+        })
+        .sort((a, b) => b.totalStreams - a.totalStreams)
+        .slice(0, 100);
+
+      function renderTable(data) {
+        tableBody.innerHTML = "";
+        data.forEach((a, i) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${i + 1}</td>
+            <td><a href="artist.html?artist=${encodeURIComponent(a.name)}">${a.name}</a></td>
+            <td>${formatNumber(a.totalStreams)}</td>
+            <td>${formatNumber(a.monthlyStreams)}</td>
+            <td>${formatNumber(a.totalSales)}</td>
+            <td>${a.num1Songs}</td>
+            <td>${a.top10Songs}</td>
+            <td>${a.num1Albums}</td>
+            <td>${a.top10Albums}</td>
+          `;
+          tableBody.appendChild(tr);
+        });
+      }
+
+      renderTable(artistList);
+
+      // Sorting
+      const headers = document.querySelectorAll("th[data-sort]");
+      headers.forEach(header => {
+        header.addEventListener("click", () => {
+          const key = header.getAttribute("data-sort");
+          const isAsc = header.classList.contains("asc");
+          headers.forEach(h => h.classList.remove("asc", "desc"));
+          header.classList.add(isAsc ? "desc" : "asc");
+
+          artistList.sort((a, b) => {
+            if (typeof a[key] === 'string') {
+              return isAsc
+                ? a[key].localeCompare(b[key])
+                : b[key].localeCompare(a[key]);
+            } else {
+              return isAsc ? a[key] - b[key] : b[key] - a[key];
+            }
+          });
+
+          renderTable(artistList);
+        });
+      });
+    });
+  </script>
 </body>
 </html>
+
