@@ -95,19 +95,9 @@
   <script>
     const params = new URLSearchParams(location.search);
     const artistParam = params.get("artist");
-    const normalize = str =>
-      typeof str === "string" ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim() : "";
-
-    const normalizeAlbum = str => str?.toUpperCase()
-      .replace(/\(.*?\)|\[.*?\]/g, "")
-      .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
-      .replace(/[^A-Z0-9]/g, "")
-      .trim();
-
-    const normalizeTitle = str => str?.toUpperCase()
-      .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
-      .replace(/[^A-Z0-9]/g, "")
-      .trim();
+    const normalize = str => (str || "").toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
+    const normalizeAlbum = str => str?.toUpperCase().replace(/\(.*?\)|\[.*?\]/g, "").replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "").replace(/[^A-Z0-9]/g, "").trim();
+    const normalizeTitle = str => str?.toUpperCase().replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "").replace(/[^A-Z0-9]/g, "").trim();
 
     function formatNumber(n) {
       if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + "B";
@@ -117,62 +107,46 @@
     }
 
     function getSongCertImages(sales) {
-      if (sales >= 1_000_000) {
-        return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
-      }
-      if (sales >= 100_000) {
-        const count = Math.floor(sales / 100_000);
-        return Array(count).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
-      }
-      if (sales >= 50_000) {
-        return `<img src="gold.png" class="cert-icon" title="Gold">`;
-      }
+      if (sales >= 1_000_000) return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
+      if (sales >= 100_000) return Array(Math.floor(sales / 100_000)).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
+      if (sales >= 50_000) return `<img src="gold.png" class="cert-icon" title="Gold">`;
       return "—";
     }
 
     function getAlbumCertImages(sales) {
-      if (sales >= 10_000_000) {
-        return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
-      }
-      if (sales >= 1_000_000) {
-        const count = Math.floor(sales / 1_000_000);
-        return Array(count).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
-      }
-      if (sales >= 500_000) {
-        return `<img src="gold.png" class="cert-icon" title="Gold">`;
-      }
+      if (sales >= 10_000_000) return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
+      if (sales >= 1_000_000) return Array(Math.floor(sales / 1_000_000)).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
+      if (sales >= 500_000) return `<img src="gold.png" class="cert-icon" title="Gold">`;
       return "—";
     }
 
     document.getElementById("artistName").textContent = artistParam;
-
     const artistKey = normalize(artistParam);
     const albumsMap = {};
     const songsMap = {};
     const songDebutWeek = {};
 
     for (const week in weekData) {
+      const weekNum = parseInt(week.replace(/\D/g, ""));
+
       weekData[week].forEach(entry => {
         const normArtist = normalize(entry.artist);
         const normTitle = normalizeTitle(entry.title || "");
         const normAlbum = normalizeAlbum(entry.album || "");
-        const weekNumber = parseInt(week.replace(/[^0-9]/g, "")) || 0;
+        const titleLower = (entry.title || '').toLowerCase();
+        const artistLower = (artistParam || '').toLowerCase();
+
+        const isMatch = normArtist === artistKey || titleLower.includes(artistLower);
+        if (!isMatch) return;
+
         const salesRaw = parseFloat(entry.sales) || 0;
         const sales = salesRaw * 1000;
         const rank = parseInt(entry.rank);
         const totalSales = parseFloat(entry.totalSales) || 0;
 
-        const artistInTitle = normalize(entry.title).includes(artistKey);
-        const isRelevant = normArtist === artistKey || artistInTitle;
-
-        if (!isRelevant) return;
-
         if (entry.album && normAlbum !== "NAN") {
           if (!albumsMap[normAlbum]) {
-            albumsMap[normAlbum] = {
-              name: entry.album,
-              sales: 0
-            };
+            albumsMap[normAlbum] = { name: entry.album, sales: 0 };
           }
           albumsMap[normAlbum].sales += sales;
         }
@@ -187,7 +161,7 @@
             peak: rank,
             num1s: 0
           };
-          songDebutWeek[normTitle] = weekNumber;
+          songDebutWeek[normTitle] = weekNum;
         }
 
         const song = songsMap[normTitle];
@@ -196,8 +170,8 @@
         song.weeks += 1;
         if (rank < song.peak) song.peak = rank;
         if (rank === 1) song.num1s += 1;
-        if (weekNumber < songDebutWeek[normTitle]) {
-          songDebutWeek[normTitle] = weekNumber;
+        if (weekNum < songDebutWeek[normTitle]) {
+          songDebutWeek[normTitle] = weekNum;
         }
       });
     }
@@ -236,7 +210,6 @@
       if (!certCounts[label]) certCounts[label] = 0;
       certCounts[label]++;
     });
-
     certTotals.innerHTML = Object.entries(certCounts)
       .filter(([c]) => c !== "—")
       .map(([label, count]) => `${label}: ${count}`)
@@ -251,6 +224,7 @@
   </script>
 </body>
 </html>
+
 
 
 
