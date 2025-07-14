@@ -57,7 +57,7 @@
   <h1><a id="albumLink" href="#">Album Detail</a></h1>
   <p><strong>Artist:</strong> <a id="artistLink" href="#">Artist</a></p>
   <p><strong>Total Streams:</strong> <span id="totalStreams">0</span></p>
-  <p><strong>Total Sales:</strong> <span id="totalSales">0</span> <small>(x1,000)</small></p>
+  <p><strong>Total Sales:</strong> <span id="totalSales">0</span></p>
   <p><strong>Total Weeks on Chart:</strong> <span id="totalWeeks">0</span></p>
   <p><strong>Weeks at #1:</strong> <span id="weeksAt1">0</span></p>
   <p><strong>Peak Position:</strong> <span id="peak">—</span></p>
@@ -93,7 +93,6 @@
           .trim()
       : "";
 
-    // Album-level certification logic: BASED ON SALES
     function getAlbumCertLabel(sales) {
       if (sales >= 1000) return `💿 Multi-Platinum (x${Math.floor(sales / 500)})`;
       if (sales >= 500) return "💿 Platinum";
@@ -101,11 +100,17 @@
       return "—";
     }
 
-    // Track-level certification logic: BASED ON SALES
     function getTrackCertIcon(sales) {
       if (sales >= 200) return `💿 x${Math.floor(sales / 200)}`;
       if (sales >= 100) return "🥇 Gold";
       return "";
+    }
+
+    function formatNumber(n) {
+      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
+      return n.toString();
     }
 
     const albumLink = document.getElementById("albumLink");
@@ -119,8 +124,6 @@
     const albumCertEl = document.getElementById("albumCert");
     const trackList = document.getElementById("trackList");
     const errorEl = document.getElementById("error");
-
-    const unit = 1000;
 
     albumLink.textContent = albumParam;
     artistLink.textContent = artistParam;
@@ -171,8 +174,8 @@
       });
     }
 
-    totalStreamsEl.textContent = Math.round(totalStreams);
-    totalSalesEl.textContent = (totalSales * unit).toLocaleString();
+    totalStreamsEl.textContent = formatNumber(Math.round(totalStreams));
+    totalSalesEl.textContent = formatNumber(Math.round(totalSales));
     totalWeeksEl.textContent = weekSet.size;
     weeksAt1El.textContent = weeksAt1;
     debutEl.textContent = debutWeek || "—";
