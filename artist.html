@@ -149,18 +149,23 @@
     const artistKey = normalize(artistParam);
     const albumsMap = {};
     const songsMap = {};
+    const songDebutWeek = {};
 
     for (const week in weekData) {
       weekData[week].forEach(entry => {
         const normArtist = normalize(entry.artist);
-        if (normArtist !== artistKey) return;
-
-        const normAlbum = normalizeAlbum(entry.album || "");
         const normTitle = normalizeTitle(entry.title || "");
+        const normAlbum = normalizeAlbum(entry.album || "");
+        const weekNumber = parseInt(week.replace(/[^0-9]/g, "")) || 0;
         const salesRaw = parseFloat(entry.sales) || 0;
         const sales = salesRaw * 1000;
         const rank = parseInt(entry.rank);
         const totalSales = parseFloat(entry.totalSales) || 0;
+
+        const artistInTitle = normalize(entry.title).includes(artistKey);
+        const isRelevant = normArtist === artistKey || artistInTitle;
+
+        if (!isRelevant) return;
 
         if (entry.album && normAlbum !== "NAN") {
           if (!albumsMap[normAlbum]) {
@@ -170,10 +175,6 @@
             };
           }
           albumsMap[normAlbum].sales += sales;
-        } else if (normAlbum === "NAN") {
-          const realAlbums = Object.values(albumsMap).slice(0, 3);
-          const portion = sales / (realAlbums.length || 1);
-          realAlbums.forEach(album => album.sales += portion);
         }
 
         if (!songsMap[normTitle]) {
@@ -186,17 +187,21 @@
             peak: rank,
             num1s: 0
           };
+          songDebutWeek[normTitle] = weekNumber;
         }
+
         const song = songsMap[normTitle];
         song.sales += sales;
         song.totalSales += totalSales;
         song.weeks += 1;
         if (rank < song.peak) song.peak = rank;
         if (rank === 1) song.num1s += 1;
+        if (weekNumber < songDebutWeek[normTitle]) {
+          songDebutWeek[normTitle] = weekNumber;
+        }
       });
     }
 
-    // Albums Table
     const albumsTable = document.querySelector("#albumsTable tbody");
     Object.values(albumsMap).sort((a, b) => b.sales - a.sales).forEach(album => {
       const certHTML = getAlbumCertImages(album.sales);
@@ -206,24 +211,24 @@
       albumsTable.appendChild(tr);
     });
 
-    // Songs Table
     const songsTable = document.querySelector("#songsTable tbody");
-    Object.values(songsMap).sort((a, b) => b.sales - a.sales).forEach(song => {
-      const certHTML = getSongCertImages(song.sales);
-      const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
-      const streams = (song.sales / 1000) * 2.2567 * 1_000_000;
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><a href="${url}">${song.title}</a></td>
-        <td>${certHTML}</td>
-        <td>${formatNumber(streams)}</td>
-        <td>${song.weeks}</td>
-        <td>#${song.peak}</td>
-        <td>${song.num1s}</td>`;
-      songsTable.appendChild(tr);
-    });
+    Object.entries(songsMap)
+      .sort((a, b) => songDebutWeek[a[0]] - songDebutWeek[b[0]])
+      .forEach(([key, song]) => {
+        const certHTML = getSongCertImages(song.sales);
+        const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
+        const streams = (song.sales / 1000) * 2.2567 * 1_000_000;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><a href="${url}">${song.title}</a></td>
+          <td>${certHTML}</td>
+          <td>${formatNumber(streams)}</td>
+          <td>${song.weeks}</td>
+          <td>#${song.peak}</td>
+          <td>${song.num1s}</td>`;
+        songsTable.appendChild(tr);
+      });
 
-    // Certification Summary
     const certTotals = document.getElementById("certTotals");
     const certCounts = {};
     Object.values(albumsMap).forEach(album => {
@@ -237,7 +242,6 @@
       .map(([label, count]) => `${label}: ${count}`)
       .join(" | ");
 
-    // Stats
     const statsEl = document.getElementById("artistStats");
     const songList = Object.values(songsMap);
     const num1s = songList.filter(s => s.peak === 1).length;
@@ -247,6 +251,7 @@
   </script>
 </body>
 </html>
+
 
 
 
