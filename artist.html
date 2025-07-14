@@ -5,316 +5,231 @@
   <title>Artist Profile</title>
   <style>
     body {
-      font-family: 'Arial Black', sans-serif;
-      background-color: #000;
-      color: #fff;
-      margin: 0;
-      padding: 2rem;
-    }
-    a { color: #00f0ff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    nav {
+      font-family: Arial, sans-serif;
       background-color: #111;
-      padding: 1rem;
-      margin-bottom: 2rem;
-      border-radius: 8px;
-      text-align: center;
-    }
-    nav a {
-      margin: 0 1rem;
-      font-weight: bold;
+      color: #fff;
+      padding: 2rem;
     }
     h1 {
       font-size: 2.5rem;
-      color: #ff007f;
-      margin-bottom: 1rem;
-    }
-    h1 img {
-      height: 2rem;
-      width: 2rem;
-      border-radius: 50%;
-      vertical-align: middle;
-      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
     }
     h2 {
-      color: #00f0ff;
-      border-bottom: 2px solid #ff007f;
+      margin-top: 2.5rem;
+      font-size: 1.8rem;
+      border-bottom: 2px solid #fff;
       padding-bottom: 0.3rem;
-      margin-top: 2rem;
+    }
+    .stats {
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+    .cert {
+      font-size: 0.9rem;
+      color: gold;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 1rem;
-      background-color: #1c1c1c;
-      border-radius: 8px;
-      overflow: hidden;
+      margin-top: 1.5rem;
+      background-color: #1a1a1a;
     }
     th, td {
-      padding: 0.75rem;
+      padding: 0.8rem;
+      border: 1px solid #444;
       text-align: left;
+      font-size: 0.95rem;
     }
     th {
       background-color: #222;
-      color: #ff007f;
       text-transform: uppercase;
-      font-size: 0.85rem;
     }
-    tr:nth-child(even) { background-color: #2a2a2a; }
-    tr:hover { background-color: #333; }
-    ul { list-style: none; padding-left: 0; }
-    ul li { padding: 0.2rem 0; }
-    .cert-icon { height: 20px; }
-    .album-cert-icon { height: 32px; }
+    a {
+      color: #4DB8FF;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    img.album-cover {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    .summary {
+      margin-top: 2rem;
+      font-weight: bold;
+      color: #ccc;
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html">🏠 Hot 100</a>
-    <a href="albums.html">📀 Albums</a>
-    <a href="top_albums.html">🏆 Top Albums</a>
-    <a href="records.html">📊 Records</a>
-  </nav>
+  <h1 id="artistName">Artist Name</h1>
+  <div class="stats" id="artistStats"></div>
 
-  <h1 id="artistNameTitle">
-    <img id="artistImg" src="" alt=""> <span id="artistText">Artist Profile</span>
-  </h1>
+  <h2>Albums</h2>
+  <table id="albumsTable">
+    <thead>
+      <tr>
+        <th>Album</th>
+        <th>Certification</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-  <section>
-    <h2>📊 Artist Stats</h2>
-    <p><strong>Total Songs Charted:</strong> <span id="songCount"></span></p>
-    <p><strong>Number Ones:</strong> <span id="numOnes"></span></p>
-    <p><strong>Top 10 Hits:</strong> <span id="top10s"></span></p>
-    <p><strong>Debuts:</strong> <span id="debuts"></span></p>
-    <p><strong>Total Albums Charted:</strong> <span id="albumCount"></span></p>
-  </section>
+  <h2>Songs</h2>
+  <table id="songsTable">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Certification</th>
+        <th>Streams</th>
+        <th>Weeks</th>
+        <th>Peak</th>
+        <th>#1s</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-  <section>
-    <h2>💿 Albums</h2>
-    <table id="albumsTable">
-      <thead>
-        <tr>
-          <th>Album</th>
-          <th>Certification</th>
-          <th>Plays</th>
-          <th>Peak</th>
-          <th>Weeks</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+  <div class="summary" id="certTotals"></div>
 
-  <section>
-    <h2>🎶 Songs</h2>
-    <table id="songsTable">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Certification</th>
-          <th>Weeks</th>
-          <th>Peak</th>
-          <th>#1s</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>🏅 Certification Summary</h2>
-    <ul id="certSummary"></ul>
-  </section>
-
-  <script src="albumdata.js"></script>
   <script src="weekdata.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
-    const artistName = params.get("artist");
-    const normArtist = normalize(artistName);
+    const artistParam = params.get("artist");
+    const normalize = str =>
+      typeof str === "string" ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim() : "";
 
-    const artistImg = document.getElementById("artistImg");
-    artistImg.src = `img/artists/${artistName}.jpg`;
-    artistImg.onerror = () => { artistImg.style.display = 'none'; };
-    document.getElementById("artistText").textContent = artistName;
+    const normalizeAlbum = str => str?.toUpperCase()
+      .replace(/\(.*?\)|\[.*?\]/g, "")
+      .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
+      .replace(/[^A-Z0-9]/g, "")
+      .trim();
 
-    function normalize(str) {
-      return str?.toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
+    const normalizeTitle = str => str?.toUpperCase()
+      .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+      .replace(/[^A-Z0-9]/g, "")
+      .trim();
+
+    function getCert(sales) {
+      if (sales >= 1000) return `💿 Multi-Platinum x${Math.floor(sales / 500)}`;
+      if (sales >= 500) return "💿 Platinum";
+      if (sales >= 250) return "🥇 Gold";
+      return "—";
     }
 
-    function normalizeAlbumName(name) {
-      return name?.toUpperCase()
-        .replace(/\([^)]*\)|\[.*?]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED/gi, "")
-        .replace(/[^A-Z0-9]/g, "")
-        .trim();
+    function formatNumber(n) {
+      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
+      return n.toString();
     }
 
-    function normalizeTitle(title) {
-      return title?.toUpperCase()
-        .replace(/\(.*?\)|\[.*?\]|REMIX|VERSION|FEAT\.?|FEATURING|RADIO EDIT|EDIT|SINGLE/gi, "")
-        .replace(/[^A-Z0-9]/g, "")
-        .trim();
-    }
+    document.getElementById("artistName").textContent = artistParam;
 
-    function getCertIcon(count, isAlbum = false) {
-      if (isAlbum) {
-        if (count >= 500) return '<img src="platinum.png" class="album-cert-icon">'.repeat(Math.floor(count / 500));
-        if (count >= 250) return '<img src="gold.png" class="album-cert-icon">';
-      } else {
-        if (count >= 200) return '<img src="platinum.png" class="cert-icon">'.repeat(Math.floor(count / 200));
-        if (count >= 100) return '<img src="gold.png" class="cert-icon">';
-      }
-      return '';
-    }
-
-    function getCertLabel(count, isAlbum = false) {
-      if (isAlbum) {
-        if (count >= 500) return `Multi-Platinum (x${Math.floor(count / 500)})`;
-        if (count >= 250) return "Gold";
-      } else {
-        if (count >= 200) return `Multi-Platinum (x${Math.floor(count / 200)})`;
-        if (count >= 100) return "Gold";
-      }
-      return "";
-    }
-
+    const artistKey = normalize(artistParam);
     const albumsMap = {};
     const songsMap = {};
-    const certCount = {};
-    let num1s = 0, debuts = 0, songCount = 0, top10s = 0;
 
-    let orphanedPlays = 0, orphanedWeeks = 0;
-
-    // Step 1: Gather albums
-    albumData.forEach(row => {
-      if (normalize(row.artist) === normArtist) {
-        const key = normalizeAlbumName(row.album);
-        if (!key || key === "NAN") {
-          orphanedPlays += row.totalPlays || 0;
-          orphanedWeeks += row.totalWeeks || 0;
-          return;
-        }
-        if (!albumsMap[key]) {
-          albumsMap[key] = {
-            album: row.album,
-            artist: row.artist,
-            totalPlays: 0,
-            weeks: 0,
-            peak: Infinity
-          };
-        }
-        albumsMap[key].totalPlays += row.totalPlays || 0;
-        albumsMap[key].weeks += row.totalWeeks || 0;
-      }
-    });
-
-    // Distribute orphaned data equally to first 3 albums
-    const albumKeys = Object.keys(albumsMap);
-    if (albumKeys.length >= 1 && orphanedPlays > 0) {
-      const slice = albumKeys.slice(0, 3);
-      slice.forEach(key => {
-        albumsMap[key].totalPlays += orphanedPlays / slice.length;
-        albumsMap[key].weeks += orphanedWeeks / slice.length;
-      });
-    }
-
-    // Step 2: Peak using weekData
     for (const week in weekData) {
-      weekData[week].forEach(row => {
-        if (!row.album || !row.rank || normalize(row.artist) !== normArtist) return;
-        const key = normalizeAlbumName(row.album);
-        if (!albumsMap[key]) return;
-        if (row.rank < albumsMap[key].peak) albumsMap[key].peak = row.rank;
-      });
-    }
+      weekData[week].forEach(entry => {
+        const normArtist = normalize(entry.artist);
+        if (normArtist !== artistKey) return;
 
-    // Step 3: Cert info
-    for (const key in albumsMap) {
-      const album = albumsMap[key];
-      album.certLabel = getCertLabel(album.totalPlays, true);
-      album.certIcon = getCertIcon(album.totalPlays, true);
-    }
+        const normAlbum = normalizeAlbum(entry.album || "");
+        const normTitle = normalizeTitle(entry.title || "");
+        const sales = parseFloat(entry.sales) || 0;
+        const rank = parseInt(entry.rank);
+        const totalSales = parseFloat(entry.totalSales) || 0;
 
-    // Step 4: Songs
-    for (const week in weekData) {
-      weekData[week].forEach(row => {
-        const normRowArtist = normalize(row.artist);
-        if (!row.title || !row.rank) return;
-        if (!normRowArtist.includes(normArtist) && !normalize(row.title + row.artist).includes(normArtist)) return;
+        // Albums
+        if (entry.album && normAlbum !== "NAN") {
+          if (!albumsMap[normAlbum]) {
+            albumsMap[normAlbum] = {
+              name: entry.album,
+              sales: 0,
+              image: entry.cover || ""
+            };
+          }
+          albumsMap[normAlbum].sales += sales;
+        } else if (normAlbum === "NAN") {
+          const realAlbums = Object.values(albumsMap).slice(0, 3);
+          const portion = sales / (realAlbums.length || 1);
+          realAlbums.forEach(album => album.sales += portion);
+        }
 
-        const key = normalizeTitle(row.title);
-        if (!songsMap[key]) {
-          songsMap[key] = {
-            title: row.title,
-            artist: row.artist,
+        // Songs
+        if (!songsMap[normTitle]) {
+          songsMap[normTitle] = {
+            title: entry.title,
+            artist: entry.artist,
+            sales: 0,
             totalSales: 0,
-            peak: row.rank,
             weeks: 0,
+            peak: rank,
             num1s: 0
           };
         }
-
-        songsMap[key].totalSales += row.sales || 0;
-        songsMap[key].weeks++;
-        if (row.rank < songsMap[key].peak) songsMap[key].peak = row.rank;
-        if (row.rank === 1) songsMap[key].num1s++;
-
-        if (row.sales > (songsMap[key].latestSales || 0)) {
-          songsMap[key].title = row.title;
-          songsMap[key].artist = row.artist;
-          songsMap[key].latestSales = row.sales;
-        }
+        const song = songsMap[normTitle];
+        song.sales += sales;
+        song.totalSales += totalSales;
+        song.weeks += 1;
+        if (rank < song.peak) song.peak = rank;
+        if (rank === 1) song.num1s += 1;
       });
     }
 
+    const albumsTable = document.querySelector("#albumsTable tbody");
+    Object.values(albumsMap).sort((a, b) => b.sales - a.sales).forEach(album => {
+      const cert = getCert(album.sales);
+      const url = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><img src="https://via.placeholder.com/50?text=🎵" class="album-cover" />
+        <a href="${url}">${album.name}</a></td>
+        <td class="cert">${cert}</td>`;
+      albumsTable.appendChild(tr);
+    });
+
     const songsTable = document.querySelector("#songsTable tbody");
-    Object.values(songsMap).forEach(song => {
-      songCount++;
-      if (song.weeks === 1) debuts++;
-      if (song.peak <= 10) top10s++;
-      if (song.num1s > 0) num1s++;
-
-      const cert = getCertIcon(song.totalSales, false);
-      const label = getCertLabel(song.totalSales, false);
+    Object.values(songsMap).sort((a, b) => b.sales - a.sales).forEach(song => {
+      const cert = getCert(song.sales);
       const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
-
+      const streams = song.totalSales * 2.2567 * 1_000_000;
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td><a href="${url}">${song.title}</a></td>
-        <td>${cert}</td>
+        <td class="cert">${cert}</td>
+        <td>${formatNumber(streams)}</td>
         <td>${song.weeks}</td>
         <td>#${song.peak}</td>
         <td>${song.num1s}</td>`;
       songsTable.appendChild(tr);
-
-      if (label) certCount[label] = (certCount[label] || 0) + 1;
     });
 
-    const albumsTable = document.querySelector("#albumsTable tbody");
+    const certCounts = {};
     Object.values(albumsMap).forEach(album => {
-      const url = `album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}`;
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><a href="${url}"><strong>${album.album}</strong></a></td>
-        <td>${album.certIcon} ${album.certLabel}</td>
-        <td>${Math.round(album.totalPlays)}</td>
-        <td>#${album.peak}</td>
-        <td>${Math.round(album.weeks)}</td>`;
-      albumsTable.appendChild(tr);
+      const cert = getCert(album.sales);
+      if (!certCounts[cert]) certCounts[cert] = 0;
+      certCounts[cert]++;
     });
 
-    document.getElementById("songCount").textContent = songCount;
-    document.getElementById("debuts").textContent = debuts;
-    document.getElementById("numOnes").textContent = num1s;
-    document.getElementById("top10s").textContent = top10s;
-    document.getElementById("albumCount").textContent = Object.keys(albumsMap).length;
+    const certTotals = document.getElementById("certTotals");
+    certTotals.innerHTML = Object.entries(certCounts)
+      .filter(([c]) => c !== "—")
+      .map(([label, count]) => `${label}: ${count}`)
+      .join(" | ");
 
-    const certSummary = document.getElementById("certSummary");
-    Object.entries(certCount).sort().forEach(([label, count]) => {
-      const li = document.createElement("li");
-      li.textContent = `${label}: ${count}`;
-      certSummary.appendChild(li);
-    });
+    // Artist Stats
+    const artistStats = document.getElementById("artistStats");
+    const songList = Object.values(songsMap);
+    const num1s = songList.filter(s => s.peak === 1).length;
+    const top10s = songList.filter(s => s.peak <= 10).length;
+    const debuts = songList.filter(s => s.peak === s.weeks).length;
+    artistStats.innerHTML = `Songs Charted: ${songList.length} | #1s: ${num1s} | Top 10s: ${top10s} | Debuts: ${debuts}`;
   </script>
 </body>
 </html>
