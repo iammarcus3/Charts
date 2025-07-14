@@ -15,8 +15,8 @@
       margin-bottom: 0.5rem;
     }
     h2 {
-      margin-top: 2.5rem;
-      font-size: 1.8rem;
+      margin-top: 2rem;
+      font-size: 1.5rem;
       border-bottom: 2px solid #fff;
       padding-bottom: 0.3rem;
     }
@@ -24,14 +24,10 @@
       font-size: 1rem;
       margin-top: 0.5rem;
     }
-    .cert {
-      font-size: 0.9rem;
-      color: gold;
-    }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       background-color: #1a1a1a;
     }
     th, td {
@@ -51,10 +47,8 @@
     a:hover {
       text-decoration: underline;
     }
-    img.album-cover {
-      width: 50px;
-      height: 50px;
-      margin-right: 10px;
+    .cert-icon {
+      height: 20px;
       vertical-align: middle;
     }
     .summary {
@@ -114,18 +108,27 @@
       .replace(/[^A-Z0-9]/g, "")
       .trim();
 
-    function getCert(sales) {
-      if (sales >= 1000) return `💿 Multi-Platinum x${Math.floor(sales / 500)}`;
-      if (sales >= 500) return "💿 Platinum";
-      if (sales >= 250) return "🥇 Gold";
+    function formatNumber(n) {
+      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + "B";
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
+      if (n >= 1_000) return (n / 1_000).toFixed(0) + "K";
+      return n.toString();
+    }
+
+    function getAlbumCertImage(sales) {
+      if (sales >= 10000) return `<img src="images/diamond.png" class="cert-icon" title="Diamond">`;
+      if (sales >= 1000) return `<img src="images/multi.png" class="cert-icon" title="Multi-Platinum"> x${Math.floor(sales / 500)}`;
+      if (sales >= 500) return `<img src="images/platinum.png" class="cert-icon" title="Platinum">`;
+      if (sales >= 250) return `<img src="images/gold.png" class="cert-icon" title="Gold">`;
       return "—";
     }
 
-    function formatNumber(n) {
-      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
-      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
-      return n.toString();
+    function getSongCertImage(sales) {
+      if (sales >= 1000) return `<img src="images/diamond.png" class="cert-icon" title="Diamond">`;
+      if (sales >= 400) return `<img src="images/multi.png" class="cert-icon" title="Multi-Platinum"> x${Math.floor(sales / 200)}`;
+      if (sales >= 200) return `<img src="images/platinum.png" class="cert-icon" title="Platinum">`;
+      if (sales >= 100) return `<img src="images/gold.png" class="cert-icon" title="Gold">`;
+      return "—";
     }
 
     document.getElementById("artistName").textContent = artistParam;
@@ -150,8 +153,7 @@
           if (!albumsMap[normAlbum]) {
             albumsMap[normAlbum] = {
               name: entry.album,
-              sales: 0,
-              image: entry.cover || ""
+              sales: 0
             };
           }
           albumsMap[normAlbum].sales += sales;
@@ -182,27 +184,26 @@
       });
     }
 
+    // Albums Table
     const albumsTable = document.querySelector("#albumsTable tbody");
     Object.values(albumsMap).sort((a, b) => b.sales - a.sales).forEach(album => {
-      const cert = getCert(album.sales);
+      const certHTML = getAlbumCertImage(album.sales);
       const url = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
       const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><img src="https://via.placeholder.com/50?text=🎵" class="album-cover" />
-        <a href="${url}">${album.name}</a></td>
-        <td class="cert">${cert}</td>`;
+      tr.innerHTML = `<td><a href="${url}">${album.name}</a></td><td>${certHTML}</td>`;
       albumsTable.appendChild(tr);
     });
 
+    // Songs Table
     const songsTable = document.querySelector("#songsTable tbody");
     Object.values(songsMap).sort((a, b) => b.sales - a.sales).forEach(song => {
-      const cert = getCert(song.sales);
+      const certHTML = getSongCertImage(song.sales);
       const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
       const streams = song.totalSales * 2.2567 * 1_000_000;
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td><a href="${url}">${song.title}</a></td>
-        <td class="cert">${cert}</td>
+        <td>${certHTML}</td>
         <td>${formatNumber(streams)}</td>
         <td>${song.weeks}</td>
         <td>#${song.peak}</td>
@@ -210,26 +211,27 @@
       songsTable.appendChild(tr);
     });
 
+    // Certification Summary
+    const certTotals = document.getElementById("certTotals");
     const certCounts = {};
     Object.values(albumsMap).forEach(album => {
-      const cert = getCert(album.sales);
-      if (!certCounts[cert]) certCounts[cert] = 0;
-      certCounts[cert]++;
+      const label = getAlbumCertImage(album.sales).replace(/<[^>]*>/g, "").trim();
+      if (!certCounts[label]) certCounts[label] = 0;
+      certCounts[label]++;
     });
 
-    const certTotals = document.getElementById("certTotals");
     certTotals.innerHTML = Object.entries(certCounts)
       .filter(([c]) => c !== "—")
       .map(([label, count]) => `${label}: ${count}`)
       .join(" | ");
 
-    // Artist Stats
-    const artistStats = document.getElementById("artistStats");
+    // Stats line
+    const statsEl = document.getElementById("artistStats");
     const songList = Object.values(songsMap);
     const num1s = songList.filter(s => s.peak === 1).length;
     const top10s = songList.filter(s => s.peak <= 10).length;
     const debuts = songList.filter(s => s.peak === s.weeks).length;
-    artistStats.innerHTML = `Songs Charted: ${songList.length} | #1s: ${num1s} | Top 10s: ${top10s} | Debuts: ${debuts}`;
+    statsEl.innerHTML = `Songs Charted: ${songList.length} | #1s: ${num1s} | Top 10s: ${top10s} | Debuts: ${debuts}`;
   </script>
 </body>
 </html>
