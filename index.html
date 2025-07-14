@@ -251,15 +251,31 @@
              val.includes("RE") ? "🔁" : "➖";
     }
 
+    function getWeekLabel(weekNum) {
+      const startDate = new Date(2018, 1, 23); // 23 Feb 2018
+      startDate.setDate(startDate.getDate() + (weekNum - 1) * 7);
+      const endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+
+      const optionsStart = { day: 'numeric', month: 'short' };
+      const optionsEnd = { day: 'numeric', month: 'short', year: 'numeric' };
+
+      const startStr = startDate.toLocaleDateString('en-GB', optionsStart);
+      const endStr = endDate.toLocaleDateString('en-GB', optionsEnd);
+
+      return `${startStr} – ${endStr}`;
+    }
+
     function populateWeeks() {
       const selector = document.getElementById("weekSelector");
       sortedWeeks = Object.keys(weekData)
         .sort((a, b) => parseInt(b.replace(/\D/g, '')) - parseInt(a.replace(/\D/g, '')));
       selector.innerHTML = '';
       sortedWeeks.forEach(week => {
+        const weekNum = parseInt(week.replace(/\D/g, ''));
         const opt = document.createElement("option");
         opt.value = week;
-        opt.textContent = week;
+        opt.textContent = getWeekLabel(weekNum);
         selector.appendChild(opt);
       });
       selector.value = sortedWeeks[0];
