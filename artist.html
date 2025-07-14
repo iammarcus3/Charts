@@ -81,6 +81,7 @@
         <th>Title</th>
         <th>Certification</th>
         <th>Streams</th>
+        <th>Sales</th>
         <th>Weeks</th>
         <th>Peak</th>
         <th>#1s</th>
@@ -94,77 +95,67 @@
   <script src="weekdata.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
-    const artistParam = params.get("artist");
+    const artistParam = params.get("artist") || "";
+    document.getElementById("artistName").textContent = artistParam;
 
-    const normalize = str => (str || "").toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
+    const normalize = str => String(str || "").toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
+    const normalizeTitle = str => String(str || "").toUpperCase()
+      .replace(/\(.*?\)|\[.*?\]|REMIX|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+      .replace(/[^A-Z0-9]/g, "").trim();
+    const normalizeAlbum = str => String(str || "").toUpperCase()
+      .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
+      .replace(/[^A-Z0-9]/g, "").trim();
 
-    const normalizeAlbum = str => String(str || '')
-      .toUpperCase()
-      .replace(/\(.*?\)|\[.*?\]/g, "")
-      .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
-      .replace(/[^A-Z0-9]/g, "")
-      .trim();
-
-    const normalizeTitle = str => String(str || '')
-      .toUpperCase()
-      .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
-      .replace(/[^A-Z0-9]/g, "")
-      .trim();
-
-    function formatNumber(n) {
+    const formatNumber = n => {
       if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + "B";
       if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
       if (n >= 1_000) return (n / 1_000).toFixed(0) + "K";
       return n.toString();
-    }
+    };
 
-    function getSongCertImages(sales) {
+    const getSongCertImages = sales => {
       if (sales >= 1_000_000) return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
       if (sales >= 100_000) return Array(Math.floor(sales / 100_000)).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
       if (sales >= 50_000) return `<img src="gold.png" class="cert-icon" title="Gold">`;
       return "—";
-    }
+    };
 
-    function getAlbumCertImages(sales) {
+    const getAlbumCertImages = sales => {
       if (sales >= 10_000_000) return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
       if (sales >= 1_000_000) return Array(Math.floor(sales / 1_000_000)).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
       if (sales >= 500_000) return `<img src="gold.png" class="cert-icon" title="Gold">`;
       return "—";
-    }
+    };
 
-    document.getElementById("artistName").textContent = artistParam;
     const artistKey = normalize(artistParam);
     const albumsMap = {};
     const songsMap = {};
-    const songDebutWeek = {};
 
     for (const week in weekData) {
-      const weekNum = parseInt(week.replace(/\D/g, ""));
-
       weekData[week].forEach(entry => {
-        const normArtist = normalize(entry.artist);
-        const normTitle = normalizeTitle(entry.title);
-        const normAlbum = normalizeAlbum(entry.album);
-        const titleLower = (entry.title || '').toLowerCase();
-        const artistLower = (artistParam || '').toLowerCase();
+        const artist = normalize(entry.artist);
+        const title = normalizeTitle(entry.title);
+        const album = normalizeAlbum(entry.album);
+        const rawSales = parseFloat(entry.sales) || 0;
+        const sales = rawSales * 1000;
+        const totalSales = parseFloat(entry.totalSales) || 0;
+        const rank = parseInt(entry.rank);
+        const titleText = entry.title || "";
+        const artistText = entry.artist || "";
 
-        const isMatch = normArtist === artistKey || titleLower.includes(artistLower);
+        const isMatch = artist === artistKey || (titleText.toLowerCase().includes(artistParam.toLowerCase()));
+
         if (!isMatch) return;
 
-        const salesRaw = parseFloat(entry.sales) || 0;
-        const sales = salesRaw * 1000;
-        const rank = parseInt(entry.rank);
-        const totalSales = parseFloat(entry.totalSales) || 0;
-
-        if (entry.album && normAlbum !== "NAN") {
-          if (!albumsMap[normAlbum]) {
-            albumsMap[normAlbum] = { name: entry.album, sales: 0 };
+        if (album && album !== "NAN") {
+          if (!albumsMap[album]) {
+            albumsMap[album] = { name: entry.album, sales: 0 };
           }
-          albumsMap[normAlbum].sales += sales;
+          albumsMap[album].sales += sales;
         }
 
-        if (!songsMap[normTitle]) {
-          songsMap[normTitle] = {
+        if (!songsMap[title]) {
+          songsMap[title] = {
             title: entry.title,
             artist: entry.artist,
             sales: 0,
@@ -173,47 +164,54 @@
             peak: rank,
             num1s: 0
           };
-          songDebutWeek[normTitle] = weekNum;
         }
 
-        const song = songsMap[normTitle];
+        const song = songsMap[title];
         song.sales += sales;
         song.totalSales += totalSales;
         song.weeks += 1;
         if (rank < song.peak) song.peak = rank;
         if (rank === 1) song.num1s += 1;
-        if (weekNum < songDebutWeek[normTitle]) {
-          songDebutWeek[normTitle] = weekNum;
-        }
       });
     }
 
+    // Albums
     const albumsTable = document.querySelector("#albumsTable tbody");
     Object.values(albumsMap).sort((a, b) => b.sales - a.sales).forEach(album => {
-      const certHTML = getAlbumCertImages(album.sales);
+      const cert = getAlbumCertImages(album.sales);
       const url = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
       const tr = document.createElement("tr");
-      tr.innerHTML = `<td><a href="${url}">${album.name}</a></td><td>${certHTML}</td>`;
+      tr.innerHTML = `<td><a href="${url}">${album.name}</a></td><td>${cert}</td>`;
       albumsTable.appendChild(tr);
     });
 
+    // Songs (sorted by total sales)
     const songsTable = document.querySelector("#songsTable tbody");
-    Object.entries(songsMap)
-      .sort((a, b) => songDebutWeek[a[0]] - songDebutWeek[b[0]])
-      .forEach(([key, song]) => {
-        const certHTML = getSongCertImages(song.sales);
+    Object.values(songsMap)
+      .sort((a, b) => b.sales - a.sales)
+      .forEach(song => {
+        const cert = getSongCertImages(song.sales);
         const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
         const streams = (song.sales / 1000) * 2.2567 * 1_000_000;
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><a href="${url}">${song.title}</a></td>
-          <td>${certHTML}</td>
+          <td>${cert}</td>
           <td>${formatNumber(streams)}</td>
+          <td>${formatNumber(song.sales)}</td>
           <td>${song.weeks}</td>
           <td>#${song.peak}</td>
           <td>${song.num1s}</td>`;
         songsTable.appendChild(tr);
       });
+
+    // Summary Stats
+    const statsEl = document.getElementById("artistStats");
+    const allSongs = Object.values(songsMap);
+    const num1s = allSongs.filter(s => s.peak === 1).length;
+    const top10s = allSongs.filter(s => s.peak <= 10).length;
+    const debuts = allSongs.filter(s => s.peak === s.weeks).length;
+    statsEl.innerHTML = `Songs Charted: ${allSongs.length} | #1s: ${num1s} | Top 10s: ${top10s} | Debuts: ${debuts}`;
 
     const certTotals = document.getElementById("certTotals");
     const certCounts = {};
@@ -226,13 +224,6 @@
       .filter(([c]) => c !== "—")
       .map(([label, count]) => `${label}: ${count}`)
       .join(" | ");
-
-    const statsEl = document.getElementById("artistStats");
-    const songList = Object.values(songsMap);
-    const num1s = songList.filter(s => s.peak === 1).length;
-    const top10s = songList.filter(s => s.peak <= 10).length;
-    const debuts = songList.filter(s => s.peak === s.weeks).length;
-    statsEl.innerHTML = `Songs Charted: ${songList.length} | #1s: ${num1s} | Top 10s: ${top10s} | Debuts: ${debuts}`;
   </script>
 </body>
 </html>
