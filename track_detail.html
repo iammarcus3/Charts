@@ -1,10 +1,54 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Track Details</title>
-  <link rel="stylesheet" href="billboard-style.css" />
+  <title>Track Detail</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      color: #000;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.2rem;
+    }
+    h2 {
+      margin-top: 2rem;
+      font-size: 1.5rem;
+      border-bottom: 2px solid #000;
+      padding-bottom: 0.3rem;
+    }
+    p {
+      font-size: 1rem;
+      margin: 0.4rem 0;
+    }
+    a {
+      color: blue;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 1rem;
+    }
+    ul li {
+      margin-bottom: 0.4rem;
+    }
+    .cert-icon {
+      font-size: 0.9rem;
+      margin-left: 0.3rem;
+      color: #666;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <nav>
@@ -18,56 +62,117 @@
   <p><strong>Peak Rank:</strong> <span id="peakRank"></span></p>
   <p><strong>Total Weeks on Chart:</strong> <span id="weeksOnChart"></span></p>
   <p><strong>Total Sales:</strong> <span id="totalSales"></span></p>
-  <h2>Weekly Chart History</h2>
-  <ul id="chartHistory"></ul>
+  <p><strong>Total Streams:</strong> <span id="totalStreams"></span></p>
+
+  <h2>📀 Appears On Albums</h2>
+  <ul id="albumList"></ul>
 
   <script src="weekdata.js"></script>
   <script>
-    function normalize(str) {
-      return str.toUpperCase().replace(/[^A-Z0-9 ]/g, "").trim();
-    }
-
     const params = new URLSearchParams(location.search);
     const titleParam = params.get("title");
     const artistParam = params.get("artist");
 
-    document.getElementById("trackTitle").textContent = titleParam;
-    document.getElementById("trackArtist").textContent = artistParam;
+    const normalize = str =>
+      typeof str === "string" ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim() : "";
 
-    const songKey = normalize(titleParam);
+    const normalizeTitle = str =>
+      typeof str === "string"
+        ? str.toUpperCase()
+            .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+            .replace(/[^A-Z0-9]/g, "")
+            .trim()
+        : "";
+
+    function getAlbumCertLabel(sales) {
+      if (sales >= 1000) return `💿 Multi-Platinum (x${Math.floor(sales / 500)})`;
+      if (sales >= 500) return "💿 Platinum";
+      if (sales >= 250) return "🥇 Gold";
+      return "—";
+    }
+
+    const trackTitleEl = document.getElementById("trackTitle");
+    const trackArtistEl = document.getElementById("trackArtist");
+    const debutEl = document.getElementById("debutWeek");
+    const peakEl = document.getElementById("peakRank");
+    const weeksEl = document.getElementById("weeksOnChart");
+    const totalSalesEl = document.getElementById("totalSales");
+    const totalStreamsEl = document.getElementById("totalStreams");
+    const albumList = document.getElementById("albumList");
+
+    trackTitleEl.textContent = titleParam;
+    trackArtistEl.textContent = artistParam;
+
+    const songKey = normalizeTitle(titleParam);
     const artistKey = normalize(artistParam);
 
-    let debut = null, peak = 999, weeks = 0, totalSales = 0;
-    const history = [];
+    let debut = null,
+        peak = 999,
+        weeks = 0,
+        totalSales = 0,
+        totalStreams = 0;
+
+    const albumMap = {};
 
     for (const week in weekData) {
       const entries = weekData[week];
+      const weekNum = parseInt(week.replace(/\D/g, ""));
+
       entries.forEach(row => {
-        if (normalize(row.title) === songKey && normalize(row.artist) === artistKey) {
+        if (normalize(row.artist) === artistKey && normalizeTitle(row.title) === songKey) {
           const rank = row.rank;
-          if (!debut || parseInt(week.replace(/\D/g,'')) < debut.week) {
-            debut = { week: parseInt(week.replace(/\D/g,'')), date: week };
+          const sales = parseFloat(row.sales) || 0;
+          const streams = parseFloat(row.totalSales) || 0;
+
+          totalSales += sales;
+          totalStreams += streams;
+          weeks++;
+
+          if (!debut || weekNum < debut.week) {
+            debut = { week: weekNum, label: week };
           }
           if (rank < peak) peak = rank;
-          weeks++;
-          totalSales += row.sales || 0;
-          history.push({ week: week, rank: rank, sales: row.sales || 0 });
+
+          const albumName = row.album || "Unknown Album";
+          const albumKey = albumName.toUpperCase();
+
+          if (!albumMap[albumKey]) {
+            albumMap[albumKey] = {
+              name: albumName,
+              sales: 0,
+              weeks: 0,
+              peak: rank
+            };
+          }
+          albumMap[albumKey].sales += sales;
+          albumMap[albumKey].weeks += 1;
+          if (rank < albumMap[albumKey].peak) {
+            albumMap[albumKey].peak = rank;
+          }
         }
       });
     }
 
-    document.getElementById("debutWeek").textContent = debut ? debut.date : "-";
-    document.getElementById("peakRank").textContent = peak === 999 ? "-" : peak;
-    document.getElementById("weeksOnChart").textContent = weeks;
-    document.getElementById("totalSales").textContent = totalSales;
+    debutEl.textContent = debut ? debut.label : "—";
+    peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
+    weeksEl.textContent = weeks;
+    totalSalesEl.textContent = Math.round(totalSales);
+    totalStreamsEl.textContent = Math.round(totalStreams);
 
-    const ul = document.getElementById("chartHistory");
-    history.sort((a, b) => parseInt(a.week.replace(/\D/g,'')) - parseInt(b.week.replace(/\D/g,'')))
-      .forEach(entry => {
+    const albums = Object.values(albumMap);
+
+    if (albums.length === 0) {
+      albumList.innerHTML = '<li class="error">No album data found for this track.</li>';
+    } else {
+      albums.sort((a, b) => b.sales - a.sales);
+      albums.forEach(album => {
         const li = document.createElement("li");
-        li.textContent = `${entry.week} — Rank #${entry.rank} — Sales: ${entry.sales}`;
-        ul.appendChild(li);
+        const cert = getAlbumCertLabel(album.sales);
+        const albumUrl = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
+        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${Math.round(album.sales)} <span class="cert-icon">${cert}</span>`;
+        albumList.appendChild(li);
       });
+    }
   </script>
 </body>
 </html>
