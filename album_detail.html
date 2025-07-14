@@ -47,9 +47,9 @@
       font-weight: bold;
     }
     .cert-icon {
-      font-size: 0.95rem;
-      margin-left: 0.4rem;
-      color: #555;
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 4px;
     }
   </style>
 </head>
@@ -93,16 +93,27 @@
           .trim()
       : "";
 
-    function getAlbumCertLabel(sales) {
-      if (sales >= 1000) return `💿 Multi-Platinum (x${Math.floor(sales / 500)})`;
-      if (sales >= 500) return "💿 Platinum";
-      if (sales >= 250) return "🥇 Gold";
+    function getAlbumCertIcons(sales) {
+      const scaled = sales * 1000;
+
+      if (scaled >= 10_000_000) {
+        return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
+      }
+      if (scaled >= 1_000_000) {
+        const count = Math.floor(scaled / 1_000_000);
+        return Array(count).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
+      }
+      if (scaled >= 500_000) {
+        return `<img src="gold.png" class="cert-icon" title="Gold">`;
+      }
       return "—";
     }
 
     function getTrackCertIcon(sales) {
-      if (sales >= 200) return `💿 x${Math.floor(sales / 200)}`;
-      if (sales >= 100) return "🥇 Gold";
+      const scaled = sales * 1000;
+      if (scaled >= 1_000_000) return `<img src="diamond.png" class="cert-icon">`;
+      if (scaled >= 100_000) return Array(Math.floor(scaled / 100_000)).fill(`<img src="platinum.png" class="cert-icon">`).join('');
+      if (scaled >= 50_000) return `<img src="gold.png" class="cert-icon">`;
       return "";
     }
 
@@ -183,7 +194,7 @@
     weeksAt1El.textContent = weeksAt1;
     debutEl.textContent = debutWeek || "—";
     peakEl.textContent = peakRank === Infinity ? "—" : `#${peakRank}`;
-    albumCertEl.textContent = getAlbumCertLabel(rawSales);
+    albumCertEl.innerHTML = getAlbumCertIcons(rawSales); // ✅ renders icons not text
 
     const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
     if (sortedTracks.length === 0) {
@@ -191,10 +202,8 @@
     } else {
       sortedTracks.forEach(track => {
         const cert = getTrackCertIcon(track.sales);
-        if (!cert) return;
-
-        const li = document.createElement("li");
         const trackURL = `track_detail.html?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`;
+        const li = document.createElement("li");
         li.innerHTML = `<a href="${trackURL}">${track.title}</a> <span class="cert-icon">${cert}</span>`;
         trackList.appendChild(li);
       });
