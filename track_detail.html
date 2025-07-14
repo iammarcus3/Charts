@@ -32,7 +32,7 @@
   <p><strong>Debut Week:</strong> <span id="debutWeek"></span></p>
   <p><strong>Peak Rank:</strong> <span id="peakRank"></span></p>
   <p><strong>Total Weeks on Chart:</strong> <span id="weeksOnChart"></span></p>
-  <p><strong>Total Sales:</strong> <span id="totalSales"></span> <small>(x1,000)</small></p>
+  <p><strong>Total Sales:</strong> <span id="totalSales"></span></p>
   <p><strong>Total Streams:</strong> <span id="totalStreams"></span></p>
 
   <h2>📀 Appears On Albums</h2>
@@ -62,8 +62,15 @@
       return "—";
     }
 
-    const streamMultiplier = 2.567;
-    const saleUnit = 1000;
+    function formatNumber(n) {
+      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
+      return n.toString();
+    }
+
+    const streamMultiplier = 2.2567;
+    const saleMultiplier = 1000; // ✅ each sale = 1,000 copies
 
     const trackTitleEl = document.getElementById("trackTitle");
     const trackArtistEl = document.getElementById("trackArtist");
@@ -83,8 +90,7 @@
     let debut = null,
         peak = 999,
         weeks = 0,
-        totalSales = 0,
-        maxTotalStreams = 0;
+        rawSales = 0;
 
     const albumMap = {};
 
@@ -98,14 +104,9 @@
 
         if (normArtist === artistKey && normTitle === songKey) {
           const rank = row.rank;
-          const sales = parseFloat(row.sales) || 0;
-          const streamTotal = parseFloat(row.totalSales) || 0;
+          const weeklySales = parseFloat(row.sales) || 0;
 
-          totalSales += sales;
-          if (streamTotal > maxTotalStreams) {
-            maxTotalStreams = streamTotal;
-          }
-
+          rawSales += weeklySales;
           weeks++;
 
           if (!debut || weekNum < debut.week) {
@@ -124,7 +125,7 @@
               peak: rank
             };
           }
-          albumMap[albumKey].sales += sales;
+          albumMap[albumKey].sales += weeklySales;
           albumMap[albumKey].weeks += 1;
           if (rank < albumMap[albumKey].peak) {
             albumMap[albumKey].peak = rank;
@@ -133,15 +134,14 @@
       });
     }
 
+    const actualSales = rawSales * saleMultiplier;
+    const calculatedStreams = rawSales * streamMultiplier;
+
     debutEl.textContent = debut ? debut.label : "—";
     peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
     weeksEl.textContent = weeks;
-    totalSalesEl.textContent = (totalSales * saleUnit).toLocaleString();
-
-    const adjustedStreams = maxTotalStreams * streamMultiplier;
-    totalStreamsEl.textContent = adjustedStreams >= 1000
-      ? `${(adjustedStreams / 1000).toFixed(1)}B`
-      : `${adjustedStreams.toFixed(1)}M`;
+    totalSalesEl.textContent = formatNumber(actualSales);
+    totalStreamsEl.textContent = formatNumber(calculatedStreams * 1_000_000); // final in units
 
     const albums = Object.values(albumMap);
     if (albums.length === 0) {
@@ -151,8 +151,9 @@
       albums.forEach(album => {
         const cert = getAlbumCertLabel(album.sales);
         const albumUrl = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
+        const albumActualSales = album.sales * saleMultiplier;
         const li = document.createElement("li");
-        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${(album.sales * saleUnit).toLocaleString()} <span class="cert-icon">${cert}</span>`;
+        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${formatNumber(albumActualSales)} <span class="cert-icon">${cert}</span>`;
         albumList.appendChild(li);
       });
     }
