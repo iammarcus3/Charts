@@ -4,59 +4,17 @@
   <meta charset="UTF-8" />
   <title>Artist Profile</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #fff;
-      padding: 2rem;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-    h2 {
-      margin-top: 2rem;
-      font-size: 1.5rem;
-      border-bottom: 2px solid #fff;
-      padding-bottom: 0.3rem;
-    }
-    .stats {
-      font-size: 1rem;
-      margin-top: 0.5rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      background-color: #1a1a1a;
-    }
-    th, td {
-      padding: 0.8rem;
-      border: 1px solid #444;
-      text-align: left;
-      font-size: 0.95rem;
-    }
-    th {
-      background-color: #222;
-      text-transform: uppercase;
-    }
-    a {
-      color: #4DB8FF;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .cert-icon {
-      height: 20px;
-      vertical-align: middle;
-      margin-right: 3px;
-    }
-    .summary {
-      margin-top: 2rem;
-      font-weight: bold;
-      color: #ccc;
-    }
+    body { font-family: Arial, sans-serif; background-color: #111; color: #fff; padding: 2rem; }
+    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    h2 { margin-top: 2rem; font-size: 1.5rem; border-bottom: 2px solid #fff; padding-bottom: 0.3rem; }
+    .stats { font-size: 1rem; margin-top: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; background-color: #1a1a1a; }
+    th, td { padding: 0.8rem; border: 1px solid #444; text-align: left; font-size: 0.95rem; }
+    th { background-color: #222; text-transform: uppercase; }
+    a { color: #4DB8FF; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .cert-icon { height: 20px; vertical-align: middle; margin-right: 3px; }
+    .summary { margin-top: 2rem; font-weight: bold; color: #ccc; }
   </style>
 </head>
 <body>
@@ -65,12 +23,7 @@
 
   <h2>Albums</h2>
   <table id="albumsTable">
-    <thead>
-      <tr>
-        <th>Album</th>
-        <th>Certification</th>
-      </tr>
-    </thead>
+    <thead><tr><th>Album</th><th>Certification</th></tr></thead>
     <tbody></tbody>
   </table>
 
@@ -78,13 +31,8 @@
   <table id="songsTable">
     <thead>
       <tr>
-        <th>Title</th>
-        <th>Certification</th>
-        <th>Streams</th>
-        <th>Sales</th>
-        <th>Weeks</th>
-        <th>Peak</th>
-        <th>#1s</th>
+        <th>Title</th><th>Certification</th><th>Streams</th>
+        <th>Sales</th><th>Weeks</th><th>Peak</th><th>#1s</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -100,24 +48,22 @@
 
     const normalize = str => String(str || "").toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
     const normalizeTitle = str => normalize(
-      str.replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
-         .replace(/AND|&|N/gi, "AND")
+      String(str || "")
+        .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+        .replace(/AND|&|N/gi, "AND")
     );
     const normalizeAlbum = str => normalize(
-      str.replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
+      String(str || "")
+        .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
     );
 
     const splitArtists = str => String(str || "")
       .split(/,|&| and | with | feat\.? | featuring /i)
-      .map(a => normalize(a))
-      .filter(Boolean);
+      .map(a => normalize(a)).filter(Boolean);
 
-    const formatNumber = n => {
-      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + "B";
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
-      if (n >= 1_000) return (n / 1_000).toFixed(0) + "K";
-      return n.toString();
-    };
+    const formatNumber = n => n >= 1_000_000_000 ? (n / 1_000_000_000).toFixed(1) + "B" :
+                          n >= 1_000_000 ? (n / 1_000_000).toFixed(1) + "M" :
+                          n >= 1_000 ? (n / 1_000).toFixed(0) + "K" : n.toString();
 
     const getSongCertImages = sales => {
       if (sales >= 1_000_000) return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
@@ -134,8 +80,7 @@
     };
 
     const artistKey = normalize(artistParam);
-    const albumsMap = {};
-    const songsMap = {};
+    const albumsMap = {}, songsMap = {};
 
     for (const week in weekData) {
       weekData[week].forEach(entry => {
