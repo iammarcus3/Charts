@@ -5,85 +5,65 @@
   <title>Top 100 Artists</title>
   <style>
     body {
-      font-family: 'Arial Black', sans-serif;
-      background-color: #000;
-      color: #fff;
-      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
       padding: 2rem;
     }
-
     nav {
-      background-color: #111;
-      padding: 1rem;
-      margin-bottom: 2rem;
-      border-radius: 8px;
       text-align: center;
+      margin-bottom: 2rem;
     }
-
     nav a {
       margin: 0 1rem;
-      font-weight: bold;
-      color: #00f0ff;
       text-decoration: none;
+      font-weight: bold;
+      color: #333;
     }
-
     nav a:hover {
-      color: #ff007f;
+      color: #007acc;
     }
-
     h1 {
       text-align: center;
-      font-size: 2.5rem;
-      color: #ff007f;
-      margin-bottom: 1.5rem;
+      color: #333;
+      margin-bottom: 1rem;
     }
-
+    .table-container {
+      overflow: auto;
+      max-height: 600px;
+      border: 1px solid #ccc;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #1c1c1c;
-      border-radius: 8px;
-      overflow: hidden;
-      font-size: 0.95rem;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      min-width: 900px;
     }
-
     th, td {
-      padding: 0.75rem;
+      padding: 0.8rem;
+      border: 1px solid #ccc;
       text-align: left;
-    }
-
-    th {
-      background-color: #222;
-      color: #ff007f;
-      text-transform: uppercase;
       cursor: pointer;
+      white-space: nowrap;
     }
-
-    td {
-      color: #fff;
+    th {
+      background-color: #eee;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      position: sticky;
+      top: 0;
+      z-index: 2;
     }
-
-    tr:nth-child(even) {
-      background-color: #2a2a2a;
+    th:first-child, td:first-child {
+      position: sticky;
+      left: 0;
+      background: #f0f0f0;
+      z-index: 3;
     }
-
-    tr:hover {
-      background-color: #333;
-    }
-
-    th.asc::after {
-      content: " 🔼";
-    }
-
-    th.desc::after {
-      content: " 🔽";
-    }
-
     a {
-      color: #00f0ff;
+      color: #0066cc;
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
     }
@@ -92,32 +72,34 @@
 <body>
 
   <nav>
-    <a href="index.html">🔥 Hot 100</a>
-    <a href="albums.html">📀 Albums</a>
-    <a href="top_albums.html">🏆 Top Albums</a>
-    <a href="records.html">📊 Records</a>
+    <a href="index.html">🔥 Home</a>
+    <a href="top_albums.html">💿 Top Albums</a>
+    <a href="top_songs.html">🎵 Top Songs</a>
+    <a href="top_artists.html">🎤 Top Artists</a>
   </nav>
 
   <h1>🎤 Top 100 Artists</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th data-sort="rank">Rank</th>
-        <th data-sort="artist">Artist</th>
-        <th data-sort="streams">Total Streams</th>
-        <th data-sort="monthly">Avg Monthly Streams</th>
-        <th data-sort="sales">Total Sales</th>
-        <th data-sort="num1songs">#1 Songs</th>
-        <th data-sort="top10songs">Top 10 Songs</th>
-        <th data-sort="num1albums">#1 Albums</th>
-        <th data-sort="top10albums">Top 10 Albums</th>
-      </tr>
-    </thead>
-    <tbody id="artistTable">
-      <tr><td colspan="9">Loading data...</td></tr>
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th data-sort="rank">Rank</th>
+          <th data-sort="artist">Artist</th>
+          <th data-sort="streams">Total Streams</th>
+          <th data-sort="monthly">Avg Monthly Streams</th>
+          <th data-sort="sales">Total Sales</th>
+          <th data-sort="num1songs">#1 Songs</th>
+          <th data-sort="top10songs">Top 10 Songs</th>
+          <th data-sort="num1albums">#1 Albums</th>
+          <th data-sort="top10albums">Top 10 Albums</th>
+        </tr>
+      </thead>
+      <tbody id="artistTable">
+        <tr><td colspan="9">Loading data...</td></tr>
+      </tbody>
+    </table>
+  </div>
 
   <script src="weekdata.js"></script>
   <script>
@@ -142,27 +124,29 @@
     function splitArtists(str) {
       return String(str || "")
         .split(/,|&| and | with | feat\.? | featuring /i)
-        .map(a => normalize(a))
+        .map(a => a.trim())
         .filter(Boolean);
     }
 
     window.addEventListener("DOMContentLoaded", () => {
       const tableBody = document.getElementById("artistTable");
       const artistMap = {};
+      const artistNameMap = {};
       const albumPeakMap = {};
 
       for (const week in weekData) {
         weekData[week].forEach(entry => {
-          const artistList = splitArtists(entry.artist);
+          const fullArtistList = splitArtists(entry.artist);
           const album = entry.album || "";
           const title = entry.title;
           const rank = parseInt(entry.rank);
           const sales = parseFloat(entry.sales) || 0;
 
-          artistList.forEach(normArtist => {
-            if (!artistMap[normArtist]) {
-              artistMap[normArtist] = {
-                name: entry.artist,
+          fullArtistList.forEach(rawName => {
+            const normName = normalize(rawName);
+
+            if (!artistMap[normName]) {
+              artistMap[normName] = {
                 rawSales: 0,
                 weeks: new Set(),
                 num1Songs: 0,
@@ -170,9 +154,10 @@
                 num1Albums: 0,
                 top10Albums: 0
               };
+              artistNameMap[normName] = rawName;
             }
 
-            const artistStats = artistMap[normArtist];
+            const artistStats = artistMap[normName];
             artistStats.rawSales += sales;
             artistStats.weeks.add(week);
 
@@ -182,7 +167,7 @@
             }
 
             if (typeof album === 'string' && normalize(album) !== "NAN") {
-              const albumKey = `${normalizeAlbum(album)}|${normArtist}`;
+              const albumKey = `${normalizeAlbum(album)}|${normName}`;
               if (!albumPeakMap[albumKey]) albumPeakMap[albumKey] = rank;
               else if (rank < albumPeakMap[albumKey]) albumPeakMap[albumKey] = rank;
             }
@@ -203,8 +188,11 @@
           const totalStreams = a.rawSales * 2.2567 * 1_000_000;
           const totalSales = a.rawSales * 1000;
           const months = a.weeks.size / 4.33;
+          const displayName = artistNameMap[norm].split(' ')
+            .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+            .join(' ');
           return {
-            name: a.name,
+            name: displayName,
             totalStreams,
             totalSales,
             monthlyStreams: totalStreams / (months || 1),
@@ -247,6 +235,9 @@
           header.classList.add(isAsc ? "desc" : "asc");
 
           artistList.sort((a, b) => {
+            if (key === "rank") {
+              return isAsc ? a.rank - b.rank : b.rank - a.rank;
+            }
             if (typeof a[key] === 'string') {
               return isAsc
                 ? a[key].localeCompare(b[key])
