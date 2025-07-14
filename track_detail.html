@@ -17,7 +17,11 @@
     a:hover { text-decoration: underline; }
     ul { list-style: none; padding-left: 0; margin-top: 1rem; }
     ul li { margin-bottom: 0.4rem; }
-    .cert-icon { font-size: 0.9rem; margin-left: 0.3rem; color: #666; }
+    .cert-icon img {
+      height: 20px;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
     .error { color: red; font-weight: bold; }
   </style>
 </head>
@@ -55,10 +59,18 @@
             .trim()
         : "";
 
-    function getAlbumCertLabel(sales) {
-      if (sales >= 1000) return `💿 Multi-Platinum (x${Math.floor(sales / 500)})`;
-      if (sales >= 500) return "💿 Platinum";
-      if (sales >= 250) return "🥇 Gold";
+    function getSongCertImages(sales) {
+      const scaled = sales * 1000;
+      if (scaled >= 1_000_000) {
+        return `<img src="diamond.png" title="Diamond">`;
+      }
+      if (scaled >= 100_000) {
+        const count = Math.floor(scaled / 100_000);
+        return Array(count).fill(`<img src="platinum.png" title="Platinum">`).join('');
+      }
+      if (scaled >= 50_000) {
+        return `<img src="gold.png" title="Gold">`;
+      }
       return "—";
     }
 
@@ -70,7 +82,7 @@
     }
 
     const streamMultiplier = 2.2567;
-    const saleMultiplier = 1000; // ✅ each sale = 1,000 copies
+    const saleMultiplier = 1000;
 
     const trackTitleEl = document.getElementById("trackTitle");
     const trackArtistEl = document.getElementById("trackArtist");
@@ -141,7 +153,15 @@
     peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
     weeksEl.textContent = weeks;
     totalSalesEl.textContent = formatNumber(actualSales);
-    totalStreamsEl.textContent = formatNumber(calculatedStreams * 1_000_000); // final in units
+    totalStreamsEl.textContent = formatNumber(calculatedStreams * 1_000_000);
+
+    const certIcons = getSongCertImages(rawSales);
+    if (certIcons && certIcons !== "—") {
+      const certSpan = document.createElement("div");
+      certSpan.className = "cert-icon";
+      certSpan.innerHTML = certIcons;
+      totalSalesEl.appendChild(certSpan);
+    }
 
     const albums = Object.values(albumMap);
     if (albums.length === 0) {
@@ -149,11 +169,10 @@
     } else {
       albums.sort((a, b) => b.sales - a.sales);
       albums.forEach(album => {
-        const cert = getAlbumCertLabel(album.sales);
         const albumUrl = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
         const albumActualSales = album.sales * saleMultiplier;
         const li = document.createElement("li");
-        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${formatNumber(albumActualSales)} <span class="cert-icon">${cert}</span>`;
+        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${formatNumber(albumActualSales)}`;
         albumList.appendChild(li);
       });
     }
