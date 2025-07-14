@@ -96,48 +96,61 @@
       return (str || '').toUpperCase().replace(/[^A-Z0-9]/g, '').trim();
     }
 
+    function normalizeAlbum(str) {
+      return normalize(
+        String(str || "")
+          .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
+      );
+    }
+
+    function splitArtists(str) {
+      return String(str || "")
+        .split(/,|&| and | with | feat\.? | featuring /i)
+        .map(a => normalize(a))
+        .filter(Boolean);
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
       const tableBody = document.getElementById("artistTable");
       const artistMap = {};
       const albumPeakMap = {};
 
       for (const week in weekData) {
-        const entries = weekData[week];
-
-        entries.forEach(entry => {
-          const artist = entry.artist;
-          const normArtist = normalize(artist);
+        weekData[week].forEach(entry => {
+          const artistList = splitArtists(entry.artist);
           const album = entry.album || "";
           const title = entry.title;
           const rank = parseInt(entry.rank);
           const sales = parseFloat(entry.sales) || 0;
 
-          if (!artistMap[normArtist]) {
-            artistMap[normArtist] = {
-              name: artist,
-              rawSales: 0,
-              weeks: new Set(),
-              num1Songs: 0,
-              top10Songs: 0,
-              num1Albums: 0,
-              top10Albums: 0
-            };
-          }
+          artistList.forEach(normArtist => {
+            if (!artistMap[normArtist]) {
+              artistMap[normArtist] = {
+                name: entry.artist,
+                rawSales: 0,
+                weeks: new Set(),
+                num1Songs: 0,
+                top10Songs: 0,
+                num1Albums: 0,
+                top10Albums: 0
+              };
+            }
 
-          const artistStats = artistMap[normArtist];
-          artistStats.rawSales += sales;
-          artistStats.weeks.add(week);
+            const artistStats = artistMap[normArtist];
+            artistStats.rawSales += sales;
+            artistStats.weeks.add(week);
 
-          if (title) {
-            if (rank === 1) artistStats.num1Songs++;
-            if (rank <= 10) artistStats.top10Songs++;
-          }
+            if (title) {
+              if (rank === 1) artistStats.num1Songs++;
+              if (rank <= 10) artistStats.top10Songs++;
+            }
 
-          if (typeof album === 'string' && normalize(album) !== "NAN") {
-            const key = `${normalize(album)}|${normArtist}`;
-            if (!albumPeakMap[key]) albumPeakMap[key] = rank;
-            else if (rank < albumPeakMap[key]) albumPeakMap[key] = rank;
-          }
+            if (typeof album === 'string' && normalize(album) !== "NAN") {
+              const albumKey = `${normalizeAlbum(album)}|${normArtist}`;
+              if (!albumPeakMap[albumKey]) albumPeakMap[albumKey] = rank;
+              else if (rank < albumPeakMap[albumKey]) albumPeakMap[albumKey] = rank;
+            }
+          });
         });
       }
 
@@ -149,8 +162,8 @@
         if (peak <= 10) artistMap[normArtist].top10Albums++;
       }
 
-      const artistList = Object.values(artistMap)
-        .map(a => {
+      const artistList = Object.entries(artistMap)
+        .map(([norm, a]) => {
           const totalStreams = a.rawSales * 2.2567 * 1_000_000;
           const totalSales = a.rawSales * 1000;
           const months = a.weeks.size / 4.33;
