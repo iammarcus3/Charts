@@ -93,20 +93,22 @@
           .trim()
       : "";
 
-    function getAlbumCertLabel(streams) {
-      if (streams >= 1000) return `💿 Multi-Platinum (x${Math.floor(streams / 500)})`;
-      if (streams >= 500) return "💿 Platinum";
-      if (streams >= 250) return "🥇 Gold";
+    // Album-level certification logic: BASED ON SALES
+    function getAlbumCertLabel(sales) {
+      if (sales >= 1000) return `💿 Multi-Platinum (x${Math.floor(sales / 500)})`;
+      if (sales >= 500) return "💿 Platinum";
+      if (sales >= 250) return "🥇 Gold";
       return "—";
     }
 
+    // Track-level certification logic: BASED ON SALES
     function getTrackCertIcon(sales) {
       if (sales >= 200) return `💿 x${Math.floor(sales / 200)}`;
       if (sales >= 100) return "🥇 Gold";
       return "";
     }
 
-    // DOM
+    // DOM refs
     const albumLink = document.getElementById("albumLink");
     const artistLink = document.getElementById("artistLink");
     const totalStreamsEl = document.getElementById("totalStreams");
@@ -119,10 +121,9 @@
     const trackList = document.getElementById("trackList");
     const errorEl = document.getElementById("error");
 
-    // Init
     albumLink.textContent = albumParam;
-    albumLink.href = `album_detail.html?album=${encodeURIComponent(albumParam)}&artist=${encodeURIComponent(artistParam)}`;
     artistLink.textContent = artistParam;
+    albumLink.href = `album_detail.html?album=${encodeURIComponent(albumParam)}&artist=${encodeURIComponent(artistParam)}`;
     artistLink.href = `artist.html?artist=${encodeURIComponent(artistParam)}`;
 
     const normArtist = normalize(artistParam);
@@ -134,7 +135,6 @@
     let debutWeek = null;
     let peakRank = Infinity;
     let weeksAt1 = 0;
-
     const tracks = {};
 
     for (const week in weekData) {
@@ -153,7 +153,6 @@
           totalSales += entrySales;
           totalStreams += entryStreams;
           weekSet.add(week);
-
           if (!debutWeek || weekNum < debutWeek) debutWeek = weekNum;
           if (entryRank && entryRank < peakRank) peakRank = entryRank;
           if (entryRank === 1) weeksAt1++;
@@ -171,16 +170,14 @@
       });
     }
 
-    // Update UI
     totalStreamsEl.textContent = Math.round(totalStreams);
     totalSalesEl.textContent = Math.round(totalSales);
     totalWeeksEl.textContent = weekSet.size;
     weeksAt1El.textContent = weeksAt1;
     debutEl.textContent = debutWeek || "—";
     peakEl.textContent = peakRank === Infinity ? "—" : `#${peakRank}`;
-    albumCertEl.textContent = getAlbumCertLabel(totalStreams);
+    albumCertEl.textContent = getAlbumCertLabel(totalSales); // ✅ FIXED
 
-    // Render Tracks
     const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
     if (sortedTracks.length === 0) {
       errorEl.textContent = "⚠️ No matching album data found in weekdata.js.";
