@@ -57,7 +57,7 @@
   <h1><a id="albumLink" href="#">Album Detail</a></h1>
   <p><strong>Artist:</strong> <a id="artistLink" href="#">Artist</a></p>
   <p><strong>Total Streams:</strong> <span id="totalStreams">0</span></p>
-  <p><strong>Total Sales:</strong> <span id="totalSales">0</span></p>
+  <p><strong>Total Sales:</strong> <span id="totalSales">0</span> <small>(x1,000)</small></p>
   <p><strong>Total Weeks on Chart:</strong> <span id="totalWeeks">0</span></p>
   <p><strong>Weeks at #1:</strong> <span id="weeksAt1">0</span></p>
   <p><strong>Peak Position:</strong> <span id="peak">—</span></p>
@@ -108,7 +108,6 @@
       return "";
     }
 
-    // DOM refs
     const albumLink = document.getElementById("albumLink");
     const artistLink = document.getElementById("artistLink");
     const totalStreamsEl = document.getElementById("totalStreams");
@@ -120,6 +119,8 @@
     const albumCertEl = document.getElementById("albumCert");
     const trackList = document.getElementById("trackList");
     const errorEl = document.getElementById("error");
+
+    const unit = 1000;
 
     albumLink.textContent = albumParam;
     artistLink.textContent = artistParam;
@@ -171,12 +172,12 @@
     }
 
     totalStreamsEl.textContent = Math.round(totalStreams);
-    totalSalesEl.textContent = Math.round(totalSales);
+    totalSalesEl.textContent = (totalSales * unit).toLocaleString();
     totalWeeksEl.textContent = weekSet.size;
     weeksAt1El.textContent = weeksAt1;
     debutEl.textContent = debutWeek || "—";
     peakEl.textContent = peakRank === Infinity ? "—" : `#${peakRank}`;
-    albumCertEl.textContent = getAlbumCertLabel(totalSales); // ✅ FIXED
+    albumCertEl.textContent = getAlbumCertLabel(totalSales);
 
     const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
     if (sortedTracks.length === 0) {
