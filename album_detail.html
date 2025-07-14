@@ -57,6 +57,7 @@
   <h1><a id="albumLink" href="#">Album Detail</a></h1>
   <p><strong>Artist:</strong> <a id="artistLink" href="#">Artist</a></p>
   <p><strong>Total Streams:</strong> <span id="totalStreams">0</span></p>
+  <p><strong>Total Sales:</strong> <span id="totalSales">0</span></p>
   <p><strong>Total Weeks on Chart:</strong> <span id="totalWeeks">0</span></p>
   <p><strong>Weeks at #1:</strong> <span id="weeksAt1">0</span></p>
   <p><strong>Peak Position:</strong> <span id="peak">—</span></p>
@@ -73,34 +74,29 @@
     const albumParam = params.get("album");
     const artistParam = params.get("artist");
 
-    const normalize = str =>
-      typeof str === "string"
-        ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim()
-        : "";
+    const normalize = str => typeof str === "string"
+      ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim()
+      : "";
 
-    const normalizeAlbum = str =>
-      typeof str === "string"
-        ? str
-            .toUpperCase()
-            .replace(/\(.*?\)|\[.*?\]/g, "")
-            .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
-            .replace(/[^A-Z0-9]/g, "")
-            .trim()
-        : "";
+    const normalizeAlbum = str => typeof str === "string"
+      ? str.toUpperCase()
+          .replace(/\(.*?\)|\[.*?\]/g, "")
+          .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
+          .replace(/[^A-Z0-9]/g, "")
+          .trim()
+      : "";
 
-    const normalizeTitle = str =>
-      typeof str === "string"
-        ? str
-            .toUpperCase()
-            .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
-            .replace(/[^A-Z0-9]/g, "")
-            .trim()
-        : "";
+    const normalizeTitle = str => typeof str === "string"
+      ? str.toUpperCase()
+          .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+          .replace(/[^A-Z0-9]/g, "")
+          .trim()
+      : "";
 
-    function getAlbumCertLabel(sales) {
-      if (sales >= 1000) return `💿 Multi-Platinum (x${Math.floor(sales / 500)})`;
-      if (sales >= 500) return "💿 Platinum";
-      if (sales >= 250) return "🥇 Gold";
+    function getAlbumCertLabel(streams) {
+      if (streams >= 1000) return `💿 Multi-Platinum (x${Math.floor(streams / 500)})`;
+      if (streams >= 500) return "💿 Platinum";
+      if (streams >= 250) return "🥇 Gold";
       return "—";
     }
 
@@ -110,10 +106,11 @@
       return "";
     }
 
-    // Assign elements
+    // DOM
     const albumLink = document.getElementById("albumLink");
     const artistLink = document.getElementById("artistLink");
     const totalStreamsEl = document.getElementById("totalStreams");
+    const totalSalesEl = document.getElementById("totalSales");
     const totalWeeksEl = document.getElementById("totalWeeks");
     const weeksAt1El = document.getElementById("weeksAt1");
     const peakEl = document.getElementById("peak");
@@ -122,7 +119,7 @@
     const trackList = document.getElementById("trackList");
     const errorEl = document.getElementById("error");
 
-    // Init UI
+    // Init
     albumLink.textContent = albumParam;
     albumLink.href = `album_detail.html?album=${encodeURIComponent(albumParam)}&artist=${encodeURIComponent(artistParam)}`;
     artistLink.textContent = artistParam;
@@ -131,6 +128,7 @@
     const normArtist = normalize(artistParam);
     const normAlbum = normalizeAlbum(albumParam);
 
+    let totalStreams = 0;
     let totalSales = 0;
     const weekSet = new Set();
     let debutWeek = null;
@@ -148,11 +146,14 @@
         const entryAlbum = normalizeAlbum(entry.album);
         const entryTitle = entry.title;
         const entrySales = parseFloat(entry.sales) || 0;
+        const entryStreams = parseFloat(entry.totalSales) || 0;
         const entryRank = parseInt(entry.rank);
 
         if (entryArtist === normArtist && entryAlbum === normAlbum) {
           totalSales += entrySales;
+          totalStreams += entryStreams;
           weekSet.add(week);
+
           if (!debutWeek || weekNum < debutWeek) debutWeek = weekNum;
           if (entryRank && entryRank < peakRank) peakRank = entryRank;
           if (entryRank === 1) weeksAt1++;
@@ -162,31 +163,31 @@
             tracks[trackKey] = {
               title: entryTitle,
               artist: entry.artist,
-              totalSales: 0
+              sales: 0
             };
           }
-          tracks[trackKey].totalSales += entrySales;
+          tracks[trackKey].sales += entrySales;
         }
       });
     }
 
-    // Render album stats
-    totalStreamsEl.textContent = Math.round(totalSales);
+    // Update UI
+    totalStreamsEl.textContent = Math.round(totalStreams);
+    totalSalesEl.textContent = Math.round(totalSales);
     totalWeeksEl.textContent = weekSet.size;
     weeksAt1El.textContent = weeksAt1;
     debutEl.textContent = debutWeek || "—";
     peakEl.textContent = peakRank === Infinity ? "—" : `#${peakRank}`;
-    albumCertEl.textContent = getAlbumCertLabel(totalSales);
+    albumCertEl.textContent = getAlbumCertLabel(totalStreams);
 
-    // Render tracks
-    const sortedTracks = Object.values(tracks).sort((a, b) => b.totalSales - a.totalSales);
-
+    // Render Tracks
+    const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
     if (sortedTracks.length === 0) {
       errorEl.textContent = "⚠️ No matching album data found in weekdata.js.";
     } else {
       sortedTracks.forEach(track => {
-        const cert = getTrackCertIcon(track.totalSales);
-        if (!cert) return; // Only show certified songs
+        const cert = getTrackCertIcon(track.sales);
+        if (!cert) return;
 
         const li = document.createElement("li");
         const trackURL = `track_detail.html?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`;
