@@ -113,6 +113,8 @@
 
   <script src="weekdata.js"></script>
   <script>
+    let currentData = [], sortedWeeks = [], history = {};
+
     function similarity(a, b) {
       a = a.toLowerCase().replace(/[^a-z0-9]/g, '');
       b = b.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -124,8 +126,6 @@
       return matches / len;
     }
 
-    let currentData = [], sortedWeeks = [], history = {};
-
     function getFuzzyKey(title, artist) {
       title = title.toLowerCase();
       artist = artist.toLowerCase();
@@ -134,6 +134,27 @@
         if (a === artist && similarity(t, title) >= 0.95) return key;
       }
       return title + '||' + artist;
+    }
+
+    function getMovementIcon(move) {
+      return move === 'UP' ? '⬆️' :
+             move === 'DOWN' ? '⬇️' :
+             move === 'SAME' ? '➖' :
+             move === 'RE' ? '🔁' : '🆕';
+    }
+
+    function getCertification(sales) {
+      if (sales >= 1000) return '💎<br>Diamond';
+      if (sales >= 200) return '💿'.repeat(Math.floor(sales / 200)) + '<br>Platinum';
+      if (sales >= 100) return '🥇<br>Gold';
+      return '—';
+    }
+
+    function getCertificationText(sales) {
+      if (sales >= 1000) return 'Diamond';
+      if (sales >= 200) return `Multi-Platinum (x${Math.floor(sales / 200)})`;
+      if (sales >= 100) return 'Gold';
+      return null;
     }
 
     function calculateStats() {
@@ -169,36 +190,15 @@
       });
     }
 
-    function getMovementIcon(move) {
-      return move === 'UP' ? '⬆️' :
-             move === 'DOWN' ? '⬇️' :
-             move === 'SAME' ? '➖' :
-             move === 'RE' ? '🔁' : '🆕';
-    }
-
-    function getCertification(sales) {
-      if (sales >= 1000) return \"💎<br>Diamond\";
-      if (sales >= 200) return \"💿\".repeat(Math.floor(sales / 200)) + \"<br>Platinum\";
-      if (sales >= 100) return \"🥇<br>Gold\";
-      return \"—\";
-    }
-
-    function getCertificationText(sales) {
-      if (sales >= 1000) return \"Diamond\";
-      if (sales >= 200) return `Multi-Platinum (x${Math.floor(sales / 200)})`;
-      if (sales >= 100) return \"Gold\";
-      return null;
-    }
-
     function populateWeeks() {
       if (!window.weekData) return;
       sortedWeeks = Object.keys(weekData)
         .filter(k => Array.isArray(weekData[k]))
         .sort((a, b) => parseInt(b.replace(/\\D/g, '')) - parseInt(a.replace(/\\D/g, '')));
-      const sel = document.getElementById(\"weekSelector\");
+      const sel = document.getElementById('weekSelector');
       sel.innerHTML = '';
       sortedWeeks.forEach(w => {
-        const opt = document.createElement(\"option\");
+        const opt = document.createElement('option');
         opt.value = w;
         opt.textContent = w;
         sel.appendChild(opt);
@@ -210,15 +210,15 @@
     }
 
     function populateTable(week) {
-      const tbody = document.getElementById(\"chartBody\");
+      const tbody = document.getElementById('chartBody');
       tbody.innerHTML = '';
       currentData = weekData[week];
       const certified = [];
 
       currentData.forEach(row => {
-        const tr = document.createElement(\"tr\");
-        if (row.rank === 1) tr.classList.add(\"top-spot\");
-        if (row.movement === \"NEW\") tr.classList.add(\"new-entry\");
+        const tr = document.createElement('tr');
+        if (row.rank === 1) tr.classList.add('top-spot');
+        if (row.movement === 'NEW') tr.classList.add('new-entry');
 
         tr.innerHTML = `
           <td>${row.rank}</td>
@@ -241,27 +241,27 @@
     }
 
     function renderCertifiedList(list) {
-      const ul = document.getElementById(\"certifiedSongs\");
+      const ul = document.getElementById('certifiedSongs');
       ul.innerHTML = list.length ? '' : '<li>No new certifications this week.</li>';
       list.forEach(s => {
-        const li = document.createElement(\"li\");
+        const li = document.createElement('li');
         li.innerHTML = `🎵 <strong>${s.title}</strong> by ${s.artist} – ${s.cert}`;
         ul.appendChild(li);
       });
     }
 
     function showModal(song) {
-      document.getElementById(\"modalTitle\").textContent = song.title;
-      document.getElementById(\"modalArtist\").textContent = \"By \" + song.artist;
-      document.getElementById(\"modalSales\").textContent = \"This Week: \" + song.sales;
-      document.getElementById(\"modalWeeks\").textContent = \"Weeks: \" + song.weeks;
-      document.getElementById(\"modalPeak\").textContent = \"Peak: \" + song.peak;
-      document.getElementById(\"modalCert\").innerHTML = getCertification(song.total_sales);
-      document.getElementById(\"songModal\").style.display = \"flex\";
+      document.getElementById('modalTitle').textContent = song.title;
+      document.getElementById('modalArtist').textContent = \"By \" + song.artist;
+      document.getElementById('modalSales').textContent = \"This Week: \" + song.sales;
+      document.getElementById('modalWeeks').textContent = \"Weeks: \" + song.weeks;
+      document.getElementById('modalPeak').textContent = \"Peak: \" + song.peak;
+      document.getElementById('modalCert').innerHTML = getCertification(song.total_sales);
+      document.getElementById('songModal').style.display = 'flex';
     }
 
-    document.addEventListener(\"click\", e => {
-      if (e.target.classList.contains(\"song-link\")) {
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('song-link')) {
         e.preventDefault();
         const title = decodeURIComponent(e.target.dataset.title);
         const artist = decodeURIComponent(e.target.dataset.artist);
@@ -271,7 +271,7 @@
     });
 
     function navigateWeek(offset) {
-      const sel = document.getElementById(\"weekSelector\");
+      const sel = document.getElementById('weekSelector');
       const i = sortedWeeks.indexOf(sel.value);
       const newIndex = i + offset;
       if (newIndex >= 0 && newIndex < sortedWeeks.length) {
@@ -280,7 +280,7 @@
       }
     }
 
-    document.addEventListener(\"DOMContentLoaded\", populateWeeks);
+    document.addEventListener('DOMContentLoaded', populateWeeks);
   </script>
 </body>
 </html>
