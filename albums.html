@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Billboard Albums Chart</title>
   <style>
     body {
@@ -44,24 +44,6 @@
     tr:hover { background-color: #333; }
     tr.top-spot { background-color: #ff007f; color: black; font-weight: bold; }
     tr.new-entry { border-left: 5px solid #00f0ff; }
-    #certifiedList {
-      margin-top: 3rem; background: #111; padding: 1rem; border-radius: 8px;
-    }
-    #certifiedList h2 { color: #00f0ff; }
-    .modal {
-      display: none; position: fixed; z-index: 99;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7); justify-content: center; align-items: center;
-    }
-    .modal-content {
-      background: #1a1a1a; color: #fff; padding: 2rem;
-      border-radius: 10px; text-align: center; width: 300px;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
-    }
-    .modal-content h3 { color: #ff007f; }
-    .modal-content button {
-      margin-top: 1rem; background-color: #00f0ff; color: #000;
-    }
   </style>
 </head>
 <body>
@@ -94,33 +76,69 @@
     <tbody id="chartBody"></tbody>
   </table>
 
-  <div id="certifiedList">
-    <h2>🏅 Certified Albums This Week</h2>
-    <ul id="certifiedAlbums"></ul>
-  </div>
-
-  <div class="modal" id="albumModal">
-    <div class="modal-content">
-      <h3 id="modalTitle"></h3>
-      <p id="modalArtist"></p>
-      <p id="modalSales"></p>
-      <p id="modalWeeks"></p>
-      <p id="modalPeak"></p>
-      <p id="modalCert"></p>
-      <button onclick="document.getElementById('albumModal').style.display='none'">Close</button>
-    </div>
-  </div>
-
   <script src="weekdata.js"></script>
   <script>
-    let currentData = [], sortedWeeks = [], history = {};
+    let currentWeek = "1";
+    let sortedWeeks = Object.keys(weekData).sort((a, b) => parseInt(a) - parseInt(b));
+    const albumHistory = {};
 
     function normalize(str) {
-      return str.toLowerCase().replace(/\(.*?\)|\[.*?\]|deluxe|bonus|edition|version|ep|[^a-z0-9]/gi, '').trim();
+      return str ? str.toLowerCase().replace(/\(.*?\)|\[.*?\]|deluxe|bonus|edition|version|[^a-z0-9]/gi, '').trim() : '';
     }
 
     function getFuzzyKey(album, artist) {
       return normalize(album) + '||' + normalize(artist);
+    }
+
+    function buildAlbumChart(week) {
+      const rows = weekData[week] || [];
+      const albumMap = {};
+
+      rows.forEach(row => {
+        if (!row.album || !row.artist) return;
+        const key = getFuzzyKey(row.album, row.artist);
+        if (!albumMap[key]) {
+          albumMap[key] = {
+            album: row.album,
+            artist: row.artist,
+            sales: 0,
+            totalSales: 0,
+            weeks: 0,
+            peak: Infinity,
+            movement: 'NEW',
+            lastRank: null
+          };
+        }
+        albumMap[key].sales += row.sales;
+        albumMap[key].peak = Math.min(albumMap[key].peak, row.rank);
+      });
+
+      // update historical stats
+      for (const w of sortedWeeks) {
+        if (parseInt(w) > parseInt(week)) break;
+        (weekData[w] || []).forEach(row => {
+          const key = getFuzzyKey(row.album, row.artist);
+          if (!albumHistory[key]) albumHistory[key] = { total: 0, weeks: 0, peak: Infinity };
+          albumHistory[key].total += row.sales;
+          albumHistory[key].weeks++;
+          albumHistory[key].peak = Math.min(albumHistory[key].peak, row.rank);
+        });
+      }
+
+      const albums = Object.values(albumMap);
+      albums.forEach(album => {
+        const key = getFuzzyKey(album.album, album.artist);
+        const stats = albumHistory[key] || {};
+        album.totalSales = stats.total || album.sales;
+        album.weeks = stats.weeks || 1;
+        album.peak = stats.peak || album.peak;
+      });
+
+      albums.sort((a, b) => b.sales - a.sales);
+      return albums.map((album, i) => {
+        album.rank = i + 1;
+        return album;
+      });
     }
 
     function getMovementIcon(move) {
@@ -130,146 +148,70 @@
              move === 'RE' ? '🔁' : '🆕';
     }
 
-    function getCertification(sales) {
-      if (sales >= 10000) return '💎<br>Diamond';
-      if (sales >= 1000) return '💿'.repeat(Math.floor(sales / 1000)) + '<br>Platinum';
-      if (sales >= 500) return '🥇<br>Gold';
-      return '—';
-    }
-
-    function getCertificationText(sales) {
-      if (sales >= 10000) return 'Diamond';
-      if (sales >= 1000) return `Multi-Platinum (x${Math.floor(sales / 1000)})`;
-      if (sales >= 500) return 'Gold';
-      return null;
-    }
-
-    function calculateStats() {
-      history = {};
-      sortedWeeks.forEach((week, i) => {
-        const lastWeek = sortedWeeks[i + 1] && weekData[sortedWeeks[i + 1]] || [];
-        const lastMap = {};
-        lastWeek.forEach(r => {
-          const k = getFuzzyKey(r.album, r.artist);
-          lastMap[k] = r.rank;
-        });
-
-        weekData[week].forEach(row => {
-          if (!row.album || !row.artist) return;
-          const key = getFuzzyKey(row.album, row.artist);
-          if (!history[key]) history[key] = { total: 0, peak: 999, weeks: 0, seen: false };
-          history[key].total += row.sales;
-          history[key].peak = Math.min(history[key].peak, row.rank);
-          history[key].weeks++;
-          let move = 'NEW';
-          if (key in lastMap) {
-            const prev = parseInt(lastMap[key]);
-            const curr = parseInt(row.rank);
-            move = curr < prev ? 'UP' : curr > prev ? 'DOWN' : 'SAME';
-          } else if (history[key].seen) {
-            move = 'RE';
-          }
-          history[key].seen = true;
-          row.total_sales = history[key].total;
-          row.peak = history[key].peak;
-          row.weeks = history[key].weeks;
-          row.movement = move;
-        });
-      });
-    }
-
-    function populateWeeks() {
-      if (!window.weekData) return;
-      sortedWeeks = Object.keys(weekData)
-        .filter(k => Array.isArray(weekData[k]))
-        .sort((a, b) => parseInt(b.replace(/\D/g, '')) - parseInt(a.replace(/\D/g, '')));
-      const sel = document.getElementById('weekSelector');
-      sel.innerHTML = '';
+    function populateSelector() {
+      const sel = document.getElementById("weekSelector");
       sortedWeeks.forEach(w => {
-        const opt = document.createElement('option');
+        const opt = document.createElement("option");
         opt.value = w;
-        opt.textContent = w;
+        opt.textContent = `Week ${w}`;
         sel.appendChild(opt);
       });
-      sel.value = sortedWeeks[0];
-      sel.onchange = () => populateTable(sel.value);
-      calculateStats();
-      populateTable(sel.value);
-    }
-
-    function populateTable(week) {
-      const tbody = document.getElementById('chartBody');
-      tbody.innerHTML = '';
-      currentData = weekData[week];
-      const certified = [];
-
-      currentData.forEach(row => {
-        if (!row.album || !row.artist) return;
-        const tr = document.createElement('tr');
-        if (row.rank === 1) tr.classList.add('top-spot');
-        if (row.movement === 'NEW') tr.classList.add('new-entry');
-
-        tr.innerHTML = `
-          <td>${row.rank}</td>
-          <td>${getMovementIcon(row.movement)}</td>
-          <td><a href="#" class="album-link" data-album="${encodeURIComponent(row.album)}" data-artist="${encodeURIComponent(row.artist)}">${row.album}</a></td>
-          <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
-          <td>${row.sales}</td>
-          <td>${row.total_sales}</td>
-          <td>${row.weeks}</td>
-          <td>${row.peak}</td>
-        `;
-        tbody.appendChild(tr);
-
-        if (row.total_sales >= 500) {
-          certified.push({ title: row.album, artist: row.artist, cert: getCertificationText(row.total_sales) });
-        }
-      });
-
-      renderCertifiedList(certified);
-    }
-
-    function renderCertifiedList(list) {
-      const ul = document.getElementById('certifiedAlbums');
-      ul.innerHTML = list.length ? '' : '<li>No new certifications this week.</li>';
-      list.forEach(s => {
-        const li = document.createElement('li');
-        li.innerHTML = `📀 <strong>${s.title}</strong> by ${s.artist} – ${s.cert}`;
-        ul.appendChild(li);
+      sel.value = currentWeek;
+      sel.addEventListener('change', () => {
+        currentWeek = sel.value;
+        renderWeek(currentWeek);
       });
     }
-
-    function showModal(album) {
-      document.getElementById("modalTitle").textContent = album.album;
-      document.getElementById("modalArtist").textContent = "By " + album.artist;
-      document.getElementById("modalSales").textContent = "This Week: " + album.sales;
-      document.getElementById("modalWeeks").textContent = "Weeks: " + album.weeks;
-      document.getElementById("modalPeak").textContent = "Peak: " + album.peak;
-      document.getElementById("modalCert").innerHTML = getCertification(album.total_sales);
-      document.getElementById("albumModal").style.display = 'flex';
-    }
-
-    document.addEventListener("click", e => {
-      if (e.target.classList.contains("album-link")) {
-        e.preventDefault();
-        const album = decodeURIComponent(e.target.dataset.album);
-        const artist = decodeURIComponent(e.target.dataset.artist);
-        const entry = currentData.find(r => r.album === album && r.artist === artist);
-        if (entry) showModal(entry);
-      }
-    });
 
     function navigateWeek(offset) {
-      const sel = document.getElementById('weekSelector');
-      const i = sortedWeeks.indexOf(sel.value);
+      let i = sortedWeeks.indexOf(currentWeek);
       const newIndex = i + offset;
       if (newIndex >= 0 && newIndex < sortedWeeks.length) {
-        sel.value = sortedWeeks[newIndex];
-        populateTable(sel.value);
+        currentWeek = sortedWeeks[newIndex];
+        document.getElementById("weekSelector").value = currentWeek;
+        renderWeek(currentWeek);
       }
     }
 
-    document.addEventListener('DOMContentLoaded', populateWeeks);
+    function renderWeek(week) {
+      const tbody = document.getElementById("chartBody");
+      tbody.innerHTML = "";
+      const chart = buildAlbumChart(week);
+      const lastWeek = sortedWeeks[sortedWeeks.indexOf(week) - 1];
+      const lastChart = lastWeek ? buildAlbumChart(lastWeek) : [];
+
+      chart.forEach(album => {
+        const key = getFuzzyKey(album.album, album.artist);
+        const prev = lastChart.find(a => getFuzzyKey(a.album, a.artist) === key);
+        let move = "NEW";
+        if (prev) {
+          if (album.rank < prev.rank) move = "UP";
+          else if (album.rank > prev.rank) move = "DOWN";
+          else move = "SAME";
+        } else if (albumHistory[key] && albumHistory[key].weeks > 1) move = "RE";
+        album.movement = move;
+
+        const tr = document.createElement("tr");
+        if (album.rank === 1) tr.classList.add("top-spot");
+        if (move === "NEW") tr.classList.add("new-entry");
+        tr.innerHTML = `
+          <td>${album.rank}</td>
+          <td>${getMovementIcon(move)}</td>
+          <td>${album.album}</td>
+          <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
+          <td>${album.sales}</td>
+          <td>${album.totalSales}</td>
+          <td>${album.weeks}</td>
+          <td>${album.peak}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      populateSelector();
+      renderWeek(currentWeek);
+    });
   </script>
 </body>
 </html>
