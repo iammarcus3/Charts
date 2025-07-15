@@ -136,6 +136,8 @@
       const artistNameMap = {};
       const albumSalesMap = {};
       const songSalesMap = {};
+      const songPeakMap = {};
+      const albumPeakMap = {};
 
       for (const week in weekData) {
         weekData[week].forEach(entry => {
@@ -154,10 +156,8 @@
               artistMap[normName] = {
                 rawSales: 0,
                 weeks: new Set(),
-                num1Songs: 0,
-                top10Songs: 0,
-                num1Albums: 0,
-                top10Albums: 0,
+                songs: {},
+                albums: {},
                 diamondSongs: new Set(),
                 diamondAlbums: new Set()
               };
@@ -168,40 +168,39 @@
             artistStats.rawSales += sales;
             artistStats.weeks.add(week);
 
-            // Track song sales
+            // Track song sales and best rank
             const songID = songKey + "|" + normName;
             if (!songSalesMap[songID]) songSalesMap[songID] = 0;
             songSalesMap[songID] += sales;
 
-            if (title) {
-              if (rank === 1) artistStats.num1Songs++;
-              if (rank <= 10) artistStats.top10Songs++;
-            }
+            if (!artistStats.songs[songKey]) artistStats.songs[songKey] = Infinity;
+            if (rank < artistStats.songs[songKey]) artistStats.songs[songKey] = rank;
 
-            if (typeof album === 'string' && normalize(album) !== "NAN") {
+            // Track album sales and best rank
+            if (albumKey !== "NAN") {
               const albumID = albumKey + "|" + normName;
               if (!albumSalesMap[albumID]) albumSalesMap[albumID] = 0;
               albumSalesMap[albumID] += sales;
 
-              if (rank === 1) artistStats.num1Albums++;
-              if (rank <= 10) artistStats.top10Albums++;
+              if (!artistStats.albums[albumKey]) artistStats.albums[albumKey] = Infinity;
+              if (rank < artistStats.albums[albumKey]) artistStats.albums[albumKey] = rank;
             }
           });
         });
       }
 
-      // Count Diamond songs and albums
-      for (const [key, total] of Object.entries(songSalesMap)) {
-        if (total >= 1000) {
-          const [song, artist] = key.split("|");
-          if (artistMap[artist]) artistMap[artist].diamondSongs.add(song);
+      // Assign diamond songs and albums
+      for (const key in songSalesMap) {
+        const [songKey, normName] = key.split("|");
+        if (songSalesMap[key] >= 1000 && artistMap[normName]) {
+          artistMap[normName].diamondSongs.add(songKey);
         }
       }
 
-      for (const [key, total] of Object.entries(albumSalesMap)) {
-        if (total >= 1000) {
-          const [album, artist] = key.split("|");
-          if (artistMap[artist]) artistMap[artist].diamondAlbums.add(album);
+      for (const key in albumSalesMap) {
+        const [albumKey, normName] = key.split("|");
+        if (albumSalesMap[key] >= 1000 && artistMap[normName]) {
+          artistMap[normName].diamondAlbums.add(albumKey);
         }
       }
 
@@ -213,15 +212,29 @@
           const displayName = artistNameMap[norm].split(' ')
             .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
             .join(' ');
+
+          // Count unique song/album hits
+          let num1Songs = 0, top10Songs = 0;
+          for (const r of Object.values(a.songs)) {
+            if (r === 1) num1Songs++;
+            if (r <= 10) top10Songs++;
+          }
+
+          let num1Albums = 0, top10Albums = 0;
+          for (const r of Object.values(a.albums)) {
+            if (r === 1) num1Albums++;
+            if (r <= 10) top10Albums++;
+          }
+
           return {
             name: displayName,
             totalStreams,
             totalSales,
             monthlyStreams: totalStreams / (months || 1),
-            num1Songs: a.num1Songs,
-            top10Songs: a.top10Songs,
-            num1Albums: a.num1Albums,
-            top10Albums: a.top10Albums,
+            num1Songs,
+            top10Songs,
+            num1Albums,
+            top10Albums,
             diamondSongs: a.diamondSongs.size,
             diamondAlbums: a.diamondAlbums.size
           };
