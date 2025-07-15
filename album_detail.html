@@ -137,7 +137,7 @@
     const errorEl = document.getElementById("error");
 
     const saleMultiplier = 1000;
-    const streamMultiplier = 2.2567;
+    const streamMultiplier = 1.32762;
 
     albumLink.textContent = albumParam;
     artistLink.textContent = artistParam;
@@ -194,7 +194,7 @@
     weeksAt1El.textContent = weeksAt1;
     debutEl.textContent = debutWeek || "—";
     peakEl.textContent = peakRank === Infinity ? "—" : `#${peakRank}`;
-    albumCertEl.innerHTML = getAlbumCertIcons(rawSales); // ✅ renders icons not text
+    albumCertEl.innerHTML = getAlbumCertIcons(rawSales);
 
     const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
     if (sortedTracks.length === 0) {
