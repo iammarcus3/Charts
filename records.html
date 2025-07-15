@@ -37,7 +37,7 @@
       border-collapse: collapse;
       background-color: #fff;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      min-width: 900px;
+      min-width: 1000px;
     }
     th, td {
       padding: 0.8rem;
@@ -93,10 +93,12 @@
           <th data-sort="top10songs">Top 10 Songs</th>
           <th data-sort="num1albums">#1 Albums</th>
           <th data-sort="top10albums">Top 10 Albums</th>
+          <th data-sort="diamondSongs">💎 Songs</th>
+          <th data-sort="diamondAlbums">💎 Albums</th>
         </tr>
       </thead>
       <tbody id="artistTable">
-        <tr><td colspan="9">Loading data...</td></tr>
+        <tr><td colspan="11">Loading data...</td></tr>
       </tbody>
     </table>
   </div>
@@ -132,15 +134,18 @@
       const tableBody = document.getElementById("artistTable");
       const artistMap = {};
       const artistNameMap = {};
-      const albumPeakMap = {};
+      const albumSalesMap = {};
+      const songSalesMap = {};
 
       for (const week in weekData) {
         weekData[week].forEach(entry => {
           const fullArtistList = splitArtists(entry.artist);
           const album = entry.album || "";
-          const title = entry.title;
+          const title = entry.title || "";
           const rank = parseInt(entry.rank);
           const sales = parseFloat(entry.sales) || 0;
+          const songKey = normalize(title);
+          const albumKey = normalizeAlbum(album);
 
           fullArtistList.forEach(rawName => {
             const normName = normalize(rawName);
@@ -152,7 +157,9 @@
                 num1Songs: 0,
                 top10Songs: 0,
                 num1Albums: 0,
-                top10Albums: 0
+                top10Albums: 0,
+                diamondSongs: new Set(),
+                diamondAlbums: new Set()
               };
               artistNameMap[normName] = rawName;
             }
@@ -161,26 +168,41 @@
             artistStats.rawSales += sales;
             artistStats.weeks.add(week);
 
+            // Track song sales
+            const songID = songKey + "|" + normName;
+            if (!songSalesMap[songID]) songSalesMap[songID] = 0;
+            songSalesMap[songID] += sales;
+
             if (title) {
               if (rank === 1) artistStats.num1Songs++;
               if (rank <= 10) artistStats.top10Songs++;
             }
 
             if (typeof album === 'string' && normalize(album) !== "NAN") {
-              const albumKey = `${normalizeAlbum(album)}|${normName}`;
-              if (!albumPeakMap[albumKey]) albumPeakMap[albumKey] = rank;
-              else if (rank < albumPeakMap[albumKey]) albumPeakMap[albumKey] = rank;
+              const albumID = albumKey + "|" + normName;
+              if (!albumSalesMap[albumID]) albumSalesMap[albumID] = 0;
+              albumSalesMap[albumID] += sales;
+
+              if (rank === 1) artistStats.num1Albums++;
+              if (rank <= 10) artistStats.top10Albums++;
             }
           });
         });
       }
 
-      for (const key in albumPeakMap) {
-        const [albumKey, normArtist] = key.split('|');
-        const peak = albumPeakMap[key];
-        if (!artistMap[normArtist]) continue;
-        if (peak === 1) artistMap[normArtist].num1Albums++;
-        if (peak <= 10) artistMap[normArtist].top10Albums++;
+      // Count Diamond songs and albums
+      for (const [key, total] of Object.entries(songSalesMap)) {
+        if (total >= 1000) {
+          const [song, artist] = key.split("|");
+          if (artistMap[artist]) artistMap[artist].diamondSongs.add(song);
+        }
+      }
+
+      for (const [key, total] of Object.entries(albumSalesMap)) {
+        if (total >= 1000) {
+          const [album, artist] = key.split("|");
+          if (artistMap[artist]) artistMap[artist].diamondAlbums.add(album);
+        }
       }
 
       const artistList = Object.entries(artistMap)
@@ -199,7 +221,9 @@
             num1Songs: a.num1Songs,
             top10Songs: a.top10Songs,
             num1Albums: a.num1Albums,
-            top10Albums: a.top10Albums
+            top10Albums: a.top10Albums,
+            diamondSongs: a.diamondSongs.size,
+            diamondAlbums: a.diamondAlbums.size
           };
         })
         .sort((a, b) => b.totalStreams - a.totalStreams)
@@ -219,6 +243,8 @@
             <td>${a.top10Songs}</td>
             <td>${a.num1Albums}</td>
             <td>${a.top10Albums}</td>
+            <td>${a.diamondSongs}</td>
+            <td>${a.diamondAlbums}</td>
           `;
           tableBody.appendChild(tr);
         });
@@ -235,9 +261,6 @@
           header.classList.add(isAsc ? "desc" : "asc");
 
           artistList.sort((a, b) => {
-            if (key === "rank") {
-              return isAsc ? a.rank - b.rank : b.rank - a.rank;
-            }
             if (typeof a[key] === 'string') {
               return isAsc
                 ? a[key].localeCompare(b[key])
