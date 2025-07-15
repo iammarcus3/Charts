@@ -11,125 +11,56 @@
       margin: 0;
       padding: 2rem;
     }
-    a {
-      color: #00f0ff;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
+    a { color: #00f0ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
     nav {
-      background-color: #111;
-      padding: 1rem;
-      margin-bottom: 2rem;
-      border-radius: 8px;
-      text-align: center;
+      background-color: #111; padding: 1rem; margin-bottom: 2rem;
+      border-radius: 8px; text-align: center;
     }
-    nav a {
-      margin: 0 1rem;
-      font-weight: bold;
-    }
-    h1 {
-      font-size: 2.5rem;
-      color: #ff007f;
-      margin-bottom: 1rem;
-    }
-    label, select, button {
-      font-size: 1rem;
-    }
-    #weekSelector {
-      padding: 0.3rem;
-      border-radius: 4px;
-      margin-right: 0.5rem;
-    }
+    nav a { margin: 0 1rem; font-weight: bold; }
+    h1 { font-size: 2.5rem; color: #ff007f; margin-bottom: 1rem; }
+    label, select, button { font-size: 1rem; }
+    #weekSelector { padding: 0.3rem; border-radius: 4px; margin-right: 0.5rem; }
     button {
-      background-color: #ff007f;
-      color: white;
-      border: none;
-      padding: 0.4rem 0.8rem;
-      border-radius: 4px;
-      cursor: pointer;
-      margin: 0 0.2rem;
-      font-weight: bold;
+      background-color: #ff007f; color: white; border: none;
+      padding: 0.4rem 0.8rem; border-radius: 4px;
+      cursor: pointer; margin: 0 0.2rem; font-weight: bold;
     }
-    button:hover {
-      background-color: #e60073;
-    }
+    button:hover { background-color: #e60073; }
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1.5rem;
-      background-color: #1c1c1c;
-      border-radius: 8px;
-      overflow: hidden;
+      width: 100%; border-collapse: collapse;
+      margin-top: 1.5rem; background-color: #1c1c1c;
+      border-radius: 8px; overflow: hidden;
     }
-    th, td {
-      padding: 0.75rem;
-      text-align: left;
-    }
+    th, td { padding: 0.75rem; text-align: left; }
     th {
-      background-color: #222;
-      color: #ff007f;
-      text-transform: uppercase;
-      font-size: 0.85rem;
+      background-color: #222; color: #ff007f;
+      text-transform: uppercase; font-size: 0.85rem;
     }
     td:first-child, th:first-child {
-      position: sticky;
-      left: 0;
-      background-color: #1c1c1c;
-      z-index: 2;
+      position: sticky; left: 0; background-color: #1c1c1c; z-index: 2;
     }
-    tr:nth-child(even) {
-      background-color: #2a2a2a;
-    }
-    tr:hover {
-      background-color: #333;
-    }
-    tr.top-spot {
-      background-color: #ff007f;
-      color: black;
-      font-weight: bold;
-    }
-    tr.new-entry {
-      border-left: 5px solid #00f0ff;
-    }
+    tr:nth-child(even) { background-color: #2a2a2a; }
+    tr:hover { background-color: #333; }
+    tr.top-spot { background-color: #ff007f; color: black; font-weight: bold; }
+    tr.new-entry { border-left: 5px solid #00f0ff; }
     #certifiedList {
-      margin-top: 3rem;
-      background: #111;
-      padding: 1rem;
-      border-radius: 8px;
+      margin-top: 3rem; background: #111; padding: 1rem; border-radius: 8px;
     }
-    #certifiedList h2 {
-      color: #00f0ff;
-    }
+    #certifiedList h2 { color: #00f0ff; }
     .modal {
-      display: none;
-      position: fixed;
-      z-index: 99;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      justify-content: center;
-      align-items: center;
+      display: none; position: fixed; z-index: 99;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7); justify-content: center; align-items: center;
     }
     .modal-content {
-      background: #1a1a1a;
-      color: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      text-align: center;
-      width: 300px;
+      background: #1a1a1a; color: #fff; padding: 2rem;
+      border-radius: 10px; text-align: center; width: 300px;
       box-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
     }
-    .modal-content h3 {
-      color: #ff007f;
-    }
+    .modal-content h3 { color: #ff007f; }
     .modal-content button {
-      margin-top: 1rem;
-      background-color: #00f0ff;
-      color: #000;
+      margin-top: 1rem; background-color: #00f0ff; color: #000;
     }
   </style>
 </head>
@@ -142,7 +73,6 @@
   </nav>
 
   <h1>🎵 Billboard Top 100</h1>
-
   <label for="weekSelector">Select a week:</label>
   <select id="weekSelector"></select>
   <button onclick="navigateWeek(-1)">⬅️</button>
@@ -194,9 +124,7 @@
       return matches / len;
     }
 
-    let currentData = [];
-    let sortedWeeks = [];
-    let history = {};
+    let currentData = [], sortedWeeks = [], history = {};
 
     function getFuzzyKey(title, artist) {
       title = title.toLowerCase();
@@ -211,7 +139,7 @@
     function calculateStats() {
       history = {};
       sortedWeeks.forEach((week, i) => {
-        const lastWeek = i > 0 ? weekData[sortedWeeks[i - 1]] : [];
+        const lastWeek = sortedWeeks[i + 1] && weekData[sortedWeeks[i + 1]] || [];
         const lastMap = {};
         lastWeek.forEach(r => {
           const k = getFuzzyKey(r.title, r.artist);
@@ -249,35 +177,30 @@
     }
 
     function getCertification(sales) {
-      if (sales >= 1000) return "💎<br>Diamond";
-      if (sales >= 200) return "💿".repeat(Math.floor(sales / 200)) + "<br>Platinum";
-      if (sales >= 100) return "🥇<br>Gold";
-      return "—";
+      if (sales >= 1000) return \"💎<br>Diamond\";
+      if (sales >= 200) return \"💿\".repeat(Math.floor(sales / 200)) + \"<br>Platinum\";
+      if (sales >= 100) return \"🥇<br>Gold\";
+      return \"—\";
     }
 
     function getCertificationText(sales) {
-      if (sales >= 1000) return "Diamond";
+      if (sales >= 1000) return \"Diamond\";
       if (sales >= 200) return `Multi-Platinum (x${Math.floor(sales / 200)})`;
-      if (sales >= 100) return "Gold";
+      if (sales >= 100) return \"Gold\";
       return null;
     }
 
-    function getWeekLabel(weekNum) {
-      const startDate = new Date(2018, 1, 23);
-      startDate.setDate(startDate.getDate() + (weekNum - 1) * 7);
-      const endDate = new Date(startDate);
-      endDate.setDate(startDate.getDate() + 6);
-      return `${startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} – ${endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`;
-    }
-
     function populateWeeks() {
-      sortedWeeks = Object.keys(weekData).sort((a, b) => +b.match(/\\d+/)[0] - +a.match(/\\d+/)[0]);
-      const sel = document.getElementById("weekSelector");
+      if (!window.weekData) return;
+      sortedWeeks = Object.keys(weekData)
+        .filter(k => Array.isArray(weekData[k]))
+        .sort((a, b) => parseInt(b.replace(/\\D/g, '')) - parseInt(a.replace(/\\D/g, '')));
+      const sel = document.getElementById(\"weekSelector\");
       sel.innerHTML = '';
       sortedWeeks.forEach(w => {
-        const opt = document.createElement("option");
+        const opt = document.createElement(\"option\");
         opt.value = w;
-        opt.textContent = getWeekLabel(parseInt(w.match(/\\d+/)[0]));
+        opt.textContent = w;
         sel.appendChild(opt);
       });
       sel.value = sortedWeeks[0];
@@ -287,21 +210,21 @@
     }
 
     function populateTable(week) {
-      const tbody = document.getElementById("chartBody");
+      const tbody = document.getElementById(\"chartBody\");
       tbody.innerHTML = '';
       currentData = weekData[week];
       const certified = [];
 
       currentData.forEach(row => {
-        const tr = document.createElement("tr");
-        if (row.rank === 1) tr.classList.add("top-spot");
-        if (row.movement === "NEW") tr.classList.add("new-entry");
+        const tr = document.createElement(\"tr\");
+        if (row.rank === 1) tr.classList.add(\"top-spot\");
+        if (row.movement === \"NEW\") tr.classList.add(\"new-entry\");
 
         tr.innerHTML = `
           <td>${row.rank}</td>
           <td>${getMovementIcon(row.movement)}</td>
-          <td><a href="#" class="song-link" data-title="${encodeURIComponent(row.title)}" data-artist="${encodeURIComponent(row.artist)}">${row.title}</a></td>
-          <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
+          <td><a href=\"#\" class=\"song-link\" data-title=\"${encodeURIComponent(row.title)}\" data-artist=\"${encodeURIComponent(row.artist)}\">${row.title}</a></td>
+          <td><a href=\"artist.html?artist=${encodeURIComponent(row.artist)}\">${row.artist}</a></td>
           <td>${row.sales}</td>
           <td>${row.total_sales}</td>
           <td>${row.weeks}</td>
@@ -318,27 +241,27 @@
     }
 
     function renderCertifiedList(list) {
-      const ul = document.getElementById("certifiedSongs");
+      const ul = document.getElementById(\"certifiedSongs\");
       ul.innerHTML = list.length ? '' : '<li>No new certifications this week.</li>';
       list.forEach(s => {
-        const li = document.createElement("li");
+        const li = document.createElement(\"li\");
         li.innerHTML = `🎵 <strong>${s.title}</strong> by ${s.artist} – ${s.cert}`;
         ul.appendChild(li);
       });
     }
 
     function showModal(song) {
-      document.getElementById("modalTitle").textContent = song.title;
-      document.getElementById("modalArtist").textContent = "By " + song.artist;
-      document.getElementById("modalSales").textContent = "This Week: " + song.sales;
-      document.getElementById("modalWeeks").textContent = "Weeks: " + song.weeks;
-      document.getElementById("modalPeak").textContent = "Peak: " + song.peak;
-      document.getElementById("modalCert").innerHTML = getCertification(song.total_sales);
-      document.getElementById("songModal").style.display = "flex";
+      document.getElementById(\"modalTitle\").textContent = song.title;
+      document.getElementById(\"modalArtist\").textContent = \"By \" + song.artist;
+      document.getElementById(\"modalSales\").textContent = \"This Week: \" + song.sales;
+      document.getElementById(\"modalWeeks\").textContent = \"Weeks: \" + song.weeks;
+      document.getElementById(\"modalPeak\").textContent = \"Peak: \" + song.peak;
+      document.getElementById(\"modalCert\").innerHTML = getCertification(song.total_sales);
+      document.getElementById(\"songModal\").style.display = \"flex\";
     }
 
-    document.addEventListener("click", e => {
-      if (e.target.classList.contains("song-link")) {
+    document.addEventListener(\"click\", e => {
+      if (e.target.classList.contains(\"song-link\")) {
         e.preventDefault();
         const title = decodeURIComponent(e.target.dataset.title);
         const artist = decodeURIComponent(e.target.dataset.artist);
@@ -348,7 +271,7 @@
     });
 
     function navigateWeek(offset) {
-      const sel = document.getElementById("weekSelector");
+      const sel = document.getElementById(\"weekSelector\");
       const i = sortedWeeks.indexOf(sel.value);
       const newIndex = i + offset;
       if (newIndex >= 0 && newIndex < sortedWeeks.length) {
@@ -357,7 +280,7 @@
       }
     }
 
-    document.addEventListener("DOMContentLoaded", populateWeeks);
+    document.addEventListener(\"DOMContentLoaded\", populateWeeks);
   </script>
 </body>
 </html>
