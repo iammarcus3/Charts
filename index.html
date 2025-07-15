@@ -194,7 +194,7 @@
       if (!window.weekData) return;
       sortedWeeks = Object.keys(weekData)
         .filter(k => Array.isArray(weekData[k]))
-        .sort((a, b) => parseInt(b.replace(/\\D/g, '')) - parseInt(a.replace(/\\D/g, '')));
+        .sort((a, b) => parseInt(b.replace(/\D/g, '')) - parseInt(a.replace(/\D/g, '')));
       const sel = document.getElementById('weekSelector');
       sel.innerHTML = '';
       sortedWeeks.forEach(w => {
@@ -223,8 +223,8 @@
         tr.innerHTML = `
           <td>${row.rank}</td>
           <td>${getMovementIcon(row.movement)}</td>
-          <td><a href=\"#\" class=\"song-link\" data-title=\"${encodeURIComponent(row.title)}\" data-artist=\"${encodeURIComponent(row.artist)}\">${row.title}</a></td>
-          <td><a href=\"artist.html?artist=${encodeURIComponent(row.artist)}\">${row.artist}</a></td>
+          <td><a href="#" class="song-link" data-title="${encodeURIComponent(row.title)}" data-artist="${encodeURIComponent(row.artist)}">${row.title}</a></td>
+          <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
           <td>${row.sales}</td>
           <td>${row.total_sales}</td>
           <td>${row.weeks}</td>
@@ -252,10 +252,10 @@
 
     function showModal(song) {
       document.getElementById('modalTitle').textContent = song.title;
-      document.getElementById('modalArtist').textContent = \"By \" + song.artist;
-      document.getElementById('modalSales').textContent = \"This Week: \" + song.sales;
-      document.getElementById('modalWeeks').textContent = \"Weeks: \" + song.weeks;
-      document.getElementById('modalPeak').textContent = \"Peak: \" + song.peak;
+      document.getElementById('modalArtist').textContent = "By " + song.artist;
+      document.getElementById('modalSales').textContent = "This Week: " + song.sales;
+      document.getElementById('modalWeeks').textContent = "Weeks: " + song.weeks;
+      document.getElementById('modalPeak').textContent = "Peak: " + song.peak;
       document.getElementById('modalCert').innerHTML = getCertification(song.total_sales);
       document.getElementById('songModal').style.display = 'flex';
     }
