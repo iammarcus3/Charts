@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Billboard Top 100</title>
   <script src="weekdata.js"></script>
   <style>
@@ -12,9 +12,22 @@
       margin: 0;
       padding: 20px;
     }
-    h1 { color: #ff4081; }
-    a { color: #90caf9; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    h1 {
+      color: #ff4081;
+      margin-bottom: 0.5rem;
+    }
+    nav {
+      margin-bottom: 20px;
+    }
+    nav a {
+      color: #90caf9;
+      margin-right: 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
     select, button {
       font-size: 1rem;
       margin: 10px 5px;
@@ -40,6 +53,7 @@
       position: sticky;
       top: 0;
       z-index: 3;
+      cursor: pointer;
     }
     td:first-child, th:first-child {
       position: sticky;
@@ -77,6 +91,13 @@
 </head>
 <body>
   <h1>🎵 Billboard Top 100</h1>
+  <nav>
+    <a href="albums.html">Albums</a>
+    <a href="top_albums.html">Top Albums</a>
+    <a href="records.html">Records</a>
+    <a href="streams.html">Streams</a>
+  </nav>
+
   <label for="weekSelect">Week:</label>
   <select id="weekSelect"></select>
   <button onclick="changeWeek(-1)">⬅️</button>
@@ -111,12 +132,19 @@
   </div>
 
   <script>
-    let currentWeek = 1;
-    const weeks = Object.keys(weekData).filter(k => Array.isArray(weekData[k])).map(Number).sort((a,b) => a - b);
+    let currentWeek;
+    const weeks = Object.keys(weekData)
+      .filter(k => Array.isArray(weekData[k]))
+      .map(Number)
+      .sort((a, b) => b - a); // Most recent week first
+
+    currentWeek = weeks[0]; // Default to latest week
+
     const weekSelect = document.getElementById("weekSelect");
     const chartBody = document.getElementById("chart");
     const modal = document.getElementById("songModal");
     const history = {};
+
     function getFuzzyKey(title, artist) {
       const clean = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
       const newKey = clean(title) + "||" + clean(artist);
@@ -137,13 +165,14 @@
 
     function formatRange(weekNum) {
       const base = new Date(2018,1,23);
-      base.setDate(base.getDate() + (weekNum-1)*7);
+      base.setDate(base.getDate() + (weekNum - 1) * 7);
       const end = new Date(base);
-      end.setDate(base.getDate()+6);
+      end.setDate(base.getDate() + 6);
       return `${base.toLocaleDateString('en-GB')} – ${end.toLocaleDateString('en-GB')}`;
     }
 
     function updateDropdown() {
+      weekSelect.innerHTML = "";
       weeks.forEach(w => {
         const opt = document.createElement("option");
         opt.value = w;
@@ -159,7 +188,7 @@
 
     function getCert(sales) {
       if (sales >= 1000000) return '💎 Diamond';
-      if (sales >= 100000) return `💿 x${Math.floor(sales/100000)} Platinum`;
+      if (sales >= 100000) return `💿 x${Math.floor(sales / 100000)} Platinum`;
       if (sales >= 50000) return '🥇 Gold';
       return '';
     }
@@ -167,7 +196,7 @@
     function renderWeek() {
       chartBody.innerHTML = "";
       const rows = weekData[currentWeek];
-      const last = weekData[currentWeek-1] || [];
+      const last = weekData[currentWeek - 1] || [];
       const lastMap = {};
       last.forEach(r => lastMap[getFuzzyKey(r.title, r.artist)] = r.rank);
 
