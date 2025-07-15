@@ -157,6 +157,34 @@
       return null;
     }
 
+    function getWeekDateRange(weekNum) {
+      const start = new Date(2018, 1, 23);
+      start.setDate(start.getDate() + (weekNum - 1) * 7);
+      const end = new Date(start);
+      end.setDate(start.getDate() + 6);
+      const format = d => d.toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' });
+      return `${format(start)} – ${format(end)}`;
+    }
+
+    function populateWeeks() {
+      if (!window.weekData) return;
+      sortedWeeks = Object.keys(weekData)
+        .filter(k => Array.isArray(weekData[k]))
+        .sort((a, b) => parseInt(b) - parseInt(a));
+      const sel = document.getElementById('weekSelector');
+      sel.innerHTML = '';
+      sortedWeeks.forEach(w => {
+        const opt = document.createElement('option');
+        opt.value = w;
+        opt.textContent = `Week ${w} (${getWeekDateRange(+w)})`;
+        sel.appendChild(opt);
+      });
+      sel.value = sortedWeeks[0];
+      sel.onchange = () => populateTable(sel.value);
+      calculateStats();
+      populateTable(sel.value);
+    }
+
     function calculateStats() {
       history = {};
       sortedWeeks.forEach((week, i) => {
@@ -190,34 +218,6 @@
       });
     }
 
-    function getWeekDateRange(weekNum) {
-      const start = new Date(2018, 1, 23);
-      start.setDate(start.getDate() + (weekNum - 1) * 7);
-      const end = new Date(start);
-      end.setDate(start.getDate() + 6);
-      const format = d => d.toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' });
-      return `${format(start)} – ${format(end)}`;
-    }
-
-    function populateWeeks() {
-      if (!window.weekData) return;
-      sortedWeeks = Object.keys(weekData)
-        .filter(k => Array.isArray(weekData[k]))
-        .sort((a, b) => parseInt(b) - parseInt(a));
-      const sel = document.getElementById('weekSelector');
-      sel.innerHTML = '';
-      sortedWeeks.forEach(w => {
-        const opt = document.createElement('option');
-        opt.value = w;
-        opt.textContent = `Week ${w} (${getWeekDateRange(+w)})`;
-        sel.appendChild(opt);
-      });
-      sel.value = sortedWeeks[0];
-      sel.onchange = () => populateTable(sel.value);
-      calculateStats();
-      populateTable(sel.value);
-    }
-
     function populateTable(week) {
       const tbody = document.getElementById('chartBody');
       tbody.innerHTML = '';
@@ -232,8 +232,8 @@
         tr.innerHTML = `
           <td>${row.rank}</td>
           <td>${getMovementIcon(row.movement)}</td>
-          <td><a href="#" class="song-link" data-title="${encodeURIComponent(row.title)}" data-artist="${encodeURIComponent(row.artist)}">${row.title}</a></td>
-          <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
+          <td><a href=\"#\" class=\"song-link\" data-title=\"${encodeURIComponent(row.title)}\" data-artist=\"${encodeURIComponent(row.artist)}\">${row.title}</a></td>
+          <td><a href=\"artist.html?artist=${encodeURIComponent(row.artist)}\">${row.artist}</a></td>
           <td>${row.sales}</td>
           <td>${row.total_sales}</td>
           <td>${row.weeks}</td>
@@ -261,10 +261,10 @@
 
     function showModal(song) {
       document.getElementById('modalTitle').textContent = song.title;
-      document.getElementById('modalArtist').textContent = "By " + song.artist;
-      document.getElementById('modalSales').textContent = "This Week: " + song.sales;
-      document.getElementById('modalWeeks').textContent = "Weeks: " + song.weeks;
-      document.getElementById('modalPeak').textContent = "Peak: " + song.peak;
+      document.getElementById('modalArtist').textContent = \"By \" + song.artist;
+      document.getElementById('modalSales').textContent = \"This Week: \" + song.sales;
+      document.getElementById('modalWeeks').textContent = \"Weeks: \" + song.weeks;
+      document.getElementById('modalPeak').textContent = \"Peak: \" + song.peak;
       document.getElementById('modalCert').innerHTML = getCertification(song.total_sales);
       document.getElementById('songModal').style.display = 'flex';
     }
