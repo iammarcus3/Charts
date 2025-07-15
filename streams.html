@@ -76,21 +76,19 @@
 <body>
   <h1>Stream Rankings</h1>
 
-  <!-- Main Tabs -->
   <div class="tabs" id="mainTabs">
     <button data-tab="7days" class="active">7 Days</button>
     <button data-tab="30days">30 Days</button>
     <button data-tab="alltime">All Time</button>
   </div>
 
-  <!-- Sub Tabs -->
   <div class="subtabs" id="subTabs">
     <button data-subtab="artist" class="active">Artist</button>
     <button data-subtab="tracks">Tracks</button>
     <button data-subtab="album">Album</button>
   </div>
 
-  <!-- Dynamic Content Tables -->
+  <!-- Content Sections -->
   <div id="content-7days-artist" class="content active"><table><thead><tr><th>Rank</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="artist7DaysTable"></tbody></table></div>
   <div id="content-7days-tracks" class="content"><table><thead><tr><th>Rank</th><th>Title</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="track7DaysTable"></tbody></table></div>
   <div id="content-7days-album" class="content"><table><thead><tr><th>Rank</th><th>Album</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="album7DaysTable"></tbody></table></div>
@@ -139,8 +137,8 @@
 
     function populateAll() {
       const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
-      const latest7 = allWeeks.slice(-1);
-      const latest30 = allWeeks.slice(-4);
+      const latest7 = allWeeks.slice(0, 1);   // ✅ Use most recent week
+      const latest30 = allWeeks.slice(0, 4);  // ✅ Use last 4 weeks
       const allTime = allWeeks;
 
       const fill = (rows, id, isArtist = false) => {
@@ -184,7 +182,6 @@
         btn.addEventListener("click", () => {
           document.querySelector("#mainTabs .active").classList.remove("active");
           btn.classList.add("active");
-
           const currentSub = document.querySelector("#subTabs .active").dataset.subtab;
           updateActiveContent(btn.dataset.tab, currentSub);
         });
@@ -194,7 +191,6 @@
         btn.addEventListener("click", () => {
           document.querySelector("#subTabs .active").classList.remove("active");
           btn.classList.add("active");
-
           const currentMain = document.querySelector("#mainTabs .active").dataset.tab;
           updateActiveContent(currentMain, btn.dataset.subtab);
         });
