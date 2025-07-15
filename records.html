@@ -136,8 +136,6 @@
       const artistNameMap = {};
       const albumSalesMap = {};
       const songSalesMap = {};
-      const songPeakMap = {};
-      const albumPeakMap = {};
 
       for (const week in weekData) {
         weekData[week].forEach(entry => {
@@ -206,14 +204,13 @@
 
       const artistList = Object.entries(artistMap)
         .map(([norm, a]) => {
-          const totalStreams = a.rawSales * 2.2567 * 1_000_000;
+          const totalStreams = a.rawSales * 1.32762 * 1_000_000;
           const totalSales = a.rawSales * 1000;
           const months = a.weeks.size / 4.33;
           const displayName = artistNameMap[norm].split(' ')
             .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
             .join(' ');
 
-          // Count unique song/album hits
           let num1Songs = 0, top10Songs = 0;
           for (const r of Object.values(a.songs)) {
             if (r === 1) num1Songs++;
