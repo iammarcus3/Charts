@@ -103,7 +103,7 @@
 
   <script src="weekdata.js"></script>
   <script>
-    const streamMultiplier = 2.2567;
+    const streamMultiplier = 2.2567 * 1_000_000;
 
     function formatStreams(value) {
       const millions = value / 1_000_000;
@@ -115,8 +115,8 @@
       const result = {};
       weeks.forEach(week => {
         (weekData[week] || []).forEach(entry => {
-          const plays = parseFloat(entry.plays) || 0;
-          const streams = plays * streamMultiplier;
+          const sales = parseFloat(entry.sales) || 0;
+          const streams = sales * streamMultiplier;
 
           let key = "";
           if (type === "artist") {
