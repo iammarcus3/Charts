@@ -11,16 +11,13 @@
       margin: 0;
       padding: 2rem;
     }
-
     a {
       color: #00f0ff;
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
     }
-
     nav {
       background-color: #111;
       padding: 1rem;
@@ -28,28 +25,23 @@
       border-radius: 8px;
       text-align: center;
     }
-
     nav a {
       margin: 0 1rem;
       font-weight: bold;
     }
-
     h1 {
       font-size: 2.5rem;
       color: #ff007f;
       margin-bottom: 1rem;
     }
-
     label, select, button {
       font-size: 1rem;
     }
-
     #weekSelector {
       padding: 0.3rem;
       border-radius: 4px;
       margin-right: 0.5rem;
     }
-
     button {
       background-color: #ff007f;
       color: white;
@@ -60,11 +52,9 @@
       margin: 0 0.2rem;
       font-weight: bold;
     }
-
     button:hover {
       background-color: #e60073;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -73,44 +63,45 @@
       border-radius: 8px;
       overflow: hidden;
     }
-
     th, td {
       padding: 0.75rem;
       text-align: left;
     }
-
     th {
       background-color: #222;
       color: #ff007f;
       text-transform: uppercase;
       font-size: 0.85rem;
     }
-
+    td:first-child, th:first-child {
+      position: sticky;
+      left: 0;
+      background-color: #1c1c1c;
+      z-index: 2;
+    }
     tr:nth-child(even) {
       background-color: #2a2a2a;
     }
-
     tr:hover {
       background-color: #333;
     }
-
     tr.top-spot {
       background-color: #ff007f;
       color: black;
       font-weight: bold;
     }
-
+    tr.new-entry {
+      border-left: 5px solid #00f0ff;
+    }
     #certifiedList {
       margin-top: 3rem;
       background: #111;
       padding: 1rem;
       border-radius: 8px;
     }
-
     #certifiedList h2 {
       color: #00f0ff;
     }
-
     .modal {
       display: none;
       position: fixed;
@@ -123,7 +114,6 @@
       justify-content: center;
       align-items: center;
     }
-
     .modal-content {
       background: #1a1a1a;
       color: #fff;
@@ -133,11 +123,9 @@
       width: 300px;
       box-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
     }
-
     .modal-content h3 {
       color: #ff007f;
     }
-
     .modal-content button {
       margin-top: 1rem;
       background-color: #00f0ff;
@@ -195,105 +183,119 @@
 
   <script src="weekdata.js"></script>
   <script>
-    let sortedWeeks = [];
-    let currentData = [];
-    let totals = {}, peaks = {};
+    function similarity(a, b) {
+      a = a.toLowerCase().replace(/[^a-z0-9]/g, '');
+      b = b.toLowerCase().replace(/[^a-z0-9]/g, '');
+      let matches = 0;
+      const len = Math.max(a.length, b.length);
+      for (let i = 0; i < Math.min(a.length, b.length); i++) {
+        if (a[i] === b[i]) matches++;
+      }
+      return matches / len;
+    }
 
-    function getKey(title, artist) {
-      return title.toLowerCase().trim() + '||' + artist.toLowerCase().trim();
+    let currentData = [];
+    let sortedWeeks = [];
+    let history = {};
+
+    function getFuzzyKey(title, artist) {
+      title = title.toLowerCase();
+      artist = artist.toLowerCase();
+      for (let key in history) {
+        const [t, a] = key.split('||');
+        if (a === artist && similarity(t, title) >= 0.95) return key;
+      }
+      return title + '||' + artist;
     }
 
     function calculateStats() {
-      totals = {};
-      peaks = {};
+      history = {};
+      sortedWeeks.forEach((week, i) => {
+        const lastWeek = i > 0 ? weekData[sortedWeeks[i - 1]] : [];
+        const lastMap = {};
+        lastWeek.forEach(r => {
+          const k = getFuzzyKey(r.title, r.artist);
+          lastMap[k] = r.rank;
+        });
 
-      for (const week of Object.keys(weekData)) {
-        for (const row of weekData[week]) {
-          const key = getKey(row.title, row.artist);
-          totals[key] = (totals[key] || 0) + row.sales;
-          row.total_sales = totals[key];
-
-          const rank = parseInt(row.rank);
-          if (!peaks[key] || rank < peaks[key]) {
-            peaks[key] = rank;
+        weekData[week].forEach(row => {
+          const key = getFuzzyKey(row.title, row.artist);
+          if (!history[key]) history[key] = { total: 0, peak: 999, weeks: 0, seen: false };
+          history[key].total += row.sales;
+          history[key].peak = Math.min(history[key].peak, row.rank);
+          history[key].weeks++;
+          let move = 'NEW';
+          if (key in lastMap) {
+            const prev = parseInt(lastMap[key]);
+            const curr = parseInt(row.rank);
+            move = curr < prev ? 'UP' : curr > prev ? 'DOWN' : 'SAME';
+          } else if (history[key].seen) {
+            move = 'RE';
           }
-          row.peak = peaks[key];
-        }
-      }
+          history[key].seen = true;
+          row.total_sales = history[key].total;
+          row.peak = history[key].peak;
+          row.weeks = history[key].weeks;
+          row.movement = move;
+        });
+      });
+    }
+
+    function getMovementIcon(move) {
+      return move === 'UP' ? '⬆️' :
+             move === 'DOWN' ? '⬇️' :
+             move === 'SAME' ? '➖' :
+             move === 'RE' ? '🔁' : '🆕';
     }
 
     function getCertification(sales) {
-      if (sales >= 200) {
-        const count = Math.floor(sales / 200);
-        return "💿".repeat(count) + "<br>" + (count === 1 ? "Platinum" : `Multi-Platinum (x${count})`);
-      } else if (sales >= 100) {
-        return "🥈<br>Gold";
-      }
+      if (sales >= 1000) return "💎<br>Diamond";
+      if (sales >= 200) return "💿".repeat(Math.floor(sales / 200)) + "<br>Platinum";
+      if (sales >= 100) return "🥇<br>Gold";
       return "—";
     }
 
     function getCertificationText(sales) {
-      if (sales >= 200) {
-        const count = Math.floor(sales / 200);
-        return count === 1 ? "Platinum" : `Multi-Platinum (x${count})`;
-      } else if (sales >= 100) {
-        return "Gold";
-      }
+      if (sales >= 1000) return "Diamond";
+      if (sales >= 200) return `Multi-Platinum (x${Math.floor(sales / 200)})`;
+      if (sales >= 100) return "Gold";
       return null;
     }
 
-    function getMovementIcon(move) {
-      if (!move) return "➖";
-      const val = move.toUpperCase();
-      return val === "UP" ? "⬆️" :
-             val === "DOWN" ? "⬇️" :
-             val === "NEW" ? "🆕" :
-             val.includes("RE") ? "🔁" : "➖";
-    }
-
     function getWeekLabel(weekNum) {
-      const startDate = new Date(2018, 1, 23); // 23 Feb 2018
+      const startDate = new Date(2018, 1, 23);
       startDate.setDate(startDate.getDate() + (weekNum - 1) * 7);
       const endDate = new Date(startDate);
       endDate.setDate(startDate.getDate() + 6);
-
-      const optionsStart = { day: 'numeric', month: 'short' };
-      const optionsEnd = { day: 'numeric', month: 'short', year: 'numeric' };
-
-      const startStr = startDate.toLocaleDateString('en-GB', optionsStart);
-      const endStr = endDate.toLocaleDateString('en-GB', optionsEnd);
-
-      return `${startStr} – ${endStr}`;
+      return `${startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} – ${endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`;
     }
 
     function populateWeeks() {
-      const selector = document.getElementById("weekSelector");
-      sortedWeeks = Object.keys(weekData)
-        .sort((a, b) => parseInt(b.replace(/\D/g, '')) - parseInt(a.replace(/\D/g, '')));
-      selector.innerHTML = '';
-      sortedWeeks.forEach(week => {
-        const weekNum = parseInt(week.replace(/\D/g, ''));
+      sortedWeeks = Object.keys(weekData).sort((a, b) => +b.match(/\\d+/)[0] - +a.match(/\\d+/)[0]);
+      const sel = document.getElementById("weekSelector");
+      sel.innerHTML = '';
+      sortedWeeks.forEach(w => {
         const opt = document.createElement("option");
-        opt.value = week;
-        opt.textContent = getWeekLabel(weekNum);
-        selector.appendChild(opt);
+        opt.value = w;
+        opt.textContent = getWeekLabel(parseInt(w.match(/\\d+/)[0]));
+        sel.appendChild(opt);
       });
-      selector.value = sortedWeeks[0];
-      selector.addEventListener("change", () => populateTable(selector.value));
+      sel.value = sortedWeeks[0];
+      sel.onchange = () => populateTable(sel.value);
       calculateStats();
-      populateTable(selector.value);
+      populateTable(sel.value);
     }
 
     function populateTable(week) {
       const tbody = document.getElementById("chartBody");
       tbody.innerHTML = '';
       currentData = weekData[week];
-
       const certified = [];
 
       currentData.forEach(row => {
         const tr = document.createElement("tr");
-        if (parseInt(row.rank) === 1) tr.classList.add("top-spot");
+        if (row.rank === 1) tr.classList.add("top-spot");
+        if (row.movement === "NEW") tr.classList.add("new-entry");
 
         tr.innerHTML = `
           <td>${row.rank}</td>
@@ -308,29 +310,19 @@
         tbody.appendChild(tr);
 
         if (row.total_sales >= 100) {
-          certified.push({
-            title: row.title,
-            artist: row.artist,
-            cert: getCertificationText(row.total_sales)
-          });
+          certified.push({ title: row.title, artist: row.artist, cert: getCertificationText(row.total_sales) });
         }
       });
 
       renderCertifiedList(certified);
     }
 
-    function renderCertifiedList(certifiedSongs) {
+    function renderCertifiedList(list) {
       const ul = document.getElementById("certifiedSongs");
-      ul.innerHTML = '';
-
-      if (certifiedSongs.length === 0) {
-        ul.innerHTML = '<li>No new certifications this week.</li>';
-        return;
-      }
-
-      certifiedSongs.forEach(song => {
+      ul.innerHTML = list.length ? '' : '<li>No new certifications this week.</li>';
+      list.forEach(s => {
         const li = document.createElement("li");
-        li.innerHTML = `🎵 <strong>${song.title}</strong> by ${song.artist} – ${song.cert}`;
+        li.innerHTML = `🎵 <strong>${s.title}</strong> by ${s.artist} – ${s.cert}`;
         ul.appendChild(li);
       });
     }
@@ -345,25 +337,25 @@
       document.getElementById("songModal").style.display = "flex";
     }
 
-    function navigateWeek(offset) {
-      const currentIndex = sortedWeeks.indexOf(document.getElementById("weekSelector").value);
-      const newIndex = currentIndex + offset;
-      if (newIndex >= 0 && newIndex < sortedWeeks.length) {
-        const newWeek = sortedWeeks[newIndex];
-        document.getElementById("weekSelector").value = newWeek;
-        populateTable(newWeek);
-      }
-    }
-
-    document.addEventListener("click", function (e) {
+    document.addEventListener("click", e => {
       if (e.target.classList.contains("song-link")) {
         e.preventDefault();
         const title = decodeURIComponent(e.target.dataset.title);
         const artist = decodeURIComponent(e.target.dataset.artist);
-        const song = currentData.find(row => row.title === title && row.artist === artist);
+        const song = currentData.find(r => r.title === title && r.artist === artist);
         if (song) showModal(song);
       }
     });
+
+    function navigateWeek(offset) {
+      const sel = document.getElementById("weekSelector");
+      const i = sortedWeeks.indexOf(sel.value);
+      const newIndex = i + offset;
+      if (newIndex >= 0 && newIndex < sortedWeeks.length) {
+        sel.value = sortedWeeks[newIndex];
+        populateTable(sel.value);
+      }
+    }
 
     document.addEventListener("DOMContentLoaded", populateWeeks);
   </script>
