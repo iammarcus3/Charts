@@ -95,7 +95,7 @@
       const albumMap = {};
 
       rows.forEach(row => {
-        if (!row.album || !row.artist) return;
+        if (!row.album || row.album === "NaN" || !row.artist) return;
         const key = getFuzzyKey(row.album, row.artist);
         if (!albumMap[key]) {
           albumMap[key] = {
@@ -105,23 +105,22 @@
             totalSales: 0,
             weeks: 0,
             peak: Infinity,
-            movement: 'NEW',
-            lastRank: null
+            movement: 'NEW'
           };
         }
-        albumMap[key].sales += row.sales;
-        albumMap[key].peak = Math.min(albumMap[key].peak, row.rank);
+        albumMap[key].sales += +row.sales || 0;
+        albumMap[key].peak = Math.min(albumMap[key].peak, +row.rank || 999);
       });
 
-      // update historical stats
       for (const w of sortedWeeks) {
         if (parseInt(w) > parseInt(week)) break;
         (weekData[w] || []).forEach(row => {
+          if (!row.album || row.album === "NaN" || !row.artist) return;
           const key = getFuzzyKey(row.album, row.artist);
           if (!albumHistory[key]) albumHistory[key] = { total: 0, weeks: 0, peak: Infinity };
-          albumHistory[key].total += row.sales;
+          albumHistory[key].total += +row.sales || 0;
           albumHistory[key].weeks++;
-          albumHistory[key].peak = Math.min(albumHistory[key].peak, row.rank);
+          albumHistory[key].peak = Math.min(albumHistory[key].peak, +row.rank || 999);
         });
       }
 
