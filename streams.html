@@ -115,15 +115,23 @@
       const result = {};
       weeks.forEach(week => {
         (weekData[week] || []).forEach(entry => {
-          const plays = entry.plays || 0;
+          const plays = parseFloat(entry.plays) || 0;
           const streams = plays * streamMultiplier;
-          const key = type === "artist" ? entry.artist
-                    : type === "tracks" ? `${entry.title}|||${entry.artist}`
-                    : `${entry.album}|||${entry.artist}`;
-          if (!key || key.includes("undefined") || key.includes("NaN")) return;
+
+          let key = "";
+          if (type === "artist") {
+            key = entry.artist || "Unknown";
+          } else if (type === "tracks") {
+            key = `${entry.title || "Unknown"}|||${entry.artist || "Unknown"}`;
+          } else {
+            key = `${entry.album || "Unknown"}|||${entry.artist || "Unknown"}`;
+          }
+
+          if (!key || key.toLowerCase().includes("undefined")) return;
           result[key] = (result[key] || 0) + streams;
         });
       });
+
       return Object.entries(result)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 100)
@@ -137,8 +145,8 @@
 
     function populateAll() {
       const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
-      const latest7 = allWeeks.slice(0, 1);   // ✅ Use most recent week
-      const latest30 = allWeeks.slice(0, 4);  // ✅ Use last 4 weeks
+      const latest7 = allWeeks.slice(0, 1);   // newest week
+      const latest30 = allWeeks.slice(0, 4);  // last 4 weeks
       const allTime = allWeeks;
 
       const fill = (rows, id, isArtist = false) => {
@@ -197,8 +205,10 @@
       });
     }
 
-    populateAll();
-    setupTabs();
+    window.onload = function() {
+      populateAll();
+      setupTabs();
+    };
   </script>
 </body>
 </html>
