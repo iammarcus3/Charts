@@ -90,71 +90,81 @@
     <button data-subtab="album">Album</button>
   </div>
 
-  <!-- Content Containers -->
-  <div id="content-7days-artist" class="content active">
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Artist</th>
-          <th>Streams (7 Days)</th>
-        </tr>
-      </thead>
-      <tbody id="artist7DaysTable"></tbody>
-    </table>
-  </div>
+  <!-- Dynamic Content Tables -->
+  <div id="content-7days-artist" class="content active"><table><thead><tr><th>Rank</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="artist7DaysTable"></tbody></table></div>
+  <div id="content-7days-tracks" class="content"><table><thead><tr><th>Rank</th><th>Title</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="track7DaysTable"></tbody></table></div>
+  <div id="content-7days-album" class="content"><table><thead><tr><th>Rank</th><th>Album</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="album7DaysTable"></tbody></table></div>
 
-  <div id="content-7days-tracks" class="content">Coming Soon: Tracks</div>
-  <div id="content-7days-album" class="content">Coming Soon: Album</div>
-  <div id="content-30days-artist" class="content">Coming Soon: 30 Days - Artist</div>
-  <div id="content-30days-tracks" class="content">Coming Soon: 30 Days - Tracks</div>
-  <div id="content-30days-album" class="content">Coming Soon: 30 Days - Album</div>
-  <div id="content-alltime-artist" class="content">Coming Soon: All Time - Artist</div>
-  <div id="content-alltime-tracks" class="content">Coming Soon: All Time - Tracks</div>
-  <div id="content-alltime-album" class="content">Coming Soon: All Time - Album</div>
+  <div id="content-30days-artist" class="content"><table><thead><tr><th>Rank</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="artist30DaysTable"></tbody></table></div>
+  <div id="content-30days-tracks" class="content"><table><thead><tr><th>Rank</th><th>Title</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="track30DaysTable"></tbody></table></div>
+  <div id="content-30days-album" class="content"><table><thead><tr><th>Rank</th><th>Album</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="album30DaysTable"></tbody></table></div>
+
+  <div id="content-alltime-artist" class="content"><table><thead><tr><th>Rank</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="artistAllTimeTable"></tbody></table></div>
+  <div id="content-alltime-tracks" class="content"><table><thead><tr><th>Rank</th><th>Title</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="trackAllTimeTable"></tbody></table></div>
+  <div id="content-alltime-album" class="content"><table><thead><tr><th>Rank</th><th>Album</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="albumAllTimeTable"></tbody></table></div>
 
   <script src="weekdata.js"></script>
   <script>
+    const streamMultiplier = 2.2567;
+
     function formatStreams(value) {
       const millions = value / 1_000_000;
       const billions = value / 1_000_000_000;
-      return billions >= 1
-        ? `${billions.toFixed(2)}B`
-        : `${millions.toFixed(2)}M`;
+      return billions >= 1 ? `${billions.toFixed(2)}B` : `${millions.toFixed(2)}M`;
     }
 
-    function calculateArtistStreams(data) {
-      const artistMap = {};
-      data.forEach(entry => {
-        const name = entry.artist;
-        const sales = entry.sales;
-        const streams = sales * 2.2567;
-
-        if (!artistMap[name]) artistMap[name] = 0;
-        artistMap[name] += streams;
+    function aggregate(type, weeks) {
+      const result = {};
+      weeks.forEach(week => {
+        weekData[week].forEach(entry => {
+          const key = type === "artist" ? entry.artist
+                    : type === "tracks" ? `${entry.title}|||${entry.artist}`
+                    : `${entry.album}|||${entry.artist}`;
+          if (!key || key.includes("undefined") || key.includes("NaN")) return;
+          const streams = (entry.sales || 0) * streamMultiplier;
+          result[key] = (result[key] || 0) + streams;
+        });
       });
-
-      return Object.entries(artistMap)
+      return Object.entries(result)
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 50)
-        .map(([name, streams], index) => ({
-          rank: index + 1,
-          name,
-          streams: formatStreams(streams)
-        }));
+        .slice(0, 100)
+        .map(([k, streams], i) => {
+          const [val1, val2] = k.split("|||");
+          return type === "artist"
+            ? { rank: i + 1, name: val1, streams: formatStreams(streams) }
+            : { rank: i + 1, name: val1, artist: val2, streams: formatStreams(streams) };
+        });
     }
 
-    function populateArtistTable() {
-      const tbody = document.getElementById("artist7DaysTable");
-      const latestWeekKey = Math.max(...Object.keys(weekData).map(Number));
-      const rows = calculateArtistStreams(weekData[latestWeekKey]);
-      tbody.innerHTML = rows.map(row => `
-        <tr>
-          <td class="rank">${row.rank}</td>
-          <td>${row.name}</td>
-          <td>${row.streams}</td>
-        </tr>
-      `).join("");
+    function populateAll() {
+      const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
+      const latest7 = allWeeks.slice(0, 1);
+      const latest30 = allWeeks.slice(0, 4);
+      const allTime = allWeeks;
+
+      const fill = (rows, id, isArtist = false) => {
+        const tbody = document.getElementById(id);
+        tbody.innerHTML = rows.map(row => `
+          <tr>
+            <td class="rank">${row.rank}</td>
+            <td>${row.name}</td>
+            ${isArtist ? '' : `<td>${row.artist}</td>`}
+            <td>${row.streams}</td>
+          </tr>
+        `).join("");
+      };
+
+      fill(aggregate("artist", latest7), "artist7DaysTable", true);
+      fill(aggregate("tracks", latest7), "track7DaysTable");
+      fill(aggregate("album", latest7), "album7DaysTable");
+
+      fill(aggregate("artist", latest30), "artist30DaysTable", true);
+      fill(aggregate("tracks", latest30), "track30DaysTable");
+      fill(aggregate("album", latest30), "album30DaysTable");
+
+      fill(aggregate("artist", allTime), "artistAllTimeTable", true);
+      fill(aggregate("tracks", allTime), "trackAllTimeTable");
+      fill(aggregate("album", allTime), "albumAllTimeTable");
     }
 
     function setupTabs() {
@@ -190,8 +200,7 @@
       });
     }
 
-    // Initialize
-    populateArtistTable();
+    populateAll();
     setupTabs();
   </script>
 </body>
