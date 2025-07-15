@@ -44,6 +44,10 @@
     tr:hover { background-color: #333; }
     tr.top-spot { background-color: #ff007f; color: black; font-weight: bold; }
     tr.new-entry { border-left: 5px solid #00f0ff; }
+    #certifiedList {
+      margin-top: 3rem; background: #111; padding: 1rem; border-radius: 8px;
+    }
+    #certifiedList h2 { color: #00f0ff; }
     .modal {
       display: none; position: fixed; z-index: 99;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -90,6 +94,11 @@
     <tbody id="chartBody"></tbody>
   </table>
 
+  <div id="certifiedList">
+    <h2>🏅 Certified Albums This Week</h2>
+    <ul id="certifiedAlbums"></ul>
+  </div>
+
   <div class="modal" id="albumModal">
     <div class="modal-content">
       <h3 id="modalTitle"></h3>
@@ -112,15 +121,6 @@
 
     function getFuzzyKey(album, artist) {
       return normalize(album) + '||' + normalize(artist);
-    }
-
-    function similarity(a, b) {
-      let matches = 0;
-      const len = Math.max(a.length, b.length);
-      for (let i = 0; i < Math.min(a.length, b.length); i++) {
-        if (a[i] === b[i]) matches++;
-      }
-      return matches / len;
     }
 
     function getMovementIcon(move) {
@@ -212,7 +212,7 @@
         tr.innerHTML = `
           <td>${row.rank}</td>
           <td>${getMovementIcon(row.movement)}</td>
-          <td><a href="album_detail.html?album=${encodeURIComponent(row.album)}&artist=${encodeURIComponent(row.artist)}">${row.album}</a></td>
+          <td><a href="#" class="album-link" data-album="${encodeURIComponent(row.album)}" data-artist="${encodeURIComponent(row.artist)}">${row.album}</a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
           <td>${row.sales}</td>
           <td>${row.total_sales}</td>
@@ -225,7 +225,39 @@
           certified.push({ title: row.album, artist: row.artist, cert: getCertificationText(row.total_sales) });
         }
       });
+
+      renderCertifiedList(certified);
     }
+
+    function renderCertifiedList(list) {
+      const ul = document.getElementById('certifiedAlbums');
+      ul.innerHTML = list.length ? '' : '<li>No new certifications this week.</li>';
+      list.forEach(s => {
+        const li = document.createElement('li');
+        li.innerHTML = `📀 <strong>${s.title}</strong> by ${s.artist} – ${s.cert}`;
+        ul.appendChild(li);
+      });
+    }
+
+    function showModal(album) {
+      document.getElementById("modalTitle").textContent = album.album;
+      document.getElementById("modalArtist").textContent = "By " + album.artist;
+      document.getElementById("modalSales").textContent = "This Week: " + album.sales;
+      document.getElementById("modalWeeks").textContent = "Weeks: " + album.weeks;
+      document.getElementById("modalPeak").textContent = "Peak: " + album.peak;
+      document.getElementById("modalCert").innerHTML = getCertification(album.total_sales);
+      document.getElementById("albumModal").style.display = 'flex';
+    }
+
+    document.addEventListener("click", e => {
+      if (e.target.classList.contains("album-link")) {
+        e.preventDefault();
+        const album = decodeURIComponent(e.target.dataset.album);
+        const artist = decodeURIComponent(e.target.dataset.artist);
+        const entry = currentData.find(r => r.album === album && r.artist === artist);
+        if (entry) showModal(entry);
+      }
+    });
 
     function navigateWeek(offset) {
       const sel = document.getElementById('weekSelector');
