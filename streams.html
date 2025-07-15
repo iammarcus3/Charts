@@ -116,12 +116,13 @@
     function aggregate(type, weeks) {
       const result = {};
       weeks.forEach(week => {
-        weekData[week].forEach(entry => {
+        (weekData[week] || []).forEach(entry => {
+          const plays = entry.plays || 0;
+          const streams = plays * streamMultiplier;
           const key = type === "artist" ? entry.artist
                     : type === "tracks" ? `${entry.title}|||${entry.artist}`
                     : `${entry.album}|||${entry.artist}`;
           if (!key || key.includes("undefined") || key.includes("NaN")) return;
-          const streams = (entry.sales || 0) * streamMultiplier;
           result[key] = (result[key] || 0) + streams;
         });
       });
@@ -138,8 +139,8 @@
 
     function populateAll() {
       const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
-      const latest7 = allWeeks.slice(0, 1);
-      const latest30 = allWeeks.slice(0, 4);
+      const latest7 = allWeeks.slice(-1);
+      const latest30 = allWeeks.slice(-4);
       const allTime = allWeeks;
 
       const fill = (rows, id, isArtist = false) => {
