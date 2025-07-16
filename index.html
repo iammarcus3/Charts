@@ -35,13 +35,19 @@
       text-transform: uppercase;
       letter-spacing: 2px;
     }
+    .week-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
     #weekSelector {
       padding: 0.5rem;
       font-size: 1rem;
       background-color: #1a1a1a;
       color: #00ffff;
       border: 1px solid #00ffff;
-      margin-right: 1rem;
     }
     button {
       padding: 0.5rem 1rem;
@@ -50,7 +56,6 @@
       color: #0f0f0f;
       border: none;
       cursor: pointer;
-      margin-right: 0.5rem;
     }
     button:hover {
       background-color: #00cccc;
@@ -128,10 +133,10 @@
 
   <h1>Billboard Hot 100</h1>
 
-  <div style="text-align: center;">
+  <div class="week-nav">
+    <button onclick="changeWeek(1)">⬅️</button>
     <select id="weekSelector"></select>
-    <button onclick="changeWeek(-1)">⬅️</button>
-    <button onclick="changeWeek(1)">➡️</button>
+    <button onclick="changeWeek(-1)">➡️</button>
   </div>
 
   <div class="tabs">
@@ -211,7 +216,7 @@
         }
       }
 
-      const currentTracks = entries.filter(row => row.title && row.artist); // ← UPDATED LINE
+      const currentTracks = entries.filter(row => row.title && row.artist);
 
       for (const row of currentTracks) {
         const key = getFuzzyKey(row.title, row.artist);
@@ -267,22 +272,33 @@
       const pastAlbums = {};
 
       for (let i = 1; i < weekNumber; i++) {
+        const seenWeeks = new Set();
         for (const row of weekData[i] || []) {
           if (!row.album || row.album === "NaN") continue;
           const key = getAlbumKey(row.album, row.artist);
-          if (!pastAlbums[key]) pastAlbums[key] = [];
-          pastAlbums[key].push(row);
+          if (!pastAlbums[key]) pastAlbums[key] = new Set();
+          pastAlbums[key].add(i);
         }
       }
 
       const enrichedAlbums = currentAlbums.map(album => {
         const key = getAlbumKey(album.album, album.artist);
-        const past = pastAlbums[key] || [];
-        const totalWeeks = past.length > 0 ? new Set(past.map(r => r.week)).size + 1 : 1;
-        const pastRanks = past.map(r => parseInt(r.rank));
+        const pastWeeks = pastAlbums[key] || new Set();
+        const totalWeeks = pastWeeks.size + 1;
+
+        const pastRanks = [];
+        for (let i = 1; i < weekNumber; i++) {
+          const entries = weekData[i] || [];
+          for (const r of entries) {
+            if (getAlbumKey(r.album, r.artist) === key) {
+              pastRanks.push(parseInt(r.rank));
+            }
+          }
+        }
+
         const currentBestRank = Math.min(...album.ranks);
         const bestPeak = Math.min(...pastRanks.concat(album.ranks));
-        const lastRank = past.length > 0 ? parseInt(past[past.length - 1].rank) : null;
+        const lastRank = pastRanks.length > 0 ? pastRanks[pastRanks.length - 1] : null;
         const diff = lastRank !== null ? lastRank - currentBestRank : null;
 
         let movementIcon = "🆕", movementText = "";
@@ -292,11 +308,19 @@
           else movementIcon = "➡️";
         }
 
+        const totalSales = album.sales + pastRanks.reduce((s, r, idx) => {
+          const weekDataEntries = weekData[idx + 1] || [];
+          const salesThisWeek = weekDataEntries
+            .filter(e => getAlbumKey(e.album, e.artist) === key)
+            .reduce((sum, e) => sum + e.sales, 0);
+          return s + salesThisWeek;
+        }, 0);
+
         return {
           ...album,
           rank: currentBestRank,
           totalWeeks,
-          totalSales: album.sales + past.reduce((s, r) => s + r.sales, 0),
+          totalSales,
           bestPeak,
           movementIcon,
           movementText
@@ -310,7 +334,7 @@
         tr.innerHTML = `
           <td>${album.rank}</td>
           <td>${album.movementIcon}${album.movementText}</td>
-          <td><a href="album.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
+          <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
           <td>${album.sales.toFixed(2)}</td>
           <td>${album.totalSales.toFixed(2)}</td>
@@ -321,13 +345,22 @@
       }
     }
 
+    function getDateRange(weekNum) {
+      const start = new Date(2018, 1, 23); // 23 Feb 2018
+      start.setDate(start.getDate() + (weekNum - 1) * 7);
+      const end = new Date(start);
+      end.setDate(start.getDate() + 6);
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      return `${start.toLocaleDateString('en-GB', options)} - ${end.toLocaleDateString('en-GB', options)}`;
+    }
+
     function populateWeekSelector() {
       const selector = document.getElementById("weekSelector");
       const weeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
       for (const w of weeks) {
         const opt = document.createElement("option");
         opt.value = w;
-        opt.textContent = `Week ${w}`;
+        opt.textContent = getDateRange(w);
         selector.appendChild(opt);
       }
       selector.addEventListener("change", () => loadWeek(Number(selector.value)));
@@ -347,5 +380,3 @@
   </script>
 </body>
 </html>
-
-
