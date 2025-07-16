@@ -45,10 +45,31 @@
       background-color: #00cccc;
     }
 
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .tab {
+      background-color: #1a1a1a;
+      color: #00ffff;
+      padding: 0.5rem 1rem;
+      margin: 0 0.25rem;
+      cursor: pointer;
+      border: 1px solid #00ffff;
+    }
+
+    .tab.active {
+      background-color: #00ffff;
+      color: #0f0f0f;
+      font-weight: bold;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 2rem;
+      margin-top: 1rem;
     }
 
     thead {
@@ -86,6 +107,18 @@
     strong {
       color: #00ffff;
     }
+
+    .move-up {
+      color: #00ff00;
+    }
+
+    .move-down {
+      color: #ff3333;
+    }
+
+    .move-stay {
+      color: #cccccc;
+    }
   </style>
   <script src="weekdata.js"></script>
 </head>
@@ -96,6 +129,11 @@
     <select id="weekSelector"></select>
     <button onclick="changeWeek(-1)">⬅️</button>
     <button onclick="changeWeek(1)">➡️</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchChart('tracks')">Tracks</div>
+    <div class="tab" onclick="switchChart('albums')">Albums</div>
   </div>
 
   <table id="chart">
@@ -116,8 +154,7 @@
 
   <script>
     function normalize(text) {
-      return text
-        .toLowerCase()
+      return (text || "").toLowerCase()
         .replace(/\(.*?\)/g, '')
         .replace(/\[.*?\]/g, '')
         .replace(/feat\..*/g, '')
@@ -129,16 +166,33 @@
     }
 
     let currentWeek = 1;
+    let currentChart = 'tracks';
+
+    function switchChart(chartType) {
+      currentChart = chartType;
+      document.querySelectorAll(".tab").forEach(tab => {
+        tab.classList.remove("active");
+      });
+      document.querySelector(`.tab:nth-child(${chartType === 'tracks' ? 1 : 2})`).classList.add("active");
+      loadWeek(currentWeek);
+    }
 
     function loadWeek(weekNumber) {
       currentWeek = weekNumber;
-      const chartData = weekData[weekNumber];
+      const allData = weekData[weekNumber] || [];
+
+      const chartData = allData.filter(row =>
+        currentChart === 'albums' ? row.album && row.album !== 'NaN' : !row.album || row.album === 'NaN'
+      );
+
       const tbody = document.querySelector("#chart tbody");
       tbody.innerHTML = "";
 
       const history = {};
       for (let i = 1; i < weekNumber; i++) {
         for (const row of weekData[i] || []) {
+          const match = currentChart === 'albums' ? row.album && row.album !== 'NaN' : !row.album || row.album === 'NaN';
+          if (!match) continue;
           const key = getFuzzyKey(row.title, row.artist);
           if (!history[key]) history[key] = [];
           history[key].push({ ...row, week: i });
@@ -152,17 +206,32 @@
         const totalWeeks = past.length + 1;
         const totalSales = past.reduce((sum, r) => sum + r.sales, 0) + row.sales;
         const bestPeak = Math.min(...past.map(r => parseInt(r.rank)).concat([parseInt(row.rank)]));
-        const movement = past.length === 0 ? "NEW" :
-                         parseInt(past[past.length - 1].rank) > parseInt(row.rank) ? "⬆️" :
-                         parseInt(past[past.length - 1].rank) < parseInt(row.rank) ? "⬇️" : "➡️";
 
-        const titleHTML = `<a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movement === "NEW" ? `<strong>${row.title}</strong>` : row.title}</a>`;
+        let movementIcon = "➡️", movementText = "", moveClass = "move-stay";
+        if (past.length === 0) {
+          movementIcon = "🆕";
+        } else {
+          const lastRank = parseInt(past[past.length - 1].rank);
+          const currentRank = parseInt(row.rank);
+          const diff = lastRank - currentRank;
+          if (diff > 0) {
+            movementIcon = "⬆️";
+            movementText = ` <span class="move-up">+${diff}</span>`;
+            moveClass = "move-up";
+          } else if (diff < 0) {
+            movementIcon = "⬇️";
+            movementText = ` <span class="move-down">${diff}</span>`;
+            moveClass = "move-down";
+          }
+        }
+
+        const titleHTML = `<a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movementIcon === "🆕" ? `<strong>${row.title}</strong>` : row.title}</a>`;
         const artistHTML = `<a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a>`;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.rank}</td>
-          <td>${movement}</td>
+          <td>${movementIcon}${movementText}</td>
           <td>${titleHTML}</td>
           <td>${artistHTML}</td>
           <td>${row.sales.toFixed(2)}</td>
@@ -178,7 +247,7 @@
 
     function populateWeekSelector() {
       const selector = document.getElementById("weekSelector");
-      const weeks = Object.keys(weekData).map(Number).sort((a, b) => b - a); // Latest first
+      const weeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
       for (const w of weeks) {
         const opt = document.createElement("option");
         opt.value = w;
@@ -186,7 +255,7 @@
         selector.appendChild(opt);
       }
       selector.addEventListener("change", () => loadWeek(Number(selector.value)));
-      loadWeek(weeks[0]); // Load latest on page open
+      loadWeek(weeks[0]);
     }
 
     function changeWeek(delta) {
@@ -202,3 +271,4 @@
   </script>
 </body>
 </html>
+
