@@ -156,10 +156,17 @@
     <button onclick="changeWeek(1)">➡️</button>
   </div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="switchChart('tracks')">Tracks</div>
-    <div class="tab" onclick="switchChart('albums')">Albums</div>
-  </div>
+function switchChart(type) {
+  currentChart = type;
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.classList.remove("active");
+    if (tab.dataset.chart === type) {
+      tab.classList.add("active");
+    }
+  });
+  loadWeek(currentWeek);
+}
+
 
   <table id="chart">
     <thead>
