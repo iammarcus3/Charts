@@ -149,35 +149,52 @@
     const weeks = Object.keys(weekData)
       .filter(k => Array.isArray(weekData[k]))
       .map(Number)
-      .sort((a, b) => b - a); // Most recent first
+      .sort((a, b) => b - a);
 
-    currentWeek = weeks[0]; // Default to latest week
+    currentWeek = weeks[0];
 
     const weekSelect = document.getElementById("weekSelect");
     const chartBody = document.getElementById("chart");
     const modal = document.getElementById("songModal");
     const history = {};
 
-    function getFuzzyKey(title, artist) {
-      const clean = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-      const newKey = clean(title) + "||" + clean(artist);
-      for (let key in history) {
-        const [t, a] = key.split("||");
-        if (a === clean(artist)) {
-          let matches = 0;
-          const titleClean = clean(title);
-          for (let i = 0; i < Math.min(t.length, titleClean.length); i++) {
-            if (t[i] === titleClean[i]) matches++;
-          }
-          const ratio = matches / Math.max(t.length, titleClean.length);
-          if (ratio >= 0.95) return key;
+    // Normalize text for comparison
+    function normalize(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    // Levenshtein distance for fuzzy match
+    function similarity(a, b) {
+      const alen = a.length;
+      const blen = b.length;
+      const dp = Array.from({ length: alen + 1 }, () => Array(blen + 1).fill(0));
+      for (let i = 0; i <= alen; i++) dp[i][0] = i;
+      for (let j = 0; j <= blen; j++) dp[0][j] = j;
+      for (let i = 1; i <= alen; i++) {
+        for (let j = 1; j <= blen; j++) {
+          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+          dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
         }
       }
-      return newKey;
+      const distance = dp[alen][blen];
+      return 1 - distance / Math.max(alen, blen);
+    }
+
+    // Find best fuzzy key
+    function getFuzzyKey(title, artist) {
+      const normKey = normalize(title + artist);
+      for (let key in history) {
+        const [oldTitle, oldArtist] = key.split("||");
+        if (normalize(oldArtist) === normalize(artist)) {
+          const sim = similarity(normalize(title), normalize(oldTitle));
+          if (sim >= 0.8) return key;
+        }
+      }
+      return title + "||" + artist;
     }
 
     function formatRange(weekNum) {
-      const base = new Date(2018,1,23);
+      const base = new Date(2018, 1, 23);
       base.setDate(base.getDate() + (weekNum - 1) * 7);
       const end = new Date(base);
       end.setDate(base.getDate() + 6);
@@ -211,7 +228,11 @@
       const rows = weekData[currentWeek];
       const last = weekData[currentWeek - 1] || [];
       const lastMap = {};
-      last.forEach(r => lastMap[getFuzzyKey(r.title, r.artist)] = r.rank);
+
+      last.forEach(r => {
+        const k = getFuzzyKey(r.title, r.artist);
+        lastMap[k] = r.rank;
+      });
 
       rows.forEach(row => {
         const key = getFuzzyKey(row.title, row.artist);
@@ -219,24 +240,25 @@
 
         history[key].total += row.sales;
         history[key].weeks++;
-        history[key].peak = Math.min(history[key].peak, row.rank);
+        history[key].peak = Math.min(history[key].peak, +row.rank);
 
         let move = '🆕';
         if (key in lastMap) {
-          move = row.rank < lastMap[key] ? '⬆️' : row.rank > lastMap[key] ? '⬇️' : '➖';
+          move = +row.rank < +lastMap[key] ? '⬆️' : +row.rank > +lastMap[key] ? '⬇️' : '➖';
         } else if (history[key].seen) {
           move = '🔁';
         }
 
         history[key].seen = true;
+
         const tr = document.createElement("tr");
-        if (row.rank === 1) tr.classList.add("top");
+        if (+row.rank === 1) tr.classList.add("top");
         if (move === '🆕') tr.classList.add("new");
 
         tr.innerHTML = `
           <td>${row.rank}</td>
           <td>${move}</td>
-          <td><a href="#" onclick='openModal(${JSON.stringify({...row, total: history[key].total, weeks: history[key].weeks, peak: history[key].peak})})'>${row.title}</a></td>
+          <td><a href="#" onclick='openModal(${JSON.stringify({...row, totalSales: history[key].total, weeks: history[key].weeks, peak: history[key].peak})})'>${row.title}</a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
           <td>${row.sales}</td>
           <td>${history[key].total}</td>
@@ -253,7 +275,7 @@
       document.getElementById('modalSales').textContent = 'This Week: ' + song.sales;
       document.getElementById('modalWeeks').textContent = 'Weeks: ' + song.weeks;
       document.getElementById('modalPeak').textContent = 'Peak: ' + song.peak;
-      document.getElementById('modalCert').textContent = getCert(song.total);
+      document.getElementById('modalCert').textContent = getCert(song.totalSales);
       modal.style.display = 'flex';
     }
 
