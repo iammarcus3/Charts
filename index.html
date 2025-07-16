@@ -146,11 +146,7 @@
 
   <script>
     let currentWeek;
-    const weeks = Object.keys(weekData)
-      .filter(k => Array.isArray(weekData[k]))
-      .map(Number)
-      .sort((a, b) => b - a);
-
+    const weeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
     currentWeek = weeks[0];
 
     const weekSelect = document.getElementById("weekSelect");
@@ -158,38 +154,44 @@
     const modal = document.getElementById("songModal");
     const history = {};
 
-    // Normalize text for comparison
+    const alias = {
+      "standingonthesunbeyonce": "standingonthesun||Beyoncé",
+      "standingonthesunremixbeyonce": "standingonthesun||Beyoncé"
+    };
+
     function normalize(text) {
       return text.toLowerCase().replace(/[^a-z0-9]/g, '');
     }
 
-    // Levenshtein distance for fuzzy match
     function similarity(a, b) {
-      const alen = a.length;
-      const blen = b.length;
-      const dp = Array.from({ length: alen + 1 }, () => Array(blen + 1).fill(0));
-      for (let i = 0; i <= alen; i++) dp[i][0] = i;
-      for (let j = 0; j <= blen; j++) dp[0][j] = j;
-      for (let i = 1; i <= alen; i++) {
-        for (let j = 1; j <= blen; j++) {
+      const dp = Array(a.length + 1).fill(null).map(() => Array(b.length + 1).fill(0));
+      for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+      for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+      for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
           const cost = a[i - 1] === b[j - 1] ? 0 : 1;
           dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
         }
       }
-      const distance = dp[alen][blen];
-      return 1 - distance / Math.max(alen, blen);
+      const distance = dp[a.length][b.length];
+      return 1 - distance / Math.max(a.length, b.length);
     }
 
-    // Find best fuzzy key
     function getFuzzyKey(title, artist) {
       const normKey = normalize(title + artist);
+      if (alias[normKey]) return alias[normKey];
+
       for (let key in history) {
         const [oldTitle, oldArtist] = key.split("||");
         if (normalize(oldArtist) === normalize(artist)) {
           const sim = similarity(normalize(title), normalize(oldTitle));
-          if (sim >= 0.8) return key;
+          console.log(`🔍 Matching "${title}" to "${oldTitle}" → similarity: ${sim.toFixed(2)}`);
+          if (sim >= 0.8) {
+            return key;
+          }
         }
       }
+
       return title + "||" + artist;
     }
 
@@ -228,7 +230,6 @@
       const rows = weekData[currentWeek];
       const last = weekData[currentWeek - 1] || [];
       const lastMap = {};
-
       last.forEach(r => {
         const k = getFuzzyKey(r.title, r.artist);
         lastMap[k] = r.rank;
