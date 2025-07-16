@@ -156,17 +156,10 @@
     <button onclick="changeWeek(1)">➡️</button>
   </div>
 
-function switchChart(type) {
-  currentChart = type;
-  document.querySelectorAll(".tab").forEach(tab => {
-    tab.classList.remove("active");
-    if (tab.dataset.chart === type) {
-      tab.classList.add("active");
-    }
-  });
-  loadWeek(currentWeek);
-}
-
+  <div class="tabs">
+    <div class="tab active" data-chart="tracks" onclick="switchChart('tracks')">Tracks</div>
+    <div class="tab" data-chart="albums" onclick="switchChart('albums')">Albums</div>
+  </div>
 
   <table id="chart">
     <thead>
@@ -207,8 +200,10 @@ function switchChart(type) {
 
     function switchChart(type) {
       currentChart = type;
-      document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-      document.querySelector(`.tab:nth-child(${type === 'tracks' ? 1 : 2})`).classList.add("active");
+      document.querySelectorAll(".tab").forEach(tab => {
+        tab.classList.remove("active");
+        if (tab.dataset.chart === type) tab.classList.add("active");
+      });
       loadWeek(currentWeek);
     }
 
@@ -376,3 +371,4 @@ function switchChart(type) {
   </script>
 </body>
 </html>
+
