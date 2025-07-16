@@ -78,13 +78,19 @@
       color: #0f0f0f;
       font-weight: bold;
     }
+    .table-container {
+      max-height: 600px;
+      overflow-y: auto;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 1rem;
     }
     thead {
       background-color: #1a1a1a;
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }
     th, td {
       padding: 0.8rem;
@@ -96,6 +102,7 @@
       color: #00ffff;
       text-transform: uppercase;
       font-weight: 600;
+      background-color: #1a1a1a;
     }
     tr:hover {
       background-color: #1f1f1f;
@@ -144,21 +151,23 @@
     <div class="tab" data-chart="albums" onclick="switchChart('albums')">Albums</div>
   </div>
 
-  <table id="chart">
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Move</th>
-        <th>Title</th>
-        <th>Artist</th>
-        <th>Sales</th>
-        <th>Total Sales</th>
-        <th>Weeks</th>
-        <th>Peak</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="table-container">
+    <table id="chart">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Move</th>
+          <th>Title</th>
+          <th>Artist</th>
+          <th>Sales</th>
+          <th>Total Sales</th>
+          <th>Weeks</th>
+          <th>Peak</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <script>
     function normalize(text) {
@@ -272,7 +281,6 @@
       const pastAlbums = {};
 
       for (let i = 1; i < weekNumber; i++) {
-        const seenWeeks = new Set();
         for (const row of weekData[i] || []) {
           if (!row.album || row.album === "NaN") continue;
           const key = getAlbumKey(row.album, row.artist);
@@ -380,3 +388,4 @@
   </script>
 </body>
 </html>
+
