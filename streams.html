@@ -2,266 +2,251 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Stream Rankings</title>
+  <title>Billboard Top 100</title>
+  <script src="weekdata.js"></script>
   <style>
     body {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
+      font-family: sans-serif;
+      background: #181818;
+      color: #f5f5f5;
       margin: 0;
       padding: 20px;
     }
-
     h1 {
-      text-align: center;
-      color: white;
-      font-size: 2.5em;
-      font-weight: bold;
-      margin-bottom: 30px;
-      letter-spacing: 1px;
+      color: #ff4081;
+      margin-bottom: 0.5rem;
     }
-
-    .tabs, .subtabs {
-      display: flex;
-      justify-content: center;
+    nav {
       margin-bottom: 20px;
-      gap: 10px;
     }
-
-    .tabs button, .subtabs button {
-      padding: 10px 20px;
-      border: none;
-      background: #333;
-      color: white;
-      cursor: pointer;
-      border-radius: 25px;
+    nav a {
+      color: #90caf9;
+      margin-right: 15px;
+      text-decoration: none;
       font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: background 0.3s;
     }
-
-    .tabs button:hover, .subtabs button:hover {
-      background: #e60000;
+    nav a:hover {
+      text-decoration: underline;
     }
-
-    .tabs button.active, .subtabs button.active {
-      background: #e60000;
-      color: white;
+    select, button {
+      font-size: 1rem;
+      margin: 10px 5px;
+      padding: 6px 10px;
+      border-radius: 5px;
+      border: none;
+      background-color: #2d2d2d;
+      color: #fff;
     }
-
-    .content {
-      display: none;
-    }
-
-    .content.active {
-      display: block;
-      animation: fadeIn 0.4s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      background-color: #111;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    th, td {
-      padding: 14px 12px;
-      text-align: left;
-      border-bottom: 1px solid #222;
-    }
-
-    th {
       background: #222;
-      color: #e0e0e0;
-      text-transform: uppercase;
-      font-size: 0.9em;
     }
-
-    tr:hover {
-      background: #1c1c1c;
+    th, td {
+      padding: 10px;
+      text-align: left;
     }
-
-    .rank {
-      font-weight: bold;
-      color: #e60000;
+    th {
+      background: #303030;
+      color: #ff4081;
+      position: sticky;
+      top: 0;
+      z-index: 3;
     }
-
+    td:first-child, th:first-child {
+      position: sticky;
+      left: 0;
+      background: #2d2d2d;
+      z-index: 2;
+    }
+    tr:nth-child(even) { background: #2a2a2a; }
+    tr:hover { background: #383838; }
     a {
-      color: #1db954;
+      color: #81d4fa;
       text-decoration: none;
-      font-weight: bold;
     }
-
     a:hover {
       text-decoration: underline;
-      color: #fff;
     }
-
-    @media (max-width: 600px) {
-      .tabs, .subtabs {
-        flex-direction: column;
-      }
+    .top {
+      background: #ff4081;
+      color: #000;
+    }
+    .new {
+      border-left: 4px solid #00e5ff;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+    .modal-content {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      width: 320px;
+      color: #fff;
+      text-align: center;
+      border: 1px solid #555;
+      box-shadow: 0 0 10px #000;
+    }
+    .cert {
+      margin-top: 10px;
+      font-size: 1.3em;
     }
   </style>
 </head>
 <body>
-  <h1>Stream Rankings</h1>
+  <h1>🎵 Billboard Top 100</h1>
+  <nav>
+    <a href="albums.html">Albums</a>
+    <a href="top_albums.html">Top Albums</a>
+    <a href="records.html">Records</a>
+    <a href="streams.html">Streams</a>
+  </nav>
 
-  <div class="tabs" id="mainTabs">
-    <button data-tab="7days" class="active">7 Days</button>
-    <button data-tab="30days">30 Days</button>
-    <button data-tab="alltime">All Time</button>
+  <label for="weekSelect">Week:</label>
+  <select id="weekSelect"></select>
+  <button onclick="changeWeek(-1)">⬅️</button>
+  <button onclick="changeWeek(1)">➡️</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Move</th>
+        <th>Title</th>
+        <th>Artist</th>
+        <th>Sales</th>
+        <th>Total Sales</th>
+        <th>Weeks</th>
+        <th>Peak</th>
+      </tr>
+    </thead>
+    <tbody id="chart"></tbody>
+  </table>
+
+  <div class="modal" id="songModal">
+    <div class="modal-content">
+      <h2 id="modalTitle"></h2>
+      <p id="modalArtist"></p>
+      <p id="modalSales"></p>
+      <p id="modalWeeks"></p>
+      <p id="modalPeak"></p>
+      <div class="cert" id="modalCert"></div>
+      <button onclick="closeModal()">Close</button>
+    </div>
   </div>
 
-  <div class="subtabs" id="subTabs">
-    <button data-subtab="artist" class="active">Artist</button>
-    <button data-subtab="tracks">Tracks</button>
-    <button data-subtab="album">Album</button>
-  </div>
-
-  <!-- Content Sections -->
-  <div id="content-7days-artist" class="content active"><table><thead><tr><th>Rank</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="artist7DaysTable"></tbody></table></div>
-  <div id="content-7days-tracks" class="content"><table><thead><tr><th>Rank</th><th>Title</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="track7DaysTable"></tbody></table></div>
-  <div id="content-7days-album" class="content"><table><thead><tr><th>Rank</th><th>Album</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="album7DaysTable"></tbody></table></div>
-
-  <div id="content-30days-artist" class="content"><table><thead><tr><th>Rank</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="artist30DaysTable"></tbody></table></div>
-  <div id="content-30days-tracks" class="content"><table><thead><tr><th>Rank</th><th>Title</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="track30DaysTable"></tbody></table></div>
-  <div id="content-30days-album" class="content"><table><thead><tr><th>Rank</th><th>Album</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="album30DaysTable"></tbody></table></div>
-
-  <div id="content-alltime-artist" class="content"><table><thead><tr><th>Rank</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="artistAllTimeTable"></tbody></table></div>
-  <div id="content-alltime-tracks" class="content"><table><thead><tr><th>Rank</th><th>Title</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="trackAllTimeTable"></tbody></table></div>
-  <div id="content-alltime-album" class="content"><table><thead><tr><th>Rank</th><th>Album</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="albumAllTimeTable"></tbody></table></div>
-
-  <script src="weekdata.js"></script>
   <script>
-    const streamMultiplier = 1.32762 * 1_000_000;
+    let currentWeek;
+    const weeks = Object.keys(weekData)
+      .filter(k => Array.isArray(weekData[k]))
+      .map(Number)
+      .sort((a, b) => b - a);
 
-    function formatStreams(value) {
-      const millions = value / 1_000_000;
-      const billions = value / 1_000_000_000;
-      return billions >= 1 ? `${billions.toFixed(2)}B` : `${millions.toFixed(2)}M`;
+    currentWeek = weeks[0];
+
+    const weekSelect = document.getElementById("weekSelect");
+    const chartBody = document.getElementById("chart");
+    const modal = document.getElementById("songModal");
+
+    function formatRange(weekNum) {
+      const base = new Date(2018,1,23);
+      base.setDate(base.getDate() + (weekNum - 1) * 7);
+      const end = new Date(base);
+      end.setDate(base.getDate() + 6);
+      return `${base.toLocaleDateString('en-GB')} – ${end.toLocaleDateString('en-GB')}`;
     }
 
-    function aggregate(type, weeks) {
-      const result = {};
-      weeks.forEach(week => {
-        (weekData[week] || []).forEach(entry => {
-          const sales = parseFloat(entry.sales) || 0;
-          const streams = sales * streamMultiplier;
-
-          let key = "";
-          if (type === "artist") {
-            key = entry.artist || "Unknown";
-          } else if (type === "tracks") {
-            key = `${entry.title || "Unknown"}|||${entry.artist || "Unknown"}`;
-          } else {
-            key = `${entry.album || "Unknown"}|||${entry.artist || "Unknown"}`;
-          }
-
-          if (!key || key.toLowerCase().includes("undefined")) return;
-          result[key] = (result[key] || 0) + streams;
-        });
+    function updateDropdown() {
+      weekSelect.innerHTML = "";
+      weeks.forEach(w => {
+        const opt = document.createElement("option");
+        opt.value = w;
+        opt.textContent = `Week ${w} (${formatRange(w)})`;
+        weekSelect.appendChild(opt);
       });
-
-      return Object.entries(result)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 100)
-        .map(([k, streams], i) => {
-          const [val1, val2] = k.split("|||");
-          return type === "artist"
-            ? { rank: i + 1, name: val1, streams: formatStreams(streams) }
-            : { rank: i + 1, name: val1, artist: val2, streams: formatStreams(streams) };
-        });
-    }
-
-    function linkify(name, artist, type) {
-      const encodedName = encodeURIComponent(name);
-      const encodedArtist = encodeURIComponent(artist);
-      if (type === "artist") {
-        return `<a href="artist.html?name=${encodedName}">${name}</a>`;
-      } else if (type === "track") {
-        return `<a href="track_detail.html?title=${encodedName}&artist=${encodedArtist}">${name}</a>`;
-      } else {
-        return `<a href="album_detail.html?album=${encodedName}&artist=${encodedArtist}">${name}</a>`;
-      }
-    }
-
-    function populateAll() {
-      const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
-      const latest7 = allWeeks.slice(0, 1);
-      const latest30 = allWeeks.slice(0, 4);
-      const allTime = allWeeks;
-
-      const fill = (rows, id, isArtist = false, type = "") => {
-        const tbody = document.getElementById(id);
-        tbody.innerHTML = rows.map(row => `
-          <tr>
-            <td class="rank">${row.rank}</td>
-            <td>${linkify(row.name, row.artist || row.name, type)}</td>
-            ${isArtist ? '' : `<td>${linkify(row.artist, row.artist, "artist")}</td>`}
-            <td>${row.streams}</td>
-          </tr>
-        `).join("");
+      weekSelect.value = currentWeek;
+      weekSelect.onchange = () => {
+        currentWeek = +weekSelect.value;
+        renderWeek();
       };
-
-      fill(aggregate("artist", latest7), "artist7DaysTable", true, "artist");
-      fill(aggregate("tracks", latest7), "track7DaysTable", false, "track");
-      fill(aggregate("album", latest7), "album7DaysTable", false, "album");
-
-      fill(aggregate("artist", latest30), "artist30DaysTable", true, "artist");
-      fill(aggregate("tracks", latest30), "track30DaysTable", false, "track");
-      fill(aggregate("album", latest30), "album30DaysTable", false, "album");
-
-      fill(aggregate("artist", allTime), "artistAllTimeTable", true, "artist");
-      fill(aggregate("tracks", allTime), "trackAllTimeTable", false, "track");
-      fill(aggregate("album", allTime), "albumAllTimeTable", false, "album");
     }
 
-    function setupTabs() {
-      const mainTabs = document.querySelectorAll("#mainTabs button");
-      const subTabs = document.querySelectorAll("#subTabs button");
-      const allContents = document.querySelectorAll(".content");
+    function getCert(sales) {
+      if (sales >= 1000000) return '💎 Diamond';
+      if (sales >= 100000) return `💿 x${Math.floor(sales / 100000)} Platinum`;
+      if (sales >= 50000) return '🥇 Gold';
+      return '';
+    }
 
-      function updateActiveContent(main, sub) {
-        allContents.forEach(c => c.classList.remove("active"));
-        const id = `content-${main}-${sub}`;
-        const contentEl = document.getElementById(id);
-        if (contentEl) contentEl.classList.add("active");
+    function renderWeek() {
+      chartBody.innerHTML = "";
+      const rows = weekData[currentWeek];
+      const last = weekData[currentWeek - 1] || [];
+      const lastMap = {};
+      last.forEach(r => {
+        const key = (r.title + r.artist).toLowerCase().replace(/[^a-z0-9]/g, '');
+        lastMap[key] = r.rank;
+      });
+
+      rows.forEach(row => {
+        const key = (row.title + row.artist).toLowerCase().replace(/[^a-z0-9]/g, '');
+        let move = '🆕';
+        if (key in lastMap) {
+          move = row.rank < lastMap[key] ? '⬆️' : row.rank > lastMap[key] ? '⬇️' : '➖';
+        }
+
+        const tr = document.createElement("tr");
+        if (+row.rank === 1) tr.classList.add("top");
+        if (move === '🆕') tr.classList.add("new");
+
+        tr.innerHTML = `
+          <td>${row.rank}</td>
+          <td>${move}</td>
+          <td><a href="#" onclick='openModal(${JSON.stringify(row)})'>${row.title}</a></td>
+          <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
+          <td>${row.sales}</td>
+          <td>${row.totalSales}</td>
+          <td>${row.weeks}</td>
+          <td>${row.peak}</td>
+        `;
+        chartBody.appendChild(tr);
+      });
+    }
+
+    function openModal(song) {
+      document.getElementById('modalTitle').textContent = song.title;
+      document.getElementById('modalArtist').textContent = 'by ' + song.artist;
+      document.getElementById('modalSales').textContent = 'This Week: ' + song.sales;
+      document.getElementById('modalWeeks').textContent = 'Weeks: ' + song.weeks;
+      document.getElementById('modalPeak').textContent = 'Peak: ' + song.peak;
+      document.getElementById('modalCert').textContent = getCert(song.totalSales);
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    function changeWeek(offset) {
+      const idx = weeks.indexOf(currentWeek);
+      if (idx + offset >= 0 && idx + offset < weeks.length) {
+        currentWeek = weeks[idx + offset];
+        weekSelect.value = currentWeek;
+        renderWeek();
       }
-
-      mainTabs.forEach(btn => {
-        btn.addEventListener("click", () => {
-          document.querySelector("#mainTabs .active").classList.remove("active");
-          btn.classList.add("active");
-          const currentSub = document.querySelector("#subTabs .active").dataset.subtab;
-          updateActiveContent(btn.dataset.tab, currentSub);
-        });
-      });
-
-      subTabs.forEach(btn => {
-        btn.addEventListener("click", () => {
-          document.querySelector("#subTabs .active").classList.remove("active");
-          btn.classList.add("active");
-          const currentMain = document.querySelector("#mainTabs .active").dataset.tab;
-          updateActiveContent(currentMain, btn.dataset.subtab);
-        });
-      });
     }
 
-    window.onload = function() {
-      populateAll();
-      setupTabs();
-    };
+    updateDropdown();
+    renderWeek();
   </script>
 </body>
 </html>
