@@ -2,121 +2,99 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Billboard Top 100</title>
-  <script src="weekdata.js"></script>
+  <title>Billboard Hot 100</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #181818;
-      color: #f5f5f5;
+      background-color: #0f0f0f;
+      color: #ffffff;
+      font-family: 'Helvetica Neue', sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 2rem;
     }
+
     h1 {
-      color: #ff4081;
-      margin-bottom: 0.5rem;
-    }
-    nav {
-      margin-bottom: 20px;
-    }
-    nav a {
-      color: #90caf9;
-      margin-right: 15px;
-      text-decoration: none;
+      font-size: 2.5rem;
       font-weight: bold;
+      color: #00ffff;
+      text-align: center;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    select, button {
+
+    #weekSelector {
+      padding: 0.5rem;
       font-size: 1rem;
-      margin: 10px 5px;
-      padding: 6px 10px;
-      border-radius: 5px;
-      border: none;
-      background-color: #2d2d2d;
-      color: #fff;
+      background-color: #1a1a1a;
+      color: #00ffff;
+      border: 1px solid #00ffff;
+      margin-right: 1rem;
     }
+
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #00ffff;
+      color: #0f0f0f;
+      border: none;
+      cursor: pointer;
+      margin-right: 0.5rem;
+    }
+
+    button:hover {
+      background-color: #00cccc;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
-      background: #222;
+      margin-top: 2rem;
     }
+
+    thead {
+      background-color: #1a1a1a;
+    }
+
     th, td {
-      padding: 10px;
+      padding: 0.8rem;
       text-align: left;
+      border-bottom: 1px solid #333;
+      font-size: 0.95rem;
     }
+
     th {
-      background: #303030;
-      color: #ff4081;
-      position: sticky;
-      top: 0;
-      z-index: 3;
+      color: #00ffff;
+      text-transform: uppercase;
+      font-weight: 600;
     }
-    td:first-child, th:first-child {
-      position: sticky;
-      left: 0;
-      background: #2d2d2d;
-      z-index: 2;
+
+    tr:hover {
+      background-color: #1f1f1f;
     }
-    tr:nth-child(even) { background: #2a2a2a; }
-    tr:hover { background: #383838; }
+
     a {
-      color: #81d4fa;
+      color: #ffffff;
       text-decoration: none;
+      font-weight: 500;
     }
+
     a:hover {
+      color: #00ffff;
       text-decoration: underline;
     }
-    .top {
-      background: #ff4081;
-      color: #000;
-    }
-    .new {
-      border-left: 4px solid #00e5ff;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
-      justify-content: center;
-      align-items: center;
-      z-index: 10;
-    }
-    .modal-content {
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 10px;
-      width: 320px;
-      color: #fff;
-      text-align: center;
-      border: 1px solid #555;
-      box-shadow: 0 0 10px #000;
-    }
-    .cert {
-      margin-top: 10px;
-      font-size: 1.3em;
-    }
   </style>
+  <script src="weekdata.js"></script>
 </head>
 <body>
-  <h1>🎵 Billboard Top 100</h1>
-  <nav>
-    <a href="albums.html">Albums</a>
-    <a href="top_albums.html">Top Albums</a>
-    <a href="records.html">Records</a>
-    <a href="streams.html">Streams</a>
-  </nav>
+  <h1>Billboard Hot 100</h1>
 
-  <label for="weekSelect">Week:</label>
-  <select id="weekSelect"></select>
-  <button onclick="changeWeek(-1)">⬅️</button>
-  <button onclick="changeWeek(1)">➡️</button>
+  <div style="text-align: center;">
+    <select id="weekSelector"></select>
+    <button onclick="changeWeek(-1)">⬅️</button>
+    <button onclick="changeWeek(1)">➡️</button>
+  </div>
 
-  <table>
+  <table id="chart">
     <thead>
       <tr>
         <th>Rank</th>
@@ -129,172 +107,91 @@
         <th>Peak</th>
       </tr>
     </thead>
-    <tbody id="chart"></tbody>
+    <tbody></tbody>
   </table>
 
-  <div class="modal" id="songModal">
-    <div class="modal-content">
-      <h2 id="modalTitle"></h2>
-      <p id="modalArtist"></p>
-      <p id="modalSales"></p>
-      <p id="modalWeeks"></p>
-      <p id="modalPeak"></p>
-      <div class="cert" id="modalCert"></div>
-      <button onclick="closeModal()">Close</button>
-    </div>
-  </div>
-
   <script>
-    let currentWeek;
-    const weeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
-    currentWeek = weeks[0];
-
-    const weekSelect = document.getElementById("weekSelect");
-    const chartBody = document.getElementById("chart");
-    const modal = document.getElementById("songModal");
-    const history = {};
-
-    const alias = {
-      "standingonthesunbeyonce": "standingonthesun||Beyoncé",
-      "standingonthesunremixbeyonce": "standingonthesun||Beyoncé"
-    };
-
     function normalize(text) {
-      return text.toLowerCase().replace(/[^a-z0-9]/g, '');
-    }
-
-    function similarity(a, b) {
-      const dp = Array(a.length + 1).fill(null).map(() => Array(b.length + 1).fill(0));
-      for (let i = 0; i <= a.length; i++) dp[i][0] = i;
-      for (let j = 0; j <= b.length; j++) dp[0][j] = j;
-      for (let i = 1; i <= a.length; i++) {
-        for (let j = 1; j <= b.length; j++) {
-          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-          dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
-        }
-      }
-      const distance = dp[a.length][b.length];
-      return 1 - distance / Math.max(a.length, b.length);
+      return text
+        .toLowerCase()
+        .replace(/\(.*?\)/g, '')
+        .replace(/\[.*?\]/g, '')
+        .replace(/feat\..*/g, '')
+        .replace(/[^a-z0-9]/g, '');
     }
 
     function getFuzzyKey(title, artist) {
-      const normKey = normalize(title + artist);
-      if (alias[normKey]) return alias[normKey];
+      return normalize(title) + normalize(artist);
+    }
 
-      for (let key in history) {
-        const [oldTitle, oldArtist] = key.split("||");
-        if (normalize(oldArtist) === normalize(artist)) {
-          const sim = similarity(normalize(title), normalize(oldTitle));
-          console.log(`🔍 Matching "${title}" to "${oldTitle}" → similarity: ${sim.toFixed(2)}`);
-          if (sim >= 0.8) {
-            return key;
-          }
+    let currentWeek = 1;
+
+    function loadWeek(weekNumber) {
+      currentWeek = weekNumber;
+      const chartData = weekData[weekNumber];
+      const tbody = document.querySelector("#chart tbody");
+      tbody.innerHTML = "";
+
+      // Build history from previous weeks
+      const history = {};
+      for (let i = 1; i < weekNumber; i++) {
+        for (const row of weekData[i] || []) {
+          const key = getFuzzyKey(row.title, row.artist);
+          if (!history[key]) history[key] = [];
+          history[key].push({ ...row, week: i });
         }
       }
 
-      return title + "||" + artist;
-    }
-
-    function formatRange(weekNum) {
-      const base = new Date(2018, 1, 23);
-      base.setDate(base.getDate() + (weekNum - 1) * 7);
-      const end = new Date(base);
-      end.setDate(base.getDate() + 6);
-      return `${base.toLocaleDateString('en-GB')} – ${end.toLocaleDateString('en-GB')}`;
-    }
-
-    function updateDropdown() {
-      weekSelect.innerHTML = "";
-      weeks.forEach(w => {
-        const opt = document.createElement("option");
-        opt.value = w;
-        opt.textContent = `Week ${w} (${formatRange(w)})`;
-        weekSelect.appendChild(opt);
-      });
-      weekSelect.value = currentWeek;
-      weekSelect.onchange = () => {
-        currentWeek = +weekSelect.value;
-        renderWeek();
-      };
-    }
-
-    function getCert(sales) {
-      if (sales >= 1000000) return '💎 Diamond';
-      if (sales >= 100000) return `💿 x${Math.floor(sales / 100000)} Platinum`;
-      if (sales >= 50000) return '🥇 Gold';
-      return '';
-    }
-
-    function renderWeek() {
-      chartBody.innerHTML = "";
-      const rows = weekData[currentWeek];
-      const last = weekData[currentWeek - 1] || [];
-      const lastMap = {};
-      last.forEach(r => {
-        const k = getFuzzyKey(r.title, r.artist);
-        lastMap[k] = r.rank;
-      });
-
-      rows.forEach(row => {
+      for (const row of chartData) {
         const key = getFuzzyKey(row.title, row.artist);
-        if (!history[key]) history[key] = { total: 0, peak: 999, weeks: 0, seen: false };
+        const past = history[key] || [];
 
-        history[key].total += row.sales;
-        history[key].weeks++;
-        history[key].peak = Math.min(history[key].peak, +row.rank);
-
-        let move = '🆕';
-        if (key in lastMap) {
-          move = +row.rank < +lastMap[key] ? '⬆️' : +row.rank > +lastMap[key] ? '⬇️' : '➖';
-        } else if (history[key].seen) {
-          move = '🔁';
-        }
-
-        history[key].seen = true;
+        const totalWeeks = past.length + 1;
+        const totalSales = past.reduce((sum, r) => sum + r.sales, 0) + row.sales;
+        const bestPeak = Math.min(...past.map(r => parseInt(r.rank)).concat([parseInt(row.rank)]));
+        const movement = past.length === 0 ? "NEW" :
+                         parseInt(past[past.length - 1].rank) > parseInt(row.rank) ? "⬆️" :
+                         parseInt(past[past.length - 1].rank) < parseInt(row.rank) ? "⬇️" : "➡️";
 
         const tr = document.createElement("tr");
-        if (+row.rank === 1) tr.classList.add("top");
-        if (move === '🆕') tr.classList.add("new");
-
         tr.innerHTML = `
           <td>${row.rank}</td>
-          <td>${move}</td>
-          <td><a href="#" onclick='openModal(${JSON.stringify({...row, totalSales: history[key].total, weeks: history[key].weeks, peak: history[key].peak})})'>${row.title}</a></td>
+          <td>${movement}</td>
+          <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${row.title}</a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
-          <td>${row.sales}</td>
-          <td>${history[key].total}</td>
-          <td>${history[key].weeks}</td>
-          <td>${history[key].peak}</td>
+          <td>${row.sales.toFixed(2)}</td>
+          <td>${totalSales.toFixed(2)}</td>
+          <td>${totalWeeks}</td>
+          <td>${bestPeak}</td>
         `;
-        chartBody.appendChild(tr);
-      });
+        tbody.appendChild(tr);
+      }
+
+      document.getElementById("weekSelector").value = weekNumber;
     }
 
-    function openModal(song) {
-      document.getElementById('modalTitle').textContent = song.title;
-      document.getElementById('modalArtist').textContent = 'by ' + song.artist;
-      document.getElementById('modalSales').textContent = 'This Week: ' + song.sales;
-      document.getElementById('modalWeeks').textContent = 'Weeks: ' + song.weeks;
-      document.getElementById('modalPeak').textContent = 'Peak: ' + song.peak;
-      document.getElementById('modalCert').textContent = getCert(song.totalSales);
-      modal.style.display = 'flex';
+    function populateWeekSelector() {
+      const selector = document.getElementById("weekSelector");
+      const weeks = Object.keys(weekData).sort((a, b) => Number(a) - Number(b));
+      for (const w of weeks) {
+        const opt = document.createElement("option");
+        opt.value = w;
+        opt.textContent = `Week ${w}`;
+        selector.appendChild(opt);
+      }
+      selector.addEventListener("change", () => loadWeek(Number(selector.value)));
     }
 
-    function closeModal() {
-      modal.style.display = 'none';
-    }
-
-    function changeWeek(offset) {
-      const idx = weeks.indexOf(currentWeek);
-      if (idx + offset >= 0 && idx + offset < weeks.length) {
-        currentWeek = weeks[idx + offset];
-        weekSelect.value = currentWeek;
-        renderWeek();
+    function changeWeek(delta) {
+      const weeks = Object.keys(weekData).map(Number).sort((a, b) => a - b);
+      let newWeek = currentWeek + delta;
+      if (weeks.includes(newWeek)) {
+        loadWeek(newWeek);
       }
     }
 
-    updateDropdown();
-    renderWeek();
+    populateWeekSelector();
+    loadWeek(currentWeek);
   </script>
 </body>
 </html>
