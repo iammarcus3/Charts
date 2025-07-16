@@ -179,7 +179,8 @@
 
   <script>
     function normalize(text) {
-      return (text || "").toLowerCase()
+      if (typeof text !== "string") text = String(text || "");
+      return text.toLowerCase()
         .replace(/\(.*?\)/g, '')
         .replace(/\[.*?\]/g, '')
         .replace(/feat\..*/g, '')
@@ -368,5 +369,3 @@
   </script>
 </body>
 </html>
-
-
