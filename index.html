@@ -11,12 +11,10 @@
       margin: 0;
       padding: 2rem;
     }
-
     nav {
       text-align: center;
       margin-bottom: 1rem;
     }
-
     nav a {
       color: #00ffff;
       text-decoration: none;
@@ -24,12 +22,10 @@
       font-weight: bold;
       font-size: 1.1rem;
     }
-
     nav a:hover {
       color: #ffffff;
       text-decoration: underline;
     }
-
     h1 {
       font-size: 2.5rem;
       font-weight: bold;
@@ -39,7 +35,6 @@
       text-transform: uppercase;
       letter-spacing: 2px;
     }
-
     #weekSelector {
       padding: 0.5rem;
       font-size: 1rem;
@@ -48,7 +43,6 @@
       border: 1px solid #00ffff;
       margin-right: 1rem;
     }
-
     button {
       padding: 0.5rem 1rem;
       font-size: 1rem;
@@ -58,17 +52,14 @@
       cursor: pointer;
       margin-right: 0.5rem;
     }
-
     button:hover {
       background-color: #00cccc;
     }
-
     .tabs {
       display: flex;
       justify-content: center;
       margin-top: 2rem;
     }
-
     .tab {
       background-color: #1a1a1a;
       color: #00ffff;
@@ -77,63 +68,51 @@
       cursor: pointer;
       border: 1px solid #00ffff;
     }
-
     .tab.active {
       background-color: #00ffff;
       color: #0f0f0f;
       font-weight: bold;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
     }
-
     thead {
       background-color: #1a1a1a;
     }
-
     th, td {
       padding: 0.8rem;
       text-align: left;
       border-bottom: 1px solid #333;
       font-size: 0.95rem;
     }
-
     th {
       color: #00ffff;
       text-transform: uppercase;
       font-weight: 600;
     }
-
     tr:hover {
       background-color: #1f1f1f;
     }
-
     a {
       color: #ffffff;
       text-decoration: none;
       font-weight: 500;
     }
-
     a:hover {
       color: #00ffff;
       text-decoration: underline;
     }
-
     strong {
       color: #00ffff;
     }
-
     .move-up {
       color: #00ff00;
     }
-
     .move-down {
       color: #ff3333;
     }
-
     .move-stay {
       color: #cccccc;
     }
@@ -141,7 +120,6 @@
   <script src="weekdata.js"></script>
 </head>
 <body>
-  <!-- Navigation -->
   <nav>
     <a href="index.html">Home</a>
     <a href="streams.html">Streams</a>
@@ -227,15 +205,13 @@
 
       for (let i = 1; i < weekNumber; i++) {
         for (const row of weekData[i] || []) {
-          if (!row.album || row.album === "NaN") {
-            const key = getFuzzyKey(row.title, row.artist);
-            if (!history[key]) history[key] = [];
-            history[key].push({ ...row });
-          }
+          const key = getFuzzyKey(row.title, row.artist);
+          if (!history[key]) history[key] = [];
+          history[key].push({ ...row });
         }
       }
 
-      const currentTracks = entries.filter(row => !row.album || row.album === "NaN");
+      const currentTracks = entries.filter(row => row.title && row.artist); // ← UPDATED LINE
 
       for (const row of currentTracks) {
         const key = getFuzzyKey(row.title, row.artist);
@@ -371,4 +347,5 @@
   </script>
 </body>
 </html>
+
 
