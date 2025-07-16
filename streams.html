@@ -6,34 +6,48 @@
   <title>Stream Rankings</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
       margin: 0;
       padding: 20px;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 20px;
+      color: white;
+      font-size: 2.5em;
+      font-weight: bold;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
     }
 
     .tabs, .subtabs {
       display: flex;
       justify-content: center;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       gap: 10px;
     }
 
     .tabs button, .subtabs button {
       padding: 10px 20px;
       border: none;
-      background: #ddd;
+      background: #333;
+      color: white;
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: 25px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover, .subtabs button:hover {
+      background: #e60000;
     }
 
     .tabs button.active, .subtabs button.active {
-      background: #333;
+      background: #e60000;
       color: white;
     }
 
@@ -43,27 +57,54 @@
 
     .content.active {
       display: block;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
+      margin-top: 20px;
+      background-color: #111;
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     th, td {
-      padding: 10px;
+      padding: 14px 12px;
       text-align: left;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid #222;
     }
 
     th {
-      background: #eee;
+      background: #222;
+      color: #e0e0e0;
+      text-transform: uppercase;
+      font-size: 0.9em;
+    }
+
+    tr:hover {
+      background: #1c1c1c;
     }
 
     .rank {
       font-weight: bold;
-      width: 60px;
+      color: #e60000;
+    }
+
+    a {
+      color: #1db954;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: #fff;
     }
 
     @media (max-width: 600px) {
@@ -143,35 +184,47 @@
         });
     }
 
+    function linkify(name, artist, type) {
+      const encodedName = encodeURIComponent(name);
+      const encodedArtist = encodeURIComponent(artist);
+      if (type === "artist") {
+        return `<a href="artist.html?name=${encodedName}">${name}</a>`;
+      } else if (type === "track") {
+        return `<a href="track_detail.html?title=${encodedName}&artist=${encodedArtist}">${name}</a>`;
+      } else {
+        return `<a href="album_detail.html?album=${encodedName}&artist=${encodedArtist}">${name}</a>`;
+      }
+    }
+
     function populateAll() {
       const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
-      const latest7 = allWeeks.slice(0, 1);   // newest week
-      const latest30 = allWeeks.slice(0, 4);  // last 4 weeks
+      const latest7 = allWeeks.slice(0, 1);
+      const latest30 = allWeeks.slice(0, 4);
       const allTime = allWeeks;
 
-      const fill = (rows, id, isArtist = false) => {
+      const fill = (rows, id, isArtist = false, type = "") => {
         const tbody = document.getElementById(id);
         tbody.innerHTML = rows.map(row => `
           <tr>
             <td class="rank">${row.rank}</td>
-            <td>${row.name}</td>
-            ${isArtist ? '' : `<td>${row.artist}</td>`}
+            <td>${linkify(row.name, row.artist || row.name, type)}</td>
+            ${isArtist ? '' : `<td>${linkify(row.artist, row.artist, "artist")}</td>`}
             <td>${row.streams}</td>
           </tr>
         `).join("");
       };
 
-      fill(aggregate("artist", latest7), "artist7DaysTable", true);
-      fill(aggregate("tracks", latest7), "track7DaysTable");
-      fill(aggregate("album", latest7), "album7DaysTable");
+      fill(aggregate("artist", latest7), "artist7DaysTable", true, "artist");
+      fill(aggregate("tracks", latest7), "track7DaysTable", false, "track");
+      fill(aggregate("album", latest7), "album7DaysTable", false, "album");
 
-      fill(aggregate("artist", latest30), "artist30DaysTable", true);
-      fill(aggregate("tracks", latest30), "track30DaysTable");
-      fill(aggregate("album", latest30), "album30DaysTable");
+      fill(aggregate("artist", latest30), "artist30DaysTable", true, "artist");
+      fill(aggregate("tracks", latest30), "track30DaysTable", false, "track");
+      fill(aggregate("album", latest30), "album30DaysTable", false, "album");
 
-      fill(aggregate("artist", allTime), "artistAllTimeTable", true);
-      fill(aggregate("tracks", allTime), "trackAllTimeTable");
-      fill(aggregate("album", allTime), "albumAllTimeTable");
+      fill(aggregate("artist", allTime), "artistAllTimeTable", true, "artist");
+      fill(aggregate("tracks", allTime), "trackAllTimeTable", false, "track");
+      fill(aggregate("album", allTime), "albumAllTimeTable", false, "album");
     }
 
     function setupTabs() {
