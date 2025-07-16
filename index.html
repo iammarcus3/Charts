@@ -12,6 +12,24 @@
       padding: 2rem;
     }
 
+    nav {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    nav a {
+      color: #00ffff;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    nav a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
     h1 {
       font-size: 2.5rem;
       font-weight: bold;
@@ -123,6 +141,13 @@
   <script src="weekdata.js"></script>
 </head>
 <body>
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="streams.html">Streams</a>
+    <a href="records.html">Records</a>
+  </nav>
+
   <h1>Billboard Hot 100</h1>
 
   <div style="text-align: center;">
@@ -165,75 +190,72 @@
       return normalize(title) + normalize(artist);
     }
 
+    function getAlbumKey(album, artist) {
+      return normalize(album) + normalize(artist);
+    }
+
     let currentWeek = 1;
     let currentChart = 'tracks';
 
-    function switchChart(chartType) {
-      currentChart = chartType;
-      document.querySelectorAll(".tab").forEach(tab => {
-        tab.classList.remove("active");
-      });
-      document.querySelector(`.tab:nth-child(${chartType === 'tracks' ? 1 : 2})`).classList.add("active");
+    function switchChart(type) {
+      currentChart = type;
+      document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+      document.querySelector(`.tab:nth-child(${type === 'tracks' ? 1 : 2})`).classList.add("active");
       loadWeek(currentWeek);
     }
 
     function loadWeek(weekNumber) {
       currentWeek = weekNumber;
-      const allData = weekData[weekNumber] || [];
-
-      const chartData = allData.filter(row =>
-        currentChart === 'albums' ? row.album && row.album !== 'NaN' : !row.album || row.album === 'NaN'
-      );
-
+      const allEntries = weekData[weekNumber] || [];
       const tbody = document.querySelector("#chart tbody");
       tbody.innerHTML = "";
 
+      if (currentChart === "tracks") {
+        renderTrackChart(allEntries, weekNumber, tbody);
+      } else {
+        renderAlbumChart(allEntries, weekNumber, tbody);
+      }
+
+      document.getElementById("weekSelector").value = weekNumber;
+    }
+
+    function renderTrackChart(entries, weekNumber, tbody) {
       const history = {};
+
       for (let i = 1; i < weekNumber; i++) {
         for (const row of weekData[i] || []) {
-          const match = currentChart === 'albums' ? row.album && row.album !== 'NaN' : !row.album || row.album === 'NaN';
-          if (!match) continue;
-          const key = getFuzzyKey(row.title, row.artist);
-          if (!history[key]) history[key] = [];
-          history[key].push({ ...row, week: i });
+          if (!row.album || row.album === "NaN") {
+            const key = getFuzzyKey(row.title, row.artist);
+            if (!history[key]) history[key] = [];
+            history[key].push({ ...row });
+          }
         }
       }
 
-      for (const row of chartData) {
+      const currentTracks = entries.filter(row => !row.album || row.album === "NaN");
+
+      for (const row of currentTracks) {
         const key = getFuzzyKey(row.title, row.artist);
         const past = history[key] || [];
-
         const totalWeeks = past.length + 1;
         const totalSales = past.reduce((sum, r) => sum + r.sales, 0) + row.sales;
         const bestPeak = Math.min(...past.map(r => parseInt(r.rank)).concat([parseInt(row.rank)]));
 
-        let movementIcon = "➡️", movementText = "", moveClass = "move-stay";
+        let movementIcon = "➡️", movementText = "";
         if (past.length === 0) {
           movementIcon = "🆕";
         } else {
-          const lastRank = parseInt(past[past.length - 1].rank);
-          const currentRank = parseInt(row.rank);
-          const diff = lastRank - currentRank;
-          if (diff > 0) {
-            movementIcon = "⬆️";
-            movementText = ` <span class="move-up">+${diff}</span>`;
-            moveClass = "move-up";
-          } else if (diff < 0) {
-            movementIcon = "⬇️";
-            movementText = ` <span class="move-down">${diff}</span>`;
-            moveClass = "move-down";
-          }
+          const diff = parseInt(past[past.length - 1].rank) - parseInt(row.rank);
+          if (diff > 0) movementIcon = "⬆️", movementText = ` <span class="move-up">+${diff}</span>`;
+          else if (diff < 0) movementIcon = "⬇️", movementText = ` <span class="move-down">${diff}</span>`;
         }
-
-        const titleHTML = `<a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movementIcon === "🆕" ? `<strong>${row.title}</strong>` : row.title}</a>`;
-        const artistHTML = `<a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a>`;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.rank}</td>
           <td>${movementIcon}${movementText}</td>
-          <td>${titleHTML}</td>
-          <td>${artistHTML}</td>
+          <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movementIcon === "🆕" ? `<strong>${row.title}</strong>` : row.title}</a></td>
+          <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
           <td>${row.sales.toFixed(2)}</td>
           <td>${totalSales.toFixed(2)}</td>
           <td>${totalWeeks}</td>
@@ -241,8 +263,83 @@
         `;
         tbody.appendChild(tr);
       }
+    }
 
-      document.getElementById("weekSelector").value = weekNumber;
+    function renderAlbumChart(entries, weekNumber, tbody) {
+      const albumsMap = {};
+      for (const row of entries) {
+        if (!row.album || row.album === "NaN") continue;
+        const key = getAlbumKey(row.album, row.artist);
+        if (!albumsMap[key]) {
+          albumsMap[key] = {
+            album: row.album,
+            artist: row.artist,
+            sales: 0,
+            tracks: [],
+            ranks: [],
+          };
+        }
+        albumsMap[key].sales += row.sales;
+        albumsMap[key].tracks.push(row.title);
+        albumsMap[key].ranks.push(parseInt(row.rank));
+      }
+
+      const currentAlbums = Object.values(albumsMap);
+      const pastAlbums = {};
+
+      for (let i = 1; i < weekNumber; i++) {
+        for (const row of weekData[i] || []) {
+          if (!row.album || row.album === "NaN") continue;
+          const key = getAlbumKey(row.album, row.artist);
+          if (!pastAlbums[key]) pastAlbums[key] = [];
+          pastAlbums[key].push(row);
+        }
+      }
+
+      const enrichedAlbums = currentAlbums.map(album => {
+        const key = getAlbumKey(album.album, album.artist);
+        const past = pastAlbums[key] || [];
+        const totalWeeks = past.length > 0 ? new Set(past.map(r => r.week)).size + 1 : 1;
+        const pastRanks = past.map(r => parseInt(r.rank));
+        const currentBestRank = Math.min(...album.ranks);
+        const bestPeak = Math.min(...pastRanks.concat(album.ranks));
+        const lastRank = past.length > 0 ? parseInt(past[past.length - 1].rank) : null;
+        const diff = lastRank !== null ? lastRank - currentBestRank : null;
+
+        let movementIcon = "🆕", movementText = "";
+        if (diff !== null) {
+          if (diff > 0) movementIcon = "⬆️", movementText = ` <span class="move-up">+${diff}</span>`;
+          else if (diff < 0) movementIcon = "⬇️", movementText = ` <span class="move-down">${diff}</span>`;
+          else movementIcon = "➡️";
+        }
+
+        return {
+          ...album,
+          rank: currentBestRank,
+          totalWeeks,
+          totalSales: album.sales + past.reduce((s, r) => s + r.sales, 0),
+          bestPeak,
+          movementIcon,
+          movementText
+        };
+      });
+
+      enrichedAlbums.sort((a, b) => a.rank - b.rank);
+
+      for (const album of enrichedAlbums) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${album.rank}</td>
+          <td>${album.movementIcon}${album.movementText}</td>
+          <td><a href="album.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
+          <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
+          <td>${album.sales.toFixed(2)}</td>
+          <td>${album.totalSales.toFixed(2)}</td>
+          <td>${album.totalWeeks}</td>
+          <td>${album.bestPeak}</td>
+        `;
+        tbody.appendChild(tr);
+      }
     }
 
     function populateWeekSelector() {
@@ -271,4 +368,5 @@
   </script>
 </body>
 </html>
+
 
