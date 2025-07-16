@@ -82,6 +82,10 @@
       color: #00ffff;
       text-decoration: underline;
     }
+
+    strong {
+      color: #00ffff;
+    }
   </style>
   <script src="weekdata.js"></script>
 </head>
@@ -132,7 +136,6 @@
       const tbody = document.querySelector("#chart tbody");
       tbody.innerHTML = "";
 
-      // Build history from previous weeks
       const history = {};
       for (let i = 1; i < weekNumber; i++) {
         for (const row of weekData[i] || []) {
@@ -153,12 +156,15 @@
                          parseInt(past[past.length - 1].rank) > parseInt(row.rank) ? "⬆️" :
                          parseInt(past[past.length - 1].rank) < parseInt(row.rank) ? "⬇️" : "➡️";
 
+        const titleHTML = `<a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movement === "NEW" ? `<strong>${row.title}</strong>` : row.title}</a>`;
+        const artistHTML = `<a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a>`;
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.rank}</td>
           <td>${movement}</td>
-          <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${row.title}</a></td>
-          <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
+          <td>${titleHTML}</td>
+          <td>${artistHTML}</td>
           <td>${row.sales.toFixed(2)}</td>
           <td>${totalSales.toFixed(2)}</td>
           <td>${totalWeeks}</td>
@@ -172,7 +178,7 @@
 
     function populateWeekSelector() {
       const selector = document.getElementById("weekSelector");
-      const weeks = Object.keys(weekData).sort((a, b) => Number(a) - Number(b));
+      const weeks = Object.keys(weekData).map(Number).sort((a, b) => b - a); // Latest first
       for (const w of weeks) {
         const opt = document.createElement("option");
         opt.value = w;
@@ -180,18 +186,19 @@
         selector.appendChild(opt);
       }
       selector.addEventListener("change", () => loadWeek(Number(selector.value)));
+      loadWeek(weeks[0]); // Load latest on page open
     }
 
     function changeWeek(delta) {
-      const weeks = Object.keys(weekData).map(Number).sort((a, b) => a - b);
-      let newWeek = currentWeek + delta;
-      if (weeks.includes(newWeek)) {
-        loadWeek(newWeek);
+      const weeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
+      const index = weeks.indexOf(currentWeek);
+      const newIndex = index + delta;
+      if (newIndex >= 0 && newIndex < weeks.length) {
+        loadWeek(weeks[newIndex]);
       }
     }
 
     populateWeekSelector();
-    loadWeek(currentWeek);
   </script>
 </body>
 </html>
