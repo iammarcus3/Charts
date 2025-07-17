@@ -205,8 +205,9 @@
       const artistList = Object.entries(artistMap)
         .map(([norm, a]) => {
           const totalStreams = a.rawSales * 0.927124 * 1_000_000;
-          const totalSales = a.rawSales * 1000;
-          const months = a.weeks.size / 4.33;
+          const totalSales = a.rawSales * 11146.3457895
+          const months = a.weeks.size / 4.33; 
+          const weeks = a.weeks.size / 1;
           const displayName = artistNameMap[norm].split(' ')
             .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
             .join(' ');
@@ -227,7 +228,8 @@
             name: displayName,
             totalStreams,
             totalSales,
-            monthlyStreams: totalStreams / (months || 1),
+            monthlyStreams: totalStreams / (months || 1), 
+            weeklyStreams:  totalStreams / (weeks || 1),
             num1Songs,
             top10Songs,
             num1Albums,
