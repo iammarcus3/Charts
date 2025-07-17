@@ -204,7 +204,7 @@
 
       const artistList = Object.entries(artistMap)
         .map(([norm, a]) => {
-          const totalStreams = a.rawSales * 1.32762 * 1_000_000;
+          const totalStreams = a.rawSales * 0.927124 * 1_000_000;
           const totalSales = a.rawSales * 1000;
           const months = a.weeks.size / 4.33;
           const displayName = artistNameMap[norm].split(' ')
