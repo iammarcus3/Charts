@@ -131,7 +131,7 @@
     const songsTable = document.querySelector("#songsTable tbody");
     Object.values(songsMap).sort((a, b) => b.sales - a.sales).forEach(song => {
       const cert = getSongCertImages(song.sales);
-      const streams = (song.sales / 1000) * 1.32762 * 1_000_000;
+      const streams = (song.sales / 1000) * 0.927124 * 1_000_000;
       const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
       songsTable.innerHTML += `
         <tr>
