@@ -94,7 +94,7 @@
       : "";
 
     function getAlbumCertIcons(sales) {
-      const scaled = sales * 1000;
+      const scaled = sales * 1447,89;
 
       if (scaled >= 10_000_000) {
         return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
@@ -110,7 +110,7 @@
     }
 
     function getTrackCertIcon(sales) {
-      const scaled = sales * 1000;
+      const scaled = sales * 1146.3457895;
       if (scaled >= 1_000_000) return `<img src="diamond.png" class="cert-icon">`;
       if (scaled >= 100_000) return Array(Math.floor(scaled / 100_000)).fill(`<img src="platinum.png" class="cert-icon">`).join('');
       if (scaled >= 50_000) return `<img src="gold.png" class="cert-icon">`;
