@@ -147,7 +147,7 @@
         .filter(s => s.rawSales > 0)
         .map((s, i) => ({
           ...s,
-          totalSales: s.rawSales * 1000,
+          totalSales: s.rawSales * 1146.3457895,
           totalStreams: s.rawSales * 0.927124 * 1_000_000,
           cert: getSongCertIcons(s.rawSales),
           rank: i + 1
