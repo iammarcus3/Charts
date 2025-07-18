@@ -97,7 +97,7 @@
 
 <script src="weekdata.js"></script>
 <script>
-  // Multiplier function based on weeks on chart
+  // Multiplier based on weeks on chart
   function getMultiplier(weeks) {
     if (weeks <= 4) return 2890;
     if (weeks <= 10) return 8450;
@@ -106,6 +106,21 @@
     if (weeks <= 30) return 4540;
     if (weeks <= 40) return 3090;
     return 1010;
+  }
+
+  // Count weeks a song has charted up to a certain week
+  function getWeeksCharted(title, artist, upToWeek) {
+    let count = 0;
+    for (let w = 1; w <= upToWeek; w++) {
+      if (!weekData[w]) continue;
+      const songsArray = Array.isArray(weekData[w]) ? weekData[w] : Object.values(weekData[w]);
+      const matched = songsArray.find(s =>
+        s.title.toLowerCase() === title.toLowerCase() &&
+        s.artist.toLowerCase() === artist.toLowerCase()
+      );
+      if (matched) count++;
+    }
+    return count;
   }
 
   // Create HTML snippet for a song cell
@@ -127,28 +142,45 @@
     const tbody = document.getElementById('tableBody');
     tbody.innerHTML = '';
 
+    // Precompute top radio song per week using the same logic as in your radio chart page (A)
+    const topRadioSongsByWeek = {};
     for (const week of weeks) {
       const data = weekData[week];
+      if (!data) continue;
+      const songsArray = Array.isArray(data) ? data : Object.values(data);
 
-      // Find Hot 100 #1 song by rank === 1
-      let hot100 = null;
-      for (const s of Object.values(data)) {
-        if (Number(s.rank) === 1) {
-          hot100 = s;
-          break;
+      let topRadioSong = null;
+      let topRadioValue = -Infinity;
+      for (const s of songsArray) {
+        const lifetimeWeeks = getWeeksCharted(s.title, s.artist, week);
+        const radioSales = (s.sales || 0) * getMultiplier(lifetimeWeeks);
+        if (radioSales > topRadioValue) {
+          topRadioValue = radioSales;
+          topRadioSong = { ...s, radioSales };
         }
       }
+      if (topRadioSong) {
+        topRadioSongsByWeek[week] = topRadioSong;
+      }
+    }
+
+    for (const week of weeks) {
+      const data = weekData[week];
+      if (!data) continue;
+      const songsArray = Array.isArray(data) ? data : Object.values(data);
+
+      // Hot 100 #1 song (rank === 1)
+      let hot100 = songsArray.find(s => Number(s.rank) === 1);
       if (!hot100) {
-        hot100 = Object.values(data).reduce((best, s) => {
+        hot100 = songsArray.reduce((best, s) => {
           if (!best) return s;
-          if ((Number(s.rank) || 999) < (Number(best.rank) || 999)) return s;
-          return best;
+          return (Number(s.rank) || 999) < (Number(best.rank) || 999) ? s : best;
         }, null);
       }
 
-      // Streamed Top: based on current week sales * 0.927124
+      // Streamed Top (sales * 0.927124)
       let streamedTop = null;
-      for (const s of Object.values(data)) {
+      for (const s of songsArray) {
         const streams = (s.sales || 0) * 0.927124;
         if (!streamedTop || streams > streamedTop.plays) {
           streamedTop = {
@@ -161,14 +193,8 @@
         }
       }
 
-      // Radio Top: calculate radio sales = sales * multiplier(weeks on chart)
-      let radioTop = null;
-      for (const s of Object.values(data)) {
-        const radioSales = (s.sales || 0) * getMultiplier(s.weeks || 0);
-        if (!radioTop || radioSales > radioTop.radioSales) {
-          radioTop = { ...s, radioSales };
-        }
-      }
+      // Radio Top: use precomputed from above
+      const radioTop = topRadioSongsByWeek[week] || null;
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -176,13 +202,15 @@
         <td>${createSongHTML(hot100, 'Sales')}</td>
         <td>${createSongHTML(streamedTop, 'Plays')}</td>
         <td>
-          <div>
-            <div class="song-title" title="Click for details" onclick="alert('Song: ${radioTop.title}\\nArtist: ${radioTop.artist}')">${radioTop.title}</div>
-            <div class="artist-name" title="Click for artist details" onclick="alert('Artist: ${radioTop.artist}')">${radioTop.artist}</div>
-            <div class="details">
-              Radio Sales: ${Math.round(radioTop.radioSales).toLocaleString()}
-            </div>
-          </div>
+          ${radioTop
+            ? `<div>
+                <div class="song-title" title="Click for details" onclick="alert('Song: ${radioTop.title}\\nArtist: ${radioTop.artist}')">${radioTop.title}</div>
+                <div class="artist-name" title="Click for artist details" onclick="alert('Artist: ${radioTop.artist}')">${radioTop.artist}</div>
+                <div class="details">
+                  Radio Sales: ${Math.round(radioTop.radioSales).toLocaleString()}
+                </div>
+              </div>`
+            : 'N/A'}
         </td>
       `;
       tbody.appendChild(tr);
