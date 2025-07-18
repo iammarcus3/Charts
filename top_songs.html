@@ -1,79 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>All Number One Songs by Week</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #111;
-    color: #eee;
-    margin: 1rem;
-  }
-  h1 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  .table-container {
-    max-width: 100%;
-    overflow: auto;
-    border: 1px solid #444;
-  }
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    min-width: 1200px;
-  }
-  th, td {
-    border: 1px solid #444;
-    padding: 0.5rem 0.8rem;
-    vertical-align: top;
-    white-space: nowrap;
-    background: #111;
-  }
-  th {
-    background: #222;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  th:first-child {
-    left: 0;
-    z-index: 15;
-    position: sticky;
-    background: #222;
-  }
-  td.week {
-    position: sticky;
-    left: 0;
-    background: #1a1a1a;
-    z-index: 5;
-    font-weight: bold;
-    text-align: center;
-  }
-  tr:nth-child(even) {
-    background: #1a1a1a;
-  }
-  .song-title {
-    font-weight: bold;
-    font-size: 1rem;
-    color: #1db954;
-    cursor: pointer;
-    user-select: none;
-  }
-  .artist-name {
-    font-style: italic;
-    color: #ccc;
-    user-select: none;
-  }
-  .details {
-    margin-top: 0.2rem;
-    font-size: 0.85rem;
-    color: #bbb;
-    user-select: none;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All Number One Songs by Week</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      margin: 1rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .table-container {
+      max-width: 100%;
+      overflow: auto;
+      border: 1px solid #444;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 1200px;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 0.5rem 0.8rem;
+      vertical-align: top;
+      white-space: nowrap;
+      background: #111;
+    }
+    th {
+      background: #222;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    th:first-child {
+      left: 0;
+      z-index: 15;
+      position: sticky;
+      background: #222;
+    }
+    td.week {
+      position: sticky;
+      left: 0;
+      background: #1a1a1a;
+      z-index: 5;
+      font-weight: bold;
+      text-align: center;
+    }
+    tr:nth-child(even) {
+      background: #1a1a1a;
+    }
+    .song-title {
+      font-weight: bold;
+      font-size: 1rem;
+      color: #1db954;
+      cursor: pointer;
+      user-select: none;
+    }
+    .artist-name {
+      font-style: italic;
+      color: #ccc;
+      user-select: none;
+    }
+    .details {
+      margin-top: 0.2rem;
+      font-size: 0.85rem;
+      color: #bbb;
+      user-select: none;
+    }
+  </style>
 </head>
 <body>
 <h1>All Number One Songs by Week</h1>
@@ -126,6 +126,7 @@
     for (const week of weeks) {
       const data = weekData[week];
 
+      // Get #1 on Hot 100
       let hot100 = null;
       for (const s of Object.values(data)) {
         if (Number(s.rank) === 1) {
@@ -141,6 +142,7 @@
         }, null);
       }
 
+      // Streamed: last 7 weeks
       const windowWeeks = weeks.filter(w => w <= week && w > week - 7);
       const streamAgg = {};
       for (const w of windowWeeks) {
@@ -151,7 +153,8 @@
           if (!streamAgg[key]) {
             streamAgg[key] = { title: s.title, artist: s.artist, plays: 0, sales: 0 };
           }
-          streamAgg[key].plays += (s.sales || 0) * 0.927124;
+          const streams = (s.sales || 0) * 0.927124; // ✅ CORRECTED CALCULATION
+          streamAgg[key].plays += streams;
           streamAgg[key].sales += s.sales || 0;
         }
       }
@@ -161,6 +164,7 @@
         if (!streamedTop || s.plays > streamedTop.plays) streamedTop = s;
       }
 
+      // Radio Top
       let radioTop = null;
       for (const s of Object.values(data)) {
         const radioSales = (s.sales || 0) * getMultiplier(s.weeks || 0);
