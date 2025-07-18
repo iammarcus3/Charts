@@ -4,158 +4,145 @@
   <meta charset="UTF-8" />
   <title>Top Radio Songs</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
-      padding: 2rem;
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-    select, button {
-      margin: 0.5rem;
-      padding: 0.4rem 0.7rem;
-      font-size: 1rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      padding: 0.6rem;
-      border-bottom: 1px solid #444;
-      text-align: left;
-    }
-    th {
-      background: #222;
-    }
-    .up { color: #0f0; }
-    .down { color: #f33; }
-    .same { color: #999; }
+    body { font-family: Arial, sans-serif; background: #111; color: #fff; padding: 2rem; }
+    h1 { font-size: 2rem; margin-bottom: 1rem; }
+    table { width: 100%; border-collapse: collapse; background: #222; }
+    th, td { padding: 0.6rem; border-bottom: 1px solid #333; text-align: left; }
+    th { background: #333; }
+    tr:hover { background: #2a2a2a; }
+    .move-up { color: lime; }
+    .move-down { color: red; }
+    .no-change { color: gray; }
+    select, button { margin-right: 1rem; padding: 0.5rem; background: #222; color: #fff; border: 1px solid #555; }
   </style>
 </head>
 <body>
-  <h1>Top 50 Radio Songs (Last 6 Months)</h1>
-  <div>
+  <h1>Top 50 Radio Songs (Audience-Based)</h1>
+  <div style="margin-bottom: 1rem;">
     <button onclick="changeWeek(-1)">⬅️</button>
-    <select id="weekSelector" onchange="renderTopRadioSongs()"></select>
+    <select id="weekSelector" onchange="renderWeek(this.value)"></select>
     <button onclick="changeWeek(1)">➡️</button>
   </div>
   <table>
     <thead>
       <tr>
         <th>Rank</th>
-        <th>Movement</th>
+        <th>Move</th>
         <th>Title</th>
         <th>Artist</th>
         <th>Sales</th>
-        <th>Audience Points</th>
-        <th>Total Weeks</th>
+        <th>Audience</th>
+        <th>Points</th>
       </tr>
     </thead>
-    <tbody id="radioTable"></tbody>
+    <tbody id="chartBody"></tbody>
   </table>
 
   <script src="weekdata.js"></script>
   <script>
-    const table = document.getElementById("radioTable");
-    const selector = document.getElementById("weekSelector");
-    let weeks = Object.keys(weekData).map(Number).filter(w => w >= 357); // last 6 months (if week 1 = 2018)
-    weeks.sort((a, b) => b - a);
-    let currentIndex = 0;
+    const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => a - b);
+    let currentWeek = allWeeks[0];
 
-    // Build selector
-    weeks.forEach(w => {
-      const option = document.createElement("option");
-      option.value = w;
-      option.textContent = `Week ${w}`;
-      selector.appendChild(option);
+    // Fill dropdown
+    const weekSelector = document.getElementById("weekSelector");
+    allWeeks.forEach(w => {
+      const opt = document.createElement("option");
+      opt.value = w;
+      opt.textContent = `Week ${w}`;
+      weekSelector.appendChild(opt);
     });
 
-    function getTotalWeeksCharted(title, artist, currentWeek) {
+    function changeWeek(dir) {
+      const idx = allWeeks.indexOf(currentWeek);
+      if (idx + dir >= 0 && idx + dir < allWeeks.length) {
+        currentWeek = allWeeks[idx + dir];
+        weekSelector.value = currentWeek;
+        renderWeek(currentWeek);
+      }
+    }
+
+    function getWeeksCharted(title, artist, upToWeek) {
       let count = 0;
-      for (let w = 1; w <= currentWeek; w++) {
+      for (let w = 1; w <= upToWeek; w++) {
         if (!weekData[w]) continue;
-        if (weekData[w].some(song => song.title === title && song.artist === artist)) {
-          count++;
-        }
+        const matched = weekData[w].find(s =>
+          s.title.toLowerCase() === title.toLowerCase() &&
+          s.artist.toLowerCase() === artist.toLowerCase()
+        );
+        if (matched) count++;
       }
       return count;
     }
 
-    function getAudiencePoints(sales, weeks) {
-      if (weeks <= 4) return sales * 2890;
-      if (weeks <= 10) return sales * 5450;
-      if (weeks <= 16) return sales * 11040;
-      if (weeks <= 20) return sales * 7690;
-      if (weeks <= 30) return sales * 4540;
-      if (weeks <= 40) return sales * 3090;
-      return sales * 1010;
+    function getMovement(song, thisWeek, lastWeekData) {
+      const prev = lastWeekData.find(s =>
+        s.title.toLowerCase() === song.title.toLowerCase() &&
+        s.artist.toLowerCase() === song.artist.toLowerCase()
+      );
+      if (!prev) return "NEW";
+      const prevRank = prev.rank;
+      if (prevRank > song.rank) return "⬆️";
+      if (prevRank < song.rank) return "⬇️";
+      return "—";
     }
 
-    let previousRanks = {};
+    function getMultiplier(weeks) {
+      if (weeks <= 4) return 2890;
+      if (weeks <= 10) return 8450;
+      if (weeks <= 16) return 11040;
+      if (weeks <= 20) return 8690;
+      if (weeks <= 30) return 4540;
+      if (weeks <= 40) return 3090;
+      return 1010;
+    }
 
-    function renderTopRadioSongs() {
-      const week = parseInt(selector.value);
-      const songs = weekData[week] || [];
-      const pointsMap = [];
+    function renderWeek(weekNum) {
+      const week = parseInt(weekNum);
+      currentWeek = week;
+      const currentSongs = weekData[week] || [];
+      const lastWeekSongs = weekData[week - 1] || [];
 
-      for (const song of songs) {
-        const { title, artist, sales } = song;
-        const totalWeeks = getTotalWeeksCharted(title, artist, week);
-        const audiencePoints = getAudiencePoints(sales, totalWeeks);
-        pointsMap.push({
-          title,
-          artist,
-          sales,
-          totalWeeks,
-          audiencePoints,
-        });
-      }
+      const enhanced = currentSongs.map(song => {
+        const lifetimeWeeks = getWeeksCharted(song.title, song.artist, week);
+        const multiplier = getMultiplier(lifetimeWeeks);
+        const audience = song.sales * multiplier;
+        const points = song.sales + audience;
+        return {
+          ...song,
+          audience,
+          points,
+          move: getMovement(song, week, lastWeekSongs)
+        };
+      });
 
-      pointsMap.sort((a, b) => b.audiencePoints - a.audiencePoints);
-      const top50 = pointsMap.slice(0, 50);
+      enhanced.sort((a, b) => b.points - a.points);
+      const top50 = enhanced.slice(0, 50);
 
-      table.innerHTML = "";
-      top50.forEach((song, index) => {
-        const prev = previousRanks[`${song.title}|||${song.artist}`];
-        const currentRank = index + 1;
-        let move = "➖", cls = "same";
-        if (prev !== undefined) {
-          if (prev > currentRank) { move = "▲"; cls = "up"; }
-          else if (prev < currentRank) { move = "🔻"; cls = "down"; }
-        }
-        previousRanks[`${song.title}|||${song.artist}`] = currentRank;
+      const body = document.getElementById("chartBody");
+      body.innerHTML = "";
+      top50.forEach((song, i) => {
+        const tr = document.createElement("tr");
 
-        const row = `
-          <tr>
-            <td>${currentRank}</td>
-            <td class="${cls}">${move}</td>
-            <td>${song.title}</td>
-            <td>${song.artist}</td>
-            <td>${song.sales.toLocaleString()}</td>
-            <td>${Math.round(song.audiencePoints).toLocaleString()}</td>
-            <td>${song.totalWeeks}</td>
-          </tr>`;
-        table.innerHTML += row;
+        const moveClass = song.move === "⬆️" ? "move-up" :
+                          song.move === "⬇️" ? "move-down" :
+                          song.move === "—" ? "no-change" : "";
+
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td class="${moveClass}">${song.move}</td>
+          <td>${song.title}</td>
+          <td>${song.artist}</td>
+          <td>${song.sales.toLocaleString()}</td>
+          <td>${Math.round(song.audience).toLocaleString()}</td>
+          <td>${Math.round(song.points / 1000).toLocaleString()}</td>
+        `;
+        body.appendChild(tr);
       });
     }
 
-    function changeWeek(offset) {
-      currentIndex += offset;
-      if (currentIndex < 0) currentIndex = 0;
-      if (currentIndex >= weeks.length) currentIndex = weeks.length - 1;
-      selector.value = weeks[currentIndex];
-      renderTopRadioSongs();
-    }
-
-    window.onload = () => {
-      selector.value = weeks[currentIndex];
-      renderTopRadioSongs();
-    };
+    // Initial render
+    weekSelector.value = currentWeek;
+    renderWeek(currentWeek);
   </script>
 </body>
 </html>
