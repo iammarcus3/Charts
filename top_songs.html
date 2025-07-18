@@ -15,22 +15,36 @@
     text-align: center;
     margin-bottom: 1.5rem;
   }
+  .table-container {
+    max-width: 1200px;
+    margin: 0 auto 3rem;
+    overflow: auto;
+    border: 1px solid #444;
+  }
   table {
     border-collapse: collapse;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto 3rem;
+    min-width: 800px;
   }
   th, td {
     border: 1px solid #444;
     padding: 0.5rem 0.8rem;
     vertical-align: top;
+    white-space: nowrap;
   }
   th {
     background: #222;
     position: sticky;
     top: 0;
     z-index: 2;
+  }
+  td.week, th:first-child {
+    position: sticky;
+    left: 0;
+    background: #222;
+    z-index: 1;
+    text-align: center;
+    font-weight: bold;
   }
   tr:nth-child(even) {
     background: #1a1a1a;
@@ -59,29 +73,25 @@
     color: #bbb;
     user-select: none;
   }
-  td.week {
-    font-weight: bold;
-    width: 50px;
-    text-align: center;
-    user-select: none;
-  }
 </style>
 </head>
 <body>
 <h1>All Number One Songs by Week</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Week</th>
-      <th>Hot 100 #1 (Sales)</th>
-      <th>#1 Streamed (Last 7 Weeks)</th>
-      <th>#1 Radio (Radio Sales)</th>
-    </tr>
-  </thead>
-  <tbody id="tableBody">
-    <!-- Filled by JS -->
-  </tbody>
-</table>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Week</th>
+        <th>Hot 100 #1 (Sales)</th>
+        <th>#1 Streamed (Last 7 Weeks)</th>
+        <th>#1 Radio (Radio Sales)</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <!-- Filled by JS -->
+    </tbody>
+  </table>
+</div>
 
 <script src="weekdata.js"></script>
 <script>
@@ -119,7 +129,6 @@
   }
 
   (function main() {
-    // DESCENDING sort, latest week first
     const weeks = Object.keys(weekData).map(Number).sort((a,b) => b - a);
     const tbody = document.getElementById('tableBody');
     tbody.innerHTML = '';
@@ -127,7 +136,6 @@
     for (const week of weeks) {
       const data = weekData[week];
 
-      // Hot 100 #1 with fallback - compare rank as number, rank stored as string sometimes
       let hot100 = null;
       for (const s of Object.values(data)) {
         if (Number(s.rank) === 1) {
@@ -143,7 +151,6 @@
         }, null);
       }
 
-      // #1 streamed over last 7 weeks (descending order, so window is week..week-6)
       const windowWeeks = weeks.filter(w => w <= week && w > week - 7);
       const streamAgg = {};
       for (const w of windowWeeks) {
@@ -164,7 +171,6 @@
         if (!streamedTop || s.plays > streamedTop.plays) streamedTop = s;
       }
 
-      // #1 radio song
       let radioTop = null;
       for (const s of Object.values(data)) {
         const radioSales = (s.sales || 0) * getMultiplier(s.weeks || 0);
