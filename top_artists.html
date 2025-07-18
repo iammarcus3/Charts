@@ -1,0 +1,120 @@
+<script>
+  // Multiplier tiers based on weeks charted
+  function getMultiplier(weeks) {
+    if (weeks >= 1 && weeks <= 4) return 6890;
+    if (weeks >= 5 && weeks <= 10) return 9450;
+    if (weeks >= 11 && weeks <= 16) return 11040;
+    if (weeks >= 17 && weeks <= 20) return 7690;
+    if (weeks >= 21 && weeks <= 30) return 4540;
+    if (weeks >= 31 && weeks <= 40) return 3090;
+    if (weeks > 40) return 1010;
+    return 0;
+  }
+
+  function formatNumber(num) {
+    if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + "M";
+    if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
+    return num.toString();
+  }
+
+  function aggregateLast6Months() {
+    // Get all week keys and sort ascending (oldest to newest)
+    const allWeeks = Object.keys(weekData).map(Number).sort((a,b) => a-b);
+
+    // Approximate 6 months = last 26 weeks (adjust if you have exact date info)
+    const last26Weeks = allWeeks.slice(-26);
+
+    // Aggregate data by song key "title|||artist"
+    const songMap = {};
+
+    last26Weeks.forEach(weekNum => {
+      const entries = weekData[weekNum];
+      if (!entries) return;
+
+      entries.forEach(entry => {
+        const title = entry.title || "Unknown";
+        const artist = entry.artist || "Unknown";
+        const sales = parseFloat(entry.sales) || 0;
+        const key = `${title}|||${artist}`;
+
+        if (!songMap[key]) {
+          songMap[key] = {
+            title,
+            artist,
+            totalSales: 0,
+            weeksChartedSet: new Set()
+          };
+        }
+
+        songMap[key].totalSales += sales;
+        songMap[key].weeksChartedSet.add(weekNum);
+      });
+    });
+
+    // Convert set to count weeks charted
+    Object.values(songMap).forEach(song => {
+      song.weeksCharted = song.weeksChartedSet.size;
+      delete song.weeksChartedSet;
+
+      // Calculate audience points based on total sales and weeks charted
+      const multiplier = getMultiplier(song.weeksCharted);
+      song.audiencePoints = song.totalSales * multiplier;
+    });
+
+    // Sort songs descending by audiencePoints
+    const sortedSongs = Object.values(songMap)
+      .sort((a, b) => b.audiencePoints - a.audiencePoints)
+      .slice(0, 50);
+
+    return sortedSongs;
+  }
+
+  function renderTopRadioSongs() {
+    const songs = aggregateLast6Months();
+
+    // Create table HTML string
+    let html = `
+      <table style="width:100%; border-collapse: collapse; margin-top: 20px; color: #fff;">
+        <thead>
+          <tr style="background:#222; text-transform: uppercase;">
+            <th style="padding: 10px; border-bottom: 1px solid #444;">Rank</th>
+            <th style="padding: 10px; border-bottom: 1px solid #444;">Title</th>
+            <th style="padding: 10px; border-bottom: 1px solid #444;">Artist</th>
+            <th style="padding: 10px; border-bottom: 1px solid #444;">Weeks Charted</th>
+            <th style="padding: 10px; border-bottom: 1px solid #444;">Total Sales</th>
+            <th style="padding: 10px; border-bottom: 1px solid #444;">Audience Points</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    songs.forEach((song, i) => {
+      html += `
+        <tr style="border-bottom: 1px solid #333;">
+          <td style="padding: 8px; font-weight: bold; color: #e60000;">${i + 1}</td>
+          <td style="padding: 8px;">${song.title}</td>
+          <td style="padding: 8px;">${song.artist}</td>
+          <td style="padding: 8px; text-align: center;">${song.weeksCharted}</td>
+          <td style="padding: 8px; text-align: right;">${formatNumber(song.totalSales)}</td>
+          <td style="padding: 8px; text-align: right; color: #1db954; font-weight: bold;">${formatNumber(song.audiencePoints)}</td>
+        </tr>
+      `;
+    });
+
+    html += `</tbody></table>`;
+
+    // Append or inject into a container on your page:
+    // Make sure your top_artists.html has a container div with id "radioTop50"
+    const container = document.getElementById("radioTop50");
+    if (container) {
+      container.innerHTML = html;
+    } else {
+      // Or just append to body if no container
+      document.body.insertAdjacentHTML('beforeend', html);
+    }
+  }
+
+  window.onload = function() {
+    renderTopRadioSongs();
+  };
+</script>
