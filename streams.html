@@ -107,6 +107,12 @@
       color: #fff;
     }
 
+    small {
+      font-size: 0.85em;
+      color: gray;
+      padding-left: 4px;
+    }
+
     @media (max-width: 600px) {
       .tabs, .subtabs {
         flex-direction: column;
@@ -129,7 +135,6 @@
     <button data-subtab="album">Album</button>
   </div>
 
-  <!-- Content Sections -->
   <div id="content-7days-artist" class="content active"><table><thead><tr><th>Rank</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="artist7DaysTable"></tbody></table></div>
   <div id="content-7days-tracks" class="content"><table><thead><tr><th>Rank</th><th>Title</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="track7DaysTable"></tbody></table></div>
   <div id="content-7days-album" class="content"><table><thead><tr><th>Rank</th><th>Album</th><th>Artist</th><th>Streams</th></tr></thead><tbody id="album7DaysTable"></tbody></table></div>
@@ -152,9 +157,41 @@
       return billions >= 1 ? `${billions.toFixed(2)}B` : `${millions.toFixed(2)}M`;
     }
 
-    function aggregate(type, weeks) {
-      const result = {};
+    function formatChange(current, previous) {
+      if (previous === 0 || previous === undefined) return '➖ 0.0%';
+      const diff = ((current - previous) / previous) * 100;
+      const symbol = diff > 0 ? '🔺' : diff < 0 ? '🔻' : '➖';
+      return `${symbol} ${Math.abs(diff).toFixed(1)}%`;
+    }
+
+    function calculateChangeMap(type, weeks) {
+      const map = {};
       weeks.forEach(week => {
+        (weekData[week] || []).forEach(entry => {
+          const sales = parseFloat(entry.sales) || 0;
+          const streams = sales * streamMultiplier;
+
+          let key = "";
+          if (type === "artist") {
+            key = entry.artist || "Unknown";
+          } else if (type === "tracks") {
+            key = `${entry.title || "Unknown"}|||${entry.artist || "Unknown"}`;
+          } else {
+            key = `${entry.album || "Unknown"}|||${entry.artist || "Unknown"}`;
+          }
+
+          if (!key || key.toLowerCase().includes("undefined")) return;
+          map[key] = (map[key] || 0) + streams;
+        });
+      });
+      return map;
+    }
+
+    function aggregate(type, currentWeeks, previousWeeks) {
+      const previousMap = previousWeeks ? calculateChangeMap(type, previousWeeks) : {};
+
+      const result = {};
+      currentWeeks.forEach(week => {
         (weekData[week] || []).forEach(entry => {
           const sales = parseFloat(entry.sales) || 0;
           const streams = sales * streamMultiplier;
@@ -176,11 +213,13 @@
       return Object.entries(result)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 100)
-        .map(([k, streams], i) => {
+        .map(([k, currentStreams], i) => {
           const [val1, val2] = k.split("|||");
+          const previousStreams = previousMap[k] || 0;
+          const change = formatChange(currentStreams, previousStreams);
           return type === "artist"
-            ? { rank: i + 1, name: val1, streams: formatStreams(streams) }
-            : { rank: i + 1, name: val1, artist: val2, streams: formatStreams(streams) };
+            ? { rank: i + 1, name: val1, streams: formatStreams(currentStreams), change }
+            : { rank: i + 1, name: val1, artist: val2, streams: formatStreams(currentStreams), change };
         });
     }
 
@@ -199,8 +238,13 @@
     function populateAll() {
       const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
       const latest7 = allWeeks.slice(0, 1);
+      const prev7 = allWeeks.slice(1, 2);
+
       const latest30 = allWeeks.slice(0, 4);
+      const prev30 = allWeeks.slice(4, 8);
+
       const allTime = allWeeks;
+      const none = [];
 
       const fill = (rows, id, isArtist = false, type = "") => {
         const tbody = document.getElementById(id);
@@ -209,22 +253,22 @@
             <td class="rank">${row.rank}</td>
             <td>${linkify(row.name, row.artist || row.name, type)}</td>
             ${isArtist ? '' : `<td>${linkify(row.artist, row.artist, "artist")}</td>`}
-            <td>${row.streams}</td>
+            <td>${row.streams}<small>${row.change}</small></td>
           </tr>
         `).join("");
       };
 
-      fill(aggregate("artist", latest7), "artist7DaysTable", true, "artist");
-      fill(aggregate("tracks", latest7), "track7DaysTable", false, "track");
-      fill(aggregate("album", latest7), "album7DaysTable", false, "album");
+      fill(aggregate("artist", latest7, prev7), "artist7DaysTable", true, "artist");
+      fill(aggregate("tracks", latest7, prev7), "track7DaysTable", false, "track");
+      fill(aggregate("album", latest7, prev7), "album7DaysTable", false, "album");
 
-      fill(aggregate("artist", latest30), "artist30DaysTable", true, "artist");
-      fill(aggregate("tracks", latest30), "track30DaysTable", false, "track");
-      fill(aggregate("album", latest30), "album30DaysTable", false, "album");
+      fill(aggregate("artist", latest30, prev30), "artist30DaysTable", true, "artist");
+      fill(aggregate("tracks", latest30, prev30), "track30DaysTable", false, "track");
+      fill(aggregate("album", latest30, prev30), "album30DaysTable", false, "album");
 
-      fill(aggregate("artist", allTime), "artistAllTimeTable", true, "artist");
-      fill(aggregate("tracks", allTime), "trackAllTimeTable", false, "track");
-      fill(aggregate("album", allTime), "albumAllTimeTable", false, "album");
+      fill(aggregate("artist", allTime, none), "artistAllTimeTable", true, "artist");
+      fill(aggregate("tracks", allTime, none), "trackAllTimeTable", false, "track");
+      fill(aggregate("album", allTime, none), "albumAllTimeTable", false, "album");
     }
 
     function setupTabs() {
