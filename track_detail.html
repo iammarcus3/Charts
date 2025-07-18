@@ -87,14 +87,7 @@
       if (scaled >= 100_000) return "Platinum";
       if (scaled >= 50_000)  return "Gold";
       return "";
-    }
 
-    // Helper to format large numbers
-    function formatNumber(num) {
-      if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + "M";
-      if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
-      return num.toFixed(0);
-    }
 
     const streamMultiplier = 0.927124;
     const saleMultiplier = 745;
