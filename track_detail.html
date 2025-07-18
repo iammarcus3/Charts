@@ -87,7 +87,14 @@
       if (scaled >= 100_000) return "Platinum";
       if (scaled >= 50_000)  return "Gold";
       return "";
+    }
 
+    // Helper to format large numbers
+    function formatNumber(num) {
+      if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + "M";
+      if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
+      return num.toFixed(0);
+    }
 
     const streamMultiplier = 0.927124;
     const saleMultiplier = 745;
@@ -163,7 +170,7 @@
     totalSalesEl.textContent = formatNumber(actualSales);
     totalStreamsEl.textContent = formatNumber(calculatedStreams * 1_000_000);
 
-    // Show certification icons
+    // Show certification icons and label
     const certIcons = getSongCertImages(rawSales);
     const certLabel = getSongCertLabel(rawSales);
 
@@ -192,7 +199,7 @@
         li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${formatNumber(albumActualSales)}`;
         albumList.appendChild(li);
       });
-
+    }
   </script>
 </body>
 </html>
