@@ -152,14 +152,14 @@
 
     const albumsTable = document.querySelector("#albumsTable tbody");
     Object.values(albumsMap).sort((a, b) => b.sales - a.sales).forEach(album => {
-      const cert = getAlbumCertImages(album.sales);
+      const cert = getAlbumCertIcons(album.sales);
       const url = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
       albumsTable.innerHTML += `<tr><td><a href="${url}">${album.name}</a></td><td>${cert}</td></tr>`;
     });
 
     const songsTable = document.querySelector("#songsTable tbody");
     Object.values(songsMap).sort((a, b) => b.sales - a.sales).forEach(song => {
-      const cert = getSongCertImages(song.sales);
+      const cert = getTrackCertIcon(song.sales);
       const streams = (song.sales / 1000) * 0.927124 * 1_000_000;
       const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
       songsTable.innerHTML += `
@@ -184,7 +184,7 @@
     const certTotals = document.getElementById("certTotals");
     const certCounts = {};
     Object.values(albumsMap).forEach(album => {
-      const label = getAlbumCertImages(album.sales).replace(/<[^>]*>/g, "").trim();
+      const label = getAlbumCertIcons(album.sales).replace(/<[^>]*>/g, "").trim();
       if (!certCounts[label]) certCounts[label] = 0;
       certCounts[label]++;
     });
