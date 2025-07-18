@@ -1,202 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Top 100 Songs</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      padding: 2rem;
-    }
-    nav {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    nav a {
-      margin: 0 1rem;
-      text-decoration: none;
-      font-weight: bold;
-      color: #333;
-    }
-    nav a:hover {
-      color: #007acc;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 1rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: #fff;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    th, td {
-      padding: 0.8rem;
-      border: 1px solid #ccc;
-      text-align: left;
-      cursor: pointer;
-    }
-    th {
-      background-color: #eee;
-      text-transform: uppercase;
-      font-size: 0.9rem;
-    }
-    a {
-      color: #0066cc;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .cert img {
-      height: 20px;
-      vertical-align: middle;
-      margin-right: 3px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Number One Songs - Hot 100, Streams & Radio</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #eee;
+    margin: 2rem;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .card {
+    background: #222;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #000;
+  }
+  .card h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    border-bottom: 1px solid #444;
+    padding-bottom: 0.3rem;
+  }
+  .song-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #1db954;
+  }
+  .artist-name {
+    font-style: italic;
+    cursor: pointer;
+    color: #ccc;
+  }
+  .cert {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-weight: bold;
+    color: gold;
+  }
+  .details {
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    color: #bbb;
+  }
+</style>
 </head>
 <body>
+<h1>Number One Songs</h1>
+<div class="grid" id="numberOneGrid">
+  <div class="card" id="hot100Card">
+    <h2>Hot 100 #1 Song (Sales)</h2>
+    <div id="hot100Song"></div>
+  </div>
+  <div class="card" id="streamedCard">
+    <h2>#1 Streamed Song (Last 7 Days)</h2>
+    <div id="streamedSong"></div>
+  </div>
+  <div class="card" id="radioCard">
+    <h2>#1 Radio Song (Radio Sales)</h2>
+    <div id="radioSong"></div>
+  </div>
+</div>
 
-  <nav>
-    <a href="index.html">🔥 Home</a>
-    <a href="top_albums.html">💿 Top Albums</a>
-    <a href="top_songs.html">🎵 Top Songs</a>
-  </nav>
+<script src="weekdata.js"></script>
+<script>
+  // Your radio multiplier function
+  function getMultiplier(weeks) {
+    if (weeks <= 4) return 2890;
+    if (weeks <= 10) return 8450;
+    if (weeks <= 16) return 11040;
+    if (weeks <= 20) return 8690;
+    if (weeks <= 30) return 4540;
+    if (weeks <= 40) return 3090;
+    return 1010;
+  }
 
-  <h1>🎵 Top 100 Songs by Sales</h1>
+  // Certification logic same as your usual logic
+  function getCertification(sales) {
+    if (sales >= 1_000_000) return '💎 Diamond';
+    if (sales >= 200_000) return '💿 x2 Platinum';
+    if (sales >= 100_000) return '💿 Platinum';
+    if (sales >= 50_000) return '🥇 Gold';
+    return '';
+  }
 
-  <table>
-    <thead>
-      <tr>
-        <th data-sort="rank">Rank</th>
-        <th data-sort="title">Title</th>
-        <th data-sort="artist">Artist</th>
-        <th data-sort="sales">Total Sales</th>
-        <th data-sort="streams">Total Streams</th>
-        <th data-sort="cert">Certification</th>
-      </tr>
-    </thead>
-    <tbody id="songTable">
-      <tr><td colspan="6">Loading data...</td></tr>
-    </tbody>
-  </table>
+  function createSongHTML(song) {
+    const cert = getCertification(song.totalSales || song.sales);
+    return `
+      <div>
+        <div class="song-title" title="Click for details" onclick="alert('Song: ${song.title}\\nArtist: ${song.artist}')">${song.title}</div>
+        <div class="artist-name" title="Click for artist details" onclick="alert('Artist: ${song.artist}')">${song.artist}</div>
+        ${cert ? `<div class="cert">${cert}</div>` : ''}
+        <div class="details">
+          ${song.sales !== undefined ? `Sales: ${song.sales.toLocaleString()}` : ''}
+          ${song.plays !== undefined ? `Plays: ${song.plays.toLocaleString()}` : ''}
+        </div>
+      </div>
+    `;
+  }
 
-  <script src="weekdata.js"></script>
-  <script>
-    function formatNumber(n) {
-      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
-      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
-      return n.toString();
+  (function main() {
+    const weekKeys = Object.keys(weekData).map(Number).sort((a,b) => a-b);
+    const latestWeek = weekKeys[weekKeys.length - 1];
+    const latestWeekData = weekData[latestWeek];
+
+    // 1) Hot 100 #1 by sales (rank=1)
+    let hot100NumberOne = null;
+    for (const song of Object.values(latestWeekData)) {
+      if (song.rank === 1) {
+        hot100NumberOne = song;
+        break;
+      }
     }
 
-    function getSongCertIcons(sales) {
-      const scaled = sales * 745.2;
-      if (scaled >= 1_000_000) {
-        return `<img src="diamond.png" title="Diamond">`;
-      }
-      if (scaled >= 100_000) {
-        const count = Math.floor(scaled / 100_000);
-        return Array(count).fill(`<img src="platinum.png" title="Platinum">`).join('');
-      }
-      if (scaled >= 50_000) {
-        return `<img src="gold.png" title="Gold">`;
-      }
-      return "—";
-    }
-
-    function normalizeTitle(title) {
-      return title?.toUpperCase()
-        .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
-        .replace(/[^A-Z0-9]/g, "")
-        .trim();
-    }
-
-    function normalize(str) {
-      return str?.toUpperCase().replace(/[^A-Z0-9]/g, "").trim();
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      const tableBody = document.getElementById("songTable");
-
-      const songMap = {};
-      for (const week in weekData) {
-        const entries = weekData[week];
-        entries.forEach(entry => {
-          const normTitle = normalizeTitle(entry.title);
-          const normArtist = normalize(entry.artist);
-          const key = `${normTitle}|${normArtist}`;
-          const sales = parseFloat(entry.sales) || 0;
-
-          if (!songMap[key]) {
-            songMap[key] = {
-              title: entry.title,
-              artist: entry.artist,
-              rawSales: 0
-            };
-          }
-
-          songMap[key].rawSales += sales;
-        });
-      }
-
-      let songList = Object.values(songMap)
-        .filter(s => s.rawSales > 0)
-        .map((s, i) => ({
-          ...s,
-          totalSales: s.rawSales * 1146.3457895,
-          totalStreams: s.rawSales * 0.927124 * 1_000_000,
-          cert: getSongCertIcons(s.rawSales),
-          rank: i + 1
-        }))
-        .sort((a, b) => b.totalSales - a.totalSales)
-        .slice(0, 100);
-
-      function renderTable(data) {
-        tableBody.innerHTML = "";
-        data.forEach((song, index) => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>
-              <a href="track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}">${song.title}</a>
-            </td>
-            <td><a href="artist.html?artist=${encodeURIComponent(song.artist)}">${song.artist}</a></td>
-            <td>${formatNumber(song.totalSales)}</td>
-            <td>${formatNumber(song.totalStreams)}</td>
-            <td class="cert">${song.cert}</td>
-          `;
-          tableBody.appendChild(tr);
-        });
-      }
-
-      renderTable(songList);
-
-      const headers = document.querySelectorAll("th[data-sort]");
-      headers.forEach(header => {
-        header.addEventListener("click", () => {
-          const key = header.getAttribute("data-sort");
-          const isAsc = header.classList.contains("asc");
-          headers.forEach(h => h.classList.remove("asc", "desc"));
-          header.classList.add(isAsc ? "desc" : "asc");
-
-          songList.sort((a, b) => {
-            if (key === "title" || key === "artist") {
-              return isAsc
-                ? a[key].localeCompare(b[key])
-                : b[key].localeCompare(a[key]);
-            } else {
-              return isAsc ? a[key] - b[key] : b[key] - a[key];
-            }
-          });
-
-          renderTable(songList);
-        });
+    // 2) #1 streamed song aggregated over last 7 days
+    const recentWeeks = weekKeys.filter(w => w > latestWeek - 7 && w <= latestWeek);
+    const streamAgg = {};
+    recentWeeks.forEach(week => {
+      const data = weekData[week];
+      Object.values(data).forEach(s => {
+        const key = s.title.toLowerCase() + '|' + s.artist.toLowerCase();
+        if (!streamAgg[key]) {
+          streamAgg[key] = { title: s.title, artist: s.artist, plays: 0, sales: 0, totalSales: 0 };
+        }
+        streamAgg[key].plays += s.plays || 0;
+        streamAgg[key].sales += s.sales || 0;
+        streamAgg[key].totalSales += s.totalSales || 0;
       });
     });
-  </script>
+    let topStreamedSong = null;
+    for (const s of Object.values(streamAgg)) {
+      if (!topStreamedSong || s.plays > topStreamedSong.plays) {
+        topStreamedSong = s;
+      }
+    }
+
+    // 3) #1 radio song: compute radio sales = sales * getMultiplier(weeks)
+    let topRadioSong = null;
+    for (const song of Object.values(latestWeekData)) {
+      const radioSales = (song.sales || 0) * getMultiplier(song.weeks || 0);
+      if (!topRadioSong || radioSales > topRadioSong.radioSales) {
+        topRadioSong = {...song, radioSales};
+      }
+    }
+
+    document.getElementById('hot100Song').innerHTML = hot100NumberOne ? createSongHTML(hot100NumberOne) : 'No data';
+    document.getElementById('streamedSong').innerHTML = topStreamedSong ? createSongHTML(topStreamedSong) : 'No data';
+    document.getElementById('radioSong').innerHTML = topRadioSong ? createSongHTML(topRadioSong) : 'No data';
+  })();
+</script>
 </body>
 </html>
