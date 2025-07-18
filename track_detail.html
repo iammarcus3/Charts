@@ -23,6 +23,11 @@
       margin-left: 4px;
     }
     .error { color: red; font-weight: bold; }
+    .cert-label {
+      font-weight: bold;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body>
@@ -71,11 +76,24 @@
       if (scaled >= 50_000) {
         return `<img src="gold.png" title="Gold">`;
       }
-      return "—";
+      return "";
     }
 
-  
-  
+    // New function: return text label for certification
+    function getSongCertLabel(sales) {
+      const scaled = sales * 745;
+      if (scaled >= 1_000_000) return "Diamond";
+      if (scaled >= 200_000) return Math.floor(scaled / 100_000) + "× Platinum";
+      if (scaled >= 100_000) return "Platinum";
+      if (scaled >= 50_000)  return "Gold";
+      return "";
+    }
+
+    function formatNumber(num) {
+      if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + "M";
+      if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
+      return num.toFixed(0);
+    }
 
     const streamMultiplier = 0.927124;
     const saleMultiplier = 745;
@@ -151,12 +169,21 @@
     totalSalesEl.textContent = formatNumber(actualSales);
     totalStreamsEl.textContent = formatNumber(calculatedStreams * 1_000_000);
 
+    // Show certification icons
     const certIcons = getSongCertImages(rawSales);
-    if (certIcons && certIcons !== "—") {
-      const certSpan = document.createElement("div");
+    const certLabel = getSongCertLabel(rawSales);
+
+    if (certIcons) {
+      const certSpan = document.createElement("span");
       certSpan.className = "cert-icon";
       certSpan.innerHTML = certIcons;
       totalSalesEl.appendChild(certSpan);
+    }
+    if (certLabel) {
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "cert-label";
+      labelSpan.textContent = certLabel;
+      totalSalesEl.appendChild(labelSpan);
     }
 
     const albums = Object.values(albumMap);
