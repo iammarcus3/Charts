@@ -93,8 +93,8 @@
           <th data-sort="top10songs">Top 10 Songs</th>
           <th data-sort="num1albums">#1 Albums</th>
           <th data-sort="top10albums">Top 10 Albums</th>
-          <th data-sort="diamondSongs">💎 Songs</th>
-          <th data-sort="diamondAlbums">💎 Albums</th>
+          <th data-sort="weekly">Avg Weekly Streams</th>
+          
         </tr>
       </thead>
       <tbody id="artistTable">
@@ -205,7 +205,7 @@
       const artistList = Object.entries(artistMap)
         .map(([norm, a]) => {
           const totalStreams = a.rawSales * 0.927124 * 1_000_000;
-          const totalSales = a.rawSales * 11146.3457895
+          const totalSales = a.rawSales * 745
           const months = a.weeks.size / 4.33; 
           const weeks = a.weeks.size / 1;
           const displayName = artistNameMap[norm].split(' ')
