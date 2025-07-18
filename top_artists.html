@@ -34,6 +34,7 @@
         <th>Sales</th>
         <th>Audience</th>
         <th>Points</th>
+        <th>#1s</th> <!-- New Column -->
       </tr>
     </thead>
     <tbody id="chartBody"></tbody>
@@ -75,6 +76,23 @@
       return count;
     }
 
+    function getNumberOnes(title, artist, upToWeek) {
+      let count = 0;
+      for (let w = 1; w <= upToWeek; w++) {
+        const songs = weekData[w];
+        if (!songs) continue;
+        const topSong = songs.reduce((top, s) => (s.rank === 1 && (!top || s.sales > top.sales)) ? s : top, null);
+        if (
+          topSong &&
+          topSong.title.toLowerCase() === title.toLowerCase() &&
+          topSong.artist.toLowerCase() === artist.toLowerCase()
+        ) {
+          count++;
+        }
+      }
+      return count;
+    }
+
     function getMovement(song, thisWeek, lastWeekData) {
       const prev = lastWeekData.find(s =>
         s.title.toLowerCase() === song.title.toLowerCase() &&
@@ -82,16 +100,15 @@
       );
 
       if (!prev) {
-        // Check if the song appeared in any earlier week before last week
         for (let w = thisWeek - 2; w >= 1; w--) {
           if (!weekData[w]) continue;
           const earlier = weekData[w].find(s =>
             s.title.toLowerCase() === song.title.toLowerCase() &&
             s.artist.toLowerCase() === song.artist.toLowerCase()
           );
-          if (earlier) return "RE-ENTER"; // Re-enter after gap
+          if (earlier) return "RE-ENTER";
         }
-        return "NEW"; // First ever entry
+        return "NEW";
       }
 
       if (prev.rank > song.rank) return "UP";
@@ -117,6 +134,7 @@
 
       const enhanced = currentSongs.map(song => {
         const lifetimeWeeks = getWeeksCharted(song.title, song.artist, week);
+        const numberOnes = getNumberOnes(song.title, song.artist, week);
         const multiplier = getMultiplier(lifetimeWeeks);
         const audience = song.sales * multiplier;
         const points = song.sales + audience;
@@ -124,6 +142,7 @@
           ...song,
           audience,
           points,
+          numberOnes,
           move: getMovement(song, week, lastWeekSongs)
         };
       });
@@ -157,12 +176,12 @@
           <td>${song.sales.toLocaleString()}</td>
           <td>${Math.round(song.audience).toLocaleString()}</td>
           <td>${Math.round(song.points / 1000).toLocaleString()}</td>
+          <td>${song.numberOnes}</td>
         `;
         body.appendChild(tr);
       });
     }
 
-    // Initial render
     weekSelector.value = currentWeek;
     renderWeek(currentWeek);
   </script>
