@@ -158,9 +158,16 @@
     }
 
     function formatChange(current, previous) {
-      if (previous === 0 || previous === undefined) return '➖ 0.0%';
+      if (previous === 0 || previous === undefined) return '<span>➖ 0.0%</span>';
       const diff = ((current - previous) / previous) * 100;
-      const symbol = diff > 0 ? '🔺' : diff < 0 ? '🔻' : '➖';
+
+      let symbol = '➖';
+      if (diff > 0) {
+        symbol = '<span style="color:green">▲</span>';
+      } else if (diff < 0) {
+        symbol = '<span style="color:red">🔻</span>';
+      }
+
       return `${symbol} ${Math.abs(diff).toFixed(1)}%`;
     }
 
