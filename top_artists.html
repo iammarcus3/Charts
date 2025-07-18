@@ -2,30 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Top Radio Songs</title>
+  <title>Top Radio Songs - Weekly</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #111;
+      background-color: #111;
       color: #fff;
       padding: 2rem;
     }
     h1 {
       text-align: center;
       font-size: 2rem;
-      margin-bottom: 1rem;
     }
-    .nav {
+    .controls {
       text-align: center;
       margin-bottom: 1rem;
     }
-    .nav button {
-      background: #444;
-      color: #fff;
-      border: none;
-      padding: 0.5rem 1rem;
+    .controls button {
+      font-size: 1.2rem;
       margin: 0 1rem;
-      font-size: 1rem;
+      background: #222;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
       cursor: pointer;
     }
     table {
@@ -34,24 +34,28 @@
       margin-top: 1rem;
     }
     th, td {
-      padding: 0.75rem;
+      border: 1px solid #444;
+      padding: 0.5rem;
       text-align: left;
-      border-bottom: 1px solid #333;
     }
     th {
-      background: #222;
+      background-color: #222;
     }
-    .up { color: limegreen; }
-    .down { color: red; }
-    .new { color: gray; }
+    tr:nth-child(even) {
+      background-color: #1a1a1a;
+    }
+    .up { color: #00ff00; font-weight: bold; }
+    .down { color: #ff4444; font-weight: bold; }
+    .same { color: #aaa; }
+    .bold { font-weight: bold; }
   </style>
 </head>
 <body>
   <h1>Top 50 Radio Songs (Weekly)</h1>
-  <div class="nav">
-    <button id="prevBtn">⬅️</button>
-    <span id="weekLabel">Week</span>
-    <button id="nextBtn">➡️</button>
+  <div class="controls">
+    <button id="prevWeek">⬅️</button>
+    <span id="weekLabel">Week </span>
+    <button id="nextWeek">➡️</button>
   </div>
   <table>
     <thead>
@@ -62,31 +66,19 @@
         <th>Artist</th>
         <th>Sales</th>
         <th>Weeks Charted</th>
-        <th>Audience</th>
+        <th>Audience Points</th>
       </tr>
     </thead>
-    <tbody id="chartBody"></tbody>
+    <tbody id="radioTable"></tbody>
   </table>
 
   <script src="weekdata.js"></script>
   <script>
-    const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => a - b);
-    const latestWeek = allWeeks[allWeeks.length - 1];
-    const sixMonthsAgo = allWeeks.filter(w => w >= latestWeek - 26);
-    let currentWeekIndex = sixMonthsAgo.length - 1; // start from most recent
-
-    // Get total weeks charted for every (title + artist)
-    const weeksChartedMap = {};
-    for (const week of allWeeks) {
-      for (const entry of weekData[week]) {
-        const key = (entry.title + entry.artist).toLowerCase();
-        weeksChartedMap[key] = (weeksChartedMap[key] || new Set()).add(week);
-      }
-    }
-
-    function getWeeksCharted(key) {
-      return weeksChartedMap[key] ? weeksChartedMap[key].size : 0;
-    }
+    const table = document.getElementById('radioTable');
+    const weekLabel = document.getElementById('weekLabel');
+    const weekKeys = Object.keys(weekData).map(Number).sort((a, b) => b - a);
+    const last26Weeks = weekKeys.slice(0, 26); // 6 months approx
+    let currentWeekIndex = 0;
 
     function getMultiplier(weeks) {
       if (weeks <= 4) return 6890;
@@ -98,68 +90,90 @@
       return 1010;
     }
 
-    function renderChart() {
-      const weekNum = sixMonthsAgo[currentWeekIndex];
-      const entries = weekData[weekNum];
-      const chartBody = document.getElementById("chartBody");
-      document.getElementById("weekLabel").textContent = `Week ${weekNum}`;
-
-      const prevWeekEntries = weekData[sixMonthsAgo[currentWeekIndex - 1] || -1] || [];
-      const prevMap = {};
-      for (const e of prevWeekEntries) {
-        const key = (e.title + e.artist).toLowerCase();
-        prevMap[key] = e.rank;
+    function countLifetimeWeeks(song) {
+      let count = 0;
+      for (let week of Object.keys(weekData)) {
+        if (Number(week) > last26Weeks[currentWeekIndex]) continue;
+        const matches = weekData[week].filter(entry =>
+          entry.title.toLowerCase() === song.title.toLowerCase() &&
+          entry.artist.toLowerCase() === song.artist.toLowerCase()
+        );
+        if (matches.length > 0) count++;
       }
-
-      const ranked = entries.map(entry => {
-        const key = (entry.title + entry.artist).toLowerCase();
-        const weeksCharted = getWeeksCharted(key);
-        const multiplier = getMultiplier(weeksCharted);
-        const audience = entry.sales * multiplier;
-        const prevRank = prevMap[key];
-        let move = '➖', cls = 'new';
-        if (prevRank) {
-          const diff = prevRank - entry.rank;
-          if (diff > 0) move = `<span class="up">▲</span>`;
-          else if (diff < 0) move = `<span class="down">🔻</span>`;
-          else move = `<span class="new">➖</span>`;
-        }
-        return {
-          ...entry,
-          weeksCharted,
-          audience,
-          move
-        };
-      }).sort((a, b) => b.audience - a.audience).slice(0, 50);
-
-      chartBody.innerHTML = ranked.map((entry, i) => `
-        <tr>
-          <td>${i + 1}</td>
-          <td>${entry.move}</td>
-          <td>${entry.title}</td>
-          <td>${entry.artist}</td>
-          <td>${entry.sales.toLocaleString()}</td>
-          <td>${entry.weeksCharted}</td>
-          <td>${Math.round(entry.audience).toLocaleString()}</td>
-        </tr>
-      `).join('');
+      return count;
     }
 
-    document.getElementById("prevBtn").onclick = () => {
+    let previousRanks = {};
+
+    function renderWeekChart() {
+      const weekNum = last26Weeks[currentWeekIndex];
+      const thisWeek = weekData[weekNum];
+      weekLabel.textContent = `Week ${weekNum}`;
+
+      const scored = thisWeek.map(song => {
+        const lifetimeWeeks = countLifetimeWeeks(song);
+        const multiplier = getMultiplier(lifetimeWeeks);
+        const audience = song.sales * multiplier;
+        return {
+          title: song.title,
+          artist: song.artist,
+          sales: song.sales,
+          weeks: lifetimeWeeks,
+          audience,
+        };
+      });
+
+      scored.sort((a, b) => b.audience - a.audience);
+      const top50 = scored.slice(0, 50);
+      const newRanks = {};
+
+      table.innerHTML = top50.map((s, i) => {
+        const prev = previousRanks[`${s.title}|${s.artist}`];
+        const currRank = i + 1;
+        newRanks[`${s.title}|${s.artist}`] = currRank;
+
+        let movement = '<span class="same">➖</span>';
+        if (prev) {
+          if (currRank < prev) movement = '<span class="up">▲</span>';
+          else if (currRank > prev) movement = '<span class="down">🔻</span>';
+        }
+
+        const salesFormatted = s.sales.toLocaleString();
+        const audienceFormatted = Math.min(s.audience, 100000000).toLocaleString();
+
+        return `
+          <tr>
+            <td>${currRank}</td>
+            <td>${movement}</td>
+            <td class="${prev === undefined ? 'bold' : ''}">${s.title}</td>
+            <td>${s.artist}</td>
+            <td>${salesFormatted}</td>
+            <td>${s.weeks}</td>
+            <td>${audienceFormatted}</td>
+          </tr>
+        `;
+      }).join("");
+
+      previousRanks = newRanks;
+    }
+
+    document.getElementById('prevWeek').onclick = () => {
+      if (currentWeekIndex < last26Weeks.length - 1) {
+        currentWeekIndex++;
+        renderWeekChart();
+      }
+    };
+
+    document.getElementById('nextWeek').onclick = () => {
       if (currentWeekIndex > 0) {
         currentWeekIndex--;
-        renderChart();
+        renderWeekChart();
       }
     };
 
-    document.getElementById("nextBtn").onclick = () => {
-      if (currentWeekIndex < sixMonthsAgo.length - 1) {
-        currentWeekIndex++;
-        renderChart();
-      }
+    window.onload = () => {
+      renderWeekChart();
     };
-
-    window.onload = renderChart;
   </script>
 </body>
 </html>
