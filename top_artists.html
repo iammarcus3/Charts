@@ -1,64 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Top 50 Radio Songs</title>
-  <style>
-    body {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 30px;
-      color: #e60000;
-      letter-spacing: 1px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: #111;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid #222;
-    }
-    th {
-      background-color: #222;
-      text-transform: uppercase;
-      font-size: 0.85em;
-      color: #e0e0e0;
-    }
-    tr:hover {
-      background-color: #1c1c1c;
-    }
-    .rank {
-      color: #e60000;
-      font-weight: bold;
-      text-align: center;
-      width: 50px;
-    }
-    .audience-points {
-      color: #1db954;
-      font-weight: bold;
-      text-align: right;
-    }
-    .weeks, .sales {
-      text-align: right;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Top 50 Radio Songs Weekly</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    margin: 0; padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #e60000;
+    letter-spacing: 1px;
+  }
+  .nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+  }
+  button {
+    background: #e60000;
+    border: none;
+    padding: 8px 15px;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+  }
+  button:disabled {
+    background: #550000;
+    cursor: default;
+  }
+  select {
+    background: #111;
+    color: #fff;
+    border: 1px solid #e60000;
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-weight: bold;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #111;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #222;
+  }
+  th {
+    background-color: #222;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    color: #e0e0e0;
+  }
+  tr:hover {
+    background-color: #1c1c1c;
+  }
+  .rank {
+    color: #e60000;
+    font-weight: bold;
+    text-align: center;
+    width: 50px;
+  }
+  .audience-points {
+    color: #1db954;
+    font-weight: bold;
+    text-align: right;
+  }
+  .weeks, .sales {
+    text-align: right;
+  }
+  .movement {
+    text-align: center;
+    width: 30px;
+    font-weight: bold;
+    user-select: none;
+  }
+  .up {
+    color: #4CAF50;
+  }
+  .down {
+    color: #f44336;
+  }
+  .steady {
+    color: #999;
+  }
+</style>
 </head>
 <body>
 
-<h1>Top 50 Radio Songs (Last 6 Months)</h1>
+<h1>Top 50 Radio Songs Weekly (Last 6 Months)</h1>
+
+<div class="nav">
+  <button id="prevWeekBtn">⬅️ Prev Week</button>
+  <select id="weekSelect"></select>
+  <button id="nextWeekBtn">Next Week ➡️</button>
+</div>
 
 <div id="radioTop50"></div>
 
@@ -82,13 +131,36 @@
     return num.toString();
   }
 
-  function aggregateLast6Months() {
-    const allWeeks = Object.keys(weekData).map(Number).sort((a,b) => a-b);
-    const last26Weeks = allWeeks.slice(-26);
+  // Get all weeks sorted ascending
+  const allWeeks = Object.keys(weekData).map(Number).sort((a,b) => a-b);
+  // Last 26 weeks (approx 6 months)
+  const last26Weeks = allWeeks.slice(-26);
 
+  const weekSelect = document.getElementById('weekSelect');
+  const prevBtn = document.getElementById('prevWeekBtn');
+  const nextBtn = document.getElementById('nextWeekBtn');
+  const container = document.getElementById('radioTop50');
+
+  // Fill week dropdown with last 26 weeks (show as "Week X")
+  last26Weeks.forEach((w, i) => {
+    const option = document.createElement('option');
+    option.value = w;
+    option.textContent = `Week ${w}`;
+    weekSelect.appendChild(option);
+  });
+
+  // Current index in last26Weeks array
+  let currentWeekIndex = last26Weeks.length - 1;
+  weekSelect.value = last26Weeks[currentWeekIndex];
+
+  // Aggregate songs up to given weekNumber (inclusive)
+  function aggregateUpToWeek(weekNumber) {
     const songMap = {};
 
-    last26Weeks.forEach(weekNum => {
+    // Filter weeks up to selected week
+    const weeksToUse = last26Weeks.filter(w => w <= weekNumber);
+
+    weeksToUse.forEach(weekNum => {
       const entries = weekData[weekNum];
       if (!entries) return;
 
@@ -112,21 +184,38 @@
       });
     });
 
+    // Calculate weeks charted and audience points per song
     Object.values(songMap).forEach(song => {
       song.weeksCharted = song.weeksChartedSet.size;
       delete song.weeksChartedSet;
-
       const multiplier = getMultiplier(song.weeksCharted);
       song.audiencePoints = song.totalSales * multiplier;
     });
 
-    return Object.values(songMap)
-      .sort((a,b) => b.audiencePoints - a.audiencePoints)
-      .slice(0, 50);
+    return Object.values(songMap);
   }
 
-  function renderTopRadioSongs() {
-    const songs = aggregateLast6Months();
+  // Get ranking map for a week to compare movement (key -> rank)
+  function getRankingMap(songs) {
+    const map = {};
+    songs.forEach((song, idx) => {
+      const key = `${song.title}|||${song.artist}`;
+      map[key] = idx + 1;
+    });
+    return map;
+  }
+
+  // Render table for selected week with movement
+  function renderTableForWeek(weekNumber) {
+    const currentSongs = aggregateUpToWeek(weekNumber);
+    // Sort by audiencePoints descending
+    currentSongs.sort((a,b) => b.audiencePoints - a.audiencePoints);
+    const top50 = currentSongs.slice(0, 50);
+
+    // Previous week for movement
+    const prevWeekIndex = last26Weeks.indexOf(weekNumber) - 1;
+    const prevWeekNumber = prevWeekIndex >= 0 ? last26Weeks[prevWeekIndex] : null;
+    const prevRankingMap = prevWeekNumber !== null ? getRankingMap(aggregateUpToWeek(prevWeekNumber).sort((a,b)=>b.audiencePoints - a.audiencePoints)) : {};
 
     let html = `
       <table>
@@ -138,31 +227,76 @@
             <th class="weeks">Weeks Charted</th>
             <th class="sales">Total Sales</th>
             <th class="audience-points">Audience Points</th>
+            <th class="movement" title="Movement">↕</th>
           </tr>
         </thead>
         <tbody>
     `;
 
-    songs.forEach((song, i) => {
+    top50.forEach((song, i) => {
+      const rank = i + 1;
+      const key = `${song.title}|||${song.artist}`;
+      const prevRank = prevRankingMap[key] || null;
+
+      let movementSymbol = '➖';
+      let movementClass = 'steady';
+
+      if (prevRank !== null) {
+        if (prevRank > rank) {
+          movementSymbol = '▲';
+          movementClass = 'up';
+        } else if (prevRank < rank) {
+          movementSymbol = '🔻';
+          movementClass = 'down';
+        }
+      }
+
       html += `
         <tr>
-          <td class="rank">${i + 1}</td>
+          <td class="rank">${rank}</td>
           <td>${song.title}</td>
           <td>${song.artist}</td>
           <td class="weeks">${song.weeksCharted}</td>
           <td class="sales">${formatNumber(song.totalSales)}</td>
           <td class="audience-points">${formatNumber(song.audiencePoints)}</td>
+          <td class="movement ${movementClass}" aria-label="Movement">${movementSymbol}</td>
         </tr>
       `;
     });
 
-    html += `</tbody></table>`;
+    html += '</tbody></table>';
+    container.innerHTML = html;
 
-    document.getElementById("radioTop50").innerHTML = html;
+    // Update buttons disabled state
+    prevBtn.disabled = currentWeekIndex === 0;
+    nextBtn.disabled = currentWeekIndex === last26Weeks.length -1;
   }
 
-  window.onload = function() {
-    renderTopRadioSongs();
+  // Navigation button handlers
+  prevBtn.onclick = () => {
+    if (currentWeekIndex > 0) {
+      currentWeekIndex--;
+      weekSelect.value = last26Weeks[currentWeekIndex];
+      renderTableForWeek(last26Weeks[currentWeekIndex]);
+    }
+  };
+  nextBtn.onclick = () => {
+    if (currentWeekIndex < last26Weeks.length -1) {
+      currentWeekIndex++;
+      weekSelect.value = last26Weeks[currentWeekIndex];
+      renderTableForWeek(last26Weeks[currentWeekIndex]);
+    }
+  };
+  // Dropdown change handler
+  weekSelect.onchange = () => {
+    const selectedWeek = Number(weekSelect.value);
+    currentWeekIndex = last26Weeks.indexOf(selectedWeek);
+    renderTableForWeek(selectedWeek);
+  };
+
+  // Initial render
+  window.onload = () => {
+    renderTableForWeek(last26Weeks[currentWeekIndex]);
   };
 </script>
 
