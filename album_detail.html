@@ -94,35 +94,33 @@
       : "";
 
     function getAlbumCertIcons(sales) {
-      const scaled = sales * 1447,89;
+      const scaled = sales * 1447,89
 
-      if (scaled >= 10_000_000) {
-        return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
-      }
-      if (scaled >= 1_000_000) {
-        const count = Math.floor(scaled / 1_000_000);
-        return Array(count).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
-      }
-      if (scaled >= 500_000) {
-        return `<img src="gold.png" class="cert-icon" title="Gold">`;
-      }
-      return "—";
+     if (scaled >= 10_000_000) {
+  return `<img src="diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+}
+
+if (scaled >= 1_000_000) {
+  const count = Math.floor(scaled / 1_000_000);
+  const text = count === 1 ? 'Platinum' : `${count}× Platinum`;
+  return (`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('') + ' ' + text;
+}
+
+if (scaled >= 500_000) {
+  return `<img src="gold.png" class="cert-icon" title="Gold"> Gold`;
+}
+
+return "—";
+
     }
 
     function getTrackCertIcon(sales) {
-      const scaled = sales * 1146.3457895;
-      if (scaled >= 1_000_000) return `<img src="diamond.png" class="cert-icon">`;
-      if (scaled >= 100_000) return Array(Math.floor(scaled / 100_000)).fill(`<img src="platinum.png" class="cert-icon">`).join('');
-      if (scaled >= 50_000) return `<img src="gold.png" class="cert-icon">`;
+      const scaled = sales * 745;
+      if (scaled >= 1_000_000) return `<img src="diamond.png" class="cert-icon"title="Diamond"> Diamond`;
+      if (scaled >= 100_000) return (`<img src="platinum.png" class="cert-icon">`).join('');const text = count === 1 ? 'Platinum' : `${count}× Platinum`;      if (scaled >= 50_000) return `<img src="gold.png" class="cert-icon">`;
       return "";
     }
-
-    function formatNumber(n) {
-      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
-      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
-      return n.toString();
-    }
+    
 
     const albumLink = document.getElementById("albumLink");
     const artistLink = document.getElementById("artistLink");
