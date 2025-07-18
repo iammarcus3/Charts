@@ -79,7 +79,7 @@
       return "";
     }
 
-    // New function: return text label for certification
+    // Text certification label
     function getSongCertLabel(sales) {
       const scaled = sales * 745;
       if (scaled >= 1_000_000) return "Diamond";
@@ -87,7 +87,7 @@
       if (scaled >= 100_000) return "Platinum";
       if (scaled >= 50_000)  return "Gold";
       return "";
-
+    }
 
     const streamMultiplier = 0.927124;
     const saleMultiplier = 745;
@@ -160,8 +160,8 @@
     debutEl.textContent = debut ? debut.label : "—";
     peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
     weeksEl.textContent = weeks;
-    totalSalesEl.textContent = formatNumber(actualSales);
-    totalStreamsEl.textContent = formatNumber(calculatedStreams * 1_000_000);
+    totalSalesEl.textContent = actualSales.toFixed(0);
+    totalStreamsEl.textContent = (calculatedStreams * 1_000_000).toFixed(0);
 
     // Show certification icons and label
     const certIcons = getSongCertImages(rawSales);
@@ -189,7 +189,7 @@
         const albumUrl = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
         const albumActualSales = album.sales * saleMultiplier;
         const li = document.createElement("li");
-        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${formatNumber(albumActualSales)}`;
+        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${albumActualSales.toFixed(0)}`;
         albumList.appendChild(li);
       });
     }
