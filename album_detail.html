@@ -94,38 +94,46 @@
       : "";
 
     function getAlbumCertIcons(sales) {
-      <div>
-  <script>
-    const scaled = sales * 1447.89;
-  </script>
-</div>
+      const scaled = sales * 1447.89;
 
+      if (scaled >= 10_000_000) {
+        return `<img src="diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+      }
 
-     if (scaled >= 10_000_000) {
-  return `<img src="diamond.png" class="cert-icon" title="Diamond"> Diamond`;
-}
+      if (scaled >= 1_000_000) {
+        const count = Math.floor(scaled / 1_000_000);
+        const icons = Array(count).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
+        const text = count === 1 ? 'Platinum' : `${count}× Platinum`;
+        return icons + ' ' + text;
+      }
 
-if (scaled >= 1_000_000) {
-  const count = Math.floor(scaled / 1_000_000);
-  const text = count === 1 ? 'Platinum' : `${count}× Platinum`;
-  return (`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('') + ' ' + text;
-}
+      if (scaled >= 500_000) {
+        return `<img src="gold.png" class="cert-icon" title="Gold"> Gold`;
+      }
 
-if (scaled >= 500_000) {
-  return `<img src="gold.png" class="cert-icon" title="Gold"> Gold`;
-}
-
-return "—";
-
+      return "—";
     }
 
     function getTrackCertIcon(sales) {
       const scaled = sales * 745;
-      if (scaled >= 1_000_000) return `<img src="diamond.png" class="cert-icon"title="Diamond"> Diamond`;
-      if (scaled >= 100_000) return (`<img src="platinum.png" class="cert-icon">`).join('');const text = count === 1 ? 'Platinum' : `${count}× Platinum`;      if (scaled >= 50_000) return `<img src="gold.png" class="cert-icon">`;
+
+      if (scaled >= 1_000_000) {
+        return `<img src="diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+      }
+
+      if (scaled >= 100_000) {
+        const count = Math.floor(scaled / 100_000);
+        const icons = (`<img src="platinum.png" class="cert-icon" title="Platinum">`);
+        const text = count === 1 ? 'Platinum' : `${count}× Platinum`;
+        return icons + ' ' + text;
+      }
+
+      if (scaled >= 50_000) {
+        return `<img src="gold.png" class="cert-icon" title="Gold"> Gold`;
+      }
+
       return "";
     }
-    
 
     const albumLink = document.getElementById("albumLink");
     const artistLink = document.getElementById("artistLink");
@@ -210,6 +218,10 @@ return "—";
         li.innerHTML = `<a href="${trackURL}">${track.title}</a> <span class="cert-icon">${cert}</span>`;
         trackList.appendChild(li);
       });
+    }
+
+    function formatNumber(num) {
+      return Math.round(num).toLocaleString("en-US");
     }
   </script>
 </body>
