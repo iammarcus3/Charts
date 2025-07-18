@@ -3,82 +3,88 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Number One Songs - Hot 100, Streams & Radio</title>
+<title>All Number One Songs by Week</title>
 <style>
   body {
     font-family: Arial, sans-serif;
     background: #111;
     color: #eee;
-    margin: 2rem;
+    margin: 1rem;
   }
   h1 {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    max-width: 1000px;
-    margin: 0 auto;
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 3rem;
   }
-  .card {
+  th, td {
+    border: 1px solid #444;
+    padding: 0.5rem 0.8rem;
+    vertical-align: top;
+  }
+  th {
     background: #222;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 0 8px #000;
+    position: sticky;
+    top: 0;
+    z-index: 2;
   }
-  .card h2 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-    border-bottom: 1px solid #444;
-    padding-bottom: 0.3rem;
+  tr:nth-child(even) {
+    background: #1a1a1a;
   }
   .song-title {
     font-weight: bold;
-    font-size: 1.1rem;
-    cursor: pointer;
+    font-size: 1rem;
     color: #1db954;
+    cursor: pointer;
+    user-select: none;
   }
   .artist-name {
     font-style: italic;
-    cursor: pointer;
     color: #ccc;
+    user-select: none;
   }
   .cert {
-    display: inline-block;
-    margin-left: 0.5rem;
+    margin-left: 0.3rem;
     font-weight: bold;
     color: gold;
+    user-select: none;
   }
   .details {
-    margin-top: 0.8rem;
-    font-size: 0.9rem;
+    margin-top: 0.2rem;
+    font-size: 0.85rem;
     color: #bbb;
+    user-select: none;
+  }
+  td.week {
+    font-weight: bold;
+    width: 50px;
+    text-align: center;
+    user-select: none;
   }
 </style>
 </head>
 <body>
-<h1>Number One Songs</h1>
-<div class="grid" id="numberOneGrid">
-  <div class="card" id="hot100Card">
-    <h2>Hot 100 #1 Song (Sales)</h2>
-    <div id="hot100Song"></div>
-  </div>
-  <div class="card" id="streamedCard">
-    <h2>#1 Streamed Song (Last 7 Days)</h2>
-    <div id="streamedSong"></div>
-  </div>
-  <div class="card" id="radioCard">
-    <h2>#1 Radio Song (Radio Sales)</h2>
-    <div id="radioSong"></div>
-  </div>
-</div>
+<h1>All Number One Songs by Week</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Week</th>
+      <th>Hot 100 #1 (Sales)</th>
+      <th>#1 Streamed (Last 7 Weeks)</th>
+      <th>#1 Radio (Radio Sales)</th>
+    </tr>
+  </thead>
+  <tbody id="tableBody">
+    <!-- Filled by JS -->
+  </tbody>
+</table>
 
 <script src="weekdata.js"></script>
 <script>
-  // Your radio multiplier function
   function getMultiplier(weeks) {
     if (weeks <= 4) return 2890;
     if (weeks <= 10) return 8450;
@@ -89,7 +95,6 @@
     return 1010;
   }
 
-  // Certification logic same as your usual logic
   function getCertification(sales) {
     if (sales >= 1_000_000) return '💎 Diamond';
     if (sales >= 200_000) return '💿 x2 Platinum';
@@ -98,7 +103,8 @@
     return '';
   }
 
-  function createSongHTML(song) {
+  function createSongHTML(song, extraLabel) {
+    if (!song) return 'N/A';
     const cert = getCertification(song.totalSales || song.sales);
     return `
       <div>
@@ -106,61 +112,68 @@
         <div class="artist-name" title="Click for artist details" onclick="alert('Artist: ${song.artist}')">${song.artist}</div>
         ${cert ? `<div class="cert">${cert}</div>` : ''}
         <div class="details">
-          ${song.sales !== undefined ? `Sales: ${song.sales.toLocaleString()}` : ''}
-          ${song.plays !== undefined ? `Plays: ${song.plays.toLocaleString()}` : ''}
+          ${extraLabel}: ${((extraLabel === 'Plays') ? (song.plays || 0) : (song.sales || 0)).toLocaleString()}
         </div>
       </div>
     `;
   }
 
   (function main() {
-    const weekKeys = Object.keys(weekData).map(Number).sort((a,b) => a-b);
-    const latestWeek = weekKeys[weekKeys.length - 1];
-    const latestWeekData = weekData[latestWeek];
+    const weeks = Object.keys(weekData).map(Number).sort((a,b) => a-b);
+    const tbody = document.getElementById('tableBody');
 
-    // 1) Hot 100 #1 by sales (rank=1)
-    let hot100NumberOne = null;
-    for (const song of Object.values(latestWeekData)) {
-      if (song.rank === 1) {
-        hot100NumberOne = song;
-        break;
-      }
-    }
-
-    // 2) #1 streamed song aggregated over last 7 days
-    const recentWeeks = weekKeys.filter(w => w > latestWeek - 7 && w <= latestWeek);
-    const streamAgg = {};
-    recentWeeks.forEach(week => {
+    for (const week of weeks) {
       const data = weekData[week];
-      Object.values(data).forEach(s => {
-        const key = s.title.toLowerCase() + '|' + s.artist.toLowerCase();
-        if (!streamAgg[key]) {
-          streamAgg[key] = { title: s.title, artist: s.artist, plays: 0, sales: 0, totalSales: 0 };
+
+      // 1) Hot 100 #1 (rank=1)
+      let hot100 = null;
+      for (const s of Object.values(data)) {
+        if (s.rank === 1) {
+          hot100 = s;
+          break;
         }
-        streamAgg[key].plays += s.plays || 0;
-        streamAgg[key].sales += s.sales || 0;
-        streamAgg[key].totalSales += s.totalSales || 0;
-      });
-    });
-    let topStreamedSong = null;
-    for (const s of Object.values(streamAgg)) {
-      if (!topStreamedSong || s.plays > topStreamedSong.plays) {
-        topStreamedSong = s;
       }
-    }
 
-    // 3) #1 radio song: compute radio sales = sales * getMultiplier(weeks)
-    let topRadioSong = null;
-    for (const song of Object.values(latestWeekData)) {
-      const radioSales = (song.sales || 0) * getMultiplier(song.weeks || 0);
-      if (!topRadioSong || radioSales > topRadioSong.radioSales) {
-        topRadioSong = {...song, radioSales};
+      // 2) #1 streamed song over last 7 weeks (including this)
+      const windowWeeks = weeks.filter(w => w >= week-6 && w <= week);
+      const streamAgg = {};
+      for (const w of windowWeeks) {
+        const wkData = weekData[w];
+        if (!wkData) continue;
+        for (const s of Object.values(wkData)) {
+          const key = s.title.toLowerCase() + '|' + s.artist.toLowerCase();
+          if (!streamAgg[key]) {
+            streamAgg[key] = { title: s.title, artist: s.artist, plays: 0, sales: 0, totalSales: 0 };
+          }
+          streamAgg[key].plays += s.plays || 0;
+          streamAgg[key].sales += s.sales || 0;
+          streamAgg[key].totalSales += s.totalSales || 0;
+        }
       }
-    }
+      let streamedTop = null;
+      for (const s of Object.values(streamAgg)) {
+        if (!streamedTop || s.plays > streamedTop.plays) streamedTop = s;
+      }
 
-    document.getElementById('hot100Song').innerHTML = hot100NumberOne ? createSongHTML(hot100NumberOne) : 'No data';
-    document.getElementById('streamedSong').innerHTML = topStreamedSong ? createSongHTML(topStreamedSong) : 'No data';
-    document.getElementById('radioSong').innerHTML = topRadioSong ? createSongHTML(topRadioSong) : 'No data';
+      // 3) #1 radio song for this week by radioSales = sales * multiplier(weeks)
+      let radioTop = null;
+      for (const s of Object.values(data)) {
+        const radioSales = (s.sales || 0) * getMultiplier(s.weeks || 0);
+        if (!radioTop || radioSales > radioTop.radioSales) {
+          radioTop = {...s, radioSales};
+        }
+      }
+
+      // Create table row
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="week">${week}</td>
+        <td>${createSongHTML(hot100, 'Sales')}</td>
+        <td>${createSongHTML(streamedTop, 'Plays')}</td>
+        <td>${createSongHTML(radioTop, 'Radio Sales')}</td>
+      `;
+      tbody.appendChild(tr);
+    }
   })();
 </script>
 </body>
