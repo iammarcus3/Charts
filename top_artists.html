@@ -1,3 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Top 50 Radio Songs</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 30px;
+      color: #e60000;
+      letter-spacing: 1px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #111;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #222;
+    }
+    th {
+      background-color: #222;
+      text-transform: uppercase;
+      font-size: 0.85em;
+      color: #e0e0e0;
+    }
+    tr:hover {
+      background-color: #1c1c1c;
+    }
+    .rank {
+      color: #e60000;
+      font-weight: bold;
+      text-align: center;
+      width: 50px;
+    }
+    .audience-points {
+      color: #1db954;
+      font-weight: bold;
+      text-align: right;
+    }
+    .weeks, .sales {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Top 50 Radio Songs (Last 6 Months)</h1>
+
+<div id="radioTop50"></div>
+
+<script src="weekdata.js"></script>
 <script>
   // Multiplier tiers based on weeks charted
   function getMultiplier(weeks) {
@@ -18,13 +83,9 @@
   }
 
   function aggregateLast6Months() {
-    // Get all week keys and sort ascending (oldest to newest)
     const allWeeks = Object.keys(weekData).map(Number).sort((a,b) => a-b);
-
-    // Approximate 6 months = last 26 weeks (adjust if you have exact date info)
     const last26Weeks = allWeeks.slice(-26);
 
-    // Aggregate data by song key "title|||artist"
     const songMap = {};
 
     last26Weeks.forEach(weekNum => {
@@ -51,38 +112,32 @@
       });
     });
 
-    // Convert set to count weeks charted
     Object.values(songMap).forEach(song => {
       song.weeksCharted = song.weeksChartedSet.size;
       delete song.weeksChartedSet;
 
-      // Calculate audience points based on total sales and weeks charted
       const multiplier = getMultiplier(song.weeksCharted);
       song.audiencePoints = song.totalSales * multiplier;
     });
 
-    // Sort songs descending by audiencePoints
-    const sortedSongs = Object.values(songMap)
-      .sort((a, b) => b.audiencePoints - a.audiencePoints)
+    return Object.values(songMap)
+      .sort((a,b) => b.audiencePoints - a.audiencePoints)
       .slice(0, 50);
-
-    return sortedSongs;
   }
 
   function renderTopRadioSongs() {
     const songs = aggregateLast6Months();
 
-    // Create table HTML string
     let html = `
-      <table style="width:100%; border-collapse: collapse; margin-top: 20px; color: #fff;">
+      <table>
         <thead>
-          <tr style="background:#222; text-transform: uppercase;">
-            <th style="padding: 10px; border-bottom: 1px solid #444;">Rank</th>
-            <th style="padding: 10px; border-bottom: 1px solid #444;">Title</th>
-            <th style="padding: 10px; border-bottom: 1px solid #444;">Artist</th>
-            <th style="padding: 10px; border-bottom: 1px solid #444;">Weeks Charted</th>
-            <th style="padding: 10px; border-bottom: 1px solid #444;">Total Sales</th>
-            <th style="padding: 10px; border-bottom: 1px solid #444;">Audience Points</th>
+          <tr>
+            <th class="rank">Rank</th>
+            <th>Title</th>
+            <th>Artist</th>
+            <th class="weeks">Weeks Charted</th>
+            <th class="sales">Total Sales</th>
+            <th class="audience-points">Audience Points</th>
           </tr>
         </thead>
         <tbody>
@@ -90,31 +145,26 @@
 
     songs.forEach((song, i) => {
       html += `
-        <tr style="border-bottom: 1px solid #333;">
-          <td style="padding: 8px; font-weight: bold; color: #e60000;">${i + 1}</td>
-          <td style="padding: 8px;">${song.title}</td>
-          <td style="padding: 8px;">${song.artist}</td>
-          <td style="padding: 8px; text-align: center;">${song.weeksCharted}</td>
-          <td style="padding: 8px; text-align: right;">${formatNumber(song.totalSales)}</td>
-          <td style="padding: 8px; text-align: right; color: #1db954; font-weight: bold;">${formatNumber(song.audiencePoints)}</td>
+        <tr>
+          <td class="rank">${i + 1}</td>
+          <td>${song.title}</td>
+          <td>${song.artist}</td>
+          <td class="weeks">${song.weeksCharted}</td>
+          <td class="sales">${formatNumber(song.totalSales)}</td>
+          <td class="audience-points">${formatNumber(song.audiencePoints)}</td>
         </tr>
       `;
     });
 
     html += `</tbody></table>`;
 
-    // Append or inject into a container on your page:
-    // Make sure your top_artists.html has a container div with id "radioTop50"
-    const container = document.getElementById("radioTop50");
-    if (container) {
-      container.innerHTML = html;
-    } else {
-      // Or just append to body if no container
-      document.body.insertAdjacentHTML('beforeend', html);
-    }
+    document.getElementById("radioTop50").innerHTML = html;
   }
 
   window.onload = function() {
     renderTopRadioSongs();
   };
 </script>
+
+</body>
+</html>
