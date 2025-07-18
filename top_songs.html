@@ -97,6 +97,7 @@
 
 <script src="weekdata.js"></script>
 <script>
+  // Multiplier function based on weeks on chart
   function getMultiplier(weeks) {
     if (weeks <= 4) return 2890;
     if (weeks <= 10) return 8450;
@@ -107,6 +108,7 @@
     return 1010;
   }
 
+  // Create HTML snippet for a song cell
   function createSongHTML(song, extraLabel) {
     if (!song) return 'N/A';
     return `
@@ -128,6 +130,7 @@
     for (const week of weeks) {
       const data = weekData[week];
 
+      // Find Hot 100 #1 song by rank === 1
       let hot100 = null;
       for (const s of Object.values(data)) {
         if (Number(s.rank) === 1) {
@@ -143,6 +146,7 @@
         }, null);
       }
 
+      // Streamed Top: based on current week sales * 0.927124
       let streamedTop = null;
       for (const s of Object.values(data)) {
         const streams = (s.sales || 0) * 0.927124;
@@ -157,6 +161,7 @@
         }
       }
 
+      // Radio Top: calculate radio sales = sales * multiplier(weeks on chart)
       let radioTop = null;
       for (const s of Object.values(data)) {
         const radioSales = (s.sales || 0) * getMultiplier(s.weeks || 0);
@@ -170,7 +175,15 @@
         <td class="week">${week}</td>
         <td>${createSongHTML(hot100, 'Sales')}</td>
         <td>${createSongHTML(streamedTop, 'Plays')}</td>
-        <td>${createSongHTML(radioTop, 'Radio Sales')}</td>
+        <td>
+          <div>
+            <div class="song-title" title="Click for details" onclick="alert('Song: ${radioTop.title}\\nArtist: ${radioTop.artist}')">${radioTop.title}</div>
+            <div class="artist-name" title="Click for artist details" onclick="alert('Artist: ${radioTop.artist}')">${radioTop.artist}</div>
+            <div class="details">
+              Radio Sales: ${Math.round(radioTop.radioSales).toLocaleString()}
+            </div>
+          </div>
+        </td>
       `;
       tbody.appendChild(tr);
     }
