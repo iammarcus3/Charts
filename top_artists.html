@@ -92,7 +92,8 @@
       return count;
     }
 
-    function getMovement(song, thisWeek, lastWeekData) {
+    // Modified getMovement to use displayed rank
+    function getMovement(song, thisWeek, lastWeekData, currentRank) {
       const prev = lastWeekData.find(s =>
         s.title.toLowerCase() === song.title.toLowerCase() &&
         s.artist.toLowerCase() === song.artist.toLowerCase()
@@ -108,8 +109,8 @@
         }
         return "NEW";
       }
-      if (prev.rank > song.rank) return "UP";
-      if (prev.rank < song.rank) return "DOWN";
+      if (prev.rank > currentRank) return "UP";
+      if (prev.rank < currentRank) return "DOWN";
       return "SAME";
     }
 
@@ -129,7 +130,7 @@
       const currentSongs = weekData[week] || [];
       const lastWeekSongs = weekData[week - 1] || [];
 
-      const enhanced = currentSongs.map(song => {
+      let enhanced = currentSongs.map(song => {
         const lifetimeWeeks = getWeeksCharted(song.title, song.artist, week);
         const multiplier = getMultiplier(lifetimeWeeks);
         const audience = song.sales * multiplier;
@@ -142,12 +143,16 @@
           audience,
           points,
           timesAtOne,
-          move: getMovement(song, week, lastWeekSongs)
         };
       });
 
       enhanced.sort((a, b) => b.points - a.points);
       const top50 = enhanced.slice(0, 50);
+
+      // Assign movement after sorting, using displayed rank (i+1)
+      top50.forEach((song, i) => {
+        song.move = getMovement(song, week, lastWeekSongs, i + 1);
+      });
 
       const body = document.getElementById("chartBody");
       body.innerHTML = "";
@@ -181,3 +186,4 @@
   </script>
 </body>
 </html>
+
