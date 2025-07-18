@@ -119,23 +119,32 @@
   }
 
   (function main() {
-    const weeks = Object.keys(weekData).map(Number).sort((a,b) => a-b);
+    // DESCENDING sort, latest week first
+    const weeks = Object.keys(weekData).map(Number).sort((a,b) => b - a);
     const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
 
     for (const week of weeks) {
       const data = weekData[week];
 
-      // 1) Hot 100 #1 (rank=1)
+      // Hot 100 #1 with fallback - compare rank as number, rank stored as string sometimes
       let hot100 = null;
       for (const s of Object.values(data)) {
-        if (s.rank === 1) {
+        if (Number(s.rank) === 1) {
           hot100 = s;
           break;
         }
       }
+      if (!hot100) {
+        hot100 = Object.values(data).reduce((best, s) => {
+          if (!best) return s;
+          if ((Number(s.rank) || 999) < (Number(best.rank) || 999)) return s;
+          return best;
+        }, null);
+      }
 
-      // 2) #1 streamed song over last 7 weeks (including this)
-      const windowWeeks = weeks.filter(w => w >= week-6 && w <= week);
+      // #1 streamed over last 7 weeks (descending order, so window is week..week-6)
+      const windowWeeks = weeks.filter(w => w <= week && w > week - 7);
       const streamAgg = {};
       for (const w of windowWeeks) {
         const wkData = weekData[w];
@@ -155,7 +164,7 @@
         if (!streamedTop || s.plays > streamedTop.plays) streamedTop = s;
       }
 
-      // 3) #1 radio song for this week by radioSales = sales * multiplier(weeks)
+      // #1 radio song
       let radioTop = null;
       for (const s of Object.values(data)) {
         const radioSales = (s.sales || 0) * getMultiplier(s.weeks || 0);
@@ -164,7 +173,6 @@
         }
       }
 
-      // Create table row
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td class="week">${week}</td>
