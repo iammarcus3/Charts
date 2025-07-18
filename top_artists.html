@@ -34,7 +34,7 @@
         <th>Sales</th>
         <th>Audience</th>
         <th>Points</th>
-        <th>#1s</th> <!-- New Column -->
+        <th>#1 Count</th>
       </tr>
     </thead>
     <tbody id="chartBody"></tbody>
@@ -42,10 +42,11 @@
 
   <script src="weekdata.js"></script>
   <script>
-    const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a); // reversed for newest first
+    const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a); // newest first
     let currentWeek = allWeeks[0];
 
-    // Fill dropdown
+    const numberOneCounts = {};
+
     const weekSelector = document.getElementById("weekSelector");
     allWeeks.forEach(w => {
       const opt = document.createElement("option");
@@ -72,23 +73,6 @@
           s.artist.toLowerCase() === artist.toLowerCase()
         );
         if (matched) count++;
-      }
-      return count;
-    }
-
-    function getNumberOnes(title, artist, upToWeek) {
-      let count = 0;
-      for (let w = 1; w <= upToWeek; w++) {
-        const songs = weekData[w];
-        if (!songs) continue;
-        const topSong = songs.reduce((top, s) => (s.rank === 1 && (!top || s.sales > top.sales)) ? s : top, null);
-        if (
-          topSong &&
-          topSong.title.toLowerCase() === title.toLowerCase() &&
-          topSong.artist.toLowerCase() === artist.toLowerCase()
-        ) {
-          count++;
-        }
       }
       return count;
     }
@@ -132,17 +116,27 @@
       const currentSongs = weekData[week] || [];
       const lastWeekSongs = weekData[week - 1] || [];
 
+      // Count #1 songs this week
+      currentSongs.forEach(song => {
+        if (song.rank === 1 || song.rank === '1') {
+          const key = (song.title.toLowerCase() + '|' + song.artist.toLowerCase());
+          numberOneCounts[key] = (numberOneCounts[key] || 0) + 1;
+        }
+      });
+
       const enhanced = currentSongs.map(song => {
         const lifetimeWeeks = getWeeksCharted(song.title, song.artist, week);
-        const numberOnes = getNumberOnes(song.title, song.artist, week);
         const multiplier = getMultiplier(lifetimeWeeks);
         const audience = song.sales * multiplier;
         const points = song.sales + audience;
+        const key = (song.title.toLowerCase() + '|' + song.artist.toLowerCase());
+        const timesAtOne = numberOneCounts[key] || 0;
+
         return {
           ...song,
           audience,
           points,
-          numberOnes,
+          timesAtOne,
           move: getMovement(song, week, lastWeekSongs)
         };
       });
@@ -176,12 +170,13 @@
           <td>${song.sales.toLocaleString()}</td>
           <td>${Math.round(song.audience).toLocaleString()}</td>
           <td>${Math.round(song.points / 1000).toLocaleString()}</td>
-          <td>${song.numberOnes}</td>
+          <td>${song.timesAtOne}</td>
         `;
         body.appendChild(tr);
       });
     }
 
+    // Initial render
     weekSelector.value = currentWeek;
     renderWeek(currentWeek);
   </script>
