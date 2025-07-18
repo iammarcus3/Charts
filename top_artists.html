@@ -12,7 +12,8 @@
     tr:hover { background: #2a2a2a; }
     .move-up { color: lime; }
     .move-down { color: red; }
-    .no-change { color: gray; }
+    .no-change { color: deepskyblue; }
+    .re-enter { color: gold; }
     select, button { margin-right: 1rem; padding: 0.5rem; background: #222; color: #fff; border: 1px solid #555; }
   </style>
 </head>
@@ -40,7 +41,7 @@
 
   <script src="weekdata.js"></script>
   <script>
-    const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => a - b);
+    const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a); // reversed for newest first
     let currentWeek = allWeeks[0];
 
     // Fill dropdown
@@ -79,11 +80,23 @@
         s.title.toLowerCase() === song.title.toLowerCase() &&
         s.artist.toLowerCase() === song.artist.toLowerCase()
       );
-      if (!prev) return "NEW";
-      const prevRank = prev.rank;
-      if (prevRank > song.rank) return "⬆️";
-      if (prevRank < song.rank) return "⬇️";
-      return "—";
+
+      if (!prev) {
+        // Check if the song appeared in any earlier week before last week
+        for (let w = thisWeek - 2; w >= 1; w--) {
+          if (!weekData[w]) continue;
+          const earlier = weekData[w].find(s =>
+            s.title.toLowerCase() === song.title.toLowerCase() &&
+            s.artist.toLowerCase() === song.artist.toLowerCase()
+          );
+          if (earlier) return "RE-ENTER"; // Re-enter after gap
+        }
+        return "NEW"; // First ever entry
+      }
+
+      if (prev.rank > song.rank) return "UP";
+      if (prev.rank < song.rank) return "DOWN";
+      return "SAME";
     }
 
     function getMultiplier(weeks) {
@@ -121,15 +134,24 @@
       const body = document.getElementById("chartBody");
       body.innerHTML = "";
       top50.forEach((song, i) => {
+        let symbol = "", moveClass = "";
+        switch (song.move) {
+          case "UP":
+            symbol = "▲"; moveClass = "move-up"; break;
+          case "DOWN":
+            symbol = "▼"; moveClass = "move-down"; break;
+          case "SAME":
+            symbol = "●"; moveClass = "no-change"; break;
+          case "RE-ENTER":
+            symbol = "▬"; moveClass = "re-enter"; break;
+          case "NEW":
+            symbol = "🆕"; moveClass = "move-up"; break;
+        }
+
         const tr = document.createElement("tr");
-
-        const moveClass = song.move === "⬆️" ? "move-up" :
-                          song.move === "⬇️" ? "move-down" :
-                          song.move === "—" ? "no-change" : "";
-
         tr.innerHTML = `
           <td>${i + 1}</td>
-          <td class="${moveClass}">${song.move}</td>
+          <td class="${moveClass}">${symbol}</td>
           <td>${song.title}</td>
           <td>${song.artist}</td>
           <td>${song.sales.toLocaleString()}</td>
@@ -146,3 +168,4 @@
   </script>
 </body>
 </html>
+
