@@ -44,8 +44,23 @@
   <script>
     const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a); // newest first
     let currentWeek = allWeeks[0];
-
     const numberOneCounts = {};
+
+    // Precompute #1 song counts ONCE across all weeks
+    allWeeks.forEach(week => {
+      const songs = weekData[week];
+      if (!songs) return;
+      const topRadio = songs.reduce((max, song) => {
+        const lifetime = getWeeksCharted(song.title, song.artist, week);
+        const mult = getMultiplier(lifetime);
+        const aud = song.sales * mult;
+        return (!max || aud > max.audience) ? { song, audience: aud } : max;
+      }, null);
+      if (topRadio) {
+        const key = topRadio.song.title.toLowerCase() + "|" + topRadio.song.artist.toLowerCase();
+        numberOneCounts[key] = (numberOneCounts[key] || 0) + 1;
+      }
+    });
 
     const weekSelector = document.getElementById("weekSelector");
     allWeeks.forEach(w => {
@@ -82,7 +97,6 @@
         s.title.toLowerCase() === song.title.toLowerCase() &&
         s.artist.toLowerCase() === song.artist.toLowerCase()
       );
-
       if (!prev) {
         for (let w = thisWeek - 2; w >= 1; w--) {
           if (!weekData[w]) continue;
@@ -94,7 +108,6 @@
         }
         return "NEW";
       }
-
       if (prev.rank > song.rank) return "UP";
       if (prev.rank < song.rank) return "DOWN";
       return "SAME";
@@ -115,14 +128,6 @@
       currentWeek = week;
       const currentSongs = weekData[week] || [];
       const lastWeekSongs = weekData[week - 1] || [];
-
-      // Count #1 songs this week
-      currentSongs.forEach(song => {
-        if (song.rank === 1 || song.rank === '1') {
-          const key = (song.title.toLowerCase() + '|' + song.artist.toLowerCase());
-          numberOneCounts[key] = (numberOneCounts[key] || 0) + 1;
-        }
-      });
 
       const enhanced = currentSongs.map(song => {
         const lifetimeWeeks = getWeeksCharted(song.title, song.artist, week);
@@ -149,16 +154,11 @@
       top50.forEach((song, i) => {
         let symbol = "", moveClass = "";
         switch (song.move) {
-          case "UP":
-            symbol = "▲"; moveClass = "move-up"; break;
-          case "DOWN":
-            symbol = "▼"; moveClass = "move-down"; break;
-          case "SAME":
-            symbol = "●"; moveClass = "no-change"; break;
-          case "RE-ENTER":
-            symbol = "▬"; moveClass = "re-enter"; break;
-          case "NEW":
-            symbol = "🆕"; moveClass = "move-up"; break;
+          case "UP": symbol = "▲"; moveClass = "move-up"; break;
+          case "DOWN": symbol = "▼"; moveClass = "move-down"; break;
+          case "SAME": symbol = "●"; moveClass = "no-change"; break;
+          case "RE-ENTER": symbol = "▬"; moveClass = "re-enter"; break;
+          case "NEW": symbol = "🆕"; moveClass = "move-up"; break;
         }
 
         const tr = document.createElement("tr");
@@ -176,10 +176,8 @@
       });
     }
 
-    // Initial render
     weekSelector.value = currentWeek;
     renderWeek(currentWeek);
   </script>
 </body>
 </html>
-
