@@ -23,7 +23,7 @@
   table {
     border-collapse: collapse;
     width: 100%;
-    min-width: 1200px; /* Ensure enough space for all columns */
+    min-width: 1200px;
   }
   th, td {
     border: 1px solid #444;
@@ -32,34 +32,29 @@
     white-space: nowrap;
     background: #111;
   }
-
   th {
     background: #222;
     position: sticky;
     top: 0;
-    z-index: 10; /* header row should float above everything else */
+    z-index: 10;
   }
-
   th:first-child {
     left: 0;
-    z-index: 15; /* top-left cell gets highest z-index */
+    z-index: 15;
     position: sticky;
     background: #222;
   }
-
   td.week {
     position: sticky;
     left: 0;
-    background: #1a1a1a; /* slightly different for zebra effect */
+    background: #1a1a1a;
     z-index: 5;
     font-weight: bold;
     text-align: center;
   }
-
   tr:nth-child(even) {
     background: #1a1a1a;
   }
-
   .song-title {
     font-weight: bold;
     font-size: 1rem;
@@ -70,12 +65,6 @@
   .artist-name {
     font-style: italic;
     color: #ccc;
-    user-select: none;
-  }
-  .cert {
-    margin-left: 0.3rem;
-    font-weight: bold;
-    color: gold;
     user-select: none;
   }
   .details {
@@ -116,24 +105,14 @@
     return 1010;
   }
 
-  function getCertification(sales) {
-    if (sales >= 1_000_000) return '💎 Diamond';
-    if (sales >= 200_000) return '💿 x2 Platinum';
-    if (sales >= 100_000) return '💿 Platinum';
-    if (sales >= 50_000) return '🥇 Gold';
-    return '';
-  }
-
   function createSongHTML(song, extraLabel) {
     if (!song) return 'N/A';
-    const cert = getCertification(song.totalSales || song.sales);
     return `
       <div>
         <div class="song-title" title="Click for details" onclick="alert('Song: ${song.title}\\nArtist: ${song.artist}')">${song.title}</div>
         <div class="artist-name" title="Click for artist details" onclick="alert('Artist: ${song.artist}')">${song.artist}</div>
-        ${cert ? `<div class="cert">${cert}</div>` : ''}
         <div class="details">
-          ${extraLabel}: ${((extraLabel === 'Plays') ? (song.plays || 0) : (song.sales || 0)).toLocaleString()}
+          ${extraLabel}: ${((extraLabel === 'Plays') ? Math.round(song.plays || 0) : (song.sales || 0)).toLocaleString()}
         </div>
       </div>
     `;
@@ -170,13 +149,13 @@
         for (const s of Object.values(wkData)) {
           const key = s.title.toLowerCase() + '|' + s.artist.toLowerCase();
           if (!streamAgg[key]) {
-            streamAgg[key] = { title: s.title, artist: s.artist, plays: 0, sales: 0, totalSales: 0 };
+            streamAgg[key] = { title: s.title, artist: s.artist, plays: 0, sales: 0 };
           }
-          streamAgg[key].plays += s.plays || 0;
+          streamAgg[key].plays += (s.sales || 0) * 0.927124;
           streamAgg[key].sales += s.sales || 0;
-          streamAgg[key].totalSales += s.totalSales || 0;
         }
       }
+
       let streamedTop = null;
       for (const s of Object.values(streamAgg)) {
         if (!streamedTop || s.plays > streamedTop.plays) streamedTop = s;
@@ -203,5 +182,6 @@
 </script>
 </body>
 </html>
+
 
 
