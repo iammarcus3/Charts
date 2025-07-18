@@ -60,7 +60,7 @@
         : "";
 
     function getSongCertImages(sales) {
-      const scaled = sales * 1146.3457895;
+      const scaled = sales * 745;
       if (scaled >= 1_000_000) {
         return `<img src="diamond.png" title="Diamond">`;
       }
@@ -74,15 +74,11 @@
       return "—";
     }
 
-    function formatNumber(n) {
-      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
-      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
-      return n.toString();
+  
     }
 
     const streamMultiplier = 0.927124;
-    const saleMultiplier = 1146.3457895;
+    const saleMultiplier = 745;
 
     const trackTitleEl = document.getElementById("trackTitle");
     const trackArtistEl = document.getElementById("trackArtist");
