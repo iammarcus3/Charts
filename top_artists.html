@@ -70,10 +70,12 @@
       weekSelector.appendChild(opt);
     });
 
+    // FIXED changeWeek: invert dir sign because allWeeks is descending
     function changeWeek(dir) {
       const idx = allWeeks.indexOf(currentWeek);
-      if (idx + dir >= 0 && idx + dir < allWeeks.length) {
-        currentWeek = allWeeks[idx + dir];
+      const newIndex = idx - dir; // invert direction here
+      if (newIndex >= 0 && newIndex < allWeeks.length) {
+        currentWeek = allWeeks[newIndex];
         weekSelector.value = currentWeek;
         renderWeek(currentWeek);
       }
@@ -92,7 +94,6 @@
       return count;
     }
 
-    // Modified getMovement to use displayed rank
     function getMovement(song, thisWeek, lastWeekData, currentRank) {
       const prev = lastWeekData.find(s =>
         s.title.toLowerCase() === song.title.toLowerCase() &&
@@ -186,4 +187,3 @@
   </script>
 </body>
 </html>
-
