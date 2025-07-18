@@ -1,304 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Top 50 Radio Songs Weekly</title>
-<style>
-  body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #000;
-    color: #fff;
-    margin: 0; padding: 20px;
-  }
-  h1 {
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #e60000;
-    letter-spacing: 1px;
-  }
-  .nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 15px;
-    gap: 10px;
-  }
-  button {
-    background: #e60000;
-    border: none;
-    padding: 8px 15px;
-    color: #fff;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    user-select: none;
-  }
-  button:disabled {
-    background: #550000;
-    cursor: default;
-  }
-  select {
-    background: #111;
-    color: #fff;
-    border: 1px solid #e60000;
-    border-radius: 5px;
-    padding: 6px 10px;
-    font-weight: bold;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #111;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  th, td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #222;
-  }
-  th {
-    background-color: #222;
-    text-transform: uppercase;
-    font-size: 0.85em;
-    color: #e0e0e0;
-  }
-  tr:hover {
-    background-color: #1c1c1c;
-  }
-  .rank {
-    color: #e60000;
-    font-weight: bold;
-    text-align: center;
-    width: 50px;
-  }
-  .audience-points {
-    color: #1db954;
-    font-weight: bold;
-    text-align: right;
-  }
-  .weeks, .sales {
-    text-align: right;
-  }
-  .movement {
-    text-align: center;
-    width: 30px;
-    font-weight: bold;
-    user-select: none;
-  }
-  .up {
-    color: #4CAF50;
-  }
-  .down {
-    color: #f44336;
-  }
-  .steady {
-    color: #999;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Top Radio Songs</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .nav {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .nav button {
+      background: #444;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin: 0 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+    th {
+      background: #222;
+    }
+    .up { color: limegreen; }
+    .down { color: red; }
+    .new { color: gray; }
+  </style>
 </head>
 <body>
+  <h1>Top 50 Radio Songs (Weekly)</h1>
+  <div class="nav">
+    <button id="prevBtn">⬅️</button>
+    <span id="weekLabel">Week</span>
+    <button id="nextBtn">➡️</button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Move</th>
+        <th>Title</th>
+        <th>Artist</th>
+        <th>Sales</th>
+        <th>Weeks Charted</th>
+        <th>Audience</th>
+      </tr>
+    </thead>
+    <tbody id="chartBody"></tbody>
+  </table>
 
-<h1>Top 50 Radio Songs Weekly (Last 6 Months)</h1>
+  <script src="weekdata.js"></script>
+  <script>
+    const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => a - b);
+    const latestWeek = allWeeks[allWeeks.length - 1];
+    const sixMonthsAgo = allWeeks.filter(w => w >= latestWeek - 26);
+    let currentWeekIndex = sixMonthsAgo.length - 1; // start from most recent
 
-<div class="nav">
-  <button id="prevWeekBtn">⬅️ Prev Week</button>
-  <select id="weekSelect"></select>
-  <button id="nextWeekBtn">Next Week ➡️</button>
-</div>
+    // Get total weeks charted for every (title + artist)
+    const weeksChartedMap = {};
+    for (const week of allWeeks) {
+      for (const entry of weekData[week]) {
+        const key = (entry.title + entry.artist).toLowerCase();
+        weeksChartedMap[key] = (weeksChartedMap[key] || new Set()).add(week);
+      }
+    }
 
-<div id="radioTop50"></div>
+    function getWeeksCharted(key) {
+      return weeksChartedMap[key] ? weeksChartedMap[key].size : 0;
+    }
 
-<script src="weekdata.js"></script>
-<script>
-  // Multiplier tiers based on weeks charted
-  function getMultiplier(weeks) {
-    if (weeks >= 1 && weeks <= 4) return 6890;
-    if (weeks >= 5 && weeks <= 10) return 9450;
-    if (weeks >= 11 && weeks <= 16) return 11040;
-    if (weeks >= 17 && weeks <= 20) return 7690;
-    if (weeks >= 21 && weeks <= 30) return 4540;
-    if (weeks >= 31 && weeks <= 40) return 3090;
-    if (weeks > 40) return 1010;
-    return 0;
-  }
+    function getMultiplier(weeks) {
+      if (weeks <= 4) return 6890;
+      if (weeks <= 10) return 9450;
+      if (weeks <= 16) return 11040;
+      if (weeks <= 20) return 7690;
+      if (weeks <= 30) return 4540;
+      if (weeks <= 40) return 3090;
+      return 1010;
+    }
 
-  function formatNumber(num) {
-    if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + "M";
-    if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
-    return num.toString();
-  }
-
-  // Get all weeks sorted ascending
-  const allWeeks = Object.keys(weekData).map(Number).sort((a,b) => a-b);
-  // Last 26 weeks (approx 6 months)
-  const last26Weeks = allWeeks.slice(-26);
-
-  const weekSelect = document.getElementById('weekSelect');
-  const prevBtn = document.getElementById('prevWeekBtn');
-  const nextBtn = document.getElementById('nextWeekBtn');
-  const container = document.getElementById('radioTop50');
-
-  // Fill week dropdown with last 26 weeks (show as "Week X")
-  last26Weeks.forEach((w, i) => {
-    const option = document.createElement('option');
-    option.value = w;
-    option.textContent = `Week ${w}`;
-    weekSelect.appendChild(option);
-  });
-
-  // Current index in last26Weeks array
-  let currentWeekIndex = last26Weeks.length - 1;
-  weekSelect.value = last26Weeks[currentWeekIndex];
-
-  // Aggregate songs up to given weekNumber (inclusive)
-  function aggregateUpToWeek(weekNumber) {
-    const songMap = {};
-
-    // Filter weeks up to selected week
-    const weeksToUse = last26Weeks.filter(w => w <= weekNumber);
-
-    weeksToUse.forEach(weekNum => {
+    function renderChart() {
+      const weekNum = sixMonthsAgo[currentWeekIndex];
       const entries = weekData[weekNum];
-      if (!entries) return;
+      const chartBody = document.getElementById("chartBody");
+      document.getElementById("weekLabel").textContent = `Week ${weekNum}`;
 
-      entries.forEach(entry => {
-        const title = entry.title || "Unknown";
-        const artist = entry.artist || "Unknown";
-        const sales = parseFloat(entry.sales) || 0;
-        const key = `${title}|||${artist}`;
-
-        if (!songMap[key]) {
-          songMap[key] = {
-            title,
-            artist,
-            totalSales: 0,
-            weeksChartedSet: new Set()
-          };
-        }
-
-        songMap[key].totalSales += sales;
-        songMap[key].weeksChartedSet.add(weekNum);
-      });
-    });
-
-    // Calculate weeks charted and audience points per song
-    Object.values(songMap).forEach(song => {
-      song.weeksCharted = song.weeksChartedSet.size;
-      delete song.weeksChartedSet;
-      const multiplier = getMultiplier(song.weeksCharted);
-      song.audiencePoints = song.totalSales * multiplier;
-    });
-
-    return Object.values(songMap);
-  }
-
-  // Get ranking map for a week to compare movement (key -> rank)
-  function getRankingMap(songs) {
-    const map = {};
-    songs.forEach((song, idx) => {
-      const key = `${song.title}|||${song.artist}`;
-      map[key] = idx + 1;
-    });
-    return map;
-  }
-
-  // Render table for selected week with movement
-  function renderTableForWeek(weekNumber) {
-    const currentSongs = aggregateUpToWeek(weekNumber);
-    // Sort by audiencePoints descending
-    currentSongs.sort((a,b) => b.audiencePoints - a.audiencePoints);
-    const top50 = currentSongs.slice(0, 50);
-
-    // Previous week for movement
-    const prevWeekIndex = last26Weeks.indexOf(weekNumber) - 1;
-    const prevWeekNumber = prevWeekIndex >= 0 ? last26Weeks[prevWeekIndex] : null;
-    const prevRankingMap = prevWeekNumber !== null ? getRankingMap(aggregateUpToWeek(prevWeekNumber).sort((a,b)=>b.audiencePoints - a.audiencePoints)) : {};
-
-    let html = `
-      <table>
-        <thead>
-          <tr>
-            <th class="rank">Rank</th>
-            <th>Title</th>
-            <th>Artist</th>
-            <th class="weeks">Weeks Charted</th>
-            <th class="sales">Total Sales</th>
-            <th class="audience-points">Audience Points</th>
-            <th class="movement" title="Movement">↕</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
-
-    top50.forEach((song, i) => {
-      const rank = i + 1;
-      const key = `${song.title}|||${song.artist}`;
-      const prevRank = prevRankingMap[key] || null;
-
-      let movementSymbol = '➖';
-      let movementClass = 'steady';
-
-      if (prevRank !== null) {
-        if (prevRank > rank) {
-          movementSymbol = '▲';
-          movementClass = 'up';
-        } else if (prevRank < rank) {
-          movementSymbol = '🔻';
-          movementClass = 'down';
-        }
+      const prevWeekEntries = weekData[sixMonthsAgo[currentWeekIndex - 1] || -1] || [];
+      const prevMap = {};
+      for (const e of prevWeekEntries) {
+        const key = (e.title + e.artist).toLowerCase();
+        prevMap[key] = e.rank;
       }
 
-      html += `
+      const ranked = entries.map(entry => {
+        const key = (entry.title + entry.artist).toLowerCase();
+        const weeksCharted = getWeeksCharted(key);
+        const multiplier = getMultiplier(weeksCharted);
+        const audience = entry.sales * multiplier;
+        const prevRank = prevMap[key];
+        let move = '➖', cls = 'new';
+        if (prevRank) {
+          const diff = prevRank - entry.rank;
+          if (diff > 0) move = `<span class="up">▲</span>`;
+          else if (diff < 0) move = `<span class="down">🔻</span>`;
+          else move = `<span class="new">➖</span>`;
+        }
+        return {
+          ...entry,
+          weeksCharted,
+          audience,
+          move
+        };
+      }).sort((a, b) => b.audience - a.audience).slice(0, 50);
+
+      chartBody.innerHTML = ranked.map((entry, i) => `
         <tr>
-          <td class="rank">${rank}</td>
-          <td>${song.title}</td>
-          <td>${song.artist}</td>
-          <td class="weeks">${song.weeksCharted}</td>
-          <td class="sales">${formatNumber(song.totalSales)}</td>
-          <td class="audience-points">${formatNumber(song.audiencePoints)}</td>
-          <td class="movement ${movementClass}" aria-label="Movement">${movementSymbol}</td>
+          <td>${i + 1}</td>
+          <td>${entry.move}</td>
+          <td>${entry.title}</td>
+          <td>${entry.artist}</td>
+          <td>${entry.sales.toLocaleString()}</td>
+          <td>${entry.weeksCharted}</td>
+          <td>${Math.round(entry.audience).toLocaleString()}</td>
         </tr>
-      `;
-    });
-
-    html += '</tbody></table>';
-    container.innerHTML = html;
-
-    // Update buttons disabled state
-    prevBtn.disabled = currentWeekIndex === 0;
-    nextBtn.disabled = currentWeekIndex === last26Weeks.length -1;
-  }
-
-  // Navigation button handlers
-  prevBtn.onclick = () => {
-    if (currentWeekIndex > 0) {
-      currentWeekIndex--;
-      weekSelect.value = last26Weeks[currentWeekIndex];
-      renderTableForWeek(last26Weeks[currentWeekIndex]);
+      `).join('');
     }
-  };
-  nextBtn.onclick = () => {
-    if (currentWeekIndex < last26Weeks.length -1) {
-      currentWeekIndex++;
-      weekSelect.value = last26Weeks[currentWeekIndex];
-      renderTableForWeek(last26Weeks[currentWeekIndex]);
-    }
-  };
-  // Dropdown change handler
-  weekSelect.onchange = () => {
-    const selectedWeek = Number(weekSelect.value);
-    currentWeekIndex = last26Weeks.indexOf(selectedWeek);
-    renderTableForWeek(selectedWeek);
-  };
 
-  // Initial render
-  window.onload = () => {
-    renderTableForWeek(last26Weeks[currentWeekIndex]);
-  };
-</script>
+    document.getElementById("prevBtn").onclick = () => {
+      if (currentWeekIndex > 0) {
+        currentWeekIndex--;
+        renderChart();
+      }
+    };
 
+    document.getElementById("nextBtn").onclick = () => {
+      if (currentWeekIndex < sixMonthsAgo.length - 1) {
+        currentWeekIndex++;
+        renderChart();
+      }
+    };
+
+    window.onload = renderChart;
+  </script>
 </body>
 </html>
