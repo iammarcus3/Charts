@@ -65,18 +65,48 @@
                           n >= 1_000_000 ? (n / 1_000_000).toFixed(1) + "M" :
                           n >= 1_000 ? (n / 1_000).toFixed(0) + "K" : n.toString();
 
-    const getSongCertImages = sales => {
-      if (sales >= 1_000_000) return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
-      if (sales >= 100_000) return Array(Math.floor(sales / 100_000)).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
-      if (sales >= 50_000) return `<img src="gold.png" class="cert-icon" title="Gold">`;
-      return "—";
-    };
+    function getTrackCertIcon(sales) {
+      const scaled = sales * 745;
 
-    const getAlbumCertImages = sales => {
-      if (sales >= 10_000_000) return `<img src="diamond.png" class="cert-icon" title="Diamond">`;
-      if (sales >= 1_000_000) return Array(Math.floor(sales / 1_000_000)).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
-      if (sales >= 500_000) return `<img src="gold.png" class="cert-icon" title="Gold">`;
+      if (scaled >= 1_000_000) {
+        return `<img src="diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+      }
+
+      if (scaled >= 100_000) {
+        const count = Math.floor(scaled / 100_000);
+        const icons = (`<img src="platinum.png" class="cert-icon" title="Platinum">`);
+        const text = count === 1 ? 'Platinum' : `${count}× Platinum`;
+        return icons + ' ' + text;
+      }
+
+      if (scaled >= 50_000) {
+        return `<img src="gold.png" class="cert-icon" title="Gold"> Gold`;
+      }
+
+      return "";
+    }
+
+
+    function getAlbumCertIcons(sales) {
+      const scaled = sales * 1447.89;
+
+      if (scaled >= 10_000_000) {
+        return `<img src="diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+      }
+
+      if (scaled >= 1_000_000) {
+        const count = Math.floor(scaled / 1_000_000);
+        const icons = Array(count).fill(`<img src="platinum.png" class="cert-icon" title="Platinum">`).join('');
+        const text = count === 1 ? 'Platinum' : `${count}× Platinum`;
+        return icons + ' ' + text;
+      }
+
+      if (scaled >= 500_000) {
+        return `<img src="gold.png" class="cert-icon" title="Gold"> Gold`;
+      }
+
       return "—";
+    }
     };
 
     const artistKey = normalize(artistParam);
