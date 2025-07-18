@@ -15,16 +15,19 @@
     text-align: center;
     margin-bottom: 1.5rem;
   }
+
   .table-container {
-    max-width: 100%;
+    max-height: 80vh;
     overflow: auto;
     border: 1px solid #444;
   }
+
   table {
     border-collapse: collapse;
     width: 100%;
     min-width: 1200px;
   }
+
   th, td {
     border: 1px solid #444;
     padding: 0.5rem 0.8rem;
@@ -32,29 +35,26 @@
     white-space: nowrap;
     background: #111;
   }
-  th {
-    background: #222;
+
+  thead th {
     position: sticky;
     top: 0;
+    background: #222;
     z-index: 10;
   }
-  th:first-child {
-    left: 0;
-    z-index: 15;
-    position: sticky;
-    background: #222;
-  }
+
+  th:first-child,
   td.week {
     position: sticky;
     left: 0;
     background: #1a1a1a;
-    z-index: 5;
-    font-weight: bold;
-    text-align: center;
+    z-index: 15;
   }
+
   tr:nth-child(even) {
     background: #1a1a1a;
   }
+
   .song-title {
     font-weight: bold;
     font-size: 1rem;
@@ -62,11 +62,13 @@
     cursor: pointer;
     user-select: none;
   }
+
   .artist-name {
     font-style: italic;
     color: #ccc;
     user-select: none;
   }
+
   .details {
     margin-top: 0.2rem;
     font-size: 0.85rem;
@@ -141,7 +143,6 @@
         }, null);
       }
 
-      // StreamedTop: Based only on current week sales × 0.927124
       let streamedTop = null;
       for (const s of Object.values(data)) {
         const streams = (s.sales || 0) * 0.927124;
@@ -156,7 +157,6 @@
         }
       }
 
-      // Radio Top
       let radioTop = null;
       for (const s of Object.values(data)) {
         const radioSales = (s.sales || 0) * getMultiplier(s.weeks || 0);
