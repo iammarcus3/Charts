@@ -159,7 +159,11 @@
 
     function formatChange(current, previous) {
       if (previous === 0 || previous === undefined) return '<span>➖ 0.0%</span>';
-      const diff = ((current - previous) / previous) * 100;
+      let diff = ((current - previous) / previous) * 100;
+
+      // Cap diff between -100 and 100
+      if (diff > 100) diff = 100;
+      else if (diff < -100) diff = -100;
 
       let symbol = '➖';
       if (diff > 0) {
