@@ -4,17 +4,52 @@
   <meta charset="UTF-8" />
   <title>Top Radio Songs</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #111; color: #fff; padding: 2rem; }
-    h1 { font-size: 2rem; margin-bottom: 1rem; }
-    table { width: 100%; border-collapse: collapse; background: #222; }
-    th, td { padding: 0.6rem; border-bottom: 1px solid #333; text-align: left; }
-    th { background: #333; }
-    tr:hover { background: #2a2a2a; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 2rem;
+      margin: 0;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .chart-container {
+      max-height: 80vh;
+      overflow-y: auto;
+      border-top: 2px solid #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #222;
+    }
+    th, td {
+      padding: 0.6rem;
+      border-bottom: 1px solid #333;
+      text-align: left;
+    }
+    th {
+      background: #333;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    tr:hover {
+      background: #2a2a2a;
+    }
     .move-up { color: lime; }
     .move-down { color: red; }
     .no-change { color: deepskyblue; }
     .re-enter { color: gold; }
-    select, button { margin-right: 1rem; padding: 0.5rem; background: #222; color: #fff; border: 1px solid #555; }
+    select, button {
+      margin-right: 1rem;
+      padding: 0.5rem;
+      background: #222;
+      color: #fff;
+      border: 1px solid #555;
+    }
   </style>
 </head>
 <body>
@@ -24,31 +59,31 @@
     <select id="weekSelector" onchange="renderWeek(this.value)"></select>
     <button onclick="changeWeek(1)">➡️</button>
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Move</th>
-        <th>Title</th>
-        <th>Artist</th>
-        <th>Sales</th>
-        <th>Audience</th>
-        <th>Points</th>
-        <th>#1 Count</th>
-      </tr>
-    </thead>
-    <tbody id="chartBody"></tbody>
-  </table>
+  <div class="chart-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Move</th>
+          <th>Title</th>
+          <th>Artist</th>
+          <th>Sales</th>
+          <th>Audience</th>
+          <th>Points</th>
+          <th>#1 Count</th>
+        </tr>
+      </thead>
+      <tbody id="chartBody"></tbody>
+    </table>
+  </div>
 
   <script src="weekdata.js"></script>
   <script>
-    const startDate = new Date("2018-02-23"); // Week 1 starts on Feb 23, 2018
+    const startDate = new Date("2018-02-23");
     const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
     let currentWeek = allWeeks[0];
-
     const numberOneCountsByWeek = {};
 
-    // Precompute number one counts up to each week
     allWeeks.forEach(week => {
       if (!numberOneCountsByWeek[week]) numberOneCountsByWeek[week] = {};
       const songs = weekData[week];
