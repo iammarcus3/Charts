@@ -50,6 +50,9 @@
       color: #fff;
       border: 1px solid #555;
     }
+    .bold {
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -152,6 +155,20 @@
       return count;
     }
 
+    function wasChartedBefore(title, artist, week) {
+      for (let w = 1; w < week; w++) {
+        const entries = weekData[w];
+        if (!entries) continue;
+        if (entries.some(s =>
+          s.title.toLowerCase() === title.toLowerCase() &&
+          s.artist.toLowerCase() === artist.toLowerCase()
+        )) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     function getPreviousRank(song, lastWeekData) {
       const match = lastWeekData.find(s =>
         s.title.toLowerCase() === song.title.toLowerCase() &&
@@ -163,8 +180,12 @@
     function getMovementPercent(prevRank, currentRank) {
       if (!prevRank) return null;
       const change = prevRank - currentRank;
-      const percent = ((change / prevRank) * 100).toFixed(0);
-      return percent > 0 ? `▲ ${percent}%` : percent < 0 ? `▼ ${Math.abs(percent)}%` : `● 0%`;
+      let percent = (change / prevRank) * 100;
+      percent = Math.min(100, Math.abs(Math.round(percent)));
+
+      return change > 0 ? `▲ ${percent}%`
+           : change < 0 ? `▼ ${percent}%`
+           : `● 0%`;
     }
 
     function getMultiplier(weeks) {
@@ -191,14 +212,19 @@
         const key = (song.title.toLowerCase() + "|" + song.artist.toLowerCase());
         const timesAtOne = getNumberOneCount(key, week);
         const previousRank = getPreviousRank(song, lastWeekSongs);
-        const movementPercent = previousRank ? getMovementPercent(previousRank, song.rank) : "🆕";
+        let movement = getMovementPercent(previousRank, song.rank);
+
+        if (!previousRank) {
+          movement = wasChartedBefore(song.title, song.artist, week) ? "RE-ENTER" : "🆕";
+        }
 
         return {
           ...song,
           audience,
           points,
           timesAtOne,
-          movementPercent,
+          movement,
+          isNew: movement === "🆕"
         };
       });
 
@@ -209,16 +235,19 @@
       body.innerHTML = "";
       top100.forEach((song, i) => {
         let moveClass = "";
-        if (song.movementPercent.includes("▲")) moveClass = "move-up";
-        else if (song.movementPercent.includes("▼")) moveClass = "move-down";
-        else if (song.movementPercent === "● 0%") moveClass = "no-change";
-        else if (song.movementPercent === "🆕") moveClass = "move-up";
+        if (song.movement.includes("▲")) moveClass = "move-up";
+        else if (song.movement.includes("▼")) moveClass = "move-down";
+        else if (song.movement === "● 0%") moveClass = "no-change";
+        else if (song.movement === "RE-ENTER") moveClass = "re-enter";
+        else if (song.movement === "🆕") moveClass = "move-up";
+
+        const title = song.isNew ? `<span class="bold">${song.title}</span>` : song.title;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${i + 1}</td>
-          <td class="${moveClass}">${song.movementPercent}</td>
-          <td>${song.title}</td>
+          <td class="${moveClass}">${song.movement}</td>
+          <td>${title}</td>
           <td>${song.artist}</td>
           <td>${song.sales.toLocaleString()}</td>
           <td>${Math.round(song.audience).toLocaleString()}</td>
