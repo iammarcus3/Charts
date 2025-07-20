@@ -43,15 +43,16 @@
     .move-down { color: red; }
     .no-change { color: deepskyblue; }
     .re-enter { color: gold; }
+    .bold-new {
+      font-weight: bold;
+      color: orange;
+    }
     select, button {
       margin-right: 1rem;
       padding: 0.5rem;
       background: #222;
       color: #fff;
       border: 1px solid #555;
-    }
-    .bold {
-      font-weight: bold;
     }
   </style>
 </head>
@@ -74,6 +75,7 @@
           <th>Audience</th>
           <th>Points</th>
           <th>#1 Count</th>
+          <th>Peak</th>
         </tr>
       </thead>
       <tbody id="chartBody"></tbody>
@@ -87,6 +89,7 @@
     let currentWeek = allWeeks[0];
     const numberOneCountsByWeek = {};
 
+    // Build number one counts for each week (only current and past)
     allWeeks.forEach(week => {
       if (!numberOneCountsByWeek[week]) numberOneCountsByWeek[week] = {};
       const songs = weekData[week];
@@ -115,15 +118,6 @@
       return count;
     }
 
-    const weekSelector = document.getElementById("weekSelector");
-    allWeeks.forEach(w => {
-      const opt = document.createElement("option");
-      const dateRange = getWeekDateRange(w);
-      opt.value = w;
-      opt.textContent = `Week ${w} - ${dateRange}`;
-      weekSelector.appendChild(opt);
-    });
-
     function getWeekDateRange(week) {
       const start = new Date(startDate);
       start.setDate(start.getDate() + (week - 1) * 7);
@@ -131,6 +125,14 @@
       end.setDate(end.getDate() + 6);
       return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
     }
+
+    const weekSelector = document.getElementById("weekSelector");
+    allWeeks.forEach(w => {
+      const opt = document.createElement("option");
+      opt.value = w;
+      opt.textContent = `Week ${w} - ${getWeekDateRange(w)}`;
+      weekSelector.appendChild(opt);
+    });
 
     function changeWeek(dir) {
       const idx = allWeeks.indexOf(currentWeek);
@@ -146,11 +148,12 @@
       let count = 0;
       for (let w = 1; w <= upToWeek; w++) {
         if (!weekData[w]) continue;
-        const matched = weekData[w].find(s =>
+        if (weekData[w].some(s =>
           s.title.toLowerCase() === title.toLowerCase() &&
           s.artist.toLowerCase() === artist.toLowerCase()
-        );
-        if (matched) count++;
+        )) {
+          count++;
+        }
       }
       return count;
     }
@@ -198,6 +201,22 @@
       return 1010;
     }
 
+    // Calculate peak rank for a song up to current week (lowest rank)
+    function getPeakRank(title, artist, upToWeek) {
+      let peak = 10000; // arbitrarily large number
+      for (let w = 1; w <= upToWeek; w++) {
+        if (!weekData[w]) continue;
+        const entry = weekData[w].find(s =>
+          s.title.toLowerCase() === title.toLowerCase() &&
+          s.artist.toLowerCase() === artist.toLowerCase()
+        );
+        if (entry && entry.rank < peak) {
+          peak = entry.rank;
+        }
+      }
+      return peak === 10000 ? "—" : peak;
+    }
+
     function renderWeek(weekNum) {
       const week = parseInt(weekNum);
       currentWeek = week;
@@ -215,8 +234,10 @@
         let movement = getMovementPercent(previousRank, song.rank);
 
         if (!previousRank) {
-          movement = wasChartedBefore(song.title, song.artist, week) ? "RE-ENTER" : "🆕";
+          movement = wasChartedBefore(song.title, song.artist, week) ? "🔁" : "🆕";
         }
+
+        const peak = getPeakRank(song.title, song.artist, week);
 
         return {
           ...song,
@@ -224,6 +245,7 @@
           points,
           timesAtOne,
           movement,
+          peak,
           isNew: movement === "🆕"
         };
       });
@@ -235,24 +257,25 @@
       body.innerHTML = "";
       top100.forEach((song, i) => {
         let moveClass = "";
-        if (song.movement.includes("▲")) moveClass = "move-up";
-        else if (song.movement.includes("▼")) moveClass = "move-down";
+        if (typeof song.movement === "string" && song.movement.includes("▲")) moveClass = "move-up";
+        else if (typeof song.movement === "string" && song.movement.includes("▼")) moveClass = "move-down";
         else if (song.movement === "● 0%") moveClass = "no-change";
-        else if (song.movement === "RE-ENTER") moveClass = "re-enter";
+        else if (song.movement === "🔁") moveClass = "re-enter";
         else if (song.movement === "🆕") moveClass = "move-up";
 
-        const title = song.isNew ? `<span class="bold">${song.title}</span>` : song.title;
+        const titleHTML = song.isNew ? `<span class="bold-new">${song.title}</span>` : song.title;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${i + 1}</td>
           <td class="${moveClass}">${song.movement}</td>
-          <td>${title}</td>
+          <td>${titleHTML}</td>
           <td>${song.artist}</td>
           <td>${song.sales.toLocaleString()}</td>
           <td>${Math.round(song.audience).toLocaleString()}</td>
           <td>${Math.round(song.points / 1000).toLocaleString()}</td>
           <td>${song.timesAtOne}</td>
+          <td>${song.peak}</td>
         `;
         body.appendChild(tr);
       });
