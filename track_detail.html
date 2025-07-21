@@ -41,6 +41,8 @@
   <p><strong>Debut Week:</strong> <span id="debutWeek"></span></p>
   <p><strong>Peak Rank:</strong> <span id="peakRank"></span></p>
   <p><strong>Total Weeks on Chart:</strong> <span id="weeksOnChart"></span></p>
+  <p><strong>Weeks at #1:</strong> <span id="weeksAt1">—</span></p>
+  <p><strong>Weeks in Top 10:</strong> <span id="weeksTop10">—</span></p>
   <p><strong>Total Sales:</strong> <span id="totalSales"></span></p>
   <p><strong>Total Streams:</strong> <span id="totalStreams"></span></p>
 
@@ -64,6 +66,8 @@
             .trim()
         : "";
 
+    const formatNumber = num => parseFloat(num).toLocaleString();
+
     function getSongCertImages(sales) {
       const scaled = sales * 745.1;
       if (scaled >= 1_000_000) {
@@ -79,7 +83,6 @@
       return "";
     }
 
-    // Text certification label
     function getSongCertLabel(sales) {
       const scaled = sales * 745;
       if (scaled >= 1_000_000) return "Diamond";
@@ -99,6 +102,8 @@
     const weeksEl = document.getElementById("weeksOnChart");
     const totalSalesEl = document.getElementById("totalSales");
     const totalStreamsEl = document.getElementById("totalStreams");
+    const weeksAt1El = document.getElementById("weeksAt1");
+    const weeksTop10El = document.getElementById("weeksTop10");
     const albumList = document.getElementById("albumList");
 
     trackTitleEl.textContent = titleParam;
@@ -110,6 +115,8 @@
     let debut = null,
         peak = 999,
         weeks = 0,
+        weeksAt1 = 0,
+        weeksTop10 = 0,
         rawSales = 0;
 
     const albumMap = {};
@@ -133,6 +140,8 @@
             debut = { week: weekNum, label: week };
           }
           if (rank < peak) peak = rank;
+          if (rank === 1) weeksAt1++;
+          if (rank <= 10) weeksTop10++;
 
           const albumName = row.album || "Unknown Album";
           const albumKey = albumName.toUpperCase();
@@ -160,10 +169,11 @@
     debutEl.textContent = debut ? debut.label : "—";
     peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
     weeksEl.textContent = weeks;
-    totalSalesEl.textContent = actualSales.toFixed(0);
-    totalStreamsEl.textContent = (calculatedStreams * 1_000_000).toFixed(0);
+    weeksAt1El.textContent = weeksAt1 || "—";
+    weeksTop10El.textContent = weeksTop10 || "—";
+    totalSalesEl.textContent = formatNumber(actualSales.toFixed(0));
+    totalStreamsEl.textContent = formatNumber((calculatedStreams * 1_000_000).toFixed(0));
 
-    // Show certification icons and label
     const certIcons = getSongCertImages(rawSales);
     const certLabel = getSongCertLabel(rawSales);
 
@@ -189,7 +199,7 @@
         const albumUrl = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
         const albumActualSales = album.sales * saleMultiplier;
         const li = document.createElement("li");
-        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${albumActualSales.toFixed(0)}`;
+        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${formatNumber(albumActualSales.toFixed(0))}`;
         albumList.appendChild(li);
       });
     }
