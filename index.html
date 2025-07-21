@@ -183,10 +183,6 @@
       return normalize(title) + normalize(artist);
     }
 
-    function getAlbumKey(album, artist) {
-      return normalize(album) + normalize(artist);
-    }
-
     let currentWeek = 1;
     let currentChart = 'tracks';
 
@@ -217,6 +213,7 @@
     function renderTrackChart(entries, weekNumber, tbody) {
       const history = {};
 
+      // Build history only for Move, Weeks, Peak
       for (let i = 1; i < weekNumber; i++) {
         for (const row of weekData[i] || []) {
           const key = getFuzzyKey(row.title, row.artist);
@@ -227,36 +224,33 @@
 
       const currentTracks = entries.filter(row => row.title && row.artist);
 
-      // Enrich with totalWeeks, totalSales, bestPeak, calculate points and store
+      // Use points field directly from current week's row; no summation or calculation
       const enrichedTracks = currentTracks.map(row => {
         const key = getFuzzyKey(row.title, row.artist);
         const past = history[key] || [];
         const totalWeeks = past.length + 1;
-        const totalSales = past.reduce((sum, r) => sum + r.sales, 0) + row.sales;
-        const bestPeak = Math.min(...past.map(r => parseInt(r.rank)).concat([parseInt(row.rank)]));
 
-        // Calculate points here - if you have a formula, replace this line:
-        // For now, points = totalSales (same as before), can be updated easily
-        const points = totalSales; 
+        // Determine peak rank so far (including previous weeks)
+        const bestPeak = Math.min(...past.map(r => parseInt(r.rank)).concat([parseInt(row.rank)]));
 
         return {
           ...row,
           totalWeeks,
-          totalSales,
           bestPeak,
-          points
+          points: row.points  // <-- use points directly from current week's data
         };
       });
 
       // Sort by points descending
       enrichedTracks.sort((a, b) => b.points - a.points);
 
-      // Render rows, rank by points order
+      // Render rows with rank based on points order
       enrichedTracks.forEach((row, index) => {
-        // Determine movement icon by comparing with last week's rank for this song, if exists
-        let movementIcon = "➡️", movementText = "";
         const key = getFuzzyKey(row.title, row.artist);
         const past = history[key] || [];
+
+        // Move indicator based on last week's rank comparison
+        let movementIcon = "➡️", movementText = "";
         if (past.length === 0) {
           movementIcon = "🆕";
         } else {
@@ -282,10 +276,11 @@
     }
 
     function renderAlbumChart(entries, weekNumber, tbody) {
+      // No changes to album chart from your original code
       const albumsMap = {};
       for (const row of entries) {
         if (!row.album || row.album === "NaN") continue;
-        const key = getAlbumKey(row.album, row.artist);
+        const key = row.album.toLowerCase() + row.artist.toLowerCase();
         if (!albumsMap[key]) {
           albumsMap[key] = {
             album: row.album,
@@ -306,14 +301,14 @@
       for (let i = 1; i < weekNumber; i++) {
         for (const row of weekData[i] || []) {
           if (!row.album || row.album === "NaN") continue;
-          const key = getAlbumKey(row.album, row.artist);
+          const key = row.album.toLowerCase() + row.artist.toLowerCase();
           if (!pastAlbums[key]) pastAlbums[key] = new Set();
           pastAlbums[key].add(i);
         }
       }
 
       const enrichedAlbums = currentAlbums.map(album => {
-        const key = getAlbumKey(album.album, album.artist);
+        const key = album.album.toLowerCase() + album.artist.toLowerCase();
         const pastWeeks = pastAlbums[key] || new Set();
         const totalWeeks = pastWeeks.size + 1;
 
@@ -321,7 +316,7 @@
         for (let i = 1; i < weekNumber; i++) {
           const entries = weekData[i] || [];
           for (const r of entries) {
-            if (getAlbumKey(r.album, r.artist) === key) {
+            if ((r.album && r.album.toLowerCase() + r.artist.toLowerCase()) === key) {
               pastRanks.push(parseInt(r.rank));
             }
           }
@@ -342,7 +337,7 @@
         const totalSales = album.sales + pastRanks.reduce((s, r, idx) => {
           const weekDataEntries = weekData[idx + 1] || [];
           const salesThisWeek = weekDataEntries
-            .filter(e => getAlbumKey(e.album, e.artist) === key)
+            .filter(e => (e.album && e.album.toLowerCase() + e.artist.toLowerCase()) === key)
             .reduce((sum, e) => sum + e.sales, 0);
           return s + salesThisWeek;
         }, 0);
