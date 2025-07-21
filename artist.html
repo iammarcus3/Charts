@@ -10,44 +10,32 @@
       color: #fff;
       padding: 2rem;
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.2rem;
-    }
-    h2 {
-      font-size: 1.2rem;
-      margin-top: 2rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    h2 { margin-top: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
     th, td {
       padding: 0.5rem;
-      border-bottom: 1px solid #444;
       text-align: left;
+      border-bottom: 1px solid #444;
     }
-    th {
-      background-color: #222;
-    }
-    tr.year-row th {
-      background-color: #333;
+    th { background-color: #222; }
+    a { color: #1db954; text-decoration: none; }
+    .cert-icon { font-size: 1.2rem; margin-right: 4px; }
+    .year-row th {
+      background: #222;
+      color: #fff;
       font-size: 1.1rem;
-    }
-    a {
-      color: #1DB954;
-      text-decoration: none;
-    }
-    .cert-image {
-      height: 40px;
+      padding-top: 1rem;
     }
   </style>
 </head>
 <body>
-  <h1 id="artist-name">Loading...</h1>
+  <h1 id="artist-name">Artist</h1>
+  <p><strong>#1 Hits:</strong> <span id="num1s">0</span> |
+     <strong>Top 10s:</strong> <span id="top10s">0</span></p>
+
   <h2>Albums</h2>
-  <table id="albums-table">
+  <table>
     <thead>
       <tr>
         <th>Cover</th>
@@ -55,7 +43,7 @@
         <th>Certification</th>
       </tr>
     </thead>
-    <tbody id="albums-body"></tbody>
+    <tbody id="albums-table"></tbody>
   </table>
 
   <h2>Songs</h2>
@@ -63,13 +51,15 @@
     <thead>
       <tr>
         <th>Title</th>
-        <th>Certification</th>
+        <th>Cert</th>
         <th>Weeks</th>
         <th>Peak</th>
         <th>#1s</th>
       </tr>
     </thead>
-    <tbody id="songs-body"></tbody>
+    <tbody id="songs-body">
+      <!-- Populated by script -->
+    </tbody>
   </table>
 
   <h2>Certifications Summary</h2>
@@ -77,17 +67,19 @@
 
   <script src="weekdata.js"></script>
   <script>
+    const params = new URLSearchParams(window.location.search);
+    const artist = params.get("artist");
+    document.getElementById("artist-name").textContent = decodeURIComponent(artist);
+
+    const artistData = {
+      songs: [],
+      albums: {}
+    };
+
+    // Cert logic
     function getCertification(sales) {
       if (sales >= 1000000) return "💎 Diamond";
-      if (sales >= 900000) return "💿 x9 Platinum";
-      if (sales >= 800000) return "💿 x8 Platinum";
-      if (sales >= 700000) return "💿 x7 Platinum";
-      if (sales >= 600000) return "💿 x6 Platinum";
-      if (sales >= 500000) return "💿 x5 Platinum";
-      if (sales >= 400000) return "💿 x4 Platinum";
-      if (sales >= 300000) return "💿 x3 Platinum";
-      if (sales >= 200000) return "💿 x2 Platinum";
-      if (sales >= 100000) return "💿 Platinum";
+      if (sales >= 100000) return `${sales / 100000}x Platinum`;
       if (sales >= 50000) return "🥇 Gold";
       return "";
     }
@@ -99,66 +91,85 @@
       return "";
     }
 
-    const params = new URLSearchParams(window.location.search);
-    const artistName = decodeURIComponent(params.get("artist") || "").toLowerCase();
-    document.getElementById("artist-name").textContent = decodeURIComponent(params.get("artist") || "");
-
-    const artistData = {
-      albums: {},
-      songs: [],
-    };
-
-    const seenSongs = new Set();
     const certCounts = {};
 
+    // Gather song data
     for (const week in weekData) {
       weekData[week].forEach(entry => {
-        const entryArtist = entry.artist.toLowerCase();
-        if (entryArtist !== artistName) return;
-
-        // Albums
-        const albumKey = `${entry.album}||${entry.artist}`;
-        if (!artistData.albums[albumKey]) {
-          artistData.albums[albumKey] = {
-            name: entry.album,
-            artist: entry.artist,
-            totalSales: 0,
-          };
-        }
-        artistData.albums[albumKey].totalSales += entry.sales;
-
-        // Songs
-        const songKey = `${entry.title}||${entry.artist}`;
-        if (!seenSongs.has(songKey)) {
-          seenSongs.add(songKey);
-          artistData.songs.push({
-            title: entry.title,
-            artist: entry.artist,
-            totalSales: entry.totalSales,
-            weeks: entry.weeks,
-            peak: entry.peak,
-            debutWeek: entry.debutWeek || parseInt(week),
-            weeksOnChart: [parseInt(week)],
-            weeksAtOne: entry.rank === 1 ? 1 : 0,
-          });
-        } else {
-          const song = artistData.songs.find(s => s.title === entry.title && s.artist === entry.artist);
-          song.weeksOnChart.push(parseInt(week));
-          if (entry.rank === 1) song.weeksAtOne++;
+        if (entry.artist.toLowerCase().includes(artist.toLowerCase())) {
+          const key = entry.title + "___" + entry.artist;
+          let song = artistData.songs.find(s => s.key === key);
+          if (!song) {
+            song = {
+              key,
+              title: entry.title,
+              artist: entry.artist,
+              totalSales: 0,
+              weeks: 0,
+              peak: Infinity,
+              weeksAtOne: 0,
+              weeksOnChart: [],
+              album: entry.album
+            };
+            artistData.songs.push(song);
+          }
+          song.totalSales += entry.totalSales;
+          song.weeks++;
+          song.weeksOnChart.push(week);
+          const rank = parseInt(entry.rank);
+          if (rank === 1) song.weeksAtOne++;
+          if (rank < song.peak) song.peak = rank;
         }
       });
     }
 
-    // === SONGS GROUPED BY YEAR OF DEBUT ===
-    const songsByYear = {};
-    const baseDate = new Date("2018-01-01");
-
+    // Count Top 10s and #1s
+    let top10s = 0, num1s = 0;
     artistData.songs.forEach(song => {
-      const firstWeek = parseInt(song.weeksOnChart[0]);
-      const debutDate = new Date(baseDate);
-      debutDate.setDate(baseDate.getDate() + (firstWeek - 1) * 7);
+      if (song.peak <= 10) top10s++;
+      if (song.peak === 1) num1s++;
+    });
+    document.getElementById("num1s").textContent = num1s;
+    document.getElementById("top10s").textContent = top10s;
+
+    // Album table
+    artistData.songs.forEach(song => {
+      const album = song.album || "Unknown";
+      if (!artistData.albums[album]) {
+        artistData.albums[album] = { totalSales: 0, title: album };
+      }
+      artistData.albums[album].totalSales += song.totalSales;
+    });
+
+    const albumRows = Object.values(artistData.albums)
+      .sort((a, b) => b.totalSales - a.totalSales);
+
+    const albumTable = document.getElementById("albums-table");
+    albumRows.forEach(album => {
+      const cert = getCertification(album.totalSales);
+      const icon = getCertificationIcon(album.totalSales);
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${icon}</td>
+        <td><a href="album_detail.html?album=${encodeURIComponent(album.title)}&artist=${encodeURIComponent(artist)}">${album.title}</a></td>
+        <td>${cert}</td>
+      `;
+      albumTable.appendChild(row);
+
+      if (icon) {
+        certCounts[cert] = (certCounts[cert] || 0) + 1;
+      }
+    });
+
+    // Group songs by year of debut
+    const songsByYear = {};
+    artistData.songs.forEach(song => {
+      const debutWeek = song.weeksOnChart[0];
+      // Convert debutWeek string to number
+      const debutWeekNum = parseInt(debutWeek);
+      const baseDate = new Date(2018, 1, 23); // Feb 23, 2018 (month 1 = Feb)
+      const debutDate = new Date(baseDate.getTime() + (debutWeekNum - 1) * 7 * 24 * 60 * 60 * 1000);
       const year = debutDate.getFullYear();
-      if (year < 2018) return;
 
       if (!songsByYear[year]) songsByYear[year] = [];
 
@@ -168,7 +179,9 @@
       });
     });
 
-    const sortedYears = Object.keys(songsByYear).sort((a, b) => b - a);
+    // Sort years ascending (oldest first)
+    const sortedYears = Object.keys(songsByYear).sort((a, b) => a - b);
+
     const tbody = document.getElementById("songs-body");
     tbody.innerHTML = "";
 
@@ -201,39 +214,15 @@
       });
     });
 
-    // === ALBUMS ===
-    const albumTbody = document.getElementById("albums-body");
-    for (const key in artistData.albums) {
-      const album = artistData.albums[key];
-      const cert = getCertification(album.totalSales);
-      const image = cert.includes("Diamond") ? "diamond.png"
-                  : cert.includes("x9") ? "9x.png"
-                  : cert.includes("x8") ? "8x.png"
-                  : cert.includes("x7") ? "7x.png"
-                  : cert.includes("x6") ? "6x.png"
-                  : cert.includes("x5") ? "5x.png"
-                  : cert.includes("x4") ? "4x.png"
-                  : cert.includes("x3") ? "3x.png"
-                  : cert.includes("x2") ? "2x.png"
-                  : cert.includes("Platinum") ? "platinum.png"
-                  : cert.includes("Gold") ? "gold.png"
-                  : "";
+    // Summary
+    const certList = document.getElementById("cert-summary");
+    const sortedCerts = Object.entries(certCounts)
+      .sort((a, b) => b[1] - a[1]);
 
-      albumTbody.innerHTML += `
-        <tr>
-          <td>${image ? `<img src="certs/${image}" class="cert-image">` : ""}</td>
-          <td>${album.name}</td>
-          <td>${cert}</td>
-        </tr>
-      `;
-    }
-
-    // === CERTIFICATION SUMMARY ===
-    const summary = document.getElementById("cert-summary");
-    Object.keys(certCounts).sort((a, b) => certCounts[b] - certCounts[a]).forEach(cert => {
+    sortedCerts.forEach(([label, count]) => {
       const li = document.createElement("li");
-      li.textContent = `${cert}: ${certCounts[cert]}`;
-      summary.appendChild(li);
+      li.textContent = `${label}: ${count}`;
+      certList.appendChild(li);
     });
   </script>
 </body>
