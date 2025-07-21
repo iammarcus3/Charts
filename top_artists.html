@@ -43,6 +43,7 @@
     .move-down { color: red; }
     .no-change { color: deepskyblue; }
     .re-enter { color: gold; }
+    .new-song { color: violet; font-weight: bold; }
     select, button {
       margin-right: 1rem;
       padding: 0.5rem;
@@ -73,6 +74,7 @@
           <th>Sales</th>
           <th>Audience</th>
           <th>Points</th>
+          <th>Peak</th>
           <th>#1 Count</th>
         </tr>
       </thead>
@@ -87,6 +89,7 @@
     let currentWeek = allWeeks[0];
     const numberOneCountsByWeek = {};
 
+    // Build #1 counts by week and song key
     allWeeks.forEach(week => {
       if (!numberOneCountsByWeek[week]) numberOneCountsByWeek[week] = {};
       const songs = weekData[week];
@@ -105,6 +108,7 @@
       }
     });
 
+    // Get how many times a song has been #1 up to current week (inclusive)
     function getNumberOneCount(key, upToWeek) {
       let count = 0;
       for (let w = 1; w <= upToWeek; w++) {
@@ -115,6 +119,7 @@
       return count;
     }
 
+    // Generate week dropdown with date ranges Fri–Thu
     const weekSelector = document.getElementById("weekSelector");
     allWeeks.forEach(w => {
       const opt = document.createElement("option");
@@ -142,6 +147,7 @@
       }
     }
 
+    // Count how many weeks a song has charted including current week
     function getWeeksCharted(title, artist, upToWeek) {
       let count = 0;
       for (let w = 1; w <= upToWeek; w++) {
@@ -155,6 +161,7 @@
       return count;
     }
 
+    // Check if a song charted before current week (not including current)
     function wasChartedBefore(title, artist, week) {
       for (let w = 1; w < week; w++) {
         const entries = weekData[w];
@@ -169,6 +176,7 @@
       return false;
     }
 
+    // Get previous rank of song in last week data
     function getPreviousRank(song, lastWeekData) {
       const match = lastWeekData.find(s =>
         s.title.toLowerCase() === song.title.toLowerCase() &&
@@ -177,17 +185,35 @@
       return match ? parseInt(match.rank) : null;
     }
 
+    // Calculate movement % based on rank changes, capped at 100%
     function getMovementPercent(prevRank, currentRank) {
       if (!prevRank) return null;
       const change = prevRank - currentRank;
-      let percent = (change / prevRank) * 100;
-      percent = Math.min(100, Math.abs(Math.round(percent)));
+      let percent = (Math.abs(change) / prevRank) * 100;
+      percent = Math.min(100, Math.round(percent));
 
       return change > 0 ? `▲ ${percent}%`
            : change < 0 ? `▼ ${percent}%`
            : `● 0%`;
     }
 
+    // Get best (lowest) rank achieved by song up to current week
+    function getPeakRank(title, artist, upToWeek) {
+      let peak = Infinity;
+      for (let w = 1; w <= upToWeek; w++) {
+        if (!weekData[w]) continue;
+        const entry = weekData[w].find(s =>
+          s.title.toLowerCase() === title.toLowerCase() &&
+          s.artist.toLowerCase() === artist.toLowerCase()
+        );
+        if (entry && entry.rank && entry.rank < peak) {
+          peak = entry.rank;
+        }
+      }
+      return peak === Infinity ? null : peak;
+    }
+
+    // Multiplier for audience calculation by weeks charted
     function getMultiplier(weeks) {
       if (weeks <= 4) return 2890;
       if (weeks <= 10) return 8450;
@@ -215,8 +241,10 @@
         let movement = getMovementPercent(previousRank, song.rank);
 
         if (!previousRank) {
-          movement = wasChartedBefore(song.title, song.artist, week) ? "RE-ENTER" : "🆕";
+          movement = wasChartedBefore(song.title, song.artist, week) ? "🔄" : "🆕";
         }
+
+        const peakRank = getPeakRank(song.title, song.artist, week);
 
         return {
           ...song,
@@ -224,37 +252,40 @@
           points,
           timesAtOne,
           movement,
+          peakRank,
           isNew: movement === "🆕"
         };
       });
 
-      enhanced.sort((a, b) => b.points - a.points);
+      // Sort by points descending, then rank ascending for tie-breaks
+      enhanced.sort((a, b) => {
+        if (b.points === a.points) return a.rank - b.rank;
+        return b.points - a.points;
+      });
       const top100 = enhanced.slice(0, 100);
 
       const body = document.getElementById("chartBody");
       body.innerHTML = "";
       top100.forEach((song, i) => {
         let moveClass = "";
-        if (song.movement.includes("▲")) moveClass = "move-up";
+        if (song.movement === "🆕") moveClass = "new-song";
+        else if (song.movement === "🔄") moveClass = "re-enter";
+        else if (song.movement.includes("▲")) moveClass = "move-up";
         else if (song.movement.includes("▼")) moveClass = "move-down";
         else if (song.movement === "● 0%") moveClass = "no-change";
-        else if (song.movement === "RE-ENTER") moveClass = "re-enter";
-        else if (song.movement === "🆕") moveClass = "move-up";
 
-        // Replace RE-ENTER text with 🔄 icon
-        const moveDisplay = song.movement === "RE-ENTER" ? "🔄" : song.movement;
-
-        const title = song.isNew ? `<span class="bold" style="color: #ffdd57;">${song.title}</span>` : song.title;
+        const titleHTML = song.isNew ? `<span class="bold">${song.title}</span>` : song.title;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${i + 1}</td>
-          <td class="${moveClass}">${moveDisplay}</td>
-          <td>${title}</td>
+          <td class="${moveClass}">${song.movement}</td>
+          <td>${titleHTML}</td>
           <td>${song.artist}</td>
           <td>${song.sales.toLocaleString()}</td>
           <td>${Math.round(song.audience).toLocaleString()}</td>
           <td>${Math.round(song.points / 1000).toLocaleString()}</td>
+          <td>${song.peakRank !== null ? song.peakRank : '-'}</td>
           <td>${song.timesAtOne}</td>
         `;
         body.appendChild(tr);
