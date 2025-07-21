@@ -76,6 +76,14 @@
       albums: {}
     };
 
+    const chartStartDate = new Date("2018-02-23"); // Week 1
+
+    function getWeekDate(weekNum) {
+      const date = new Date(chartStartDate);
+      date.setDate(chartStartDate.getDate() + (weekNum - 1) * 7);
+      return date;
+    }
+
     // Cert logic
     function getCertification(sales) {
       if (sales >= 1000000) return "💎 Diamond";
@@ -115,7 +123,7 @@
           }
           song.totalSales += entry.totalSales;
           song.weeks++;
-          song.weeksOnChart.push(week);
+          song.weeksOnChart.push(parseInt(week));
           const rank = parseInt(entry.rank);
           if (rank === 1) song.weeksAtOne++;
           if (rank < song.peak) song.peak = rank;
@@ -164,8 +172,8 @@
     // Group songs by year of debut
     const songsByYear = {};
     artistData.songs.forEach(song => {
-      const debutWeek = song.weeksOnChart[0];
-      const debutDate = new Date(debutWeek);
+      const debutWeek = Math.min(...song.weeksOnChart);
+      const debutDate = getWeekDate(debutWeek);
       const year = debutDate.getFullYear();
 
       if (!songsByYear[year]) songsByYear[year] = [];
@@ -176,9 +184,7 @@
       });
     });
 
-    // Sort years descending
     const sortedYears = Object.keys(songsByYear).sort((a, b) => b - a);
-
     const tbody = document.getElementById("songs-body");
     tbody.innerHTML = "";
 
@@ -193,15 +199,13 @@
       songsByYear[year].forEach(song => {
         const cert = getCertification(song.totalSales);
         const certIcon = getCertificationIcon(song.totalSales);
-        const num1s = song.weeksAtOne || 0;
-
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><a href="track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}">${song.title}</a></td>
           <td>${certIcon} ${cert}</td>
           <td>${song.weeks}</td>
           <td>${song.peak}</td>
-          <td>${num1s > 0 ? num1s : ""}</td>
+          <td>${song.weeksAtOne || ""}</td>
         `;
         tbody.appendChild(tr);
 
