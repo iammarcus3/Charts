@@ -160,7 +160,7 @@
           <th>Title</th>
           <th>Artist</th>
           <th>Sales</th>
-          <th>Total Sales</th>
+          <th>Points</th>
           <th>Weeks</th>
           <th>Peak</th>
         </tr>
@@ -227,35 +227,58 @@
 
       const currentTracks = entries.filter(row => row.title && row.artist);
 
-      for (const row of currentTracks) {
+      // Enrich with totalWeeks, totalSales, bestPeak, calculate points and store
+      const enrichedTracks = currentTracks.map(row => {
         const key = getFuzzyKey(row.title, row.artist);
         const past = history[key] || [];
         const totalWeeks = past.length + 1;
         const totalSales = past.reduce((sum, r) => sum + r.sales, 0) + row.sales;
         const bestPeak = Math.min(...past.map(r => parseInt(r.rank)).concat([parseInt(row.rank)]));
 
+        // Calculate points here - if you have a formula, replace this line:
+        // For now, points = totalSales (same as before), can be updated easily
+        const points = totalSales; 
+
+        return {
+          ...row,
+          totalWeeks,
+          totalSales,
+          bestPeak,
+          points
+        };
+      });
+
+      // Sort by points descending
+      enrichedTracks.sort((a, b) => b.points - a.points);
+
+      // Render rows, rank by points order
+      enrichedTracks.forEach((row, index) => {
+        // Determine movement icon by comparing with last week's rank for this song, if exists
         let movementIcon = "➡️", movementText = "";
+        const key = getFuzzyKey(row.title, row.artist);
+        const past = history[key] || [];
         if (past.length === 0) {
           movementIcon = "🆕";
         } else {
-          const diff = parseInt(past[past.length - 1].rank) - parseInt(row.rank);
+          const lastRank = parseInt(past[past.length - 1].rank);
+          const diff = lastRank - parseInt(row.rank);
           if (diff > 0) movementIcon = "⬆️", movementText = ` <span class="move-up">+${diff}</span>`;
           else if (diff < 0) movementIcon = "⬇️", movementText = ` <span class="move-down">${diff}</span>`;
         }
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${row.rank}</td>
+          <td>${index + 1}</td>
           <td>${movementIcon}${movementText}</td>
           <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movementIcon === "🆕" ? `<strong>${row.title}</strong>` : row.title}</a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
           <td>${row.sales.toFixed(2)}</td>
-          <td>${totalSales.toFixed(2)}</td>
-          <td>${totalWeeks}</td>
-          <td>${bestPeak}</td>
+          <td>${row.points.toFixed(2)}</td>
+          <td>${row.totalWeeks}</td>
+          <td>${row.bestPeak}</td>
         `;
         tbody.appendChild(tr);
-      }
+      });
     }
 
     function renderAlbumChart(entries, weekNumber, tbody) {
@@ -388,4 +411,3 @@
   </script>
 </body>
 </html>
-
