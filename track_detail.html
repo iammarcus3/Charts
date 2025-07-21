@@ -39,10 +39,11 @@
   <h1 id="trackTitle">Track Title</h1>
   <p><strong>Artist:</strong> <span id="trackArtist"></span></p>
   <p><strong>Debut Week:</strong> <span id="debutWeek"></span></p>
+  <p><strong>Debut Rank:</strong> <span id="debutRank"></span></p>
   <p><strong>Peak Rank:</strong> <span id="peakRank"></span></p>
   <p><strong>Total Weeks on Chart:</strong> <span id="weeksOnChart"></span></p>
-  <p><strong>Weeks at #1:</strong> <span id="weeksAt1">—</span></p>
-  <p><strong>Weeks in Top 10:</strong> <span id="weeksTop10">—</span></p>
+  <p><strong>Weeks at #1:</strong> <span id="weeksAtOne"></span></p>
+  <p><strong>Weeks in Top 10:</strong> <span id="weeksTop10"></span></p>
   <p><strong>Total Sales:</strong> <span id="totalSales"></span></p>
   <p><strong>Total Streams:</strong> <span id="totalStreams"></span></p>
 
@@ -65,8 +66,6 @@
             .replace(/[^A-Z0-9]/g, "")
             .trim()
         : "";
-
-    const formatNumber = num => parseFloat(num).toLocaleString();
 
     function getSongCertImages(sales) {
       const scaled = sales * 745.1;
@@ -98,12 +97,13 @@
     const trackTitleEl = document.getElementById("trackTitle");
     const trackArtistEl = document.getElementById("trackArtist");
     const debutEl = document.getElementById("debutWeek");
+    const debutRankEl = document.getElementById("debutRank");
     const peakEl = document.getElementById("peakRank");
     const weeksEl = document.getElementById("weeksOnChart");
+    const weeksAtOneEl = document.getElementById("weeksAtOne");
+    const weeksTop10El = document.getElementById("weeksTop10");
     const totalSalesEl = document.getElementById("totalSales");
     const totalStreamsEl = document.getElementById("totalStreams");
-    const weeksAt1El = document.getElementById("weeksAt1");
-    const weeksTop10El = document.getElementById("weeksTop10");
     const albumList = document.getElementById("albumList");
 
     trackTitleEl.textContent = titleParam;
@@ -113,11 +113,12 @@
     const artistKey = normalize(artistParam);
 
     let debut = null,
+        debutRank = null,
         peak = 999,
         weeks = 0,
-        weeksAt1 = 0,
-        weeksTop10 = 0,
-        rawSales = 0;
+        rawSales = 0,
+        weeksAtOne = 0,
+        weeksTop10 = 0;
 
     const albumMap = {};
 
@@ -130,7 +131,7 @@
         const normTitle = normalizeTitle(row.title);
 
         if (normArtist === artistKey && normTitle === songKey) {
-          const rank = row.rank;
+          const rank = parseInt(row.rank);
           const weeklySales = parseFloat(row.sales) || 0;
 
           rawSales += weeklySales;
@@ -138,9 +139,11 @@
 
           if (!debut || weekNum < debut.week) {
             debut = { week: weekNum, label: week };
+            debutRank = rank;
           }
+
           if (rank < peak) peak = rank;
-          if (rank === 1) weeksAt1++;
+          if (rank === 1) weeksAtOne++;
           if (rank <= 10) weeksTop10++;
 
           const albumName = row.album || "Unknown Album";
@@ -167,12 +170,13 @@
     const calculatedStreams = rawSales * streamMultiplier;
 
     debutEl.textContent = debut ? debut.label : "—";
+    debutRankEl.textContent = debutRank ? `#${debutRank}` : "—";
     peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
     weeksEl.textContent = weeks;
-    weeksAt1El.textContent = weeksAt1 || "—";
-    weeksTop10El.textContent = weeksTop10 || "—";
-    totalSalesEl.textContent = formatNumber(actualSales.toFixed(0));
-    totalStreamsEl.textContent = formatNumber((calculatedStreams * 1_000_000).toFixed(0));
+    weeksAtOneEl.textContent = weeksAtOne;
+    weeksTop10El.textContent = weeksTop10;
+    totalSalesEl.textContent = actualSales.toLocaleString();
+    totalStreamsEl.textContent = Math.round(calculatedStreams * 1_000_000).toLocaleString();
 
     const certIcons = getSongCertImages(rawSales);
     const certLabel = getSongCertLabel(rawSales);
@@ -199,7 +203,7 @@
         const albumUrl = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
         const albumActualSales = album.sales * saleMultiplier;
         const li = document.createElement("li");
-        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${formatNumber(albumActualSales.toFixed(0))}`;
+        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${albumActualSales.toLocaleString()}`;
         albumList.appendChild(li);
       });
     }
