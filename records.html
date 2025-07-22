@@ -200,7 +200,9 @@
       const artistNameMap = {};
       const albumSalesMap = {};
       const songSalesMap = {};
+      let artistList = [];
 
+      // Build artist map from weekData
       for (const week in weekData) {
         weekData[week].forEach(entry => {
           const fullArtistList = splitArtists(entry.artist);
@@ -266,7 +268,8 @@
         }
       }
 
-      const artistList = Object.entries(artistMap)
+      // Create array of artists for rendering and sorting
+      artistList = Object.entries(artistMap)
         .map(([norm, a]) => {
           const totalStreams = a.rawSales * 0.927124 * 1_000_000;
           const totalSales = a.rawSales * 745;
@@ -293,24 +296,29 @@
             totalStreams,
             totalSales,
             monthlyStreams: totalStreams / (months || 1),
-            weeklyStreams:  totalStreams / (weeks || 1),
+            weeklyStreams: totalStreams / (weeks || 1),
             num1Songs,
             top10Songs,
             num1Albums,
             top10Albums,
             diamondSongs: a.diamondSongs.size,
-            diamondAlbums: a.diamondAlbums.size
+            diamondAlbums: a.diamondAlbums.size,
+            rank: 0 // will set below
           };
         })
         .sort((a, b) => b.totalStreams - a.totalStreams)
         .slice(0, 100);
 
+      // Assign initial rank based on sorting by totalStreams desc
+      artistList.forEach((artist, i) => artist.rank = i + 1);
+
+      // Render function
       function renderTable(data) {
         tableBody.innerHTML = "";
         data.forEach((a, i) => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td>${i + 1}</td>
+            <td>${a.rank}</td>
             <td><a href="artist.html?artist=${encodeURIComponent(a.name)}" title="View artist profile">${a.name}</a></td>
             <td data-tooltip="Total estimated streams">${formatNumber(a.totalStreams)}</td>
             <td data-tooltip="Average monthly streams">${formatNumber(a.monthlyStreams)}</td>
@@ -334,22 +342,52 @@
       renderTable(artistList);
 
       const headers = document.querySelectorAll("th[data-sort]");
+      let currentSortKey = 'rank';
+      let currentSortAsc = true;
+
       headers.forEach(header => {
         header.addEventListener("click", () => {
           const key = header.getAttribute("data-sort");
-          const isAsc = header.classList.contains("asc");
-          headers.forEach(h => h.classList.remove("asc", "desc"));
-          header.classList.add(isAsc ? "desc" : "asc");
 
-          artistList.sort((a, b) => {
-            if (typeof a[key] === 'string') {
-              return isAsc
-                ? a[key].localeCompare(b[key])
-                : b[key].localeCompare(a[key]);
-            } else {
-              return isAsc ? a[key] - b[key] : b[key] - a[key];
+          if (currentSortKey === key) {
+            // If clicking the same column, toggle asc/desc
+            currentSortAsc = !currentSortAsc;
+          } else {
+            // New column clicked: default ascending except for rank and some numeric columns
+            currentSortKey = key;
+            currentSortAsc = true;
+            if (key === 'rank' || key === 'num1songs' || key === 'num1albums' || key === 'top10songs' || key === 'top10albums' || key === 'sales' || key === 'streams' || key === 'monthly' || key === 'weekly') {
+              currentSortAsc = false; // default descending for numbers/rank
             }
+          }
+
+          // Remove all asc/desc classes
+          headers.forEach(h => h.classList.remove("asc", "desc"));
+          // Add class to the clicked header
+          header.classList.add(currentSortAsc ? "asc" : "desc");
+
+          // Sort data array
+          artistList.sort((a, b) => {
+            let aVal = a[key];
+            let bVal = b[key];
+
+            // For name (string), do localeCompare
+            if (typeof aVal === 'string') {
+              return currentSortAsc
+                ? aVal.localeCompare(bVal)
+                : bVal.localeCompare(aVal);
+            }
+            // For numbers, handle null or undefined gracefully
+            aVal = (aVal === undefined || aVal === null) ? -Infinity : aVal;
+            bVal = (bVal === undefined || bVal === null) ? -Infinity : bVal;
+
+            return currentSortAsc ? aVal - bVal : bVal - aVal;
           });
+
+          // Re-assign rank if sorting by rank or totalStreams (you can customize this)
+          if (currentSortKey === 'rank' || currentSortKey === 'streams' || currentSortKey === 'sales') {
+            artistList.forEach((artist, i) => artist.rank = i + 1);
+          }
 
           renderTable(artistList);
         });
@@ -358,4 +396,3 @@
   </script>
 </body>
 </html>
-
