@@ -4,121 +4,28 @@
   <meta charset="UTF-8" />
   <title>Billboard Hot 100</title>
   <style>
-    body {
-      background-color: #0f0f0f;
-      color: #ffffff;
-      font-family: 'Helvetica Neue', sans-serif;
-      margin: 0;
-      padding: 2rem;
-    }
-    nav {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    nav a {
-      color: #00ffff;
-      text-decoration: none;
-      margin: 0 1rem;
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-    nav a:hover {
-      color: #ffffff;
-      text-decoration: underline;
-    }
-    h1 {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #00ffff;
-      text-align: center;
-      margin-bottom: 2rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-    .week-nav {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    #weekSelector {
-      padding: 0.5rem;
-      font-size: 1rem;
-      background-color: #1a1a1a;
-      color: #00ffff;
-      border: 1px solid #00ffff;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      background-color: #00ffff;
-      color: #0f0f0f;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #00cccc;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-    .tab {
-      background-color: #1a1a1a;
-      color: #00ffff;
-      padding: 0.5rem 1rem;
-      margin: 0 0.25rem;
-      cursor: pointer;
-      border: 1px solid #00ffff;
-    }
-    .tab.active {
-      background-color: #00ffff;
-      color: #0f0f0f;
-      font-weight: bold;
-    }
-    .table-container {
-      max-height: 600px;
-      overflow-y: auto;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    thead {
-      background-color: #1a1a1a;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    th, td {
-      padding: 0.8rem;
-      text-align: left;
-      border-bottom: 1px solid #333;
-      font-size: 0.95rem;
-    }
-    th {
-      color: #00ffff;
-      text-transform: uppercase;
-      font-weight: 600;
-      background-color: #1a1a1a;
-    }
-    tr:hover {
-      background-color: #1f1f1f;
-    }
-    a {
-      color: #ffffff;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    a:hover {
-      color: #00ffff;
-      text-decoration: underline;
-    }
-    strong {
-      color: #00ffff;
-    }
+    /* [style unchanged from your original code] */
+    body { background-color: #0f0f0f; color: #ffffff; font-family: 'Helvetica Neue', sans-serif; margin: 0; padding: 2rem; }
+    nav { text-align: center; margin-bottom: 1rem; }
+    nav a { color: #00ffff; text-decoration: none; margin: 0 1rem; font-weight: bold; font-size: 1.1rem; }
+    nav a:hover { color: #ffffff; text-decoration: underline; }
+    h1 { font-size: 2.5rem; font-weight: bold; color: #00ffff; text-align: center; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 2px; }
+    .week-nav { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    #weekSelector { padding: 0.5rem; font-size: 1rem; background-color: #1a1a1a; color: #00ffff; border: 1px solid #00ffff; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; background-color: #00ffff; color: #0f0f0f; border: none; cursor: pointer; }
+    button:hover { background-color: #00cccc; }
+    .tabs { display: flex; justify-content: center; margin-top: 2rem; }
+    .tab { background-color: #1a1a1a; color: #00ffff; padding: 0.5rem 1rem; margin: 0 0.25rem; cursor: pointer; border: 1px solid #00ffff; }
+    .tab.active { background-color: #00ffff; color: #0f0f0f; font-weight: bold; }
+    .table-container { max-height: 600px; overflow-y: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background-color: #1a1a1a; position: sticky; top: 0; z-index: 1; }
+    th, td { padding: 0.8rem; text-align: left; border-bottom: 1px solid #333; font-size: 0.95rem; }
+    th { color: #00ffff; text-transform: uppercase; font-weight: 600; background-color: #1a1a1a; }
+    tr:hover { background-color: #1f1f1f; }
+    a { color: #ffffff; text-decoration: none; font-weight: 500; }
+    a:hover { color: #00ffff; text-decoration: underline; }
+    strong { color: #00ffff; }
     .move-up { color: #00ff00; }
     .move-down { color: #ff3333; }
     .move-stay { color: #cccccc; }
@@ -221,12 +128,7 @@
         const past = history[key] || [];
         const totalWeeks = past.length + 1;
         const bestPeak = Math.min(...past.map(r => parseInt(r.rank)).concat([parseInt(row.rank)]));
-        return {
-          ...row,
-          totalWeeks,
-          bestPeak,
-          points: row.points
-        };
+        return { ...row, totalWeeks, bestPeak, points: row.points };
       });
 
       enrichedTracks.sort((a, b) => b.points - a.points);
@@ -234,7 +136,6 @@
       enrichedTracks.forEach((row, index) => {
         const key = getFuzzyKey(row.title, row.artist);
         const past = history[key] || [];
-
         let movementIcon = "➡️", movementText = "";
         if (past.length === 0) {
           movementIcon = "🆕";
@@ -263,16 +164,12 @@
     function renderAlbumChart(entries, weekNumber, tbody) {
       const albumsMap = {};
       for (const row of entries) {
-        if (!row.album || row.album === "NaN") continue;
-        const key = row.album.toLowerCase() + row.artist.toLowerCase();
+        if (typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
+        const albumName = row.album || "";
+        const artistName = typeof row.artist === "string" ? row.artist : "";
+        const key = albumName.toLowerCase() + artistName.toLowerCase();
         if (!albumsMap[key]) {
-          albumsMap[key] = {
-            album: row.album,
-            artist: row.artist,
-            sales: 0,
-            tracks: [],
-            ranks: [],
-          };
+          albumsMap[key] = { album: albumName, artist: artistName, sales: 0, tracks: [], ranks: [] };
         }
         albumsMap[key].sales += row.sales;
         albumsMap[key].tracks.push(row.title);
@@ -284,8 +181,10 @@
 
       for (let i = 1; i < weekNumber; i++) {
         for (const row of weekData[i] || []) {
-          if (!row.album || row.album === "NaN") continue;
-          const key = row.album.toLowerCase() + row.artist.toLowerCase();
+          if (typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
+          const albumName = row.album || "";
+          const artistName = typeof row.artist === "string" ? row.artist : "";
+          const key = albumName.toLowerCase() + artistName.toLowerCase();
           if (!pastAlbums[key]) pastAlbums[key] = new Set();
           pastAlbums[key].add(i);
         }
@@ -295,14 +194,14 @@
         const key = album.album.toLowerCase() + album.artist.toLowerCase();
         const pastWeeks = pastAlbums[key] || new Set();
         const totalWeeks = pastWeeks.size + 1;
-
         const pastRanks = [];
+
         for (let i = 1; i < weekNumber; i++) {
           const entries = weekData[i] || [];
           for (const r of entries) {
-            if ((r.album && r.album.toLowerCase() + r.artist.toLowerCase()) === key) {
-              pastRanks.push(parseInt(r.rank));
-            }
+            if (typeof r.album !== "string" || r.album.trim().toLowerCase() === "nan") continue;
+            const rKey = r.album.toLowerCase() + r.artist.toLowerCase();
+            if (rKey === key) pastRanks.push(parseInt(r.rank));
           }
         }
 
@@ -318,28 +217,20 @@
           else movementIcon = "➡️";
         }
 
-        return {
-          ...album,
-          rank: currentBestRank,
-          totalWeeks,
-          bestPeak,
-          movementIcon,
-          movementText
-        };
+        return { ...album, rank: currentBestRank, totalWeeks, bestPeak, movementIcon, movementText };
       });
 
-      // ✅ SORT BY WEEKLY SALES ONLY
       enrichedAlbums.sort((a, b) => b.sales - a.sales);
 
       for (const album of enrichedAlbums) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>-</td>
+          <td>${enrichedAlbums.indexOf(album) + 1}</td>
           <td>${album.movementIcon}${album.movementText}</td>
           <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
           <td>${album.sales.toFixed(2)}</td>
-          <td>-</td>
+          <td>—</td>
           <td>${album.totalWeeks}</td>
           <td>${album.bestPeak}</td>
         `;
@@ -359,8 +250,8 @@
     function populateWeekSelector() {
       const selector = document.getElementById("weekSelector");
       const weeks = Object.keys(weekData)
-        .filter(k => !isNaN(parseInt(k)))
         .map(k => parseInt(k))
+        .filter(k => !isNaN(k))
         .sort((a, b) => b - a);
       for (const w of weeks) {
         const opt = document.createElement("option");
@@ -369,13 +260,13 @@
         selector.appendChild(opt);
       }
       selector.addEventListener("change", () => loadWeek(Number(selector.value)));
-      loadWeek(weeks[0]); // ✅ Load latest week
+      loadWeek(weeks[0]);
     }
 
     function changeWeek(delta) {
       const weeks = Object.keys(weekData)
-        .filter(k => !isNaN(parseInt(k)))
         .map(k => parseInt(k))
+        .filter(k => !isNaN(k))
         .sort((a, b) => b - a);
       const index = weeks.indexOf(currentWeek);
       const newIndex = index + delta;
