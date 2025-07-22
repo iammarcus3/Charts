@@ -48,31 +48,60 @@
   </table>
 
 <script>
-  // ===== Dummy sample weekData with 3 weeks
+  // ===== Expanded dummy weekData with 10 albums over 4 weeks
   const weekData = {
     1: [
       { rank: "1", title: "Song A1", artist: "Artist A", album: "Album Alpha", sales: 100, points: 100 },
       { rank: "2", title: "Song A2", artist: "Artist A", album: "Album Alpha", sales: 80, points: 80 },
       { rank: "3", title: "Song B1", artist: "Artist B", album: "Album Beta", sales: 90, points: 90 },
-      { rank: "4", title: "Song C1", artist: "Artist C", album: "Album Gamma", sales: 50, points: 50 }
+      { rank: "4", title: "Song B2", artist: "Artist B", album: "Album Beta", sales: 70, points: 70 },
+      { rank: "5", title: "Song C1", artist: "Artist C", album: "Album Gamma", sales: 50, points: 50 },
+      { rank: "6", title: "Song D1", artist: "Artist D", album: "Album Delta", sales: 40, points: 40 },
+      { rank: "7", title: "Song E1", artist: "Artist E", album: "Album Epsilon", sales: 30, points: 30 },
+      { rank: "8", title: "Song F1", artist: "Artist F", album: "Album Zeta", sales: 25, points: 25 },
+      { rank: "9", title: "Song G1", artist: "Artist G", album: "Album Eta", sales: 20, points: 20 },
+      { rank: "10", title: "Song H1", artist: "Artist H", album: "Album Theta", sales: 15, points: 15 }
     ],
     2: [
       { rank: "1", title: "Song B1", artist: "Artist B", album: "Album Beta", sales: 110, points: 110 },
-      { rank: "2", title: "Song A1", artist: "Artist A", album: "Album Alpha", sales: 95, points: 95 },
-      { rank: "3", title: "Song A2", artist: "Artist A", album: "Album Alpha", sales: 90, points: 90 },
-      { rank: "4", title: "Song D1", artist: "Artist D", album: "Album Delta", sales: 70, points: 70 }
+      { rank: "2", title: "Song B2", artist: "Artist B", album: "Album Beta", sales: 90, points: 90 },
+      { rank: "3", title: "Song A1", artist: "Artist A", album: "Album Alpha", sales: 95, points: 95 },
+      { rank: "4", title: "Song A2", artist: "Artist A", album: "Album Alpha", sales: 90, points: 90 },
+      { rank: "5", title: "Song I1", artist: "Artist I", album: "Album Iota", sales: 60, points: 60 },
+      { rank: "6", title: "Song D1", artist: "Artist D", album: "Album Delta", sales: 50, points: 50 },
+      { rank: "7", title: "Song J1", artist: "Artist J", album: "Album Kappa", sales: 40, points: 40 },
+      { rank: "8", title: "Song E1", artist: "Artist E", album: "Album Epsilon", sales: 35, points: 35 },
+      { rank: "9", title: "Song F1", artist: "Artist F", album: "Album Zeta", sales: 30, points: 30 },
+      { rank: "10", title: "Song G1", artist: "Artist G", album: "Album Eta", sales: 25, points: 25 }
     ],
     3: [
       { rank: "1", title: "Song A2", artist: "Artist A", album: "Album Alpha", sales: 120, points: 120 },
       { rank: "2", title: "Song B1", artist: "Artist B", album: "Album Beta", sales: 115, points: 115 },
       { rank: "3", title: "Song D1", artist: "Artist D", album: "Album Delta", sales: 80, points: 80 },
-      { rank: "4", title: "Song E1", artist: "Artist E", album: "Album Epsilon", sales: 40, points: 40 }
+      { rank: "4", title: "Song E1", artist: "Artist E", album: "Album Epsilon", sales: 70, points: 70 },
+      { rank: "5", title: "Song I1", artist: "Artist I", album: "Album Iota", sales: 60, points: 60 },
+      { rank: "6", title: "Song J1", artist: "Artist J", album: "Album Kappa", sales: 50, points: 50 },
+      { rank: "7", title: "Song F1", artist: "Artist F", album: "Album Zeta", sales: 45, points: 45 },
+      { rank: "8", title: "Song G1", artist: "Artist G", album: "Album Eta", sales: 40, points: 40 },
+      { rank: "9", title: "Song K1", artist: "Artist K", album: "Album Lambda", sales: 20, points: 20 },
+      { rank: "10", title: "Song L1", artist: "Artist L", album: "Album Mu", sales: 15, points: 15 }
+    ],
+    4: [
+      { rank: "1", title: "Song A1", artist: "Artist A", album: "Album Alpha", sales: 130, points: 130 },
+      { rank: "2", title: "Song D1", artist: "Artist D", album: "Album Delta", sales: 110, points: 110 },
+      { rank: "3", title: "Song B1", artist: "Artist B", album: "Album Beta", sales: 100, points: 100 },
+      { rank: "4", title: "Song E1", artist: "Artist E", album: "Album Epsilon", sales: 90, points: 90 },
+      { rank: "5", title: "Song F1", artist: "Artist F", album: "Album Zeta", sales: 85, points: 85 },
+      { rank: "6", title: "Song G1", artist: "Artist G", album: "Album Eta", sales: 80, points: 80 },
+      { rank: "7", title: "Song M1", artist: "Artist M", album: "Album Nu", sales: 50, points: 50 },
+      { rank: "8", title: "Song I1", artist: "Artist I", album: "Album Iota", sales: 40, points: 40 },
+      { rank: "9", title: "Song J1", artist: "Artist J", album: "Album Kappa", sales: 35, points: 35 },
+      { rank: "10", title: "Song N1", artist: "Artist N", album: "Album Xi", sales: 30, points: 30 }
     ]
   };
 
   let currentWeek = 1;
 
-  // --- Helper to populate week selector dropdown
   function populateWeekSelector() {
     const selector = document.getElementById("weekSelector");
     selector.innerHTML = "";
@@ -88,7 +117,6 @@
     });
   }
 
-  // --- Change week by delta
   function changeWeek(delta) {
     const weeks = Object.keys(weekData).map(Number).sort((a,b) => a-b);
     let idx = weeks.indexOf(currentWeek);
@@ -99,7 +127,6 @@
     document.getElementById("weekSelector").value = currentWeek;
   }
 
-  // --- Normalize helper
   function normalize(text) {
     if (typeof text !== "string") text = String(text || "");
     return text.toLowerCase()
@@ -109,7 +136,6 @@
       .replace(/[^a-z0-9]/g, '');
   }
 
-  // --- Main album chart render function with all requested logic
   function renderAlbumChart(entries, weekNumber, tbody) {
     // 1. Build map: albumKey -> unique songs across all weeks for song count
     const albumSongsCount = {};
@@ -231,7 +257,6 @@
     });
   }
 
-  // --- Load week function
   function loadWeek(weekNumber) {
     currentWeek = weekNumber;
     const entries = weekData[weekNumber] || [];
@@ -240,7 +265,6 @@
     document.getElementById("weekSelector").value = weekNumber;
   }
 
-  // --- Initialize
   populateWeekSelector();
   loadWeek(currentWeek);
 </script>
