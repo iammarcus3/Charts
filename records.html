@@ -5,9 +5,10 @@
   <title>Top 100 Artists</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fb;
       padding: 2rem;
+      color: #222;
     }
     nav {
       text-align: center;
@@ -16,56 +17,117 @@
     nav a {
       margin: 0 1rem;
       text-decoration: none;
-      font-weight: bold;
-      color: #333;
+      font-weight: 600;
+      color: #4a6cf7;
+      transition: color 0.3s ease;
+      font-size: 1.1rem;
     }
     nav a:hover {
-      color: #007acc;
+      color: #1a3de1;
     }
     h1 {
       text-align: center;
-      color: #333;
+      color: #34495e;
       margin-bottom: 1rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
     }
     .table-container {
-      overflow: auto;
-      max-height: 600px;
-      border: 1px solid #ccc;
+      overflow-x: auto;
+      max-height: 650px;
+      border: 1px solid #d0d7e3;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #fff;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      min-width: 1000px;
+      min-width: 1050px;
     }
     th, td {
-      padding: 0.8rem;
-      border: 1px solid #ccc;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e3e8f0;
       text-align: left;
-      cursor: pointer;
       white-space: nowrap;
+      font-size: 0.95rem;
+      user-select: none;
     }
     th {
-      background-color: #eee;
+      background-color: #f0f4ff;
+      font-weight: 700;
       text-transform: uppercase;
-      font-size: 0.9rem;
       position: sticky;
       top: 0;
-      z-index: 2;
+      z-index: 5;
+      cursor: pointer;
+      color: #3a4a91;
+      border-bottom: 2px solid #4a6cf7;
+      transition: background-color 0.3s ease;
+    }
+    th:hover {
+      background-color: #d2d9ff;
     }
     th:first-child, td:first-child {
       position: sticky;
       left: 0;
-      background: #f0f0f0;
-      z-index: 3;
+      background: #f9fbff;
+      font-weight: 700;
+      border-right: 1px solid #d0d7e3;
+      z-index: 6;
+    }
+    tbody tr:hover {
+      background-color: #f9faff;
     }
     a {
-      color: #0066cc;
+      color: #4a6cf7;
       text-decoration: none;
+      font-weight: 600;
     }
     a:hover {
       text-decoration: underline;
+    }
+    /* Sort arrow indicators */
+    th.asc::after {
+      content: " ▲";
+      font-size: 0.7rem;
+      color: #4a6cf7;
+    }
+    th.desc::after {
+      content: " ▼";
+      font-size: 0.7rem;
+      color: #4a6cf7;
+    }
+
+    /* Tooltip styling */
+    [data-tooltip] {
+      position: relative;
+      cursor: help;
+      border-bottom: 1px dotted #4a6cf7;
+    }
+    [data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4a6cf7;
+      color: white;
+      padding: 5px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+      font-size: 0.8rem;
+      opacity: 0.95;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Summary below table */
+    .summary {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #556677;
+      text-align: center;
     }
   </style>
 </head>
@@ -84,24 +146,26 @@
     <table>
       <thead>
         <tr>
-          <th data-sort="rank">Rank</th>
-          <th data-sort="artist">Artist</th>
-          <th data-sort="streams">Total Streams</th>
-          <th data-sort="monthly">Avg Monthly Streams</th>
-          <th data-sort="sales">Total Sales</th>
-          <th data-sort="num1songs">#1 Songs</th>
-          <th data-sort="top10songs">Top 10 Songs</th>
-          <th data-sort="num1albums">#1 Albums</th>
-          <th data-sort="top10albums">Top 10 Albums</th>
-          <th data-sort="weekly">Avg Weekly Streams</th>
-          
+          <th data-sort="rank" title="Rank position">Rank</th>
+          <th data-sort="artist" title="Artist name">Artist</th>
+          <th data-sort="streams" title="Total streams (estimated)">Total Streams</th>
+          <th data-sort="monthly" title="Average monthly streams">Avg Monthly Streams</th>
+          <th data-sort="sales" title="Estimated total sales">Total Sales</th>
+          <th data-sort="num1songs" title="Number of #1 songs">#1 Songs</th>
+          <th data-sort="top10songs" title="Number of Top 10 songs">Top 10 Songs</th>
+          <th data-sort="num1albums" title="Number of #1 albums">#1 Albums</th>
+          <th data-sort="top10albums" title="Number of Top 10 albums">Top 10 Albums</th>
+          <th data-sort="weekly" title="Average weekly streams">Avg Weekly Streams</th>
+          <!-- Removed last column as requested -->
         </tr>
       </thead>
       <tbody id="artistTable">
-        <tr><td colspan="11">Loading data...</td></tr>
+        <tr><td colspan="10">Loading data...</td></tr>
       </tbody>
     </table>
   </div>
+
+  <div class="summary" id="summaryText" aria-live="polite" role="status"></div>
 
   <script src="weekdata.js"></script>
   <script>
@@ -132,6 +196,7 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       const tableBody = document.getElementById("artistTable");
+      const summary = document.getElementById("summaryText");
       const artistMap = {};
       const artistNameMap = {};
       const albumSalesMap = {};
@@ -205,9 +270,9 @@
       const artistList = Object.entries(artistMap)
         .map(([norm, a]) => {
           const totalStreams = a.rawSales * 0.927124 * 1_000_000;
-          const totalSales = a.rawSales * 745
-          const months = a.weeks.size / 4.33; 
-          const weeks = a.weeks.size / 1;
+          const totalSales = a.rawSales * 745;
+          const months = a.weeks.size / 4.33;
+          const weeks = a.weeks.size;
           const displayName = artistNameMap[norm].split(' ')
             .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
             .join(' ');
@@ -228,7 +293,7 @@
             name: displayName,
             totalStreams,
             totalSales,
-            monthlyStreams: totalStreams / (months || 1), 
+            monthlyStreams: totalStreams / (months || 1),
             weeklyStreams:  totalStreams / (weeks || 1),
             num1Songs,
             top10Songs,
@@ -247,19 +312,24 @@
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${i + 1}</td>
-            <td><a href="artist.html?artist=${encodeURIComponent(a.name)}">${a.name}</a></td>
-            <td>${formatNumber(a.totalStreams)}</td>
-            <td>${formatNumber(a.monthlyStreams)}</td>
-            <td>${formatNumber(a.totalSales)}</td>
-            <td>${a.num1Songs}</td>
-            <td>${a.top10Songs}</td>
-            <td>${a.num1Albums}</td>
-            <td>${a.top10Albums}</td>
-            <td>${a.diamondSongs}</td>
-            <td>${a.diamondAlbums}</td>
+            <td><a href="artist.html?artist=${encodeURIComponent(a.name)}" title="View artist profile">${a.name}</a></td>
+            <td data-tooltip="Total estimated streams">${formatNumber(a.totalStreams)}</td>
+            <td data-tooltip="Average monthly streams">${formatNumber(a.monthlyStreams)}</td>
+            <td data-tooltip="Estimated total sales">${formatNumber(a.totalSales)}</td>
+            <td data-tooltip="Number of #1 songs">${a.num1Songs}</td>
+            <td data-tooltip="Number of Top 10 songs">${a.top10Songs}</td>
+            <td data-tooltip="Number of #1 albums">${a.num1Albums}</td>
+            <td data-tooltip="Number of Top 10 albums">${a.top10Albums}</td>
+            <td data-tooltip="Average weekly streams">${formatNumber(a.weeklyStreams)}</td>
           `;
           tableBody.appendChild(tr);
         });
+
+        // Update summary below table
+        const totalArtists = data.length;
+        const totalStreamsAll = data.reduce((sum, a) => sum + a.totalStreams, 0);
+        const totalSalesAll = data.reduce((sum, a) => sum + a.totalSales, 0);
+        summary.textContent = `Top ${totalArtists} artists combined have approximately ${formatNumber(totalStreamsAll)} streams and ${formatNumber(totalSalesAll)} sales.`;
       }
 
       renderTable(artistList);
