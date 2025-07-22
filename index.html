@@ -170,11 +170,11 @@
         const artistName = typeof row.artist === "string" ? row.artist : "";
         const key = albumName.toLowerCase() + artistName.toLowerCase();
         if (!albumsMap[key]) {
-          albumsMap[key] = { album: albumName, artist: artistName, sales: 0, ranks: [] };
+          albumsMap[key] = { album: albumName, artist: artistName, sales: 0, currentWeekRanks: [] };
         }
         albumsMap[key].sales += row.sales;
         const rankNum = parseInt(row.rank);
-        if (!isNaN(rankNum)) albumsMap[key].ranks.push(rankNum);
+        if (!isNaN(rankNum)) albumsMap[key].currentWeekRanks.push(rankNum);
       }
 
       const currentAlbums = Object.values(albumsMap);
@@ -197,7 +197,7 @@
         const pastWeeks = pastAlbums[key] || new Set();
         const totalWeeks = pastWeeks.size;
 
-        // Gather all ranks up to and including current week for peak calculation
+        // Gather all ranks from all weeks up to current week for peak calculation
         const allRanks = [];
         for (let i = 1; i <= weekNumber; i++) {
           const entries = weekData[i] || [];
@@ -210,14 +210,14 @@
             }
           }
         }
-
-        // Calculate best peak (lowest rank)
         const bestPeak = allRanks.length > 0 ? Math.min(...allRanks) : null;
 
-        // Movement calculation based on last week's best rank vs current best rank
+        // Get current week best rank for movement comparison
+        const currentBestRank = album.currentWeekRanks.length > 0 ? Math.min(...album.currentWeekRanks) : null;
+
+        // Movement calculation based on last week's best rank vs current week's best rank
         let movementIcon = "🆕", movementText = "";
-        if (weekNumber > 1) {
-          // Find last week's best rank
+        if (weekNumber > 1 && currentBestRank !== null) {
           const lastWeekEntries = weekData[weekNumber - 1] || [];
           let lastWeekRanks = [];
           for (const r of lastWeekEntries) {
@@ -230,7 +230,6 @@
           }
           if (lastWeekRanks.length > 0) {
             const lastWeekBestRank = Math.min(...lastWeekRanks);
-            const currentBestRank = Math.min(...album.ranks);
             const diff = lastWeekBestRank - currentBestRank;
             if (diff > 0) movementIcon = "⬆️", movementText = ` <span class="move-up">+${diff}</span>`;
             else if (diff < 0) movementIcon = "⬇️", movementText = ` <span class="move-down">${diff}</span>`;
@@ -238,16 +237,16 @@
           }
         }
 
-        return { ...album, totalWeeks, bestPeak, movementIcon, movementText };
+        return { ...album, totalWeeks, bestPeak, movementIcon, movementText, currentBestRank };
       });
 
       // Sort by sales descending
       enrichedAlbums.sort((a, b) => b.sales - a.sales);
 
-      for (const album of enrichedAlbums) {
+      for (const [i, album] of enrichedAlbums.entries()) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${enrichedAlbums.indexOf(album) + 1}</td>
+          <td>${i + 1}</td>
           <td>${album.movementIcon}${album.movementText}</td>
           <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
