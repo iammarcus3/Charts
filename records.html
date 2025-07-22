@@ -5,10 +5,9 @@
   <title>Top 100 Artists</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f7fb;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
       padding: 2rem;
-      color: #222;
     }
     nav {
       text-align: center;
@@ -17,117 +16,65 @@
     nav a {
       margin: 0 1rem;
       text-decoration: none;
-      font-weight: 600;
-      color: #4a6cf7;
-      transition: color 0.3s ease;
-      font-size: 1.1rem;
+      font-weight: bold;
+      color: #333;
     }
     nav a:hover {
-      color: #1a3de1;
+      color: #007acc;
     }
     h1 {
       text-align: center;
-      color: #34495e;
+      color: #333;
       margin-bottom: 1rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
     }
     .table-container {
-      overflow-x: auto;
-      max-height: 650px;
-      border: 1px solid #d0d7e3;
-      border-radius: 8px;
-      background-color: #fff;
-      box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
+      overflow: auto;
+      max-height: 600px;
+      border: 1px solid #ccc;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1050px;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      min-width: 1000px;
     }
     th, td {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #e3e8f0;
+      padding: 0.8rem;
+      border: 1px solid #ccc;
       text-align: left;
+      cursor: pointer;
       white-space: nowrap;
-      font-size: 0.95rem;
-      user-select: none;
     }
     th {
-      background-color: #f0f4ff;
-      font-weight: 700;
+      background-color: #eee;
       text-transform: uppercase;
+      font-size: 0.9rem;
       position: sticky;
       top: 0;
-      z-index: 5;
-      cursor: pointer;
-      color: #3a4a91;
-      border-bottom: 2px solid #4a6cf7;
-      transition: background-color 0.3s ease;
-    }
-    th:hover {
-      background-color: #d2d9ff;
+      z-index: 2;
+      user-select: none;
     }
     th:first-child, td:first-child {
       position: sticky;
       left: 0;
-      background: #f9fbff;
-      font-weight: 700;
-      border-right: 1px solid #d0d7e3;
-      z-index: 6;
-    }
-    tbody tr:hover {
-      background-color: #f9faff;
+      background: #f0f0f0;
+      z-index: 3;
     }
     a {
-      color: #4a6cf7;
+      color: #0066cc;
       text-decoration: none;
-      font-weight: 600;
     }
     a:hover {
       text-decoration: underline;
     }
-    /* Sort arrow indicators */
     th.asc::after {
       content: " ▲";
-      font-size: 0.7rem;
-      color: #4a6cf7;
+      color: #007acc;
     }
     th.desc::after {
       content: " ▼";
-      font-size: 0.7rem;
-      color: #4a6cf7;
-    }
-
-    /* Tooltip styling */
-    [data-tooltip] {
-      position: relative;
-      cursor: help;
-      border-bottom: 1px dotted #4a6cf7;
-    }
-    [data-tooltip]:hover::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: 125%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #4a6cf7;
-      color: white;
-      padding: 5px 8px;
-      border-radius: 5px;
-      white-space: nowrap;
-      font-size: 0.8rem;
-      opacity: 0.95;
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    /* Summary below table */
-    .summary {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #556677;
-      text-align: center;
+      color: #007acc;
     }
   </style>
 </head>
@@ -146,16 +93,16 @@
     <table>
       <thead>
         <tr>
-          <th data-sort="rank" title="Rank position">Rank</th>
-          <th data-sort="artist" title="Artist name">Artist</th>
-          <th data-sort="streams" title="Total streams (estimated)">Total Streams</th>
-          <th data-sort="monthly" title="Average monthly streams">Avg Monthly Streams</th>
-          <th data-sort="sales" title="Estimated total sales">Total Sales</th>
-          <th data-sort="num1songs" title="Number of #1 songs">#1 Songs</th>
-          <th data-sort="top10songs" title="Number of Top 10 songs">Top 10 Songs</th>
-          <th data-sort="num1albums" title="Number of #1 albums">#1 Albums</th>
-          <th data-sort="top10albums" title="Number of Top 10 albums">Top 10 Albums</th>
-          <th data-sort="weekly" title="Average weekly streams">Avg Weekly Streams</th>
+          <th data-sort="rank">Rank</th>
+          <th data-sort="name">Artist</th>
+          <th data-sort="totalStreams">Total Streams</th>
+          <th data-sort="monthlyStreams">Avg Monthly Streams</th>
+          <th data-sort="totalSales">Total Sales</th>
+          <th data-sort="num1Songs">#1 Songs</th>
+          <th data-sort="top10Songs">Top 10 Songs</th>
+          <th data-sort="num1Albums">#1 Albums</th>
+          <th data-sort="top10Albums">Top 10 Albums</th>
+          <th data-sort="weeklyStreams">Avg Weekly Streams</th>
         </tr>
       </thead>
       <tbody id="artistTable">
@@ -163,8 +110,6 @@
       </tbody>
     </table>
   </div>
-
-  <div class="summary" id="summaryText" aria-live="polite" role="status"></div>
 
   <script src="weekdata.js"></script>
   <script>
@@ -175,46 +120,24 @@
       return n.toString();
     }
 
-    function normalize(str) {
-      return (str || '').toUpperCase().replace(/[^A-Z0-9]/g, '').trim();
-    }
-
-    function normalizeAlbum(str) {
-      return normalize(
-        String(str || "")
-          .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
-      );
-    }
-
-    function splitArtists(str) {
-      return String(str || "")
-        .split(/,|&| and | with | feat\.? | featuring /i)
-        .map(a => a.trim())
-        .filter(Boolean);
-    }
-
     window.addEventListener("DOMContentLoaded", () => {
-      const tableBody = document.getElementById("artistTable");
-      const summary = document.getElementById("summaryText");
+      const tbody = document.getElementById('artistTable');
       const artistMap = {};
       const artistNameMap = {};
       const albumSalesMap = {};
       const songSalesMap = {};
-      let artistList = [];
 
-      // Build artist map from weekData
+      // Build artist stats from weekData
       for (const week in weekData) {
         weekData[week].forEach(entry => {
-          const fullArtistList = splitArtists(entry.artist);
+          const artists = (entry.artist || "").split(/,|&| and | with | feat\.? | featuring /i).map(a => a.trim()).filter(Boolean);
           const album = entry.album || "";
           const title = entry.title || "";
           const rank = parseInt(entry.rank);
           const sales = parseFloat(entry.sales) || 0;
-          const songKey = normalize(title);
-          const albumKey = normalizeAlbum(album);
 
-          fullArtistList.forEach(rawName => {
-            const normName = normalize(rawName);
+          artists.forEach(rawName => {
+            const normName = rawName.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
             if (!artistMap[normName]) {
               artistMap[normName] = {
@@ -222,30 +145,21 @@
                 weeks: new Set(),
                 songs: {},
                 albums: {},
-                diamondSongs: new Set(),
-                diamondAlbums: new Set()
               };
               artistNameMap[normName] = rawName;
             }
-
             const artistStats = artistMap[normName];
             artistStats.rawSales += sales;
             artistStats.weeks.add(week);
 
-            // Track song sales and best rank
-            const songID = songKey + "|" + normName;
-            if (!songSalesMap[songID]) songSalesMap[songID] = 0;
-            songSalesMap[songID] += sales;
-
+            // Track songs
+            const songKey = (title || "").toUpperCase().replace(/[^A-Z0-9]/g, '');
             if (!artistStats.songs[songKey]) artistStats.songs[songKey] = Infinity;
             if (rank < artistStats.songs[songKey]) artistStats.songs[songKey] = rank;
 
-            // Track album sales and best rank
-            if (albumKey !== "NAN") {
-              const albumID = albumKey + "|" + normName;
-              if (!albumSalesMap[albumID]) albumSalesMap[albumID] = 0;
-              albumSalesMap[albumID] += sales;
-
+            // Track albums
+            const albumKey = album.toUpperCase().replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "").replace(/[^A-Z0-9]/g, '');
+            if (albumKey !== "") {
               if (!artistStats.albums[albumKey]) artistStats.albums[albumKey] = Infinity;
               if (rank < artistStats.albums[albumKey]) artistStats.albums[albumKey] = rank;
             }
@@ -253,140 +167,99 @@
         });
       }
 
-      // Assign diamond songs and albums
-      for (const key in songSalesMap) {
-        const [songKey, normName] = key.split("|");
-        if (songSalesMap[key] >= 1000 && artistMap[normName]) {
-          artistMap[normName].diamondSongs.add(songKey);
-        }
-      }
+      // Convert artistMap to array and compute stats
+      const artistList = Object.entries(artistMap).map(([normName, stats]) => {
+        const totalStreams = stats.rawSales * 0.927124 * 1_000_000;
+        const months = stats.weeks.size / 4.33;
+        const weeks = stats.weeks.size;
 
-      for (const key in albumSalesMap) {
-        const [albumKey, normName] = key.split("|");
-        if (albumSalesMap[key] >= 1000 && artistMap[normName]) {
-          artistMap[normName].diamondAlbums.add(albumKey);
-        }
-      }
+        let num1Songs = 0, top10Songs = 0;
+        Object.values(stats.songs).forEach(r => {
+          if (r === 1) num1Songs++;
+          if (r <= 10) top10Songs++;
+        });
 
-      // Create array of artists for rendering and sorting
-      artistList = Object.entries(artistMap)
-        .map(([norm, a]) => {
-          const totalStreams = a.rawSales * 0.927124 * 1_000_000;
-          const totalSales = a.rawSales * 745;
-          const months = a.weeks.size / 4.33;
-          const weeks = a.weeks.size;
-          const displayName = artistNameMap[norm].split(' ')
-            .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-            .join(' ');
+        let num1Albums = 0, top10Albums = 0;
+        Object.values(stats.albums).forEach(r => {
+          if (r === 1) num1Albums++;
+          if (r <= 10) top10Albums++;
+        });
 
-          let num1Songs = 0, top10Songs = 0;
-          for (const r of Object.values(a.songs)) {
-            if (r === 1) num1Songs++;
-            if (r <= 10) top10Songs++;
-          }
+        return {
+          name: artistNameMap[normName],
+          totalStreams,
+          monthlyStreams: totalStreams / (months || 1),
+          totalSales: stats.rawSales * 745,
+          num1Songs,
+          top10Songs,
+          num1Albums,
+          top10Albums,
+          weeklyStreams: totalStreams / (weeks || 1),
+          rank: 0 // will assign later
+        };
+      });
 
-          let num1Albums = 0, top10Albums = 0;
-          for (const r of Object.values(a.albums)) {
-            if (r === 1) num1Albums++;
-            if (r <= 10) top10Albums++;
-          }
-
-          return {
-            name: displayName,
-            totalStreams,
-            totalSales,
-            monthlyStreams: totalStreams / (months || 1),
-            weeklyStreams: totalStreams / (weeks || 1),
-            num1Songs,
-            top10Songs,
-            num1Albums,
-            top10Albums,
-            diamondSongs: a.diamondSongs.size,
-            diamondAlbums: a.diamondAlbums.size,
-            rank: 0 // will set below
-          };
-        })
-        .sort((a, b) => b.totalStreams - a.totalStreams)
-        .slice(0, 100);
-
-      // Assign initial rank based on sorting by totalStreams desc
-      artistList.forEach((artist, i) => artist.rank = i + 1);
+      // Sort initially by totalStreams descending & assign rank
+      artistList.sort((a,b) => b.totalStreams - a.totalStreams);
+      artistList.forEach((a,i) => a.rank = i+1);
 
       // Render function
       function renderTable(data) {
-        tableBody.innerHTML = "";
-        data.forEach((a, i) => {
+        tbody.innerHTML = "";
+        data.forEach(a => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${a.rank}</td>
-            <td><a href="artist.html?artist=${encodeURIComponent(a.name)}" title="View artist profile">${a.name}</a></td>
-            <td data-tooltip="Total estimated streams">${formatNumber(a.totalStreams)}</td>
-            <td data-tooltip="Average monthly streams">${formatNumber(a.monthlyStreams)}</td>
-            <td data-tooltip="Estimated total sales">${formatNumber(a.totalSales)}</td>
-            <td data-tooltip="Number of #1 songs">${a.num1Songs}</td>
-            <td data-tooltip="Number of Top 10 songs">${a.top10Songs}</td>
-            <td data-tooltip="Number of #1 albums">${a.num1Albums}</td>
-            <td data-tooltip="Number of Top 10 albums">${a.top10Albums}</td>
-            <td data-tooltip="Average weekly streams">${formatNumber(a.weeklyStreams)}</td>
+            <td><a href="artist.html?artist=${encodeURIComponent(a.name)}">${a.name}</a></td>
+            <td>${formatNumber(a.totalStreams)}</td>
+            <td>${formatNumber(a.monthlyStreams)}</td>
+            <td>${formatNumber(a.totalSales)}</td>
+            <td>${a.num1Songs}</td>
+            <td>${a.top10Songs}</td>
+            <td>${a.num1Albums}</td>
+            <td>${a.top10Albums}</td>
+            <td>${formatNumber(a.weeklyStreams)}</td>
           `;
-          tableBody.appendChild(tr);
+          tbody.appendChild(tr);
         });
-
-        // Update summary below table
-        const totalArtists = data.length;
-        const totalStreamsAll = data.reduce((sum, a) => sum + a.totalStreams, 0);
-        const totalSalesAll = data.reduce((sum, a) => sum + a.totalSales, 0);
-        summary.textContent = `Top ${totalArtists} artists combined have approximately ${formatNumber(totalStreamsAll)} streams and ${formatNumber(totalSalesAll)} sales.`;
       }
 
       renderTable(artistList);
 
+      // Sorting logic
+      let currentSort = { key: 'rank', asc: true };
       const headers = document.querySelectorAll("th[data-sort]");
-      let currentSortKey = 'rank';
-      let currentSortAsc = true;
 
       headers.forEach(header => {
         header.addEventListener("click", () => {
           const key = header.getAttribute("data-sort");
-
-          if (currentSortKey === key) {
-            // If clicking the same column, toggle asc/desc
-            currentSortAsc = !currentSortAsc;
+          if (currentSort.key === key) {
+            currentSort.asc = !currentSort.asc;
           } else {
-            // New column clicked: default ascending except for rank and some numeric columns
-            currentSortKey = key;
-            currentSortAsc = true;
-            if (key === 'rank' || key === 'num1songs' || key === 'num1albums' || key === 'top10songs' || key === 'top10albums' || key === 'sales' || key === 'streams' || key === 'monthly' || key === 'weekly') {
-              currentSortAsc = false; // default descending for numbers/rank
-            }
+            currentSort.key = key;
+            currentSort.asc = true;
+            // For numeric fields except name, default desc
+            if (key !== 'name') currentSort.asc = false;
           }
 
           // Remove all asc/desc classes
           headers.forEach(h => h.classList.remove("asc", "desc"));
-          // Add class to the clicked header
-          header.classList.add(currentSortAsc ? "asc" : "desc");
+          header.classList.add(currentSort.asc ? "asc" : "desc");
 
-          // Sort data array
-          artistList.sort((a, b) => {
-            let aVal = a[key];
-            let bVal = b[key];
+          artistList.sort((a,b) => {
+            let valA = a[key];
+            let valB = b[key];
 
-            // For name (string), do localeCompare
-            if (typeof aVal === 'string') {
-              return currentSortAsc
-                ? aVal.localeCompare(bVal)
-                : bVal.localeCompare(aVal);
+            if (typeof valA === 'string') {
+              return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+            } else {
+              return currentSort.asc ? valA - valB : valB - valA;
             }
-            // For numbers, handle null or undefined gracefully
-            aVal = (aVal === undefined || aVal === null) ? -Infinity : aVal;
-            bVal = (bVal === undefined || bVal === null) ? -Infinity : bVal;
-
-            return currentSortAsc ? aVal - bVal : bVal - aVal;
           });
 
-          // Re-assign rank if sorting by rank or totalStreams (you can customize this)
-          if (currentSortKey === 'rank' || currentSortKey === 'streams' || currentSortKey === 'sales') {
-            artistList.forEach((artist, i) => artist.rank = i + 1);
+          // Recalculate rank if sorting by totalStreams or rank
+          if (currentSort.key === 'rank' || currentSort.key === 'totalStreams' || currentSort.key === 'totalSales') {
+            artistList.forEach((a,i) => a.rank = i+1);
           }
 
           renderTable(artistList);
@@ -394,5 +267,6 @@
       });
     });
   </script>
+
 </body>
 </html>
