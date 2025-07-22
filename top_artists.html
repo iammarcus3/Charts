@@ -4,21 +4,18 @@
   <meta charset="UTF-8" />
   <title>Album Chart Test</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #fff; color: #000; }
+    body { font-family: Arial, sans-serif; background: #fff; color: #111; padding: 2rem; }
+    h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+    select, button { font-size: 1rem; margin: 0.5rem 0; }
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th, td { padding: 0.5rem; text-align: left; border: 1px solid #ccc; }
     th { background: #f0f0f0; }
-    .up { color: green; }
-    .down { color: red; }
-    .new { font-weight: bold; color: blue; }
   </style>
 </head>
 <body>
   <h1>Album Chart Test</h1>
-  <label>Select Week:
-    <select id="weekSelect"></select>
-  </label>
-
+  <label for="weekSelector">Select Week:</label>
+  <select id="weekSelector"></select>
   <table>
     <thead>
       <tr>
@@ -27,153 +24,113 @@
         <th>Album</th>
         <th>Artist</th>
         <th>Sales</th>
-        <th>Total Sales</th>
         <th>Weeks</th>
         <th>Peak</th>
       </tr>
     </thead>
-    <tbody id="albumTable"></tbody>
+    <tbody id="albumTableBody"></tbody>
   </table>
 
   <script src="weekdata.js"></script>
   <script>
-    const weekKeys = Object.keys(weekData).sort((a, b) => +a - +b);
-    const weekSelect = document.getElementById("weekSelect");
-    const tableBody = document.getElementById("albumTable");
-
-    weekKeys.forEach(w => {
-      const opt = document.createElement("option");
-      opt.value = w;
-      opt.textContent = `Week ${w}`;
-      weekSelect.appendChild(opt);
-    });
-
-    weekSelect.value = weekKeys[0];
-    weekSelect.addEventListener("change", () => render(+weekSelect.value));
-    render(+weekSelect.value);
+    const weekSelector = document.getElementById('weekSelector');
+    const tbody = document.getElementById('albumTableBody');
+    const albumHistory = {};
 
     function normalize(str) {
-      return str?.toLowerCase().replace(/ *[\[\(].*?[\]\)] */g, '').replace(/[^a-z0-9]/g, '');
+      return str.toLowerCase().replace(/[\s\-–_(){}\[\]]+/g, '').replace(/(deluxe|bonus|edition|version)/gi, '');
     }
 
-    function getAlbumDataUpToWeek(targetWeek) {
-      const albumMap = {};
-      for (let w = 1; w <= targetWeek; w++) {
-        const weekEntries = weekData[w];
-        if (!weekEntries) continue;
+    const weekKeys = Object.keys(weekData).sort((a, b) => Number(a) - Number(b));
+    weekKeys.forEach(week => {
+      const opt = document.createElement('option');
+      opt.value = week;
+      opt.textContent = `Week ${week}`;
+      weekSelector.appendChild(opt);
+    });
 
-        weekEntries.forEach(entry => {
-          if (!entry.album || !entry.title || !entry.artist) return;
-          const key = normalize(entry.album) + "|" + normalize(entry.artist);
-          if (!albumMap[key]) {
-            albumMap[key] = {
-              album: entry.album,
-              artist: entry.artist,
-              totalSales: 0,
-              salesByWeek: {},
-              peaks: [],
-              weeks: new Set()
-            };
-          }
-          const album = albumMap[key];
-          album.totalSales += entry.sales;
-          album.salesByWeek[w] = (album.salesByWeek[w] || 0) + entry.sales;
-          album.weeks.add(w);
-        });
-      }
+    function getAlbumKey(title, artist) {
+      return normalize(title) + '___' + normalize(artist);
+    }
 
-      const currentWeekAlbums = Object.values(albumMap).map(album => {
-        const salesThisWeek = album.salesByWeek[targetWeek] || 0;
-        return {
-          ...album,
-          salesThisWeek,
-          weeksCount: album.weeks.size
+    function loadWeek(weekNum) {
+      const currentWeek = weekData[weekNum];
+      const prevWeek = weekData[weekKeys[weekKeys.indexOf(weekNum) - 1]] || [];
+
+      const albums = {};
+      const albumSongsCount = {};
+
+      currentWeek.forEach(song => {
+        if (!song.album || !song.artist || !song.sales) return;
+        const key = getAlbumKey(song.album, song.artist);
+        albums[key] = albums[key] || {
+          album: song.album,
+          artist: song.artist,
+          sales: 0,
+          songs: [],
         };
-      }).filter(a => a.salesThisWeek > 0);
-
-      currentWeekAlbums.sort((a, b) => b.salesThisWeek - a.salesThisWeek);
-      currentWeekAlbums.forEach((album, i) => album.rank = i + 1);
-
-      // Track peaks
-      Object.values(albumMap).forEach(album => {
-        album.peak = Infinity;
-        for (let w = 1; w <= targetWeek; w++) {
-          const wk = weekData[w];
-          if (!wk) continue;
-          let sales = 0;
-          wk.forEach(e => {
-            const key = normalize(e.album) + "|" + normalize(e.artist);
-            if (key === normalize(album.album) + "|" + normalize(album.artist)) {
-              sales += e.sales;
-            }
-          });
-          if (sales > 0) {
-            // Rank for this week
-            const allAlbums = {};
-            wk.forEach(e => {
-              const k = normalize(e.album) + "|" + normalize(e.artist);
-              allAlbums[k] = (allAlbums[k] || 0) + e.sales;
-            });
-            const sorted = Object.entries(allAlbums).sort((a, b) => b[1] - a[1]);
-            const currentRank = sorted.findIndex(([k]) => k === normalize(album.album) + "|" + normalize(album.artist)) + 1;
-            if (currentRank && currentRank < album.peak) album.peak = currentRank;
-          }
-        }
+        albums[key].sales += song.sales;
+        albums[key].songs.push(song);
       });
 
-      return currentWeekAlbums;
-    }
+      // Filter out albums with fewer than 2 songs
+      const filtered = Object.entries(albums).filter(([key, val]) => val.songs.length >= 2);
 
-    function getLastWeekAlbumRanks(week) {
-      const lastWeekAlbums = {};
-      if (!weekData[week - 1]) return lastWeekAlbums;
+      const ranked = filtered.map(([key, data]) => ({
+        key,
+        ...data
+      })).sort((a, b) => b.sales - a.sales);
 
-      const prevAlbumMap = {};
-      weekData[week - 1].forEach(entry => {
-        const key = normalize(entry.album) + "|" + normalize(entry.artist);
-        prevAlbumMap[key] = (prevAlbumMap[key] || 0) + entry.sales;
-      });
+      ranked.forEach((album, index) => {
+        album.rank = index + 1;
+        const hist = albumHistory[album.key] || { weeks: 0, peak: null, seen: false, lastRank: null };
+        hist.weeks += 1;
+        if (hist.peak === null || album.rank < hist.peak) hist.peak = album.rank;
 
-      const sorted = Object.entries(prevAlbumMap).sort((a, b) => b[1] - a[1]);
-      sorted.forEach(([key], i) => {
-        lastWeekAlbums[key] = i + 1;
-      });
-
-      return lastWeekAlbums;
-    }
-
-    function render(week) {
-      const albums = getAlbumDataUpToWeek(week);
-      const lastRanks = getLastWeekAlbumRanks(week);
-
-      tableBody.innerHTML = "";
-      albums.forEach(album => {
-        const key = normalize(album.album) + "|" + normalize(album.artist);
-        let move = "";
-        if (!lastRanks[key]) {
-          move = `<span class="new">NEW</span>`;
+        let move;
+        if (!hist.seen) {
+          move = "NEW";
+          hist.seen = true;
+        } else if (hist.lastRank == null) {
+          move = "RE";
+        } else if (album.rank < hist.lastRank) {
+          move = `+${hist.lastRank - album.rank}`;
+        } else if (album.rank > hist.lastRank) {
+          move = `-${album.rank - hist.lastRank}`;
         } else {
-          const change = lastRanks[key] - album.rank;
-          if (change > 0) move = `<span class="up">+${change}</span>`;
-          else if (change < 0) move = `<span class="down">${change}</span>`;
-          else move = `<span>=</span>`;
+          move = "=";
         }
 
-        const row = `
-          <tr>
-            <td>${album.rank}</td>
-            <td>${move}</td>
-            <td>${album.album}</td>
-            <td>${album.artist}</td>
-            <td>${album.salesThisWeek.toLocaleString()}</td>
-            <td>${album.totalSales.toLocaleString()}</td>
-            <td>${album.weeksCount}</td>
-            <td>${album.peak}</td>
-          </tr>
+        hist.lastRank = album.rank;
+        album.move = move;
+        album.weeks = hist.weeks;
+        album.peak = hist.peak;
+        albumHistory[album.key] = hist;
+      });
+
+      // Render
+      tbody.innerHTML = "";
+      ranked.forEach(album => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${album.rank}</td>
+          <td>${album.move}</td>
+          <td>${album.album}</td>
+          <td>${album.artist}</td>
+          <td>${album.sales.toLocaleString()}</td>
+          <td>${album.weeks}</td>
+          <td>${album.peak}</td>
         `;
-        tableBody.insertAdjacentHTML("beforeend", row);
+        tbody.appendChild(row);
       });
     }
+
+    weekSelector.addEventListener('change', e => {
+      loadWeek(e.target.value);
+    });
+
+    weekSelector.value = weekKeys[0];
+    loadWeek(weekKeys[0]);
   </script>
 </body>
 </html>
