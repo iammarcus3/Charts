@@ -119,15 +119,9 @@
     strong {
       color: #00ffff;
     }
-    .move-up {
-      color: #00ff00;
-    }
-    .move-down {
-      color: #ff3333;
-    }
-    .move-stay {
-      color: #cccccc;
-    }
+    .move-up { color: #00ff00; }
+    .move-down { color: #ff3333; }
+    .move-stay { color: #cccccc; }
   </style>
   <script src="weekdata.js"></script>
 </head>
@@ -213,7 +207,6 @@
     function renderTrackChart(entries, weekNumber, tbody) {
       const history = {};
 
-      // Build history only for Move, Weeks, Peak
       for (let i = 1; i < weekNumber; i++) {
         for (const row of weekData[i] || []) {
           const key = getFuzzyKey(row.title, row.artist);
@@ -223,33 +216,25 @@
       }
 
       const currentTracks = entries.filter(row => row.title && row.artist);
-
-      // Use points field directly from current week's row; no summation or calculation
       const enrichedTracks = currentTracks.map(row => {
         const key = getFuzzyKey(row.title, row.artist);
         const past = history[key] || [];
         const totalWeeks = past.length + 1;
-
-        // Determine peak rank so far (including previous weeks)
         const bestPeak = Math.min(...past.map(r => parseInt(r.rank)).concat([parseInt(row.rank)]));
-
         return {
           ...row,
           totalWeeks,
           bestPeak,
-          points: row.points  // <-- use points directly from current week's data
+          points: row.points
         };
       });
 
-      // Sort by points descending
       enrichedTracks.sort((a, b) => b.points - a.points);
 
-      // Render rows with rank based on points order
       enrichedTracks.forEach((row, index) => {
         const key = getFuzzyKey(row.title, row.artist);
         const past = history[key] || [];
 
-        // Move indicator based on last week's rank comparison
         let movementIcon = "➡️", movementText = "";
         if (past.length === 0) {
           movementIcon = "🆕";
@@ -276,7 +261,6 @@
     }
 
     function renderAlbumChart(entries, weekNumber, tbody) {
-      // No changes to album chart from your original code
       const albumsMap = {};
       for (const row of entries) {
         if (!row.album || row.album === "NaN") continue;
@@ -334,36 +318,28 @@
           else movementIcon = "➡️";
         }
 
-        const totalSales = album.sales + pastRanks.reduce((s, r, idx) => {
-          const weekDataEntries = weekData[idx + 1] || [];
-          const salesThisWeek = weekDataEntries
-            .filter(e => (e.album && e.album.toLowerCase() + e.artist.toLowerCase()) === key)
-            .reduce((sum, e) => sum + e.sales, 0);
-          return s + salesThisWeek;
-        }, 0);
-
         return {
           ...album,
           rank: currentBestRank,
           totalWeeks,
-          totalSales,
           bestPeak,
           movementIcon,
           movementText
         };
       });
 
-      enrichedAlbums.sort((a, b) => a.rank - b.rank);
+      // ✅ SORT BY WEEKLY SALES ONLY
+      enrichedAlbums.sort((a, b) => b.sales - a.sales);
 
       for (const album of enrichedAlbums) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${album.rank}</td>
+          <td>-</td>
           <td>${album.movementIcon}${album.movementText}</td>
           <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
           <td>${album.sales.toFixed(2)}</td>
-          <td>${album.totalSales.toFixed(2)}</td>
+          <td>-</td>
           <td>${album.totalWeeks}</td>
           <td>${album.bestPeak}</td>
         `;
@@ -372,7 +348,7 @@
     }
 
     function getDateRange(weekNum) {
-      const start = new Date(2018, 1, 23); // 23 Feb 2018
+      const start = new Date(2018, 1, 23);
       start.setDate(start.getDate() + (weekNum - 1) * 7);
       const end = new Date(start);
       end.setDate(start.getDate() + 6);
@@ -382,7 +358,10 @@
 
     function populateWeekSelector() {
       const selector = document.getElementById("weekSelector");
-      const weeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
+      const weeks = Object.keys(weekData)
+        .filter(k => !isNaN(parseInt(k)))
+        .map(k => parseInt(k))
+        .sort((a, b) => b - a);
       for (const w of weeks) {
         const opt = document.createElement("option");
         opt.value = w;
@@ -390,11 +369,14 @@
         selector.appendChild(opt);
       }
       selector.addEventListener("change", () => loadWeek(Number(selector.value)));
-      loadWeek(weeks[0]);
+      loadWeek(weeks[0]); // ✅ Load latest week
     }
 
     function changeWeek(delta) {
-      const weeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
+      const weeks = Object.keys(weekData)
+        .filter(k => !isNaN(parseInt(k)))
+        .map(k => parseInt(k))
+        .sort((a, b) => b - a);
       const index = weeks.indexOf(currentWeek);
       const newIndex = index + delta;
       if (newIndex >= 0 && newIndex < weeks.length) {
