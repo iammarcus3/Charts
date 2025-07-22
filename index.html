@@ -161,20 +161,28 @@
       });
     }
 
-    // === FIXED renderAlbumChart function with correct peak, movement, and weeks ===
+    // === FULLY FIXED renderAlbumChart with normalized keys and correct peak & movement calculation ===
+    function normalizeKey(album, artist) {
+      function normalizeText(text) {
+        if (typeof text !== "string") return "";
+        return text.trim().toLowerCase().replace(/\s+/g, ' ');
+      }
+      return normalizeText(album) + '|' + normalizeText(artist);
+    }
+
     function renderAlbumChart(entries, weekNumber, tbody) {
       const albumsMap = {};
       for (const row of entries) {
         if (typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
         const albumName = row.album || "";
         const artistName = typeof row.artist === "string" ? row.artist : "";
-        const key = albumName.toLowerCase() + artistName.toLowerCase();
+        const key = normalizeKey(albumName, artistName);
         if (!albumsMap[key]) {
           albumsMap[key] = { album: albumName, artist: artistName, sales: 0, currentWeekRanks: [] };
         }
         albumsMap[key].sales += row.sales;
         const rankNum = parseInt(row.rank);
-        if (!isNaN(rankNum)) albumsMap[key].currentWeekRanks.push(rankNum);
+        if (!isNaN(rankNum) && rankNum > 0) albumsMap[key].currentWeekRanks.push(rankNum);
       }
 
       const currentAlbums = Object.values(albumsMap);
@@ -186,14 +194,14 @@
           if (typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
           const albumName = row.album || "";
           const artistName = typeof row.artist === "string" ? row.artist : "";
-          const key = albumName.toLowerCase() + artistName.toLowerCase();
+          const key = normalizeKey(albumName, artistName);
           if (!pastAlbums[key]) pastAlbums[key] = new Set();
           pastAlbums[key].add(i);
         }
       }
 
       const enrichedAlbums = currentAlbums.map(album => {
-        const key = album.album.toLowerCase() + album.artist.toLowerCase();
+        const key = normalizeKey(album.album, album.artist);
         const pastWeeks = pastAlbums[key] || new Set();
         const totalWeeks = pastWeeks.size;
 
@@ -203,10 +211,10 @@
           const entries = weekData[i] || [];
           for (const r of entries) {
             if (typeof r.album !== "string" || r.album.trim().toLowerCase() === "nan") continue;
-            const rKey = r.album.toLowerCase() + r.artist.toLowerCase();
+            const rKey = normalizeKey(r.album, r.artist);
             if (rKey === key) {
               const rankNum = parseInt(r.rank);
-              if (!isNaN(rankNum)) allRanks.push(rankNum);
+              if (!isNaN(rankNum) && rankNum > 0) allRanks.push(rankNum);
             }
           }
         }
@@ -222,10 +230,10 @@
           let lastWeekRanks = [];
           for (const r of lastWeekEntries) {
             if (typeof r.album !== "string" || r.album.trim().toLowerCase() === "nan") continue;
-            const rKey = r.album.toLowerCase() + r.artist.toLowerCase();
+            const rKey = normalizeKey(r.album, r.artist);
             if (rKey === key) {
               const rankNum = parseInt(r.rank);
-              if (!isNaN(rankNum)) lastWeekRanks.push(rankNum);
+              if (!isNaN(rankNum) && rankNum > 0) lastWeekRanks.push(rankNum);
             }
           }
           if (lastWeekRanks.length > 0) {
@@ -259,44 +267,30 @@
       }
     }
 
-    function getDateRange(weekNum) {
-      const start = new Date(2018, 1, 23);
-      start.setDate(start.getDate() + (weekNum - 1) * 7);
-      const end = new Date(start);
-      end.setDate(start.getDate() + 6);
-      const options = { day: 'numeric', month: 'short', year: 'numeric' };
-      return `${start.toLocaleDateString('en-GB', options)} - ${end.toLocaleDateString('en-GB', options)}`;
+    function changeWeek(direction) {
+      let newWeek = currentWeek + direction;
+      if (newWeek < 1) newWeek = 1;
+      else if (newWeek > Object.keys(weekData).length) newWeek = Object.keys(weekData).length;
+      loadWeek(newWeek);
     }
 
     function populateWeekSelector() {
-      const selector = document.getElementById("weekSelector");
-      const weeks = Object.keys(weekData)
-        .map(k => parseInt(k))
-        .filter(k => !isNaN(k))
-        .sort((a, b) => b - a);
-      for (const w of weeks) {
-        const opt = document.createElement("option");
-        opt.value = w;
-        opt.textContent = getDateRange(w);
-        selector.appendChild(opt);
+      const select = document.getElementById("weekSelector");
+      select.innerHTML = "";
+      const weeks = Object.keys(weekData).map(w => parseInt(w)).sort((a,b)=>a-b);
+      for (const week of weeks) {
+        const option = document.createElement("option");
+        option.value = week;
+        option.textContent = `Week ${week}`;
+        select.appendChild(option);
       }
-      selector.addEventListener("change", () => loadWeek(Number(selector.value)));
-      loadWeek(weeks[0]);
+      select.value = currentWeek;
+      select.onchange = (e) => loadWeek(parseInt(e.target.value));
     }
 
-    function changeWeek(delta) {
-      const weeks = Object.keys(weekData)
-        .map(k => parseInt(k))
-        .filter(k => !isNaN(k))
-        .sort((a, b) => b - a);
-      const index = weeks.indexOf(currentWeek);
-      const newIndex = index + delta;
-      if (newIndex >= 0 && newIndex < weeks.length) {
-        loadWeek(weeks[newIndex]);
-      }
-    }
-
+    // Initialize
     populateWeekSelector();
+    loadWeek(currentWeek);
   </script>
 </body>
 </html>
