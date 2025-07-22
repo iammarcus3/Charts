@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Billboard Hot 100</title>
   <style>
-    /* [style unchanged from your original code] */
+    /* Your original styling */
     body { background-color: #0f0f0f; color: #ffffff; font-family: 'Helvetica Neue', sans-serif; margin: 0; padding: 2rem; }
     nav { text-align: center; margin-bottom: 1rem; }
     nav a { color: #00ffff; text-decoration: none; margin: 0 1rem; font-weight: bold; font-size: 1.1rem; }
@@ -42,9 +42,9 @@
   <h1>Billboard Hot 100</h1>
 
   <div class="week-nav">
-    <button onclick="changeWeek(1)">⬅️</button>
+    <button onclick="changeWeek(-1)">⬅️</button>
     <select id="weekSelector"></select>
-    <button onclick="changeWeek(-1)">➡️</button>
+    <button onclick="changeWeek(1)">➡️</button>
   </div>
 
   <div class="tabs">
@@ -161,9 +161,7 @@
       });
     }
 
-    // --- FIXED renderAlbumChart with correct peak, movement, AND minimum 2 songs check ---
     function renderAlbumChart(entries, weekNumber, tbody) {
-      // Build a map of album to unique song titles count across ALL weeks (for min 2 songs rule)
       const albumSongCounts = {};
       for (const week in weekData) {
         if (!weekData.hasOwnProperty(week)) continue;
@@ -171,19 +169,18 @@
         if (isNaN(w)) continue;
         for (const row of weekData[week] || []) {
           if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
-          const albumKey = row.album.toLowerCase() + '||' + (row.artist || '').toLowerCase();
+          const albumKey = normalize(row.album) + '||' + normalize(row.artist || '');
           if (!albumSongCounts[albumKey]) albumSongCounts[albumKey] = new Set();
           if (row.title) albumSongCounts[albumKey].add(row.title.toLowerCase());
         }
       }
 
-      // Aggregate current week album data
       const albumsMap = {};
       for (const row of entries) {
         if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
         const albumName = row.album;
         const artistName = row.artist || "";
-        const key = albumName.toLowerCase() + '||' + artistName.toLowerCase();
+        const key = normalize(albumName) + '||' + normalize(artistName);
         if (!albumsMap[key]) {
           albumsMap[key] = { album: albumName, artist: artistName, sales: 0, currentWeekRanks: [] };
         }
@@ -192,37 +189,33 @@
         if (!isNaN(rankNum)) albumsMap[key].currentWeekRanks.push(rankNum);
       }
 
-      // Filter albums with at least 2 unique songs overall
       const filteredAlbums = Object.entries(albumsMap).filter(([key, album]) => {
         return albumSongCounts[key] && albumSongCounts[key].size >= 2;
       }).map(([key, album]) => album);
 
-      // Collect past weeks the album appeared in, including current week
-      const pastAlbums = {};
+      // Build albumWeeks mapping: which weeks album appeared in
+      const albumWeeks = {};
       for (let i = 1; i <= weekNumber; i++) {
         for (const row of weekData[i] || []) {
           if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
-          const albumName = row.album;
-          const artistName = row.artist || "";
-          const key = albumName.toLowerCase() + '||' + artistName.toLowerCase();
-          if (!pastAlbums[key]) pastAlbums[key] = new Set();
-          pastAlbums[key].add(i);
+          const key = normalize(row.album) + '||' + normalize(row.artist || '');
+          if (!albumWeeks[key]) albumWeeks[key] = new Set();
+          albumWeeks[key].add(i);
         }
       }
 
-      // Enrich albums with totalWeeks, bestPeak, movement, etc.
       const enrichedAlbums = filteredAlbums.map(album => {
-        const key = album.album.toLowerCase() + '||' + album.artist.toLowerCase();
-        const pastWeeks = pastAlbums[key] || new Set();
-        const totalWeeks = pastWeeks.size;
+        const key = normalize(album.album) + '||' + normalize(album.artist);
+        const weeksSet = albumWeeks[key] || new Set();
 
-        // Gather all ranks from all weeks <= current week for peak calculation
+        const totalWeeks = weeksSet.size;
+
+        // Gather all ranks up to current week to find peak
         const allRanks = [];
         for (let i = 1; i <= weekNumber; i++) {
-          const entries = weekData[i] || [];
-          for (const r of entries) {
+          for (const r of weekData[i] || []) {
             if (!r.album || typeof r.album !== "string" || r.album.trim().toLowerCase() === "nan") continue;
-            const rKey = r.album.toLowerCase() + '||' + (r.artist || '').toLowerCase();
+            const rKey = normalize(r.album) + '||' + normalize(r.artist || '');
             if (rKey === key) {
               const rankNum = parseInt(r.rank);
               if (!isNaN(rankNum)) allRanks.push(rankNum);
@@ -231,38 +224,62 @@
         }
         const bestPeak = allRanks.length > 0 ? Math.min(...allRanks) : null;
 
-        // Get current week best rank for movement comparison
+        // Current week's best rank
         const currentBestRank = album.currentWeekRanks.length > 0 ? Math.min(...album.currentWeekRanks) : null;
 
-        // Movement calculation based on last week's best rank vs current week's best rank
-        let movementIcon = "🆕", movementText = "";
-        if (weekNumber > 1 && currentBestRank !== null) {
-          const lastWeekEntries = weekData[weekNumber - 1] || [];
+        // Last week's presence
+        const lastWeekNumber = weekNumber - 1;
+        const wasLastWeekPresent = weeksSet.has(lastWeekNumber);
+
+        // Has appeared before this week?
+        const appearedBeforeThisWeek = Array.from(weeksSet).some(w => w < weekNumber);
+
+        // Movement icon/text logic
+        let movementIcon = "";
+        let movementText = "";
+
+        if (!appearedBeforeThisWeek) {
+          // First appearance ever
+          movementIcon = "🆕";
+        } else if (!wasLastWeekPresent) {
+          // Re-entry (appeared before but not last week)
+          movementIcon = "↩️";
+          movementText = ` <span class="move-stay">(Re-entry)</span>`;
+        } else {
+          // Appeared last week - calculate movement
+          const lastWeekEntries = weekData[lastWeekNumber] || [];
           let lastWeekRanks = [];
           for (const r of lastWeekEntries) {
             if (!r.album || typeof r.album !== "string" || r.album.trim().toLowerCase() === "nan") continue;
-            const rKey = r.album.toLowerCase() + '||' + (r.artist || '').toLowerCase();
+            const rKey = normalize(r.album) + '||' + normalize(r.artist || '');
             if (rKey === key) {
               const rankNum = parseInt(r.rank);
               if (!isNaN(rankNum)) lastWeekRanks.push(rankNum);
             }
           }
-          if (lastWeekRanks.length > 0) {
+
+          if (lastWeekRanks.length > 0 && currentBestRank !== null) {
             const lastWeekBestRank = Math.min(...lastWeekRanks);
             const diff = lastWeekBestRank - currentBestRank;
-            if (diff > 0) movementIcon = "⬆️", movementText = ` <span class="move-up">+${diff}</span>`;
-            else if (diff < 0) movementIcon = "⬇️", movementText = ` <span class="move-down">${diff}</span>`;
-            else movementIcon = "➡️";
+            if (diff > 0) {
+              movementIcon = "⬆️";
+              movementText = ` <span class="move-up">+${diff}</span>`;
+            } else if (diff < 0) {
+              movementIcon = "⬇️";
+              movementText = ` <span class="move-down">${diff}</span>`;
+            } else {
+              movementIcon = "➡️";
+            }
+          } else {
+            movementIcon = "➡️";
           }
         }
 
         return { ...album, totalWeeks, bestPeak, movementIcon, movementText, currentBestRank };
       });
 
-      // Sort by sales descending
       enrichedAlbums.sort((a, b) => b.sales - a.sales);
 
-      // Render rows
       for (const [i, album] of enrichedAlbums.entries()) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
