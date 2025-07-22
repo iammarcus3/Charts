@@ -5,68 +5,169 @@
   <title>Album Detail</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #ffffff;
       color: #000;
-      padding: 2rem;
+      padding: 2rem 3rem;
+      max-width: 900px;
+      margin: auto;
+      line-height: 1.5;
+      transition: background-color 0.3s, color 0.3s;
     }
     h1 {
-      font-size: 2rem;
-      margin-bottom: 0.2rem;
+      font-size: 2.25rem;
+      margin-bottom: 0.3rem;
+      font-weight: 700;
+      color: #003366;
     }
     h2 {
-      margin-top: 2rem;
-      font-size: 1.5rem;
-      border-bottom: 2px solid #000;
-      padding-bottom: 0.3rem;
+      margin-top: 2.5rem;
+      font-size: 1.6rem;
+      border-bottom: 3px solid #003366;
+      padding-bottom: 0.4rem;
+      font-weight: 600;
     }
     p {
-      font-size: 1rem;
-      margin: 0.4rem 0;
+      font-size: 1.05rem;
+      margin: 0.3rem 0;
     }
     a {
-      color: blue;
+      color: #004080;
       text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
     }
     a:hover {
       text-decoration: underline;
+      color: #007acc;
     }
     .cert {
-      font-weight: bold;
+      font-weight: 700;
+      margin-top: 0.8rem;
     }
     ul {
       list-style: none;
       padding-left: 0;
       margin-top: 1rem;
+      border-top: 1px solid #ddd;
     }
     ul li {
-      margin-bottom: 0.4rem;
+      margin: 0.4rem 0;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #eee;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .error {
-      color: red;
-      font-weight: bold;
+    ul li a {
+      flex-grow: 1;
     }
-    .cert-icon {
+    ul li span.cert-icon {
+      white-space: nowrap;
+      margin-left: 10px;
+      font-size: 0.95rem;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cert-icon img {
       height: 20px;
       vertical-align: middle;
-      margin-right: 4px;
+    }
+    .error {
+      color: #d33;
+      font-weight: 700;
+      margin-top: 1rem;
+    }
+    /* Summary box */
+    .summary {
+      background: #f0f8ff;
+      border: 1.5px solid #003366;
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgb(0 51 102 / 0.1);
+    }
+    .summary p {
+      margin: 0.5rem 0;
+      font-size: 1.1rem;
+    }
+    /* Dark mode toggle */
+    #darkModeToggle {
+      position: fixed;
+      top: 1rem;
+      right: 1.5rem;
+      padding: 0.4rem 0.9rem;
+      background: #003366;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgb(0 51 102 / 0.7);
+      transition: background 0.3s;
+      z-index: 1000;
+    }
+    #darkModeToggle:hover {
+      background: #0059b3;
+    }
+    /* Dark mode styles */
+    body.dark {
+      background: #121212;
+      color: #ddd;
+    }
+    body.dark a {
+      color: #66bfff;
+    }
+    body.dark a:hover {
+      color: #a3d1ff;
+    }
+    body.dark .summary {
+      background: #222;
+      border-color: #66bfff;
+      box-shadow: 0 2px 10px rgb(102 191 255 / 0.3);
+    }
+    body.dark ul li {
+      border-color: #444;
+    }
+    body.dark ul li span.cert-icon {
+      color: #aaa;
+    }
+    body.dark .error {
+      color: #ff6666;
+    }
+    footer {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: #555;
+      text-align: center;
+      border-top: 1px solid #ccc;
+      padding-top: 1rem;
+      user-select: none;
     }
   </style>
 </head>
 <body>
+  <button id="darkModeToggle" aria-label="Toggle dark mode">🌙 Dark Mode</button>
+
   <h1><a id="albumLink" href="#">Album Detail</a></h1>
   <p><strong>Artist:</strong> <a id="artistLink" href="#">Artist</a></p>
-  <p><strong>Total Streams:</strong> <span id="totalStreams">0</span></p>
-  <p><strong>Total Sales:</strong> <span id="totalSales">0</span></p>
-  <p><strong>Total Weeks on Chart:</strong> <span id="totalWeeks">0</span></p>
-  <p><strong>Weeks at #1:</strong> <span id="weeksAt1">0</span></p>
-  <p><strong>Peak Position:</strong> <span id="peak">—</span></p>
-  <p><strong>Debut Week:</strong> <span id="debutWeek">—</span></p>
-  <p class="cert"><strong>Certification:</strong> <span id="albumCert">—</span></p>
+
+  <div class="summary" aria-label="Album statistics summary">
+    <p><strong>Total Streams:</strong> <span id="totalStreams">0</span></p>
+    <p><strong>Total Sales:</strong> <span id="totalSales">0</span></p>
+    <p><strong>Total Weeks on Chart:</strong> <span id="totalWeeks">0</span></p>
+    <p><strong>Weeks at #1:</strong> <span id="weeksAt1">0</span></p>
+    <p><strong>Peak Position:</strong> <span id="peak">—</span></p>
+    <p><strong>Debut Week:</strong> <span id="debutWeek">—</span></p>
+    <p class="cert"><strong>Certification:</strong> <span id="albumCert">—</span></p>
+  </div>
 
   <h2>📀 Tracks</h2>
-  <ul id="trackList"></ul>
-  <p id="error" class="error"></p>
+  <ul id="trackList" aria-live="polite" aria-relevant="additions"></ul>
+  <p id="error" class="error" role="alert"></p>
 
   <script src="weekdata.js"></script>
   <script>
@@ -223,6 +324,21 @@
     function formatNumber(num) {
       return Math.round(num).toLocaleString("en-US");
     }
+
+    // Dark mode toggle logic
+    const darkModeToggle = document.getElementById("darkModeToggle");
+    darkModeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      if (document.body.classList.contains("dark")) {
+        darkModeToggle.textContent = "☀️ Light Mode";
+      } else {
+        darkModeToggle.textContent = "🌙 Dark Mode";
+      }
+    });
   </script>
+
+  <footer>
+    Data source: <a href="https://hot100.netlify.app/" target="_blank" rel="noopener noreferrer">Hot100.netlify.app</a> &bull; Album and track data aggregated from weekly charts since 2018.
+  </footer>
 </body>
 </html>
