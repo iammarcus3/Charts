@@ -124,8 +124,6 @@
       const tbody = document.getElementById('artistTable');
       const artistMap = {};
       const artistNameMap = {};
-      const albumSalesMap = {};
-      const songSalesMap = {};
 
       // Build artist stats from weekData
       for (const week in weekData) {
@@ -157,8 +155,10 @@
             if (!artistStats.songs[songKey]) artistStats.songs[songKey] = Infinity;
             if (rank < artistStats.songs[songKey]) artistStats.songs[songKey] = rank;
 
-            // Track albums
-            const albumKey = album.toUpperCase().replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "").replace(/[^A-Z0-9]/g, '');
+            // Track albums, FIX: safely convert album to string before toUpperCase
+            const albumKey = String(album || "").toUpperCase()
+              .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
+              .replace(/[^A-Z0-9]/g, '');
             if (albumKey !== "") {
               if (!artistStats.albums[albumKey]) artistStats.albums[albumKey] = Infinity;
               if (rank < artistStats.albums[albumKey]) artistStats.albums[albumKey] = rank;
@@ -257,8 +257,8 @@
             }
           });
 
-          // Recalculate rank if sorting by totalStreams or rank
-          if (currentSort.key === 'rank' || currentSort.key === 'totalStreams' || currentSort.key === 'totalSales') {
+          // Recalculate rank if sorting by totalStreams or rank or totalSales
+          if (['rank', 'totalStreams', 'totalSales'].includes(currentSort.key)) {
             artistList.forEach((a,i) => a.rank = i+1);
           }
 
