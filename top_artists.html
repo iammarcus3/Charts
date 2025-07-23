@@ -70,7 +70,7 @@
 
       for (const week in weekData) {
         const entries = weekData[week];
-        const year = 2018 + Math.floor((parseInt(week) - 1) / 52); // estimate year from week number
+        const year = 2018 + Math.floor((parseInt(week) - 1) / 52);
 
         if (!yearlyArtistStats[year]) yearlyArtistStats[year] = {};
 
@@ -87,15 +87,19 @@
                 name: artist,
                 totalSales: 0,
                 weeks: new Set(),
-                num1s: 0,
+                num1TracksSet: new Set(),
                 top10s: 0
               };
             }
 
             const artistObj = yearlyArtistStats[year][key];
-            artistObj.totalSales += sales * 745; // 💥 FIX: scale sales properly
+            artistObj.totalSales += sales * 745;
             artistObj.weeks.add(week);
-            if (rank === 1) artistObj.num1s++;
+
+            if (rank === 1) {
+              const trackKey = title.toUpperCase().replace(/[^A-Z0-9]/g, '');
+              artistObj.num1TracksSet.add(trackKey);
+            }
             if (rank <= 10) artistObj.top10s++;
           });
         });
@@ -104,7 +108,14 @@
       container.innerHTML = "";
 
       Object.keys(yearlyArtistStats).sort().forEach(year => {
-        const artistArray = Object.values(yearlyArtistStats[year]);
+        const artistArray = Object.values(yearlyArtistStats[year]).map(artistObj => ({
+          name: artistObj.name,
+          totalSales: artistObj.totalSales,
+          weeks: artistObj.weeks.size,
+          num1s: artistObj.num1TracksSet.size,
+          top10s: artistObj.top10s
+        }));
+
         artistArray.sort((a, b) => b.totalSales - a.totalSales);
         const top10 = artistArray.slice(0, 10);
 
@@ -133,7 +144,7 @@
             <td>${i + 1}</td>
             <td><a href="artist.html?artist=${encodeURIComponent(a.name)}">${a.name}</a></td>
             <td>${formatNumber(a.totalSales)}</td>
-            <td>${a.weeks.size}</td>
+            <td>${a.weeks}</td>
             <td>${a.num1s}</td>
             <td>${a.top10s}</td>
           `;
