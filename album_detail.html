@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Album Detail</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #ffffff;
+      color: #000;
+      padding: 2rem 3rem;
+      max-width: 900px;
+      margin: auto;
+      line-height: 1.5;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    h1 {
+      font-size: 2.25rem;
+      margin-bottom: 0.3rem;
+      font-weight: 700;
+      color: #003366;
+    }
+    h2 {
+      margin-top: 2.5rem;
+      font-size: 1.6rem;
+      border-bottom: 3px solid #003366;
+      padding-bottom: 0.4rem;
+      font-weight: 600;
+    }
+    p {
+      font-size: 1.05rem;
+      margin: 0.3rem 0;
+    }
+    a {
+      color: #004080;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #007acc;
+    }
+    .cert {
+      font-weight: 700;
+      margin-top: 0.8rem;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 1rem;
+      border-top: 1px solid #ddd;
+    }
+    ul li {
+      margin: 0.4rem 0;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #eee;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    ul li a {
+      flex-grow: 1;
+    }
+    ul li span.cert-icon {
+      white-space: nowrap;
+      margin-left: 10px;
+      font-size: 0.95rem;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cert-icon img {
+      height: 20px;
+      vertical-align: middle;
+    }
+    .error {
+      color: #d33;
+      font-weight: 700;
+      margin-top: 1rem;
+    }
+    /* Summary box */
+    .summary {
+      background: #f0f8ff;
+      border: 1.5px solid #003366;
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgb(0 51 102 / 0.1);
+    }
+    .summary p {
+      margin: 0.5rem 0;
+      font-size: 1.1rem;
+    }
+    /* Dark mode toggle */
+    #darkModeToggle {
+      position: fixed;
+      top: 1rem;
+      right: 1.5rem;
+      padding: 0.4rem 0.9rem;
+      background: #003366;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgb(0 51 102 / 0.7);
+      transition: background 0.3s;
+      z-index: 1000;
+    }
+    #darkModeToggle:hover {
+      background: #0059b3;
+    }
+    /* Dark mode styles */
+    body.dark {
+      background: #121212;
+      color: #ddd;
+    }
+    body.dark a {
+      color: #66bfff;
+    }
+    body.dark a:hover {
+      color: #a3d1ff;
+    }
+    body.dark .summary {
+      background: #222;
+      border-color: #66bfff;
+      box-shadow: 0 2px 10px rgb(102 191 255 / 0.3);
+    }
+    body.dark ul li {
+      border-color: #444;
+    }
+    body.dark ul li span.cert-icon {
+      color: #aaa;
+    }
+    body.dark .error {
+      color: #ff6666;
+    }
+    footer {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: #555;
+      text-align: center;
+      border-top: 1px solid #ccc;
+      padding-top: 1rem;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <button id="darkModeToggle" aria-label="Toggle dark mode">🌙 Dark Mode</button>
+
+  <h1><a id="albumLink" href="#">Album Detail</a></h1>
+  <p><strong>Artist:</strong> <a id="artistLink" href="#">Artist</a></p>
+
+  <div class="summary" aria-label="Album statistics summary">
+    <p><strong>Total Streams:</strong> <span id="totalStreams">0</span></p>
+    <p><strong>Total Sales:</strong> <span id="totalSales">0</span></p>
+    <p><strong>Total Weeks on Chart:</strong> <span id="totalWeeks">0</span></p>
+    <p><strong>Weeks at #1:</strong> <span id="weeksAt1">0</span></p>
+    <p><strong>Peak Position:</strong> <span id="peak">—</span></p>
+    <p><strong>Debut Week:</strong> <span id="debutWeek">—</span></p>
+    <p class="cert"><strong>Certification:</strong> <span id="albumCert">—</span></p>
+  </div>
+
+  <h2>📀 Tracks</h2>
+  <ul id="trackList" aria-live="polite" aria-relevant="additions"></ul>
+  <p id="error" class="error" role="alert"></p>
+
+  <script src="weekdata.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const albumParam = params.get("album");
+    const artistParam = params.get("artist");
+
+    const normalize = str => typeof str === "string"
+      ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim()
+      : "";
+
+    const normalizeAlbum = str => typeof str === "string"
+      ? str.toUpperCase()
+          .replace(/\(.*?\)|\[.*?\]/g, "")
+          .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
+          .replace(/[^A-Z0-9]/g, "")
+          .trim()
+      : "";
+
+    const normalizeTitle = str => typeof str === "string"
+      ? str.toUpperCase()
+          .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+          .replace(/[^A-Z0-9]/g, "")
+          .trim()
+      : "";
+
+    function getAlbumCertIcons(sales) {
+      const scaled = sales * 1000;
+
+      if (scaled >= 10_000_000) {
+        return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+      }
+
+      if (scaled >= 9_000_000) {
+        return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
+      }
+
+      if (scaled >= 8_000_000) {
+        return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
+      }
+
+      if (scaled >= 7_000_000) {
+        return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
+      }
+
+      if (scaled >= 6_000_000) {
+        return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
+      }
+
+      if (scaled >= 5_000_000) {
+        return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
+      }
+
+      if (scaled >= 4_000_000) {
+        return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
+      }
+
+      if (scaled >= 3_000_000) {
+        return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
+      }
+
+      if (scaled >= 2_000_000) {
+        return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
+      }
+
+      if (scaled >= 1_000_000) {
+        return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
+      }
+
+      if (scaled >= 500_000) {
+        return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
+      }
+
+      return "—";
+    }
+
+    function getTrackCertIcon(sales) {
+      const scaled = sales * 745;
+
+      if (scaled >= 1_000_000) {
+        return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+      }
+
+      if (scaled >= 900_000) {
+        return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
+      }
+
+      if (scaled >= 800_000) {
+        return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
+      }
+
+      if (scaled >= 700_000) {
+        return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
+      }
+
+      if (scaled >= 600_000) {
+        return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
+      }
+
+      if (scaled >= 500_000) {
+        return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
+      }
+
+      if (scaled >= 400_000) {
+        return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
+      }
+
+      if (scaled >= 300_000) {
+        return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
+      }
+
+      if (scaled >= 200_000) {
+        return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
+      }
+
+      if (scaled >= 100_000) {
+        return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
+      }
+
+      if (scaled >= 50_000) {
+        return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
+      }
+
+      return "";
+    }
+
+    const albumLink = document.getElementById("albumLink");
+    const artistLink = document.getElementById("artistLink");
+    const totalStreamsEl = document.getElementById("totalStreams");
+    const totalSalesEl = document.getElementById("totalSales");
+    const totalWeeksEl = document.getElementById("totalWeeks");
+    const weeksAt1El = document.getElementById("weeksAt1");
+    const peakEl = document.getElementById("peak");
+    const debutEl = document.getElementById("debutWeek");
+    const albumCertEl = document.getElementById("albumCert");
+    const trackList = document.getElementById("trackList");
+    const errorEl = document.getElementById("error");
+
+    const saleMultiplier = 1000;
+    const streamMultiplier = 0.927124;
+
+    albumLink.textContent = albumParam;
+    artistLink.textContent = artistParam;
+    albumLink.href = `album_detail.html?album=${encodeURIComponent(albumParam)}&artist=${encodeURIComponent(artistParam)}`;
+    artistLink.href = `artist.html?artist=${encodeURIComponent(artistParam)}`;
+
+    const normArtist = normalize(artistParam);
+    const normAlbum = normalizeAlbum(albumParam);
+
+    let rawSales = 0;
+    const weekSet = new Set();
+    let debutWeek = null;
+    let peakRank = Infinity;
+    let weeksAt1 = 0;
+    const tracks = {};
+
+    for (const week in weekData) {
+      const entries = weekData[week];
+      const weekNum = parseInt(week.replace(/\D/g, ""));
+
+      entries.forEach(entry => {
+        const entryArtist = normalize(entry.artist);
+        const entryAlbum = normalizeAlbum(entry.album);
+        const entryTitle = entry.title;
+        const entrySales = parseFloat(entry.sales) || 0;
+        const entryRank = parseInt(entry.rank);
+
+        if (entryArtist === normArtist && entryAlbum === normAlbum) {
+          rawSales += entrySales;
+          weekSet.add(week);
+          if (!debutWeek || weekNum < debutWeek) debutWeek = weekNum;
+          if (entryRank && entryRank < peakRank) peakRank = entryRank;
+          if (entryRank === 1) weeksAt1++;
+
+          const trackKey = normalizeTitle(entryTitle);
+          if (!tracks[trackKey]) {
+            tracks[trackKey] = {
+              title: entryTitle,
+              artist: entry.artist,
+              sales: 0
+            };
+          }
+          tracks[trackKey].sales += entrySales;
+        }
+      });
+    }
+
+    const actualSales = rawSales * saleMultiplier;
+    const estimatedStreams = rawSales * streamMultiplier * 1_000_000;
+
+    totalStreamsEl.textContent = formatNumber(estimatedStreams);
+    totalSalesEl.textContent = formatNumber(actualSales);
+    totalWeeksEl.textContent = weekSet.size;
+    weeksAt1El.textContent = weeksAt1;
+    debutEl.textContent = debutWeek || "—";
+    peakEl.textContent = peakRank === Infinity ? "—" : `#${peakRank}`;
+    albumCertEl.innerHTML = getAlbumCertIcons(rawSales);
+
+    const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
+    if (sortedTracks.length === 0) {
+      errorEl.textContent = "⚠️ No matching album data found in weekdata.js.";
+    } else {
+      sortedTracks.forEach(track => {
+        const cert = getTrackCertIcon(track.sales);
+        const trackURL = `track_detail.html?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`;
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${trackURL}">${track.title}</a> <span class="cert-icon">${cert}</span>`;
+        trackList.appendChild(li);
+      });
+    }
+
+    function formatNumber(num) {
+      return Math.round(num).toLocaleString("en-US");
+    }
+
+    // Dark mode toggle logic
+    const darkModeToggle = document.getElementById("darkModeToggle");
+    darkModeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      if (document.body.classList.contains("dark")) {
+        darkModeToggle.textContent = "☀️ Light Mode";
+      } else {
+        darkModeToggle.textContent = "🌙 Dark Mode";
+      }
+    });
+  </script>
+
+  <footer>
+    Data source: <a href="https://hot100.netlify.app/" target="_blank" rel="noopener noreferrer">Hot100.netlify.app</a> &bull; Album and track data aggregated from weekly charts since 2018.
+  </footer>
+</body>
+</html>
