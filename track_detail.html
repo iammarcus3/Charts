@@ -205,6 +205,14 @@
       return "";
     }
 
+    // Convert week number (e.g. 1, 2, ...) to actual date string
+    function getChartDateFromWeekNumber(weekNum) {
+      const startDate = new Date("2018-02-23T00:00:00Z"); // Chart start date (Friday Feb 23, 2018)
+      const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+      const chartDate = new Date(startDate.getTime() + (weekNum - 1) * msPerWeek);
+      return chartDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    }
+
     const streamMultiplier = 0.927124;
     const saleMultiplier = 745;
 
@@ -249,6 +257,7 @@
 
     for (const week in weekData) {
       const entries = weekData[week];
+      // extract week number from string, e.g. "Week 42" or "42"
       const weekNum = parseInt(week.replace(/\D/g, ""));
       let weekSales = 0;
 
@@ -296,7 +305,9 @@
       cumulative += weekSales * saleMultiplier;
       certMilestones.forEach(cert => {
         if (cumulative >= cert.threshold && !reached.has(cert.label)) {
-          timeline.push(`${cert.label} — ${week}`);
+          // Convert week number to date for timeline display:
+          const dateStr = getChartDateFromWeekNumber(weekNum);
+          timeline.push(`${cert.label} — ${dateStr}`);
           reached.add(cert.label);
         }
       });
@@ -305,7 +316,8 @@
     const actualSales = rawSales * saleMultiplier;
     const calculatedStreams = rawSales * streamMultiplier;
 
-    debutEl.textContent = debut ? debut.label : "—";
+    // Show debut week as actual date instead of label
+    debutEl.textContent = debut ? getChartDateFromWeekNumber(debut.week) : "—";
     debutRankEl.textContent = debutRank ? `#${debutRank}` : "—";
     peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
     weeksEl.textContent = weeks;
