@@ -18,7 +18,6 @@
       --box-bg: #1e1e1e;
       --border: #333;
     }
-
     body {
       font-family: 'Segoe UI', sans-serif;
       background: var(--bg);
@@ -26,70 +25,57 @@
       padding: 2rem;
       transition: background 0.3s, color 0.3s;
     }
-
     nav {
       margin-bottom: 1rem;
     }
-
     nav a {
       margin-right: 1.5rem;
       font-weight: bold;
       color: var(--accent);
     }
-
     h1 {
       font-size: 2rem;
       margin-bottom: 0.2rem;
     }
-
     h2 {
       margin-top: 2rem;
       font-size: 1.5rem;
       border-bottom: 2px solid var(--text);
       padding-bottom: 0.3rem;
     }
-
     p {
       font-size: 1rem;
       margin: 0.4rem 0;
     }
-
     ul {
       list-style: none;
       padding-left: 0;
       margin-top: 1rem;
     }
-
     ul li {
       margin-bottom: 0.4rem;
     }
-
     a {
       color: var(--accent);
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
     }
-
     .cert-icon img {
       height: 20px;
       vertical-align: middle;
       margin-left: 4px;
     }
-
     .cert-label {
       font-weight: bold;
       margin-left: 8px;
       vertical-align: middle;
     }
-
     .error {
       color: red;
       font-weight: bold;
     }
-
     .data-box {
       background: var(--box-bg);
       border: 1px solid var(--border);
@@ -97,7 +83,6 @@
       margin: 1rem 0;
       border-radius: 8px;
     }
-
     .toggle-theme {
       position: absolute;
       top: 1rem;
@@ -110,7 +95,6 @@
       font-size: 0.9rem;
       color: var(--text);
     }
-
     .badge {
       display: inline-block;
       background: var(--accent);
@@ -120,7 +104,6 @@
       font-size: 0.8rem;
       margin-left: 0.5rem;
     }
-
     li a:hover {
       background-color: var(--accent);
       color: white;
@@ -184,20 +167,32 @@
     function getSongCertImages(sales) {
       const scaled = sales * 745.1;
       if (scaled >= 1_000_000) return `<img src="diamond.png" title="Diamond">`;
-      if (scaled >= 100_000) {
-        const count = Math.floor(scaled / 100_000);
-        return Array(count).fill(`<img src="platinum.png" title="Platinum">`).join('');
-      }
+      if (scaled >= 900_000) return `<img src="9x_platinum.png" title="9× Platinum">`;
+      if (scaled >= 800_000) return `<img src="8x_platinum.png" title="8× Platinum">`;
+      if (scaled >= 700_000) return `<img src="7x_platinum.png" title="7× Platinum">`;
+      if (scaled >= 600_000) return `<img src="6x_platinum.png" title="6× Platinum">`;
+      if (scaled >= 500_000) return `<img src="5x_platinum.png" title="5× Platinum">`;
+      if (scaled >= 400_000) return `<img src="4x_platinum.png" title="4× Platinum">`;
+      if (scaled >= 300_000) return `<img src="3x_platinum.png" title="3× Platinum">`;
+      if (scaled >= 200_000) return `<img src="2x_platinum.png" title="2× Platinum">`;
+      if (scaled >= 100_000) return `<img src="platinum.png" title="Platinum">`;
       if (scaled >= 50_000) return `<img src="gold.png" title="Gold">`;
       return "";
     }
 
     function getSongCertLabel(sales) {
-      const scaled = sales * 745;
+      const scaled = sales * 745.1;
       if (scaled >= 1_000_000) return "Diamond";
-      if (scaled >= 200_000) return Math.floor(scaled / 100_000) + "× Platinum";
+      if (scaled >= 900_000) return "9× Platinum";
+      if (scaled >= 800_000) return "8× Platinum";
+      if (scaled >= 700_000) return "7× Platinum";
+      if (scaled >= 600_000) return "6× Platinum";
+      if (scaled >= 500_000) return "5× Platinum";
+      if (scaled >= 400_000) return "4× Platinum";
+      if (scaled >= 300_000) return "3× Platinum";
+      if (scaled >= 200_000) return "2× Platinum";
       if (scaled >= 100_000) return "Platinum";
-      if (scaled >= 50_000)  return "Gold";
+      if (scaled >= 50_000) return "Gold";
       return "";
     }
 
