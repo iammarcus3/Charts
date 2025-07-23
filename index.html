@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Billboard Hot 100</title>
   <style>
-    /* Your original styling */
     body { background-color: #0f0f0f; color: #ffffff; font-family: 'Helvetica Neue', sans-serif; margin: 0; padding: 2rem; }
     nav { text-align: center; margin-bottom: 1rem; }
     nav a { color: #00ffff; text-decoration: none; margin: 0 1rem; font-weight: bold; font-size: 1.1rem; }
@@ -71,6 +70,7 @@
   </div>
 
   <script>
+    // Normalize text for fuzzy matching (remove brackets, feat., special chars, lowercase)
     function normalize(text) {
       if (typeof text !== "string") text = String(text || "");
       return text.toLowerCase()
@@ -80,21 +80,36 @@
         .replace(/[^a-z0-9]/g, '');
     }
 
+    // Unique key for songs/albums by title + artist
     function getFuzzyKey(title, artist) {
-      return normalize(title) + normalize(artist);
+      return normalize(title) + '||' + normalize(artist);
     }
 
-    let currentWeek = 1;
+    let currentWeek = null;
     let currentChart = 'tracks';
 
     function switchChart(type) {
       currentChart = type;
       document.querySelectorAll(".tab").forEach(tab => {
-        tab.classList.remove("active");
-        if (tab.dataset.chart === type) tab.classList.add("active");
+        tab.classList.toggle("active", tab.dataset.chart === type);
       });
-      loadWeek(currentWeek);
+      loadWeek(currentWeek || getLatestWeek());
     }
+
+    function getAllWeeksDesc() {
+      return Object.keys(weekData)
+        .map(w => parseInt(w))
+        .filter(w => !isNaN(w))
+        .sort((a, b) => b - a);
+    }
+
+    function getLatestWeek() {
+      const weeks = getAllWeeksDesc();
+      return weeks.length ? weeks[0] : 1;
+    }
+
+    // Global set to track albums that have shown "NEW" to avoid duplicates
+    const albumsNewShown = new Set();
 
     function loadWeek(weekNumber) {
       currentWeek = weekNumber;
@@ -114,15 +129,19 @@
     function renderTrackChart(entries, weekNumber, tbody) {
       const history = {};
 
-      for (let i = 1; i < weekNumber; i++) {
-        for (const row of weekData[i] || []) {
+      // Build history of past weeks for each song
+      for (let w = 1; w < weekNumber; w++) {
+        for (const row of weekData[w] || []) {
           const key = getFuzzyKey(row.title, row.artist);
           if (!history[key]) history[key] = [];
           history[key].push({ ...row });
         }
       }
 
+      // Filter current week songs
       const currentTracks = entries.filter(row => row.title && row.artist);
+
+      // Enrich each with total weeks and best peak so far
       const enrichedTracks = currentTracks.map(row => {
         const key = getFuzzyKey(row.title, row.artist);
         const past = history[key] || [];
@@ -131,6 +150,7 @@
         return { ...row, totalWeeks, bestPeak, points: row.points };
       });
 
+      // Sort by points descending
       enrichedTracks.sort((a, b) => b.points - a.points);
 
       enrichedTracks.forEach((row, index) => {
@@ -162,60 +182,60 @@
     }
 
     function renderAlbumChart(entries, weekNumber, tbody) {
+      // Map to count unique songs per album (across all weeks)
       const albumSongCounts = {};
-      for (const week in weekData) {
-        if (!weekData.hasOwnProperty(week)) continue;
-        const w = parseInt(week);
-        if (isNaN(w)) continue;
-        for (const row of weekData[week] || []) {
+      for (const w in weekData) {
+        if (!weekData.hasOwnProperty(w)) continue;
+        const wk = parseInt(w);
+        if (isNaN(wk)) continue;
+        for (const row of weekData[w] || []) {
           if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
-          const albumKey = normalize(row.album) + '||' + normalize(row.artist || '');
-          if (!albumSongCounts[albumKey]) albumSongCounts[albumKey] = new Set();
-          if (row.title) albumSongCounts[albumKey].add(row.title.toLowerCase());
+          const key = getFuzzyKey(row.album, row.artist || '');
+          if (!albumSongCounts[key]) albumSongCounts[key] = new Set();
+          if (row.title) albumSongCounts[key].add(row.title.toLowerCase());
         }
       }
 
+      // Aggregate current week albums: sum sales and collect ranks
       const albumsMap = {};
       for (const row of entries) {
         if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
-        const albumName = row.album;
-        const artistName = row.artist || "";
-        const key = normalize(albumName) + '||' + normalize(artistName);
+        const key = getFuzzyKey(row.album, row.artist || '');
         if (!albumsMap[key]) {
-          albumsMap[key] = { album: albumName, artist: artistName, sales: 0, currentWeekRanks: [] };
+          albumsMap[key] = { album: row.album, artist: row.artist || '', sales: 0, currentWeekRanks: [] };
         }
         albumsMap[key].sales += row.sales;
         const rankNum = parseInt(row.rank);
         if (!isNaN(rankNum)) albumsMap[key].currentWeekRanks.push(rankNum);
       }
 
-      const filteredAlbums = Object.entries(albumsMap).filter(([key, album]) => {
+      // Filter albums with >= 2 unique songs overall
+      const filteredAlbums = Object.entries(albumsMap).filter(([key]) => {
         return albumSongCounts[key] && albumSongCounts[key].size >= 2;
       }).map(([key, album]) => album);
 
-      // Build albumWeeks mapping: which weeks album appeared in
+      // Build albumWeeks map: weeks in which album appeared
       const albumWeeks = {};
-      for (let i = 1; i <= weekNumber; i++) {
-        for (const row of weekData[i] || []) {
+      for (let w = 1; w <= weekNumber; w++) {
+        for (const row of weekData[w] || []) {
           if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
-          const key = normalize(row.album) + '||' + normalize(row.artist || '');
+          const key = getFuzzyKey(row.album, row.artist || '');
           if (!albumWeeks[key]) albumWeeks[key] = new Set();
-          albumWeeks[key].add(i);
+          albumWeeks[key].add(w);
         }
       }
 
       const enrichedAlbums = filteredAlbums.map(album => {
-        const key = normalize(album.album) + '||' + normalize(album.artist);
+        const key = getFuzzyKey(album.album, album.artist);
         const weeksSet = albumWeeks[key] || new Set();
-
         const totalWeeks = weeksSet.size;
 
-        // Gather all ranks up to current week to find peak
+        // Peak is best rank in all weeks up to current week
         const allRanks = [];
-        for (let i = 1; i <= weekNumber; i++) {
-          for (const r of weekData[i] || []) {
+        for (let w = 1; w <= weekNumber; w++) {
+          for (const r of weekData[w] || []) {
             if (!r.album || typeof r.album !== "string" || r.album.trim().toLowerCase() === "nan") continue;
-            const rKey = normalize(r.album) + '||' + normalize(r.artist || '');
+            const rKey = getFuzzyKey(r.album, r.artist || '');
             if (rKey === key) {
               const rankNum = parseInt(r.rank);
               if (!isNaN(rankNum)) allRanks.push(rankNum);
@@ -224,43 +244,48 @@
         }
         const bestPeak = allRanks.length > 0 ? Math.min(...allRanks) : null;
 
-        // Current week's best rank
+        // Current week best rank
         const currentBestRank = album.currentWeekRanks.length > 0 ? Math.min(...album.currentWeekRanks) : null;
 
-        // Last week's presence
-        const lastWeekNumber = weekNumber - 1;
-        const wasLastWeekPresent = weeksSet.has(lastWeekNumber);
+        // Check if album appeared last week
+        const lastWeek = weekNumber - 1;
+        const wasLastWeekPresent = weeksSet.has(lastWeek);
 
-        // Has appeared before this week?
-        const appearedBeforeThisWeek = Array.from(weeksSet).some(w => w < weekNumber);
+        // Check if album appeared before current week
+        const appearedBefore = Array.from(weeksSet).some(w => w < weekNumber);
 
-        // Movement icon/text logic
+        // Movement icon logic:
         let movementIcon = "";
         let movementText = "";
 
-        if (!appearedBeforeThisWeek) {
-          // First appearance ever
-          movementIcon = "🆕";
+        if (!appearedBefore) {
+          // First time ever on chart
+          if (!albumsNewShown.has(key)) {
+            movementIcon = "🆕";
+            albumsNewShown.add(key);
+          } else {
+            // Defensive fallback, but ideally shouldn't happen
+            movementIcon = "➡️";
+          }
         } else if (!wasLastWeekPresent) {
-          // Re-entry (appeared before but not last week)
+          // Re-entry after falling off
           movementIcon = "↩️";
           movementText = ` <span class="move-stay">(Re-entry)</span>`;
         } else {
-          // Appeared last week - calculate movement
-          const lastWeekEntries = weekData[lastWeekNumber] || [];
+          // Regular movement compared to last week
+          const lastWeekEntries = weekData[lastWeek] || [];
           let lastWeekRanks = [];
           for (const r of lastWeekEntries) {
             if (!r.album || typeof r.album !== "string" || r.album.trim().toLowerCase() === "nan") continue;
-            const rKey = normalize(r.album) + '||' + normalize(r.artist || '');
+            const rKey = getFuzzyKey(r.album, r.artist || '');
             if (rKey === key) {
               const rankNum = parseInt(r.rank);
               if (!isNaN(rankNum)) lastWeekRanks.push(rankNum);
             }
           }
-
           if (lastWeekRanks.length > 0 && currentBestRank !== null) {
-            const lastWeekBestRank = Math.min(...lastWeekRanks);
-            const diff = lastWeekBestRank - currentBestRank;
+            const lastBest = Math.min(...lastWeekRanks);
+            const diff = lastBest - currentBestRank;
             if (diff > 0) {
               movementIcon = "⬆️";
               movementText = ` <span class="move-up">+${diff}</span>`;
@@ -296,6 +321,7 @@
       }
     }
 
+    // Format week date range for selector option text
     function getDateRange(weekNum) {
       const start = new Date(2018, 1, 23);
       start.setDate(start.getDate() + (weekNum - 1) * 7);
@@ -305,12 +331,10 @@
       return `${start.toLocaleDateString('en-GB', options)} - ${end.toLocaleDateString('en-GB', options)}`;
     }
 
+    // Populate week dropdown (descending order) and add listener
     function populateWeekSelector() {
       const selector = document.getElementById("weekSelector");
-      const weeks = Object.keys(weekData)
-        .map(k => parseInt(k))
-        .filter(k => !isNaN(k))
-        .sort((a, b) => b - a);
+      const weeks = getAllWeeksDesc();
       for (const w of weeks) {
         const opt = document.createElement("option");
         opt.value = w;
@@ -321,11 +345,9 @@
       loadWeek(weeks[0]);
     }
 
+    // Change week with left/right buttons
     function changeWeek(delta) {
-      const weeks = Object.keys(weekData)
-        .map(k => parseInt(k))
-        .filter(k => !isNaN(k))
-        .sort((a, b) => b - a);
+      const weeks = getAllWeeksDesc();
       const index = weeks.indexOf(currentWeek);
       const newIndex = index + delta;
       if (newIndex >= 0 && newIndex < weeks.length) {
