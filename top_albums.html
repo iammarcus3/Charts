@@ -2,206 +2,161 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Top 100 Albums</title>
+  <title>Top Albums by Year</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
+      background: #111;
+      color: #fff;
       padding: 2rem;
     }
-    nav {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    nav a {
-      margin: 0 1rem;
-      text-decoration: none;
-      font-weight: bold;
-      color: #333;
-    }
-    nav a:hover {
-      color: #007acc;
-    }
     h1 {
-      text-align: center;
-      color: #333;
+      font-size: 2rem;
       margin-bottom: 1rem;
+    }
+    select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #fff;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      margin-top: 1rem;
     }
     th, td {
-      padding: 0.8rem;
-      border: 1px solid #ccc;
+      padding: 0.6rem;
       text-align: left;
-      cursor: pointer;
+      border-bottom: 1px solid #333;
     }
     th {
-      background-color: #eee;
-      text-transform: uppercase;
-      font-size: 0.9rem;
+      background: #222;
     }
-    a {
-      color: #0066cc;
-      text-decoration: none;
+    tr:hover {
+      background: #1a1a1a;
     }
-    a:hover {
-      text-decoration: underline;
-    }
-    .cert img {
-      height: 20px;
-      vertical-align: middle;
-      margin-right: 3px;
+    .number {
+      text-align: right;
     }
   </style>
 </head>
 <body>
-
-  <nav>
-    <a href="index.html">🔥 Home</a>
-    <a href="top_albums.html">💿 Top Albums</a>
-    <a href="top_songs.html">🎵 Top Songs</a>
-  </nav>
-
-  <h1>🏆 Top 100 Albums by Sales</h1>
+  <h1>Top 20 Albums by Sales Per Year</h1>
+  <label for="yearSelect">Select Year:</label>
+  <select id="yearSelect"></select>
 
   <table>
     <thead>
       <tr>
-        <th data-sort="rank">Rank</th>
-        <th data-sort="album">Album</th>
-        <th data-sort="artist">Artist</th>
-        <th data-sort="sales">Total Sales</th>
-        <th data-sort="streams">Total Streams</th>
-        <th data-sort="cert">Certification</th>
+        <th>Rank</th>
+        <th>Album</th>
+        <th>Artist</th>
+        <th class="number">Sales (That Year)</th>
+        <th class="number">Sales to Date</th>
+        <th class="number">Weeks</th>
+        <th class="number">Peak</th>
       </tr>
     </thead>
-    <tbody id="albumTable">
-      <tr><td colspan="6">Loading data...</td></tr>
-    </tbody>
+    <tbody id="albumTable"></tbody>
   </table>
 
   <script src="weekdata.js"></script>
   <script>
-    function formatNumber(n) {
-      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
-      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
-      return n.toString();
-    }
+    const yearSelect = document.getElementById('yearSelect');
+    const tableBody = document.getElementById('albumTable');
 
-    function getAlbumCertIcons(sales) {
-      const scaled = sales * 1000;
-      if (scaled >= 10_000_000) {
-        return `<img src="diamond.png" title="Diamond">`;
-      }
-      if (scaled >= 1_000_000) {
-        const count = Math.floor(scaled / 1_000_000);
-        return Array(count).fill(`<img src="platinum.png" title="Platinum">`).join('');
-      }
-      if (scaled >= 500_000) {
-        return `<img src="gold.png" title="Gold">`;
-      }
-      return "—";
-    }
-
+    // Normalize album names for merging editions
     function normalizeAlbum(name) {
-      if (typeof name !== "string") return "";
-      return name.toUpperCase()
-        .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMIX|SINGLE|EP/gi, "")
-        .replace(/[^A-Z0-9 ]/g, "")
-        .replace(/\s+/g, " ")
-        .trim();
+      return name
+        ? name.toLowerCase().replace(/\s*\(.*?\)|\[.*?]|[-–—_]/g, '').replace(/[^a-z0-9 ]/g, '').trim()
+        : '';
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const tableBody = document.getElementById("albumTable");
+    // Extract all years available
+    const weekYears = Object.keys(weekData).map(Number).map(weekNum => {
+      const entry = weekData[weekNum][0];
+      return entry && entry.date ? new Date(entry.date).getFullYear() : 2018 + Math.floor((weekNum - 1) / 52);
+    });
 
-      if (typeof weekData !== "object") {
-        tableBody.innerHTML = `<tr><td colspan="6">❌ weekdata.js not found or not formatted correctly.</td></tr>`;
-        return;
-      }
+    const uniqueYears = [...new Set(weekYears)].sort((a, b) => b - a);
 
-      const albumMap = {};
-      for (const week in weekData) {
-        const entries = weekData[week];
-        if (!Array.isArray(entries)) continue;
+    uniqueYears.forEach(year => {
+      const option = document.createElement('option');
+      option.value = year;
+      option.textContent = year;
+      yearSelect.appendChild(option);
+    });
 
-        entries.forEach(entry => {
-          if (!entry.album || !entry.artist || isNaN(entry.sales)) return;
+    function getTopAlbums(year) {
+      const albumMap = new Map();
 
-          const albumKey = normalizeAlbum(entry.album) + "|" + entry.artist.toUpperCase().trim();
-          const sales = parseFloat(entry.sales) || 0;
+      for (const [weekKey, entries] of Object.entries(weekData)) {
+        const weekNum = parseInt(weekKey);
+        const entryYear = entries[0] && entries[0].date
+          ? new Date(entries[0].date).getFullYear()
+          : 2018 + Math.floor((weekNum - 1) / 52);
 
-          if (!albumMap[albumKey]) {
-            albumMap[albumKey] = {
-              album: entry.album,
-              artist: entry.artist,
-              rawSales: 0
-            };
+        for (const entry of entries) {
+          if (!entry.album || !entry.artist) continue;
+
+          const key = normalizeAlbum(entry.album) + '___' + entry.artist;
+          const albumInfo = albumMap.get(key) || {
+            album: entry.album,
+            artist: entry.artist,
+            salesThisYear: 0,
+            totalSales: 0,
+            weeks: 0,
+            peak: entry.rank
+          };
+
+          if (entryYear === parseInt(year)) {
+            albumInfo.salesThisYear += entry.sales || 0;
           }
 
-          albumMap[albumKey].rawSales += sales;
-        });
+          albumInfo.totalSales += entry.sales || 0;
+          albumInfo.weeks += 1;
+          if (entry.rank < albumInfo.peak) albumInfo.peak = entry.rank;
+
+          albumMap.set(key, albumInfo);
+        }
       }
 
-      let albumList = Object.values(albumMap)
-        .filter(a => a.rawSales > 0)
-        .map((a, i) => ({
-          ...a,
-          totalSales: a.rawSales * 1000,
-          totalStreams: a.rawSales * 0.927124 * 1_000_000,
-          cert: getAlbumCertIcons(a.rawSales),
-          rank: i + 1
-        }))
-        .sort((a, b) => b.totalSales - a.totalSales)
-        .slice(0, 100);
+      const sortedAlbums = [...albumMap.values()]
+        .filter(a => a.salesThisYear > 0)
+        .sort((a, b) => b.salesThisYear - a.salesThisYear)
+        .slice(0, 20);
 
-      function renderTable(data) {
-        tableBody.innerHTML = "";
-        data.forEach((album, index) => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>
-              <a href="album_detail.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}">${album.album}</a>
-            </td>
-            <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
-            <td>${formatNumber(album.totalSales)}</td>
-            <td>${formatNumber(album.totalStreams)}</td>
-            <td class="cert">${album.cert}</td>
-          `;
-          tableBody.appendChild(tr);
-        });
-      }
+      return sortedAlbums;
+    }
 
-      renderTable(albumList);
+    function renderTable(year) {
+      const albums = getTopAlbums(year);
+      tableBody.innerHTML = '';
 
-      const headers = document.querySelectorAll("th[data-sort]");
-      headers.forEach(header => {
-        header.addEventListener("click", () => {
-          const key = header.getAttribute("data-sort");
-          const isAsc = header.classList.contains("asc");
-          headers.forEach(h => h.classList.remove("asc", "desc"));
-          header.classList.add(isAsc ? "desc" : "asc");
+      albums.forEach((album, index) => {
+        const row = document.createElement('tr');
 
-          albumList.sort((a, b) => {
-            if (key === "album" || key === "artist") {
-              return isAsc
-                ? a[key].localeCompare(b[key])
-                : b[key].localeCompare(a[key]);
-            } else {
-              return isAsc ? a[key] - b[key] : b[key] - a[key];
-            }
-          });
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${album.album}</td>
+          <td>${album.artist}</td>
+          <td class="number">${album.salesThisYear.toLocaleString()}</td>
+          <td class="number">${album.totalSales.toLocaleString()}</td>
+          <td class="number">${album.weeks}</td>
+          <td class="number">${album.peak}</td>
+        `;
 
-          renderTable(albumList);
-        });
+        tableBody.appendChild(row);
       });
+    }
+
+    yearSelect.addEventListener('change', e => {
+      renderTable(e.target.value);
     });
+
+    // Load latest year by default
+    renderTable(uniqueYears[0]);
+    yearSelect.value = uniqueYears[0];
   </script>
 </body>
 </html>
