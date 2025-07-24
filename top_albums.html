@@ -65,17 +65,22 @@
     const yearSelect = document.getElementById('yearSelect');
     const tableBody = document.getElementById('albumTable');
 
-    // Normalize album names for merging editions
+    // Safe normalizeAlbum: only process strings, else empty string
     function normalizeAlbum(name) {
+      if (typeof name !== 'string') return '';
       return name
-        ? name.toLowerCase().replace(/\s*\(.*?\)|\[.*?]|[-–—_]/g, '').replace(/[^a-z0-9 ]/g, '').trim()
-        : '';
+        .toLowerCase()
+        .replace(/\s*\(.*?\)|\[.*?]|[-–—_]/g, '')
+        .replace(/[^a-z0-9 ]/g, '')
+        .trim();
     }
 
-    // Extract all years available
+    // Extract all years available from weekData
     const weekYears = Object.keys(weekData).map(Number).map(weekNum => {
       const entry = weekData[weekNum][0];
-      return entry && entry.date ? new Date(entry.date).getFullYear() : 2018 + Math.floor((weekNum - 1) / 52);
+      if (entry && entry.date) return new Date(entry.date).getFullYear();
+      // fallback estimate if date missing:
+      return 2018 + Math.floor((weekNum - 1) / 52);
     });
 
     const uniqueYears = [...new Set(weekYears)].sort((a, b) => b - a);
@@ -121,12 +126,10 @@
         }
       }
 
-      const sortedAlbums = [...albumMap.values()]
+      return [...albumMap.values()]
         .filter(a => a.salesThisYear > 0)
         .sort((a, b) => b.salesThisYear - a.salesThisYear)
         .slice(0, 20);
-
-      return sortedAlbums;
     }
 
     function renderTable(year) {
