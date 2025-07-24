@@ -147,6 +147,29 @@
       padding-top: 1rem;
       user-select: none;
     }
+    /* Certification timeline styles */
+    #certTimeline {
+      margin-top: 1rem;
+      font-size: 1rem;
+      border-top: 1px solid #ccc;
+      padding-top: 0.7rem;
+      color: #003366;
+    }
+    #certTimeline ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    #certTimeline ul li {
+      margin-bottom: 0.3rem;
+      display: flex;
+      justify-content: space-between;
+      max-width: 350px;
+    }
+    #certTimeline ul li span.date {
+      font-weight: 600;
+      color: #555;
+      font-family: monospace;
+    }
   </style>
 </head>
 <body>
@@ -163,6 +186,8 @@
     <p><strong>Peak Position:</strong> <span id="peak">—</span></p>
     <p><strong>Debut Week:</strong> <span id="debutWeek">—</span></p>
     <p class="cert"><strong>Certification:</strong> <span id="albumCert">—</span></p>
+    <!-- Certification timeline container -->
+    <div id="certTimeline" aria-label="Certification timeline"></div>
   </div>
 
   <h2>📀 Tracks</h2>
@@ -382,6 +407,98 @@
     function formatNumber(num) {
       return Math.round(num).toLocaleString("en-US");
     }
+
+    // === Added: Certification Timeline ===
+    // Maps certification thresholds (scaled sales) to label and min sales
+    const certLevels = [
+      { label: "Diamond", threshold: 10_000_000 },
+      { label: "9× Platinum", threshold: 9_000_000 },
+      { label: "8× Platinum", threshold: 8_000_000 },
+      { label: "7× Platinum", threshold: 7_000_000 },
+      { label: "6× Platinum", threshold: 6_000_000 },
+      { label: "5× Platinum", threshold: 5_000_000 },
+      { label: "4× Platinum", threshold: 4_000_000 },
+      { label: "3× Platinum", threshold: 3_000_000 },
+      { label: "2× Platinum", threshold: 2_000_000 },
+      { label: "Platinum", threshold: 1_000_000 },
+      { label: "Gold", threshold: 500_000 }
+    ];
+
+    // Base date for week 1 (your example was 23 Feb 2018)
+    const baseDate = new Date(2018, 1, 23); // Month 1 = February (0-based)
+
+    function formatDate(date) {
+      return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+    }
+
+    // Find first week number the album hit each certification level
+    function findCertTimeline() {
+      const certDates = [];
+
+      certLevels.forEach(({ label, threshold }) => {
+        for (const week in weekData) {
+          const weekNum = parseInt(week.replace(/\D/g, ""));
+          const entries = weekData[week];
+          let totalSalesThisWeek = 0;
+
+          entries.forEach(entry => {
+            const entryArtist = normalize(entry.artist);
+            const entryAlbum = normalizeAlbum(entry.album);
+            if (entryArtist === normArtist && entryAlbum === normAlbum) {
+              totalSalesThisWeek += parseFloat(entry.sales) || 0;
+            }
+          });
+
+          const cumulativeSales = totalSalesThisWeek * 1000; // scale back to match scaled cert thresholds
+          // But wait: you want cumulative sales over time, so we must sum sales of all weeks <= current week
+
+          // Let's sum cumulative sales for album up to current weekNum:
+          let cumSales = 0;
+          for (const w in weekData) {
+            const wNum = parseInt(w.replace(/\D/g, ""));
+            if (wNum <= weekNum) {
+              weekData[w].forEach(e => {
+                if (normalize(e.artist) === normArtist && normalizeAlbum(e.album) === normAlbum) {
+                  cumSales += parseFloat(e.sales) || 0;
+                }
+              });
+            }
+          }
+          const scaledCumSales = cumSales * 1000;
+
+          if (scaledCumSales >= threshold) {
+            certDates.push({ label, weekNum });
+            break; // Found first week reaching cert
+          }
+        }
+      });
+
+      return certDates;
+    }
+
+    const certTimelineEl = document.getElementById("certTimeline");
+    const certTimeline = findCertTimeline();
+
+    if (certTimeline.length === 0) {
+      certTimelineEl.innerHTML = "<p>No certification timeline data available.</p>";
+    } else {
+      // Sort descending by threshold order
+      certTimeline.sort((a, b) => {
+        // Sort certLevels order descending
+        return certLevels.findIndex(c => c.label === b.label) - certLevels.findIndex(c => c.label === a.label);
+      });
+
+      const ul = document.createElement("ul");
+      certTimeline.forEach(({ label, weekNum }) => {
+        // Calculate cert date from baseDate + (weekNum - 1) * 7 days
+        const certDate = new Date(baseDate.getTime() + (weekNum - 1) * 7 * 24 * 60 * 60 * 1000);
+        const li = document.createElement("li");
+        li.innerHTML = `<span>${label}</span> <span class="date">${formatDate(certDate)}</span>`;
+        ul.appendChild(li);
+      });
+      certTimelineEl.appendChild(ul);
+    }
+    // === End Added Feature ===
 
     // Dark mode toggle logic
     const darkModeToggle = document.getElementById("darkModeToggle");
