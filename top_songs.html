@@ -68,7 +68,6 @@
 
   <script src="weekdata.js"></script>
   <script>
-    // Certification thresholds and classes (for styling borders)
     const thresholds = [
       { level: "🥇 Gold", value: 50000, class: "gold" },
       { level: "💿 Platinum", value: 100000, class: "platinum" },
@@ -83,9 +82,8 @@
       { level: "💎 Diamond", value: 1000000, class: "diamond" }
     ];
 
-    // Returns certification image HTML string based on scaled sales
     function getCertImage(totalSales) {
-      const scaled = totalSales * 745.1;
+      const scaled = totalSales * 745;
       if (scaled >= 1_000_000) return `<img src="Diamond.png" title="Diamond">`;
       if (scaled >= 900_000) return `<img src="9x Platinum.png" title="9× Platinum">`;
       if (scaled >= 800_000) return `<img src="8x Platinum.png" title="8× Platinum">`;
@@ -101,7 +99,7 @@
     }
 
     const output = document.getElementById("output");
-    const previousCerts = {}; // songKey → highest cert value
+    const previousCerts = {};
 
     function normalizeKey(title, artist) {
       return `${title.trim().toLowerCase()}|${artist.trim().toLowerCase()}`;
@@ -116,7 +114,6 @@
       return `${start.toLocaleDateString('en-GB', options)} – ${end.toLocaleDateString('en-GB', options)}`;
     }
 
-    // Process weeks oldest → newest to accumulate certifications correctly
     const weeks = Object.keys(weekData)
       .map(Number)
       .sort((a, b) => a - b);
@@ -130,7 +127,6 @@
         const totalSales = song.totalSales || 0;
         const prevHighest = previousCerts[key] || 0;
 
-        // Find the highest threshold crossed at current totalSales
         let currentCertValue = 0;
         let currentCertClass = "";
         let currentCertLevel = "";
@@ -144,7 +140,6 @@
           }
         }
 
-        // New certification crossed this week?
         if (currentCertValue > prevHighest) {
           newCerts.push({
             title: song.title,
@@ -186,7 +181,6 @@
   </script>
 </body>
 </html>
-
 
 
 
