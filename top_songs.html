@@ -89,8 +89,13 @@
     ];
 
     const output = document.getElementById("output");
-    const previousCerts = {}; // key: title|artist → highest value crossed
+    const previousCerts = {}; // key: normalized title|artist → highest value crossed
     const encode = str => encodeURIComponent(str);
+
+    // Normalize keys for consistent matching (case insensitive + trim)
+    function normalizeKey(title, artist) {
+      return `${title.trim().toLowerCase()}|${artist.trim().toLowerCase()}`;
+    }
 
     function getDateRange(weekNum) {
       const start = new Date(2018, 1, 23); // 23 Feb 2018
@@ -110,19 +115,23 @@
       const newCerts = [];
 
       weekEntries.forEach(song => {
-        const key = `${song.title}|${song.artist}`;
+        const key = normalizeKey(song.title, song.artist);
         const total = song.totalSales || 0;
 
+        // Initialize previousCerts[key] if not set
+        if (!(key in previousCerts)) previousCerts[key] = 0;
+
+        // Find highest threshold crossed this week above previous highest
         for (let i = thresholds.length - 1; i >= 0; i--) {
           const { value, level, class: className } = thresholds[i];
-          if (total >= value && (!previousCerts[key] || previousCerts[key] < value)) {
+          if (total >= value && previousCerts[key] < value) {
             newCerts.push({
               title: song.title,
               artist: song.artist,
               cert: level,
               className
             });
-            previousCerts[key] = value;
+            previousCerts[key] = value; // Update highest certification reached
             break;
           }
         }
