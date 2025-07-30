@@ -13,22 +13,22 @@
     }
     h1 {
       text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
+      font-size: 3rem; /* larger title */
+      margin-bottom: 1.5rem;
       color: #ffffff;
     }
     #nav {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
     button {
       background: #2a2a2a;
       border: none;
       color: #66ccff;
-      font-size: 1.5rem;
-      margin: 0 1rem;
-      padding: 0.3rem 1rem;
-      border-radius: 6px;
+      font-size: 2rem; /* bigger buttons */
+      margin: 0 1.5rem;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
       cursor: pointer;
       transition: background 0.3s ease;
     }
@@ -42,37 +42,40 @@
     }
     .week {
       background: #1e1e1e;
-      border-radius: 10px;
-      padding: 1.5rem;
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
-      max-width: 700px;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+      max-width: 750px;
       margin: 0 auto;
     }
     .week h2 {
       margin-top: 0;
       color: #66ccff;
-      border-bottom: 1px solid #333;
-      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #333;
+      padding-bottom: 0.75rem;
       text-align: center;
+      font-size: 2rem; /* bigger heading */
     }
     .cert {
-      padding: 0.75rem 1rem;
-      margin: 0.5rem 0;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
       background: #2a2a2a;
-      border-left: 6px solid #666;
-      border-radius: 5px;
-      font-size: 1rem;
+      border-left: 8px solid #666;
+      border-radius: 7px;
+      font-size: 1.4rem; /* bigger font */
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1rem;
+      line-height: 1.3;
     }
     .gold { border-color: gold; }
     .platinum { border-color: #c0c0c0; }
     .diamond { border-color: deepskyblue; }
     .cert img {
-      height: 24px;
+      height: 36px; /* bigger image */
       width: auto;
       vertical-align: middle;
+      flex-shrink: 0;
     }
     a {
       color: #66ccff;
@@ -83,9 +86,12 @@
     }
     @media (max-width: 600px) {
       body { padding: 1rem; }
-      h1 { font-size: 2rem; }
-      button { font-size: 1.2rem; margin: 0 0.5rem; }
-      .week { padding: 1rem; }
+      h1 { font-size: 2.2rem; }
+      button { font-size: 1.5rem; margin: 0 0.5rem; padding: 0.4rem 1rem; }
+      .week { padding: 1.5rem; max-width: 100%; }
+      .week h2 { font-size: 1.5rem; }
+      .cert { font-size: 1.1rem; padding: 0.75rem 1rem; margin: 0.75rem 0; }
+      .cert img { height: 28px; }
     }
   </style>
 </head>
@@ -116,20 +122,22 @@
       { level: "💎 Diamond", value: 1000000, class: "diamond" }
     ];
 
-    function getCertImage(totalSales) {
-      const scaled = totalSales * 745;
-      if (scaled >= 1_000_000) return `<img src="Diamond.png" title="Diamond">`;
-      if (scaled >= 900_000) return `<img src="9x Platinum.png" title="9× Platinum">`;
-      if (scaled >= 800_000) return `<img src="8x Platinum.png" title="8× Platinum">`;
-      if (scaled >= 700_000) return `<img src="7x Platinum.png" title="7× Platinum">`;
-      if (scaled >= 600_000) return `<img src="6x Platinum.png" title="6× Platinum">`;
-      if (scaled >= 500_000) return `<img src="5x Platinum.png" title="5× Platinum">`;
-      if (scaled >= 400_000) return `<img src="4x Platinum.png" title="4× Platinum">`;
-      if (scaled >= 300_000) return `<img src="3x Platinum.png" title="3× Platinum">`;
-      if (scaled >= 200_000) return `<img src="2x Platinum.png" title="2× Platinum">`;
-      if (scaled >= 100_000) return `<img src="Platinum.png" title="Platinum">`;
-      if (scaled >= 50_000) return `<img src="Gold.png" title="Gold">`;
-      return "";
+    function getCertImage(level) {
+      const images = {
+        "🥇 Gold": "Gold.png",
+        "💿 Platinum": "Platinum.png",
+        "💿 x2": "2x Platinum.png",
+        "💿 x3": "3x Platinum.png",
+        "💿 x4": "4x Platinum.png",
+        "💿 x5": "5x Platinum.png",
+        "💿 x6": "6x Platinum.png",
+        "💿 x7": "7x Platinum.png",
+        "💿 x8": "8x Platinum.png",
+        "💿 x9": "9x Platinum.png",
+        "💎 Diamond": "Diamond.png"
+      };
+      const src = images[level];
+      return src ? `<img src="${src}" title="${level}">` : "";
     }
 
     function normalizeKey(title, artist) {
@@ -145,70 +153,80 @@
       return `${start.toLocaleDateString('en-GB', options)} – ${end.toLocaleDateString('en-GB', options)}`;
     }
 
-    // Sort weeks descending (latest first)
-    const weeks = Object.keys(weekData)
+    // Sort weeks ascending to compute certs cumulatively
+    const weeksAsc = Object.keys(weekData)
       .map(Number)
-      .sort((a, b) => b - a);
+      .sort((a,b) => a - b);
 
-    const previousCerts = {};
+    // We'll store for each song (key), the highest cert achieved so far
+    // For each week, store certifications newly achieved that week
+    const certHistory = {};
+    const newCertsByWeek = {};
+
+    weeksAsc.forEach(weekNum => {
+      const entries = weekData[weekNum];
+      const newCerts = [];
+
+      entries.forEach(song => {
+        const key = normalizeKey(song.title, song.artist);
+        const totalSales = song.totalSales || 0;
+        const scaled = totalSales * 745;
+
+        // Find highest cert level for this totalSales
+        let certForThisSales = null;
+        for (let i = thresholds.length - 1; i >= 0; i--) {
+          if (scaled >= thresholds[i].value) {
+            certForThisSales = thresholds[i];
+            break;
+          }
+        }
+
+        if (!certForThisSales) return; // no cert at all
+
+        const prevCertValue = certHistory[key] ? certHistory[key].value : 0;
+
+        // Only show cert if this week crosses a new certification level strictly higher than previous
+        if (certForThisSales.value > prevCertValue) {
+          newCerts.push({
+            title: song.title,
+            artist: song.artist,
+            certLevel: certForThisSales.level,
+            certClass: certForThisSales.class,
+            totalSales: totalSales
+          });
+          certHistory[key] = certForThisSales;
+        }
+      });
+
+      newCertsByWeek[weekNum] = newCerts;
+    });
+
+    // Sort weeks descending for display newest first
+    const weeksDesc = weeksAsc.slice().reverse();
 
     const output = document.getElementById("output");
     const weekLabel = document.getElementById("weekLabel");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
 
-    let currentWeekIndex = 0; // start at latest week (weeks[0])
+    let currentWeekIndex = 0;
 
-    function renderWeek(index) {
+    function renderWeek(idx) {
       output.innerHTML = "";
-      const weekNum = weeks[index];
-      const weekEntries = weekData[weekNum];
-      const newCerts = [];
-
-      weekEntries.forEach(song => {
-        const key = normalizeKey(song.title, song.artist);
-        const totalSales = song.totalSales || 0;
-        const prevHighest = previousCerts[key] || 0;
-
-        const scaled = totalSales * 745;
-
-        let currentCertValue = 0;
-        let currentCertClass = "";
-        let currentCertLevel = "";
-
-        for (let i = thresholds.length - 1; i >= 0; i--) {
-          if (scaled >= thresholds[i].value) {
-            currentCertValue = thresholds[i].value;
-            currentCertClass = thresholds[i].class;
-            currentCertLevel = thresholds[i].level;
-            break;
-          }
-        }
-
-        if (currentCertValue > prevHighest) {
-          newCerts.push({
-            title: song.title,
-            artist: song.artist,
-            certLevel: currentCertLevel,
-            certClass: currentCertClass,
-            certValue: currentCertValue,
-            totalSales: totalSales
-          });
-          previousCerts[key] = currentCertValue;
-        }
-      });
+      const weekNum = weeksDesc[idx];
+      const certs = newCertsByWeek[weekNum] || [];
 
       weekLabel.textContent = `Week ${weekNum} (${getDateRange(weekNum)})`;
 
       const div = document.createElement("div");
       div.className = "week";
-      div.innerHTML = `<h2>Certifications for Week ${weekNum}</h2>`;
+      div.innerHTML = `<h2>New Certifications in Week ${weekNum}</h2>`;
 
-      if (newCerts.length > 0) {
-        newCerts.forEach(c => {
+      if (certs.length > 0) {
+        certs.forEach(c => {
           const trackLink = `track_detail.html?title=${encodeURIComponent(c.title)}&artist=${encodeURIComponent(c.artist)}`;
           const artistLink = `artist.html?name=${encodeURIComponent(c.artist)}`;
-          const certImageHTML = getCertImage(c.totalSales);
+          const certImageHTML = getCertImage(c.certLevel);
 
           const line = document.createElement("div");
           line.className = `cert ${c.certClass}`;
@@ -220,18 +238,17 @@
           div.appendChild(line);
         });
       } else {
-        div.innerHTML += `<p>No new certifications this week.</p>`;
+        div.innerHTML += `<p style="font-size:1.3rem; text-align:center; margin-top:1rem;">No new certifications this week.</p>`;
       }
 
       output.appendChild(div);
 
-      // Enable/disable buttons
-      prevBtn.disabled = (index === weeks.length - 1);
-      nextBtn.disabled = (index === 0);
+      prevBtn.disabled = (idx === weeksDesc.length - 1);
+      nextBtn.disabled = (idx === 0);
     }
 
     prevBtn.addEventListener("click", () => {
-      if (currentWeekIndex < weeks.length - 1) {
+      if (currentWeekIndex < weeksDesc.length - 1) {
         currentWeekIndex++;
         renderWeek(currentWeekIndex);
       }
@@ -249,6 +266,5 @@
   </script>
 </body>
 </html>
-
 
 
