@@ -11,14 +11,12 @@
       margin: 0;
       padding: 2rem;
     }
-
     h1 {
       text-align: center;
       font-size: 2.5rem;
       margin-bottom: 2rem;
       color: #ffffff;
     }
-
     .week {
       background: #1e1e1e;
       margin-bottom: 2rem;
@@ -26,14 +24,12 @@
       padding: 1.5rem;
       box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
     }
-
     .week h2 {
       margin-top: 0;
       color: #66ccff;
       border-bottom: 1px solid #333;
       padding-bottom: 0.5rem;
     }
-
     .cert {
       padding: 0.75rem 1rem;
       margin: 0.5rem 0;
@@ -41,27 +37,25 @@
       border-left: 6px solid #666;
       border-radius: 5px;
       font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
-
     .gold { border-color: gold; }
     .platinum { border-color: #c0c0c0; }
     .diamond { border-color: deepskyblue; }
-
-    .cert span.cert-label {
-      font-weight: bold;
-      margin-right: 1rem;
-      color: #ffd700;
+    .cert img {
+      height: 24px;
+      width: auto;
+      vertical-align: middle;
     }
-
     a {
       color: #66ccff;
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
     }
-
     @media (max-width: 600px) {
       body { padding: 1rem; }
       h1 { font-size: 2rem; }
@@ -74,6 +68,7 @@
 
   <script src="weekdata.js"></script>
   <script>
+    // Certification thresholds and classes (for styling borders)
     const thresholds = [
       { level: "🥇 Gold", value: 50000, class: "gold" },
       { level: "💿 Platinum", value: 100000, class: "platinum" },
@@ -88,16 +83,32 @@
       { level: "💎 Diamond", value: 1000000, class: "diamond" }
     ];
 
+    // Returns certification image HTML string based on scaled sales
+    function getCertImage(totalSales) {
+      const scaled = totalSales * 745.1;
+      if (scaled >= 1_000_000) return `<img src="Diamond.png" title="Diamond">`;
+      if (scaled >= 900_000) return `<img src="9x Platinum.png" title="9× Platinum">`;
+      if (scaled >= 800_000) return `<img src="8x Platinum.png" title="8× Platinum">`;
+      if (scaled >= 700_000) return `<img src="7x Platinum.png" title="7× Platinum">`;
+      if (scaled >= 600_000) return `<img src="6x Platinum.png" title="6× Platinum">`;
+      if (scaled >= 500_000) return `<img src="5x Platinum.png" title="5× Platinum">`;
+      if (scaled >= 400_000) return `<img src="4x Platinum.png" title="4× Platinum">`;
+      if (scaled >= 300_000) return `<img src="3x Platinum.png" title="3× Platinum">`;
+      if (scaled >= 200_000) return `<img src="2x Platinum.png" title="2× Platinum">`;
+      if (scaled >= 100_000) return `<img src="Platinum.png" title="Platinum">`;
+      if (scaled >= 50_000) return `<img src="Gold.png" title="Gold">`;
+      return "";
+    }
+
     const output = document.getElementById("output");
-    const previousCerts = {}; // key: normalized title|artist → highest certification value reached
-    const encode = str => encodeURIComponent(str);
+    const previousCerts = {}; // songKey → highest cert value
 
     function normalizeKey(title, artist) {
       return `${title.trim().toLowerCase()}|${artist.trim().toLowerCase()}`;
     }
 
     function getDateRange(weekNum) {
-      const start = new Date(2018, 1, 23); // 23 Feb 2018
+      const start = new Date(2018, 1, 23);
       start.setDate(start.getDate() + (weekNum - 1) * 7);
       const end = new Date(start);
       end.setDate(start.getDate() + 6);
@@ -105,10 +116,10 @@
       return `${start.toLocaleDateString('en-GB', options)} – ${end.toLocaleDateString('en-GB', options)}`;
     }
 
-    // Sort weeks newest first
+    // Process weeks oldest → newest to accumulate certifications correctly
     const weeks = Object.keys(weekData)
-      .map(w => parseInt(w))
-      .sort((a, b) => b - a);
+      .map(Number)
+      .sort((a, b) => a - b);
 
     weeks.forEach(weekNum => {
       const weekEntries = weekData[weekNum];
@@ -117,24 +128,33 @@
       weekEntries.forEach(song => {
         const key = normalizeKey(song.title, song.artist);
         const totalSales = song.totalSales || 0;
+        const prevHighest = previousCerts[key] || 0;
 
-        if (!(key in previousCerts)) {
-          previousCerts[key] = 0; // initialize
+        // Find the highest threshold crossed at current totalSales
+        let currentCertValue = 0;
+        let currentCertClass = "";
+        let currentCertLevel = "";
+
+        for (let i = thresholds.length - 1; i >= 0; i--) {
+          if (totalSales >= thresholds[i].value) {
+            currentCertValue = thresholds[i].value;
+            currentCertClass = thresholds[i].class;
+            currentCertLevel = thresholds[i].level;
+            break;
+          }
         }
 
-        // Check thresholds highest to lowest for new certifications
-        for (let i = thresholds.length - 1; i >= 0; i--) {
-          const { value, level, class: className } = thresholds[i];
-          if (totalSales >= value && previousCerts[key] < value) {
-            newCerts.push({
-              title: song.title,
-              artist: song.artist,
-              cert: level,
-              className
-            });
-            previousCerts[key] = value; // update highest cert reached
-            break; // only one cert per song per week
-          }
+        // New certification crossed this week?
+        if (currentCertValue > prevHighest) {
+          newCerts.push({
+            title: song.title,
+            artist: song.artist,
+            certLevel: currentCertLevel,
+            certClass: currentCertClass,
+            certValue: currentCertValue,
+            totalSales: totalSales
+          });
+          previousCerts[key] = currentCertValue;
         }
       });
 
@@ -144,13 +164,14 @@
 
       if (newCerts.length > 0) {
         newCerts.forEach(c => {
-          const trackLink = `track_detail.html?title=${encode(c.title)}&artist=${encode(c.artist)}`;
-          const artistLink = `artist.html?name=${encode(c.artist)}`;
+          const trackLink = `track_detail.html?title=${encodeURIComponent(c.title)}&artist=${encodeURIComponent(c.artist)}`;
+          const artistLink = `artist.html?name=${encodeURIComponent(c.artist)}`;
+          const certImageHTML = getCertImage(c.totalSales);
 
           const line = document.createElement("div");
-          line.className = `cert ${c.className}`;
+          line.className = `cert ${c.certClass}`;
           line.innerHTML = `
-            <span class="cert-label">${c.cert}</span>
+            ${certImageHTML}
             <a href="${trackLink}">${c.title}</a> by
             <a href="${artistLink}">${c.artist}</a>
           `;
