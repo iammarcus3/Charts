@@ -89,10 +89,9 @@
     ];
 
     const output = document.getElementById("output");
-    const previousCerts = {}; // key: normalized title|artist → highest value crossed
+    const previousCerts = {}; // key: normalized title|artist → highest certification value reached
     const encode = str => encodeURIComponent(str);
 
-    // Normalize keys for consistent matching (case insensitive + trim)
     function normalizeKey(title, artist) {
       return `${title.trim().toLowerCase()}|${artist.trim().toLowerCase()}`;
     }
@@ -106,9 +105,10 @@
       return `${start.toLocaleDateString('en-GB', options)} – ${end.toLocaleDateString('en-GB', options)}`;
     }
 
+    // Sort weeks newest first
     const weeks = Object.keys(weekData)
       .map(w => parseInt(w))
-      .sort((a, b) => b - a); // newest to oldest
+      .sort((a, b) => b - a);
 
     weeks.forEach(weekNum => {
       const weekEntries = weekData[weekNum];
@@ -116,23 +116,24 @@
 
       weekEntries.forEach(song => {
         const key = normalizeKey(song.title, song.artist);
-        const total = song.totalSales || 0;
+        const totalSales = song.totalSales || 0;
 
-        // Initialize previousCerts[key] if not set
-        if (!(key in previousCerts)) previousCerts[key] = 0;
+        if (!(key in previousCerts)) {
+          previousCerts[key] = 0; // initialize
+        }
 
-        // Find highest threshold crossed this week above previous highest
+        // Check thresholds highest to lowest for new certifications
         for (let i = thresholds.length - 1; i >= 0; i--) {
           const { value, level, class: className } = thresholds[i];
-          if (total >= value && previousCerts[key] < value) {
+          if (totalSales >= value && previousCerts[key] < value) {
             newCerts.push({
               title: song.title,
               artist: song.artist,
               cert: level,
               className
             });
-            previousCerts[key] = value; // Update highest certification reached
-            break;
+            previousCerts[key] = value; // update highest cert reached
+            break; // only one cert per song per week
           }
         }
       });
