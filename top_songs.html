@@ -14,21 +14,46 @@
     h1 {
       text-align: center;
       font-size: 2.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       color: #ffffff;
+    }
+    #nav {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    button {
+      background: #2a2a2a;
+      border: none;
+      color: #66ccff;
+      font-size: 1.5rem;
+      margin: 0 1rem;
+      padding: 0.3rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover:not(:disabled) {
+      background: #66ccff;
+      color: #121212;
+    }
+    button:disabled {
+      color: #444;
+      cursor: default;
     }
     .week {
       background: #1e1e1e;
-      margin-bottom: 2rem;
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+      max-width: 700px;
+      margin: 0 auto;
     }
     .week h2 {
       margin-top: 0;
       color: #66ccff;
       border-bottom: 1px solid #333;
       padding-bottom: 0.5rem;
+      text-align: center;
     }
     .cert {
       padding: 0.75rem 1rem;
@@ -59,11 +84,20 @@
     @media (max-width: 600px) {
       body { padding: 1rem; }
       h1 { font-size: 2rem; }
+      button { font-size: 1.2rem; margin: 0 0.5rem; }
+      .week { padding: 1rem; }
     }
   </style>
 </head>
 <body>
   <h1>Weekly Song Certifications</h1>
+
+  <div id="nav">
+    <button id="prevBtn" title="Previous Week">⬅️</button>
+    <span id="weekLabel"></span>
+    <button id="nextBtn" title="Next Week">➡️</button>
+  </div>
+
   <div id="output"></div>
 
   <script src="weekdata.js"></script>
@@ -98,9 +132,6 @@
       return "";
     }
 
-    const output = document.getElementById("output");
-    const previousCerts = {};
-
     function normalizeKey(title, artist) {
       return `${title.trim().toLowerCase()}|${artist.trim().toLowerCase()}`;
     }
@@ -114,11 +145,23 @@
       return `${start.toLocaleDateString('en-GB', options)} – ${end.toLocaleDateString('en-GB', options)}`;
     }
 
+    // Sort weeks descending (latest first)
     const weeks = Object.keys(weekData)
       .map(Number)
-      .sort((a, b) => a - b);
+      .sort((a, b) => b - a);
 
-    weeks.forEach(weekNum => {
+    const previousCerts = {};
+
+    const output = document.getElementById("output");
+    const weekLabel = document.getElementById("weekLabel");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    let currentWeekIndex = 0; // start at latest week (weeks[0])
+
+    function renderWeek(index) {
+      output.innerHTML = "";
+      const weekNum = weeks[index];
       const weekEntries = weekData[weekNum];
       const newCerts = [];
 
@@ -127,12 +170,14 @@
         const totalSales = song.totalSales || 0;
         const prevHighest = previousCerts[key] || 0;
 
+        const scaled = totalSales * 745;
+
         let currentCertValue = 0;
         let currentCertClass = "";
         let currentCertLevel = "";
 
         for (let i = thresholds.length - 1; i >= 0; i--) {
-          if (totalSales >= thresholds[i].value) {
+          if (scaled >= thresholds[i].value) {
             currentCertValue = thresholds[i].value;
             currentCertClass = thresholds[i].class;
             currentCertLevel = thresholds[i].level;
@@ -153,9 +198,11 @@
         }
       });
 
+      weekLabel.textContent = `Week ${weekNum} (${getDateRange(weekNum)})`;
+
       const div = document.createElement("div");
       div.className = "week";
-      div.innerHTML = `<h2>${getDateRange(weekNum)}</h2>`;
+      div.innerHTML = `<h2>Certifications for Week ${weekNum}</h2>`;
 
       if (newCerts.length > 0) {
         newCerts.forEach(c => {
@@ -177,7 +224,28 @@
       }
 
       output.appendChild(div);
+
+      // Enable/disable buttons
+      prevBtn.disabled = (index === weeks.length - 1);
+      nextBtn.disabled = (index === 0);
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (currentWeekIndex < weeks.length - 1) {
+        currentWeekIndex++;
+        renderWeek(currentWeekIndex);
+      }
     });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentWeekIndex > 0) {
+        currentWeekIndex--;
+        renderWeek(currentWeekIndex);
+      }
+    });
+
+    // Initial render
+    renderWeek(currentWeekIndex);
   </script>
 </body>
 </html>
