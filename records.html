@@ -5,10 +5,13 @@
   <title>Top 100 Artists</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
       padding: 2rem;
+      margin: 0;
     }
+
     nav {
       text-align: center;
       margin-bottom: 2rem;
@@ -17,64 +20,87 @@
       margin: 0 1rem;
       text-decoration: none;
       font-weight: bold;
-      color: #333;
+      color: #f0f0f0;
+      transition: color 0.2s ease;
     }
     nav a:hover {
-      color: #007acc;
+      color: #1DB954;
     }
+
     h1 {
       text-align: center;
-      color: #333;
+      color: #ffffff;
       margin-bottom: 1rem;
+      font-size: 2.5rem;
     }
+
     .table-container {
       overflow: auto;
       max-height: 600px;
-      border: 1px solid #ccc;
+      border: 1px solid #333;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #fff;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      background-color: #1e1e1e;
+      color: #f0f0f0;
       min-width: 1000px;
     }
+
     th, td {
-      padding: 0.8rem;
-      border: 1px solid #ccc;
+      padding: 0.75rem;
+      border: 1px solid #333;
       text-align: left;
       cursor: pointer;
       white-space: nowrap;
     }
+
     th {
-      background-color: #eee;
+      background-color: #2a2a2a;
       text-transform: uppercase;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       position: sticky;
       top: 0;
       z-index: 2;
       user-select: none;
     }
-    th:first-child, td:first-child {
+
+    th:first-child,
+    td:first-child {
       position: sticky;
       left: 0;
-      background: #f0f0f0;
+      background: #222;
       z-index: 3;
     }
+
     a {
-      color: #0066cc;
+      color: #1DB954;
       text-decoration: none;
     }
+
     a:hover {
       text-decoration: underline;
     }
+
     th.asc::after {
       content: " ▲";
-      color: #007acc;
+      color: #1DB954;
     }
+
     th.desc::after {
       content: " ▼";
-      color: #007acc;
+      color: #1DB954;
+    }
+
+    tr:nth-child(even) {
+      background-color: #181818;
+    }
+
+    tr:hover {
+      background-color: #2a2a2a;
     }
   </style>
 </head>
@@ -125,7 +151,6 @@
       const artistMap = {};
       const artistNameMap = {};
 
-      // Build artist stats from weekData
       for (const week in weekData) {
         weekData[week].forEach(entry => {
           const artists = (entry.artist || "").split(/,|&| and | with | feat\.? | featuring /i).map(a => a.trim()).filter(Boolean);
@@ -150,12 +175,10 @@
             artistStats.rawSales += sales;
             artistStats.weeks.add(week);
 
-            // Track songs
             const songKey = (title || "").toUpperCase().replace(/[^A-Z0-9]/g, '');
             if (!artistStats.songs[songKey]) artistStats.songs[songKey] = Infinity;
             if (rank < artistStats.songs[songKey]) artistStats.songs[songKey] = rank;
 
-            // Track albums, FIX: safely convert album to string before toUpperCase
             const albumKey = String(album || "").toUpperCase()
               .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
               .replace(/[^A-Z0-9]/g, '');
@@ -167,7 +190,6 @@
         });
       }
 
-      // Convert artistMap to array and compute stats
       const artistList = Object.entries(artistMap).map(([normName, stats]) => {
         const totalStreams = stats.rawSales * 0.927124 * 1_000_000;
         const months = stats.weeks.size / 4.33;
@@ -195,15 +217,13 @@
           num1Albums,
           top10Albums,
           weeklyStreams: totalStreams / (weeks || 1),
-          rank: 0 // will assign later
+          rank: 0
         };
       });
 
-      // Sort initially by totalStreams descending & assign rank
       artistList.sort((a,b) => b.totalStreams - a.totalStreams);
       artistList.forEach((a,i) => a.rank = i+1);
 
-      // Render function
       function renderTable(data) {
         tbody.innerHTML = "";
         data.forEach(a => {
@@ -226,7 +246,6 @@
 
       renderTable(artistList);
 
-      // Sorting logic
       let currentSort = { key: 'rank', asc: true };
       const headers = document.querySelectorAll("th[data-sort]");
 
@@ -238,11 +257,9 @@
           } else {
             currentSort.key = key;
             currentSort.asc = true;
-            // For numeric fields except name, default desc
             if (key !== 'name') currentSort.asc = false;
           }
 
-          // Remove all asc/desc classes
           headers.forEach(h => h.classList.remove("asc", "desc"));
           header.classList.add(currentSort.asc ? "asc" : "desc");
 
@@ -257,7 +274,6 @@
             }
           });
 
-          // Recalculate rank if sorting by totalStreams or rank or totalSales
           if (['rank', 'totalStreams', 'totalSales'].includes(currentSort.key)) {
             artistList.forEach((a,i) => a.rank = i+1);
           }
