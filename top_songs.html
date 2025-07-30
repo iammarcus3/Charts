@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Weekly Certifications</title>
+  <title>Weekly Song Certifications</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -63,13 +63,8 @@
     }
 
     @media (max-width: 600px) {
-      body {
-        padding: 1rem;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
+      body { padding: 1rem; }
+      h1 { font-size: 2rem; }
     }
   </style>
 </head>
@@ -95,8 +90,16 @@
 
     const output = document.getElementById("output");
     const previousCerts = {}; // key: title|artist → highest value crossed
-
     const encode = str => encodeURIComponent(str);
+
+    function getDateRange(weekNum) {
+      const start = new Date(2018, 1, 23); // 23 Feb 2018
+      start.setDate(start.getDate() + (weekNum - 1) * 7);
+      const end = new Date(start);
+      end.setDate(start.getDate() + 6);
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      return `${start.toLocaleDateString('en-GB', options)} – ${end.toLocaleDateString('en-GB', options)}`;
+    }
 
     const weeks = Object.keys(weekData)
       .map(w => parseInt(w))
@@ -125,11 +128,11 @@
         }
       });
 
-      if (newCerts.length > 0) {
-        const div = document.createElement("div");
-        div.className = "week";
-        div.innerHTML = `<h2>Week ${weekNum}</h2>`;
+      const div = document.createElement("div");
+      div.className = "week";
+      div.innerHTML = `<h2>${getDateRange(weekNum)}</h2>`;
 
+      if (newCerts.length > 0) {
         newCerts.forEach(c => {
           const trackLink = `track_detail.html?title=${encode(c.title)}&artist=${encode(c.artist)}`;
           const artistLink = `artist.html?name=${encode(c.artist)}`;
@@ -143,9 +146,11 @@
           `;
           div.appendChild(line);
         });
-
-        output.appendChild(div);
+      } else {
+        div.innerHTML += `<p>No new certifications this week.</p>`;
       }
+
+      output.appendChild(div);
     });
   </script>
 </body>
