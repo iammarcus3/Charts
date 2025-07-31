@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Artist Streams</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      font-size: 1.8rem;
+    }
+
+    .listeners {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #00e676;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 1rem;
+      border-collapse: collapse;
+      background: #1c1c1c;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+
+    th {
+      background-color: #222;
+    }
+
+    tr:hover {
+      background-color: #2a2a2a;
+    }
+
+    .up {
+      color: #00e676;
+    }
+
+    .down {
+      color: #ff1744;
+    }
+
+    .percentage {
+      font-weight: bold;
+    }
+
+    .cover {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="artist-name">Artist Name</h1>
+  <div class="listeners" id="monthly-listeners">Calculating monthly listeners...</div>
+
+  <h2>Top 10 Songs (Last 6 Months)</h2>
+  <table id="recent-songs-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Streams</th>
+        <th>Change</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Top 10 Songs of All Time</h2>
+  <table id="alltime-songs-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Total Streams</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Top 5 Albums of All Time</h2>
+  <table id="top-albums-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Album</th>
+        <th>Total Streams</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script src="weekdata.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const artistParam = params.get("artist") || "";
+
+    document.getElementById("artist-name").textContent = decodeURIComponent(artistParam);
+
+    const now = new Date();
+    const sixMonthsAgo = new Date(now);
+    sixMonthsAgo.setMonth(now.getMonth() - 6);
+
+    const fortyFiveDaysAgo = new Date(now);
+    fortyFiveDaysAgo.setDate(now.getDate() - 45);
+
+    const normalize = str => str.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+
+    const artistNorm = normalize(artistParam);
+    const recentSongMap = {};
+    const allTimeSongMap = {};
+    const albumMap = {};
+    const songHistory = {};
+
+    let totalRecentStreams = 0;
+
+    for (const weekKey in weekData) {
+      const entries = weekData[weekKey];
+      const weekDate = new Date(weekKey);
+
+      entries.forEach(entry => {
+        const normArtist = normalize(entry.artist);
+        if (!normArtist.includes(artistNorm)) return;
+
+        const songKey = entry.title.trim().toLowerCase();
+        const albumKey = (entry.album || "Unknown").trim().toLowerCase();
+
+        // Total streams (all time)
+        if (!allTimeSongMap[songKey]) allTimeSongMap[songKey] = 0;
+        allTimeSongMap[songKey] += entry.plays;
+
+        // Recent streams (last 6 months)
+        if (weekDate >= sixMonthsAgo) {
+          if (!recentSongMap[songKey]) recentSongMap[songKey] = 0;
+          recentSongMap[songKey] += entry.plays;
+        }
+
+        // Last 45-day total
+        if (weekDate >= fortyFiveDaysAgo) {
+          totalRecentStreams += entry.plays;
+        }
+
+        // Albums
+        if (!albumMap[albumKey]) albumMap[albumKey] = { name: entry.album || "Unknown", plays: 0 };
+        albumMap[albumKey].plays += entry.plays;
+
+        // Song weekly history (for % change)
+        if (!songHistory[songKey]) songHistory[songKey] = [];
+        songHistory[songKey].push({ date: weekDate, plays: entry.plays });
+      });
+    }
+
+    // MONTHLY LISTENERS
+    const monthlyListeners = totalRecentStreams * 0.1390686;
+    document.getElementById("monthly-listeners").textContent =
+      `${monthlyListeners.toFixed(1)}M Monthly Listeners`;
+
+    // RECENT SONGS TABLE (last 6 months)
+    const recentSongs = Object.entries(recentSongMap)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
+
+    const recentTable = document.querySelector("#recent-songs-table tbody");
+    recentSongs.forEach(([title, plays]) => {
+      const history = songHistory[title];
+      const sorted = history.sort((a, b) => b.date - a.date);
+      let percent = 0;
+
+      if (sorted.length >= 2) {
+        const latest = sorted[0].plays;
+        const previous = sorted[1].plays;
+        if (previous > 0) {
+          percent = Math.min(100, ((latest - previous) / previous) * 100);
+        }
+      }
+
+      const changeText = percent === 0 ? "–" :
+        `<span class="${percent >= 0 ? 'up' : 'down'} percentage">
+          ${percent >= 0 ? '🔺' : '🔻'} ${Math.abs(percent).toFixed(0)}%
+        </span>`;
+
+      recentTable.innerHTML += `
+        <tr>
+          <td>${title}</td>
+          <td>${plays.toLocaleString()}</td>
+          <td>${changeText}</td>
+        </tr>`;
+    });
+
+    // ALL TIME SONGS TABLE
+    const allTimeSongs = Object.entries(allTimeSongMap)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
+
+    const allTimeTable = document.querySelector("#alltime-songs-table tbody");
+    allTimeSongs.forEach(([title, plays], index) => {
+      allTimeTable.innerHTML += `
+        <tr>
+          <td>#${index + 1}</td>
+          <td>${title}</td>
+          <td>${plays.toLocaleString()}</td>
+        </tr>`;
+    });
+
+    // TOP 5 ALBUMS TABLE
+    const topAlbums = Object.values(albumMap)
+      .sort((a, b) => b.plays - a.plays)
+      .slice(0, 5);
+
+    const albumTable = document.querySelector("#top-albums-table tbody");
+    topAlbums.forEach((album, index) => {
+      albumTable.innerHTML += `
+        <tr>
+          <td>#${index + 1}</td>
+          <td>${album.name}</td>
+          <td>${album.plays.toLocaleString()}</td>
+        </tr>`;
+    });
+  </script>
+</body>
+</html>
