@@ -55,13 +55,13 @@
     const last6MonthsWeeks = allWeeks.slice(0, 26);  // ~6 months
     const last45DaysWeeks = allWeeks.slice(0, 7);    // ~45 days
 
-    const songMap = {};
-    const songMap6M = {};
-    const albumMap = {};
+    const songMap = {};       // all-time songs
+    const albumMap = {};      // all-time albums
+    const songMap6M = {};     // last 6 months songs only
     let totalStreams45Days = 0;
 
-    // Iterate weeks only once, filter artist inside
-    last6MonthsWeeks.forEach(week => {
+    // Aggregate all-time songs & albums from all weeks
+    allWeeks.forEach(week => {
       const entries = weekData[week] || [];
       entries.forEach(entry => {
         if (!entry.artist) return;
@@ -72,14 +72,24 @@
         const songKey = (entry.title || "Unknown").trim();
         const albumKey = String(entry.album || "Unknown").trim();
 
-        // All time top songs & albums (sum all weeks, we will sum 6M later anyway)
         songMap[songKey] = (songMap[songKey] || 0) + streams;
         albumMap[albumKey] = (albumMap[albumKey] || 0) + streams;
+      });
+    });
 
-        // Last 6 months top songs
+    // Aggregate last 6 months songs & monthly listeners
+    last6MonthsWeeks.forEach(week => {
+      const entries = weekData[week] || [];
+      entries.forEach(entry => {
+        if (!entry.artist) return;
+        if (entry.artist.toLowerCase().trim() !== artistParam) return;
+
+        const sales = parseFloat(entry.sales) || 0;
+        const streams = sales * STREAM_MULTIPLIER;
+        const songKey = (entry.title || "Unknown").trim();
+
         songMap6M[songKey] = (songMap6M[songKey] || 0) + streams;
 
-        // Sum streams for monthly listeners (last 45 days)
         if (last45DaysWeeks.includes(week)) {
           totalStreams45Days += streams;
         }
