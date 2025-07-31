@@ -51,6 +51,14 @@
     const artistParam = (decodeURIComponent(urlParams.get("name") || "")).toLowerCase().trim();
     document.getElementById("artistName").textContent = artistParam.toUpperCase();
 
+    const includesArtist = (artistStr, titleStr) => {
+      const artist = artistParam.toLowerCase();
+      return (
+        (artistStr && artistStr.toLowerCase().includes(artist)) ||
+        (titleStr && titleStr.toLowerCase().includes(artist))
+      );
+    };
+
     const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
     const last6MonthsWeeks = allWeeks.slice(0, 26);  // ~6 months
     const last45DaysWeeks = allWeeks.slice(0, 7);    // ~45 days
@@ -65,7 +73,7 @@
       const entries = weekData[week] || [];
       entries.forEach(entry => {
         if (!entry.artist) return;
-        if (entry.artist.toLowerCase().trim() !== artistParam) return;
+        if (!includesArtist(entry.artist, entry.title)) return;
 
         const sales = parseFloat(entry.sales) || 0;
         const streams = sales * STREAM_MULTIPLIER;
@@ -82,7 +90,7 @@
       const entries = weekData[week] || [];
       entries.forEach(entry => {
         if (!entry.artist) return;
-        if (entry.artist.toLowerCase().trim() !== artistParam) return;
+        if (!includesArtist(entry.artist, entry.title)) return;
 
         const sales = parseFloat(entry.sales) || 0;
         const streams = sales * STREAM_MULTIPLIER;
