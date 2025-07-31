@@ -160,17 +160,12 @@
     function formatChange(current, previous) {
       if (previous === 0 || previous === undefined) return '<span>➖ 0.0%</span>';
       let diff = ((current - previous) / previous) * 100;
-
-      // Cap diff between -100 and 100
       if (diff > 100) diff = 100;
       else if (diff < -100) diff = -100;
 
       let symbol = '➖';
-      if (diff > 0) {
-        symbol = '<span style="color:green">▲</span>';
-      } else if (diff < 0) {
-        symbol = '<span style="color:red">🔻</span>';
-      }
+      if (diff > 0) symbol = '<span style="color:green">▲</span>';
+      else if (diff < 0) symbol = '<span style="color:red">🔻</span>';
 
       return `${symbol} ${Math.abs(diff).toFixed(1)}%`;
     }
@@ -181,16 +176,10 @@
         (weekData[week] || []).forEach(entry => {
           const sales = parseFloat(entry.sales) || 0;
           const streams = sales * streamMultiplier;
-
           let key = "";
-          if (type === "artist") {
-            key = entry.artist || "Unknown";
-          } else if (type === "tracks") {
-            key = `${entry.title || "Unknown"}|||${entry.artist || "Unknown"}`;
-          } else {
-            key = `${entry.album || "Unknown"}|||${entry.artist || "Unknown"}`;
-          }
-
+          if (type === "artist") key = entry.artist || "Unknown";
+          else if (type === "tracks") key = `${entry.title || "Unknown"}|||${entry.artist || "Unknown"}`;
+          else key = `${entry.album || "Unknown"}|||${entry.artist || "Unknown"}`;
           if (!key || key.toLowerCase().includes("undefined")) return;
           map[key] = (map[key] || 0) + streams;
         });
@@ -200,22 +189,15 @@
 
     function aggregate(type, currentWeeks, previousWeeks) {
       const previousMap = previousWeeks ? calculateChangeMap(type, previousWeeks) : {};
-
       const result = {};
       currentWeeks.forEach(week => {
         (weekData[week] || []).forEach(entry => {
           const sales = parseFloat(entry.sales) || 0;
           const streams = sales * streamMultiplier;
-
           let key = "";
-          if (type === "artist") {
-            key = entry.artist || "Unknown";
-          } else if (type === "tracks") {
-            key = `${entry.title || "Unknown"}|||${entry.artist || "Unknown"}`;
-          } else {
-            key = `${entry.album || "Unknown"}|||${entry.artist || "Unknown"}`;
-          }
-
+          if (type === "artist") key = entry.artist || "Unknown";
+          else if (type === "tracks") key = `${entry.title || "Unknown"}|||${entry.artist || "Unknown"}`;
+          else key = `${entry.album || "Unknown"}|||${entry.artist || "Unknown"}`;
           if (!key || key.toLowerCase().includes("undefined")) return;
           result[key] = (result[key] || 0) + streams;
         });
@@ -238,7 +220,7 @@
       const encodedName = encodeURIComponent(name);
       const encodedArtist = encodeURIComponent(artist);
       if (type === "artist") {
-        return `<a href="artist.html?name=${encodedName}">${name}</a>`;
+        return `<a href="Artist_stream.html?name=${encodedName}">${name}</a>`;
       } else if (type === "track") {
         return `<a href="track_detail.html?title=${encodedName}&artist=${encodedArtist}">${name}</a>`;
       } else {
@@ -250,10 +232,8 @@
       const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
       const latest7 = allWeeks.slice(0, 1);
       const prev7 = allWeeks.slice(1, 2);
-
       const latest30 = allWeeks.slice(0, 4);
       const prev30 = allWeeks.slice(4, 8);
-
       const allTime = allWeeks;
       const none = [];
 
