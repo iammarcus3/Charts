@@ -63,12 +63,11 @@
     const last6MonthsWeeks = allWeeks.slice(0, 26);  // ~6 months
     const last45DaysWeeks = allWeeks.slice(0, 7);    // ~45 days
 
-    const songMap = {};       // all-time songs
-    const albumMap = {};      // all-time albums
-    const songMap6M = {};     // last 6 months songs only
+    const songMap = {};
+    const albumMap = {};
+    const songMap6M = {};
     let totalStreams45Days = 0;
 
-    // Aggregate all-time songs & albums from all weeks
     allWeeks.forEach(week => {
       const entries = weekData[week] || [];
       entries.forEach(entry => {
@@ -85,7 +84,6 @@
       });
     });
 
-    // Aggregate last 6 months songs & monthly listeners
     last6MonthsWeeks.forEach(week => {
       const entries = weekData[week] || [];
       entries.forEach(entry => {
@@ -104,15 +102,12 @@
       });
     });
 
-    // Monthly listeners estimation
     const monthlyListeners = ((totalStreams45Days / 1_000_000_000) * 150).toFixed(2);
     document.getElementById("monthlyListeners").textContent = `Monthly Listeners: ${monthlyListeners}M`;
 
-    // Count songs over 1B streams all time
     const billionSongs = Object.entries(songMap).filter(([_, v]) => v >= 1_000_000_000).length;
     document.getElementById("billionSongs").textContent = `Songs Over 1B Streams: ${billionSongs}`;
 
-    // Global Top 20 Ranking (by monthly listeners last 45 days)
     const artistStreamMap = {};
     last45DaysWeeks.forEach(week => {
       const entries = weekData[week] || [];
@@ -128,19 +123,16 @@
       .map(([name, streams]) => [name, (streams / 1_000_000_000) * 150])
       .sort((a, b) => b[1] - a[1]);
 
-    const rankIndex = ranked.findIndex(([n]) => n.toLowerCase() === artistParam);
-    if (rankIndex >= 0 && rankIndex < 20) {
+    const rankIndex = ranked.findIndex(([n]) => n.toLowerCase().includes(artistParam));
+    if (rankIndex >= 0 && rankIndex < 50) {
       document.getElementById("globalRank").innerHTML =
-        `Ranking: <span class="rank-icon">#${rankIndex + 1}</span> (Top 20 by Monthly Listeners)`;
+        `Ranking: <span class="rank-icon">#${rankIndex + 1}</span> (Top 50 by Monthly Listeners)`;
     } else {
-      document.getElementById("globalRank").textContent = "Ranking: Not in Top 20";
+      document.getElementById("globalRank").textContent = "Ranking: Not in Top 50";
     }
 
-    // Sort and display top 10 songs (all time)
     const topSongs = Object.entries(songMap).sort((a, b) => b[1] - a[1]).slice(0, 10);
-    // Sort and display top 5 albums (all time)
     const topAlbums = Object.entries(albumMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
-    // Sort and display top 10 songs (last 6 months)
     const topRecent = Object.entries(songMap6M).sort((a, b) => b[1] - a[1]).slice(0, 10);
 
     function fillTable(id, data) {
@@ -158,3 +150,4 @@
   </script>
 </body>
 </html>
+
