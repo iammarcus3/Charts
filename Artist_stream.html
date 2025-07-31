@@ -48,59 +48,62 @@
     );
 
     const urlParams = new URLSearchParams(window.location.search);
-    const artistParam = decodeURIComponent(urlParams.get("name") || "").toLowerCase();
+    const artistParam = (decodeURIComponent(urlParams.get("name") || "")).toLowerCase().trim();
     document.getElementById("artistName").textContent = artistParam.toUpperCase();
 
     const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
-    const last6MonthsWeeks = allWeeks.slice(0, 26);
-    const last45DaysWeeks = allWeeks.slice(0, 7);
-
-    const allEntries = Object.values(weekData).flat().filter(e =>
-      e.artist && e.artist.toLowerCase() === artistParam
-    );
+    const last6MonthsWeeks = allWeeks.slice(0, 26);  // ~6 months
+    const last45DaysWeeks = allWeeks.slice(0, 7);    // ~45 days
 
     const songMap = {};
     const songMap6M = {};
     const albumMap = {};
     let totalStreams45Days = 0;
 
-    allEntries.forEach(entry => {
-      const sales = parseFloat(entry.sales) || 0;
-      const streams = sales * STREAM_MULTIPLIER;
-      const songKey = (entry.title || "Unknown").trim();
-      const albumKey = String(entry.album || "Unknown").trim();
-      const week = Number(entry.week);
+    // Iterate weeks only once, filter artist inside
+    last6MonthsWeeks.forEach(week => {
+      const entries = weekData[week] || [];
+      entries.forEach(entry => {
+        if (!entry.artist) return;
+        if (entry.artist.toLowerCase().trim() !== artistParam) return;
 
-      songMap[songKey] = (songMap[songKey] || 0) + streams;
-      albumMap[albumKey] = (albumMap[albumKey] || 0) + streams;
+        const sales = parseFloat(entry.sales) || 0;
+        const streams = sales * STREAM_MULTIPLIER;
+        const songKey = (entry.title || "Unknown").trim();
+        const albumKey = String(entry.album || "Unknown").trim();
 
-      if (last6MonthsWeeks.includes(week)) {
+        // All time top songs & albums (sum all weeks, we will sum 6M later anyway)
+        songMap[songKey] = (songMap[songKey] || 0) + streams;
+        albumMap[albumKey] = (albumMap[albumKey] || 0) + streams;
+
+        // Last 6 months top songs
         songMap6M[songKey] = (songMap6M[songKey] || 0) + streams;
-      }
 
-      if (last45DaysWeeks.includes(week)) {
-        totalStreams45Days += streams;
-      }
+        // Sum streams for monthly listeners (last 45 days)
+        if (last45DaysWeeks.includes(week)) {
+          totalStreams45Days += streams;
+        }
+      });
     });
 
+    // Monthly listeners estimation
     const monthlyListeners = ((totalStreams45Days / 1_000_000_000) * 150).toFixed(2);
     document.getElementById("monthlyListeners").textContent = `Monthly Listeners: ${monthlyListeners}M`;
 
-    const topSongs = Object.entries(songMap).sort((a, b) => b[1] - a[1]).slice(0, 10);
-    const topAlbums = Object.entries(albumMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
-    const topRecent = Object.entries(songMap6M).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    // Count songs over 1B streams all time
     const billionSongs = Object.entries(songMap).filter(([_, v]) => v >= 1_000_000_000).length;
     document.getElementById("billionSongs").textContent = `Songs Over 1B Streams: ${billionSongs}`;
 
-    // Global Top 20 Ranking
+    // Global Top 20 Ranking (by monthly listeners last 45 days)
     const artistStreamMap = {};
-    Object.values(weekData).flat().forEach(entry => {
-      const sales = parseFloat(entry.sales) || 0;
-      const streams = sales * STREAM_MULTIPLIER;
-      const week = Number(entry.week);
-      const name = entry.artist;
-      if (!name || !last45DaysWeeks.includes(week)) return;
-      artistStreamMap[name] = (artistStreamMap[name] || 0) + streams;
+    last45DaysWeeks.forEach(week => {
+      const entries = weekData[week] || [];
+      entries.forEach(entry => {
+        if (!entry.artist) return;
+        const sales = parseFloat(entry.sales) || 0;
+        const streams = sales * STREAM_MULTIPLIER;
+        artistStreamMap[entry.artist] = (artistStreamMap[entry.artist] || 0) + streams;
+      });
     });
 
     const ranked = Object.entries(artistStreamMap)
@@ -111,7 +114,16 @@
     if (rankIndex >= 0 && rankIndex < 20) {
       document.getElementById("globalRank").innerHTML =
         `Ranking: <span class="rank-icon">#${rankIndex + 1}</span> (Top 20 by Monthly Listeners)`;
+    } else {
+      document.getElementById("globalRank").textContent = "Ranking: Not in Top 20";
     }
+
+    // Sort and display top 10 songs (all time)
+    const topSongs = Object.entries(songMap).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    // Sort and display top 5 albums (all time)
+    const topAlbums = Object.entries(albumMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    // Sort and display top 10 songs (last 6 months)
+    const topRecent = Object.entries(songMap6M).sort((a, b) => b[1] - a[1]).slice(0, 10);
 
     function fillTable(id, data) {
       const tbody = document.getElementById(id).querySelector("tbody");
