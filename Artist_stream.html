@@ -143,7 +143,7 @@
         if (!normArtist.includes(artistNorm)) return;
 
         const songKey = entry.title.trim().toLowerCase();
-        const albumKey = (entry.album || "Unknown").trim().toLowerCase();
+        const albumKey = String(entry.album || "Unknown").trim().toLowerCase();
 
         // Total streams (all time)
         if (!allTimeSongMap[songKey]) allTimeSongMap[songKey] = 0;
