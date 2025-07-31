@@ -59,7 +59,7 @@
   <script src="weekdata.js"></script>
   <script>
     function formatNumber(n) {
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + 'M';
       if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
       return n.toString();
     }
@@ -116,8 +116,9 @@
           top10s: artistObj.top10s
         }));
 
-        artistArray.sort((a, b) => b.totalSales - a.totalSales);
-        const top10 = artistArray.slice(0, 10);
+        const top10 = artistArray
+          .sort((a, b) => b.totalSales - a.totalSales)
+          .slice(0, 10); // ✅ Fixed: sorting before slicing
 
         const section = document.createElement("section");
         const header = document.createElement("h2");
@@ -159,3 +160,4 @@
   </script>
 </body>
 </html>
+
