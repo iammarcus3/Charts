@@ -2,159 +2,239 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Top Artists by Year</title>
+  <title>Artist Streams</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 2rem;
-      color: #222;
     }
+
     h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
     }
-    section {
-      margin-bottom: 3rem;
-    }
+
     h2 {
-      background: #333;
-      color: white;
-      padding: 0.5rem 1rem;
-      margin-bottom: 0;
+      margin-top: 2rem;
+      font-size: 1.8rem;
     }
+
+    .listeners {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #00e676;
+      margin-bottom: 1rem;
+    }
+
     table {
       width: 100%;
+      margin-top: 1rem;
       border-collapse: collapse;
-      background: white;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      background: #1c1c1c;
+      border-radius: 8px;
+      overflow: hidden;
     }
+
     th, td {
-      padding: 0.7rem;
-      border: 1px solid #ccc;
+      padding: 0.75rem 1rem;
       text-align: left;
+      border-bottom: 1px solid #333;
     }
+
     th {
-      background: #eee;
-      text-transform: uppercase;
-      font-size: 0.85rem;
+      background-color: #222;
     }
-    td a {
-      color: #007acc;
-      text-decoration: none;
+
+    tr:hover {
+      background-color: #2a2a2a;
     }
-    td a:hover {
-      text-decoration: underline;
+
+    .up {
+      color: #00e676;
+    }
+
+    .down {
+      color: #ff1744;
+    }
+
+    .percentage {
+      font-weight: bold;
+    }
+
+    .cover {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
     }
   </style>
 </head>
 <body>
-  <h1>🎤 Top 10 Artists by Year (Units Sold)</h1>
+  <h1 id="artist-name">Artist Name</h1>
+  <div class="listeners" id="monthly-listeners">Calculating monthly listeners...</div>
 
-  <div id="container">
-    <p>Loading data...</p>
-  </div>
+  <h2>Top 10 Songs (Last 6 Months)</h2>
+  <table id="recent-songs-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Streams</th>
+        <th>Change</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Top 10 Songs of All Time</h2>
+  <table id="alltime-songs-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Total Streams</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Top 5 Albums of All Time</h2>
+  <table id="top-albums-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Album</th>
+        <th>Total Streams</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <script src="weekdata.js"></script>
   <script>
-    function formatNumber(n) {
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
-      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
-      return n.toString();
+    const params = new URLSearchParams(window.location.search);
+    const artistParam = params.get("artist") || "";
+
+    document.getElementById("artist-name").textContent = decodeURIComponent(artistParam);
+
+    const now = new Date();
+    const sixMonthsAgo = new Date(now);
+    sixMonthsAgo.setMonth(now.getMonth() - 6);
+
+    const fortyFiveDaysAgo = new Date(now);
+    fortyFiveDaysAgo.setDate(now.getDate() - 45);
+
+    const normalize = str => str.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+
+    const artistNorm = normalize(artistParam);
+    const recentSongMap = {};
+    const allTimeSongMap = {};
+    const albumMap = {};
+    const songHistory = {};
+
+    let totalRecentStreams = 0;
+
+    for (const weekKey in weekData) {
+      const entries = weekData[weekKey];
+      const weekDate = new Date(weekKey);
+
+      entries.forEach(entry => {
+        const normArtist = normalize(entry.artist);
+        if (!normArtist.includes(artistNorm)) return;
+
+        const songKey = entry.title.trim().toLowerCase();
+        const albumKey = (entry.album || "Unknown").trim().toLowerCase();
+
+        // Total streams (all time)
+        if (!allTimeSongMap[songKey]) allTimeSongMap[songKey] = 0;
+        allTimeSongMap[songKey] += entry.plays;
+
+        // Recent streams (last 6 months)
+        if (weekDate >= sixMonthsAgo) {
+          if (!recentSongMap[songKey]) recentSongMap[songKey] = 0;
+          recentSongMap[songKey] += entry.plays;
+        }
+
+        // Last 45-day total
+        if (weekDate >= fortyFiveDaysAgo) {
+          totalRecentStreams += entry.plays;
+        }
+
+        // Albums
+        if (!albumMap[albumKey]) albumMap[albumKey] = { name: entry.album || "Unknown", plays: 0 };
+        albumMap[albumKey].plays += entry.plays;
+
+        // Song weekly history (for % change)
+        if (!songHistory[songKey]) songHistory[songKey] = [];
+        songHistory[songKey].push({ date: weekDate, plays: entry.plays });
+      });
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const container = document.getElementById("container");
-      const yearlyArtistStats = {};
+    // MONTHLY LISTENERS
+    const monthlyListeners = totalRecentStreams * 0.1390686;
+    document.getElementById("monthly-listeners").textContent =
+      `${monthlyListeners.toFixed(1)}M Monthly Listeners`;
 
-      for (const week in weekData) {
-        const entries = weekData[week];
-        const year = 2018 + Math.floor((parseInt(week) - 1) / 52);
+    // RECENT SONGS TABLE (last 6 months)
+    const recentSongs = Object.entries(recentSongMap)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
 
-        if (!yearlyArtistStats[year]) yearlyArtistStats[year] = {};
+    const recentTable = document.querySelector("#recent-songs-table tbody");
+    recentSongs.forEach(([title, plays]) => {
+      const history = songHistory[title];
+      const sorted = history.sort((a, b) => b.date - a.date);
+      let percent = 0;
 
-        entries.forEach(entry => {
-          const sales = parseFloat(entry.sales) || 0;
-          const rank = parseInt(entry.rank);
-          const title = entry.title || "";
-          const artists = (entry.artist || "").split(/,|&| and | with | feat\.? | featuring /i).map(s => s.trim());
-
-          artists.forEach(artist => {
-            const key = artist.toUpperCase().replace(/[^A-Z0-9]/g, '');
-            if (!yearlyArtistStats[year][key]) {
-              yearlyArtistStats[year][key] = {
-                name: artist,
-                totalSales: 0,
-                weeks: new Set(),
-                num1TracksSet: new Set(),
-                top10s: 0
-              };
-            }
-
-            const artistObj = yearlyArtistStats[year][key];
-            artistObj.totalSales += sales * 745;
-            artistObj.weeks.add(week);
-
-            if (rank === 1) {
-              const trackKey = title.toUpperCase().replace(/[^A-Z0-9]/g, '');
-              artistObj.num1TracksSet.add(trackKey);
-            }
-            if (rank <= 10) artistObj.top10s++;
-          });
-        });
+      if (sorted.length >= 2) {
+        const latest = sorted[0].plays;
+        const previous = sorted[1].plays;
+        if (previous > 0) {
+          percent = Math.min(100, ((latest - previous) / previous) * 100);
+        }
       }
 
-      container.innerHTML = "";
+      const changeText = percent === 0 ? "–" :
+        `<span class="${percent >= 0 ? 'up' : 'down'} percentage">
+          ${percent >= 0 ? '🔺' : '🔻'} ${Math.abs(percent).toFixed(0)}%
+        </span>`;
 
-      Object.keys(yearlyArtistStats).sort().forEach(year => {
-        const artistArray = Object.values(yearlyArtistStats[year]).map(artistObj => ({
-          name: artistObj.name,
-          totalSales: artistObj.totalSales,
-          weeks: artistObj.weeks.size,
-          num1s: artistObj.num1TracksSet.size,
-          top10s: artistObj.top10s
-        }));
+      recentTable.innerHTML += `
+        <tr>
+          <td>${title}</td>
+          <td>${plays.toLocaleString()}</td>
+          <td>${changeText}</td>
+        </tr>`;
+    });
 
-        artistArray.sort((a, b) => b.totalSales - a.totalSales);
-        const top10 = artistArray.slice(0, 10);
+    // ALL TIME SONGS TABLE
+    const allTimeSongs = Object.entries(allTimeSongMap)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
 
-        const section = document.createElement("section");
-        const header = document.createElement("h2");
-        header.textContent = year;
-        section.appendChild(header);
+    const allTimeTable = document.querySelector("#alltime-songs-table tbody");
+    allTimeSongs.forEach(([title, plays], index) => {
+      allTimeTable.innerHTML += `
+        <tr>
+          <td>#${index + 1}</td>
+          <td>${title}</td>
+          <td>${plays.toLocaleString()}</td>
+        </tr>`;
+    });
 
-        const table = document.createElement("table");
-        const thead = document.createElement("thead");
-        thead.innerHTML = `
-          <tr>
-            <th>Rank</th>
-            <th>Artist</th>
-            <th>Total Sales</th>
-            <th>Weeks Charted</th>
-            <th>#1s</th>
-            <th>Top 10s</th>
-          </tr>`;
-        table.appendChild(thead);
+    // TOP 5 ALBUMS TABLE
+    const topAlbums = Object.values(albumMap)
+      .sort((a, b) => b.plays - a.plays)
+      .slice(0, 5);
 
-        const tbody = document.createElement("tbody");
-        top10.forEach((a, i) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${i + 1}</td>
-            <td><a href="artist.html?artist=${encodeURIComponent(a.name)}">${a.name}</a></td>
-            <td>${formatNumber(a.totalSales)}</td>
-            <td>${a.weeks}</td>
-            <td>${a.num1s}</td>
-            <td>${a.top10s}</td>
-          `;
-          tbody.appendChild(row);
-        });
-
-        table.appendChild(tbody);
-        section.appendChild(table);
-        container.appendChild(section);
-      });
+    const albumTable = document.querySelector("#top-albums-table tbody");
+    topAlbums.forEach((album, index) => {
+      albumTable.innerHTML += `
+        <tr>
+          <td>#${index + 1}</td>
+          <td>${album.name}</td>
+          <td>${album.plays.toLocaleString()}</td>
+        </tr>`;
     });
   </script>
 </body>
