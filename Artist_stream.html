@@ -2,162 +2,216 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Artist Stream Profile</title>
+  <title>Artist Streaming Profile</title>
   <style>
     body {
-      background-color: #111;
-      color: #fff;
       font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
       padding: 2rem;
     }
-    h1 {
-      font-size: 2.5rem;
-    }
-    .section {
-      margin-top: 2rem;
-    }
+    h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+    .section { margin-top: 2rem; }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
     }
     th, td {
-      padding: 0.5rem;
+      padding: 0.6rem;
+      text-align: left;
       border-bottom: 1px solid #333;
     }
-    th {
-      text-align: left;
-      background-color: #222;
-    }
-    .highlight {
-      color: #0f0;
+    th { background: #1f1f1f; }
+    .rank-badge {
+      background: gold;
+      color: black;
       font-weight: bold;
+      padding: 0.3rem 0.6rem;
+      border-radius: 5px;
+      margin-left: 1rem;
     }
+    .up { color: #00e676; }
+    .down { color: #ff1744; }
   </style>
 </head>
 <body>
-  <h1 id="artistName">Artist Profile</h1>
+  <h1 id="artistName">Loading...</h1>
+  <div id="summary"></div>
 
   <div class="section">
-    <p><strong>Monthly Listeners:</strong> <span id="monthlyListeners">-</span></p>
-    <p id="rankInfo"></p>
-    <p><strong>Songs with over 1 Billion Streams:</strong> <span id="billionCount">-</span></p>
-  </div>
-
-  <div class="section">
-    <h2>Top 10 Songs (All-Time)</h2>
-    <table id="topSongs">
-      <thead>
-        <tr><th>Title</th><th>Total Streams</th></tr>
-      </thead>
+    <h2>Top 10 Songs (Last 6 Months)</h2>
+    <table id="recentSongs">
+      <thead><tr><th>Title</th><th>Streams</th><th>Change</th></tr></thead>
       <tbody></tbody>
     </table>
   </div>
 
   <div class="section">
-    <h2>Top 10 Albums (All-Time)</h2>
+    <h2>Top 10 Songs (All Time)</h2>
+    <table id="allTimeSongs">
+      <thead><tr><th>Title</th><th>Total Streams</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Top 5 Albums (All Time)</h2>
     <table id="topAlbums">
-      <thead>
-        <tr><th>Album</th><th>Total Streams</th></tr>
-      </thead>
+      <thead><tr><th>Album</th><th>Total Streams</th></tr></thead>
       <tbody></tbody>
     </table>
   </div>
 
   <script src="weekdata.js"></script>
   <script>
-    const params = new URLSearchParams(location.search);
-    const artistName = decodeURIComponent(params.get("artist") || "").toLowerCase();
-    document.getElementById("artistName").textContent = params.get("artist") || "Unknown Artist";
+    const params = new URLSearchParams(window.location.search);
+    const targetArtist = decodeURIComponent(params.get("name") || "").toLowerCase();
+    document.getElementById("artistName").textContent = targetArtist || "Artist Profile";
 
-    const allEntries = Object.values(weekData).flat();
+    const formatNumber = (num) => {
+      if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + "B";
+      if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + "M";
+      if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
+      return Math.round(num);
+    };
 
-    // 1. Filter only this artist's entries
-    const artistEntries = allEntries.filter(e => e.artist && e.artist.toLowerCase() === artistName);
+    const daysAgo = (dateStr) => {
+      const today = new Date();
+      const d = new Date(dateStr);
+      return (today - d) / (1000 * 60 * 60 * 24);
+    };
 
-    // 2. Calculate monthly listeners (last 45 days)
-    const now = new Date();
-    const cutoff = new Date(now);
-    cutoff.setDate(now.getDate() - 45);
-    const recentEntries = Object.entries(weekData).flatMap(([weekNum, entries]) => {
-      const weekDate = new Date(2018, 1, 23 + (7 * (parseInt(weekNum) - 1))); // Feb 23, 2018 base
-      if (weekDate >= cutoff) {
-        return entries.filter(e => e.artist && e.artist.toLowerCase() === artistName);
-      }
-      return [];
+    const sixMonthsAgo = Date.now() - 1000 * 60 * 60 * 24 * 180;
+    const fortyFiveDaysAgo = Date.now() - 1000 * 60 * 60 * 24 * 45;
+
+    let allArtistData = {};
+    let albumStreams = {};
+    let monthlyListenerMap = {};
+    let topSongs6mo = {};
+    let billionCount = 0;
+
+    Object.entries(weekData).forEach(([week, entries]) => {
+      const weekDate = new Date(week);
+      entries.forEach(entry => {
+        if (!entry.artist || entry.artist.toLowerCase() !== targetArtist) return;
+
+        const key = entry.title.toLowerCase();
+        const album = String(entry.album || "Unknown").trim().toLowerCase();
+        const weekTimestamp = weekDate.getTime();
+        const streams = entry.sales * 0.927124 * 1_000_000;
+
+        // Monthly listeners (last 45 days)
+        if (weekTimestamp >= fortyFiveDaysAgo) {
+          monthlyListenerMap[key] = (monthlyListenerMap[key] || 0) + streams;
+        }
+
+        // Last 6 months song data
+        if (weekTimestamp >= sixMonthsAgo) {
+          topSongs6mo[key] = topSongs6mo[key] || { title: entry.title, total: 0, history: [] };
+          topSongs6mo[key].total += streams;
+          topSongs6mo[key].history.push({ week: weekTimestamp, streams });
+        }
+
+        // All-time song data
+        allArtistData[key] = allArtistData[key] || { title: entry.title, total: 0 };
+        allArtistData[key].total += streams;
+        if (allArtistData[key].total >= 1_000_000_000) billionCount++;
+
+        // Album data
+        albumStreams[album] = albumStreams[album] || { name: entry.album || "Unknown", total: 0 };
+        albumStreams[album].total += streams;
+      });
     });
-    const monthlyListeners = recentEntries.reduce((sum, e) => sum + (e.plays || 0), 0);
-    document.getElementById("monthlyListeners").textContent = monthlyListeners.toLocaleString();
 
-    // 3. Billion-stream songs
-    const billionSet = new Set();
-    const songTotals = {};
-    artistEntries.forEach(e => {
-      const key = e.title.trim().toLowerCase();
-      songTotals[key] = (songTotals[key] || 0) + (e.plays || 0);
-    });
-    Object.values(songTotals).forEach(v => {
-      if (v >= 1_000_000_000) billionSet.add(v);
-    });
-    document.getElementById("billionCount").textContent = billionSet.size;
+    // Monthly Listeners
+    const totalRecentStreams = Object.values(monthlyListenerMap).reduce((a, b) => a + b, 0);
+    const monthlyListeners = totalRecentStreams / (1_000_000_000 * 150);
+    const summaryDiv = document.getElementById("summary");
+    summaryDiv.innerHTML = `
+      <p><strong>Monthly Listeners:</strong> ${formatNumber(monthlyListeners * 1_000_000)} </p>
+      <p><strong>Songs with over 1B streams:</strong> ${billionCount}</p>
+    `;
 
-    // 4. Top 10 songs
-    const topSongs = Object.entries(songTotals)
-      .map(([title, plays]) => ({ title, plays }))
-      .sort((a, b) => b.plays - a.plays)
+    // Top Songs - Last 6 Months
+    const recentTop = Object.values(topSongs6mo)
+      .sort((a, b) => b.total - a.total)
       .slice(0, 10);
-    const songTable = document.querySelector("#topSongs tbody");
-    topSongs.forEach(row => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${row.title}</td><td>${row.plays.toLocaleString()}</td>`;
-      songTable.appendChild(tr);
+
+    const recentTable = document.querySelector("#recentSongs tbody");
+    recentTop.forEach(song => {
+      const weeks = song.history.sort((a, b) => b.week - a.week);
+      const change = weeks.length > 1
+        ? Math.min(100, ((weeks[0].streams - weeks[1].streams) / weeks[1].streams) * 100)
+        : 0;
+      const trend = change > 0
+        ? `<span class="up">+${change.toFixed(1)}%</span>`
+        : `<span class="down">${change.toFixed(1)}%</span>`;
+      recentTable.innerHTML += `
+        <tr>
+          <td>${song.title}</td>
+          <td>${formatNumber(song.total)}</td>
+          <td>${trend}</td>
+        </tr>
+      `;
     });
 
-    // 5. Top 10 albums
-    const albumTotals = {};
-    artistEntries.forEach(e => {
-      const album = (e.album || "Unknown").toString().trim().toLowerCase();
-      albumTotals[album] = (albumTotals[album] || 0) + (e.plays || 0);
-    });
-    const topAlbums = Object.entries(albumTotals)
-      .map(([album, plays]) => ({ album, plays }))
-      .sort((a, b) => b.plays - a.plays)
+    // Top Songs - All Time
+    const topAllTime = Object.values(allArtistData)
+      .sort((a, b) => b.total - a.total)
       .slice(0, 10);
-    const albumTable = document.querySelector("#topAlbums tbody");
-    topAlbums.forEach(row => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${row.album}</td><td>${row.plays.toLocaleString()}</td>`;
-      albumTable.appendChild(tr);
+
+    const allTimeTable = document.querySelector("#allTimeSongs tbody");
+    topAllTime.forEach(song => {
+      allTimeTable.innerHTML += `
+        <tr>
+          <td>${song.title}</td>
+          <td>${formatNumber(song.total)}</td>
+        </tr>
+      `;
     });
 
-    // 6. Ranking vs other artists (only if in top 20)
-    const artistTotals = {};
-    allEntries.forEach(e => {
-      const a = e.artist ? e.artist.toLowerCase() : "unknown";
-      artistTotals[a] = (artistTotals[a] || 0) + (e.plays || 0);
+    // Top Albums
+    const topAlbums = Object.values(albumStreams)
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 5);
+
+    const albumsTable = document.querySelector("#topAlbums tbody");
+    topAlbums.forEach(album => {
+      albumsTable.innerHTML += `
+        <tr>
+          <td>${album.name}</td>
+          <td>${formatNumber(album.total)}</td>
+        </tr>
+      `;
     });
 
-    // Monthly listeners per artist (last 45 days)
-    const recentArtistTotals = {};
-    Object.entries(weekData).forEach(([weekNum, entries]) => {
-      const weekDate = new Date(2018, 1, 23 + (7 * (parseInt(weekNum) - 1)));
-      if (weekDate >= cutoff) {
-        entries.forEach(e => {
-          if (!e.artist) return;
-          const a = e.artist.toLowerCase();
-          recentArtistTotals[a] = (recentArtistTotals[a] || 0) + (e.plays || 0);
-        });
-      }
+    // Global Rank (Top 20)
+    const artistMonthlyMap = {};
+    Object.entries(weekData).forEach(([week, entries]) => {
+      const weekDate = new Date(week);
+      if (weekDate.getTime() < fortyFiveDaysAgo) return;
+      entries.forEach(entry => {
+        const key = entry.artist?.toLowerCase();
+        if (!key) return;
+        const streams = entry.sales * 0.927124 * 1_000_000;
+        artistMonthlyMap[key] = (artistMonthlyMap[key] || 0) + streams;
+      });
     });
 
-    const ranked = Object.entries(recentArtistTotals)
-      .map(([artist, plays]) => ({ artist, plays }))
-      .sort((a, b) => b.plays - a.plays);
+    const rankedArtists = Object.entries(artistMonthlyMap)
+      .map(([artist, streams]) => ({
+        artist,
+        monthly: streams / (1_000_000_000 * 150)
+      }))
+      .sort((a, b) => b.monthly - a.monthly)
+      .slice(0, 20);
 
-    const foundIndex = ranked.findIndex(r => r.artist === artistName);
-    if (foundIndex >= 0 && foundIndex < 20) {
-      document.getElementById("rankInfo").innerHTML =
-        `<strong>Ranking:</strong> <span class="highlight">${foundIndex + 1} out of top 20 artists by monthly listeners</span>`;
+    const artistRank = rankedArtists.findIndex(a => a.artist === targetArtist);
+    if (artistRank >= 0) {
+      summaryDiv.innerHTML += `
+        <p><strong>Rank:</strong> <span class="rank-badge">#${artistRank + 1}</span> among top 20 most streamed artists</p>
+      `;
     }
   </script>
 </body>
