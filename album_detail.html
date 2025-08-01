@@ -349,36 +349,89 @@
     let weeksAt1 = 0;
     const tracks = {};
 
-    for (const week in weekData) {
-      const entries = weekData[week];
-      const weekNum = parseInt(week.replace(/\D/g, ""));
+    // Helper: normalize album + artist key
+const getAlbumKey = (album, artist) => normalizeAlbum(album) + "||" + normalize(artist);
 
-      entries.forEach(entry => {
-        const entryArtist = normalize(entry.artist);
-        const entryAlbum = normalizeAlbum(entry.album);
-        const entryTitle = entry.title;
-        const entrySales = parseFloat(entry.sales) || 0;
-        const entryRank = parseInt(entry.rank);
+// Step 1: Build album ranks by week (like in album chart script)
+function getAlbumRanksByWeek() {
+  const ranksByWeek = {}; // { weekNum: { albumKey: rank } }
 
-        if (entryArtist === normArtist && entryAlbum === normAlbum) {
-          rawSales += entrySales;
-          weekSet.add(week);
-          if (!debutWeek || weekNum < debutWeek) debutWeek = weekNum;
-          if (entryRank && entryRank < peakRank) peakRank = entryRank;
-          if (entryRank === 1) weeksAt1++;
+  for (const week in weekData) {
+    const weekNum = parseInt(week.replace(/\D/g, ""));
+    if (isNaN(weekNum)) continue;
 
-          const trackKey = normalizeTitle(entryTitle);
-          if (!tracks[trackKey]) {
-            tracks[trackKey] = {
-              title: entryTitle,
-              artist: entry.artist,
-              sales: 0
-            };
-          }
-          tracks[trackKey].sales += entrySales;
-        }
-      });
+    const albumsMap = {};
+    const entries = weekData[week] || [];
+
+    // Sum sales per album
+    for (const entry of entries) {
+      if (!entry.album || !entry.artist) continue;
+      const albumKey = getAlbumKey(entry.album, entry.artist);
+      if (!albumsMap[albumKey]) {
+        albumsMap[albumKey] = { album: entry.album, artist: entry.artist, sales: 0 };
+      }
+      albumsMap[albumKey].sales += parseFloat(entry.sales) || 0;
     }
+
+    // Sort albums descending by sales
+    const sortedAlbums = Object.values(albumsMap).sort((a, b) => b.sales - a.sales);
+
+    ranksByWeek[weekNum] = {};
+    sortedAlbums.forEach((album, index) => {
+      const key = getAlbumKey(album.album, album.artist);
+      ranksByWeek[weekNum][key] = index + 1;
+    });
+  }
+
+  return ranksByWeek;
+}
+
+// Build ranks map once
+const ranksByWeek = getAlbumRanksByWeek();
+
+// Prepare variables
+let peakRank = Infinity;
+let weeksAt1 = 0;
+let debutWeek = null;
+const weekSet = new Set();
+let rawSales = 0;
+const tracks = {};
+
+// Iterate only the weeks where this album appears, based on ranksByWeek
+for (const week in ranksByWeek) {
+  const weekNum = parseInt(week);
+  if (isNaN(weekNum)) continue;
+
+  const albumKey = getAlbumKey(albumParam, artistParam);
+
+  if (ranksByWeek[weekNum][albumKey]) {
+    const rank = ranksByWeek[weekNum][albumKey];
+    weekSet.add(weekNum);
+
+    if (!debutWeek || weekNum < debutWeek) debutWeek = weekNum;
+    if (rank < peakRank) peakRank = rank;
+    if (rank === 1) weeksAt1++;
+
+    // Now gather track sales for this week (for listing & total sales)
+    const entries = weekData[week] || [];
+    for (const entry of entries) {
+      if (normalize(entry.artist) === normalize(artistParam) && normalizeAlbum(entry.album) === normalizeAlbum(albumParam)) {
+        rawSales += parseFloat(entry.sales) || 0;
+
+        const trackKey = normalizeTitle(entry.title);
+        if (!tracks[trackKey]) {
+          tracks[trackKey] = {
+            title: entry.title,
+            artist: entry.artist,
+            sales: 0,
+          };
+        }
+        tracks[trackKey].sales += parseFloat(entry.sales) || 0;
+      }
+    }
+  }
+}
+
 
     const actualSales = rawSales * saleMultiplier;
     const estimatedStreams = rawSales * streamMultiplier * 1_000_000;
