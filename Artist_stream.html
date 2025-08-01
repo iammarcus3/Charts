@@ -47,13 +47,20 @@
       (n / 1e3).toFixed(1) + 'K'
     );
 
+    // Normalize artist name by trimming and lowercasing
     function normalizeArtistName(name) {
       if (!name) return "";
-      let artist = name.toLowerCase().trim();
-      // Remove featuring and collaboration suffixes
-      artist = artist.replace(/\s*(feat\.|ft\.|featuring|with|&|and).*/i, '');
-      artist = artist.trim();
-      return artist;
+      return name.toLowerCase().trim();
+    }
+
+    // Split artist string into individual artist names by common delimiters and featuring keywords
+    function splitArtists(artistStr) {
+      if (!artistStr) return [];
+      return artistStr
+        .toLowerCase()
+        .split(/,|&| and | feat\.| ft\.| featuring | with /i)
+        .map(a => a.trim())
+        .filter(a => a.length > 0);
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -118,7 +125,7 @@
     const billionSongs = Object.entries(songMap).filter(([_, v]) => v >= 1_000_000_000).length;
     document.getElementById("billionSongs").textContent = `Songs Over 1B Streams: ${billionSongs}`;
 
-    // Build normalized artist stream map
+    // Build normalized artist stream map, adding streams to all featured and main artists
     const artistStreamMap = {};
     last45DaysWeeks.forEach(week => {
       const entries = weekData[week] || [];
@@ -126,17 +133,20 @@
         if (!entry.artist) return;
         const sales = parseFloat(entry.sales) || 0;
         const streams = sales * STREAM_MULTIPLIER;
-        const artistKey = normalizeArtistName(entry.artist);
-        artistStreamMap[artistKey] = (artistStreamMap[artistKey] || 0) + streams;
+        const artists = splitArtists(entry.artist);
+        artists.forEach(artistName => {
+          const normalized = normalizeArtistName(artistName);
+          artistStreamMap[normalized] = (artistStreamMap[normalized] || 0) + streams;
+        });
       });
     });
 
-    // Rank artists by monthly listeners
+    // Rank artists by monthly listeners including all features
     const ranked = Object.entries(artistStreamMap)
       .map(([name, streams]) => [name, (streams / 1_000_000_000) * 150])
       .sort((a, b) => b[1] - a[1]);
 
-    // Find rank index with exact match
+    // Find rank index for current artist
     const rankIndex = ranked.findIndex(([n]) => n === artistParam);
     if (rankIndex >= 0 && rankIndex < 50) {
       document.getElementById("globalRank").innerHTML =
@@ -162,7 +172,7 @@
     fillTable("topAlbums", topAlbums);
     fillTable("recentTopSongs", topRecent);
 
-    // Optional: Debug top 20 artists by monthly listeners in console
+    // Optional: log top 20 artists and their monthly listeners
     console.table(
       ranked.slice(0, 20).map(([name, listeners], i) => ({
         Rank: i + 1,
