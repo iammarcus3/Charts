@@ -41,38 +41,37 @@
   <script src="weekdata.js"></script>
   <script>
     const STREAM_MULTIPLIER = 0.927124 * 1_000_000;
+
     const formatNumber = n => (
       n >= 1e9 ? (n / 1e9).toFixed(2) + 'B' :
       n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' :
       (n / 1e3).toFixed(1) + 'K'
     );
 
-    // Normalize artist name by trimming and lowercasing
-    function normalizeArtistName(name) {
-      if (!name) return "";
-      return name.toLowerCase().trim();
+    // Deep normalization: strip spaces, punctuation, lowercase everything
+    function deepNormalize(str) {
+      return str.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
     }
 
-    // Split artist string into individual artist names by common delimiters and featuring keywords
+    // Split artist string into all credited names
     function splitArtists(artistStr) {
       if (!artistStr) return [];
       return artistStr
-        .toLowerCase()
         .split(/,|&| and | feat\.| ft\.| featuring | with /i)
-        .map(a => a.trim())
-        .filter(a => a.length > 0);
+        .map(s => s.trim())
+        .filter(Boolean);
     }
 
     const urlParams = new URLSearchParams(window.location.search);
-    const artistParamRaw = decodeURIComponent(urlParams.get("name") || "");
-    const artistParam = normalizeArtistName(artistParamRaw);
-    document.getElementById("artistName").textContent = artistParamRaw.toUpperCase();
+    const rawArtistName = decodeURIComponent(urlParams.get("name") || "");
+    const artistParam = deepNormalize(rawArtistName);
+    document.getElementById("artistName").textContent = rawArtistName.toUpperCase();
 
     const includesArtist = (artistStr, titleStr) => {
-      const artist = artistParam.toLowerCase();
+      const searchKey = rawArtistName.toLowerCase();
       return (
-        (artistStr && artistStr.toLowerCase().includes(artist)) ||
-        (titleStr && titleStr.toLowerCase().includes(artist))
+        (artistStr && artistStr.toLowerCase().includes(searchKey)) ||
+        (titleStr && titleStr.toLowerCase().includes(searchKey))
       );
     };
 
@@ -125,7 +124,7 @@
     const billionSongs = Object.entries(songMap).filter(([_, v]) => v >= 1_000_000_000).length;
     document.getElementById("billionSongs").textContent = `Songs Over 1B Streams: ${billionSongs}`;
 
-    // Build normalized artist stream map, adding streams to all featured and main artists
+    // STEP: Properly aggregate streams by ALL artists credited per song
     const artistStreamMap = {};
     last45DaysWeeks.forEach(week => {
       const entries = weekData[week] || [];
@@ -133,21 +132,21 @@
         if (!entry.artist) return;
         const sales = parseFloat(entry.sales) || 0;
         const streams = sales * STREAM_MULTIPLIER;
+
         const artists = splitArtists(entry.artist);
-        artists.forEach(artistName => {
-          const normalized = normalizeArtistName(artistName);
-          artistStreamMap[normalized] = (artistStreamMap[normalized] || 0) + streams;
+        artists.forEach(name => {
+          const key = deepNormalize(name);
+          if (!key) return;
+          artistStreamMap[key] = (artistStreamMap[key] || 0) + streams;
         });
       });
     });
 
-    // Rank artists by monthly listeners including all features
     const ranked = Object.entries(artistStreamMap)
-      .map(([name, streams]) => [name, (streams / 1_000_000_000) * 150])
+      .map(([key, streams]) => [key, (streams / 1_000_000_000) * 150])
       .sort((a, b) => b[1] - a[1]);
 
-    // Find rank index for current artist
-    const rankIndex = ranked.findIndex(([n]) => n === artistParam);
+    const rankIndex = ranked.findIndex(([key]) => key === artistParam);
     if (rankIndex >= 0 && rankIndex < 50) {
       document.getElementById("globalRank").innerHTML =
         `Ranking: <span class="rank-icon">#${rankIndex + 1}</span> (Top 50 by Monthly Listeners)`;
@@ -172,7 +171,7 @@
     fillTable("topAlbums", topAlbums);
     fillTable("recentTopSongs", topRecent);
 
-    // Optional: log top 20 artists and their monthly listeners
+    // Optional: log top 20 artists for debug
     console.table(
       ranked.slice(0, 20).map(([name, listeners], i) => ({
         Rank: i + 1,
