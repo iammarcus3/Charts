@@ -48,12 +48,10 @@
       (n / 1e3).toFixed(1) + 'K'
     );
 
-    // Deep normalization: strip spaces, punctuation, lowercase everything
     function deepNormalize(str) {
       return str.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
     }
 
-    // Split artist string into all credited names
     function splitArtists(artistStr) {
       if (!artistStr) return [];
       return artistStr
@@ -68,16 +66,16 @@
     document.getElementById("artistName").textContent = rawArtistName.toUpperCase();
 
     const includesArtist = (artistStr, titleStr) => {
-      const searchKey = rawArtistName.toLowerCase();
+      const raw = rawArtistName.toLowerCase();
       return (
-        (artistStr && artistStr.toLowerCase().includes(searchKey)) ||
-        (titleStr && titleStr.toLowerCase().includes(searchKey))
+        (artistStr && artistStr.toLowerCase().includes(raw)) ||
+        (titleStr && titleStr.toLowerCase().includes(raw))
       );
     };
 
     const allWeeks = Object.keys(weekData).map(Number).sort((a, b) => b - a);
-    const last6MonthsWeeks = allWeeks.slice(0, 26);  // ~6 months
-    const last45DaysWeeks = allWeeks.slice(0, 7);    // ~45 days
+    const last6MonthsWeeks = allWeeks.slice(0, 26);
+    const last45DaysWeeks = allWeeks.slice(0, 7);
 
     const songMap = {};
     const albumMap = {};
@@ -124,7 +122,6 @@
     const billionSongs = Object.entries(songMap).filter(([_, v]) => v >= 1_000_000_000).length;
     document.getElementById("billionSongs").textContent = `Songs Over 1B Streams: ${billionSongs}`;
 
-    // STEP: Properly aggregate streams by ALL artists credited per song
     const artistStreamMap = {};
     last45DaysWeeks.forEach(week => {
       const entries = weekData[week] || [];
@@ -146,7 +143,10 @@
       .map(([key, streams]) => [key, (streams / 1_000_000_000) * 150])
       .sort((a, b) => b[1] - a[1]);
 
-    const rankIndex = ranked.findIndex(([key]) => key === artistParam);
+    const rankIndex = ranked.findIndex(([key]) =>
+      key === artistParam || key.includes(artistParam) || artistParam.includes(key)
+    );
+
     if (rankIndex >= 0 && rankIndex < 50) {
       document.getElementById("globalRank").innerHTML =
         `Ranking: <span class="rank-icon">#${rankIndex + 1}</span> (Top 50 by Monthly Listeners)`;
@@ -170,15 +170,6 @@
     fillTable("topSongs", topSongs);
     fillTable("topAlbums", topAlbums);
     fillTable("recentTopSongs", topRecent);
-
-    // Optional: log top 20 artists for debug
-    console.table(
-      ranked.slice(0, 20).map(([name, listeners], i) => ({
-        Rank: i + 1,
-        Artist: name,
-        "Monthly Listeners (M)": listeners.toFixed(2)
-      }))
-    );
   </script>
 </body>
 </html>
