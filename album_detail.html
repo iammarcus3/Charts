@@ -186,6 +186,7 @@
     <p><strong>Peak Position:</strong> <span id="peak">—</span></p>
     <p><strong>Debut Week:</strong> <span id="debutWeek">—</span></p>
     <p class="cert"><strong>Certification:</strong> <span id="albumCert">—</span></p>
+    <!-- Certification timeline container -->
     <div id="certTimeline" aria-label="Certification timeline"></div>
   </div>
 
@@ -199,20 +200,16 @@
     const albumParam = params.get("album");
     const artistParam = params.get("artist");
 
-    const normalize = str => typeof str === "string"
-      ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim()
-      : "";
-
-    const normalizeAlbum = str => typeof str === "string"
-      ? str.toUpperCase()
+    const normalize = s => typeof s === "string" ? s.toUpperCase().replace(/[^A-Z0-9]/g, "").trim() : "";
+    const normalizeAlbum = s => typeof s === "string"
+      ? s.toUpperCase()
           .replace(/\(.*?\)|\[.*?\]/g, "")
           .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
           .replace(/[^A-Z0-9]/g, "")
           .trim()
       : "";
-
-    const normalizeTitle = str => typeof str === "string"
-      ? str.toUpperCase()
+    const normalizeTitle = s => typeof s === "string"
+      ? s.toUpperCase()
           .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
           .replace(/[^A-Z0-9]/g, "")
           .trim()
@@ -220,79 +217,33 @@
 
     function getAlbumCertIcons(sales) {
       const scaled = sales * 1000;
-
-      if (scaled >= 10_000_000) {
-        return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
-      }
-      if (scaled >= 9_000_000) {
-        return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
-      }
-      if (scaled >= 8_000_000) {
-        return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
-      }
-      if (scaled >= 7_000_000) {
-        return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
-      }
-      if (scaled >= 6_000_000) {
-        return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
-      }
-      if (scaled >= 5_000_000) {
-        return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
-      }
-      if (scaled >= 4_000_000) {
-        return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
-      }
-      if (scaled >= 3_000_000) {
-        return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
-      }
-      if (scaled >= 2_000_000) {
-        return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
-      }
-      if (scaled >= 1_000_000) {
-        return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
-      }
-      if (scaled >= 500_000) {
-        return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
-      }
+      if (scaled >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+      if (scaled >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
+      if (scaled >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
+      if (scaled >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
+      if (scaled >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
+      if (scaled >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
+      if (scaled >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
+      if (scaled >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
+      if (scaled >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
+      if (scaled >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
+      if (scaled >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
       return "—";
     }
 
     function getTrackCertIcon(sales) {
       const scaled = sales * 745;
-
-      if (scaled >= 1_000_000) {
-        return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
-      }
-      if (scaled >= 900_000) {
-        return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
-      }
-      if (scaled >= 800_000) {
-        return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
-      }
-      if (scaled >= 700_000) {
-        return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
-      }
-      if (scaled >= 600_000) {
-        return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
-      }
-      if (scaled >= 500_000) {
-        return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
-      }
-      if (scaled >= 400_000) {
-        return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
-      }
-      if (scaled >= 300_000) {
-        return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
-      }
-      if (scaled >= 200_000) {
-        return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
-      }
-      if (scaled >= 100_000) {
-        return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
-      }
-      if (scaled >= 50_000) {
-        return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
-      }
+      if (scaled >= 1_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+      if (scaled >= 900_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
+      if (scaled >= 800_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
+      if (scaled >= 700_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
+      if (scaled >= 600_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
+      if (scaled >= 500_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
+      if (scaled >= 400_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
+      if (scaled >= 300_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
+      if (scaled >= 200_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
+      if (scaled >= 100_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
+      if (scaled >= 50_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
       return "";
     }
 
@@ -320,70 +271,55 @@
     const normAlbum = normalizeAlbum(albumParam);
     const albumKey = normAlbum + "||" + normArtist;
 
-    // --- NEW: Compute album ranks per week based on summed sales ---
+    // Compute album ranks by week from aggregated album sales per week
     function computeAlbumRanksByWeek() {
       const ranksByWeek = {};
-
       for (const week in weekData) {
         const weekNum = parseInt(week.replace(/\D/g, ""));
         if (isNaN(weekNum)) continue;
-
-        // Sum album sales by artist+album key
         const albumSalesMap = {};
         for (const entry of weekData[week]) {
           if (!entry.album || !entry.artist) continue;
           const key = normalizeAlbum(entry.album) + "||" + normalize(entry.artist);
           albumSalesMap[key] = (albumSalesMap[key] || 0) + (parseFloat(entry.sales) || 0);
         }
-
-        // Sort descending by sales
         const sortedAlbums = Object.entries(albumSalesMap).sort(([, a], [, b]) => b - a);
-
         ranksByWeek[weekNum] = {};
-        sortedAlbums.forEach(([key], index) => {
-          ranksByWeek[weekNum][key] = index + 1;
-        });
+        sortedAlbums.forEach(([key], index) => ranksByWeek[weekNum][key] = index + 1);
       }
       return ranksByWeek;
     }
 
     const albumRanksByWeek = computeAlbumRanksByWeek();
 
-    let peakRank = Infinity;
-    let weeksAt1 = 0;
-    let debutWeek = null;
+    let peakRank = Infinity, weeksAt1 = 0, debutWeek = null;
     const weekSet = new Set();
-    let rawSales = 0;
-    const tracks = {};
 
-    // Loop through all weeks where album chart data exists
+    // Use albumRanksByWeek to get album peak, debut, weeks at #1
     for (const weekNumStr in albumRanksByWeek) {
       const weekNum = parseInt(weekNumStr);
       if (isNaN(weekNum)) continue;
-
       const rank = albumRanksByWeek[weekNum][albumKey];
       if (rank !== undefined) {
         weekSet.add(weekNum);
         if (!debutWeek || weekNum < debutWeek) debutWeek = weekNum;
         if (rank < peakRank) peakRank = rank;
         if (rank === 1) weeksAt1++;
+      }
+    }
 
-        // Collect track sales from week data for this album/artist only
-        const entries = weekData[`week${weekNum}`] || [];
-        for (const entry of entries) {
-          if (normalize(entry.artist) === normArtist && normalizeAlbum(entry.album) === normAlbum) {
-            rawSales += parseFloat(entry.sales) || 0;
-
-            const trackKey = normalizeTitle(entry.title);
-            if (!tracks[trackKey]) {
-              tracks[trackKey] = {
-                title: entry.title,
-                artist: entry.artist,
-                sales: 0
-              };
-            }
-            tracks[trackKey].sales += parseFloat(entry.sales) || 0;
+    // Separate loop to sum rawSales and track sales for streams, certification, and track list
+    let rawSales = 0;
+    const tracks = {};
+    for (const week in weekData) {
+      for (const entry of weekData[week]) {
+        if (normalize(entry.artist) === normArtist && normalizeAlbum(entry.album) === normAlbum) {
+          rawSales += parseFloat(entry.sales) || 0;
+          const trackKey = normalizeTitle(entry.title);
+          if (!tracks[trackKey]) {
+            tracks[trackKey] = { title: entry.title, artist: entry.artist, sales: 0 };
           }
+          tracks[trackKey].sales += parseFloat(entry.sales) || 0;
         }
       }
     }
@@ -416,7 +352,7 @@
       return Math.round(num).toLocaleString("en-US");
     }
 
-    // === Certification timeline code remains unchanged ===
+    // Certification timeline data and display
     const certLevels = [
       { label: "Diamond", threshold: 10_000_000 },
       { label: "9× Platinum", threshold: 9_000_000 },
@@ -434,38 +370,62 @@
     const baseDate = new Date(2018, 1, 23); // Feb 23, 2018
 
     function formatDate(date) {
-      return date.toLocaleDateString("en-US", { year: "2-digit", month: "short", day: "numeric" });
+      return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
     }
 
-    function buildCertTimeline() {
-      let lastLevel = "";
-      let timelineHTML = "<ul>";
-      let cumulativeSales = 0;
-
-      certLevels.forEach(level => {
-        if (actualSales >= level.threshold) {
-          cumulativeSales = level.threshold;
-          lastLevel = level.label;
-          timelineHTML += `<li><span class="date">${formatDate(baseDate)}</span><span>${level.label}</span></li>`;
+    function findCertTimeline() {
+      const certDates = [];
+      for (const { label, threshold } of certLevels) {
+        for (const week in weekData) {
+          const weekNum = parseInt(week.replace(/\D/g, ""));
+          if (isNaN(weekNum)) continue;
+          let cumSales = 0;
+          for (const w in weekData) {
+            const wNum = parseInt(w.replace(/\D/g, ""));
+            if (isNaN(wNum)) continue;
+            if (wNum <= weekNum) {
+              for (const e of weekData[w]) {
+                if (normalize(e.artist) === normArtist && normalizeAlbum(e.album) === normAlbum) {
+                  cumSales += parseFloat(e.sales) || 0;
+                }
+              }
+            }
+          }
+          if (cumSales * 1000 >= threshold) {
+            certDates.push({ label, weekNum });
+            break;
+          }
         }
-      });
-
-      if (weekSet.size === 0) {
-        timelineHTML = "<li>No certification data available</li>";
       }
-
-      timelineHTML += "</ul>";
-      return timelineHTML;
+      return certDates;
     }
 
-    document.getElementById("certTimeline").innerHTML = buildCertTimeline();
+    const certTimelineEl = document.getElementById("certTimeline");
+    const certTimeline = findCertTimeline();
 
-    // Dark mode toggle
+    if (certTimeline.length === 0) {
+      certTimelineEl.innerHTML = "<p>No certification timeline data available.</p>";
+    } else {
+      certTimeline.sort((a, b) =>
+        certLevels.findIndex(c => c.label === b.label) - certLevels.findIndex(c => c.label === a.label));
+      const ul = document.createElement("ul");
+      certTimeline.forEach(({ label, weekNum }) => {
+        const certDate = new Date(baseDate.getTime() + (weekNum - 1) * 7 * 24 * 60 * 60 * 1000);
+        const li = document.createElement("li");
+        li.innerHTML = `<span>${label}</span> <span class="date">${formatDate(certDate)}</span>`;
+        ul.appendChild(li);
+      });
+      certTimelineEl.appendChild(ul);
+    }
+
+    // Dark mode toggle logic
     const darkToggle = document.getElementById("darkModeToggle");
     darkToggle.addEventListener("click", () => {
       document.body.classList.toggle("dark");
       darkToggle.textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
     });
   </script>
+
+  <footer>© 2025 Album Charts Viewer</footer>
 </body>
 </html>
