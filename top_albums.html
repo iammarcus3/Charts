@@ -5,36 +5,65 @@
   <title>Top Albums by Year</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d0d0d;
+      color: #eaeaea;
       padding: 2rem;
     }
+
     h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      color: #ffffff;
     }
+
+    label, select {
+      font-size: 1rem;
+    }
+
     select {
       padding: 0.5rem;
-      font-size: 1rem;
+      background-color: #1e1e1e;
+      color: #ffffff;
+      border: 1px solid #444;
+      border-radius: 5px;
       margin-bottom: 1.5rem;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
+      background-color: #161616;
+      border-radius: 8px;
+      overflow: hidden;
     }
+
     th, td {
-      padding: 0.6rem;
+      padding: 0.75rem 1rem;
       text-align: left;
       border-bottom: 1px solid #333;
     }
+
     th {
-      background: #222;
+      background-color: #222;
+      font-weight: bold;
+      color: #ddd;
     }
+
     tr:hover {
-      background: #1a1a1a;
+      background-color: #1f1f1f;
     }
+
+    a {
+      color: #4db8ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
     .number {
       text-align: right;
     }
@@ -65,7 +94,6 @@
     const yearSelect = document.getElementById('yearSelect');
     const tableBody = document.getElementById('albumTable');
 
-    // Safe normalizeAlbum: only process strings, else empty string
     function normalizeAlbum(name) {
       if (typeof name !== 'string') return '';
       return name
@@ -75,12 +103,15 @@
         .trim();
     }
 
-    // Extract all years available from weekData
+    function encodeParam(param) {
+      return encodeURIComponent(param.replace(/\s+/g, '_'));
+    }
+
     const weekYears = Object.keys(weekData).map(Number).map(weekNum => {
       const entry = weekData[weekNum][0];
-      if (entry && entry.date) return new Date(entry.date).getFullYear();
-      // fallback estimate if date missing:
-      return 2018 + Math.floor((weekNum - 1) / 52);
+      return entry && entry.date
+        ? new Date(entry.date).getFullYear()
+        : 2018 + Math.floor((weekNum - 1) / 52);
     });
 
     const uniqueYears = [...new Set(weekYears)].sort((a, b) => b - a);
@@ -137,12 +168,14 @@
       tableBody.innerHTML = '';
 
       albums.forEach((album, index) => {
-        const row = document.createElement('tr');
+        const albumLink = `album_data.html?album=${encodeParam(album.album)}`;
+        const artistLink = `artist.html?artist=${encodeParam(album.artist)}`;
 
+        const row = document.createElement('tr');
         row.innerHTML = `
           <td>${index + 1}</td>
-          <td>${album.album}</td>
-          <td>${album.artist}</td>
+          <td><a href="${albumLink}" target="_blank">${album.album}</a></td>
+          <td><a href="${artistLink}" target="_blank">${album.artist}</a></td>
           <td class="number">${album.salesThisYear.toLocaleString()}</td>
           <td class="number">${album.totalSales.toLocaleString()}</td>
           <td class="number">${album.weeks}</td>
@@ -157,7 +190,6 @@
       renderTable(e.target.value);
     });
 
-    // Load latest year by default
     renderTable(uniqueYears[0]);
     yearSelect.value = uniqueYears[0];
   </script>
