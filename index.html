@@ -162,139 +162,147 @@
     }
 
     function renderAlbumChart(entries, weekNumber, tbody) {
-      const albumSongCounts = {};
-      for (const week in weekData) {
-        if (!weekData.hasOwnProperty(week)) continue;
-        const w = parseInt(week);
-        if (isNaN(w)) continue;
-        for (const row of weekData[week] || []) {
-          if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
-          const albumKey = normalize(row.album) + '||' + normalize(row.artist || '');
-          if (!albumSongCounts[albumKey]) albumSongCounts[albumKey] = new Set();
-          if (row.title) albumSongCounts[albumKey].add(row.title.toLowerCase());
-        }
-      }
+  // ----- NEW: helper function to build album ranks per week -----
+  function getAlbumRanksByWeek(maxWeek) {
+    const ranksByWeek = {}; // { weekNum: { albumKey: rank } }
 
+    for (let w = 1; w <= maxWeek; w++) {
       const albumsMap = {};
-      for (const row of entries) {
+      for (const row of weekData[w] || []) {
         if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
-        const albumName = row.album;
-        const artistName = row.artist || "";
-        const key = normalize(albumName) + '||' + normalize(artistName);
-        if (!albumsMap[key]) {
-          albumsMap[key] = { album: albumName, artist: artistName, sales: 0, currentWeekRanks: [] };
+        const albumKey = normalize(row.album) + '||' + normalize(row.artist || '');
+        if (!albumsMap[albumKey]) {
+          albumsMap[albumKey] = { album: row.album, artist: row.artist || "", sales: 0 };
         }
-        albumsMap[key].sales += row.sales;
-        const rankNum = parseInt(row.rank);
-        if (!isNaN(rankNum)) albumsMap[key].currentWeekRanks.push(rankNum);
+        albumsMap[albumKey].sales += row.sales;
       }
 
-      const filteredAlbums = Object.entries(albumsMap).filter(([key, album]) => {
-        return albumSongCounts[key] && albumSongCounts[key].size >= 2;
-      }).map(([key, album]) => album);
+      const albumsArray = Object.values(albumsMap);
+      albumsArray.sort((a, b) => b.sales - a.sales);
 
-      // Build albumWeeks mapping: which weeks album appeared in
-      const albumWeeks = {};
-      for (let i = 1; i <= weekNumber; i++) {
-        for (const row of weekData[i] || []) {
-          if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
-          const key = normalize(row.album) + '||' + normalize(row.artist || '');
-          if (!albumWeeks[key]) albumWeeks[key] = new Set();
-          albumWeeks[key].add(i);
-        }
-      }
-
-      const enrichedAlbums = filteredAlbums.map(album => {
+      ranksByWeek[w] = {};
+      albumsArray.forEach((album, index) => {
         const key = normalize(album.album) + '||' + normalize(album.artist);
-        const weeksSet = albumWeeks[key] || new Set();
-
-        const totalWeeks = weeksSet.size;
-
-        // Gather all ranks up to current week to find peak
-        const allRanks = [];
-        for (let i = 1; i <= weekNumber; i++) {
-          for (const r of weekData[i] || []) {
-            if (!r.album || typeof r.album !== "string" || r.album.trim().toLowerCase() === "nan") continue;
-            const rKey = normalize(r.album) + '||' + normalize(r.artist || '');
-            if (rKey === key) {
-              const rankNum = parseInt(r.rank);
-              if (!isNaN(rankNum)) allRanks.push(rankNum);
-            }
-          }
-        }
-        const bestPeak = allRanks.length > 0 ? Math.min(...allRanks) : null;
-
-        // Current week's best rank
-        const currentBestRank = album.currentWeekRanks.length > 0 ? Math.min(...album.currentWeekRanks) : null;
-
-        // Last week's presence
-        const lastWeekNumber = weekNumber - 1;
-        const wasLastWeekPresent = weeksSet.has(lastWeekNumber);
-
-        // Has appeared before this week?
-        const appearedBeforeThisWeek = Array.from(weeksSet).some(w => w < weekNumber);
-
-        // Movement icon/text logic
-        let movementIcon = "";
-        let movementText = "";
-
-        if (!appearedBeforeThisWeek) {
-          // First appearance ever
-          movementIcon = "🆕";
-        } else if (!wasLastWeekPresent) {
-          // Re-entry (appeared before but not last week)
-          movementIcon = "↩️";
-          movementText = ` <span class="move-stay">(Re-entry)</span>`;
-        } else {
-          // Appeared last week - calculate movement
-          const lastWeekEntries = weekData[lastWeekNumber] || [];
-          let lastWeekRanks = [];
-          for (const r of lastWeekEntries) {
-            if (!r.album || typeof r.album !== "string" || r.album.trim().toLowerCase() === "nan") continue;
-            const rKey = normalize(r.album) + '||' + normalize(r.artist || '');
-            if (rKey === key) {
-              const rankNum = parseInt(r.rank);
-              if (!isNaN(rankNum)) lastWeekRanks.push(rankNum);
-            }
-          }
-
-          if (lastWeekRanks.length > 0 && currentBestRank !== null) {
-            const lastWeekBestRank = Math.min(...lastWeekRanks);
-            const diff = lastWeekBestRank - currentBestRank;
-            if (diff > 0) {
-              movementIcon = "⬆️";
-              movementText = ` <span class="move-up">+${diff}</span>`;
-            } else if (diff < 0) {
-              movementIcon = "⬇️";
-              movementText = ` <span class="move-down">${diff}</span>`;
-            } else {
-              movementIcon = "➡️";
-            }
-          } else {
-            movementIcon = "➡️";
-          }
-        }
-
-        return { ...album, totalWeeks, bestPeak, movementIcon, movementText, currentBestRank };
+        ranksByWeek[w][key] = index + 1;
       });
+    }
 
-      enrichedAlbums.sort((a, b) => b.sales - a.sales);
+    return ranksByWeek;
+  }
+  // ----- END NEW -----
 
-      for (const [i, album] of enrichedAlbums.entries()) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${i + 1}</td>
-          <td>${album.movementIcon}${album.movementText}</td>
-          <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
-          <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
-          <td>${album.sales.toFixed(2)}</td>
-          <td>—</td>
-          <td>${album.totalWeeks}</td>
-          <td>${album.bestPeak !== null ? album.bestPeak : '—'}</td>
-        `;
-        tbody.appendChild(tr);
+  // ----- NEW: Build album ranks by week map -----
+  const ranksByWeek = getAlbumRanksByWeek(weekNumber);
+  // ----- END NEW -----
+
+  // ----- KEEP original albumSongCounts logic if needed later (optional, safe to keep) -----
+  const albumSongCounts = {};
+  for (const week in weekData) {
+    if (!weekData.hasOwnProperty(week)) continue;
+    const w = parseInt(week);
+    if (isNaN(w)) continue;
+    for (const row of weekData[week] || []) {
+      if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
+      const albumKey = normalize(row.album) + '||' + normalize(row.artist || '');
+      if (!albumSongCounts[albumKey]) albumSongCounts[albumKey] = new Set();
+      if (row.title) albumSongCounts[albumKey].add(row.title.toLowerCase());
+    }
+  }
+  // ----- END KEEP -----
+
+  // ----- KEEP building albumsMap from current entries -----
+  const albumsMap = {};
+  for (const row of entries) {
+    if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
+    const albumName = row.album;
+    const artistName = row.artist || "";
+    const key = normalize(albumName) + '||' + normalize(artistName);
+    if (!albumsMap[key]) {
+      albumsMap[key] = { album: albumName, artist: artistName, sales: 0 };
+    }
+    albumsMap[key].sales += row.sales;
+  }
+  // ----- END KEEP -----
+
+  // Filter albums with at least 2 distinct songs (optional, can keep)
+  const filteredAlbums = Object.entries(albumsMap).filter(([key, album]) => {
+    return albumSongCounts[key] && albumSongCounts[key].size >= 2;
+  }).map(([key, album]) => album);
+
+  // ----- REPLACE enrichment logic completely -----
+  const enrichedAlbums = filteredAlbums.map(album => {
+    const key = normalize(album.album) + '||' + normalize(album.artist);
+
+    // Gather all album ranks across weeks from ranksByWeek map
+    const allRanks = [];
+    for (let i = 1; i <= weekNumber; i++) {
+      if (ranksByWeek[i] && ranksByWeek[i][key]) {
+        allRanks.push(ranksByWeek[i][key]);
       }
     }
+
+    // Calculate best peak (lowest rank)
+    const bestPeak = allRanks.length > 0 ? Math.min(...allRanks) : null;
+
+    // Current and last week ranks
+    const currentRank = ranksByWeek[weekNumber][key] || null;
+    const lastWeekRank = ranksByWeek[weekNumber - 1] ? ranksByWeek[weekNumber - 1][key] : null;
+
+    // Movement icon logic
+    let movementIcon = "";
+    let movementText = "";
+
+    if (allRanks.length === 1) {
+      movementIcon = "🆕";
+    } else if (!lastWeekRank && allRanks.length > 1) {
+      movementIcon = "↩️";
+      movementText = ` <span class="move-stay">(Re-entry)</span>`;
+    } else if (lastWeekRank && currentRank) {
+      const diff = lastWeekRank - currentRank;
+      if (diff > 0) {
+        movementIcon = "⬆️";
+        movementText = ` <span class="move-up">+${diff}</span>`;
+      } else if (diff < 0) {
+        movementIcon = "⬇️";
+        movementText = ` <span class="move-down">${diff}</span>`;
+      } else {
+        movementIcon = "➡️";
+      }
+    } else {
+      movementIcon = "➡️";
+    }
+
+    return {
+      ...album,
+      totalWeeks: allRanks.length,
+      bestPeak,
+      movementIcon,
+      movementText,
+      currentRank,
+    };
+  });
+  // ----- END REPLACE -----
+
+  // Sort albums by sales descending (same as before)
+  enrichedAlbums.sort((a, b) => b.sales - a.sales);
+
+  // Render table rows using currentRank for Rank column
+  for (const album of enrichedAlbums) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${album.currentRank !== null ? album.currentRank : '—'}</td>
+      <td>${album.movementIcon}${album.movementText}</td>
+      <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
+      <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
+      <td>${album.sales.toFixed(2)}</td>
+      <td>—</td>
+      <td>${album.totalWeeks}</td>
+      <td>${album.bestPeak !== null ? album.bestPeak : '—'}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+
 
     function getDateRange(weekNum) {
       const start = new Date(2018, 1, 23);
