@@ -108,6 +108,7 @@
     const billionSongs = Object.entries(songMap).filter(([_, v]) => v >= 1_000_000_000).length;
     document.getElementById("billionSongs").textContent = `Songs Over 1B Streams: ${billionSongs}`;
 
+    // ✅ FIX: Normalize artist names when building map
     const artistStreamMap = {};
     last45DaysWeeks.forEach(week => {
       const entries = weekData[week] || [];
@@ -115,15 +116,18 @@
         if (!entry.artist) return;
         const sales = parseFloat(entry.sales) || 0;
         const streams = sales * STREAM_MULTIPLIER;
-        artistStreamMap[entry.artist] = (artistStreamMap[entry.artist] || 0) + streams;
+        const artistKey = entry.artist.trim().toLowerCase();
+        artistStreamMap[artistKey] = (artistStreamMap[artistKey] || 0) + streams;
       });
     });
 
+    // ✅ Generate monthly listeners and sort
     const ranked = Object.entries(artistStreamMap)
       .map(([name, streams]) => [name, (streams / 1_000_000_000) * 150])
       .sort((a, b) => b[1] - a[1]);
 
-    const rankIndex = ranked.findIndex(([n]) => n.toLowerCase().includes(artistParam));
+    // ✅ FIX: Use strict match to find artist rank
+    const rankIndex = ranked.findIndex(([n]) => n === artistParam);
     if (rankIndex >= 0 && rankIndex < 50) {
       document.getElementById("globalRank").innerHTML =
         `Ranking: <span class="rank-icon">#${rankIndex + 1}</span> (Top 50 by Monthly Listeners)`;
@@ -147,6 +151,15 @@
     fillTable("topSongs", topSongs);
     fillTable("topAlbums", topAlbums);
     fillTable("recentTopSongs", topRecent);
+
+    // ✅ Optional: Debug top 20 in browser console
+    console.table(
+      ranked.slice(0, 20).map(([name, listeners], i) => ({
+        Rank: i + 1,
+        Artist: name,
+        "Monthly Listeners (M)": listeners.toFixed(2)
+      }))
+    );
   </script>
 </body>
 </html>
