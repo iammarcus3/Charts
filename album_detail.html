@@ -232,7 +232,7 @@
     }
 
     function getTrackCertIcon(sales) {
-      const scaled = sales * 745;
+      const scaled = sales * 1000;
       if (scaled >= 1_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
       if (scaled >= 900_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
       if (scaled >= 800_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
