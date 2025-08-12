@@ -170,7 +170,7 @@
       entries.forEach(song => {
         const key = normalizeKey(song.title, song.artist);
         const totalSales = song.totalSales || 0;
-        const scaled = totalSales * 745;
+        const scaled = totalSales * 1000;
 
         // Find highest cert level for this totalSales
         let certForThisSales = null;
