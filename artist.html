@@ -67,7 +67,6 @@
                           n >= 1_000_000 ? (n / 1_000_000).toFixed(1) + "M" :
                           n >= 1_000 ? (n / 1_000).toFixed(0) + "K" : n.toString();
 
-    // === Your detailed track certification logic ===
     function getTrackCertIcon(sales) {
       const scaled = sales;
       if (scaled >= 1_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
@@ -84,7 +83,6 @@
       return "";
     }
 
-    // === Your detailed album certification logic ===
     function getAlbumCertIcons(sales) {
       const scaled = sales;
       if (scaled >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
@@ -117,6 +115,7 @@
         const sales = salesRaw * 1000;
         const totalSales = parseFloat(entry.totalSales) || 0;
         const rank = parseInt(entry.rank);
+        const streams = parseFloat(entry.streams) || 0; // Use streams from weekData
 
         if (albumKey && albumKey !== "NAN") {
           if (!albumsMap[albumKey]) albumsMap[albumKey] = { name: entry.album, sales: 0 };
@@ -131,7 +130,8 @@
             totalSales: 0,
             weeks: 0,
             peak: rank,
-            num1s: 0
+            num1s: 0,
+            streams: 0
           };
         }
 
@@ -139,6 +139,7 @@
         song.sales += sales;
         song.totalSales += totalSales;
         song.weeks++;
+        song.streams += streams; // Sum streams from weekData
         if (rank < song.peak) song.peak = rank;
         if (rank === 1) song.num1s++;
 
@@ -169,12 +170,10 @@
       const year = firstDate.getFullYear();
 
       if (year !== lastYear) {
-        // Year header row
         const yearRow = document.createElement("tr");
         yearRow.innerHTML = `<td colspan="7" style="background:#000;color:#4DB8FF;font-weight:bold;">${year}</td>`;
         songsTable.appendChild(yearRow);
 
-        // Year stats summary row
         const yearSongs = sortedSongs.filter(s => {
           const d = new Date(BASE_WEEK_START);
           d.setDate(d.getDate() + (s.firstWeek - 1) * 7);
@@ -195,14 +194,13 @@
       }
 
       const cert = getTrackCertIcon(song.sales);
-      const streams = (song.sales / 745) * 0.927124 * 1_000_000;
       const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
 
       songsTable.innerHTML += `
         <tr>
           <td><a href="${url}">${song.title}</a></td>
           <td>${cert}</td>
-          <td>${formatNumber(streams)}</td>
+          <td>${formatNumber(song.streams)}</td>
           <td>${formatNumber(song.sales)}</td>
           <td>${song.weeks}</td>
           <td>#${song.peak}</td>
