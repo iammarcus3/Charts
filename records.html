@@ -158,6 +158,7 @@
           const title = entry.title || "";
           const rank = parseInt(entry.rank);
           const sales = parseFloat(entry.sales) || 0;
+          const streams = parseFloat(entry.streams) || 0; // <- using streams from weekData
 
           artists.forEach(rawName => {
             const normName = rawName.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -168,12 +169,14 @@
                 weeks: new Set(),
                 songs: {},
                 albums: {},
+                totalStreams: 0  // <- new field to sum streams
               };
               artistNameMap[normName] = rawName;
             }
             const artistStats = artistMap[normName];
             artistStats.rawSales += sales;
             artistStats.weeks.add(week);
+            artistStats.totalStreams += streams; // <- sum streams
 
             const songKey = (title || "").toUpperCase().replace(/[^A-Z0-9]/g, '');
             if (!artistStats.songs[songKey]) artistStats.songs[songKey] = Infinity;
@@ -191,7 +194,7 @@
       }
 
       const artistList = Object.entries(artistMap).map(([normName, stats]) => {
-        const totalStreams = stats.rawSales * 0.927124 * 1_000_000;
+        const totalStreams = stats.totalStreams; // <- use summed streams
         const months = stats.weeks.size / 4.33;
         const weeks = stats.weeks.size;
 
