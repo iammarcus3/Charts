@@ -149,8 +149,6 @@
 
   <script src="weekdata.js"></script>
   <script>
-    const streamMultiplier = 0.927124 * 1_000_000;
-
     function formatStreams(value) {
       const millions = value / 1_000_000;
       const billions = value / 1_000_000_000;
@@ -174,8 +172,7 @@
       const map = {};
       weeks.forEach(week => {
         (weekData[week] || []).forEach(entry => {
-          const sales = parseFloat(entry.sales) || 0;
-          const streams = sales * streamMultiplier;
+          const streams = parseFloat(entry.streams) || 0;
           let key = "";
           if (type === "artist") key = entry.artist || "Unknown";
           else if (type === "tracks") key = `${entry.title || "Unknown"}|||${entry.artist || "Unknown"}`;
@@ -192,8 +189,7 @@
       const result = {};
       currentWeeks.forEach(week => {
         (weekData[week] || []).forEach(entry => {
-          const sales = parseFloat(entry.sales) || 0;
-          const streams = sales * streamMultiplier;
+          const streams = parseFloat(entry.streams) || 0;
           let key = "";
           if (type === "artist") key = entry.artist || "Unknown";
           else if (type === "tracks") key = `${entry.title || "Unknown"}|||${entry.artist || "Unknown"}`;
