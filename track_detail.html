@@ -205,15 +205,13 @@
       return "";
     }
 
-    // Convert week number (e.g. 1, 2, ...) to actual date string
     function getChartDateFromWeekNumber(weekNum) {
-      const startDate = new Date("2018-02-23T00:00:00Z"); // Chart start date (Friday Feb 23, 2018)
+      const startDate = new Date("2018-02-23T00:00:00Z");
       const msPerWeek = 7 * 24 * 60 * 60 * 1000;
       const chartDate = new Date(startDate.getTime() + (weekNum - 1) * msPerWeek);
       return chartDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
     }
 
-    const streamMultiplier = 0.927124;
     const saleMultiplier = 1000;
 
     const trackTitleEl = document.getElementById("trackTitle");
@@ -234,7 +232,7 @@
     const songKey = normalizeTitle(titleParam);
     const artistKey = normalize(artistParam);
 
-    let debut = null, debutRank = null, peak = 999, weeks = 0, rawSales = 0, weeksAtOne = 0, weeksTop10 = 0;
+    let debut = null, debutRank = null, peak = 999, weeks = 0, rawSales = 0, totalStreams = 0, weeksAtOne = 0, weeksTop10 = 0;
     const albumMap = {};
 
     const certMilestones = [
@@ -257,9 +255,7 @@
 
     for (const week in weekData) {
       const entries = weekData[week];
-      // extract week number from string, e.g. "Week 42" or "42"
       const weekNum = parseInt(week.replace(/\D/g, ""));
-      let weekSales = 0;
 
       entries.forEach(row => {
         const normArtist = normalize(row.artist);
@@ -268,9 +264,10 @@
         if (normArtist === artistKey && normTitle === songKey) {
           const rank = parseInt(row.rank);
           const weeklySales = parseFloat(row.sales) || 0;
+          const weeklyStreams = parseFloat(row.streams) || 0;
 
-          weekSales += weeklySales;
           rawSales += weeklySales;
+          totalStreams += weeklyStreams;
           weeks++;
 
           if (!debut || weekNum < debut.week) {
@@ -302,10 +299,17 @@
         }
       });
 
-      cumulative += weekSales * saleMultiplier;
+      cumulative += entries.reduce((sum, r) => {
+        const normArtist = normalize(r.artist);
+        const normTitle = normalizeTitle(r.title);
+        if (normArtist === artistKey && normTitle === songKey) {
+          return sum + (parseFloat(r.sales) || 0) * saleMultiplier;
+        }
+        return sum;
+      }, 0);
+
       certMilestones.forEach(cert => {
         if (cumulative >= cert.threshold && !reached.has(cert.label)) {
-          // Convert week number to date for timeline display:
           const dateStr = getChartDateFromWeekNumber(weekNum);
           timeline.push(`${cert.label} — ${dateStr}`);
           reached.add(cert.label);
@@ -314,9 +318,7 @@
     }
 
     const actualSales = rawSales * saleMultiplier;
-    const calculatedStreams = rawSales * streamMultiplier;
 
-    // Show debut week as actual date instead of label
     debutEl.textContent = debut ? getChartDateFromWeekNumber(debut.week) : "—";
     debutRankEl.textContent = debutRank ? `#${debutRank}` : "—";
     peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
@@ -324,7 +326,7 @@
     weeksAtOneEl.textContent = weeksAtOne;
     weeksTop10El.textContent = weeksTop10;
     totalSalesEl.textContent = actualSales.toLocaleString();
-    totalStreamsEl.textContent = Math.round(calculatedStreams * 1_000_000).toLocaleString();
+    totalStreamsEl.textContent = Math.round(totalStreams).toLocaleString();
 
     const certIcons = getSongCertImages(rawSales);
     const certLabel = getSongCertLabel(rawSales);
