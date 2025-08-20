@@ -81,7 +81,6 @@
       font-weight: 700;
       margin-top: 1rem;
     }
-    /* Summary box */
     .summary {
       background: #f0f8ff;
       border: 1.5px solid #003366;
@@ -94,7 +93,6 @@
       margin: 0.5rem 0;
       font-size: 1.1rem;
     }
-    /* Dark mode toggle */
     #darkModeToggle {
       position: fixed;
       top: 1rem;
@@ -113,7 +111,6 @@
     #darkModeToggle:hover {
       background: #0059b3;
     }
-    /* Dark mode styles */
     body.dark {
       background: #121212;
       color: #ddd;
@@ -147,7 +144,6 @@
       padding-top: 1rem;
       user-select: none;
     }
-    /* Certification timeline styles */
     #certTimeline {
       margin-top: 1rem;
       font-size: 1rem;
@@ -186,7 +182,6 @@
     <p><strong>Peak Position:</strong> <span id="peak">—</span></p>
     <p><strong>Debut Week:</strong> <span id="debutWeek">—</span></p>
     <p class="cert"><strong>Certification:</strong> <span id="albumCert">—</span></p>
-    <!-- Certification timeline container -->
     <div id="certTimeline" aria-label="Certification timeline"></div>
   </div>
 
@@ -260,7 +255,6 @@
     const errorEl = document.getElementById("error");
 
     const saleMultiplier = 1000;
-    const streamMultiplier = 0.927124;
 
     albumLink.textContent = albumParam;
     artistLink.textContent = artistParam;
@@ -271,7 +265,6 @@
     const normAlbum = normalizeAlbum(albumParam);
     const albumKey = normAlbum + "||" + normArtist;
 
-    // Compute album ranks by week from aggregated album sales per week
     function computeAlbumRanksByWeek() {
       const ranksByWeek = {};
       for (const week in weekData) {
@@ -295,7 +288,6 @@
     let peakRank = Infinity, weeksAt1 = 0, debutWeek = null;
     const weekSet = new Set();
 
-    // Use albumRanksByWeek to get album peak, debut, weeks at #1
     for (const weekNumStr in albumRanksByWeek) {
       const weekNum = parseInt(weekNumStr);
       if (isNaN(weekNum)) continue;
@@ -308,34 +300,35 @@
       }
     }
 
-    // Separate loop to sum rawSales and track sales for streams, certification, and track list
+    // ----- Main change: use streams from weekdata.js instead of calculating -----
+    let totalStreams = 0;
     let rawSales = 0;
     const tracks = {};
+
     for (const week in weekData) {
       for (const entry of weekData[week]) {
         if (normalize(entry.artist) === normArtist && normalizeAlbum(entry.album) === normAlbum) {
           rawSales += parseFloat(entry.sales) || 0;
+          totalStreams += parseFloat(entry.streams) || 0; // <- use streams directly
           const trackKey = normalizeTitle(entry.title);
           if (!tracks[trackKey]) {
-            tracks[trackKey] = { title: entry.title, artist: entry.artist, sales: 0 };
+            tracks[trackKey] = { title: entry.title, artist: entry.artist, sales: 0, streams: 0 };
           }
           tracks[trackKey].sales += parseFloat(entry.sales) || 0;
+          tracks[trackKey].streams += parseFloat(entry.streams) || 0; // <- track streams
         }
       }
     }
 
-    const actualSales = rawSales * saleMultiplier;
-    const estimatedStreams = rawSales * streamMultiplier * 1_000_000;
-
-    totalStreamsEl.textContent = formatNumber(estimatedStreams);
-    totalSalesEl.textContent = formatNumber(actualSales);
+    totalStreamsEl.textContent = formatNumber(totalStreams);
+    totalSalesEl.textContent = formatNumber(rawSales * saleMultiplier);
     totalWeeksEl.textContent = weekSet.size;
     weeksAt1El.textContent = weeksAt1;
     debutEl.textContent = debutWeek || "—";
     peakEl.textContent = peakRank === Infinity ? "—" : `#${peakRank}`;
     albumCertEl.innerHTML = getAlbumCertIcons(rawSales);
 
-    const sortedTracks = Object.values(tracks).sort((a, b) => b.sales - a.sales);
+    const sortedTracks = Object.values(tracks).sort((a, b) => b.streams - a.streams); // sort by streams
     if (sortedTracks.length === 0) {
       errorEl.textContent = "⚠️ No matching album data found in weekdata.js.";
     } else {
@@ -352,7 +345,6 @@
       return Math.round(num).toLocaleString("en-US");
     }
 
-    // Certification timeline data and display
     const certLevels = [
       { label: "Diamond", threshold: 10_000_000 },
       { label: "9× Platinum", threshold: 9_000_000 },
@@ -367,7 +359,7 @@
       { label: "Gold", threshold: 500_000 }
     ];
 
-    const baseDate = new Date(2018, 1, 23); // Feb 23, 2018
+    const baseDate = new Date(2018, 1, 23);
 
     function formatDate(date) {
       return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
@@ -418,7 +410,6 @@
       certTimelineEl.appendChild(ul);
     }
 
-    // Dark mode toggle logic
     const darkToggle = document.getElementById("darkModeToggle");
     darkToggle.addEventListener("click", () => {
       document.body.classList.toggle("dark");
