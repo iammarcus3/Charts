@@ -40,8 +40,6 @@
 
   <script src="weekdata.js"></script>
   <script>
-    const STREAM_MULTIPLIER = 0.927124 * 1_000_000;
-
     const formatNumber = n => (
       n >= 1e9 ? (n / 1e9).toFixed(2) + 'B' :
       n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' :
@@ -88,8 +86,7 @@
         if (!entry.artist) return;
         if (!includesArtist(entry.artist, entry.title)) return;
 
-        const sales = parseFloat(entry.sales) || 0;
-        const streams = sales * STREAM_MULTIPLIER;
+        const streams = parseFloat(entry.streams) || 0;
         const songKey = (entry.title || "Unknown").trim();
         const albumKey = String(entry.album || "Unknown").trim();
 
@@ -104,8 +101,7 @@
         if (!entry.artist) return;
         if (!includesArtist(entry.artist, entry.title)) return;
 
-        const sales = parseFloat(entry.sales) || 0;
-        const streams = sales * STREAM_MULTIPLIER;
+        const streams = parseFloat(entry.streams) || 0;
         const songKey = (entry.title || "Unknown").trim();
 
         songMap6M[songKey] = (songMap6M[songKey] || 0) + streams;
@@ -127,8 +123,7 @@
       const entries = weekData[week] || [];
       entries.forEach(entry => {
         if (!entry.artist) return;
-        const sales = parseFloat(entry.sales) || 0;
-        const streams = sales * STREAM_MULTIPLIER;
+        const streams = parseFloat(entry.streams) || 0;
 
         const artists = splitArtists(entry.artist);
         artists.forEach(name => {
