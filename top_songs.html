@@ -109,17 +109,17 @@
   <script src="weekdata.js"></script>
   <script>
     const thresholds = [
-      { level: "🥇 Gold", value: 50000, class: "gold" },
-      { level: "💿 Platinum", value: 100000, class: "platinum" },
-      { level: "💿 x2", value: 200000, class: "platinum" },
-      { level: "💿 x3", value: 300000, class: "platinum" },
-      { level: "💿 x4", value: 400000, class: "platinum" },
-      { level: "💿 x5", value: 500000, class: "platinum" },
-      { level: "💿 x6", value: 600000, class: "platinum" },
-      { level: "💿 x7", value: 700000, class: "platinum" },
-      { level: "💿 x8", value: 800000, class: "platinum" },
-      { level: "💿 x9", value: 900000, class: "platinum" },
-      { level: "💎 Diamond", value: 1000000, class: "diamond" }
+      { level: "🥇 Gold", value: 500000, class: "gold" },
+      { level: "💿 Platinum", value: 1000000, class: "platinum" },
+      { level: "💿 x2", value: 2000000, class: "platinum" },
+      { level: "💿 x3", value: 3000000, class: "platinum" },
+      { level: "💿 x4", value: 4000000, class: "platinum" },
+      { level: "💿 x5", value: 5000000, class: "platinum" },
+      { level: "💿 x6", value: 6000000, class: "platinum" },
+      { level: "💿 x7", value: 7000000, class: "platinum" },
+      { level: "💿 x8", value: 8000000, class: "platinum" },
+      { level: "💿 x9", value: 9000000, class: "platinum" },
+      { level: "💎 Diamond", value: 10000000, class: "diamond" }
     ];
 
     function getCertImage(level) {
@@ -170,7 +170,7 @@
       entries.forEach(song => {
         const key = normalizeKey(song.title, song.artist);
         const totalSales = song.totalSales || 0;
-        const scaled = totalSales * 1000;
+        const scaled = totalSales * 1500;
 
         // Find highest cert level for this totalSales
         let certForThisSales = null;
