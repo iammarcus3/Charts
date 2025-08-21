@@ -34,6 +34,9 @@
       color: #00cccc;
       cursor: pointer;
     }
+    /* New highlight colors */
+    .highlight-sales { background-color: #00ff00 !important; color: #000 !important; font-weight: bold; }
+    .highlight-radio { background-color: #ffff00 !important; color: #000 !important; font-weight: bold; }
   </style>
   <script src="weekdata.js"></script>
 </head>
@@ -136,15 +139,23 @@
         return { ...row, totalWeeks, bestPeak, points: row.points };
       });
 
+      // Find max sales & max radio
+      const maxSales = Math.max(...enrichedTracks.map(r => r.sales || 0));
+      const maxRadio = Math.max(...enrichedTracks.map(r => r.radio || 0));
+
       enrichedTracks.sort((a, b) => b.points - a.points);
 
       enrichedTracks.forEach((row, index) => {
         const key = getFuzzyKey(row.title, row.artist);
         const past = history[key] || [];
+        const lastWeek = weekData[weekNumber - 1] || [];
+        const wasLastWeek = lastWeek.some(r => getFuzzyKey(r.title, r.artist) === key);
 
         let movementIcon = "➡️", movementText = "";
         if (past.length === 0) {
-          movementIcon = "🆕";
+          movementIcon = "🆕"; // First ever debut
+        } else if (!wasLastWeek) {
+          movementIcon = "🔄"; // Re-enter
         } else {
           const lastRank = parseInt(past[past.length - 1].rank);
           const diff = lastRank - parseInt(row.rank);
@@ -153,10 +164,13 @@
         }
 
         const tr = document.createElement("tr");
+        if (row.sales === maxSales) tr.classList.add("highlight-sales");
+        if (row.radio === maxRadio) tr.classList.add("highlight-radio");
+
         tr.innerHTML = `
           <td>${index + 1}</td>
           <td>${movementIcon}${movementText}</td>
-          <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movementIcon === "🆕" ? `<strong>${row.title}</strong>` : row.title}</a></td>
+          <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${(movementIcon === "🆕" || movementIcon === "🔄") ? `<strong>${row.title}</strong>` : row.title}</a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
           <td>${row.sales.toFixed(2)}</td>
           <td>${row.points.toFixed(2)}</td>
@@ -165,7 +179,7 @@
         `;
         tbody.appendChild(tr);
 
-        // Hidden details row under Rank
+        // Hidden details row
         const detailTr = document.createElement("tr");
         detailTr.style.display = "none";
         detailTr.classList.add("detail-row");
@@ -179,7 +193,7 @@
         `;
         tbody.appendChild(detailTr);
 
-        // Toggle visibility on clicking Rank
+        // Toggle detail
         tr.querySelector("td:first-child").addEventListener("click", () => {
           detailTr.style.display = detailTr.style.display === "none" ? "table-row" : "none";
         });
@@ -187,7 +201,6 @@
     }
 
     function renderAlbumChart(entries, weekNumber, tbody) {
-      // --- YOUR ORIGINAL ALBUM LOGIC REINSTATED ---
       const albumsMap = {};
       for (const row of entries) {
         if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
