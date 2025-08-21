@@ -210,6 +210,12 @@
       return `${start.toLocaleDateString('en-GB', options)} – ${end.toLocaleDateString('en-GB', options)}`;
     }
 
+    function formatNumber(num) {
+      if (num >= 1e6) return (num / 1e6).toFixed(2).replace(/\.00$/, '') + "M";
+      if (num >= 1e3) return (num / 1e3).toFixed(1).replace(/\.0$/, '') + "K";
+      return num.toString();
+    }
+
     const weeksAsc = Object.keys(weekData).map(Number).sort((a,b) => a - b);
     const certHistory = {};
     const newCertsByWeek = {};
@@ -241,8 +247,8 @@
             artist: song.artist,
             certLevel: certForThisSales.level,
             certClass: certForThisSales.class,
-            sales: song.sales || 0,
-            totalSales: totalSales
+            sales: (song.sales || 0) * 1500,
+            totalSales: totalSales * 1500
           });
           certHistory[key] = certForThisSales;
         }
@@ -282,7 +288,7 @@
 
           line.innerHTML = `
             <a href="javascript:void(0)" 
-               onclick="showSalesModal('${c.title}', '${c.artist}', '${c.sales}', '${c.totalSales}')">
+               onclick="showSalesModal('${c.title}', '${c.artist}', '${c.certLevel}', ${c.sales}, ${c.totalSales})">
                ${certImageHTML}
             </a>
             <a href="${trackLink}">${c.title}</a> by
@@ -314,15 +320,16 @@
       }
     });
 
-    function showSalesModal(title, artist, sales, totalSales) {
+    function showSalesModal(title, artist, certLevel, sales, totalSales) {
       const modal = document.getElementById("salesModal");
       const modalTitle = document.getElementById("modalTitle");
       const modalBody = document.getElementById("modalBody");
 
       modalTitle.textContent = `${title} by ${artist}`;
       modalBody.innerHTML = `
-        <strong>Sales this week:</strong> ${sales}<br>
-        <strong>Total Sales:</strong> ${totalSales}
+        <strong>Certification:</strong> ${certLevel}<br>
+        <strong>Sales this week:</strong> ${formatNumber(sales)}<br>
+        <strong>Total Sales:</strong> ${formatNumber(totalSales)}
       `;
 
       modal.style.display = "block";
