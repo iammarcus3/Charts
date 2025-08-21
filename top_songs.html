@@ -2,367 +2,349 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Track Detail</title>
+  <title>Weekly Song Certifications</title>
   <style>
-    :root {
-      --bg: #ffffff;
-      --text: #000000;
-      --accent: #007aff;
-      --box-bg: #f4f4f4;
-      --border: #ccc;
-    }
-    body.dark {
-      --bg: #121212;
-      --text: #ffffff;
-      --accent: #0a84ff;
-      --box-bg: #1e1e1e;
-      --border: #333;
-    }
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #121212;
+      color: #f0f0f0;
+      margin: 0;
       padding: 2rem;
-      transition: background 0.3s, color 0.3s;
-    }
-    nav {
-      margin-bottom: 1rem;
-    }
-    nav a {
-      margin-right: 1.5rem;
-      font-weight: bold;
-      color: var(--accent);
     }
     h1 {
+      text-align: center;
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      color: #ffffff;
+    }
+    #nav {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    button {
+      background: #2a2a2a;
+      border: none;
+      color: #66ccff;
       font-size: 2rem;
-      margin-bottom: 0.2rem;
+      margin: 0 1.5rem;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
-    h2 {
-      margin-top: 2rem;
-      font-size: 1.5rem;
-      border-bottom: 2px solid var(--text);
-      padding-bottom: 0.3rem;
+    button:hover:not(:disabled) {
+      background: #66ccff;
+      color: #121212;
     }
-    p {
-      font-size: 1rem;
-      margin: 0.4rem 0;
+    button:disabled {
+      color: #444;
+      cursor: default;
     }
-    ul {
-      list-style: none;
-      padding-left: 0;
-      margin-top: 1rem;
+    .week {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+      max-width: 750px;
+      margin: 0 auto;
     }
-    ul li {
-      margin-bottom: 0.4rem;
+    .week h2 {
+      margin-top: 0;
+      color: #66ccff;
+      border-bottom: 2px solid #333;
+      padding-bottom: 0.75rem;
+      text-align: center;
+      font-size: 2rem;
+    }
+    .cert {
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      background: #2a2a2a;
+      border-left: 8px solid #666;
+      border-radius: 7px;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      line-height: 1.3;
+    }
+    .gold { border-color: gold; }
+    .platinum { border-color: #c0c0c0; }
+    .diamond { border-color: deepskyblue; }
+    .cert img {
+      height: 90px;
+      width: auto;
+      vertical-align: middle;
+      flex-shrink: 0;
+      cursor: pointer;
     }
     a {
-      color: var(--accent);
+      color: #66ccff;
       text-decoration: none;
     }
     a:hover {
       text-decoration: underline;
     }
-    .cert-icon img {
-      height: 60px; /* enlarged */
-      vertical-align: middle;
-      margin-left: 8px;
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      h1 { font-size: 2.2rem; }
+      button { font-size: 1.5rem; margin: 0 0.5rem; padding: 0.4rem 1rem; }
+      .week { padding: 1.5rem; max-width: 100%; }
+      .week h2 { font-size: 1.5rem; }
+      .cert { font-size: 1.1rem; padding: 0.75rem 1rem; margin: 0.75rem 0; }
+      .cert img { height: 28px; }
     }
-    .cert-label {
-      font-weight: bold;
-      margin-left: 12px;
-      font-size: 1.1rem;
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      overflow: auto;
+      animation: fadeIn 0.3s ease;
     }
-    .cert-timeline {
-      margin-top: 1rem;
-      line-height: 1.5;
+    .modal-content {
+      background: #1e1e1e;
+      color: #f0f0f0;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+      animation: slideUp 0.3s ease;
     }
-    .error {
-      color: red;
-      font-weight: bold;
+    .modal-content h2 {
+      color: #66ccff;
     }
-    .data-box {
-      background: var(--box-bg);
-      border: 1px solid var(--border);
-      padding: 1rem;
-      margin: 1rem 0;
-      border-radius: 8px;
-    }
-    .toggle-theme {
+    .close {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: var(--box-bg);
-      border: 1px solid var(--border);
-      padding: 0.4rem 1rem;
+      top: 12%;
+      right: 20%;
+      font-size: 2rem;
+      font-weight: bold;
       cursor: pointer;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      color: var(--text);
+      color: #aaa;
     }
-    .badge {
-      display: inline-block;
-      background: var(--accent);
+    .close:hover {
       color: #fff;
-      border-radius: 6px;
-      padding: 0.1rem 0.6rem;
-      font-size: 0.8rem;
-      margin-left: 0.5rem;
     }
-    li a:hover {
-      background-color: var(--accent);
-      color: white;
-      padding: 0.1rem 0.4rem;
-      border-radius: 4px;
+    @keyframes fadeIn {
+      from {opacity: 0;} to {opacity: 1;}
+    }
+    @keyframes slideUp {
+      from {transform: translateY(50px); opacity: 0;}
+      to {transform: translateY(0); opacity: 1;}
     }
   </style>
 </head>
 <body>
-  <button class="toggle-theme" onclick="toggleTheme()">🌓 Toggle Theme</button>
+  <h1>Weekly Song Certifications</h1>
 
-  <nav>
-    <a href="index.html">⬅️ Back to Hot 100</a>
-    <a href="top_albums.html">🏆 Top Albums</a>
-  </nav>
-
-  <h1 id="trackTitle">Track Title</h1>
-  <p><strong>Artist:</strong> <span id="trackArtist"></span></p>
-
-  <div class="data-box">
-    <p><strong>Debut Week:</strong> <span id="debutWeek"></span> <span class="badge" id="debutRank"></span></p>
-    <p><strong>Peak Rank:</strong> <span id="peakRank"></span></p>
-    <p><strong>Total Weeks on Chart:</strong> <span id="weeksOnChart"></span></p>
-    <p><strong>Weeks at #1:</strong> <span id="weeksAtOne"></span></p>
-    <p><strong>Weeks in Top 10:</strong> <span id="weeksTop10"></span></p>
+  <div id="nav">
+    <button id="prevBtn" title="Previous Week">⬅️</button>
+    <span id="weekLabel"></span>
+    <button id="nextBtn" title="Next Week">➡️</button>
   </div>
 
-  <div class="data-box">
-    <p><strong>Total Sales:</strong> <span id="totalSales"></span></p>
-    <p><strong>Total Streams:</strong> <span id="totalStreams"></span></p>
-  </div>
+  <div id="output"></div>
 
-  <div class="data-box" id="certTimelineBox" style="display: none;">
-    <h2>📈 Certification Timeline</h2>
-    <div class="cert-timeline" id="certTimeline"></div>
+  <!-- Modal -->
+  <div id="salesModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="modalTitle">Certification Sales Info</h2>
+      <p id="modalBody"></p>
+    </div>
   </div>
-
-  <h2>📀 Appears On Albums</h2>
-  <ul id="albumList"></ul>
 
   <script src="weekdata.js"></script>
   <script>
-    function toggleTheme() {
-      document.body.classList.toggle("dark");
-      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-    }
-    if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark");
-    }
-
-    const params = new URLSearchParams(location.search);
-    const titleParam = params.get("title");
-    const artistParam = params.get("artist");
-
-    const normalize = str =>
-      typeof str === "string" ? str.toUpperCase().replace(/[^A-Z0-9]/g, "").trim() : "";
-
-    const normalizeTitle = str =>
-      typeof str === "string"
-        ? str.toUpperCase()
-            .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
-            .replace(/[^A-Z0-9]/g, "")
-            .trim()
-        : "";
-
-    function getSongCertImages(sales) {
-      const scaled = sales * 2000;
-      if (scaled >= 10_000_000) return `<img src="Diamond.png" title="Diamond">`;
-      if (scaled >= 9_000_000) return `<img src="9x Platinum.png" title="9× Platinum">`;
-      if (scaled >= 8_000_000) return `<img src="8x Platinum.png" title="8× Platinum">`;
-      if (scaled >= 7_000_000) return `<img src="7x Platinum.png" title="7× Platinum">`;
-      if (scaled >= 6_000_000) return `<img src="6x Platinum.png" title="6× Platinum">`;
-      if (scaled >= 5_000_000) return `<img src="5x Platinum.png" title="5× Platinum">`;
-      if (scaled >= 4_000_000) return `<img src="4x Platinum.png" title="4× Platinum">`;
-      if (scaled >= 3_000_000) return `<img src="3x Platinum.png" title="3× Platinum">`;
-      if (scaled >= 2_000_000) return `<img src="2x Platinum.png" title="2× Platinum">`;
-      if (scaled >= 1_000_000) return `<img src="Platinum.png" title="Platinum">`;
-      if (scaled >= 500_000) return `<img src="Gold.png" title="Gold">`;
-      return "";
-    }
-
-    function getSongCertLabel(sales) {
-      const scaled = sales * 2000;
-      if (scaled >= 10_000_000) return "Diamond";
-      if (scaled >= 9_000_000) return "9× Platinum";
-      if (scaled >= 8_000_000) return "8× Platinum";
-      if (scaled >= 7_000_000) return "7× Platinum";
-      if (scaled >= 6_000_000) return "6× Platinum";
-      if (scaled >= 5_000_000) return "5× Platinum";
-      if (scaled >= 4_000_000) return "4× Platinum";
-      if (scaled >= 3_000_000) return "3× Platinum";
-      if (scaled >= 2_000_000) return "2× Platinum";
-      if (scaled >= 1_000_000) return "Platinum";
-      if (scaled >= 500_000) return "Gold";
-      return "";
-    }
-
-    function getChartDateFromWeekNumber(weekNum) {
-      const startDate = new Date("2018-02-23T00:00:00Z");
-      const msPerWeek = 7 * 24 * 60 * 60 * 1000;
-      const chartDate = new Date(startDate.getTime() + (weekNum - 1) * msPerWeek);
-      return chartDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
-    }
-
-    const saleMultiplier = 2000;
-
-    const trackTitleEl = document.getElementById("trackTitle");
-    const trackArtistEl = document.getElementById("trackArtist");
-    const debutEl = document.getElementById("debutWeek");
-    const debutRankEl = document.getElementById("debutRank");
-    const peakEl = document.getElementById("peakRank");
-    const weeksEl = document.getElementById("weeksOnChart");
-    const weeksAtOneEl = document.getElementById("weeksAtOne");
-    const weeksTop10El = document.getElementById("weeksTop10");
-    const totalSalesEl = document.getElementById("totalSales");
-    const totalStreamsEl = document.getElementById("totalStreams");
-    const albumList = document.getElementById("albumList");
-
-    trackTitleEl.textContent = titleParam;
-    trackArtistEl.textContent = artistParam;
-
-    const songKey = normalizeTitle(titleParam);
-    const artistKey = normalize(artistParam);
-
-    let debut = null, debutRank = null, peak = 999, weeks = 0, rawSales = 0, totalStreams = 0, weeksAtOne = 0, weeksTop10 = 0;
-    const albumMap = {};
-
-    const certMilestones = [
-      { label: "Gold", threshold: 500_000 },
-      { label: "Platinum", threshold: 1_000_000 },
-      { label: "2× Platinum", threshold: 2_000_000 },
-      { label: "3× Platinum", threshold: 3_000_000 },
-      { label: "4× Platinum", threshold: 4_000_000 },
-      { label: "5× Platinum", threshold: 5_000_000 },
-      { label: "6× Platinum", threshold: 6_000_000 },
-      { label: "7× Platinum", threshold: 7_000_000 },
-      { label: "8× Platinum", threshold: 8_000_000 },
-      { label: "9× Platinum", threshold: 9_000_000 },
-      { label: "Diamond", threshold: 10_000_000 }
+    const thresholds = [
+      { level: "🥇 Gold", value: 500000, class: "gold" },
+      { level: "💿 Platinum", value: 1000000, class: "platinum" },
+      { level: "💿 x2", value: 2000000, class: "platinum" },
+      { level: "💿 x3", value: 3000000, class: "platinum" },
+      { level: "💿 x4", value: 4000000, class: "platinum" },
+      { level: "💿 x5", value: 5000000, class: "platinum" },
+      { level: "💿 x6", value: 6000000, class: "platinum" },
+      { level: "💿 x7", value: 7000000, class: "platinum" },
+      { level: "💿 x8", value: 8000000, class: "platinum" },
+      { level: "💿 x9", value: 9000000, class: "platinum" },
+      { level: "💎 Diamond", value: 10000000, class: "diamond" }
     ];
 
-    const timeline = [];
-    let cumulative = 0;
-    const reached = new Set();
+    function getCertImage(level) {
+      const images = {
+        "🥇 Gold": "Gold.png",
+        "💿 Platinum": "Platinum.png",
+        "💿 x2": "2x Platinum.png",
+        "💿 x3": "3x Platinum.png",
+        "💿 x4": "4x Platinum.png",
+        "💿 x5": "5x Platinum.png",
+        "💿 x6": "6x Platinum.png",
+        "💿 x7": "7x Platinum.png",
+        "💿 x8": "8x Platinum.png",
+        "💿 x9": "9x Platinum.png",
+        "💎 Diamond": "Diamond.png"
+      };
+      const src = images[level];
+      return src ? `<img src="${src}" title="${level}">` : "";
+    }
 
-    for (const week in weekData) {
-      const entries = weekData[week];
-      const weekNum = parseInt(week.replace(/\D/g, ""));
+    function normalizeKey(title, artist) {
+      return `${title.trim().toLowerCase()}|${artist.trim().toLowerCase()}`;
+    }
 
-      entries.forEach(row => {
-        const normArtist = normalize(row.artist);
-        const normTitle = normalizeTitle(row.title);
+    function getDateRange(weekNum) {
+      const start = new Date(2018, 1, 23);
+      start.setDate(start.getDate() + (weekNum - 1) * 7);
+      const end = new Date(start);
+      end.setDate(start.getDate() + 6);
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      return `${start.toLocaleDateString('en-GB', options)} – ${end.toLocaleDateString('en-GB', options)}`;
+    }
 
-        if (normArtist === artistKey && normTitle === songKey) {
-          const rank = parseInt(row.rank);
-          const weeklySales = parseFloat(row.sales) || 0;
-          const weeklyStreams = parseFloat(row.streams) || 0;
+    function formatNumber(num) {
+      if (num >= 1e6) return (num / 1e6).toFixed(2).replace(/\.00$/, '') + "M";
+      if (num >= 1e3) return (num / 1e3).toFixed(1).replace(/\.0$/, '') + "K";
+      return num.toString();
+    }
 
-          rawSales += weeklySales;
-          totalStreams += weeklyStreams;
-          weeks++;
+    const weeksAsc = Object.keys(weekData).map(Number).sort((a,b) => a - b);
+    const certHistory = {};
+    const newCertsByWeek = {};
 
-          if (!debut || weekNum < debut.week) {
-            debut = { week: weekNum, label: week };
-            debutRank = rank;
+    weeksAsc.forEach(weekNum => {
+      const entries = weekData[weekNum];
+      const newCerts = [];
+
+      entries.forEach(song => {
+        const key = normalizeKey(song.title, song.artist);
+        const totalSales = song.totalSales || 0;
+        const scaled = totalSales * 2000;
+
+        let certForThisSales = null;
+        for (let i = thresholds.length - 1; i >= 0; i--) {
+          if (scaled >= thresholds[i].value) {
+            certForThisSales = thresholds[i];
+            break;
           }
+        }
 
-          if (rank < peak) peak = rank;
-          if (rank === 1) weeksAtOne++;
-          if (rank <= 10) weeksTop10++;
+        if (!certForThisSales) return;
 
-          const albumName = row.album || "Unknown Album";
-          const albumKey = albumName.toUpperCase();
+        const prevCertValue = certHistory[key] ? certHistory[key].value : 0;
 
-          if (!albumMap[albumKey]) {
-            albumMap[albumKey] = {
-              name: albumName,
-              sales: 0,
-              weeks: 0,
-              peak: rank
-            };
-          }
-
-          albumMap[albumKey].sales += weeklySales;
-          albumMap[albumKey].weeks += 1;
-          if (rank < albumMap[albumKey].peak) {
-            albumMap[albumKey].peak = rank;
-          }
+        if (certForThisSales.value > prevCertValue) {
+          newCerts.push({
+            title: song.title,
+            artist: song.artist,
+            certLevel: certForThisSales.level,
+            certClass: certForThisSales.class,
+            sales: (song.sales || 0) * 1500,
+            totalSales: totalSales * 1500
+          });
+          certHistory[key] = certForThisSales;
         }
       });
 
-      cumulative += entries.reduce((sum, r) => {
-        const normArtist = normalize(r.artist);
-        const normTitle = normalizeTitle(r.title);
-        if (normArtist === artistKey && normTitle === songKey) {
-          return sum + (parseFloat(r.sales) || 0) * saleMultiplier;
-        }
-        return sum;
-      }, 0);
+      newCertsByWeek[weekNum] = newCerts;
+    });
 
-      certMilestones.forEach(cert => {
-        if (cumulative >= cert.threshold && !reached.has(cert.label)) {
-          const dateStr = getChartDateFromWeekNumber(weekNum);
-          timeline.push(`${cert.label} — ${dateStr}`);
-          reached.add(cert.label);
-        }
-      });
+    const weeksDesc = weeksAsc.slice().reverse();
+
+    const output = document.getElementById("output");
+    const weekLabel = document.getElementById("weekLabel");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    let currentWeekIndex = 0;
+
+    function renderWeek(idx) {
+      output.innerHTML = "";
+      const weekNum = weeksDesc[idx];
+      const certs = newCertsByWeek[weekNum] || [];
+
+      weekLabel.textContent = `Week ${weekNum} (${getDateRange(weekNum)})`;
+
+      const div = document.createElement("div");
+      div.className = "week";
+      div.innerHTML = `<h2>New Certifications in Week ${weekNum}</h2>`;
+
+      if (certs.length > 0) {
+        certs.forEach(c => {
+          const trackLink = `track_detail.html?title=${encodeURIComponent(c.title)}&artist=${encodeURIComponent(c.artist)}`;
+          const artistLink = `artist.html?name=${encodeURIComponent(c.artist)}`;
+          const certImageHTML = getCertImage(c.certLevel);
+
+          const line = document.createElement("div");
+          line.className = `cert ${c.certClass}`;
+
+          line.innerHTML = `
+            <a href="javascript:void(0)" 
+               onclick="showSalesModal('${c.title}', '${c.artist}', '${c.certLevel}', ${c.sales}, ${c.totalSales})">
+               ${certImageHTML}
+            </a>
+            <a href="${trackLink}">${c.title}</a> by
+            <a href="${artistLink}">${c.artist}</a>
+          `;
+          div.appendChild(line);
+        });
+      } else {
+        div.innerHTML += `<p style="font-size:1.3rem; text-align:center; margin-top:1rem;">No new certifications this week.</p>`;
+      }
+
+      output.appendChild(div);
+
+      prevBtn.disabled = (idx === weeksDesc.length - 1);
+      nextBtn.disabled = (idx === 0);
     }
 
-    const actualSales = rawSales * saleMultiplier;
+    prevBtn.addEventListener("click", () => {
+      if (currentWeekIndex < weeksDesc.length - 1) {
+        currentWeekIndex++;
+        renderWeek(currentWeekIndex);
+      }
+    });
 
-    debutEl.textContent = debut ? getChartDateFromWeekNumber(debut.week) : "—";
-    debutRankEl.textContent = debutRank ? `#${debutRank}` : "—";
-    peakEl.textContent = peak === 999 ? "—" : `#${peak}`;
-    weeksEl.textContent = weeks;
-    weeksAtOneEl.textContent = weeksAtOne;
-    weeksTop10El.textContent = weeksTop10;
-    totalSalesEl.textContent = actualSales.toLocaleString();
-    totalStreamsEl.textContent = Math.round(totalStreams).toLocaleString();
+    nextBtn.addEventListener("click", () => {
+      if (currentWeekIndex > 0) {
+        currentWeekIndex--;
+        renderWeek(currentWeekIndex);
+      }
+    });
 
-    const certIcons = getSongCertImages(rawSales);
-    const certLabel = getSongCertLabel(rawSales);
+    function showSalesModal(title, artist, certLevel, sales, totalSales) {
+      const modal = document.getElementById("salesModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalBody = document.getElementById("modalBody");
 
-    if (certIcons) {
-      const certSpan = document.createElement("span");
-      certSpan.className = "cert-icon";
-      certSpan.innerHTML = certIcons;
-      totalSalesEl.appendChild(certSpan);
-    }
-    if (certLabel) {
-      const labelSpan = document.createElement("span");
-      labelSpan.className = "cert-label";
-      labelSpan.textContent = certLabel;
-      totalSalesEl.appendChild(labelSpan);
-    }
+      modalTitle.textContent = `${title} by ${artist}`;
+      modalBody.innerHTML = `
+        <strong>Certification:</strong> ${certLevel}<br>
+        <strong>Sales this week:</strong> ${formatNumber(sales)}<br>
+        <strong>Total Sales:</strong> ${formatNumber(totalSales)}
+      `;
 
-    if (timeline.length > 0) {
-      document.getElementById("certTimelineBox").style.display = "block";
-      document.getElementById("certTimeline").innerHTML =
-        "<ul>" + timeline.map(c => `<li>${c}</li>`).join("") + "</ul>";
+      modal.style.display = "block";
     }
 
-    const albums = Object.values(albumMap);
-    if (albums.length === 0) {
-      albumList.innerHTML = '<li class="error">No album data found for this track.</li>';
-    } else {
-      albums.sort((a, b) => b.sales - a.sales);
-      albums.forEach(album => {
-        const albumUrl = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
-        const albumActualSales = album.sales * saleMultiplier;
-        const li = document.createElement("li");
-        li.innerHTML = `<a href="${albumUrl}">${album.name}</a> — ${album.weeks} weeks, Peak: #${album.peak}, Sales: ${albumActualSales.toLocaleString()}`;
-        albumList.appendChild(li);
-      });
-    }
+    document.querySelector(".close").onclick = () => {
+      document.getElementById("salesModal").style.display = "none";
+    };
+    window.onclick = (e) => {
+      if (e.target == document.getElementById("salesModal")) {
+        document.getElementById("salesModal").style.display = "none";
+      }
+    };
+
+    renderWeek(currentWeekIndex);
   </script>
 </body>
 </html>
