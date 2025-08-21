@@ -13,7 +13,7 @@
     }
     h1 {
       text-align: center;
-      font-size: 3rem; /* larger title */
+      font-size: 3rem;
       margin-bottom: 1.5rem;
       color: #ffffff;
     }
@@ -25,7 +25,7 @@
       background: #2a2a2a;
       border: none;
       color: #66ccff;
-      font-size: 2rem; /* bigger buttons */
+      font-size: 2rem;
       margin: 0 1.5rem;
       padding: 0.5rem 1.5rem;
       border-radius: 8px;
@@ -54,7 +54,7 @@
       border-bottom: 2px solid #333;
       padding-bottom: 0.75rem;
       text-align: center;
-      font-size: 2rem; /* bigger heading */
+      font-size: 2rem;
     }
     .cert {
       padding: 1rem 1.5rem;
@@ -62,7 +62,7 @@
       background: #2a2a2a;
       border-left: 8px solid #666;
       border-radius: 7px;
-      font-size: 1.4rem; /* bigger font */
+      font-size: 1.4rem;
       display: flex;
       align-items: center;
       gap: 1rem;
@@ -72,10 +72,11 @@
     .platinum { border-color: #c0c0c0; }
     .diamond { border-color: deepskyblue; }
     .cert img {
-      height: 90px; /* bigger image */
+      height: 90px;
       width: auto;
       vertical-align: middle;
       flex-shrink: 0;
+      cursor: pointer;
     }
     a {
       color: #66ccff;
@@ -93,6 +94,53 @@
       .cert { font-size: 1.1rem; padding: 0.75rem 1rem; margin: 0.75rem 0; }
       .cert img { height: 28px; }
     }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      overflow: auto;
+      animation: fadeIn 0.3s ease;
+    }
+    .modal-content {
+      background: #1e1e1e;
+      color: #f0f0f0;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+      animation: slideUp 0.3s ease;
+    }
+    .modal-content h2 {
+      color: #66ccff;
+    }
+    .close {
+      position: absolute;
+      top: 12%;
+      right: 20%;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: #aaa;
+    }
+    .close:hover {
+      color: #fff;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;} to {opacity: 1;}
+    }
+    @keyframes slideUp {
+      from {transform: translateY(50px); opacity: 0;}
+      to {transform: translateY(0); opacity: 1;}
+    }
   </style>
 </head>
 <body>
@@ -105,6 +153,15 @@
   </div>
 
   <div id="output"></div>
+
+  <!-- Modal -->
+  <div id="salesModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="modalTitle">Certification Sales Info</h2>
+      <p id="modalBody"></p>
+    </div>
+  </div>
 
   <script src="weekdata.js"></script>
   <script>
@@ -153,13 +210,7 @@
       return `${start.toLocaleDateString('en-GB', options)} – ${end.toLocaleDateString('en-GB', options)}`;
     }
 
-    // Sort weeks ascending to compute certs cumulatively
-    const weeksAsc = Object.keys(weekData)
-      .map(Number)
-      .sort((a,b) => a - b);
-
-    // We'll store for each song (key), the highest cert achieved so far
-    // For each week, store certifications newly achieved that week
+    const weeksAsc = Object.keys(weekData).map(Number).sort((a,b) => a - b);
     const certHistory = {};
     const newCertsByWeek = {};
 
@@ -172,7 +223,6 @@
         const totalSales = song.totalSales || 0;
         const scaled = totalSales * 2000;
 
-        // Find highest cert level for this totalSales
         let certForThisSales = null;
         for (let i = thresholds.length - 1; i >= 0; i--) {
           if (scaled >= thresholds[i].value) {
@@ -181,17 +231,17 @@
           }
         }
 
-        if (!certForThisSales) return; // no cert at all
+        if (!certForThisSales) return;
 
         const prevCertValue = certHistory[key] ? certHistory[key].value : 0;
 
-        // Only show cert if this week crosses a new certification level strictly higher than previous
         if (certForThisSales.value > prevCertValue) {
           newCerts.push({
             title: song.title,
             artist: song.artist,
             certLevel: certForThisSales.level,
             certClass: certForThisSales.class,
+            sales: song.sales || 0,
             totalSales: totalSales
           });
           certHistory[key] = certForThisSales;
@@ -201,7 +251,6 @@
       newCertsByWeek[weekNum] = newCerts;
     });
 
-    // Sort weeks descending for display newest first
     const weeksDesc = weeksAsc.slice().reverse();
 
     const output = document.getElementById("output");
@@ -230,8 +279,12 @@
 
           const line = document.createElement("div");
           line.className = `cert ${c.certClass}`;
+
           line.innerHTML = `
-            ${certImageHTML}
+            <a href="javascript:void(0)" 
+               onclick="showSalesModal('${c.title}', '${c.artist}', '${c.sales}', '${c.totalSales}')">
+               ${certImageHTML}
+            </a>
             <a href="${trackLink}">${c.title}</a> by
             <a href="${artistLink}">${c.artist}</a>
           `;
@@ -261,7 +314,29 @@
       }
     });
 
-    // Initial render
+    function showSalesModal(title, artist, sales, totalSales) {
+      const modal = document.getElementById("salesModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalBody = document.getElementById("modalBody");
+
+      modalTitle.textContent = `${title} by ${artist}`;
+      modalBody.innerHTML = `
+        <strong>Sales this week:</strong> ${sales}<br>
+        <strong>Total Sales:</strong> ${totalSales}
+      `;
+
+      modal.style.display = "block";
+    }
+
+    document.querySelector(".close").onclick = () => {
+      document.getElementById("salesModal").style.display = "none";
+    };
+    window.onclick = (e) => {
+      if (e.target == document.getElementById("salesModal")) {
+        document.getElementById("salesModal").style.display = "none";
+      }
+    };
+
     renderWeek(currentWeekIndex);
   </script>
 </body>
