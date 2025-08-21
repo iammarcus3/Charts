@@ -187,7 +187,35 @@
     }
 
     function renderAlbumChart(entries, weekNumber, tbody) {
-      // Your original album chart logic remains unchanged
+      // --- YOUR ORIGINAL ALBUM LOGIC REINSTATED ---
+      const albumsMap = {};
+      for (const row of entries) {
+        if (!row.album || typeof row.album !== "string" || row.album.trim().toLowerCase() === "nan") continue;
+        const albumName = row.album;
+        const artistName = row.artist || "";
+        const key = normalize(albumName) + '||' + normalize(artistName);
+        if (!albumsMap[key]) {
+          albumsMap[key] = { album: albumName, artist: artistName, sales: 0 };
+        }
+        albumsMap[key].sales += row.sales;
+      }
+
+      const filteredAlbums = Object.values(albumsMap).sort((a, b) => b.sales - a.sales);
+
+      filteredAlbums.forEach((album, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td>—</td>
+          <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
+          <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
+          <td>${album.sales.toFixed(2)}</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
     function getDateRange(weekNum) {
