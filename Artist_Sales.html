@@ -50,7 +50,7 @@
   </style>
 </head>
 <body>
-  <h1>🎤 Top 10 Artists by Year (Units Sold)</h1>
+  <h1>🎤 Top 20 Artists by Year (Units Sold)</h1>
 
   <div id="container">
     <p>Loading data...</p>
@@ -100,7 +100,7 @@
               const trackKey = title.toUpperCase().replace(/[^A-Z0-9]/g, '');
               artistObj.num1TracksSet.add(trackKey);
             }
-            if (rank <= 10) artistObj.top10s++;
+            if (rank <= 20) artistObj.top20s++;
           });
         });
       }
@@ -116,9 +116,9 @@
           top10s: artistObj.top10s
         }));
 
-        const top10 = artistArray
+        const top20 = artistArray
           .sort((a, b) => b.totalSales - a.totalSales)
-          .slice(0, 10); // ✅ Fixed: sorting before slicing
+          .slice(0, 20); // ✅ Fixed: sorting before slicing
 
         const section = document.createElement("section");
         const header = document.createElement("h2");
