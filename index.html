@@ -189,7 +189,7 @@
         tr.innerHTML = `
           <td>${index + 1}</td>
           <td>${movementIcon}${movementText}</td>
-          <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${(movementIcon === "🆕" || movementIcon === "🔄") ? `<strong>${row.title}</strong>` : row.title}</a></td>
+        <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movementIcon === "🆕" ? `<strong>${row.title}</strong>` : row.title}</a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
           <td>${row.sales.toFixed(2)}</td>
           <td>${row.points.toFixed(2)}</td>
