@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Billboard Hot 100</title>
   <style>
-    /* Your original styling */
     body { background-color: #0f0f0f; color: #ffffff; font-family: 'Helvetica Neue', sans-serif; margin: 0; padding: 2rem; }
     nav { text-align: center; margin-bottom: 1rem; }
     nav a { color: #00ffff; text-decoration: none; margin: 0 1rem; font-weight: bold; font-size: 1.1rem; }
@@ -33,29 +32,36 @@
       text-decoration: underline;
       color: #00cccc;
       cursor: pointer;
-    }   
-   /* Softer highlights for readability */
-.highlight-sales { 
-  background-color: #32cd32 !important;  /* darker green */
-  color: #000 !important; 
-  font-weight: bold !important; 
-}
+    }
+    /* Softer highlights */
+    .highlight-sales { background-color: #32cd32 !important; color: #000 !important; font-weight: bold !important; }
+    .highlight-sales td { font-weight: bold !important; color: #000 !important; }
+    .highlight-radio { background-color: #ffcc00 !important; color: #000 !important; font-weight: bold !important; }
+    .highlight-radio td { font-weight: bold !important; color: #000 !important; }
 
-.highlight-sales td { 
-  font-weight: bold !important; 
-  color: #000 !important; 
-}
-
-.highlight-radio { 
-  background-color: #ffcc00 !important;  /* darker golden yellow */
-  color: #000 !important; 
-  font-weight: bold !important; 
-}
-
-.highlight-radio td { 
-  font-weight: bold !important; 
-  color: #000 !important; 
-}
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+      gap: 0.5rem;
+    }
+    .page-btn {
+      background-color: #1a1a1a;
+      color: #00ffff;
+      border: 1px solid #00ffff;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .page-btn.active {
+      background-color: #00ffff;
+      color: #0f0f0f;
+    }
+    .page-btn:hover {
+      background-color: #00cccc;
+      color: #0f0f0f;
+    }
   </style>
   <script src="weekdata.js"></script>
 </head>
@@ -97,6 +103,12 @@
     </table>
   </div>
 
+  <!-- Pagination -->
+  <div class="pagination">
+    <button class="page-btn active" onclick="switchPage(1)">Page 1</button>
+    <button class="page-btn" onclick="switchPage(2)">Page 2</button>
+  </div>
+
   <script>
     function normalize(text) {
       if (typeof text !== "string") text = String(text || "");
@@ -106,13 +118,13 @@
         .replace(/feat\..*/g, '')
         .replace(/[^a-z0-9]/g, '');
     }
-
     function getFuzzyKey(title, artist) {
       return normalize(title) + normalize(artist);
     }
 
     let currentWeek = 1;
     let currentChart = 'tracks';
+    let currentPage = 1;
 
     function switchChart(type) {
       currentChart = type;
@@ -120,6 +132,13 @@
         tab.classList.remove("active");
         if (tab.dataset.chart === type) tab.classList.add("active");
       });
+      loadWeek(currentWeek);
+    }
+
+    function switchPage(page) {
+      currentPage = page;
+      document.querySelectorAll(".page-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelector(`.page-btn:nth-child(${page})`).classList.add("active");
       loadWeek(currentWeek);
     }
 
@@ -140,7 +159,6 @@
 
     function renderTrackChart(entries, weekNumber, tbody) {
       const history = {};
-
       for (let i = 1; i < weekNumber; i++) {
         for (const row of weekData[i] || []) {
           const key = getFuzzyKey(row.title, row.artist);
@@ -158,13 +176,15 @@
         return { ...row, totalWeeks, bestPeak, points: row.points };
       });
 
-      // Find max sales & max radio
       const maxSales = Math.max(...enrichedTracks.map(r => r.sales || 0));
       const maxRadio = Math.max(...enrichedTracks.map(r => r.radio || 0));
 
       enrichedTracks.sort((a, b) => b.points - a.points);
 
-      enrichedTracks.forEach((row, index) => {
+      // Pagination slice
+      const paginatedTracks = enrichedTracks.slice((currentPage - 1) * 100, currentPage * 100);
+
+      paginatedTracks.forEach((row, index) => {
         const key = getFuzzyKey(row.title, row.artist);
         const past = history[key] || [];
         const lastWeek = weekData[weekNumber - 1] || [];
@@ -172,9 +192,9 @@
 
         let movementIcon = "➡️", movementText = "";
         if (past.length === 0) {
-          movementIcon = "🆕"; // First ever debut
+          movementIcon = "🆕";
         } else if (!wasLastWeek) {
-          movementIcon = "🔄"; // Re-enter
+          movementIcon = "🔄";
         } else {
           const lastRank = parseInt(past[past.length - 1].rank);
           const diff = lastRank - parseInt(row.rank);
@@ -187,9 +207,9 @@
         if (row.radio === maxRadio) tr.classList.add("highlight-radio");
 
         tr.innerHTML = `
-          <td>${index + 1}</td>
+          <td>${(currentPage - 1) * 100 + index + 1}</td>
           <td>${movementIcon}${movementText}</td>
-        <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movementIcon === "🆕" ? `<strong>${row.title}</strong>` : row.title}</a></td>
+          <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movementIcon === "🆕" ? `<strong>${row.title}</strong>` : row.title}</a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
           <td>${row.sales.toFixed(2)}</td>
           <td>${row.points.toFixed(2)}</td>
@@ -197,25 +217,6 @@
           <td>${row.bestPeak}</td>
         `;
         tbody.appendChild(tr);
-
-        // Hidden details row
-        const detailTr = document.createElement("tr");
-        detailTr.style.display = "none";
-        detailTr.classList.add("detail-row");
-        detailTr.innerHTML = `
-          <td colspan="8" style="background-color:#1a1a1a; color:#00ffff; font-size:0.9rem;">
-            <strong>Sales:</strong> ${row.sales.toFixed(2)} |
-            <strong>Streams:</strong> ${row.streams ? row.streams.toLocaleString() : '—'} |
-            <strong>Radio:</strong> ${row.radio ? row.radio.toLocaleString() : '—'} |
-            <strong>Last Week Rank:</strong> ${past.length > 0 ? past[past.length-1].rank : '—'}
-          </td>
-        `;
-        tbody.appendChild(detailTr);
-
-        // Toggle detail
-        tr.querySelector("td:first-child").addEventListener("click", () => {
-          detailTr.style.display = detailTr.style.display === "none" ? "table-row" : "none";
-        });
       });
     }
 
@@ -234,10 +235,13 @@
 
       const filteredAlbums = Object.values(albumsMap).sort((a, b) => b.sales - a.sales);
 
-      filteredAlbums.forEach((album, index) => {
+      // Pagination slice
+      const paginatedAlbums = filteredAlbums.slice((currentPage - 1) * 100, currentPage * 100);
+
+      paginatedAlbums.forEach((album, index) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${index + 1}</td>
+          <td>${(currentPage - 1) * 100 + index + 1}</td>
           <td>—</td>
           <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
@@ -291,5 +295,6 @@
   </script>
 </body>
 </html>
+
 
 
