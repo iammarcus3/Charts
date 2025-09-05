@@ -207,7 +207,11 @@
         if (row.radio === maxRadio) tr.classList.add("highlight-radio");
 
         tr.innerHTML = `
-          <td>${(currentPage - 1) * 100 + index + 1}</td>
+          <td>
+  <span class="rank-click" onclick="showTrackDetails('${encodeURIComponent(row.title)}','${encodeURIComponent(row.artist)}', ${weekNumber}, ${row.sales}, ${row.radio}, ${row.streams}, ${row.points})">
+    ${(currentPage - 1) * 100 + index + 1}
+  </span>
+</td>
           <td>${movementIcon}${movementText}</td>
           <td><a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${movementIcon === "🆕" ? `<strong>${row.title}</strong>` : row.title}</a></td>
           <td><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
@@ -326,7 +330,11 @@ function renderAlbumChart(entries, weekNumber, tbody) {
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${currentRank}</td>
+      <td>
+  <span class="rank-click" onclick="showAlbumDetails('${encodeURIComponent(album.album)}','${encodeURIComponent(album.artist)}', ${weekNumber}, ${album.sales})">
+    ${currentRank}
+  </span>
+</td>
       <td>${movementIcon}${movementText}</td>
       <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}">${isNew ? `<strong>${album.album}</strong>` : album.album}</a></td>
       <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
@@ -375,7 +383,60 @@ function renderAlbumChart(entries, weekNumber, tbody) {
         loadWeek(weeks[newIndex]);
       }
     }
+function showTrackDetails(title, artist, weekNumber, sales, radio, streams, points) {
+  title = decodeURIComponent(title);
+  artist = decodeURIComponent(artist);
+  const key = getFuzzyKey(title, artist);
 
+  // Find last week's entry
+  const lastWeek = weekData[weekNumber - 1] || [];
+  const prev = lastWeek.find(r => getFuzzyKey(r.title, r.artist) === key);
+
+  let lastRank = prev ? prev.rank : "—";
+  let percentChange = prev ? (((points - prev.points) / prev.points) * 100).toFixed(1) + "%" : "—";
+
+  alert(
+    `🎵 ${title} — ${artist}\n\n` +
+    `Sales: ${sales.toFixed(2)}\n` +
+    `Radio: ${radio.toFixed(2)}\n` +
+    `Streams: ${streams.toFixed(2)}\n` +
+    `Last Week Rank: ${lastRank}\n` +
+    `Change vs last week (points): ${percentChange}`
+  );
+}
+    function showAlbumDetails(album, artist, weekNumber, sales) {
+  album = decodeURIComponent(album);
+  artist = decodeURIComponent(artist);
+  const key = normalize(album) + "||" + normalize(artist);
+
+  // Last week's albums
+  const lastWeekAlbums = {};
+  if (weekData[weekNumber - 1]) {
+    const prevEntries = {};
+    for (const row of weekData[weekNumber - 1]) {
+      if (!row.album) continue;
+      const prevKey = normalize(row.album) + "||" + normalize(row.artist || "");
+      if (!prevEntries[prevKey]) {
+        prevEntries[prevKey] = { sales: 0 };
+      }
+      prevEntries[prevKey].sales += row.sales;
+    }
+    for (const [k, v] of Object.entries(prevEntries)) {
+      lastWeekAlbums[k] = v;
+    }
+  }
+
+  let prevSales = lastWeekAlbums[key] ? lastWeekAlbums[key].sales : null;
+  let percentChange = prevSales ? (((sales - prevSales) / prevSales) * 100).toFixed(1) + "%" : "—";
+
+  alert(
+    `💿 ${album} — ${artist}\n\n` +
+    `Sales: ${sales.toFixed(2)}\n` +
+    `Streams: (aggregate not shown yet)\n` +
+    `Last Week Sales: ${prevSales ? prevSales.toFixed(2) : "—"}\n` +
+    `Change vs last week (sales): ${percentChange}`
+  );
+}
     populateWeekSelector();
   </script>
 </body>
