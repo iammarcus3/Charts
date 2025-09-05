@@ -134,7 +134,34 @@
       });
       loadWeek(currentWeek);
     }
+// Function to toggle the hidden details row
+let expandedRow = null;
 
+function toggleDetails(row, detailsHTML) {
+  // If already expanded under this row, remove it
+  if (expandedRow === row.nextSibling && row.nextSibling.classList.contains("details-row")) {
+    row.parentNode.removeChild(row.nextSibling);
+    expandedRow = null;
+    return;
+  }
+
+  // Remove previous expanded row if any
+  if (expandedRow) {
+    expandedRow.parentNode.removeChild(expandedRow);
+    expandedRow = null;
+  }
+
+  // Create new details row
+  const tr = document.createElement("tr");
+  tr.classList.add("details-row");
+  tr.style.backgroundColor = "#1a1a1a";
+  tr.style.color = "#00ffff";
+  tr.innerHTML = `<td colspan="8">${detailsHTML}</td>`;
+
+  // Insert after the clicked row
+  row.parentNode.insertBefore(tr, row.nextSibling);
+  expandedRow = tr;
+}
     function switchPage(page) {
       currentPage = page;
       document.querySelectorAll(".page-btn").forEach(btn => btn.classList.remove("active"));
