@@ -395,16 +395,29 @@ function showTrackDetails(title, artist, weekNumber, sales, radio, streams, poin
   let lastRank = prev ? prev.rank : "—";
   let percentChange = prev ? (((points - prev.points) / prev.points) * 100).toFixed(1) + "%" : "—";
 
-  alert(
-    `🎵 ${title} — ${artist}\n\n` +
-    `Sales: ${sales.toFixed(2)}\n` +
-    `Radio: ${radio.toFixed(2)}\n` +
-    `Streams: ${streams.toFixed(2)}\n` +
-    `Last Week Rank: ${lastRank}\n` +
-    `Change vs last week (points): ${percentChange}`
-  );
+  // Find the table row for this track
+  const rows = document.querySelectorAll("#chart tbody tr");
+  let row = null;
+  rows.forEach(r => {
+    const titleCell = r.children[2];
+    if (titleCell && titleCell.textContent.trim() === title) row = r;
+  });
+  if (!row) return;
+
+  const detailsHTML = `
+    <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+      <div>Sales: ${sales.toFixed(2)}K</div>
+      <div>Radio: ${(radio/1000000).toFixed(2)}M</div>
+      <div>Streams: ${(streams/1000000).toFixed(2)}M</div>
+      <div>Last Week Rank: ${lastRank}</div>
+      <div>Change: ${percentChange}</div>
+    </div>
+  `;
+
+  // Toggle details row
+  toggleDetails(row, detailsHTML);
 }
-    function showAlbumDetails(album, artist, weekNumber, sales) {
+function showAlbumDetails(album, artist, weekNumber, sales, streams) {
   album = decodeURIComponent(album);
   artist = decodeURIComponent(artist);
   const key = normalize(album) + "||" + normalize(artist);
@@ -416,9 +429,7 @@ function showTrackDetails(title, artist, weekNumber, sales, radio, streams, poin
     for (const row of weekData[weekNumber - 1]) {
       if (!row.album) continue;
       const prevKey = normalize(row.album) + "||" + normalize(row.artist || "");
-      if (!prevEntries[prevKey]) {
-        prevEntries[prevKey] = { sales: 0 };
-      }
+      if (!prevEntries[prevKey]) prevEntries[prevKey] = { sales: 0 };
       prevEntries[prevKey].sales += row.sales;
     }
     for (const [k, v] of Object.entries(prevEntries)) {
@@ -429,13 +440,26 @@ function showTrackDetails(title, artist, weekNumber, sales, radio, streams, poin
   let prevSales = lastWeekAlbums[key] ? lastWeekAlbums[key].sales : null;
   let percentChange = prevSales ? (((sales - prevSales) / prevSales) * 100).toFixed(1) + "%" : "—";
 
-  alert(
-    `💿 ${album} — ${artist}\n\n` +
-    `Sales: ${sales.toFixed(2)}\n` +
-    `Streams: (aggregate not shown yet)\n` +
-    `Last Week Sales: ${prevSales ? prevSales.toFixed(2) : "—"}\n` +
-    `Change vs last week (sales): ${percentChange}`
-  );
+  // Find the table row for this album
+  const rows = document.querySelectorAll("#chart tbody tr");
+  let row = null;
+  rows.forEach(r => {
+    const titleCell = r.children[2];
+    if (titleCell && titleCell.textContent.trim() === album) row = r;
+  });
+  if (!row) return;
+
+  const detailsHTML = `
+    <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+      <div>Sales: ${sales.toFixed(2)}K</div>
+      <div>Streams: ${(streams/1000000 || 0).toFixed(2)}M</div>
+      <div>Last Week Sales: ${prevSales ? prevSales.toFixed(2) + "K" : "—"}</div>
+      <div>Change: ${percentChange}</div>
+    </div>
+  `;
+
+  // Toggle details row
+  toggleDetails(row, detailsHTML);
 }
     populateWeekSelector();
   </script>
