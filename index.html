@@ -220,7 +220,7 @@
       });
     }
 
-   function renderAlbumChart(entries, weekNumber, tbody) {
+function renderAlbumChart(entries, weekNumber, tbody) {
   const albumsMap = {};
 
   // Step 1: Collect album-level data from current week entries
@@ -247,7 +247,7 @@
   // Step 2: Filter albums with at least 2 unique tracks charting
   let qualifiedAlbums = Object.values(albumsMap).filter(a => a.tracks.size >= 2);
 
-  // Step 3: Build history for weeks on chart + detect NEW/REENTRY
+  // Step 3: Build history
   const history = {};
   for (let i = 1; i < weekNumber; i++) {
     const weekAlbums = {};
@@ -263,7 +263,7 @@
     for (const [key, album] of Object.entries(weekAlbums)) {
       if (album.tracks.size >= 2) {
         if (!history[key]) history[key] = [];
-        history[key].push(i); // store the week number it appeared
+        history[key].push(i);
       }
     }
   }
@@ -284,7 +284,7 @@
     const prevQualified = Object.values(prevEntries).filter(a => a.tracks.size >= 2).sort((a, b) => b.sales - a.sales);
     prevQualified.forEach((a, i) => {
       const key = normalize(a.album) + '||' + normalize(a.artist);
-      lastWeekAlbums[key] = i + 1; // store rank
+      lastWeekAlbums[key] = i + 1;
     });
   }
 
@@ -293,7 +293,6 @@
     const key = normalize(album.album) + '||' + normalize(album.artist);
     const appearances = history[key] || [];
     const totalWeeks = appearances.length + 1;
-
     return { ...album, key, totalWeeks };
   });
 
@@ -303,7 +302,7 @@
   // Step 7: Pagination
   const paginatedAlbums = qualifiedAlbums.slice((currentPage - 1) * 100, currentPage * 100);
 
-  // Step 8: Render rows with movement icons
+  // Step 8: Render rows
   paginatedAlbums.forEach((album, index) => {
     const currentRank = (currentPage - 1) * 100 + index + 1;
     const pastWeeks = history[album.key] || [];
@@ -311,11 +310,13 @@
 
     let movementIcon = "➡️";
     let movementText = "";
+    let isNew = false;
 
     if (pastWeeks.length === 0) {
-      movementIcon = "🆕"; // first ever appearance
+      movementIcon = "🆕";
+      isNew = true;
     } else if (!wasLastWeek) {
-      movementIcon = "🔄"; // re-entry
+      movementIcon = "🔄";
     } else {
       const lastRank = lastWeekAlbums[album.key];
       const diff = lastRank - currentRank;
@@ -327,7 +328,7 @@
     tr.innerHTML = `
       <td>${currentRank}</td>
       <td>${movementIcon}${movementText}</td>
-      <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}"><strong>${album.album}</strong></a></td>
+      <td><a href="album_data.html?album=${encodeURIComponent(album.album)}&artist=${encodeURIComponent(album.artist)}">${isNew ? `<strong>${album.album}</strong>` : album.album}</a></td>
       <td><a href="artist.html?artist=${encodeURIComponent(album.artist)}">${album.artist}</a></td>
       <td>${album.sales.toFixed(2)}</td>
       <td>—</td>
@@ -337,6 +338,7 @@
     tbody.appendChild(tr);
   });
 }
+
     function getDateRange(weekNum) {
       const start = new Date(2018, 1, 23);
       start.setDate(start.getDate() + (weekNum - 1) * 7);
