@@ -191,7 +191,7 @@
       : "";
 
     function getAlbumCertIcons(sales) {
-      const scaled = sales * 1500;
+      const scaled = sales * 1000;
       if (scaled >= 20_000_000) return `Diamond`;
       if (scaled >= 18_000_000) return `9× Platinum`;
       if (scaled >= 16_000_000) return `8× Platinum`;
@@ -218,7 +218,7 @@
     const trackList = document.getElementById("trackList");
     const errorEl = document.getElementById("error");
 
-    const saleMultiplier = 1500;
+    const saleMultiplier = 1000;
 
     albumLink.textContent = albumParam;
     artistLink.textContent = artistParam;
