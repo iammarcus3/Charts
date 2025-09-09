@@ -191,18 +191,18 @@
       : "";
 
     function getAlbumCertIcons(sales) {
-      const scaled = sales * 1000;
-      if (scaled >= 20_000_000) return `Diamond`;
-      if (scaled >= 18_000_000) return `9× Platinum`;
-      if (scaled >= 16_000_000) return `8× Platinum`;
-      if (scaled >= 14_000_000) return `7× Platinum`;
-      if (scaled >= 12_000_000) return `6× Platinum`;
-      if (scaled >= 10_000_000) return `5× Platinum`;
-      if (scaled >= 8_000_000) return `4× Platinum`;
-      if (scaled >= 6_000_000) return `3× Platinum`;
-      if (scaled >= 4_000_000) return `2× Platinum`;
-      if (scaled >= 2_000_000) return `Platinum`;
-      if (scaled >= 1_000_000) return `Gold`;
+      const scaled = sales * 500;
+      if (scaled >= 10_000_000) return `Diamond`;
+      if (scaled >= 9_000_000) return `9× Platinum`;
+      if (scaled >= 8_000_000) return `8× Platinum`;
+      if (scaled >= 7_000_000) return `7× Platinum`;
+      if (scaled >= 6_000_000) return `6× Platinum`;
+      if (scaled >= 5_000_000) return `5× Platinum`;
+      if (scaled >= 4_000_000) return `4× Platinum`;
+      if (scaled >= 3_000_000) return `3× Platinum`;
+      if (scaled >= 2_000_000) return `2× Platinum`;
+      if (scaled >= 1_000_000) return `Platinum`;
+      if (scaled >= 500_000) return `Gold`;
       return "—";
     }
 
@@ -218,7 +218,7 @@
     const trackList = document.getElementById("trackList");
     const errorEl = document.getElementById("error");
 
-    const saleMultiplier = 1000;
+    const saleMultiplier = 500;
 
     albumLink.textContent = albumParam;
     artistLink.textContent = artistParam;
@@ -309,17 +309,17 @@
 
     // --- Certification timeline (still based on sales) ---
     const certLevels = [
-      { label: "Diamond", threshold: 20_000_000 },
-      { label: "9× Platinum", threshold: 18_000_000 },
-      { label: "8× Platinum", threshold: 16_000_000 },
-      { label: "7× Platinum", threshold: 14_000_000 },
-      { label: "6× Platinum", threshold: 12_000_000 },
-      { label: "5× Platinum", threshold: 10_000_000 },
-      { label: "4× Platinum", threshold: 8_000_000 },
-      { label: "3× Platinum", threshold: 6_000_000 },
-      { label: "2× Platinum", threshold: 4_000_000 },
-      { label: "Platinum", threshold: 2_000_000 },
-      { label: "Gold", threshold: 1_000_000 }
+      { label: "Diamond", threshold: 10_000_000 },
+      { label: "9× Platinum", threshold: 9_000_000 },
+      { label: "8× Platinum", threshold: 8_000_000 },
+      { label: "7× Platinum", threshold: 7_000_000 },
+      { label: "6× Platinum", threshold: 6_000_000 },
+      { label: "5× Platinum", threshold: 5_000_000 },
+      { label: "4× Platinum", threshold: 4_000_000 },
+      { label: "3× Platinum", threshold: 3_000_000 },
+      { label: "2× Platinum", threshold: 2_000_000 },
+      { label: "Platinum", threshold: 1_000_000 },
+      { label: "Gold", threshold: 500_000 }
     ];
 
     const baseDate = new Date(2018, 1, 23);
@@ -346,7 +346,7 @@
               }
             }
           }
-          if (cumSales * 1500 >= threshold) {
+          if (cumSales * 1000 >= threshold) {
             certDates.push({ label, weekNum });
             break;
           }
