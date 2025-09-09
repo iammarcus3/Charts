@@ -116,7 +116,7 @@ function getAlbumCertIcons(sales) {
         const titleKey = normalizeTitle(entry.title);
         const albumKey = normalizeAlbum(entry.album);
         const salesRaw = parseFloat(entry.sales) || 0;
-        const sales = salesRaw ;
+        const sales = salesRaw * 1750 ;
         const totalSales = parseFloat(entry.totalSales) || 0;
         const rank = parseInt(entry.rank);
         const streams = parseFloat(entry.streams) || 0; // Use streams from weekData
