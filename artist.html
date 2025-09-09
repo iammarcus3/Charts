@@ -153,47 +153,51 @@
             albumsTable.appendChild(row);
         });
 
-    // Populate Songs Table
-    const songsTable = document.querySelector("#songsTable tbody");
-    const sortedSongs = Object.values(songsMap).sort((a,b) => a.firstWeek - b.firstWeek);
+ // Populate Songs Table
+const songsTable = document.querySelector("#songsTable tbody");
+const sortedSongs = Object.values(songsMap).sort((a,b) => a.firstWeek - b.firstWeek);
 
-    let lastYear = null;
-    sortedSongs.forEach(song => {
-        const firstDate = new Date(BASE_WEEK_START);
-        firstDate.setDate(firstDate.getDate() + (song.firstWeek - 1) * 7);
-        const year = firstDate.getFullYear();
+let lastYear = null;
+sortedSongs.forEach(song => {
+    // ✅ Skip songs that never peaked inside the Top 100
+    if (song.peak > 100 || song.peak === Infinity) return;
 
-        if (year !== lastYear) {
-            const yearRow = document.createElement("tr");
-            yearRow.innerHTML = `<td colspan="7" style="background:#000;color:#4DB8FF;font-weight:bold;">${year}</td>`;
-            songsTable.appendChild(yearRow);
+    const firstDate = new Date(BASE_WEEK_START);
+    firstDate.setDate(firstDate.getDate() + (song.firstWeek - 1) * 7);
+    const year = firstDate.getFullYear();
 
-            const yearSongs = sortedSongs.filter(s => {
-                const d = new Date(BASE_WEEK_START);
-                d.setDate(d.getDate() + (s.firstWeek - 1) * 7);
-                return d.getFullYear() === year;
-            });
-            const statsRow = document.createElement("tr");
-            const songsCount = yearSongs.length;
-            const num1s = yearSongs.filter(s => s.peak === 1).length;
-            const top10s = yearSongs.filter(s => s.peak <= 10).length;
-            statsRow.innerHTML = `<td colspan="7" style="background:#111;color:#ccc;font-style:italic;">🎵 Songs: ${songsCount} | 🥇 #1s: ${num1s} | 🔟 Top 10s: ${top10s}</td>`;
-            songsTable.appendChild(statsRow);
+    if (year !== lastYear) {
+        const yearRow = document.createElement("tr");
+        yearRow.innerHTML = `<td colspan="7" style="background:#000;color:#4DB8FF;font-weight:bold;">${year}</td>`;
+        songsTable.appendChild(yearRow);
 
-            lastYear = year;
-        }
+        const yearSongs = sortedSongs.filter(s => {
+            if (s.peak > 100 || s.peak === Infinity) return false; // also filter here
+            const d = new Date(BASE_WEEK_START);
+            d.setDate(d.getDate() + (s.firstWeek - 1) * 7);
+            return d.getFullYear() === year;
+        });
+        const statsRow = document.createElement("tr");
+        const songsCount = yearSongs.length;
+        const num1s = yearSongs.filter(s => s.peak === 1).length;
+        const top10s = yearSongs.filter(s => s.peak <= 10).length;
+        statsRow.innerHTML = `<td colspan="7" style="background:#111;color:#ccc;font-style:italic;">🎵 Songs: ${songsCount} | 🥇 #1s: ${num1s} | 🔟 Top 10s: ${top10s}</td>`;
+        songsTable.appendChild(statsRow);
 
-        const cert = getTrackCertIcon(song.sales);
-        const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
-        const row = document.createElement("tr");
-        row.innerHTML = `<td><a href="${url}">${song.title}</a></td>
-                         <td>${cert}</td>
-                         <td>${formatNumber(song.streams)}</td>
-                         <td>${song.weeks}</td>
-                         <td>#${song.peak}</td>
-                         <td>${song.num1s}</td>`;
-        songsTable.appendChild(row);
-    });
+        lastYear = year;
+    }
+
+    const cert = getTrackCertIcon(song.sales);
+    const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
+    const row = document.createElement("tr");
+    row.innerHTML = `<td><a href="${url}">${song.title}</a></td>
+                     <td>${cert}</td>
+                     <td>${formatNumber(song.streams)}</td>
+                     <td>${song.weeks}</td>
+                     <td>#${song.peak}</td>
+                     <td>${song.num1s}</td>`;
+    songsTable.appendChild(row);
+});
 
     // Artist Stats
     const statsEl = document.getElementById("artistStats");
