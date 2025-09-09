@@ -42,6 +42,8 @@
 
   <script src="weekdata.js"></script>
   <script>
+  document.addEventListener("DOMContentLoaded", () => {
+
     const BASE_WEEK_START = new Date("2018-02-23");
 
     const params = new URLSearchParams(location.search);
@@ -58,183 +60,161 @@
       String(str || "")
         .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
     );
-
     const splitArtists = str => String(str || "")
       .split(/,|&| and | with | feat\.? | featuring /i)
       .map(a => normalize(a)).filter(Boolean);
-
     const formatNumber = n => n >= 1_000_000_000 ? (n / 1_000_000_000).toFixed(1) + "B" :
                           n >= 1_000_000 ? (n / 1_000_000).toFixed(1) + "M" :
                           n >= 1_000 ? (n / 1_000).toFixed(0) + "K" : n.toString();
 
-function getTrackCertIcon(sales) {
-  // multiply the incoming sales once
-  const adjustedSales = sales * 1750;
+    function getTrackCertIcon(sales) {
+        const adjustedSales = sales * 1750;
+        if (adjustedSales >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+        if (adjustedSales >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
+        if (adjustedSales >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
+        if (adjustedSales >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
+        if (adjustedSales >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
+        if (adjustedSales >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
+        if (adjustedSales >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
+        if (adjustedSales >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
+        if (adjustedSales >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
+        if (adjustedSales >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
+        if (adjustedSales >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
+        return "—";
+    }
 
-  if (adjustedSales >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
-  if (adjustedSales >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
-  if (adjustedSales >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
-  if (adjustedSales >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
-  if (adjustedSales >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
-  if (adjustedSales >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
-  if (adjustedSales >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
-  if (adjustedSales >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
-  if (adjustedSales >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
-  if (adjustedSales >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
-  if (adjustedSales >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
-  return "—";
-}
-
-function getAlbumCertIcons(sales) {
-  // multiply the incoming sales once
-  const adjustedSales = sales * 500;
-
-  if (adjustedSales >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
-  if (adjustedSales >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
-  if (adjustedSales >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
-  if (adjustedSales >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
-  if (adjustedSales >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
-  if (adjustedSales >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
-  if (adjustedSales >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
-  if (adjustedSales >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
-  if (adjustedSales >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
-  if (adjustedSales >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
-  if (adjustedSales >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
-  return "—";
-}
+    function getAlbumCertIcons(sales) {
+        const adjustedSales = sales * 500;
+        if (adjustedSales >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+        if (adjustedSales >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
+        if (adjustedSales >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
+        if (adjustedSales >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
+        if (adjustedSales >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
+        if (adjustedSales >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
+        if (adjustedSales >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
+        if (adjustedSales >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
+        if (adjustedSales >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
+        if (adjustedSales >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
+        if (adjustedSales >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
+        return "—";
+    }
 
     const artistKey = normalize(artistParam);
     const albumsMap = {}, songsMap = {}, songFirstWeek = {};
 
     for (const week in weekData) {
-      const weekNum = parseInt(week);
-      weekData[week].forEach(entry => {
-        const allArtists = splitArtists(entry.artist);
-        const isMatch = allArtists.includes(artistKey) || String(entry.title || "").toLowerCase().includes(artistParam.toLowerCase());
-        if (!isMatch) return;
+        const weekNum = parseInt(week);
+        weekData[week].forEach(entry => {
+            const allArtists = splitArtists(entry.artist);
+            const isMatch = allArtists.includes(artistKey) || String(entry.title || "").toLowerCase().includes(artistParam.toLowerCase());
+            if (!isMatch) return;
 
-        const titleKey = normalizeTitle(entry.title);
-        const albumKey = normalizeAlbum(entry.album);
-        const salesRaw = parseFloat(entry.sales) || 0;
-        const sales = salesRaw ;
-        const totalSales = parseFloat(entry.totalSales) || 0;
-        const rank = parseInt(entry.rank);
-        const streams = parseFloat(entry.streams) || 0; // Use streams from weekData
+            const titleKey = normalizeTitle(entry.title);
+            const albumKey = normalizeAlbum(entry.album);
+            const sales = parseFloat(entry.sales) || 0;
+            const totalSales = parseFloat(entry.totalSales) || 0;
+            const rank = parseInt(entry.rank);
+            const streams = parseFloat(entry.streams) || 0;
 
-        if (albumKey && albumKey !== "NAN") {
-          if (!albumsMap[albumKey]) albumsMap[albumKey] = { name: entry.album, sales: 0 };
-          albumsMap[albumKey].sales += sales;
-        }
+            if (albumKey && albumKey !== "NAN") {
+                if (!albumsMap[albumKey]) albumsMap[albumKey] = { name: entry.album, sales: 0 };
+                albumsMap[albumKey].sales += sales;
+            }
 
-        if (!songsMap[titleKey]) {
-          songsMap[titleKey] = {
-            title: entry.title,
-            artist: entry.artist,
-            sales: 0,
-            totalSales: 0,
-            weeks: 0,
-            peak: rank,
-            num1s: 0,
-            streams: 0
-          };
-        }
+            if (!songsMap[titleKey]) {
+                songsMap[titleKey] = { title: entry.title, artist: entry.artist, sales: 0, totalSales: 0, weeks: 0, peak: rank, num1s: 0, streams: 0 };
+            }
 
-        const song = songsMap[titleKey];
-        song.sales += sales ;
-        song.totalSales += totalSales;
-        song.weeks++;
-        song.streams += streams; // Sum streams from weekData
-        if (rank < song.peak) song.peak = rank;
-        if (rank === 1) song.num1s++;
+            const song = songsMap[titleKey];
+            song.sales += sales;
+            song.totalSales += totalSales;
+            song.weeks++;
+            song.streams += streams;
+            if (rank < song.peak) song.peak = rank;
+            if (rank === 1) song.num1s++;
 
-        if (!songFirstWeek[titleKey] || weekNum < songFirstWeek[titleKey]) {
-          songFirstWeek[titleKey] = weekNum;
-        }
-      });
+            if (!songFirstWeek[titleKey] || weekNum < songFirstWeek[titleKey]) {
+                songFirstWeek[titleKey] = weekNum;
+            }
+        });
     }
 
-    Object.entries(songsMap).forEach(([key, song]) => {
-      song.firstWeek = songFirstWeek[key] || 9999;
-    });
+    Object.entries(songsMap).forEach(([key, song]) => song.firstWeek = songFirstWeek[key] || 9999);
 
+    // Populate Albums Table
     const albumsTable = document.querySelector("#albumsTable tbody");
-    Object.values(albumsMap).sort((a, b) => b.sales - a.sales).forEach(album => {
-      const cert = getAlbumCertIcons(album.sales);
-      const url = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
-      albumsTable.innerHTML += `<tr><td><a href="${url}">${album.name}</a></td><td>${cert}</td></tr>`;
-    });
+    Object.values(albumsMap)
+        .sort((a,b) => b.sales - a.sales)
+        .forEach(album => {
+            const cert = getAlbumCertIcons(album.sales);
+            const url = `album_detail.html?album=${encodeURIComponent(album.name)}&artist=${encodeURIComponent(artistParam)}`;
+            const row = document.createElement("tr");
+            row.innerHTML = `<td><a href="${url}">${album.name}</a></td><td>${cert}</td>`;
+            albumsTable.appendChild(row);
+        });
 
+    // Populate Songs Table
     const songsTable = document.querySelector("#songsTable tbody");
-    const sortedSongs = Object.values(songsMap).sort((a, b) => a.firstWeek - b.firstWeek);
+    const sortedSongs = Object.values(songsMap).sort((a,b) => a.firstWeek - b.firstWeek);
 
     let lastYear = null;
     sortedSongs.forEach(song => {
-      const firstDate = new Date(BASE_WEEK_START);
-      firstDate.setDate(firstDate.getDate() + (song.firstWeek - 1) * 7);
-      const year = firstDate.getFullYear();
+        const firstDate = new Date(BASE_WEEK_START);
+        firstDate.setDate(firstDate.getDate() + (song.firstWeek - 1) * 7);
+        const year = firstDate.getFullYear();
 
-      if (year !== lastYear) {
-        const yearRow = document.createElement("tr");
-        yearRow.innerHTML = `<td colspan="7" style="background:#000;color:#4DB8FF;font-weight:bold;">${year}</td>`;
-        songsTable.appendChild(yearRow);
+        if (year !== lastYear) {
+            const yearRow = document.createElement("tr");
+            yearRow.innerHTML = `<td colspan="7" style="background:#000;color:#4DB8FF;font-weight:bold;">${year}</td>`;
+            songsTable.appendChild(yearRow);
 
-        const yearSongs = sortedSongs.filter(s => {
-          const d = new Date(BASE_WEEK_START);
-          d.setDate(d.getDate() + (s.firstWeek - 1) * 7);
-          return d.getFullYear() === year;
-        });
+            const yearSongs = sortedSongs.filter(s => {
+                const d = new Date(BASE_WEEK_START);
+                d.setDate(d.getDate() + (s.firstWeek - 1) * 7);
+                return d.getFullYear() === year;
+            });
+            const statsRow = document.createElement("tr");
+            const songsCount = yearSongs.length;
+            const num1s = yearSongs.filter(s => s.peak === 1).length;
+            const top10s = yearSongs.filter(s => s.peak <= 10).length;
+            statsRow.innerHTML = `<td colspan="7" style="background:#111;color:#ccc;font-style:italic;">🎵 Songs: ${songsCount} | 🥇 #1s: ${num1s} | 🔟 Top 10s: ${top10s}</td>`;
+            songsTable.appendChild(statsRow);
 
-        const songsCount = yearSongs.length;
-        const num1s = yearSongs.filter(s => s.peak === 1).length;
-        const top10s = yearSongs.filter(s => s.peak <= 10).length;
-        const units = yearSongs.reduce((sum, s) => sum + s.sales, 0);
-        const formattedUnits = formatNumber(units);
+            lastYear = year;
+        }
 
-        const statsRow = document.createElement("tr");
-        statsRow.innerHTML = `<td colspan="7" style="background:#111;color:#ccc;font-style:italic;">🎵 Songs: ${songsCount} | 🥇 #1s: ${num1s} | 🔟 Top 10s: ${top10s} |;
-        songsTable.appendChild(statsRow);
+        const cert = getTrackCertIcon(song.sales);
+        const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
+        const row = document.createElement("tr");
+        row.innerHTML = `<td><a href="${url}">${song.title}</a></td>
+                         <td>${cert}</td>
+                         <td>${formatNumber(song.streams)}</td>
+                         <td>${song.weeks}</td>
+                         <td>#${song.peak}</td>
+                         <td>${song.num1s}</td>`;
+        songsTable.appendChild(row);
+    });
 
-        lastYear = year;
-      }
-   const cert = getTrackCertIcon(song.sales);
-
-// build URL without backticks to avoid any template literal issues
-const url = 'track_detail.html?title=' + encodeURIComponent(song.title) +
-            '&artist=' + encodeURIComponent(song.artist);
-
-songsTable.innerHTML +=
-  '<tr>' +
-    '<td><a href="' + url + '">' + song.title + '</a></td>' +
-    '<td>' + cert + '</td>' +
-    '<td>' + formatNumber(song.streams) + '</td>' +
-    '<td>' + song.weeks + '</td>' +
-    '<td>#' + song.peak + '</td>' +
-    '<td>' + song.num1s + '</td>' +
-  '</tr>';
-
-document.addEventListener("DOMContentLoaded", () => {
+    // Artist Stats
     const statsEl = document.getElementById("artistStats");
     if (statsEl) {
         const allSongs = Object.values(songsMap);
         const num1s = allSongs.filter(s => s.peak === 1).length;
         const top10s = allSongs.filter(s => s.peak <= 10).length;
-        const debuts = allSongs.filter(s => s.peak === s.weeks).length;
-        statsEl.innerHTML = `Songs Charted: ${allSongs.length} | #1s: ${num1s} | Top 10s: ${top10s} | Debuts: ${debuts}`;
-    } else {
-        console.warn("Element with id 'artistStats' not found.");
+        const debuts = allSongs.filter(s => s.firstWeek === Math.min(...Object.values(songFirstWeek))).length;
+        statsEl.textContent = `Songs Charted: ${allSongs.length} | #1s: ${num1s} | Top 10s: ${top10s} | Debuts: ${debuts}`;
     }
-});
+
+    // Certification Totals
     const certTotals = document.getElementById("certTotals");
     const certCounts = {};
     Object.values(albumsMap).forEach(album => {
-      const label = getAlbumCertIcons(album.sales).replace(/<[^>]*>/g, "").trim();
-      if (!certCounts[label]) certCounts[label] = 0;
-      certCounts[label]++;
+        const label = getAlbumCertIcons(album.sales).replace(/<[^>]*>/g, "").trim();
+        if (label !== "—") certCounts[label] = (certCounts[label] || 0) + 1;
     });
-    certTotals.innerHTML = Object.entries(certCounts)
-      .filter(([c]) => c !== "—")
-      .map(([label, count]) => `${label}: ${count}`)
-      .join(" | ");
+    certTotals.textContent = Object.entries(certCounts).map(([label, count]) => `${label}: ${count}`).join(" | ");
+
+  });
   </script>
 </body>
 </html>
