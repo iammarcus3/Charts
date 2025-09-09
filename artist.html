@@ -212,17 +212,18 @@ songsTable.innerHTML +=
     '<td>' + song.num1s + '</td>' +
   '</tr>';
 
+document.addEventListener("DOMContentLoaded", () => {
     const statsEl = document.getElementById("artistStats");
-if (statsEl) {
-    const allSongs = Object.values(songsMap);
-    const num1s = allSongs.filter(s => s.peak === 1).length;
-    const top10s = allSongs.filter(s => s.peak <= 10).length;
-    const debuts = allSongs.filter(s => s.peak === s.weeks).length;
-    statsEl.innerHTML = `Songs Charted: ${allSongs.length} | #1s: ${num1s} | Top 10s: ${top10s} | Debuts: ${debuts}`;
-} else {
-    console.warn("Element with id 'artistStats' not found.");
-}
-
+    if (statsEl) {
+        const allSongs = Object.values(songsMap);
+        const num1s = allSongs.filter(s => s.peak === 1).length;
+        const top10s = allSongs.filter(s => s.peak <= 10).length;
+        const debuts = allSongs.filter(s => s.peak === s.weeks).length;
+        statsEl.innerHTML = `Songs Charted: ${allSongs.length} | #1s: ${num1s} | Top 10s: ${top10s} | Debuts: ${debuts}`;
+    } else {
+        console.warn("Element with id 'artistStats' not found.");
+    }
+});
     const certTotals = document.getElementById("certTotals");
     const certCounts = {};
     Object.values(albumsMap).forEach(album => {
