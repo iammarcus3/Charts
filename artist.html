@@ -196,18 +196,22 @@ function getAlbumCertIcons(sales) {
 
         lastYear = year;
       }
-      const cert = getTrackCertIcon(song.sales);
-      const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
-      songsTable.innerHTML += `
-        <tr>
-          <td><a href="${url}">${song.title}</a></td>
-          <td>${cert}</td>
-          <td>${formatNumber(song.streams)}</td>
-          <td>${song.weeks}</td>
-          <td>#${song.peak}</td>
-          <td>${song.num1s}</td>
-        </tr>`;
-    });
+   const cert = getTrackCertIcon(song.sales);
+
+// build URL without backticks to avoid any template literal issues
+const url = 'track_detail.html?title=' + encodeURIComponent(song.title) +
+            '&artist=' + encodeURIComponent(song.artist);
+
+songsTable.innerHTML +=
+  '<tr>' +
+    '<td><a href="' + url + '">' + song.title + '</a></td>' +
+    '<td>' + cert + '</td>' +
+    '<td>' + formatNumber(song.streams) + '</td>' +
+    '<td>' + song.weeks + '</td>' +
+    '<td>#' + song.peak + '</td>' +
+    '<td>' + song.num1s + '</td>' +
+  '</tr>';
+
 
     const statsEl = document.getElementById("artistStats");
     const allSongs = Object.values(songsMap);
