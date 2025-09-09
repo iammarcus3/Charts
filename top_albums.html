@@ -107,6 +107,14 @@
       return encodeURIComponent(param.replace(/\s+/g, '_'));
     }
 
+    // 🔹 Format numbers with K, M, B
+    function formatNumber(n) {
+      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + "B";
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
+      if (n >= 1_000) return (n / 1_000).toFixed(1) + "K";
+      return n.toString();
+    }
+
     const weekYears = Object.keys(weekData).map(Number).map(weekNum => {
       const entry = weekData[weekNum][0];
       return entry && entry.date
@@ -123,47 +131,51 @@
       yearSelect.appendChild(option);
     });
 
-function getTopAlbums(year) {
-  const albumMap = new Map();
+    function getTopAlbums(year) {
+      const albumMap = new Map();
 
-  for (const [weekKey, entries] of Object.entries(weekData)) {
-    const weekNum = parseInt(weekKey);
-    const entryYear = entries[0] && entries[0].date
-      ? new Date(entries[0].date).getFullYear()
-      : 2018 + Math.floor((weekNum - 1) / 52);
+      for (const [weekKey, entries] of Object.entries(weekData)) {
+        const weekNum = parseInt(weekKey);
+        const entryYear = entries[0] && entries[0].date
+          ? new Date(entries[0].date).getFullYear()
+          : 2018 + Math.floor((weekNum - 1) / 52);
 
-    for (const entry of entries) {
-      if (!entry.album || !entry.artist) continue;
+        for (const entry of entries) {
+          if (!entry.album || !entry.artist) continue;
 
-      const key = normalizeAlbum(entry.album) + '___' + entry.artist;
-      const albumInfo = albumMap.get(key) || {
-        album: entry.album,
-        artist: entry.artist,
-        salesThisYear: 0,
-        totalSales: 0,
-        weeks: 0,
-        peak: entry.rank
-      };
+          const key = normalizeAlbum(entry.album) + '___' + entry.artist;
+          const albumInfo = albumMap.get(key) || {
+            album: entry.album,
+            artist: entry.artist,
+            salesThisYear: 0,
+            totalSales: 0,
+            weeks: 0,
+            peak: entry.rank
+          };
 
-      // ✅ Only add sales/weeks if in selected year
-      if (entryYear === parseInt(year)) {
-        albumInfo.salesThisYear += entry.sales || 0;
-        albumInfo.weeks += 1;   // <-- count week only for that year
+          // 🔹 Apply multiplier (×500)
+          const weekSales = (entry.sales || 0) * 500;
+
+          // ✅ Only add sales/weeks if in selected year
+          if (entryYear === parseInt(year)) {
+            albumInfo.salesThisYear += weekSales;
+            albumInfo.weeks += 1;
+          }
+
+          // Lifetime sales
+          albumInfo.totalSales += weekSales;
+          if (entry.rank < albumInfo.peak) albumInfo.peak = entry.rank;
+
+          albumMap.set(key, albumInfo);
+        }
       }
 
-      // Still accumulate lifetime sales + peak
-      albumInfo.totalSales += entry.sales || 0;
-      if (entry.rank < albumInfo.peak) albumInfo.peak = entry.rank;
-
-      albumMap.set(key, albumInfo);
+      return [...albumMap.values()]
+        .filter(a => a.salesThisYear > 0)
+        .sort((a, b) => b.salesThisYear - a.salesThisYear)
+        .slice(0, 20);
     }
-  }
 
-  return [...albumMap.values()]
-    .filter(a => a.salesThisYear > 0)
-    .sort((a, b) => b.salesThisYear - a.salesThisYear)
-    .slice(0, 20);
-}
     function renderTable(year) {
       const albums = getTopAlbums(year);
       tableBody.innerHTML = '';
@@ -177,8 +189,8 @@ function getTopAlbums(year) {
           <td>${index + 1}</td>
           <td><a href="${albumLink}" target="_blank">${album.album}</a></td>
           <td><a href="${artistLink}" target="_blank">${album.artist}</a></td>
-          <td class="number">${album.salesThisYear.toLocaleString()}</td>
-          <td class="number">${album.totalSales.toLocaleString()}</td>
+          <td class="number">${formatNumber(album.salesThisYear)}</td>
+          <td class="number">${formatNumber(album.totalSales)}</td>
           <td class="number">${album.weeks}</td>
           <td class="number">${album.peak}</td>
         `;
