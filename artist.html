@@ -67,37 +67,41 @@
                           n >= 1_000_000 ? (n / 1_000_000).toFixed(1) + "M" :
                           n >= 1_000 ? (n / 1_000).toFixed(0) + "K" : n.toString();
 
-    function getTrackCertIcon(sales) {
-      const sales = Sales * 1000;
-     if (sales >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
-      if (sales >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
-      if (sales >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
-      if (sales >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
-      if (sales >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
-      if (sales >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
-      if (sales >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
-      if (sales >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
-      if (sales >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
-      if (sales >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
-      if (sales >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
-      return "—";
-    }
+function getTrackCertIcon(sales) {
+  // multiply the incoming sales once
+  const adjustedSales = sales * 1000;
 
-    function getAlbumCertIcons(sales) {
-    const sales = Sales * 500;
-      if (sales >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
-      if (sales >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
-      if (sales >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
-      if (sales >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
-      if (sales >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
-      if (sales >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
-      if (sales >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
-      if (sales >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
-      if (sales >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
-      if (sales >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
-      if (sales >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
-      return "—";
-    }
+  if (adjustedSales >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+  if (adjustedSales >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
+  if (adjustedSales >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
+  if (adjustedSales >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
+  if (adjustedSales >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
+  if (adjustedSales >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
+  if (adjustedSales >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
+  if (adjustedSales >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
+  if (adjustedSales >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
+  if (adjustedSales >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
+  if (adjustedSales >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
+  return "—";
+}
+
+function getAlbumCertIcons(sales) {
+  // multiply the incoming sales once
+  const adjustedSales = sales * 500;
+
+  if (adjustedSales >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+  if (adjustedSales >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
+  if (adjustedSales >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
+  if (adjustedSales >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
+  if (adjustedSales >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
+  if (adjustedSales >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
+  if (adjustedSales >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
+  if (adjustedSales >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
+  if (adjustedSales >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
+  if (adjustedSales >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
+  if (adjustedSales >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
+  return "—";
+}
 
     const artistKey = normalize(artistParam);
     const albumsMap = {}, songsMap = {}, songFirstWeek = {};
