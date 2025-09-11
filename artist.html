@@ -115,19 +115,30 @@
             const totalSales = parseFloat(entry.totalSales) || 0;
             const rank = parseInt(entry.rank);
             const streams = parseFloat(entry.streams) || 0;
+}
+         if (albumKey && albumKey !== "NAN") {
+    // Try to find an existing album with ≥98% similarity
+    let existingKey = null;
+    for (const key in albumsMap) {
+        if (similarity(albumKey, key) >= 0.98) {
+            existingKey = key;
+            break;
+        }
+    }
 
-            // ✅ build albums with track count
-            if (albumKey && albumKey !== "NAN") {
-                if (!albumsMap[albumKey]) {
-                    albumsMap[albumKey] = { 
-                        name: entry.album, 
-                        sales: 0, 
-                        tracks: new Set() 
-                    };
-                }
-                albumsMap[albumKey].sales += sales;
-                albumsMap[albumKey].tracks.add(titleKey);
-            }
+    const finalKey = existingKey || albumKey;
+
+    if (!albumsMap[finalKey]) {
+        albumsMap[finalKey] = { 
+            name: entry.album, 
+            sales: 0, 
+            tracks: new Set() 
+        };
+    }
+
+    albumsMap[finalKey].sales += sales;
+    albumsMap[finalKey].tracks.add(titleKey);
+}
 
             if (!songsMap[titleKey]) {
                 songsMap[titleKey] = { title: entry.title, artist: entry.artist, sales: 0, totalSales: 0, weeks: 0, peak: rank, num1s: 0, streams: 0 };
