@@ -116,9 +116,17 @@
             const rank = parseInt(entry.rank);
             const streams = parseFloat(entry.streams) || 0;
 
+            // ✅ build albums with track count
             if (albumKey && albumKey !== "NAN") {
-                if (!albumsMap[albumKey]) albumsMap[albumKey] = { name: entry.album, sales: 0 };
+                if (!albumsMap[albumKey]) {
+                    albumsMap[albumKey] = { 
+                        name: entry.album, 
+                        sales: 0, 
+                        tracks: new Set() 
+                    };
+                }
                 albumsMap[albumKey].sales += sales;
+                albumsMap[albumKey].tracks.add(titleKey);
             }
 
             if (!songsMap[titleKey]) {
@@ -141,9 +149,10 @@
 
     Object.entries(songsMap).forEach(([key, song]) => song.firstWeek = songFirstWeek[key] || 9999);
 
-    // Populate Albums Table
+    // ✅ Populate Albums Table (only if ≥2 tracks)
     const albumsTable = document.querySelector("#albumsTable tbody");
     Object.values(albumsMap)
+        .filter(album => album.tracks.size >= 2)
         .sort((a,b) => b.sales - a.sales)
         .forEach(album => {
             const cert = getAlbumCertIcons(album.sales);
@@ -153,51 +162,50 @@
             albumsTable.appendChild(row);
         });
 
- // Populate Songs Table
-const songsTable = document.querySelector("#songsTable tbody");
-const sortedSongs = Object.values(songsMap).sort((a,b) => a.firstWeek - b.firstWeek);
+    // Populate Songs Table
+    const songsTable = document.querySelector("#songsTable tbody");
+    const sortedSongs = Object.values(songsMap).sort((a,b) => a.firstWeek - b.firstWeek);
 
-let lastYear = null;
-sortedSongs.forEach(song => {
-    // ✅ Skip songs that never peaked inside the Top 100
-    if (song.peak > 100 || song.peak === Infinity) return;
+    let lastYear = null;
+    sortedSongs.forEach(song => {
+        if (song.peak > 100 || song.peak === Infinity) return;
 
-    const firstDate = new Date(BASE_WEEK_START);
-    firstDate.setDate(firstDate.getDate() + (song.firstWeek - 1) * 7);
-    const year = firstDate.getFullYear();
+        const firstDate = new Date(BASE_WEEK_START);
+        firstDate.setDate(firstDate.getDate() + (song.firstWeek - 1) * 7);
+        const year = firstDate.getFullYear();
 
-    if (year !== lastYear) {
-        const yearRow = document.createElement("tr");
-        yearRow.innerHTML = `<td colspan="7" style="background:#000;color:#4DB8FF;font-weight:bold;">${year}</td>`;
-        songsTable.appendChild(yearRow);
+        if (year !== lastYear) {
+            const yearRow = document.createElement("tr");
+            yearRow.innerHTML = `<td colspan="7" style="background:#000;color:#4DB8FF;font-weight:bold;">${year}</td>`;
+            songsTable.appendChild(yearRow);
 
-        const yearSongs = sortedSongs.filter(s => {
-            if (s.peak > 100 || s.peak === Infinity) return false; // also filter here
-            const d = new Date(BASE_WEEK_START);
-            d.setDate(d.getDate() + (s.firstWeek - 1) * 7);
-            return d.getFullYear() === year;
-        });
-        const statsRow = document.createElement("tr");
-        const songsCount = yearSongs.length;
-        const num1s = yearSongs.filter(s => s.peak === 1).length;
-        const top10s = yearSongs.filter(s => s.peak <= 10).length;
-        statsRow.innerHTML = `<td colspan="7" style="background:#111;color:#ccc;font-style:italic;">🎵 Songs: ${songsCount} | 🥇 #1s: ${num1s} | 🔟 Top 10s: ${top10s}</td>`;
-        songsTable.appendChild(statsRow);
+            const yearSongs = sortedSongs.filter(s => {
+                if (s.peak > 100 || s.peak === Infinity) return false;
+                const d = new Date(BASE_WEEK_START);
+                d.setDate(d.getDate() + (s.firstWeek - 1) * 7);
+                return d.getFullYear() === year;
+            });
+            const statsRow = document.createElement("tr");
+            const songsCount = yearSongs.length;
+            const num1s = yearSongs.filter(s => s.peak === 1).length;
+            const top10s = yearSongs.filter(s => s.peak <= 10).length;
+            statsRow.innerHTML = `<td colspan="7" style="background:#111;color:#ccc;font-style:italic;">🎵 Songs: ${songsCount} | 🥇 #1s: ${num1s} | 🔟 Top 10s: ${top10s}</td>`;
+            songsTable.appendChild(statsRow);
 
-        lastYear = year;
-    }
+            lastYear = year;
+        }
 
-    const cert = getTrackCertIcon(song.sales);
-    const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
-    const row = document.createElement("tr");
-    row.innerHTML = `<td><a href="${url}">${song.title}</a></td>
-                     <td>${cert}</td>
-                     <td>${formatNumber(song.streams)}</td>
-                     <td>${song.weeks}</td>
-                     <td>#${song.peak}</td>
-                     <td>${song.num1s}</td>`;
-    songsTable.appendChild(row);
-});
+        const cert = getTrackCertIcon(song.sales);
+        const url = `track_detail.html?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`;
+        const row = document.createElement("tr");
+        row.innerHTML = `<td><a href="${url}">${song.title}</a></td>
+                         <td>${cert}</td>
+                         <td>${formatNumber(song.streams)}</td>
+                         <td>${song.weeks}</td>
+                         <td>#${song.peak}</td>
+                         <td>${song.num1s}</td>`;
+        songsTable.appendChild(row);
+    });
 
     // Artist Stats
     const statsEl = document.getElementById("artistStats");
@@ -209,19 +217,22 @@ sortedSongs.forEach(song => {
         statsEl.textContent = `Songs Charted: ${allSongs.length} | #1s: ${num1s} | Top 10s: ${top10s} | Debuts: ${debuts}`;
     }
 
-    // Certification Totals
+    // ✅ Certification Totals (only albums with ≥2 tracks)
     const certTotals = document.getElementById("certTotals");
     const certCounts = {};
-    Object.values(albumsMap).forEach(album => {
-        const label = getAlbumCertIcons(album.sales).replace(/<[^>]*>/g, "").trim();
-        if (label !== "—") certCounts[label] = (certCounts[label] || 0) + 1;
-    });
+    Object.values(albumsMap)
+        .filter(album => album.tracks.size >= 2)
+        .forEach(album => {
+            const label = getAlbumCertIcons(album.sales).replace(/<[^>]*>/g, "").trim();
+            if (label !== "—") certCounts[label] = (certCounts[label] || 0) + 1;
+        });
     certTotals.textContent = Object.entries(certCounts).map(([label, count]) => `${label}: ${count}`).join(" | ");
 
   });
   </script>
 </body>
 </html>
+
 
 
 
