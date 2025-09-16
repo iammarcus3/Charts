@@ -207,7 +207,10 @@ function toggleDetails(row, detailsHTML) {
       const maxRadio = Math.max(...enrichedTracks.map(r => r.radio || 0));
 
       enrichedTracks.sort((a, b) => b.points - a.points);
-
+      
+// Pick ONE best track for sales and ONE best for radio
+const bestSalesTrack = enrichedTracks.reduce((a, b) => (a.sales > b.sales ? a : b));
+const bestRadioTrack = enrichedTracks.reduce((a, b) => (a.radio > b.radio ? a : b));
       // Pagination slice
       const paginatedTracks = enrichedTracks.slice((currentPage - 1) * 100, currentPage * 100);
 
@@ -230,8 +233,8 @@ function toggleDetails(row, detailsHTML) {
         }
 
         const tr = document.createElement("tr");
-        if (row.sales === maxSales) tr.classList.add("highlight-sales");
-        if (row.radio === maxRadio) tr.classList.add("highlight-radio");
+   if (row === bestSalesTrack) tr.classList.add("highlight-sales");
+if (row === bestRadioTrack) tr.classList.add("highlight-radio");
 
         tr.innerHTML = `
           <td>
