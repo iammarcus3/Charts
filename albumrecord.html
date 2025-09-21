@@ -100,8 +100,10 @@ function processAlbums(data){
     Object.values(albums).forEach(alb=>{
         const weeksSorted = Array.from(alb.chartWeeks).sort((a,b)=>a-b);
         for(const w of weeksSorted){
-            const weekTracks = Object.values(alb.tracks).map(tlist=>tlist.find(t=>t.week===w)).filter(Boolean);
-            if(weekTracks.length>=2){
+            const weekTracks = Object.values(alb.tracks)
+                .map(tlist=>tlist.find(t=>t.week===w))
+                .filter(Boolean);
+            if(weekTracks.length>=3){
                 alb.debutSales = weekTracks.reduce((sum,t)=>sum+t.sales,0);
                 alb.debutDate = getWeekStartDate(w);
                 break;
@@ -109,14 +111,15 @@ function processAlbums(data){
         }
     });
 
-    // Compute peak sales
+    // Compute peak sales (sum of all songs in the highest-sales week)
     Object.entries(albums).forEach(([albumKey,alb])=>{
         let peak=0, peakDate=null;
         alb.chartWeeks.forEach(w=>{
-            const weekTotal = Object.values(alb.tracks).map(tlist=>{
-                const t = tlist.find(t=>t.week===w);
-                return t? t.sales : 0;
-            }).reduce((a,b)=>a+b,0);
+            const weekTotal = Object.values(alb.tracks)
+                .map(tlist=>{
+                    const t = tlist.find(t=>t.week===w);
+                    return t? t.sales : 0;
+                }).reduce((a,b)=>a+b,0);
             if(weekTotal>peak){
                 peak = weekTotal;
                 peakDate = getWeekStartDate(w);
@@ -128,12 +131,18 @@ function processAlbums(data){
 
     // Compute songs stats and total sales
     Object.values(albums).forEach(alb=>{
+        const countedNum1 = new Set();
+        const countedTop10 = new Set();
+        const countedHot100 = new Set();
         Object.values(alb.tracks).forEach(trackList=>{
-            const bestRank = Math.min(...trackList.map(t=>t.rank));
-            if(bestRank===1) alb.songsNum1++;
-            if(bestRank<=10) alb.songsTop10++;
-            alb.songsHot100+=trackList.length;
+            countedHot100.add(trackList[0].title);
+            if(trackList.some(t=>t.rank===1)) countedNum1.add(trackList[0].title);
+            if(trackList.some(t=>t.rank<=10)) countedTop10.add(trackList[0].title);
         });
+        alb.songsNum1 = countedNum1.size;
+        alb.songsTop10 = countedTop10.size;
+        alb.songsHot100 = countedHot100.size;
+
         // Yearly sales sum per track
         Object.entries(alb.tracks).forEach(([title,tlist])=>{
             tlist.forEach(t=>{
@@ -142,7 +151,8 @@ function processAlbums(data){
             });
         });
         // To-date sales sum
-        alb.totalSalesToDate = Object.values(alb.tracks).reduce((sum,tlist)=>sum+tlist.reduce((s,t)=>s+t.sales,0),0);
+        alb.totalSalesToDate = Object.values(alb.tracks)
+            .reduce((sum,tlist)=>sum+tlist.reduce((s,t)=>s+t.sales,0),0);
         alb.weeksOnChart = alb.chartWeeks.size;
         alb.weeksTop10 = alb.top10Weeks.size;
         alb.weeksAt1 = alb.num1Weeks.size;
@@ -212,7 +222,7 @@ function generateTabs(data){
     Object.values(albums).forEach(alb=>{
         const y = new Date(alb.debutDate).getFullYear();
         if(!years[y]) years[y]={};
-        if(alb.songsHot100>=3) years[y][alb.album+'||'+alb.artist]=alb;
+        if(alb.songsHot100>=2) years[y][alb.album+'||'+alb.artist]=alb;
     });
 
     const tabContainer = document.getElementById('yearTabs');
