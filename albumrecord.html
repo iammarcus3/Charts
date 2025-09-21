@@ -161,38 +161,38 @@ function processAlbums(data){
     return albums;
 }
 
-// Generate table HTML
-function generateTable(albums, year=null){
-    let html='<table><thead><tr>';
-    const headers=["Album","Artist","Weeks on Chart","Weeks Top 10","Weeks at #1",
-                   "Debut Sales","Debut Date","Peak Sales","Peak Date",
-                   "#Songs #1","#Songs Top 10","#Songs Hot 100","Date Hit #1"];
-    if(year) headers.push(`Sales (${year})`);
-    headers.push("To-Date Sales");
-    headers.forEach((h,i)=>html+=`<th onclick="sortTable(this,${i})">${h}</th>`);
-    html+='</tr></thead><tbody>';
+// In generateTable function, update headers:
+const headers=["Rank","Album","Artist","Weeks on Chart","Weeks Top 10","Weeks at #1",
+               "Debut Sales","Debut Date","Peak Sales","Peak Date",
+               "#Songs #1","#Songs Top 10","#Songs Hot 100","Date Hit #1"];
+if(year) headers.push(`Sales (${year})`);
+headers.push("To-Date Sales");
 
-    Object.values(albums).forEach(alb=>{
-        if(alb.songsHot100<2) return;
-        const yearlySales = year?(alb.yearlySales[year]||0).toFixed(2):'';
-        html+=`<tr>
-        <td>${alb.album}</td>
-        <td>${alb.artist}</td>
-        <td>${alb.weeksOnChart}</td>
-        <td>${alb.weeksTop10}</td>
-        <td>${alb.weeksAt1}</td>
-        <td>${alb.debutSales.toFixed(2)}</td>
-        <td>${alb.debutDate}</td>
-        <td>${alb.peakSales.toFixed(2)}</td>
-        <td>${alb.peakDate}</td>
-        <td>${alb.songsNum1}</td>
-        <td>${alb.songsTop10}</td>
-        <td>${alb.songsHot100}</td>
-        <td>${alb.dateHit1||'-'}</td>
-        ${year?`<td>${yearlySales}</td>`:''}
-        <td>${alb.totalSalesToDate.toFixed(2)}</td>
-        </tr>`;
-    });
+// ...then in tbody, add rank variable:
+let rank = 1;
+Object.values(albums).forEach(alb=>{
+    if(alb.songsHot100<2) return;
+    const yearlySales = year?(alb.yearlySales[year]||0).toFixed(2):'';
+    html+=`<tr>
+    <td>${rank}</td>
+    <td>${alb.album}</td>
+    <td>${alb.artist}</td>
+    <td>${alb.weeksOnChart}</td>
+    <td>${alb.weeksTop10}</td>
+    <td>${alb.weeksAt1}</td>
+    <td>${alb.debutSales.toFixed(2)}</td>
+    <td>${alb.debutDate}</td>
+    <td>${alb.peakSales.toFixed(2)}</td>
+    <td>${alb.peakDate}</td>
+    <td>${alb.songsNum1}</td>
+    <td>${alb.songsTop10}</td>
+    <td>${alb.songsHot100}</td>
+    <td>${alb.dateHit1||'-'}</td>
+    ${year?`<td>${yearlySales}</td>`:''}
+    <td>${alb.totalSalesToDate.toFixed(2)}</td>
+    </tr>`;
+    rank++;
+});
 
     html+='</tbody></table>';
     return html;
