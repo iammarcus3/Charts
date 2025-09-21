@@ -59,9 +59,7 @@
 <div class="tabs" id="yearTabs"></div>
 <div id="tabContents"></div>
 
-<!-- Include weekdata first -->
 <script src="weekdata.js"></script>
-
 <script>
 // CONFIG: Week 1 start date
 const week1Start = new Date("2018-02-23");
@@ -72,6 +70,15 @@ function getWeekStartDate(weekNumber) {
     date.setDate(week1Start.getDate() + (weekNumber - 1) * 7);
     return date.toISOString().split('T')[0]; // YYYY-MM-DD
 }
+
+// Flatten weekData object into array
+const allTracks = [];
+Object.keys(weekData).forEach(weekNum => {
+    weekData[weekNum].forEach(track => {
+        track.weeks = parseInt(weekNum);
+        allTracks.push(track);
+    });
+});
 
 // Group tracks by album
 function processAlbums(data) {
@@ -161,7 +168,6 @@ function generateTable(albums, year=null) {
     html += '</tr></thead><tbody>';
 
     Object.values(albums).forEach(alb => {
-        // Only albums with min 2 songs charted
         if (alb.songsHot100 < 2) return;
 
         const yearlySales = year ? (alb.yearlySales[year] || 0).toFixed(2) : '';
@@ -192,7 +198,7 @@ function generateTable(albums, year=null) {
 function generateTabs(data) {
     const albums = processAlbums(data);
 
-    // Group by year (based on debutDate)
+    // Group by year
     const years = {};
     Object.values(albums).forEach(alb => {
         const year = new Date(alb.debutDate).getFullYear();
@@ -227,7 +233,6 @@ function generateTabs(data) {
         const content = document.createElement('div');
         content.classList.add('tab-content');
 
-        // Sort by yearly sales descending and pick top 20
         const sortedAlbums = Object.values(years[year])
             .sort((a,b) => (b.yearlySales[year] || 0) - (a.yearlySales[year] || 0))
             .slice(0,20);
@@ -250,10 +255,10 @@ function switchTab(tab, content) {
 }
 
 // Initialize
-if (typeof weekdata !== 'undefined') {
-    generateTabs(weekdata);
+if (typeof weekData !== 'undefined') {
+    generateTabs(allTracks);
 } else {
-    console.error("weekdata is not defined. Make sure weekdata.js is loaded before this script.");
+    console.error("weekData is not defined. Make sure weekdata.js is loaded before this script.");
 }
 
 </script>
