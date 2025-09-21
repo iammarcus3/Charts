@@ -17,12 +17,14 @@
         justify-content: center;
         background: #1f1f1f;
         border-bottom: 2px solid #ff004c;
+        flex-wrap: wrap;
     }
     .tab {
         padding: 10px 20px;
         cursor: pointer;
         color: #fff;
         transition: background 0.3s;
+        margin: 2px;
     }
     .tab:hover, .tab.active {
         background: #ff004c;
@@ -57,7 +59,9 @@
 <div class="tabs" id="yearTabs"></div>
 <div id="tabContents"></div>
 
+<!-- Include weekdata first -->
 <script src="weekdata.js"></script>
+
 <script>
 // CONFIG: Week 1 start date
 const week1Start = new Date("2018-02-23");
@@ -90,7 +94,9 @@ function processAlbums(data) {
                 songsNum1: 0,
                 songsTop10: 0,
                 songsHot100: 0,
-                dateHit1: null
+                dateHit1: null,
+                yearlySales: {},
+                totalSalesToDate: 0
             };
         }
 
@@ -107,10 +113,8 @@ function processAlbums(data) {
         if (track.rank <= 10) alb.weeksTop10++;
 
         // Weeks at 1
-        if (track.rank === 1) {
-            alb.weeksAt1++;
-            if (!alb.dateHit1) alb.dateHit1 = getWeekStartDate(track.weeks);
-        }
+        if (track.rank === 1 && !alb.dateHit1) alb.dateHit1 = getWeekStartDate(track.weeks);
+        if (track.rank === 1) alb.weeksAt1++;
 
         // Debut sales
         if (!alb.debutSales) {
@@ -123,6 +127,14 @@ function processAlbums(data) {
             alb.peakSales = track.sales;
             alb.peakDate = getWeekStartDate(track.weeks);
         }
+
+        // Yearly sales
+        const weekYear = new Date(getWeekStartDate(track.weeks)).getFullYear();
+        if (!alb.yearlySales[weekYear]) alb.yearlySales[weekYear] = 0;
+        alb.yearlySales[weekYear] += track.sales;
+
+        // Total to-date sales
+        alb.totalSalesToDate += track.sales;
     });
 
     // Compute song stats
@@ -139,14 +151,20 @@ function processAlbums(data) {
 }
 
 // Generate table HTML
-function generateTable(albums) {
+function generateTable(albums, year=null) {
     let html = '<table><thead><tr>';
     html += `<th>Album</th><th>Artist</th><th>Weeks on Chart</th><th>Weeks Top 10</th><th>Weeks at #1</th>
     <th>Debut Sales</th><th>Debut Date</th><th>Peak Sales</th><th>Peak Date</th>
     <th>#Songs #1</th><th>#Songs Top 10</th><th>#Songs Hot 100</th><th>Date Hit #1</th>`;
+    if (year) html += `<th>Sales (${year})</th>`;
+    html += `<th>To-Date Sales</th>`;
     html += '</tr></thead><tbody>';
 
     Object.values(albums).forEach(alb => {
+        // Only albums with min 2 songs charted
+        if (alb.songsHot100 < 2) return;
+
+        const yearlySales = year ? (alb.yearlySales[year] || 0).toFixed(2) : '';
         html += `<tr>
         <td>${alb.album}</td>
         <td>${alb.artist}</td>
@@ -161,6 +179,8 @@ function generateTable(albums) {
         <td>${alb.songsTop10}</td>
         <td>${alb.songsHot100}</td>
         <td>${alb.dateHit1 || '-'}</td>
+        ${year ? `<td>${yearlySales}</td>` : ''}
+        <td>${alb.totalSalesToDate.toFixed(2)}</td>
         </tr>`;
     });
 
@@ -177,7 +197,6 @@ function generateTabs(data) {
     Object.values(albums).forEach(alb => {
         const year = new Date(alb.debutDate).getFullYear();
         if (!years[year]) years[year] = {};
-        // Only albums with min 2 songs
         if (alb.songsHot100 >= 2) years[year][alb.album + '||' + alb.artist] = alb;
     });
 
@@ -207,7 +226,15 @@ function generateTabs(data) {
 
         const content = document.createElement('div');
         content.classList.add('tab-content');
-        content.innerHTML = generateTable(years[year]);
+
+        // Sort by yearly sales descending and pick top 20
+        const sortedAlbums = Object.values(years[year])
+            .sort((a,b) => (b.yearlySales[year] || 0) - (a.yearlySales[year] || 0))
+            .slice(0,20);
+        const yearAlbums = {};
+        sortedAlbums.forEach(a => { yearAlbums[a.album + '||' + a.artist] = a; });
+
+        content.innerHTML = generateTable(yearAlbums, year);
         contentContainer.appendChild(content);
 
         tab.addEventListener('click', () => switchTab(tab, content));
@@ -223,7 +250,11 @@ function switchTab(tab, content) {
 }
 
 // Initialize
-generateTabs(weekdata);
+if (typeof weekdata !== 'undefined') {
+    generateTabs(weekdata);
+} else {
+    console.error("weekdata is not defined. Make sure weekdata.js is loaded before this script.");
+}
 
 </script>
 </body>
