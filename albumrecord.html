@@ -103,7 +103,7 @@ function processAlbums(data){
             const weekTracks = Object.values(alb.tracks)
                 .map(tlist=>tlist.find(t=>t.week===w))
                 .filter(Boolean);
-            if(weekTracks.length>=2){
+            if(weekTracks.length>=3){
                 alb.debutSales = weekTracks.reduce((sum,t)=>sum+t.sales,0);
                 alb.debutDate = getWeekStartDate(w);
                 break;
