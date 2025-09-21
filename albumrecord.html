@@ -4,16 +4,31 @@
 <meta charset="UTF-8">
 <title>Album Records 2018-2025</title>
 <style>
-body { font-family: 'Arial', sans-serif; background-color: #121212; color: #f0f0f0; margin:0; padding:0; }
-h1 { text-align:center; padding:1rem; color:#ff004c; }
-.tabs { display:flex; justify-content:center; background:#1f1f1f; border-bottom:2px solid #ff004c; flex-wrap:wrap; }
-.tab { padding:10px 20px; cursor:pointer; color:#fff; transition: background 0.3s; margin:2px; }
-.tab:hover, .tab.active { background:#ff004c; color:#fff; }
-.tab-content { display:none; padding:1rem 2rem; overflow-x:auto; }
-table { width:100%; border-collapse:collapse; margin-top:1rem; background-color:#1f1f1f; }
-th, td { padding:8px 10px; border:1px solid #333; text-align:center; cursor:pointer; }
-th { background-color:#2a2a2a; color:#ff004c; }
-tr:nth-child(even) { background-color:#1a1a1a; }
+  body { font-family: 'Arial', sans-serif; background-color: #121212; color: #f0f0f0; margin:0; padding:0; }
+  h1 { text-align:center; padding:1rem; color:#ff004c; }
+  .tabs { display:flex; justify-content:center; background:#1f1f1f; border-bottom:2px solid #ff004c; flex-wrap:wrap; }
+  .tab { padding:10px 20px; cursor:pointer; color:#fff; transition: background 0.3s; margin:2px; }
+  .tab:hover, .tab.active { background:#ff004c; color:#fff; }
+
+  /* Make the content scrollable so sticky headers can stick during vertical scroll */
+  .tab-content { display:none; padding:1rem 2rem; overflow-x:auto; }
+
+  table { width:100%; border-collapse:collapse; margin-top:1rem; background-color:#1f1f1f; }
+  th, td { padding:8px 10px; border:1px solid #333; text-align:center; cursor:pointer; }
+  th { background-color:#2a2a2a; color:#ff004c; }
+
+  /* 🔒 Freeze the top row (headers) */
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;            /* keeps headers above rows during scroll */
+    background-color:#2a2a2a; /* re-affirm background so it doesn't become transparent */
+  }
+
+  /* Optional visual: subtle divider under sticky header */
+  thead th { box-shadow: 0 2px 0 #00000040; }
+
+  tr:nth-child(even) { background-color:#1a1a1a; }
 </style>
 </head>
 <body>
