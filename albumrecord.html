@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Album Records 2018-2025</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #121212;
+        color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+    h1 { text-align: center; padding: 1rem; color: #ff004c; }
+    .tabs {
+        display: flex;
+        justify-content: center;
+        background: #1f1f1f;
+        border-bottom: 2px solid #ff004c;
+    }
+    .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        color: #fff;
+        transition: background 0.3s;
+    }
+    .tab:hover, .tab.active {
+        background: #ff004c;
+        color: #fff;
+    }
+    .tab-content {
+        display: none;
+        padding: 1rem 2rem;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        background-color: #1f1f1f;
+    }
+    th, td {
+        padding: 8px 10px;
+        border: 1px solid #333;
+        text-align: center;
+    }
+    th {
+        background-color: #2a2a2a;
+        color: #ff004c;
+    }
+    tr:nth-child(even) { background-color: #1a1a1a; }
+</style>
+</head>
+<body>
+
+<h1>Album Records 2018-2025</h1>
+
+<div class="tabs" id="yearTabs"></div>
+<div id="tabContents"></div>
+
+<script src="weekdata.js"></script>
+<script>
+// CONFIG: Week 1 start date
+const week1Start = new Date("2018-02-23");
+
+// Helper to get week start date
+function getWeekStartDate(weekNumber) {
+    const date = new Date(week1Start);
+    date.setDate(week1Start.getDate() + (weekNumber - 1) * 7);
+    return date.toISOString().split('T')[0]; // YYYY-MM-DD
+}
+
+// Group tracks by album
+function processAlbums(data) {
+    const albums = {};
+
+    data.forEach(track => {
+        const albumKey = track.album + "||" + track.artist;
+        if (!albums[albumKey]) {
+            albums[albumKey] = {
+                album: track.album,
+                artist: track.artist,
+                tracks: {},
+                weeksOnChart: 0,
+                weeksTop10: 0,
+                weeksAt1: 0,
+                debutSales: null,
+                debutDate: null,
+                peakSales: 0,
+                peakDate: null,
+                songsNum1: 0,
+                songsTop10: 0,
+                songsHot100: 0,
+                dateHit1: null
+            };
+        }
+
+        const alb = albums[albumKey];
+
+        // Track per song
+        if (!alb.tracks[track.title]) alb.tracks[track.title] = [];
+        alb.tracks[track.title].push(track);
+
+        // Weeks on chart
+        alb.weeksOnChart++;
+
+        // Weeks top 10
+        if (track.rank <= 10) alb.weeksTop10++;
+
+        // Weeks at 1
+        if (track.rank === 1) {
+            alb.weeksAt1++;
+            if (!alb.dateHit1) alb.dateHit1 = getWeekStartDate(track.weeks);
+        }
+
+        // Debut sales
+        if (!alb.debutSales) {
+            alb.debutSales = track.sales;
+            alb.debutDate = getWeekStartDate(track.weeks);
+        }
+
+        // Peak sales
+        if (track.sales > alb.peakSales) {
+            alb.peakSales = track.sales;
+            alb.peakDate = getWeekStartDate(track.weeks);
+        }
+    });
+
+    // Compute song stats
+    Object.values(albums).forEach(alb => {
+        Object.values(alb.tracks).forEach(trackList => {
+            const ranks = trackList.map(t => t.rank);
+            if (Math.min(...ranks) === 1) alb.songsNum1++;
+            if (Math.min(...ranks) <= 10) alb.songsTop10++;
+            if (ranks.length > 0) alb.songsHot100++;
+        });
+    });
+
+    return albums;
+}
+
+// Generate table HTML
+function generateTable(albums) {
+    let html = '<table><thead><tr>';
+    html += `<th>Album</th><th>Artist</th><th>Weeks on Chart</th><th>Weeks Top 10</th><th>Weeks at #1</th>
+    <th>Debut Sales</th><th>Debut Date</th><th>Peak Sales</th><th>Peak Date</th>
+    <th>#Songs #1</th><th>#Songs Top 10</th><th>#Songs Hot 100</th><th>Date Hit #1</th>`;
+    html += '</tr></thead><tbody>';
+
+    Object.values(albums).forEach(alb => {
+        html += `<tr>
+        <td>${alb.album}</td>
+        <td>${alb.artist}</td>
+        <td>${alb.weeksOnChart}</td>
+        <td>${alb.weeksTop10}</td>
+        <td>${alb.weeksAt1}</td>
+        <td>${alb.debutSales.toFixed(2)}</td>
+        <td>${alb.debutDate}</td>
+        <td>${alb.peakSales.toFixed(2)}</td>
+        <td>${alb.peakDate}</td>
+        <td>${alb.songsNum1}</td>
+        <td>${alb.songsTop10}</td>
+        <td>${alb.songsHot100}</td>
+        <td>${alb.dateHit1 || '-'}</td>
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    return html;
+}
+
+// Generate Tabs by Year
+function generateTabs(data) {
+    const albums = processAlbums(data);
+
+    // Group by year (based on debutDate)
+    const years = {};
+    Object.values(albums).forEach(alb => {
+        const year = new Date(alb.debutDate).getFullYear();
+        if (!years[year]) years[year] = {};
+        // Only albums with min 2 songs
+        if (alb.songsHot100 >= 2) years[year][alb.album + '||' + alb.artist] = alb;
+    });
+
+    const tabContainer = document.getElementById('yearTabs');
+    const contentContainer = document.getElementById('tabContents');
+
+    // All-Time tab
+    const allTimeTab = document.createElement('div');
+    allTimeTab.classList.add('tab', 'active');
+    allTimeTab.innerText = 'All-Time';
+    tabContainer.appendChild(allTimeTab);
+
+    const allTimeContent = document.createElement('div');
+    allTimeContent.classList.add('tab-content');
+    allTimeContent.style.display = 'block';
+    allTimeContent.innerHTML = generateTable(albums);
+    contentContainer.appendChild(allTimeContent);
+
+    allTimeTab.addEventListener('click', () => switchTab(allTimeTab, allTimeContent));
+
+    // Year tabs
+    Object.keys(years).sort().forEach(year => {
+        const tab = document.createElement('div');
+        tab.classList.add('tab');
+        tab.innerText = year;
+        tabContainer.appendChild(tab);
+
+        const content = document.createElement('div');
+        content.classList.add('tab-content');
+        content.innerHTML = generateTable(years[year]);
+        contentContainer.appendChild(content);
+
+        tab.addEventListener('click', () => switchTab(tab, content));
+    });
+}
+
+// Switch Tab
+function switchTab(tab, content) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    tab.classList.add('active');
+    content.style.display = 'block';
+}
+
+// Initialize
+generateTabs(weekdata);
+
+</script>
+</body>
+</html>
