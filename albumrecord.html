@@ -82,11 +82,11 @@ Object.keys(weekData).forEach(weekNum => {
     });
 });
 
-// Group tracks by album
+// Group tracks by album with final track sales
 function processAlbums(data) {
     const albums = {};
 
-    // For each track, keep only the final sales per track
+    // Keep only final sales per track
     const trackFinalSales = {};
     data.forEach(track => {
         const trackKey = track.album + '||' + track.artist + '||' + track.title;
@@ -119,10 +119,9 @@ function processAlbums(data) {
         }
 
         const alb = albums[albumKey];
-
         alb.tracks[track.title] = track;
 
-        // Weeks stats approximated from number of weeks the track charted
+        // Weeks stats approximation
         alb.weeksOnChart += track.weeks;
         if (track.rank <= 10) alb.weeksTop10++;
         if (track.rank === 1) alb.weeksAt1++;
@@ -141,7 +140,7 @@ function processAlbums(data) {
         // Date hit #1
         if (track.rank === 1 && !alb.dateHit1) alb.dateHit1 = getWeekStartDate(track.weeks);
 
-        // Yearly sales
+        // Yearly sales: latest track sale in that year
         const weekYear = new Date(getWeekStartDate(track.weeks)).getFullYear();
         if (!alb.yearlySales[weekYear] || track.sales > alb.yearlySales[weekYear]) {
             alb.yearlySales[weekYear] = track.sales;
@@ -225,7 +224,7 @@ function generateTabs(data) {
     const tabContainer = document.getElementById('yearTabs');
     const contentContainer = document.getElementById('tabContents');
 
-    // All-Time tab
+    // All-Time tab: top 100 by total sales
     const allTimeTab = document.createElement('div');
     allTimeTab.classList.add('tab','active');
     allTimeTab.innerText='All-Time';
@@ -234,12 +233,18 @@ function generateTabs(data) {
     const allTimeContent = document.createElement('div');
     allTimeContent.classList.add('tab-content');
     allTimeContent.style.display='block';
-    allTimeContent.innerHTML=generateTable(albums);
-    contentContainer.appendChild(allTimeContent);
 
+    const top100 = Object.values(albums)
+        .filter(a=>a.songsHot100>=2)
+        .sort((a,b)=>b.totalSalesToDate-a.totalSalesToDate)
+        .slice(0,100);
+    const top100Albums = {};
+    top100.forEach(a=>top100Albums[a.album+'||'+a.artist]=a);
+    allTimeContent.innerHTML=generateTable(top100Albums);
+    contentContainer.appendChild(allTimeContent);
     allTimeTab.addEventListener('click',()=>switchTab(allTimeTab,allTimeContent));
 
-    // Year tabs
+    // Year tabs: top 20 by yearly sales
     Object.keys(years).sort().forEach(year=>{
         const tab=document.createElement('div');
         tab.classList.add('tab');
@@ -248,6 +253,7 @@ function generateTabs(data) {
 
         const content=document.createElement('div');
         content.classList.add('tab-content');
+
         const sortedAlbums=Object.values(years[year])
             .sort((a,b)=>(b.yearlySales[year]||0)-(a.yearlySales[year]||0))
             .slice(0,20);
