@@ -5,7 +5,7 @@ export async function handler(event) {
   const apiKey = process.env.LASTFM_API_KEY;
 
   // 🧑 Replace "YOUR_USERNAME" with your Last.fm username
-  const user = "IAMMARCUS";
+  const user = "IAMMARCUS3";
 
   // 📡 Build the Last.fm API URL (get top 5 tracks all-time)
   const url = `https://ws.audioscrobbler.com/2.0/?method=user.getTopTracks&user=${user}&api_key=${apiKey}&format=json&limit=5`;
