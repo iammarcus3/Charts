@@ -1,29 +1,43 @@
-// netlify/functions/lastfm-test.js
-
+// netlify/functions/weekdata.js
 export async function handler(event) {
-  // 🔑 Get your API key from Netlify environment variables
   const apiKey = process.env.LASTFM_API_KEY;
-
-  // 🧑 Replace "YOUR_USERNAME" with your Last.fm username
   const user = "IAMMARCUS3";
 
-  // 📡 Build the Last.fm API URL (get top 5 tracks all-time)
-  const url = `https://ws.audioscrobbler.com/2.0/?method=user.getTopTracks&user=${user}&api_key=${apiKey}&format=json&limit=5`;
-
   try {
-    const res = await fetch(url);
+    // Fetch latest weekly chart
+    const chartUrl = `http://ws.audioscrobbler.com/2.0/?method=user.getWeeklyTrackChart&user=${user}&api_key=${apiKey}&format=json&limit=100`;
+    const res = await fetch(chartUrl);
     const data = await res.json();
 
-    // ✅ Return the data so you can see it in browser
+    const tracks = data.weeklytrackchart.track || [];
+
+    const weekData = { "1": [] };
+
+    tracks.forEach((t, i) => {
+      weekData["1"].push({
+        rank: i + 1,
+        movement: "NEW", // later: compare with previous week
+        title: t.name,
+        artist: t.artist["#text"],
+        album: "Unknown",
+        plays: parseFloat(t.playcount),
+        sales: 0,
+        totalSales: 0,
+        weeks: 1,
+        peak: i + 1,
+        streams: 0,
+        radio: 0,
+        points: parseInt(t.playcount)
+      });
+    });
+
+    // Respond with valid JS code so the browser can load it
     return {
       statusCode: 200,
-      body: JSON.stringify(data, null, 2), // pretty JSON
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/javascript" },
+      body: "const weekData = " + JSON.stringify(weekData, null, 2) + ";"
     };
   } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message })
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 }
