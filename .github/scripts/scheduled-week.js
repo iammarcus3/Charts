@@ -3,6 +3,7 @@
 
 const fetch = require("node-fetch");
 const fs = require("fs");
+const path = require("path");
 const { execSync } = require("child_process");
 
 // --- Settings: Your Last.fm credentials ---
@@ -12,7 +13,7 @@ const USER = "IAMMARCUS3";
 // --- Settings: GitHub repo for persistence ---
 const GH_REPO    = process.env.GITHUB_REPO || "iammarcus3/Charts";
 const GH_BRANCH  = process.env.GITHUB_BRANCH || "main";
-const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js";
+const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js"; // path relative to repo root
 const DRY_RUN = process.env.DRY_RUN === "true";
 
 // --- Debug log start ---
@@ -21,6 +22,7 @@ console.log("DEBUG: GH_REPO =", GH_REPO);
 console.log("DEBUG: GH_BRANCH =", GH_BRANCH);
 console.log("DEBUG: WEEKDATA_PATH =", WEEKDATA_PATH);
 console.log("DEBUG: DRY_RUN =", DRY_RUN);
+console.log("DEBUG: CWD =", process.cwd());
 
 // --- Constants ---
 const MAX_ENTRIES = 200;
@@ -78,7 +80,7 @@ function lastFridayToThursdayRange() {
   const now = Math.floor(Date.now() / 1000) + TZ_OFFSET;
   const d = new Date(now * 1000);
   const localMidnight = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-  const dow = localMidnight.getUTCDay();
+  const dow = localMidnight.getUTCDay(); // 0..6
   const daysSinceFri = (dow - 5 + 7) % 7;
   const thisFri = new Date(localMidnight.getTime() - daysSinceFri * 86400 * 1000);
   const prevFri = new Date(thisFri.getTime() - 7 * 86400 * 1000);
@@ -86,6 +88,61 @@ function lastFridayToThursdayRange() {
   const to = Math.floor((thisFri.getTime() - TZ_OFFSET * 1000) / 1000);
   console.log("DEBUG: Last Friday→Thursday range", { from, to });
   return { from, to };
+}
+
+// --- Resilient loader for weekdata.js ---
+// Supports both old "const weekData = {...};" and new "module.exports = {...};"
+function parseLegacyConst(raw) {
+  let body = raw.replace(/^const\s+weekData\s*=\s*/, "").trim();
+  if (body.endsWith(";")) body = body.slice(0, -1);
+  try {
+    return JSON.parse(body);
+  } catch {
+    const start = raw.indexOf("{");
+    const end = raw.lastIndexOf("}");
+    if (start === -1 || end === -1 || end <= start) {
+      throw new Error("Could not locate JSON object in weekdata.js");
+    }
+    return JSON.parse(raw.slice(start, end + 1));
+  }
+}
+function loadWeekData(filePathRel) {
+  const abs = path.isAbsolute(filePathRel)
+    ? filePathRel
+    : path.resolve(process.cwd(), filePathRel);
+  console.log("DEBUG: Resolved weekdata path =", abs);
+
+  if (!fs.existsSync(abs)) {
+    throw new Error(`Weekdata file not found at ${abs}`);
+  }
+
+  // Try module form first
+  try {
+    delete require.cache[abs];
+    const mod = require(abs);
+    if (mod && typeof mod === "object" && !Array.isArray(mod)) {
+      console.log("DEBUG: Loaded weekdata via module.exports");
+      return mod;
+    }
+  } catch (e) {
+    console.log("DEBUG: Module require failed, will try legacy parse:", e.message);
+  }
+
+  // Legacy: const weekData = {...};
+  const raw = fs.readFileSync(abs, "utf8");
+  console.log("DEBUG: Loaded raw weekdata, first 80 chars:", raw.slice(0, 80));
+  const parsed = parseLegacyConst(raw);
+  console.log("DEBUG: Parsed legacy weekdata");
+  return parsed;
+}
+
+function saveWeekData(filePathRel, dataObj) {
+  const abs = path.isAbsolute(filePathRel)
+    ? filePathRel
+    : path.resolve(process.cwd(), filePathRel);
+  const newContent = "module.exports = " + JSON.stringify(dataObj, null, 2) + ";\n";
+  fs.writeFileSync(abs, newContent);
+  console.log("DEBUG: weekdata.js written at", abs);
 }
 
 // --- Fetch scrobbles ---
@@ -127,27 +184,24 @@ async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
-    // 1. Load weekdata.js as a module
-    const weekData = require("./" + WEEKDATA_PATH);
-    console.log("DEBUG: weekdata.js loaded successfully");
+    // 1) Load weekdata from repo root
+    const weekData = loadWeekData(WEEKDATA_PATH);
 
-    // 2. Last completed week
+    // 2) Last completed week
     const lastWeek = Math.max(...Object.keys(weekData).map(Number));
     const nextWeek = Math.max(lastWeek, LAST_STATIC_WEEK) + 1;
     console.log("DEBUG: Last week =", lastWeek, "Next week =", nextWeek);
 
-    // 3. Get scrobbles
+    // 3) Pull scrobbles and aggregate plays
     const { from, to } = lastFridayToThursdayRange();
     const scrobbles = await fetchScrobbles(from, to);
-    const plays = aggregatePlays(scrobbles);
-    plays.sort((a, b) => b.plays - a.plays);
+    const plays = aggregatePlays(scrobbles).sort((a, b) => b.plays - a.plays);
 
-    // 4. Song history
+    // 4) Song history
     const songHistory = new Map();
     for (const [w, entries] of Object.entries(weekData)) {
       for (const e of entries) {
-        const key = getKey(e.title, e.artist);
-        songHistory.set(key, {
+        songHistory.set(getKey(e.title, e.artist), {
           totalSales: e.totalSales,
           weeks: e.weeks,
           lastRank: e.rank,
@@ -158,7 +212,7 @@ async function handler() {
     }
     console.log("DEBUG: Song history loaded, entries =", songHistory.size);
 
-    // 5. Compute provisional stats
+    // 5) Compute provisional stats
     let maxSales = 0, maxStreams = 0, maxRadio = 0;
     const provisional = plays.map((p, i) => {
       const rank = i + 1;
@@ -174,13 +228,13 @@ async function handler() {
       return { ...p, rank, sales, streams, radio, weeks, hist };
     });
 
-    // 6. Finalize with points
+    // 6) Points + rank
     const withPoints = provisional.map(e => ({
       ...e,
       points: calcPoints(e.sales, e.streams, e.radio, maxSales, maxStreams, maxRadio)
     })).sort((a, b) => b.points - a.points);
 
-    // 7. Build final entries
+    // 7) Final entries
     const entries = withPoints.slice(0, MAX_ENTRIES).map((e, i) => {
       const rank = i + 1;
       let movement = "NEW";
@@ -211,7 +265,7 @@ async function handler() {
 
     console.log("DEBUG: Final entries prepared =", entries.length);
 
-    // 8. Dry-run vs publish
+    // 8) Dry-run vs publish
     if (DRY_RUN) {
       console.log("=== DRY RUN PREVIEW (Top 20) ===");
       for (const e of entries.slice(0, 20)) {
@@ -223,11 +277,9 @@ async function handler() {
       return;
     }
 
-    // 9. Write & commit
+    // 9) Write & commit
     weekData[nextWeek] = entries;
-    const newContent = "module.exports = " + JSON.stringify(weekData, null, 2) + ";\n";
-    fs.writeFileSync(WEEKDATA_PATH, newContent);
-    console.log("DEBUG: weekdata.js written locally");
+    saveWeekData(WEEKDATA_PATH, weekData);
 
     execSync('git config user.name "github-actions[bot]"');
     execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
