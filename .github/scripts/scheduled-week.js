@@ -57,7 +57,7 @@ function getFactor(factors, weeks) {
 }
 function calcSales(plays, mult) { return plays * mult; }
 function calcStreams(sales, weeks) { return sales * getFactor(STREAMS_FACTORS, weeks) * 8500; }
-function calcRadio(sales, weeks) { return sales * getFactor(RADIO_FACTORS, weeks) * 1_000_000; }
+function calcRadio(sales, weeks) { return sales * getFactor(RADIO_FACTORS, weeks) * 100_000; }
 function calcPoints(sales, streams, radio, maxSales, maxStreams, maxRadio) {
   if (maxSales === 0) maxSales = 1;
   if (maxStreams === 0) maxStreams = 1;
@@ -127,27 +127,27 @@ async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
-    // 1. Load weekdata.js from repo
+    // 1. Load weekdata.js
     const content = fs.readFileSync(WEEKDATA_PATH, "utf-8");
     console.log("DEBUG: weekdata.js first 200 chars →", content.slice(0, 200));
 
-    // Strip `const weekData =` and trailing semicolon
+    // Strip "const weekData =" and trailing ";"
     const jsonString = content.replace(/^const weekData = /, "").replace(/;$/, "");
     const weekData = JSON.parse(jsonString);
     console.log("DEBUG: Parsed weekData successfully");
 
-    // 2. Get last completed week number
+    // 2. Last completed week
     const lastWeek = Math.max(...Object.keys(weekData).map(Number));
     const nextWeek = Math.max(lastWeek, LAST_STATIC_WEEK) + 1;
     console.log("DEBUG: Last week =", lastWeek, "Next week =", nextWeek);
 
-    // 3. Get scrobbles for Fri→Thu
+    // 3. Get scrobbles
     const { from, to } = lastFridayToThursdayRange();
     const scrobbles = await fetchScrobbles(from, to);
     const plays = aggregatePlays(scrobbles);
     plays.sort((a, b) => b.plays - a.plays);
 
-    // 4. Load song history
+    // 4. Song history
     const songHistory = new Map();
     for (const [w, entries] of Object.entries(weekData)) {
       for (const e of entries) {
@@ -163,7 +163,7 @@ async function handler() {
     }
     console.log("DEBUG: Song history loaded, entries =", songHistory.size);
 
-    // 5. Compute sales/streams/radio/points
+    // 5. Compute provisional stats
     let maxSales = 0, maxStreams = 0, maxRadio = 0;
     const provisional = plays.map((p, i) => {
       const rank = i + 1;
@@ -178,9 +178,8 @@ async function handler() {
       maxRadio = Math.max(maxRadio, radio);
       return { ...p, rank, sales, streams, radio, weeks, hist };
     });
-    console.log("DEBUG: Provisional entries =", provisional.length);
 
-    // 6. Calculate points & finalize ranking
+    // 6. Finalize with points
     const withPoints = provisional.map(e => ({
       ...e,
       points: calcPoints(e.sales, e.streams, e.radio, maxSales, maxStreams, maxRadio)
@@ -214,16 +213,21 @@ async function handler() {
         points: e.points
       };
     });
-    console.log("DEBUG: Final entries prepared =", entries.length);
 
     // 8. Dry-run vs publish
     if (DRY_RUN) {
-      console.log("=== DRY RUN: New Week Preview ===");
-      console.log(JSON.stringify(entries.slice(0, 10), null, 2));
+      console.log("=== DRY RUN PREVIEW ===");
+      console.table(entries.slice(0, 10).map(e => ({
+        rank: e.rank,
+        title: e.title,
+        artist: e.artist,
+        plays: e.plays,
+        points: e.points
+      })));
       return;
     }
 
-    // 9. Write and commit to GitHub
+    // 9. Write & commit
     weekData[nextWeek] = entries;
     const newContent = "const weekData = " + JSON.stringify(weekData, null, 2) + ";";
     fs.writeFileSync(WEEKDATA_PATH, newContent);
@@ -236,10 +240,8 @@ async function handler() {
     execSync("git push");
     console.log("SUCCESS: Week", nextWeek, "committed to GitHub");
 
-    return { statusCode: 200, body: JSON.stringify({ ok: true, week: nextWeek, entries: entries.length }) };
   } catch (err) {
     console.error("FATAL ERROR:", err.message, err.stack);
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 }
 
