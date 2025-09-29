@@ -3,7 +3,7 @@ name: Weekly Chart Update
 on:
   schedule:
     - cron: "0 6 * * FRI"   # Every Friday at 06:00 UTC (~08:00 South Africa)
-  workflow_dispatch:        # Allow manual run
+  workflow_dispatch:        # Allow manual trigger from the Actions tab
 
 permissions:
   contents: write           # IMPORTANT: allows committing changes
@@ -16,15 +16,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 18   # Node 18 has global fetch
 
-      # node-fetch v2 works with CommonJS require()
-      - name: Install deps
-        run: npm install node-fetch@2
-
+      # Run the chart updater script
       - name: Run chart updater
         run: node .github/scripts/scheduled-week.js
 
