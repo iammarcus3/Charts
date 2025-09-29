@@ -1,7 +1,7 @@
-// Scheduled Netlify/GitHub function to fetch Last.fm data every Friday,
+// Scheduled GitHub Action to fetch Last.fm data every Friday,
 // process it with your exact Python logic, and persist to weekdata.js
 
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
 // --- Settings: Your Last.fm credentials ---
 const API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822";
@@ -159,7 +159,7 @@ function aggregatePlays(tracks) {
 }
 
 // --- Main scheduled handler ---
-export async function handler() {
+async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
@@ -179,7 +179,7 @@ export async function handler() {
     const plays = aggregatePlays(scrobbles);
     plays.sort((a, b) => b.plays - a.plays);
 
-    // 4. Load song history for movement/peaks/totalSales
+    // 4. Load song history
     const songHistory = new Map();
     for (const [w, entries] of Object.entries(weekData)) {
       for (const e of entries) {
@@ -210,7 +210,7 @@ export async function handler() {
       maxRadio = Math.max(maxRadio, radio);
       return { ...p, rank, sales, streams, radio, weeks, hist };
     });
-    console.log("DEBUG: Provisional entries calculated =", provisional.length);
+    console.log("DEBUG: Provisional entries =", provisional.length);
 
     // 6. Calculate points & finalize ranking
     const withPoints = provisional.map(e => ({
@@ -260,3 +260,5 @@ export async function handler() {
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 }
+
+module.exports = { handler };
