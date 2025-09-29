@@ -1,1 +1,29 @@
+name: Weekly Chart Update
 
+on:
+  schedule:
+    - cron: "0 6 * * FRI"  # Every Friday at 06:00 UTC (~08:00 in South Africa)
+  workflow_dispatch:       # allows manual run from GitHub Actions tab
+
+jobs:
+  update-weekdata:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install deps
+        run: npm install node-fetch@2
+
+      - name: Run scheduled-week script
+        run: node .github/scripts/scheduled-week.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_BRANCH: ${{ github.ref_name }}
