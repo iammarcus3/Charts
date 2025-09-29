@@ -2,13 +2,14 @@
 // process it with your exact Python logic, and persist to weekdata.js
 
 const fetch = require("node-fetch");
+const fs = require("fs");
+const { execSync } = require("child_process");
 
 // --- Settings: Your Last.fm credentials ---
 const API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822";
 const USER = "IAMMARCUS3";
 
 // --- Settings: GitHub repo for persistence ---
-const GH_TOKEN   = process.env.GITHUB_TOKEN;
 const GH_REPO    = process.env.GITHUB_REPO || "iammarcus3/Charts";
 const GH_BRANCH  = process.env.GITHUB_BRANCH || "main";
 const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js";
@@ -69,45 +70,6 @@ function getKey(title, artist) {
   return title.toLowerCase().trim() + "||" + artist.toLowerCase().trim();
 }
 
-// --- GitHub file helpers ---
-async function githubGetFile() {
-  const url = `https://api.github.com/repos/${GH_REPO}/contents/${WEEKDATA_PATH}?ref=${GH_BRANCH}`;
-  console.log("DEBUG: Fetching weekdata.js from", url);
-
-  const res = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` }});
-  if (!res.ok) {
-    const msg = `GitHub get file failed: ${res.status} ${res.statusText}`;
-    console.error("ERROR:", msg);
-    throw new Error(msg);
-  }
-  const j = await res.json();
-  console.log("DEBUG: weekdata.js successfully fetched, size =", j.size);
-  return { content: Buffer.from(j.content, j.encoding).toString("utf-8"), sha: j.sha };
-}
-async function githubUpdateFile(newContent, sha, message) {
-  const url = `https://api.github.com/repos/${GH_REPO}/contents/${WEEKDATA_PATH}`;
-  console.log("DEBUG: Updating file at", url);
-
-  const body = {
-    message,
-    content: Buffer.from(newContent, "utf-8").toString("base64"),
-    sha,
-    branch: GH_BRANCH
-  };
-  const res = await fetch(url, {
-    method: "PUT",
-    headers: { Authorization: `Bearer ${GH_TOKEN}`, "Content-Type": "application/json" },
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) {
-    const errMsg = `GitHub update failed: ${res.status} ${await res.text()}`;
-    console.error("ERROR:", errMsg);
-    throw new Error(errMsg);
-  }
-  console.log("DEBUG: weekdata.js successfully updated");
-  return await res.json();
-}
-
 // --- Last Friday→Thursday window (South Africa time, UTC+2) ---
 function lastFridayToThursdayRange() {
   const TZ_OFFSET = 2 * 3600;
@@ -163,8 +125,8 @@ async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
-    // 1. Load weekdata.js from GitHub
-    const { content, sha } = await githubGetFile();
+    // 1. Load weekdata.js from repo
+    const content = fs.readFileSync(WEEKDATA_PATH, "utf-8");
     const weekData = JSON.parse(content.match(/\{[\s\S]*\}/)[0]);
     console.log("DEBUG: Parsed weekData successfully");
 
@@ -248,12 +210,19 @@ async function handler() {
     });
     console.log("DEBUG: Final entries prepared =", entries.length);
 
-    // 8. Update weekData + push to GitHub
+    // 8. Write and commit to GitHub
     weekData[nextWeek] = entries;
     const newContent = "const weekData = " + JSON.stringify(weekData, null, 2) + ";";
-    await githubUpdateFile(newContent, sha, `add week ${nextWeek} (Last.fm)`);
+    fs.writeFileSync(WEEKDATA_PATH, newContent);
+    console.log("DEBUG: weekdata.js written locally");
 
-    console.log("SUCCESS: Week", nextWeek, "updated with", entries.length, "entries");
+    execSync('git config user.name "github-actions[bot]"');
+    execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
+    execSync(`git add ${WEEKDATA_PATH}`);
+    execSync(`git commit -m "add week ${nextWeek} (Last.fm)" || echo "No changes to commit"`);
+    execSync("git push");
+    console.log("SUCCESS: Week", nextWeek, "committed to GitHub");
+
     return { statusCode: 200, body: JSON.stringify({ ok: true, week: nextWeek, entries: entries.length }) };
   } catch (err) {
     console.error("FATAL ERROR:", err.message, err.stack);
