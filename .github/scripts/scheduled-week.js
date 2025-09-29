@@ -14,11 +14,15 @@ const GH_REPO    = process.env.GITHUB_REPO || "iammarcus3/Charts";
 const GH_BRANCH  = process.env.GITHUB_BRANCH || "main";
 const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js";
 
+// --- Mode: dry-run prints preview, publish writes/commits ---
+const DRY_RUN = (process.env.DRY_RUN === "true");
+
 // --- Debug log start ---
 console.log("DEBUG: Starting weekly update job");
 console.log("DEBUG: GH_REPO =", GH_REPO);
 console.log("DEBUG: GH_BRANCH =", GH_BRANCH);
 console.log("DEBUG: WEEKDATA_PATH =", WEEKDATA_PATH);
+console.log("DEBUG: DRY_RUN =", DRY_RUN);
 
 // --- Constants ---
 const MAX_ENTRIES = 200;
@@ -97,9 +101,9 @@ async function fetchScrobbles(from, to) {
     if (!res.ok) throw new Error(`Last.fm error ${res.status}`);
     const j = await res.json();
     const arr = j.recenttracks?.track || [];
-    for (const t of arr) if (t.date) all.push(t);
-    const attr = j.recenttracks["@attr"];
-    totalPages = attr ? parseInt(attr.totalPages || "1") : 1;
+    for (const t of arr) if (t.date) all.push(t); // skip "now playing" (no date)
+    const attr = j.recenttracks?.["@attr"];
+    totalPages = attr ? parseInt(attr.totalPages || "1", 10) : 1;
     page++;
   }
   console.log("DEBUG: Total scrobbles fetched =", all.length);
@@ -151,7 +155,7 @@ async function handler() {
           weeks: e.weeks,
           lastRank: e.rank,
           peak: e.peak,
-          last_seen: parseInt(w)
+          last_seen: parseInt(w, 10)
         });
       }
     }
@@ -210,18 +214,25 @@ async function handler() {
     });
     console.log("DEBUG: Final entries prepared =", entries.length);
 
-    // 8. Write and commit to GitHub
+    // 8. Write and (optionally) commit to GitHub
     weekData[nextWeek] = entries;
     const newContent = "const weekData = " + JSON.stringify(weekData, null, 2) + ";";
-    fs.writeFileSync(WEEKDATA_PATH, newContent);
-    console.log("DEBUG: weekdata.js written locally");
 
-    execSync('git config user.name "github-actions[bot]"');
-    execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
-    execSync(`git add ${WEEKDATA_PATH}`);
-    execSync(`git commit -m "add week ${nextWeek} (Last.fm)" || echo "No changes to commit"`);
-    execSync("git push");
-    console.log("SUCCESS: Week", nextWeek, "committed to GitHub");
+    if (DRY_RUN) {
+      console.log(`DRY RUN: Would add week ${nextWeek} with ${entries.length} entries`);
+      console.log("DRY RUN: Top 10 preview:\n", JSON.stringify(entries.slice(0, 10), null, 2));
+    } else {
+      fs.writeFileSync(WEEKDATA_PATH, newContent);
+      console.log("DEBUG: weekdata.js written locally");
+
+      // commit & push
+      execSync('git config user.name "github-actions[bot]"');
+      execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
+      execSync(`git add ${WEEKDATA_PATH}`);
+      execSync(`git commit -m "add week ${nextWeek} (Last.fm)" || echo "No changes to commit"`);
+      execSync("git push");
+      console.log("SUCCESS: Week", nextWeek, "committed to GitHub");
+    }
 
     return { statusCode: 200, body: JSON.stringify({ ok: true, week: nextWeek, entries: entries.length }) };
   } catch (err) {
@@ -231,3 +242,10 @@ async function handler() {
 }
 
 module.exports = { handler };
+
+// Auto-run when executed directly (GitHub Actions uses `node file.js`)
+if (require.main === module) {
+  handler()
+    .then(() => process.exit(0))
+    .catch(err => { console.error(err); process.exit(1); });
+}
