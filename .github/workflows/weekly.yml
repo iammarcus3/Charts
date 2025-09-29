@@ -9,9 +9,13 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0      # required for pushing commits
+          ref: main           # ensure we're on main branch
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -29,3 +33,9 @@ jobs:
         run: |
           echo "Running scheduled-week.js..."
           node .github/scripts/scheduled-week.js
+
+      - name: Push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git push origin main
