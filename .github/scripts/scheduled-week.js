@@ -57,7 +57,7 @@ function getFactor(factors, weeks) {
 }
 function calcSales(plays, mult) { return plays * mult; }
 function calcStreams(sales, weeks) { return sales * getFactor(STREAMS_FACTORS, weeks) * 8500; }
-function calcRadio(sales, weeks) { return sales * getFactor(RADIO_FACTORS, weeks) * 100_000; }
+function calcRadio(sales, weeks) { return sales * getFactor(RADIO_FACTORS, weeks) * 1_000; } // exact as Python
 function calcPoints(sales, streams, radio, maxSales, maxStreams, maxRadio) {
   if (maxSales === 0) maxSales = 1;
   if (maxStreams === 0) maxStreams = 1;
@@ -99,7 +99,7 @@ async function fetchScrobbles(from, to) {
     if (!res.ok) throw new Error(`Last.fm error ${res.status}`);
     const j = await res.json();
     const arr = j.recenttracks?.track || [];
-    for (const t of arr) if (t.date) all.push(t);
+    for (const t of arr) if (t.date) all.push(t); // ignore "now playing"
     const attr = j.recenttracks["@attr"];
     totalPages = attr ? parseInt(attr.totalPages || "1") : 1;
     page++;
@@ -122,6 +122,26 @@ function aggregatePlays(tracks) {
   return [...map.values()];
 }
 
+// --- Parse weekdata.js safely ---
+function parseWeekDataFile(raw) {
+  // Try the simple strip first
+  let body = raw.replace(/^const\s+weekData\s*=\s*/, "").trim();
+  // Drop possible trailing semicolon
+  if (body.endsWith(";")) body = body.slice(0, -1);
+  // If still not valid JSON, try to extract the first {...} block
+  try {
+    return JSON.parse(body);
+  } catch {
+    const start = raw.indexOf("{");
+    const end = raw.lastIndexOf("}");
+    if (start === -1 || end === -1 || end <= start) {
+      throw new Error("Could not locate JSON object in weekdata.js");
+    }
+    const candidate = raw.slice(start, end + 1);
+    return JSON.parse(candidate);
+  }
+}
+
 // --- Main scheduled handler ---
 async function handler() {
   try {
@@ -130,10 +150,7 @@ async function handler() {
     // 1. Load weekdata.js
     const content = fs.readFileSync(WEEKDATA_PATH, "utf-8");
     console.log("DEBUG: weekdata.js first 200 chars →", content.slice(0, 200));
-
-    // Strip "const weekData =" and trailing ";"
-    const jsonString = content.replace(/^const weekData = /, "").replace(/;$/, "");
-    const weekData = JSON.parse(jsonString);
+    const weekData = parseWeekDataFile(content);
     console.log("DEBUG: Parsed weekData successfully");
 
     // 2. Last completed week
@@ -214,16 +231,17 @@ async function handler() {
       };
     });
 
+    console.log("DEBUG: Final entries prepared =", entries.length);
+
     // 8. Dry-run vs publish
     if (DRY_RUN) {
-      console.log("=== DRY RUN PREVIEW ===");
-      console.table(entries.slice(0, 10).map(e => ({
-        rank: e.rank,
-        title: e.title,
-        artist: e.artist,
-        plays: e.plays,
-        points: e.points
-      })));
+      console.log("=== DRY RUN PREVIEW (Top 20) ===");
+      for (const e of entries.slice(0, 20)) {
+        console.log(
+          `#${e.rank} ${e.title} — ${e.artist} | Plays: ${e.plays} | Sales: ${e.sales.toFixed(2)} | Points: ${e.points}`
+        );
+      }
+      console.log("=== END PREVIEW ===");
       return;
     }
 
@@ -239,10 +257,18 @@ async function handler() {
     execSync(`git commit -m "add week ${nextWeek} (Last.fm)" || echo "No changes to commit"`);
     execSync("git push");
     console.log("SUCCESS: Week", nextWeek, "committed to GitHub");
-
   } catch (err) {
-    console.error("FATAL ERROR:", err.message, err.stack);
+    console.error("FATAL ERROR:", err.message);
+    console.error(err.stack);
   }
+}
+
+// --- Run the handler when executed directly (important!) ---
+if (require.main === module) {
+  handler().catch(err => {
+    console.error("UNHANDLED:", err);
+    process.exit(1);
+  });
 }
 
 module.exports = { handler };
