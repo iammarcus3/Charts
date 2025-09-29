@@ -57,7 +57,7 @@ function getFactor(factors, weeks) {
 }
 function calcSales(plays, mult) { return plays * mult; }
 function calcStreams(sales, weeks) { return sales * getFactor(STREAMS_FACTORS, weeks) * 8500; }
-function calcRadio(sales, weeks) { return sales * getFactor(RADIO_FACTORS, weeks) * 1_000; } // exact as Python
+function calcRadio(sales, weeks) { return sales * getFactor(RADIO_FACTORS, weeks) * 1_000; }
 function calcPoints(sales, streams, radio, maxSales, maxStreams, maxRadio) {
   if (maxSales === 0) maxSales = 1;
   if (maxStreams === 0) maxStreams = 1;
@@ -78,7 +78,7 @@ function lastFridayToThursdayRange() {
   const now = Math.floor(Date.now() / 1000) + TZ_OFFSET;
   const d = new Date(now * 1000);
   const localMidnight = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-  const dow = localMidnight.getUTCDay(); // 0=Sun..6=Sat
+  const dow = localMidnight.getUTCDay();
   const daysSinceFri = (dow - 5 + 7) % 7;
   const thisFri = new Date(localMidnight.getTime() - daysSinceFri * 86400 * 1000);
   const prevFri = new Date(thisFri.getTime() - 7 * 86400 * 1000);
@@ -122,36 +122,14 @@ function aggregatePlays(tracks) {
   return [...map.values()];
 }
 
-// --- Parse weekdata.js safely ---
-function parseWeekDataFile(raw) {
-  // Try the simple strip first
-  let body = raw.replace(/^const\s+weekData\s*=\s*/, "").trim();
-  // Drop possible trailing semicolon
-  if (body.endsWith(";")) body = body.slice(0, -1);
-  // If still not valid JSON, try to extract the first {...} block
-  try {
-    return JSON.parse(body);
-  } catch {
-    const start = raw.indexOf("{");
-    const end = raw.lastIndexOf("}");
-    if (start === -1 || end === -1 || end <= start) {
-      throw new Error("Could not locate JSON object in weekdata.js");
-    }
-    const candidate = raw.slice(start, end + 1);
-    return JSON.parse(candidate);
-  }
-}
-
 // --- Main scheduled handler ---
 async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
-    // 1. Load weekdata.js
-    const content = fs.readFileSync(WEEKDATA_PATH, "utf-8");
-    console.log("DEBUG: weekdata.js first 200 chars →", content.slice(0, 200));
-    const weekData = parseWeekDataFile(content);
-    console.log("DEBUG: Parsed weekData successfully");
+    // 1. Load weekdata.js as a module
+    const weekData = require("./" + WEEKDATA_PATH);
+    console.log("DEBUG: weekdata.js loaded successfully");
 
     // 2. Last completed week
     const lastWeek = Math.max(...Object.keys(weekData).map(Number));
@@ -247,7 +225,7 @@ async function handler() {
 
     // 9. Write & commit
     weekData[nextWeek] = entries;
-    const newContent = "const weekData = " + JSON.stringify(weekData, null, 2) + ";";
+    const newContent = "module.exports = " + JSON.stringify(weekData, null, 2) + ";\n";
     fs.writeFileSync(WEEKDATA_PATH, newContent);
     console.log("DEBUG: weekdata.js written locally");
 
@@ -263,7 +241,7 @@ async function handler() {
   }
 }
 
-// --- Run the handler when executed directly (important!) ---
+// --- Run the handler when executed directly ---
 if (require.main === module) {
   handler().catch(err => {
     console.error("UNHANDLED:", err);
