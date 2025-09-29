@@ -13,9 +13,7 @@ const USER = "IAMMARCUS3";
 const GH_REPO    = process.env.GITHUB_REPO || "iammarcus3/Charts";
 const GH_BRANCH  = process.env.GITHUB_BRANCH || "main";
 const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js";
-
-// --- Mode: dry-run prints preview, publish writes/commits ---
-const DRY_RUN = (process.env.DRY_RUN === "true");
+const DRY_RUN = process.env.DRY_RUN === "true";
 
 // --- Debug log start ---
 console.log("DEBUG: Starting weekly update job");
@@ -101,9 +99,9 @@ async function fetchScrobbles(from, to) {
     if (!res.ok) throw new Error(`Last.fm error ${res.status}`);
     const j = await res.json();
     const arr = j.recenttracks?.track || [];
-    for (const t of arr) if (t.date) all.push(t); // skip "now playing" (no date)
-    const attr = j.recenttracks?.["@attr"];
-    totalPages = attr ? parseInt(attr.totalPages || "1", 10) : 1;
+    for (const t of arr) if (t.date) all.push(t);
+    const attr = j.recenttracks["@attr"];
+    totalPages = attr ? parseInt(attr.totalPages || "1") : 1;
     page++;
   }
   console.log("DEBUG: Total scrobbles fetched =", all.length);
@@ -131,7 +129,11 @@ async function handler() {
 
     // 1. Load weekdata.js from repo
     const content = fs.readFileSync(WEEKDATA_PATH, "utf-8");
-    const weekData = JSON.parse(content.match(/\{[\s\S]*\}/)[0]);
+    console.log("DEBUG: weekdata.js first 200 chars →", content.slice(0, 200));
+
+    // Strip `const weekData =` and trailing semicolon
+    const jsonString = content.replace(/^const weekData = /, "").replace(/;$/, "");
+    const weekData = JSON.parse(jsonString);
     console.log("DEBUG: Parsed weekData successfully");
 
     // 2. Get last completed week number
@@ -155,7 +157,7 @@ async function handler() {
           weeks: e.weeks,
           lastRank: e.rank,
           peak: e.peak,
-          last_seen: parseInt(w, 10)
+          last_seen: parseInt(w)
         });
       }
     }
@@ -214,25 +216,25 @@ async function handler() {
     });
     console.log("DEBUG: Final entries prepared =", entries.length);
 
-    // 8. Write and (optionally) commit to GitHub
+    // 8. Dry-run vs publish
+    if (DRY_RUN) {
+      console.log("=== DRY RUN: New Week Preview ===");
+      console.log(JSON.stringify(entries.slice(0, 10), null, 2));
+      return;
+    }
+
+    // 9. Write and commit to GitHub
     weekData[nextWeek] = entries;
     const newContent = "const weekData = " + JSON.stringify(weekData, null, 2) + ";";
+    fs.writeFileSync(WEEKDATA_PATH, newContent);
+    console.log("DEBUG: weekdata.js written locally");
 
-    if (DRY_RUN) {
-      console.log(`DRY RUN: Would add week ${nextWeek} with ${entries.length} entries`);
-      console.log("DRY RUN: Top 10 preview:\n", JSON.stringify(entries.slice(0, 10), null, 2));
-    } else {
-      fs.writeFileSync(WEEKDATA_PATH, newContent);
-      console.log("DEBUG: weekdata.js written locally");
-
-      // commit & push
-      execSync('git config user.name "github-actions[bot]"');
-      execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
-      execSync(`git add ${WEEKDATA_PATH}`);
-      execSync(`git commit -m "add week ${nextWeek} (Last.fm)" || echo "No changes to commit"`);
-      execSync("git push");
-      console.log("SUCCESS: Week", nextWeek, "committed to GitHub");
-    }
+    execSync('git config user.name "github-actions[bot]"');
+    execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
+    execSync(`git add ${WEEKDATA_PATH}`);
+    execSync(`git commit -m "add week ${nextWeek} (Last.fm)" || echo "No changes to commit"`);
+    execSync("git push");
+    console.log("SUCCESS: Week", nextWeek, "committed to GitHub");
 
     return { statusCode: 200, body: JSON.stringify({ ok: true, week: nextWeek, entries: entries.length }) };
   } catch (err) {
@@ -242,10 +244,3 @@ async function handler() {
 }
 
 module.exports = { handler };
-
-// Auto-run when executed directly (GitHub Actions uses `node file.js`)
-if (require.main === module) {
-  handler()
-    .then(() => process.exit(0))
-    .catch(err => { console.error(err); process.exit(1); });
-}
