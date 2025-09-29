@@ -1,3 +1,0 @@
-[functions."scheduled-week"]
-  # Every Friday at 06:00 UTC (~08:00 in South Africa, your TZ)
-  schedule = "0 6 * * FRI"
