@@ -2,36 +2,30 @@ name: Weekly Chart Update
 
 on:
   schedule:
-    # Runs every Friday at 02:00 UTC (04:00 South Africa time)
-    - cron: "0 2 * * 5"
-
-  # Optional: lets you manually trigger workflow from GitHub Actions tab
-  workflow_dispatch:
+    # Runs every Friday at 06:00 UTC
+    - cron: "0 6 * * 5"
+  workflow_dispatch: # Allow manual run
 
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Checkout your repo
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Set up Node.js
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # 3. Install dependencies (if you use any)
       - name: Install dependencies
-        run: npm install
+        run: npm install node-fetch@2
 
-      # 4. Run your scheduled-week.js script
-      - name: Run weekly chart update
-        run: node .github/scripts/scheduled-week.js
+      - name: Run weekly update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPO: iammarcus3/Charts
-          GITHUB_BRANCH: main
-          WEEKDATA_PATH: weekdata.js
+          GITHUB_REPO: "iammarcus3/Charts"
+          GITHUB_BRANCH: "main"
+        run: |
+          echo "Running scheduled-week.js..."
+          node .github/scripts/scheduled-week.js
