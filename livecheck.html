@@ -90,7 +90,7 @@
     function getFactor(table, weeks){ for(const [s,e,f] of table){ if(s<=weeks && weeks<=e) return f; } return table[table.length-1][2]; }
     function calcSales(plays,m){ return plays*m; }
     function calcStreams(sales,weeks){ return sales*getFactor(STREAMS_FACTORS,weeks)*8500; }
-    function calcRadio(sales,weeks){ return sales*getFactor(RADIO_FACTORS,weeks)*100_000; }
+    function calcRadio(sales,weeks){ return sales*getFactor(RADIO_FACTORS,weeks)*10_000; }
     function calcPoints(sales,streams,radio,maxS,maxSt,maxR){
       if(!maxS) maxS=1; if(!maxSt) maxSt=1; if(!maxR) maxR=1;
       return Math.round(200*(0.3*(sales/maxS)+0.3*(streams/maxSt)+0.4*(radio/maxR)));
