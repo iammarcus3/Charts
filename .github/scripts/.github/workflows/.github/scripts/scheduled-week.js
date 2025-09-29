@@ -1,23 +1,18 @@
-// Scheduled Netlify function to fetch Last.fm data every Friday,
-// process it with your exact Python logic, and persist to weekdata.js
+// GitHub Actions script to fetch Last.fm data every Friday,
+// process with Python-equivalent logic, and append to weekdata.js
 
-import fetch from "node-fetch";
+const fs = require("fs");
 
 // --- Settings: Your Last.fm credentials ---
 const API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822";
 const USER = "IAMMARCUS3";
 
-// --- Settings: GitHub repo for persistence ---
-const GH_TOKEN   = process.env.GITHUB_TOKEN;
-const GH_REPO    = process.env.GITHUB_REPO;      // e.g. "yourname/hot100"
-const GH_BRANCH  = process.env.GITHUB_BRANCH || "main";
-const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js";
-
 // --- Constants ---
+const WEEKDATA_PATH = "weekdata.js"; // adjust if your file is elsewhere
 const MAX_ENTRIES = 200;
 const LAST_STATIC_WEEK = 396;
 
-// --- Factor tables (EXACT from your Python) ---
+// --- Factor tables (EXACT from Python) ---
 const STREAMS_FACTORS = [
   [1, 1, 48.50], [2, 2, 46.78], [3, 5, 30.90], [6, 6, 20.90], [7, 10, 22.90],
   [11, 15, 27.85], [16, 25, 25.90], [26, 30, 42.70], [31, 50, 33.95],
@@ -40,8 +35,6 @@ function getMultiplierForRank(rank) {
   else if (rank <= 80) return 20.99;
   else return 10.9;
 }
-
-// --- Helpers ---
 function getFactor(factors, weeks) {
   for (const [s, e, f] of factors) if (s <= weeks && weeks <= e) return f;
   return factors[factors.length - 1][2];
@@ -63,32 +56,7 @@ function getKey(title, artist) {
   return title.toLowerCase().trim() + "||" + artist.toLowerCase().trim();
 }
 
-// --- GitHub file helpers ---
-async function githubGetFile() {
-  const url = `https://api.github.com/repos/${GH_REPO}/contents/${WEEKDATA_PATH}?ref=${GH_BRANCH}`;
-  const res = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` }});
-  if (!res.ok) throw new Error(`GitHub get file failed: ${res.status}`);
-  const j = await res.json();
-  return { content: Buffer.from(j.content, j.encoding).toString("utf-8"), sha: j.sha };
-}
-async function githubUpdateFile(newContent, sha, message) {
-  const url = `https://api.github.com/repos/${GH_REPO}/contents/${WEEKDATA_PATH}`;
-  const body = {
-    message,
-    content: Buffer.from(newContent, "utf-8").toString("base64"),
-    sha,
-    branch: GH_BRANCH
-  };
-  const res = await fetch(url, {
-    method: "PUT",
-    headers: { Authorization: `Bearer ${GH_TOKEN}`, "Content-Type": "application/json" },
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) throw new Error(`GitHub update failed: ${res.status} ${await res.text()}`);
-  return await res.json();
-}
-
-// --- Last Friday→Thursday window (South Africa time, UTC+2) ---
+// --- Friday→Thursday window (UTC+2 South Africa) ---
 function lastFridayToThursdayRange() {
   const TZ_OFFSET = 2 * 3600;
   const now = Math.floor(Date.now() / 1000) + TZ_OFFSET;
@@ -103,7 +71,7 @@ function lastFridayToThursdayRange() {
   return { from, to };
 }
 
-// --- Fetch scrobbles ---
+// --- Fetch scrobbles from Last.fm ---
 async function fetchScrobbles(from, to) {
   let page = 1, totalPages = 1;
   const all = [];
@@ -134,24 +102,23 @@ function aggregatePlays(tracks) {
   return [...map.values()];
 }
 
-// --- Main scheduled handler ---
-export async function handler() {
+// --- Main ---
+async function main() {
   try {
-    // 1. Load weekdata.js from GitHub
-    const { content, sha } = await githubGetFile();
+    // 1. Load weekdata.js
+    const content = fs.readFileSync(WEEKDATA_PATH, "utf-8");
     const weekData = JSON.parse(content.match(/\{[\s\S]*\}/)[0]);
 
-    // 2. Get last completed week number
+    // 2. Determine week #
     const lastWeek = Math.max(...Object.keys(weekData).map(Number));
     const nextWeek = Math.max(lastWeek, LAST_STATIC_WEEK) + 1;
 
-    // 3. Get scrobbles for Fri→Thu
+    // 3. Fetch Last.fm scrobbles Fri→Thu
     const { from, to } = lastFridayToThursdayRange();
     const scrobbles = await fetchScrobbles(from, to);
-    const plays = aggregatePlays(scrobbles);
-    plays.sort((a, b) => b.plays - a.plays);
+    const plays = aggregatePlays(scrobbles).sort((a, b) => b.plays - a.plays);
 
-    // 4. Load song history for movement/peaks/totalSales
+    // 4. Song history for movement/peaks
     const songHistory = new Map();
     for (const [w, entries] of Object.entries(weekData)) {
       for (const e of entries) {
@@ -166,7 +133,7 @@ export async function handler() {
       }
     }
 
-    // 5. Compute sales/streams/radio/points
+    // 5. Compute sales/streams/radio
     let maxSales = 0, maxStreams = 0, maxRadio = 0;
     const provisional = plays.map((p, i) => {
       const rank = i + 1;
@@ -182,13 +149,13 @@ export async function handler() {
       return { ...p, rank, sales, streams, radio, weeks, hist };
     });
 
-    // 6. Calculate points & finalize ranking
+    // 6. Add points
     const withPoints = provisional.map(e => ({
       ...e,
       points: calcPoints(e.sales, e.streams, e.radio, maxSales, maxStreams, maxRadio)
     })).sort((a, b) => b.points - a.points);
 
-    // 7. Build final entries
+    // 7. Final chart entries
     const entries = withPoints.slice(0, MAX_ENTRIES).map((e, i) => {
       const rank = i + 1;
       let movement = "NEW";
@@ -217,13 +184,16 @@ export async function handler() {
       };
     });
 
-    // 8. Update weekData + push to GitHub
+    // 8. Update weekData.js
     weekData[nextWeek] = entries;
     const newContent = "const weekData = " + JSON.stringify(weekData, null, 2) + ";";
-    await githubUpdateFile(newContent, sha, `add week ${nextWeek} (Last.fm)`);
+    fs.writeFileSync(WEEKDATA_PATH, newContent, "utf-8");
 
-    return { statusCode: 200, body: JSON.stringify({ ok: true, week: nextWeek, entries: entries.length }) };
+    console.log(`✅ Added week ${nextWeek} with ${entries.length} entries`);
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+    console.error("❌ ERROR:", err);
+    process.exit(1);
   }
 }
+
+main();
