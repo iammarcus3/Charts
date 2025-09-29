@@ -2,32 +2,36 @@ name: Weekly Chart Update
 
 on:
   schedule:
-    - cron: "0 6 * * FRI"   # Every Friday at 06:00 UTC (~08:00 South Africa)
-  workflow_dispatch:        # Allow manual trigger from the Actions tab
+    # Runs every Friday at 02:00 UTC (04:00 South Africa time)
+    - cron: "0 2 * * 5"
 
-permissions:
-  contents: write           # IMPORTANT: allows committing changes
+  # Optional: lets you manually trigger workflow from GitHub Actions tab
+  workflow_dispatch:
 
 jobs:
-  update-weekdata:
+  update:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout your repo
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 18   # Node 18 has global fetch
+          node-version: 18
 
-      # Run the chart updater script
-      - name: Run chart updater
+      # 3. Install dependencies (if you use any)
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Run your scheduled-week.js script
+      - name: Run weekly chart update
         run: node .github/scripts/scheduled-week.js
-
-      # Commit the updated weekdata.js back to the repo
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: add weekly chart (Last.fm)"
-          file_pattern: weekdata.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: iammarcus3/Charts
+          GITHUB_BRANCH: main
+          WEEKDATA_PATH: weekdata.js
