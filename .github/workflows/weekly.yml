@@ -4,7 +4,12 @@ on:
   schedule:
     # Runs every Friday at 06:00 UTC
     - cron: "0 6 * * 5"
-  workflow_dispatch: # Allow manual run
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode: dry-run (just preview) or publish (write & commit)"
+        required: true
+        default: "dry-run"
 
 jobs:
   update:
@@ -30,11 +35,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: "iammarcus3/Charts"
           GITHUB_BRANCH: "main"
+          DRY_RUN: ${{ github.event.inputs.mode == 'dry-run' && 'true' || 'false' }}
         run: |
           echo "Running scheduled-week.js..."
           node .github/scripts/scheduled-week.js
 
       - name: Push changes
+        if: github.event.inputs.mode == 'publish'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
