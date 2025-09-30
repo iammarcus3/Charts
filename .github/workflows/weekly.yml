@@ -2,7 +2,7 @@ name: scheduled-week.js
 
 on:
   schedule:
-    - cron: "0 12 * * FRI"
+    - cron: "0 12 * * FRI"   # Every Friday at 12:00 UTC
   workflow_dispatch:
     inputs:
       dry_run:
@@ -19,16 +19,33 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           persist-credentials: true
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Preflight check
+        run: |
+          echo "=== Preflight Check ==="
+          echo "Dry run?        : ${{ github.event.inputs.dry_run }}"
+          echo "Target week     : ${{ github.event.inputs.target_week }}"
+          echo "======================="
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            echo ">> Running in DRY RUN mode (no changes will be written)"
+          fi
+          if [ -n "${{ github.event.inputs.target_week }}" ]; then
+            echo ">> Will overwrite week ${{ github.event.inputs.target_week }}"
+          else
+            echo ">> Will append the next available week"
+          fi
 
       - name: Run scheduled-week.js
         run: node .github/scripts/scheduled-week.js
         env:
-          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
-          TARGET_WEEK: ${{ github.event.inputs.target_week || '' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          TARGET_WEEK: ${{ github.event.inputs.target_week }}
