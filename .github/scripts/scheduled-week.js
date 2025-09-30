@@ -100,23 +100,27 @@ function loadWeekData(filePathRel) {
     return {};
   }
 
-  try {
-    delete require.cache[abs];
-    const data = require(abs);
-    if (typeof data === "object" && !Array.isArray(data)) {
-      console.log("DEBUG: Loaded weekdata via require()");
-      return data;
-    }
-    throw new Error("weekdata.js did not export an object");
-  } catch (err) {
-    throw new Error("Failed to require weekdata.js: " + err.message);
+  delete require.cache[abs];
+  const data = require(abs);
+  if (typeof data === "object" && !Array.isArray(data)) {
+    console.log("DEBUG: Loaded weekdata via require()");
+    return data;
   }
+  throw new Error("weekdata.js did not export an object");
 }
 
-function saveWeekData(filePathRel, dataObj) {
+function saveWeekData(filePathRel, dataObj, targetWeek, overwriting) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
+
+  // SAFETY: backup before overwrite
+  if (fs.existsSync(abs)) {
+    fs.copyFileSync(abs, abs + ".bak");
+  }
+
+  // SAFETY: don’t shrink weeks
+  const beforeCount = Object.keys(dataObj).length;
 
   const newContent =
     "const weekData = " +
@@ -124,6 +128,12 @@ function saveWeekData(filePathRel, dataObj) {
     ";\n\nmodule.exports = weekData;\n";
 
   fs.writeFileSync(abs, newContent);
+
+  const afterCount = Object.keys(dataObj).length;
+  if (afterCount < beforeCount - 1) {
+    throw new Error(`Refusing to write: week count shrank from ${beforeCount} to ${afterCount}`);
+  }
+
   console.log("DEBUG: weekdata.js written at", abs);
 }
 
@@ -265,7 +275,7 @@ async function handler() {
 
     // 9) Write & commit — PRESERVE ALL OLD WEEKS
     weekData[targetWeek] = entries;
-    saveWeekData(WEEKDATA_PATH, weekData);
+    saveWeekData(WEEKDATA_PATH, weekData, targetWeek, overwriting);
 
     execSync('git config user.name "github-actions[bot]"');
     execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
