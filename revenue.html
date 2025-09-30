@@ -1,185 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Record Label Intelligence</title>
-
-  <!-- Tailwind (stable CDN) -->
+  <meta charset="UTF-8">
+  <title>Music Industry Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- App styles -->
   <style>
-    :root{
-      --panel:#0f172a; --card:#0b1220; --muted:#94a3b8; --accent:#7c3aed; --accent2:#10b981; --danger:#ef4444;
-      --border:#1f2937; --text:#e2e8f0; --bg:#0b0f16;
-    }
-    body{background:var(--bg); color:var(--text)}
-    .glass{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); backdrop-filter: blur(8px); border:1px solid var(--border)}
-    .tab-btn{border-radius:999px; border:1px solid var(--border); background:#0f172a; color:#cbd5e1; padding:.5rem 1rem}
-    .tab-btn.active{background:linear-gradient(90deg,var(--accent),var(--accent2)); color:white; border:none}
-    .pill{display:inline-block; padding:.15rem .5rem; border-radius:999px; background:#0b1220; color:#cbd5e1; font-size:.75rem}
-    .pill.red{background:rgba(239,68,68,.15); color:#fecaca}
-    .neg{color:#fecaca}
-    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.6)}
-    .modal.show{display:flex}
-    .modal-card{width:min(1200px,96vw); max-height:92vh; overflow:auto; border:1px solid var(--border); border-radius:16px; background:var(--panel)}
-    .subtabs button{border:1px solid var(--border); border-radius:10px; padding:.5rem .75rem; background:#0b1220; color:#cbd5e1}
-    .subtabs button.active{background:linear-gradient(90deg,var(--accent),var(--accent2)); color:white; border:none}
-    .tbl{width:100%; border-collapse:collapse; border:1px solid var(--border); border-radius:12px; overflow:hidden}
-    .tbl th,.tbl td{padding:.6rem .75rem; border-bottom:1px solid var(--border)}
-    .tbl thead{background:#0f172a}
-    .tbl tbody tr:hover{background:rgba(124,58,237,.08)}
+    .tab { cursor: pointer; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .label-card { background:#1f1f1f; padding:1rem; border-radius:0.5rem; color:#fff; }
+    .data-table { width:100%; border-collapse: collapse; margin-top: 1rem; }
+    .data-table th, .data-table td { border: 1px solid #333; padding: 6px 10px; }
+    .red { color: #ff4c4c; font-weight: bold; }
+    .modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; }
+    .modal-content { background:#1f1f1f; padding:2rem; border-radius:0.5rem; width:80%; max-height:90%; overflow:auto; }
+    .hidden { display:none; }
   </style>
 </head>
+<body class="bg-black text-white">
 
-<body class="min-h-screen">
-  <!-- Header -->
-  <header class="glass sticky top-0 z-10">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 to-emerald-500"></div>
-        <h1 class="text-xl md:text-2xl font-semibold">Record Label Intelligence</h1>
-      </div>
-      <div class="flex gap-2">
-        <span class="pill">Week 1: 2018-02-23 → Week 396 (Fri-Thu)</span>
-      </div>
-    </div>
-  </header>
+  <h1 class="text-3xl text-center font-bold my-6">Music Industry Dashboard</h1>
 
-  <!-- Main -->
-  <main class="max-w-7xl mx-auto px-4 pb-24">
-    <!-- Tabs -->
-    <div class="mt-6 flex flex-wrap gap-2">
-      <button class="tab-btn active" data-tab="labels">Labels</button>
-      <button class="tab-btn" data-tab="artists">Artists</button>
-      <button class="tab-btn" data-tab="albums">Albums</button>
-      <button class="tab-btn" data-tab="pricing">Pricing</button>
-    </div>
+  <!-- Tabs -->
+  <div class="flex justify-center space-x-4 mb-6">
+    <div class="tab active px-4 py-2 bg-gray-800 rounded" data-tab="labels">Labels</div>
+    <div class="tab px-4 py-2 bg-gray-800 rounded" data-tab="artists">Artists</div>
+    <div class="tab px-4 py-2 bg-gray-800 rounded" data-tab="albums">Albums</div>
+  </div>
 
-    <!-- Global KPIs -->
-    <section class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div class="glass rounded-2xl p-4">
-        <div class="text-sm text-slate-400">Total Sales</div>
-        <div id="kpiSales" class="text-2xl font-bold">—</div>
-      </div>
-      <div class="glass rounded-2xl p-4">
-        <div class="text-sm text-slate-400">Total Plays</div>
-        <div id="kpiPlays" class="text-2xl font-bold">—</div>
-      </div>
-      <div class="glass rounded-2xl p-4">
-        <div class="text-sm text-slate-400">Total Debt</div>
-        <div id="kpiDebt" class="text-2xl font-bold">—</div>
-      </div>
-      <div class="glass rounded-2xl p-4">
-        <div class="text-sm text-slate-400">Labels • Artists</div>
-        <div id="kpiCounts" class="text-2xl font-bold">—</div>
-      </div>
-    </section>
+  <!-- Labels Tab -->
+  <div id="tab-labels" class="tab-panel active">
+    <h2 class="text-xl font-bold mb-4">Record Labels</h2>
+    <div id="labelsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+  </div>
 
-    <!-- Filters -->
-    <section class="mt-6 flex flex-wrap gap-2">
-      <input id="searchInput" placeholder="Search label or artist…" class="glass rounded-xl px-3 py-2 outline-none w-72" />
-      <select id="yearSelect" class="glass rounded-xl px-3 py-2 outline-none">
-        <option value="">All Years</option>
-      </select>
-    </section>
+  <!-- Artists Tab -->
+  <div id="tab-artists" class="tab-panel">
+    <h2 class="text-xl font-bold mb-4">Artists</h2>
+    <table id="artistsTable" class="data-table">
+      <thead>
+        <tr><th>Artist</th><th>Sales</th><th>Plays</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-    <!-- Panels -->
-    <section id="panel-labels" class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4"></section>
-    <section id="panel-artists" class="mt-6 hidden">
-      <table class="tbl" id="artistsTable">
-        <thead><tr>
-          <th>Artist</th><th>Label</th><th>Sales</th><th>Plays</th><th>Debt</th><th>Final</th>
-        </tr></thead>
-        <tbody></tbody>
-      </table>
-    </section>
-    <section id="panel-albums" class="mt-6 hidden">
-      <table class="tbl" id="albumsTable">
-        <thead><tr>
-          <th>Album</th><th>Artist</th><th>Label</th><th>Sales</th><th>Plays</th><th>Budget</th>
-        </tr></thead>
-        <tbody></tbody>
-      </table>
-    </section>
-    <section id="panel-pricing" class="mt-6 hidden">
-      <div id="pricingWrap" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </section>
-  </main>
-
-  <!-- Label Modal -->
-  <div id="labelModal" class="modal">
-    <div class="modal-card p-4 md:p-6">
-      <div class="flex items-center justify-between">
-        <h2 id="labelTitle" class="text-xl md:text-2xl font-semibold">Label</h2>
-        <button id="closeLabelModal" class="pill">Close</button>
-      </div>
-
-      <div class="mt-4 subtabs flex flex-wrap gap-2">
-        <button class="active" data-mtab="overview">Overview</button>
-        <button data-mtab="artists">Artists</button>
-        <button data-mtab="albums">Albums</button>
-        <button data-mtab="pricing">Pricing</button>
-      </div>
-
-      <div id="mtab-overview" class="mt-4">
-        <canvas id="labelStacked" height="130"></canvas>
-        <div id="labelYearTable" class="mt-3 overflow-auto"></div>
-      </div>
-
-      <div id="mtab-artists" class="mt-4 hidden">
-        <table class="tbl" id="labelArtistsTbl">
-          <thead><tr><th>#</th><th>Artist</th><th>Sales</th><th>Plays</th><th>Debt</th><th>Final</th></tr></thead>
-          <tbody></tbody>
-        </table>
-        <div class="mt-3 flex justify-center"><button id="loadMoreArtists" class="pill">Load more</button></div>
-      </div>
-
-      <div id="mtab-albums" class="mt-4 hidden">
-        <table class="tbl" id="labelAlbumsTbl">
-          <thead><tr><th>#</th><th>Album</th><th>Artist</th><th>Sales</th><th>Plays</th><th>Budget</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <div id="mtab-pricing" class="mt-4 hidden">
-        <div id="labelPricingTbl" class="overflow-auto"></div>
-      </div>
-    </div>
+  <!-- Albums Tab -->
+  <div id="tab-albums" class="tab-panel">
+    <h2 class="text-xl font-bold mb-4">Albums</h2>
+    <table id="albumsTable" class="data-table">
+      <thead>
+        <tr><th>Album</th><th>Artist</th><th>Sales</th><th>Plays</th><th>Label</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
   <!-- Artist Modal -->
-  <div id="artistModal" class="modal">
-    <div class="modal-card p-4 md:p-6">
-      <div class="flex items-center justify-between">
-        <h2 id="artistTitle" class="text-xl md:text-2xl font-semibold">Artist</h2>
-        <button id="closeArtistModal" class="pill">Close</button>
-      </div>
-      <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <canvas id="artistWeekly" height="140"></canvas>
-        <canvas id="artistYearly" height="140"></canvas>
-      </div>
-      <div id="artistMeta" class="mt-3 text-slate-400 text-sm"></div>
-      <div id="artistAlbums" class="mt-3"></div>
+  <div id="artistModal" class="modal hidden">
+    <div class="modal-content">
+      <button id="closeArtistModal" class="bg-red-600 px-3 py-1 rounded float-right">Close</button>
+      <h2 id="artistTitle" class="text-2xl font-bold mb-4">Artist</h2>
+      <canvas id="artistYearlyChart" height="120"></canvas>
+      <div id="artistYearlyTable" class="mt-4"></div>
     </div>
   </div>
 
-  <!-- DATA (order matters) -->
-  <script src="pricing.js"></script>
-  <!-- Optional extras (debts/labels/albums). Safe if missing. -->
-  <script>
-    // guard if data.js not supplied
-    window.artistsExtra = window.artistsExtra || {};   // { [artist]: { label?, debtUSD?, finalUSD? } }
-    window.albumsData  = window.albumsData  || [];     // [ { album, artist, label?, sales?, plays?, totalBudgetM? } ]
-  </script>
+  <!-- Label Modal -->
+  <div id="labelModal" class="modal hidden">
+    <div class="modal-content">
+      <button id="closeLabelModal" class="bg-red-600 px-3 py-1 rounded float-right">Close</button>
+      <h2 id="labelTitle" class="text-2xl font-bold mb-4">Label</h2>
+      <div id="labelYearlyTable" class="mt-4"></div>
+    </div>
+  </div>
+
+  <!-- Your Data Files -->
   <script src="data.js"></script>
-  <script src="weekdata.js"></script>
+  <script src="pricing.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
