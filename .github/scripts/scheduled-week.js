@@ -89,7 +89,7 @@ function lastFridayToThursdayRange() {
 }
 
 // --- Load/save that PRESERVE your exact file format ---
-function loadWeekDataWithFormat(filePathRel) {
+function loadWeekData(filePathRel) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
@@ -97,55 +97,34 @@ function loadWeekDataWithFormat(filePathRel) {
 
   if (!fs.existsSync(abs)) {
     console.warn("WARN: weekdata.js not found. Starting fresh.");
-    return { data: {}, prefix: "const weekData = ", suffix: ";\n" };
+    return {};
   }
 
-  const raw = fs.readFileSync(abs, "utf8");
-
-  // Extract prefix (up to first "{") and suffix (from last "}" onward) to preserve style
-  const firstBrace = raw.indexOf("{");
-  const lastBrace  = raw.lastIndexOf("}");
-  if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
-    throw new Error("Malformed weekdata.js: cannot find JSON object braces");
-  }
-
-  const prefix = raw.slice(0, firstBrace);
-  const jsonText = raw.slice(firstBrace, lastBrace + 1);
-  const suffix = raw.slice(lastBrace + 1); // may include "\nmodule.exports = weekData;\n" or nothing
-
-  let data;
   try {
-    data = JSON.parse(jsonText);
-  } catch (e) {
-    throw new Error("Failed to parse weekdata.js JSON body: " + e.message);
+    delete require.cache[abs];
+    const data = require(abs);
+    if (typeof data === "object" && !Array.isArray(data)) {
+      console.log("DEBUG: Loaded weekdata via require()");
+      return data;
+    }
+    throw new Error("weekdata.js did not export an object");
+  } catch (err) {
+    throw new Error("Failed to require weekdata.js: " + err.message);
   }
-
-  // Safety: ensure this looks like a big historical object; otherwise abort
-  const weekCount = Object.keys(data).length;
-  console.log("DEBUG: Loaded weeks =", weekCount);
-  if (weekCount < 50) { // guard against accidental wipe due to bad parse
-    throw new Error("Refusing to proceed: loaded too few weeks (" + weekCount + ").");
-  }
-
-  return { data, prefix, suffix };
 }
 
-function saveWeekDataPreservingStyle(filePathRel, dataObj, prefix, suffix) {
+function saveWeekData(filePathRel, dataObj) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
 
-  // Force EXACT style: your prefix should already be 'const weekData = '
-  // and your suffix likely includes '\nmodule.exports = weekData;\n'.
-  // If suffix doesn't include module.exports, we DO NOT add it.
-  const hasModuleExport = /module\.exports\s*=\s*weekData\s*;/.test(suffix);
-  const finalSuffix = hasModuleExport ? suffix : suffix; // don't alter your chosen style
-
-  const newContent = prefix + JSON.stringify(dataObj, null, 2) + "}" + finalSuffix;
-  // Note: prefix already includes the opening "{", so we add the matching "}" before suffix.
+  const newContent =
+    "const weekData = " +
+    JSON.stringify(dataObj, null, 2) +
+    ";\n\nmodule.exports = weekData;\n";
 
   fs.writeFileSync(abs, newContent);
-  console.log("DEBUG: weekdata.js updated at", abs);
+  console.log("DEBUG: weekdata.js written at", abs);
 }
 
 // --- Last.fm fetchers (Node 18+ has global fetch) ---
@@ -188,16 +167,15 @@ async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
-    // 1) Load weekdata (and preserve its prefix/suffix style)
-    const { data: weekData, prefix, suffix } = loadWeekDataWithFormat(WEEKDATA_PATH);
+    // 1) Load weekdata
+    const weekData = loadWeekData(WEEKDATA_PATH);
 
     // 2) Decide target week number
     const keys = Object.keys(weekData).map(Number).filter(n => Number.isFinite(n));
     const maxExisting = keys.length ? Math.max(...keys) : 0;
 
-    // If TARGET_WEEK is set, we overwrite that week. Otherwise, append next week.
     const targetWeek = Number.isInteger(TARGET_WEEK) ? TARGET_WEEK : (maxExisting + 1);
-    const overwriting = Number.isInteger(TARGET_WEEK); // explicit control
+    const overwriting = Number.isInteger(TARGET_WEEK);
 
     console.log(`DEBUG: Weeks existing=${maxExisting}. Target week=${targetWeek}. Mode=${overwriting ? "OVERWRITE" : "APPEND"}.`);
 
@@ -242,7 +220,6 @@ async function handler() {
       points: calcPoints(e.sales, e.streams, e.radio, maxSales, maxStreams, maxRadio)
     })).sort((a, b) => b.points - a.points);
 
-    // previous week number for movement calc:
     const prevWeekNumber = overwriting ? (targetWeek - 1) : maxExisting;
 
     // 7) Final entries for the week
@@ -288,9 +265,8 @@ async function handler() {
 
     // 9) Write & commit — PRESERVE ALL OLD WEEKS
     weekData[targetWeek] = entries;
-    saveWeekDataPreservingStyle(WEEKDATA_PATH, weekData, prefix, suffix);
+    saveWeekData(WEEKDATA_PATH, weekData);
 
-    // Git commit/push
     execSync('git config user.name "github-actions[bot]"');
     execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
     execSync(`git add ${WEEKDATA_PATH}`);
