@@ -1,1 +1,0 @@
-var artistsYearData = {}; var albumsData = {}; var labelYearAgg = {};
