@@ -109,18 +109,10 @@ function loadWeekData(filePathRel) {
   throw new Error("weekdata.js did not export an object");
 }
 
-function saveWeekData(filePathRel, dataObj, targetWeek, overwriting) {
+function saveWeekData(filePathRel, dataObj) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
-
-  // SAFETY: backup before overwrite
-  if (fs.existsSync(abs)) {
-    fs.copyFileSync(abs, abs + ".bak");
-  }
-
-  // SAFETY: don’t shrink weeks
-  const beforeCount = Object.keys(dataObj).length;
 
   const newContent =
     "const weekData = " +
@@ -128,12 +120,6 @@ function saveWeekData(filePathRel, dataObj, targetWeek, overwriting) {
     ";\n\nmodule.exports = weekData;\n";
 
   fs.writeFileSync(abs, newContent);
-
-  const afterCount = Object.keys(dataObj).length;
-  if (afterCount < beforeCount - 1) {
-    throw new Error(`Refusing to write: week count shrank from ${beforeCount} to ${afterCount}`);
-  }
-
   console.log("DEBUG: weekdata.js written at", abs);
 }
 
@@ -275,7 +261,7 @@ async function handler() {
 
     // 9) Write & commit — PRESERVE ALL OLD WEEKS
     weekData[targetWeek] = entries;
-    saveWeekData(WEEKDATA_PATH, weekData, targetWeek, overwriting);
+    saveWeekData(WEEKDATA_PATH, weekData);
 
     execSync('git config user.name "github-actions[bot]"');
     execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
