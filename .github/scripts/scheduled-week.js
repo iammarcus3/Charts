@@ -1,5 +1,6 @@
 // Scheduled GitHub Action to fetch Last.fm data every Friday,
-// process with your exact logic, and persist to weekdata.js (module format)
+// process with your exact logic, and persist to weekdata.js
+// — respects your file format and NEVER wipes prior weeks.
 
 const fs = require("fs");
 const path = require("path");
@@ -10,23 +11,22 @@ const API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822";
 const USER = "IAMMARCUS3";
 
 // --- Settings: repo + file ---
-const GH_REPO    = process.env.GITHUB_REPO || "iammarcus3/Charts";
-const GH_BRANCH  = process.env.GITHUB_BRANCH || "main";
 const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js"; // relative to repo root
 const DRY_RUN = process.env.DRY_RUN === "true";
+// Force a specific week (e.g. 396) to overwrite that week.
+// If unset, the script appends the next week after the current max.
+const TARGET_WEEK = process.env.TARGET_WEEK ? parseInt(process.env.TARGET_WEEK, 10) : null;
 
 // --- Debug ---
 console.log("DEBUG: Starting weekly update job");
-console.log("DEBUG: GH_REPO =", GH_REPO);
-console.log("DEBUG: GH_BRANCH =", GH_BRANCH);
 console.log("DEBUG: WEEKDATA_PATH =", WEEKDATA_PATH);
 console.log("DEBUG: DRY_RUN =", DRY_RUN);
+console.log("DEBUG: TARGET_WEEK =", TARGET_WEEK);
 console.log("DEBUG: CWD =", process.cwd());
 console.log("DEBUG: Node =", process.version);
 
 // --- Constants ---
 const MAX_ENTRIES = 200;
-const LAST_STATIC_WEEK = 396; // last precomputed week
 
 // --- Factor tables (EXACT from your Python) ---
 const STREAMS_FACTORS = [
@@ -88,22 +88,8 @@ function lastFridayToThursdayRange() {
   return { from, to };
 }
 
-// --- Resilient weekdata loader/saver ---
-function parseLegacyConst(raw) {
-  let body = raw.replace(/^const\s+weekData\s*=\s*/, "").trim();
-  if (body.endsWith(";")) body = body.slice(0, -1);
-  try {
-    return JSON.parse(body);
-  } catch {
-    const start = raw.indexOf("{");
-    const end = raw.lastIndexOf("}");
-    if (start === -1 || end === -1 || end <= start) {
-      throw new Error("Could not locate JSON object in weekdata.js");
-    }
-    return JSON.parse(raw.slice(start, end + 1));
-  }
-}
-function loadWeekData(filePathRel) {
+// --- Load/save that PRESERVE your exact file format ---
+function loadWeekDataWithFormat(filePathRel) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
@@ -111,38 +97,55 @@ function loadWeekData(filePathRel) {
 
   if (!fs.existsSync(abs)) {
     console.warn("WARN: weekdata.js not found. Starting fresh.");
-    return {};
+    return { data: {}, prefix: "const weekData = ", suffix: ";\n" };
   }
 
-  // Try modern module format first
-  try {
-    delete require.cache[abs];
-    const mod = require(abs);
-    if (mod && typeof mod === "object" && !Array.isArray(mod)) {
-      console.log("DEBUG: Loaded weekdata via module.exports");
-      return mod;
-    }
-  } catch (e) {
-    console.log("DEBUG: Module require failed; trying legacy parse:", e.message);
-  }
-
-  // Legacy: const weekData = {...};
   const raw = fs.readFileSync(abs, "utf8");
-  console.log("DEBUG: Loaded raw weekdata (legacy), first 80 chars:", raw.slice(0, 80));
-  const parsed = parseLegacyConst(raw);
-  console.log("DEBUG: Parsed legacy weekdata");
-  return parsed;
+
+  // Extract prefix (up to first "{") and suffix (from last "}" onward) to preserve style
+  const firstBrace = raw.indexOf("{");
+  const lastBrace  = raw.lastIndexOf("}");
+  if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
+    throw new Error("Malformed weekdata.js: cannot find JSON object braces");
+  }
+
+  const prefix = raw.slice(0, firstBrace);
+  const jsonText = raw.slice(firstBrace, lastBrace + 1);
+  const suffix = raw.slice(lastBrace + 1); // may include "\nmodule.exports = weekData;\n" or nothing
+
+  let data;
+  try {
+    data = JSON.parse(jsonText);
+  } catch (e) {
+    throw new Error("Failed to parse weekdata.js JSON body: " + e.message);
+  }
+
+  // Safety: ensure this looks like a big historical object; otherwise abort
+  const weekCount = Object.keys(data).length;
+  console.log("DEBUG: Loaded weeks =", weekCount);
+  if (weekCount < 50) { // guard against accidental wipe due to bad parse
+    throw new Error("Refusing to proceed: loaded too few weeks (" + weekCount + ").");
+  }
+
+  return { data, prefix, suffix };
 }
-function saveWeekData(filePathRel, dataObj) {
+
+function saveWeekDataPreservingStyle(filePathRel, dataObj, prefix, suffix) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
-  const newContent =
-    "const weekData = " +
-    JSON.stringify(dataObj, null, 2) +
-    ";\n\nmodule.exports = weekData;\n";
+
+  // Force EXACT style: your prefix should already be 'const weekData = '
+  // and your suffix likely includes '\nmodule.exports = weekData;\n'.
+  // If suffix doesn't include module.exports, we DO NOT add it.
+  const hasModuleExport = /module\.exports\s*=\s*weekData\s*;/.test(suffix);
+  const finalSuffix = hasModuleExport ? suffix : suffix; // don't alter your chosen style
+
+  const newContent = prefix + JSON.stringify(dataObj, null, 2) + "}" + finalSuffix;
+  // Note: prefix already includes the opening "{", so we add the matching "}" before suffix.
+
   fs.writeFileSync(abs, newContent);
-  console.log("DEBUG: weekdata.js written at", abs);
+  console.log("DEBUG: weekdata.js updated at", abs);
 }
 
 // --- Last.fm fetchers (Node 18+ has global fetch) ---
@@ -164,6 +167,7 @@ async function fetchScrobbles(from, to) {
   console.log("DEBUG: Total scrobbles fetched =", all.length);
   return all;
 }
+
 function aggregatePlays(tracks) {
   const map = new Map();
   for (const t of tracks) {
@@ -184,27 +188,25 @@ async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
-    // 1) Load weekdata from repo root (module or legacy)
-    const weekData = loadWeekData(WEEKDATA_PATH);
+    // 1) Load weekdata (and preserve its prefix/suffix style)
+    const { data: weekData, prefix, suffix } = loadWeekDataWithFormat(WEEKDATA_PATH);
 
-    // 2) Determine target week
-    const keys = Object.keys(weekData).map(Number);
-    const lastWeek = keys.length ? Math.max(...keys) : -Infinity;
-    const { from, to } = lastFridayToThursdayRange();
+    // 2) Decide target week number
+    const keys = Object.keys(weekData).map(Number).filter(n => Number.isFinite(n));
+    const maxExisting = keys.length ? Math.max(...keys) : 0;
 
-    let targetWeek;
-    if (weekData[LAST_STATIC_WEEK]) {
-      targetWeek = LAST_STATIC_WEEK; // overwrite 396
-    } else {
-      targetWeek = Math.max(lastWeek, LAST_STATIC_WEEK) + 1; // append new week
-    }
-    console.log("DEBUG: Target week =", targetWeek);
+    // If TARGET_WEEK is set, we overwrite that week. Otherwise, append next week.
+    const targetWeek = Number.isInteger(TARGET_WEEK) ? TARGET_WEEK : (maxExisting + 1);
+    const overwriting = Number.isInteger(TARGET_WEEK); // explicit control
+
+    console.log(`DEBUG: Weeks existing=${maxExisting}. Target week=${targetWeek}. Mode=${overwriting ? "OVERWRITE" : "APPEND"}.`);
 
     // 3) Pull scrobbles for the last full week
+    const { from, to } = lastFridayToThursdayRange();
     const scrobbles = await fetchScrobbles(from, to);
     const plays = aggregatePlays(scrobbles).sort((a, b) => b.plays - a.plays);
 
-    // 4) Build song history from all prior weeks
+    // 4) Build song history (from all prior weeks)
     const songHistory = new Map();
     for (const [w, entries] of Object.entries(weekData)) {
       for (const e of entries) {
@@ -217,7 +219,6 @@ async function handler() {
         });
       }
     }
-    console.log("DEBUG: Song history entries =", songHistory.size);
 
     // 5) Compute provisional metrics
     let maxSales = 0, maxStreams = 0, maxRadio = 0;
@@ -241,12 +242,15 @@ async function handler() {
       points: calcPoints(e.sales, e.streams, e.radio, maxSales, maxStreams, maxRadio)
     })).sort((a, b) => b.points - a.points);
 
+    // previous week number for movement calc:
+    const prevWeekNumber = overwriting ? (targetWeek - 1) : maxExisting;
+
     // 7) Final entries for the week
     const entries = withPoints.slice(0, MAX_ENTRIES).map((e, i) => {
       const rank = i + 1;
       let movement = "NEW";
       if (e.hist) {
-        if (e.hist.last_seen !== lastWeek) movement = "RE";
+        if (e.hist.last_seen !== prevWeekNumber) movement = "RE";
         else if (rank < e.hist.lastRank) movement = "UP";
         else if (rank > e.hist.lastRank) movement = "DOWN";
         else movement = "—";
@@ -274,7 +278,7 @@ async function handler() {
 
     // 8) Dry-run vs publish
     if (DRY_RUN) {
-      console.log("=== DRY RUN PREVIEW (Top 20) ===");
+      console.log(`=== DRY RUN PREVIEW (${overwriting ? "Overwriting week " + targetWeek : "Appending week " + targetWeek}) Top 20 ===`);
       for (const e of entries.slice(0, 20)) {
         console.log(`#${e.rank} ${e.title} — ${e.artist} | Plays: ${e.plays} | Sales: ${e.sales.toFixed(2)} | Points: ${e.points}`);
       }
@@ -282,16 +286,17 @@ async function handler() {
       return;
     }
 
-    // 9) Write & commit
+    // 9) Write & commit — PRESERVE ALL OLD WEEKS
     weekData[targetWeek] = entries;
-    saveWeekData(WEEKDATA_PATH, weekData);
+    saveWeekDataPreservingStyle(WEEKDATA_PATH, weekData, prefix, suffix);
 
+    // Git commit/push
     execSync('git config user.name "github-actions[bot]"');
     execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
     execSync(`git add ${WEEKDATA_PATH}`);
-    execSync(`sh -lc 'git commit -m "update week ${targetWeek} (Last.fm)" || echo "No changes to commit"'`);
+    execSync(`sh -lc 'git commit -m "${overwriting ? "overwrite" : "add"} week ${targetWeek} (Last.fm)" || echo "No changes to commit"'`);
     execSync("git push");
-    console.log("SUCCESS: Week", targetWeek, "committed to GitHub");
+    console.log("SUCCESS: Week", targetWeek, overwriting ? "overwritten" : "added", "and committed");
   } catch (err) {
     console.error("FATAL ERROR:", err.message);
     console.error(err.stack);
