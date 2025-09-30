@@ -1,32 +1,32 @@
 // Scheduled GitHub Action to fetch Last.fm data every Friday,
-// process it with your exact Python logic, and persist to weekdata.js
+// process with your exact logic, and persist to weekdata.js (module format)
 
-const fetch = require("node-fetch");
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
-// --- Settings: Your Last.fm credentials ---
+// --- Settings: Last.fm credentials ---
 const API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822";
 const USER = "IAMMARCUS3";
 
-// --- Settings: GitHub repo for persistence ---
+// --- Settings: repo + file ---
 const GH_REPO    = process.env.GITHUB_REPO || "iammarcus3/Charts";
 const GH_BRANCH  = process.env.GITHUB_BRANCH || "main";
-const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js"; // path relative to repo root
+const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js"; // relative to repo root
 const DRY_RUN = process.env.DRY_RUN === "true";
 
-// --- Debug log start ---
+// --- Debug ---
 console.log("DEBUG: Starting weekly update job");
 console.log("DEBUG: GH_REPO =", GH_REPO);
 console.log("DEBUG: GH_BRANCH =", GH_BRANCH);
 console.log("DEBUG: WEEKDATA_PATH =", WEEKDATA_PATH);
 console.log("DEBUG: DRY_RUN =", DRY_RUN);
 console.log("DEBUG: CWD =", process.cwd());
+console.log("DEBUG: Node =", process.version);
 
 // --- Constants ---
 const MAX_ENTRIES = 200;
-const LAST_STATIC_WEEK = 396;
+const LAST_STATIC_WEEK = 396; // last precomputed week
 
 // --- Factor tables (EXACT from your Python) ---
 const STREAMS_FACTORS = [
@@ -51,8 +51,6 @@ function getMultiplierForRank(rank) {
   else if (rank <= 80) return 20.99;
   else return 10.9;
 }
-
-// --- Helpers ---
 function getFactor(factors, weeks) {
   for (const [s, e, f] of factors) if (s <= weeks && weeks <= e) return f;
   return factors[factors.length - 1][2];
@@ -74,24 +72,23 @@ function getKey(title, artist) {
   return title.toLowerCase().trim() + "||" + artist.toLowerCase().trim();
 }
 
-// --- Last Friday→Thursday window (South Africa time, UTC+2) ---
+// --- Last Friday→Thursday (South Africa, UTC+2). Returns the last *completed* window.
 function lastFridayToThursdayRange() {
-  const TZ_OFFSET = 2 * 3600;
-  const now = Math.floor(Date.now() / 1000) + TZ_OFFSET;
-  const d = new Date(now * 1000);
-  const localMidnight = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-  const dow = localMidnight.getUTCDay(); // 0..6
+  const TZ_OFFSET = 2 * 3600; // seconds
+  const nowSec = Math.floor(Date.now() / 1000) + TZ_OFFSET;
+  const now = new Date(nowSec * 1000);
+  const localMidnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const dow = localMidnight.getUTCDay(); // 0=Sun..6=Sat
   const daysSinceFri = (dow - 5 + 7) % 7;
   const thisFri = new Date(localMidnight.getTime() - daysSinceFri * 86400 * 1000);
   const prevFri = new Date(thisFri.getTime() - 7 * 86400 * 1000);
   const from = Math.floor((prevFri.getTime() - TZ_OFFSET * 1000) / 1000);
-  const to = Math.floor((thisFri.getTime() - TZ_OFFSET * 1000) / 1000);
+  const to   = Math.floor((thisFri.getTime() - TZ_OFFSET * 1000) / 1000);
   console.log("DEBUG: Last Friday→Thursday range", { from, to });
   return { from, to };
 }
 
-// --- Resilient loader for weekdata.js ---
-// Supports both old "const weekData = {...};" and new "module.exports = {...};"
+// --- Resilient weekdata loader/saver ---
 function parseLegacyConst(raw) {
   let body = raw.replace(/^const\s+weekData\s*=\s*/, "").trim();
   if (body.endsWith(";")) body = body.slice(0, -1);
@@ -113,10 +110,11 @@ function loadWeekData(filePathRel) {
   console.log("DEBUG: Resolved weekdata path =", abs);
 
   if (!fs.existsSync(abs)) {
-    throw new Error(`Weekdata file not found at ${abs}`);
+    console.warn("WARN: weekdata.js not found. Starting fresh.");
+    return {};
   }
 
-  // Try module form first
+  // Try modern module format first
   try {
     delete require.cache[abs];
     const mod = require(abs);
@@ -125,17 +123,16 @@ function loadWeekData(filePathRel) {
       return mod;
     }
   } catch (e) {
-    console.log("DEBUG: Module require failed, will try legacy parse:", e.message);
+    console.log("DEBUG: Module require failed; trying legacy parse:", e.message);
   }
 
   // Legacy: const weekData = {...};
   const raw = fs.readFileSync(abs, "utf8");
-  console.log("DEBUG: Loaded raw weekdata, first 80 chars:", raw.slice(0, 80));
+  console.log("DEBUG: Loaded raw weekdata (legacy), first 80 chars:", raw.slice(0, 80));
   const parsed = parseLegacyConst(raw);
   console.log("DEBUG: Parsed legacy weekdata");
   return parsed;
 }
-
 function saveWeekData(filePathRel, dataObj) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
@@ -145,20 +142,20 @@ function saveWeekData(filePathRel, dataObj) {
   console.log("DEBUG: weekdata.js written at", abs);
 }
 
-// --- Fetch scrobbles ---
+// --- Last.fm fetchers (Node 18+ has global fetch) ---
 async function fetchScrobbles(from, to) {
   let page = 1, totalPages = 1;
   const all = [];
   while (page <= totalPages) {
     console.log(`DEBUG: Fetching Last.fm scrobbles page ${page}/${totalPages}`);
-    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user=${USER}&api_key=${API_KEY}&format=json&from=${from}&to=${to}&limit=200&page=${page}`;
+    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user=${encodeURIComponent(USER)}&api_key=${API_KEY}&format=json&from=${from}&to=${to}&limit=200&page=${page}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Last.fm error ${res.status}`);
     const j = await res.json();
     const arr = j.recenttracks?.track || [];
     for (const t of arr) if (t.date) all.push(t); // ignore "now playing"
-    const attr = j.recenttracks["@attr"];
-    totalPages = attr ? parseInt(attr.totalPages || "1") : 1;
+    const attr = j.recenttracks?.["@attr"];
+    totalPages = attr ? parseInt(attr.totalPages || "1", 10) : 1;
     page++;
   }
   console.log("DEBUG: Total scrobbles fetched =", all.length);
@@ -184,20 +181,21 @@ async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
-    // 1) Load weekdata from repo root
+    // 1) Load weekdata from repo root (module or legacy)
     const weekData = loadWeekData(WEEKDATA_PATH);
 
-    // 2) Last completed week
-    const lastWeek = Math.max(...Object.keys(weekData).map(Number));
+    // 2) Determine last completed week and next index
+    const keys = Object.keys(weekData);
+    const lastWeek = keys.length ? Math.max(...keys.map(Number)) : -Infinity;
     const nextWeek = Math.max(lastWeek, LAST_STATIC_WEEK) + 1;
     console.log("DEBUG: Last week =", lastWeek, "Next week =", nextWeek);
 
-    // 3) Pull scrobbles and aggregate plays
+    // 3) Pull scrobbles for the last full week
     const { from, to } = lastFridayToThursdayRange();
     const scrobbles = await fetchScrobbles(from, to);
     const plays = aggregatePlays(scrobbles).sort((a, b) => b.plays - a.plays);
 
-    // 4) Song history
+    // 4) Build song history from all prior weeks
     const songHistory = new Map();
     for (const [w, entries] of Object.entries(weekData)) {
       for (const e of entries) {
@@ -206,13 +204,13 @@ async function handler() {
           weeks: e.weeks,
           lastRank: e.rank,
           peak: e.peak,
-          last_seen: parseInt(w)
+          last_seen: parseInt(w, 10)
         });
       }
     }
-    console.log("DEBUG: Song history loaded, entries =", songHistory.size);
+    console.log("DEBUG: Song history entries =", songHistory.size);
 
-    // 5) Compute provisional stats
+    // 5) Compute provisional metrics
     let maxSales = 0, maxStreams = 0, maxRadio = 0;
     const provisional = plays.map((p, i) => {
       const rank = i + 1;
@@ -228,18 +226,18 @@ async function handler() {
       return { ...p, rank, sales, streams, radio, weeks, hist };
     });
 
-    // 6) Points + rank
+    // 6) Points + ranking
     const withPoints = provisional.map(e => ({
       ...e,
       points: calcPoints(e.sales, e.streams, e.radio, maxSales, maxStreams, maxRadio)
     })).sort((a, b) => b.points - a.points);
 
-    // 7) Final entries
+    // 7) Final entries for the week
     const entries = withPoints.slice(0, MAX_ENTRIES).map((e, i) => {
       const rank = i + 1;
       let movement = "NEW";
       if (e.hist) {
-        if (e.hist.last_seen !== lastWeek) movement = "RE";
+        if (e.hist.last_seen !== (keys.length ? Math.max(...keys.map(Number)) : -Infinity)) movement = "RE";
         else if (rank < e.hist.lastRank) movement = "UP";
         else if (rank > e.hist.lastRank) movement = "DOWN";
         else movement = "—";
@@ -269,9 +267,7 @@ async function handler() {
     if (DRY_RUN) {
       console.log("=== DRY RUN PREVIEW (Top 20) ===");
       for (const e of entries.slice(0, 20)) {
-        console.log(
-          `#${e.rank} ${e.title} — ${e.artist} | Plays: ${e.plays} | Sales: ${e.sales.toFixed(2)} | Points: ${e.points}`
-        );
+        console.log(`#${e.rank} ${e.title} — ${e.artist} | Plays: ${e.plays} | Sales: ${e.sales.toFixed(2)} | Points: ${e.points}`);
       }
       console.log("=== END PREVIEW ===");
       return;
@@ -284,16 +280,17 @@ async function handler() {
     execSync('git config user.name "github-actions[bot]"');
     execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
     execSync(`git add ${WEEKDATA_PATH}`);
-    execSync(`git commit -m "add week ${nextWeek} (Last.fm)" || echo "No changes to commit"`);
+    execSync(`sh -lc 'git commit -m "add week ${nextWeek} (Last.fm)" || echo "No changes to commit"'`);
     execSync("git push");
     console.log("SUCCESS: Week", nextWeek, "committed to GitHub");
   } catch (err) {
     console.error("FATAL ERROR:", err.message);
     console.error(err.stack);
+    process.exitCode = 1;
   }
 }
 
-// --- Run the handler when executed directly ---
+// --- Run when executed directly ---
 if (require.main === module) {
   handler().catch(err => {
     console.error("UNHANDLED:", err);
