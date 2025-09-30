@@ -8,6 +8,9 @@ on:
       dry_run:
         description: "Preview only?"
         default: "false"
+      target_week:
+        description: "Force overwrite this week (leave blank to auto-increment)"
+        default: ""
 
 jobs:
   update-charts:
@@ -30,3 +33,4 @@ jobs:
         run: node .github/scripts/scheduled-week.js
         env:
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          TARGET_WEEK: ${{ github.event.inputs.target_week || '' }}
