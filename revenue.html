@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Record Label Intelligence</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <h1>Record Label Intelligence</h1>
+    <p>From Feb 23, 2018 (Week 1) → Week 396</p>
+  </header>
+
+  <main class="container">
+    <section class="tabs">
+      <button class="tab active" data-tab="labels">Labels</button>
+      <button class="tab" data-tab="artists">Artists</button>
+    </section>
+
+    <section id="tab-labels" class="tab-panel active">
+      <div id="labelsGrid" class="grid"></div>
+    </section>
+
+    <section id="tab-artists" class="tab-panel">
+      <table class="data-table" id="artistsTable">
+        <thead>
+          <tr>
+            <th>Artist</th>
+            <th>Sales (Total)</th>
+            <th>Plays (Total)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Artist Modal -->
+  <div id="artistModal" class="modal hidden">
+    <div class="modal-content">
+      <button id="closeArtistModal" class="close">×</button>
+      <h2 id="artistTitle"></h2>
+      <canvas id="artistYearlyChart" height="200"></canvas>
+      <div id="artistYearlyTable"></div>
+    </div>
+  </div>
+
+  <!-- Label Modal -->
+  <div id="labelModal" class="modal hidden">
+    <div class="modal-content">
+      <button id="closeLabelModal" class="close">×</button>
+      <h2 id="labelTitle"></h2>
+      <canvas id="labelYearlyChart" height="200"></canvas>
+      <div id="labelYearlyTable"></div>
+      <div id="labelArtistsTable"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
