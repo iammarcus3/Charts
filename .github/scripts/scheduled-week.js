@@ -114,12 +114,23 @@ function saveWeekData(filePathRel, dataObj) {
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
 
+  const beforeKeys = Object.keys(dataObj).map(Number).sort((a, b) => a - b);
+  console.log("DEBUG: Weeks before save =", beforeKeys);
+
   const newContent =
     "const weekData = " +
     JSON.stringify(dataObj, null, 2) +
     ";\n\nmodule.exports = weekData;\n";
 
   fs.writeFileSync(abs, newContent);
+
+  const afterKeys = Object.keys(dataObj).map(Number).sort((a, b) => a - b);
+  console.log("DEBUG: Weeks after save =", afterKeys);
+
+  if (afterKeys.length < beforeKeys.length) {
+    throw new Error(`Refusing to save: week count shrank from ${beforeKeys.length} to ${afterKeys.length}`);
+  }
+
   console.log("DEBUG: weekdata.js written at", abs);
 }
 
