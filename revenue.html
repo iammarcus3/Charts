@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Record Label Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Record Label Dashboard</h1>
+  </header>
+  <main>
+    <section class="tabs">
+      <button class="tab active" data-tab="labels">Labels</button>
+      <button class="tab" data-tab="artists">Artists</button>
+    </section>
+    <section id="tab-labels" class="tab-panel active">
+      <div id="labelsGrid"></div>
+    </section>
+    <section id="tab-artists" class="tab-panel">
+      <table id="artistsTable">
+        <thead><tr><th>Artist</th><th>Sales</th><th>Plays</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+  <!-- Modals for labels and artists -->
+  <div id="labelModal" class="modal hidden"></div>
+  <div id="artistModal" class="modal hidden"></div>
+  <script src="pricing.js"></script>
+  <script src="data.js"></script>
+  <script src="weekdata.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
