@@ -2,14 +2,14 @@ name: scheduled-week.js
 
 on:
   schedule:
-    - cron: "0 12 * * FRI"   # every Friday at 12:00 UTC
+    - cron: "0 12 * * FRI"
   workflow_dispatch:
     inputs:
       dry_run:
         description: "Preview only?"
         default: "false"
       target_week:
-        description: "Force overwrite this week (leave blank to auto-increment)"
+        description: "Force overwrite this week (leave blank to append)"
         default: ""
 
 jobs:
@@ -19,13 +19,11 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           persist-credentials: true
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
 
