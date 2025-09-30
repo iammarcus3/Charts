@@ -1,49 +1,29 @@
-name: Weekly Chart Update
+name: Weekly Charts
 
 on:
   schedule:
-    # Runs every Friday at 06:00 UTC
-    - cron: "0 6 * * 5"
-  workflow_dispatch:
-    inputs:
-      mode:
-        description: "Run mode: dry-run (just preview) or publish (write & commit)"
-        required: true
-        default: "dry-run"
+    - cron: "0 12 * * FRI"   # every Friday 12:00 UTC
+  workflow_dispatch:          # allow manual run
 
 jobs:
-  update:
+  update-charts:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # ✅ allow pushing commits
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0      # required for pushing commits
-          ref: main           # ensure we're on main branch
+          persist-credentials: true   # ✅ keep auth for git push
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: "20"   # or your version
 
       - name: Install dependencies
-        run: npm install node-fetch@2
+        run: npm install
 
-      - name: Run weekly update
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPO: "iammarcus3/Charts"
-          GITHUB_BRANCH: "main"
-          # 👇 pass DRY_RUN true/false into Node
-          DRY_RUN: ${{ github.event.inputs.mode == 'dry-run' && 'true' || 'false' }}
-        run: |
-          echo "Running scheduled-week.js..."
-          node .github/scripts/scheduled-week.js
-
-      - name: Push changes
-        if: github.event.inputs.mode == 'publish'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git push origin main
+      - name: Run scheduled-week.js
+        run: DRY_RUN=false node .github/scripts/scheduled-week.js
