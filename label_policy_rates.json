@@ -1,0 +1,38 @@
+{
+  "Columbia Records": {
+    "sale_per_record": 16.96,
+    "sale_per_play": 14.99,
+    "pct_artist": 0.45,
+    "pct_label": 0.55
+  },
+  "Def Jam": {
+    "sale_per_record": 13.6,
+    "sale_per_play": 20.78,
+    "pct_artist": 0.32,
+    "pct_label": 0.68
+  },
+  "Epic": {
+    "sale_per_record": 14.99,
+    "sale_per_play": 14.99,
+    "pct_artist": 0.2,
+    "pct_label": 0.8
+  },
+  "Park Wood ": {
+    "sale_per_record": 16.99,
+    "sale_per_play": 19.99,
+    "pct_artist": 0.45,
+    "pct_label": 0.55
+  },
+  "Republic": {
+    "sale_per_record": 15.99,
+    "sale_per_play": 19.99,
+    "pct_artist": 0.37,
+    "pct_label": 0.63
+  },
+  "Sony Music": {
+    "sale_per_record": 18.99,
+    "sale_per_play": 19.99,
+    "pct_artist": 0.5,
+    "pct_label": 0.5
+  }
+}
