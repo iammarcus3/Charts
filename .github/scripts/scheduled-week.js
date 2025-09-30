@@ -137,7 +137,10 @@ function saveWeekData(filePathRel, dataObj) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
-  const newContent = "module.exports = " + JSON.stringify(dataObj, null, 2) + ";\n";
+  const newContent =
+    "const weekData = " +
+    JSON.stringify(dataObj, null, 2) +
+    ";\n\nmodule.exports = weekData;\n";
   fs.writeFileSync(abs, newContent);
   console.log("DEBUG: weekdata.js written at", abs);
 }
@@ -184,14 +187,20 @@ async function handler() {
     // 1) Load weekdata from repo root (module or legacy)
     const weekData = loadWeekData(WEEKDATA_PATH);
 
-    // 2) Determine last completed week and next index
-    const keys = Object.keys(weekData);
-    const lastWeek = keys.length ? Math.max(...keys.map(Number)) : -Infinity;
-    const nextWeek = Math.max(lastWeek, LAST_STATIC_WEEK) + 1;
-    console.log("DEBUG: Last week =", lastWeek, "Next week =", nextWeek);
+    // 2) Determine target week
+    const keys = Object.keys(weekData).map(Number);
+    const lastWeek = keys.length ? Math.max(...keys) : -Infinity;
+    const { from, to } = lastFridayToThursdayRange();
+
+    let targetWeek;
+    if (weekData[LAST_STATIC_WEEK]) {
+      targetWeek = LAST_STATIC_WEEK; // overwrite 396
+    } else {
+      targetWeek = Math.max(lastWeek, LAST_STATIC_WEEK) + 1; // append new week
+    }
+    console.log("DEBUG: Target week =", targetWeek);
 
     // 3) Pull scrobbles for the last full week
-    const { from, to } = lastFridayToThursdayRange();
     const scrobbles = await fetchScrobbles(from, to);
     const plays = aggregatePlays(scrobbles).sort((a, b) => b.plays - a.plays);
 
@@ -237,7 +246,7 @@ async function handler() {
       const rank = i + 1;
       let movement = "NEW";
       if (e.hist) {
-        if (e.hist.last_seen !== (keys.length ? Math.max(...keys.map(Number)) : -Infinity)) movement = "RE";
+        if (e.hist.last_seen !== lastWeek) movement = "RE";
         else if (rank < e.hist.lastRank) movement = "UP";
         else if (rank > e.hist.lastRank) movement = "DOWN";
         else movement = "—";
@@ -274,15 +283,15 @@ async function handler() {
     }
 
     // 9) Write & commit
-    weekData[nextWeek] = entries;
+    weekData[targetWeek] = entries;
     saveWeekData(WEEKDATA_PATH, weekData);
 
     execSync('git config user.name "github-actions[bot]"');
     execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
     execSync(`git add ${WEEKDATA_PATH}`);
-    execSync(`sh -lc 'git commit -m "add week ${nextWeek} (Last.fm)" || echo "No changes to commit"'`);
+    execSync(`sh -lc 'git commit -m "update week ${targetWeek} (Last.fm)" || echo "No changes to commit"'`);
     execSync("git push");
-    console.log("SUCCESS: Week", nextWeek, "committed to GitHub");
+    console.log("SUCCESS: Week", targetWeek, "committed to GitHub");
   } catch (err) {
     console.error("FATAL ERROR:", err.message);
     console.error(err.stack);
