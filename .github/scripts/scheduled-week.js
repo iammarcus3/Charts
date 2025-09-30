@@ -89,6 +89,26 @@ function lastFridayToThursdayRange() {
 }
 
 // --- Load/save that PRESERVE your exact file format ---
+function tryRequire(abs) {
+  try {
+    delete require.cache[abs];
+    return require(abs);
+  } catch (e) {
+    return null;
+  }
+}
+function tryParseLegacy(abs) {
+  // Fallback: read file and extract JSON between "const weekData =" and "module.exports"
+  const raw = fs.readFileSync(abs, "utf8");
+  const m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*\})\s*;?\s*module\.exports\s*=\s*weekData\s*;?/);
+  if (!m) return null;
+  try {
+    return JSON.parse(m[1]);
+  } catch (e) {
+    console.error("ERROR parsing legacy weekdata.js:", e.message);
+    return null;
+  }
+}
 function loadWeekData(filePathRel) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
@@ -96,26 +116,36 @@ function loadWeekData(filePathRel) {
   console.log("DEBUG: Resolved weekdata path =", abs);
 
   if (!fs.existsSync(abs)) {
-    console.warn("WARN: weekdata.js not found. Starting fresh.");
-    return {};
+    throw new Error("weekdata.js not found — refusing to run with empty data");
   }
 
-  delete require.cache[abs];
-  const data = require(abs);
-  if (typeof data === "object" && !Array.isArray(data)) {
+  const mod = tryRequire(abs);
+  if (mod && typeof mod === "object" && !Array.isArray(mod)) {
     console.log("DEBUG: Loaded weekdata via require()");
-    return data;
+    return mod;
   }
-  throw new Error("weekdata.js did not export an object");
+
+  const legacy = tryParseLegacy(abs);
+  if (legacy && typeof legacy === "object" && !Array.isArray(legacy)) {
+    console.log("DEBUG: Loaded weekdata via legacy parser");
+    return legacy;
+  }
+
+  throw new Error("Could not load weekdata.js (module or legacy parse failed).");
 }
 
-function saveWeekData(filePathRel, dataObj) {
+function saveWeekData(filePathRel, dataObj, oldKeyCount) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
 
-  const beforeKeys = Object.keys(dataObj).map(Number).sort((a, b) => a - b);
-  console.log("DEBUG: Weeks before save =", beforeKeys);
+  const keysSorted = Object.keys(dataObj).map(Number).sort((a, b) => a - b);
+  console.log("DEBUG: Final week keys to save =", keysSorted);
+
+  // Safety: never shrink (except allowed overwrite vs append)
+  if (typeof oldKeyCount === "number" && keysSorted.length < oldKeyCount) {
+    throw new Error(`Refusing to save: week count shrank from ${oldKeyCount} to ${keysSorted.length}`);
+  }
 
   const newContent =
     "const weekData = " +
@@ -123,14 +153,6 @@ function saveWeekData(filePathRel, dataObj) {
     ";\n\nmodule.exports = weekData;\n";
 
   fs.writeFileSync(abs, newContent);
-
-  const afterKeys = Object.keys(dataObj).map(Number).sort((a, b) => a - b);
-  console.log("DEBUG: Weeks after save =", afterKeys);
-
-  if (afterKeys.length < beforeKeys.length) {
-    throw new Error(`Refusing to save: week count shrank from ${beforeKeys.length} to ${afterKeys.length}`);
-  }
-
   console.log("DEBUG: weekdata.js written at", abs);
 }
 
@@ -176,15 +198,15 @@ async function handler() {
 
     // 1) Load weekdata
     const weekData = loadWeekData(WEEKDATA_PATH);
+    const preKeys = Object.keys(weekData).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
+    const preCount = preKeys.length;
+    console.log("DEBUG: Weeks present BEFORE =", preKeys);
 
     // 2) Decide target week number
-    const keys = Object.keys(weekData).map(Number).filter(n => Number.isFinite(n));
-    const maxExisting = keys.length ? Math.max(...keys) : 0;
-
+    const maxExisting = preCount ? preKeys[preCount - 1] : 0;
     const targetWeek = Number.isInteger(TARGET_WEEK) ? TARGET_WEEK : (maxExisting + 1);
     const overwriting = Number.isInteger(TARGET_WEEK);
-
-    console.log(`DEBUG: Weeks existing=${maxExisting}. Target week=${targetWeek}. Mode=${overwriting ? "OVERWRITE" : "APPEND"}.`);
+    console.log(`DEBUG: Max existing=${maxExisting}. Target week=${targetWeek}. Mode=${overwriting ? "OVERWRITE" : "APPEND"}.`);
 
     // 3) Pull scrobbles for the last full week
     const { from, to } = lastFridayToThursdayRange();
@@ -272,7 +294,15 @@ async function handler() {
 
     // 9) Write & commit — PRESERVE ALL OLD WEEKS
     weekData[targetWeek] = entries;
-    saveWeekData(WEEKDATA_PATH, weekData);
+
+    // Safety: ensure we didn't lose early weeks accidentally
+    const postKeys = Object.keys(weekData).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
+    console.log("DEBUG: Weeks present AFTER  =", postKeys);
+    if (postKeys.length < preCount) {
+      throw new Error(`Refusing to save: week count shrank from ${preCount} to ${postKeys.length}`);
+    }
+
+    saveWeekData(WEEKDATA_PATH, weekData, preCount);
 
     execSync('git config user.name "github-actions[bot]"');
     execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
