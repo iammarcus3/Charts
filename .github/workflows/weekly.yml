@@ -1,31 +1,26 @@
+name: scheduled-week.js
+
 on:
   schedule:
-    - cron: "0 12 * * FRI"
-  workflow_dispatch:
-    inputs:
-      dry_run:
-        description: "Preview only?"
-        required: false
-        default: "true"
+    - cron: "0 12 * * FRI"   # every Friday at 12:00 UTC
+  workflow_dispatch:          # allow manual run
 
 jobs:
   update-charts:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write   # ✅ allow pushing commits back to repo
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          persist-credentials: true
+          persist-credentials: true   # ✅ keep auth for git push
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-
-      - run: npm install
+          node-version: "20"   # you can bump to latest LTS if needed
 
       - name: Run scheduled-week.js
-        run: node .github/scripts/scheduled-week.js
-        env:
-          DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: DRY_RUN=false node .github/scripts/scheduled-week.js
