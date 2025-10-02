@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Labels — Yearly from Weekly + Payouts + Albums</title>
-  
-  <!-- ✅ Replace Tailwind CDN script with precompiled CSS link -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
-  
+
+  <!-- ✅ Production-ready Tailwind CSS -->
+  <link href="dist/styles.css" rel="stylesheet">
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  
+
   <style>
     .sticky-th { position: sticky; top: 0; background: rgba(2,6,23,.85); backdrop-filter: blur(4px); }
     .scroll-thin::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -78,34 +78,33 @@
     </div>
   </div>
 
-<!-- ✅ Load external week data -->
-<script src="weekdata.js"></script>
+  <!-- ✅ Load external week data -->
+  <script src="weekdata.js"></script>
 
-<script>
-// ---- Embedded data ----
-const BASE = {"global": {"sales_m": 2210555.7654999997, "plays_m": 82106.32999999999, "revenue": 37697613542.9, "debt": 16822755355.914574, "net": 20874867058.105423, "num_artists": 200}, "labels": { /* ... your full label data here ... */ }};
+  <script>
+  // ---- Embedded data ----
+  const BASE = {"global": {"sales_m": 2210555.7654999997, "plays_m": 82106.32999999999, "revenue": 37697613542.9, "debt": 16822755355.914574, "net": 20874867058.105423, "num_artists": 200}, "labels": { /* ... your full label data here ... */ }};
 
-const RATES_POLICY = {
-  "Columbia Records": {"sale_per_record": 15.96, "sale_per_play": 14.99, "pct_artist": 0.45, "pct_label": 0.55},
-  "Def Jam": {"sale_per_record": 13.6, "sale_per_play": 9.96, "pct_artist": 0.32, "pct_label": 0.68},
-  "Epic": {"sale_per_record": 9.4, "sale_per_play": 16.99, "pct_artist": 0.2, "pct_label": 0.8},
-  "Park Wood ": {"sale_per_record": 18.89, "sale_per_play": 9.88, "pct_artist": 0.45, "pct_label": 0.55},
-  "Republic": {"sale_per_record": 17.78, "sale_per_play": 9.45, "pct_artist": 0.37, "pct_label": 0.63},
-  "Sony Music": {"sale_per_record": 18.99, "sale_per_play": 10.89, "pct_artist": 0.5, "pct_label": 0.5}
-};
+  const RATES_POLICY = {
+    "Columbia Records": {"sale_per_record": 15.96, "sale_per_play": 14.99, "pct_artist": 0.45, "pct_label": 0.55},
+    "Def Jam": {"sale_per_record": 13.6, "sale_per_play": 9.96, "pct_artist": 0.32, "pct_label": 0.68},
+    "Epic": {"sale_per_record": 9.4, "sale_per_play": 16.99, "pct_artist": 0.2, "pct_label": 0.8},
+    "Park Wood ": {"sale_per_record": 18.89, "sale_per_play": 9.88, "pct_artist": 0.45, "pct_label": 0.55},
+    "Republic": {"sale_per_record": 17.78, "sale_per_play": 9.45, "pct_artist": 0.37, "pct_label": 0.63},
+    "Sony Music": {"sale_per_record": 18.99, "sale_per_play": 10.89, "pct_artist": 0.5, "pct_label": 0.5}
+  };
 
-const RATES_EFFECTIVE = {
-  "Columbia Records": {"sale_per_record": 15.96000000008965, "sale_per_play": 14.99, "pct_artist": 0.45, "pct_label": 0.55},
-  "Def Jam": {"sale_per_record": 13.600000000000001, "sale_per_play": 9.96, "pct_artist": 0.32, "pct_label": 0.68},
-  "Epic": {"sale_per_record": 9.4, "sale_per_play": 16.99, "pct_artist": 0.2, "pct_label": 0.8},
-  "Park Wood ": {"sale_per_record": 18.89, "sale_per_play": 9.88, "pct_artist": 0.45, "pct_label": 0.55},
-  "Republic": {"sale_per_record": 17.78, "sale_per_play": 9.45, "pct_artist": 0.37, "pct_label": 0.63},
-  "Sony Music": {"sale_per_record": 18.99, "sale_per_play": 10.89, "pct_artist": 0.5, "pct_label": 0.5}
-};
+  const RATES_EFFECTIVE = {
+    "Columbia Records": {"sale_per_record": 15.96000000008965, "sale_per_play": 14.99, "pct_artist": 0.45, "pct_label": 0.55},
+    "Def Jam": {"sale_per_record": 13.600000000000001, "sale_per_play": 9.96, "pct_artist": 0.32, "pct_label": 0.68},
+    "Epic": {"sale_per_record": 9.4, "sale_per_play": 16.99, "pct_artist": 0.2, "pct_label": 0.8},
+    "Park Wood ": {"sale_per_record": 18.89, "sale_per_play": 9.88, "pct_artist": 0.45, "pct_label": 0.55},
+    "Republic": {"sale_per_record": 17.78, "sale_per_play": 9.45, "pct_artist": 0.37, "pct_label": 0.63},
+    "Sony Music": {"sale_per_record": 18.99, "sale_per_play": 10.89, "pct_artist": 0.5, "pct_label": 0.5}
+  };
 
-// ✅ Use the actual weekData from weekdata.js now
-// Example: initCharts(weekData);
-</script>
+  // Example: initCharts(weekData);
+  </script>
 </body>
 </html>
 
