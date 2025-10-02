@@ -1,84 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Music Industry Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Labels — Yearly from Weekly • Interactive Dashboard</title>
+  <!-- Tailwind (CDN for quick preview; consider local build for production) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
-    .tab { cursor: pointer; }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-    .label-card { background:#1f1f1f; padding:1rem; border-radius:0.5rem; color:#fff; }
-    .data-table { width:100%; border-collapse: collapse; margin-top: 1rem; }
-    .data-table th, .data-table td { border: 1px solid #333; padding: 6px 10px; }
-    .red { color: #ff4c4c; font-weight: bold; }
-    .modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; }
-    .modal-content { background:#1f1f1f; padding:2rem; border-radius:0.5rem; width:80%; max-height:90%; overflow:auto; }
-    .hidden { display:none; }
+    /* sticky headers + thin scrollbars */
+    .sticky-th { position: sticky; top: 0; background: rgba(2,6,23,.85); backdrop-filter: blur(4px); z-index: 1; }
+    .scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+    .scroll-thin::-webkit-scrollbar-thumb { background-color: rgba(148,163,184,.4); border-radius: 6px; }
+    .scroll-thin::-webkit-scrollbar-track { background: transparent; }
+    .metric-badge { border-radius: 9999px; padding: 2px 8px; background: rgba(148,163,184,.15); }
+    .cell-mono { font-variant-numeric: tabular-nums; }
+    .table-hover tbody tr:hover { background: rgba(148,163,184,.08); }
   </style>
 </head>
-<body class="bg-black text-white">
-
-  <h1 class="text-3xl text-center font-bold my-6">Music Industry Dashboard</h1>
-
-  <!-- Tabs -->
-  <div class="flex justify-center space-x-4 mb-6">
-    <div class="tab active px-4 py-2 bg-gray-800 rounded" data-tab="labels">Labels</div>
-    <div class="tab px-4 py-2 bg-gray-800 rounded" data-tab="artists">Artists</div>
-    <div class="tab px-4 py-2 bg-gray-800 rounded" data-tab="albums">Albums</div>
-  </div>
-
-  <!-- Labels Tab -->
-  <div id="tab-labels" class="tab-panel active">
-    <h2 class="text-xl font-bold mb-4">Record Labels</h2>
-    <div id="labelsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-  </div>
-
-  <!-- Artists Tab -->
-  <div id="tab-artists" class="tab-panel">
-    <h2 class="text-xl font-bold mb-4">Artists</h2>
-    <table id="artistsTable" class="data-table">
-      <thead>
-        <tr><th>Artist</th><th>Sales</th><th>Plays</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-
-  <!-- Albums Tab -->
-  <div id="tab-albums" class="tab-panel">
-    <h2 class="text-xl font-bold mb-4">Albums</h2>
-    <table id="albumsTable" class="data-table">
-      <thead>
-        <tr><th>Album</th><th>Artist</th><th>Sales</th><th>Plays</th><th>Label</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-
-  <!-- Artist Modal -->
-  <div id="artistModal" class="modal hidden">
-    <div class="modal-content">
-      <button id="closeArtistModal" class="bg-red-600 px-3 py-1 rounded float-right">Close</button>
-      <h2 id="artistTitle" class="text-2xl font-bold mb-4">Artist</h2>
-      <canvas id="artistYearlyChart" height="120"></canvas>
-      <div id="artistYearlyTable" class="mt-4"></div>
+<body class="bg-slate-900 text-slate-100">
+  <header class="px-4 sm:px-6 lg:px-8 py-6 border-b border-slate-800">
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold">Labels — Yearly from Weekly</h1>
+        <p class="text-slate-400 text-sm">Per year · Per record label · Artists overview · Budgets · Debt · Net · Units · Revenues</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <a id="downloadCSV" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm border border-slate-700" href="#">Download CSV</a>
+        <button id="resetFilters" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm border border-slate-700">Reset</button>
+      </div>
     </div>
-  </div>
+  </header>
 
-  <!-- Label Modal -->
-  <div id="labelModal" class="modal hidden">
-    <div class="modal-content">
-      <button id="closeLabelModal" class="bg-red-600 px-3 py-1 rounded float-right">Close</button>
-      <h2 id="labelTitle" class="text-2xl font-bold mb-4">Label</h2>
-      <div id="labelYearlyTable" class="mt-4"></div>
-    </div>
-  </div>
+  <main class="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <!-- Controls -->
+    <section class="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div class="md:col-span-1">
+        <label class="block text-xs uppercase tracking-wide text-slate-400 mb-2">Year</label>
+        <select id="yearSelect" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2"></select>
+      </div>
+      <div class="md:col-span-2">
+        <label class="block text-xs uppercase tracking-wide text-slate-400 mb-2">Record Label</label>
+        <select id="labelSelect" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2"></select>
+      </div>
+      <div class="md:col-span-2">
+        <label class="block text-xs uppercase tracking-wide text-slate-400 mb-2">Search Artist</label>
+        <input id="artistSearch" type="text" placeholder="Type to filter artists…" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2" />
+      </div>
+    </section>
 
-  <!-- Your Data Files -->
-  <script src="data.js"></script>
-  <script src="pricing.js"></script>
-  <script src="app.js"></script>
+    <!-- Metric toggles -->
+    <section class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="text-xs uppercase tracking-wide text-slate-400">Metrics</span>
+        <label class="flex items-center gap-2 text-sm"><input class="metricToggle" type="checkbox" data-metric="units" checked> Units</label>
+        <label class="flex items-center gap-2 text-sm"><input class="metricToggle" type="checkbox" data-metric="gross" checked> Gross $</label>
+        <label class="flex items-center gap-2 text-sm"><input class="metricToggle" type="checkbox" data-metric="budget" checked> Budget</label>
+        <label class="flex items-center gap-2 text-sm"><input class="metricToggle" type="checkbox" data-metric="debt" checked> Debt $</label>
+        <label class="flex items-center gap-2 text-sm"><input class="metricToggle" type="checkbox" data-metric="net" checked> Net $</label>
+        <label class="flex items-center gap-2 text-sm"><input class="metricToggle" type="checkbox" data-metric="artist_revenue"> Artist $</label>
+        <label class="flex items-center gap-2 text-sm"><input class="metricToggle" type="checkbox" data-metric="label_revenue"> Label $</label>
+      </div>
+    </section>
+
+    <!-- Label Totals Cards -->
+    <section>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="totalsCards"></div>
+    </section>
+
+    <!-- Charts -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4">
+        <h3 class="text-sm font-medium mb-3">Top Artists by Gross (Selected Year & Label)</h3>
+        <canvas id="topArtistsChart" height="240"></canvas>
+      </div>
+      <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4">
+        <h3 class="text-sm font-medium mb-3">Label Breakdown (Gross · Budget · Debt · Net)</h3>
+        <canvas id="labelBreakdownChart" height="240"></canvas>
+      </div>
+    </section>
+
+    <!-- Table -->
+    <section class="bg-slate-800/50 border border-slate-800 rounded-2xl">
+      <div class="overflow-auto scroll-thin">
+        <table class="min-w-full table-hover">
+          <thead class="sticky-th">
+            <tr class="text-left text-xs uppercase tracking-wide text-slate-300">
+              <th class="px-3 py-3">Rank</th>
+              <th class="px-3 py-3">Artist</th>
+              <th class="px-3 py-3">Active Weeks</th>
+              <th class="px-3 py-3">Records</th>
+              <th class="px-3 py-3 cursor-pointer sort" data-key="units">Units</th>
+              <th class="px-3 py-3 cursor-pointer sort" data-key="gross">Gross $</th>
+              <th class="px-3 py-3 cursor-pointer sort" data-key="budget">Budget</th>
+              <th class="px-3 py-3 cursor-pointer sort" data-key="debt">Debt $</th>
+              <th class="px-3 py-3 cursor-pointer sort" data-key="net">Net $</th>
+              <th class="px-3 py-3">Artist $</th>
+              <th class="px-3 py-3">Label $</th>
+            </tr>
+          </thead>
+          <tbody id="artistRows" class="text-sm"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    /* IMPORTANT: place label_year_data.js next to this HTML file. */
+    import { labelYearData } from './label_year_data.js';
+
+    const $year = document.getElementById('yearSelect');
+    const $label = document.getElementById('labelSelect');
+    const $search = document.getElementById('artistSearch');
+    const $rows = document.getElementById('artistRows');
+    const $totals = document.getElementById('totalsCards');
+    const $reset = document.getElementById('resetFilters');
+    const $download = document.getElementById('downloadCSV');
+
+    const metricToggles = [...document.querySelectorAll('.metricToggle')];
+
+    // Charts
+    let topArtistsChart, labelBreakdownChart;
+
+    // State
+    let state = {
+      year: null,
+      label: null,
+      search: '',
+      metrics: new Set(['units','gross','budget','debt','net']),
+      sortKey: 'gross',
+      sortDir: 'desc',
+    };
+
+    function formatMoney(v){
+      if (v == null || isNaN(v)) return '—';
+      return new Intl.NumberFormat('en-US',{style:'currency', currency:'USD', maximumFractionDigits:0}).format(v);
+    }
+    function formatInt(v){
+      if (v == null || isNaN(v)) return '—';
+      return new Intl.NumberFormat('en-US').format(Math.round(v));
+    }
+
+    // Populate years
+    const years = Object.keys(labelYearData.years).sort();
+    years.forEach(y=>{
+      const opt = document.createElement('option');
+      opt.value = y; opt.textContent = y;
+      $year.appendChild(opt);
+    });
+    state.year = years[0] || null;
+
+    function populateLabels(){
+      $label.innerHTML = '';
+      const labels = Object.keys(labelYearData.years[state.year] || {}).sort((a,b)=> a.localeCompare(b));
+      labels.forEach(l=>{
+        const opt = document.createElement('option');
+        opt.value = l; opt.textContent = l;
+        $label.appendChild(opt);
+      });
+      state.label = labels[0] || null;
+    }
+
+    function currentArtists(){
+      const y = labelYearData.years[state.year] || {};
+      const l = y[state.label] || { artists: {} };
+      // transform artists object -> array rows
+      const arr = Object.entries(l.artists || {}).map(([name, obj])=> ({
+        name,
+        rank: obj.rank_best ?? null,
+        active_weeks: obj.active_weeks ?? null,
+        records_count: obj.records_count ?? null,
+        units: obj.units ?? null,
+        gross: obj.gross ?? null,
+        budget: obj.budget ?? null,
+        debt: obj.debt ?? null,
+        net: obj.net ?? null,
+        artist_revenue: obj.artist_revenue ?? null,
+        label_revenue: obj.label_revenue ?? null,
+      }));
+      return arr;
+    }
+
+    function applyFilters(rows){
+      let out = rows;
+      if (state.search){
+        const q = state.search.toLowerCase();
+        out = out.filter(r => r.name && r.name.toLowerCase().includes(q));
+      }
+      return out;
+    }
+
+    function sortRows(rows){
+      const key = state.sortKey; const dir = state.sortDir === 'desc' ? -1 : 1;
+      return rows.sort((a,b)=>{
+        const va = (a[key] ?? -Infinity); const vb = (b[key] ?? -Infinity);
+        return (va < vb ? -1 : va > vb ? 1 : 0) * dir;
+      });
+    }
+
+    function renderTotals(){
+      const y = labelYearData.years[state.year] || {};
+      const l = y[state.label] || { totals: {} };
+      const t = l.totals || {};
+      const tpl = (title, value) => `
+        <div class="p-4 rounded-2xl bg-slate-800 border border-slate-700">
+          <div class="text-xs uppercase tracking-wide text-slate-400">${title}</div>
+          <div class="text-lg font-semibold">${value}</div>
+        </div>`;
+      $totals.innerHTML = [
+        tpl('Artists', formatInt(t.artists_count)),
+        tpl('Units', formatInt(t.units)),
+        tpl('Gross', formatMoney(t.gross)),
+        tpl('Budget', formatMoney(t.budget)),
+        tpl('Debt', formatMoney(t.debt)),
+        tpl('Net', formatMoney(t.net)),
+        tpl('Artist $', formatMoney(t.artist_revenue)),
+        tpl('Label $', formatMoney(t.label_revenue)),
+      ].join('');
+    }
+
+    function renderTable(){
+      let rows = currentArtists();
+      rows = applyFilters(rows);
+      rows = sortRows(rows);
+      const show = (k)=> state.metrics.has(k);
+      const cell = (v, money=false)=> money? `<td class="px-3 py-2 cell-mono">${formatMoney(v)}</td>`: `<td class="px-3 py-2 cell-mono">${formatInt(v)}</td>`;
+      $rows.innerHTML = rows.map(r=>`
+        <tr>
+          <td class="px-3 py-2">${r.rank ?? '—'}</td>
+          <td class="px-3 py-2">${r.name}</td>
+          <td class="px-3 py-2 cell-mono">${formatInt(r.active_weeks)}</td>
+          <td class="px-3 py-2 cell-mono">${formatInt(r.records_count)}</td>
+          <td class="px-3 py-2 cell-mono">${formatInt(r.units)}</td>
+          <td class="px-3 py-2 cell-mono">${formatMoney(r.gross)}</td>
+          <td class="px-3 py-2 cell-mono">${formatMoney(r.budget)}</td>
+          <td class="px-3 py-2 cell-mono">${formatMoney(r.debt)}</td>
+          <td class="px-3 py-2 cell-mono">${formatMoney(r.net)}</td>
+          <td class="px-3 py-2 cell-mono">${formatMoney(r.artist_revenue)}</td>
+          <td class="px-3 py-2 cell-mono">${formatMoney(r.label_revenue)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderCharts(){
+      const ctx1 = document.getElementById('topArtistsChart');
+      const ctx2 = document.getElementById('labelBreakdownChart');
+      const rows = sortRows(applyFilters(currentArtists())).slice(0, 12);
+
+      const labels = rows.map(r=>r.name);
+      const gross = rows.map(r=>r.gross ?? 0);
+
+      if (topArtistsChart) topArtistsChart.destroy();
+      topArtistsChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Gross $', data: gross }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: true } },
+          scales: { x: { ticks: { autoSkip: false } }, y: { beginAtZero: true } }
+        }
+      });
+
+      const totals = (labelYearData.years[state.year]?.[state.label]?.totals) || {};
+      const breakdownLabels = ['Gross', 'Budget', 'Debt', 'Net'];
+      const breakdownData = [totals.gross||0, totals.budget||0, totals.debt||0, totals.net||0];
+      if (labelBreakdownChart) labelBreakdownChart.destroy();
+      labelBreakdownChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: breakdownLabels,
+          datasets: [{ label: `${state.label} ${state.year}`, data: breakdownData }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: true } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+
+    function update(){
+      renderTotals();
+      renderTable();
+      renderCharts();
+      updateCSVLink();
+    }
+
+    // Interactions
+    $year.addEventListener('change', e=>{ state.year = e.target.value; populateLabels(); update(); });
+    $label.addEventListener('change', e=>{ state.label = e.target.value; update(); });
+    $search.addEventListener('input', e=>{ state.search = e.target.value; update(); });
+
+    document.querySelectorAll('.sort').forEach(th=>{
+      th.addEventListener('click', ()=>{
+        const key = th.dataset.key;
+        if (state.sortKey === key){ state.sortDir = state.sortDir === 'desc' ? 'asc' : 'desc'; }
+        else { state.sortKey = key; state.sortDir = 'desc'; }
+        update();
+      });
+    });
+
+    metricToggles.forEach(chk=>{
+      chk.addEventListener('change', ()=>{
+        const m = chk.dataset.metric;
+        if (chk.checked) state.metrics.add(m); else state.metrics.delete(m);
+        update();
+      });
+    });
+
+    $reset.addEventListener('click', ()=>{
+      state.search = '';
+      $search.value = '';
+      state.sortKey = 'gross';
+      state.sortDir = 'desc';
+      metricToggles.forEach(c=>{ c.checked = ['units','gross','budget','debt','net'].includes(c.dataset.metric); });
+      state.metrics = new Set(['units','gross','budget','debt','net']);
+      // keep current year/label
+      update();
+    });
+
+    // CSV Export for current view
+    function toCSV(arr){
+      const headers = ['Artist','Rank','Active Weeks','Records','Units','Gross','Budget','Debt','Net','Artist $','Label $'];
+      const lines = [headers.join(',')];
+      arr.forEach(r=>{
+        lines.push([
+          '"'+(r.name ?? '')+'"',
+          r.rank ?? '',
+          r.active_weeks ?? '',
+          r.records_count ?? '',
+          r.units ?? '',
+          r.gross ?? '',
+          r.budget ?? '',
+          r.debt ?? '',
+          r.net ?? '',
+          r.artist_revenue ?? '',
+          r.label_revenue ?? '',
+        ].join(','));
+      });
+      return lines.join('\n');
+    }
+
+    function updateCSVLink(){
+      const rows = sortRows(applyFilters(currentArtists()));
+      const csv = toCSV(rows);
+      const blob = new Blob([csv], {type: 'text/csv'});
+      const url = URL.createObjectURL(blob);
+      $download.href = url;
+      $download.download = `label_${state.label}_${state.year}.csv`;
+    }
+
+    // Init
+    populateLabels();
+    update();
+  </script>
 </body>
 </html>
