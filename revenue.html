@@ -46,7 +46,18 @@
       </div>
       <div class="md:col-span-2">
         <label class="block text-xs uppercase tracking-wide text-slate-400 mb-2">Search Artist</label>
-        <input id="artistSearch" type="text" placeholder="Type to filter artists…" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2" />
+        <div class="flex gap-3">
+          <input id="artistSearch" type="text" placeholder="Type to filter artists…" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2" />
+          <div class="w-40">
+            <label class="block text-xs uppercase tracking-wide text-slate-400 mb-2">Max Rows</label>
+            <select id="maxRows" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2">
+              <option>50</option>
+              <option selected>100</option>
+              <option>200</option>
+              <option>500</option>
+            </select>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -73,11 +84,11 @@
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4">
         <h3 class="text-sm font-medium mb-3">Top Artists by Gross (Selected Year & Label)</h3>
-        <canvas id="topArtistsChart" height="240"></canvas>
+        <canvas id="topArtistsChart" height="180"></canvas>
       </div>
       <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4">
         <h3 class="text-sm font-medium mb-3">Label Breakdown (Gross · Budget · Debt · Net)</h3>
-        <canvas id="labelBreakdownChart" height="240"></canvas>
+        <canvas id="labelBreakdownChart" height="180"></canvas>
       </div>
     </section>
 
@@ -117,6 +128,7 @@
     const $totals = document.getElementById('totalsCards');
     const $reset = document.getElementById('resetFilters');
     const $download = document.getElementById('downloadCSV');
+    const $maxRows = document.getElementById('maxRows');
 
     const metricToggles = [...document.querySelectorAll('.metricToggle')];
 
@@ -131,7 +143,12 @@
       metrics: new Set(['units','gross','budget','debt','net']),
       sortKey: 'gross',
       sortDir: 'desc',
+      maxRows: 100,
     };
+
+    // Perf helpers
+    const debounce = (fn, d=200) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), d); }; };
+    const raf = (fn)=> requestAnimationFrame(fn);
 
     function formatMoney(v){
       if (v == null || isNaN(v)) return '—';
@@ -151,21 +168,25 @@
     });
     state.year = years[0] || null;
 
+    // LABELS ONLY
     function populateLabels(){
       $label.innerHTML = '';
-      const labels = Object.keys(labelYearData.years[state.year] || {}).sort((a,b)=> a.localeCompare(b));
-      labels.forEach(l=>{
+      const yearObj = labelYearData.years[state.year] || {};
+      const labels = Object.entries(yearObj)
+        .filter(([k,v]) => v && typeof v === 'object' && v.artists && v.totals)
+        .map(([k]) => k)
+        .sort((a,b)=> a.localeCompare(b));
+      for (const l of labels){
         const opt = document.createElement('option');
         opt.value = l; opt.textContent = l;
         $label.appendChild(opt);
-      });
+      }
       state.label = labels[0] || null;
     }
 
     function currentArtists(){
       const y = labelYearData.years[state.year] || {};
       const l = y[state.label] || { artists: {} };
-      // transform artists object -> array rows
       const arr = Object.entries(l.artists || {}).map(([name, obj])=> ({
         name,
         rank: obj.rank_best ?? null,
@@ -223,9 +244,7 @@
     function renderTable(){
       let rows = currentArtists();
       rows = applyFilters(rows);
-      rows = sortRows(rows);
-      const show = (k)=> state.metrics.has(k);
-      const cell = (v, money=false)=> money? `<td class="px-3 py-2 cell-mono">${formatMoney(v)}</td>`: `<td class="px-3 py-2 cell-mono">${formatInt(v)}</td>`;
+      rows = sortRows(rows).slice(0, state.maxRows);
       $rows.innerHTML = rows.map(r=>`
         <tr>
           <td class="px-3 py-2">${r.rank ?? '—'}</td>
@@ -243,91 +262,54 @@
       `).join('');
     }
 
+    // Faster charts: fewer bars, no animation, reuse instances.
     function renderCharts(){
       const ctx1 = document.getElementById('topArtistsChart');
       const ctx2 = document.getElementById('labelBreakdownChart');
-      const rows = sortRows(applyFilters(currentArtists())).slice(0, 12);
+      const rows = sortRows(applyFilters(currentArtists())).slice(0, 10);
 
       const labels = rows.map(r=>r.name);
       const gross = rows.map(r=>r.gross ?? 0);
 
-      if (topArtistsChart) topArtistsChart.destroy();
-      topArtistsChart = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [
-            { label: 'Gross $', data: gross }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: true } },
-          scales: { x: { ticks: { autoSkip: false } }, y: { beginAtZero: true } }
-        }
-      });
+      const chartOpts = {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        parsing: false,
+        plugins: { legend: { display: true } },
+        scales: { x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0 } }, y: { beginAtZero: true } }
+      };
+
+      if (topArtistsChart){
+        topArtistsChart.data.labels = labels;
+        topArtistsChart.data.datasets[0].data = gross;
+        topArtistsChart.update();
+      } else {
+        topArtistsChart = new Chart(ctx1, {
+          type: 'bar',
+          data: { labels, datasets: [{ label: 'Gross $', data: gross }] },
+          options: chartOpts
+        });
+      }
 
       const totals = (labelYearData.years[state.year]?.[state.label]?.totals) || {};
       const breakdownLabels = ['Gross', 'Budget', 'Debt', 'Net'];
       const breakdownData = [totals.gross||0, totals.budget||0, totals.debt||0, totals.net||0];
-      if (labelBreakdownChart) labelBreakdownChart.destroy();
-      labelBreakdownChart = new Chart(ctx2, {
-        type: 'bar',
-        data: {
-          labels: breakdownLabels,
-          datasets: [{ label: `${state.label} ${state.year}`, data: breakdownData }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: true } },
-          scales: { y: { beginAtZero: true } }
-        }
-      });
+
+      if (labelBreakdownChart){
+        labelBreakdownChart.data.labels = breakdownLabels;
+        labelBreakdownChart.data.datasets[0].data = breakdownData;
+        labelBreakdownChart.data.datasets[0].label = `${state.label} ${state.year}`;
+        labelBreakdownChart.update();
+      } else {
+        labelBreakdownChart = new Chart(ctx2, {
+          type: 'bar',
+          data: { labels: breakdownLabels, datasets: [{ label: `${state.label} ${state.year}`, data: breakdownData }] },
+          options: chartOpts
+        });
+      }
     }
 
-    function update(){
-      renderTotals();
-      renderTable();
-      renderCharts();
-      updateCSVLink();
-    }
-
-    // Interactions
-    $year.addEventListener('change', e=>{ state.year = e.target.value; populateLabels(); update(); });
-    $label.addEventListener('change', e=>{ state.label = e.target.value; update(); });
-    $search.addEventListener('input', e=>{ state.search = e.target.value; update(); });
-
-    document.querySelectorAll('.sort').forEach(th=>{
-      th.addEventListener('click', ()=>{
-        const key = th.dataset.key;
-        if (state.sortKey === key){ state.sortDir = state.sortDir === 'desc' ? 'asc' : 'desc'; }
-        else { state.sortKey = key; state.sortDir = 'desc'; }
-        update();
-      });
-    });
-
-    metricToggles.forEach(chk=>{
-      chk.addEventListener('change', ()=>{
-        const m = chk.dataset.metric;
-        if (chk.checked) state.metrics.add(m); else state.metrics.delete(m);
-        update();
-      });
-    });
-
-    $reset.addEventListener('click', ()=>{
-      state.search = '';
-      $search.value = '';
-      state.sortKey = 'gross';
-      state.sortDir = 'desc';
-      metricToggles.forEach(c=>{ c.checked = ['units','gross','budget','debt','net'].includes(c.dataset.metric); });
-      state.metrics = new Set(['units','gross','budget','debt','net']);
-      // keep current year/label
-      update();
-    });
-
-    // CSV Export for current view
     function toCSV(arr){
       const headers = ['Artist','Rank','Active Weeks','Records','Units','Gross','Budget','Debt','Net','Artist $','Label $'];
       const lines = [headers.join(',')];
@@ -346,11 +328,11 @@
           r.label_revenue ?? '',
         ].join(','));
       });
-      return lines.join('\n');
+      return lines.join('
+');
     }
-
     function updateCSVLink(){
-      const rows = sortRows(applyFilters(currentArtists()));
+      const rows = sortRows(applyFilters(currentArtists())).slice(0, state.maxRows);
       const csv = toCSV(rows);
       const blob = new Blob([csv], {type: 'text/csv'});
       const url = URL.createObjectURL(blob);
@@ -358,9 +340,57 @@
       $download.download = `label_${state.label}_${state.year}.csv`;
     }
 
+    function update(){
+      renderTotals();
+      renderTable();
+      renderCharts();
+      updateCSVLink();
+    }
+
+    // Interactions
+    $year.addEventListener('change', e=>{ state.year = e.target.value; populateLabels(); raf(update); });
+    $label.addEventListener('change', e=>{ state.label = e.target.value; raf(update); });
+    $search.addEventListener('input', debounce(e=>{ state.search = e.target.value; raf(update); }, 200));
+
+    document.querySelectorAll('.sort').forEach(th=>{
+      th.addEventListener('click', ()=>{
+        const key = th.dataset.key;
+        if (state.sortKey === key){ state.sortDir = state.sortDir === 'desc' ? 'asc' : 'desc'; }
+        else { state.sortKey = key; state.sortDir = 'desc'; }
+        raf(update);
+      });
+    });
+
+    metricToggles.forEach(chk=>{
+      chk.addEventListener('change', debounce(()=>{
+        const m = chk.dataset.metric;
+        if (chk.checked) state.metrics.add(m); else state.metrics.delete(m);
+        raf(update);
+      }, 100));
+    });
+
+    $reset.addEventListener('click', ()=>{
+      state.search = '';
+      $search.value = '';
+      state.sortKey = 'gross';
+      state.sortDir = 'desc';
+      state.maxRows = 100;
+      if ($maxRows) $maxRows.value = '100';
+      metricToggles.forEach(c=>{ c.checked = ['units','gross','budget','debt','net'].includes(c.dataset.metric); });
+      state.metrics = new Set(['units','gross','budget','debt','net']);
+      raf(update);
+    });
+
+    if ($maxRows){
+      $maxRows.addEventListener('change', e=>{
+        state.maxRows = parseInt(e.target.value,10) || 100;
+        raf(update);
+      });
+    }
+
     // Init
     populateLabels();
-    update();
+    raf(update);
   </script>
 </body>
 </html>
