@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Labels — Yearly from Weekly • No Charts (with All Time)</title>
+<title>Labels — Yearly from Weekly • No Charts (All Time + Labels-only)</title>
 <style>
   :root { --bg:#0f172a; --panel:#111827; --ink:#e5e7eb; --muted:#94a3b8; --line:#1f2937; }
   html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font:14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
@@ -32,6 +32,7 @@
   .scroll { overflow:auto; max-height:60vh; }
   .flex { display:flex; gap:8px; align-items:center; }
   .warn { color:#fcd34d; }
+  #noLabels { display:none; margin-top:8px; color:#fca5a5; }
 </style>
 </head>
 <body>
@@ -58,6 +59,7 @@
       <div class="col-5">
         <label class="small">Record Label</label>
         <select id="labelSelect"></select>
+        <div id="noLabels">No labels found for this selection.</div>
       </div>
       <div class="col-4">
         <label class="small">Search Artist</label>
@@ -70,7 +72,7 @@
       </div>
     </section>
 
-    <!-- Metric toggles (kept for context; page is table-only) -->
+    <!-- Metric toggles (context only; page is table-only) -->
     <section class="panel" style="margin-bottom:12px;">
       <div class="flex" style="flex-wrap:wrap; gap:12px;">
         <span class="small" style="align-self:center;">Metrics</span>
@@ -128,7 +130,16 @@
       warn.innerHTML = '<span class="warn">Dataset not found. Make sure <code>label_year_data.global.js</code> is in the same folder and loads before this script.</span>';
       window.labelYearData = { meta:{}, years:{} };
     } else {
-      warn.textContent = 'Loaded dataset: ' + (window.labelYearData.meta && window.labelYearData.meta.source_file ? window.labelYearData.meta.source_file : '(unknown)');
+      warn.textContent = 'Loaded dataset' + (window.labelYearData.meta && window.labelYearData.meta.source_file ? ': ' + window.labelYearData.meta.source_file : '');
+    }
+
+    // ---------- Helpers ----------
+    function isLabelBlock(node) {
+      return node
+        && typeof node === 'object'
+        && !Array.isArray(node)
+        && node.artists && typeof node.artists === 'object'
+        && node.totals  && typeof node.totals  === 'object';
     }
 
     // ---------- ALL-TIME AGGREGATION ----------
@@ -143,7 +154,7 @@
       for (const y of Object.keys(yearsObj || {})) {
         const yearObj = yearsObj[y] || {};
         for (const [label, block] of Object.entries(yearObj)) {
-          if (!block || !block.artists) continue;
+          if (!isLabelBlock(block)) continue;
 
           if (!acc[label]) acc[label] = { artists: {}, totals: { artists_count: 0, units:0, gross:0, budget:0, debt:0, net:0, artist_revenue:0, label_revenue:0 } };
 
@@ -203,6 +214,7 @@
     const $reset  = document.getElementById('resetFilters');
     const $download = document.getElementById('downloadCSV');
     const $maxRows  = document.getElementById('maxRows');
+    const $noLabels = document.getElementById('noLabels');
 
     // --- State
     let state = { year:null, label:null, search:'', sortKey:'gross', sortDir:'desc', maxRows:100 };
@@ -224,16 +236,23 @@
     function populateLabels(){
       $label.innerHTML = '';
       const yearObj = getYearObject(state.year) || {};
-      const labels = Object.entries(yearObj)
-        .filter(([k,v]) => v && typeof v==='object' && v.artists && v.totals)
-        .map(([k]) => k)
+      const labels = Object.keys(yearObj)
+        .filter(k => isLabelBlock(yearObj[k]))
         .sort((a,b)=> a.localeCompare(b));
+
+      if (labels.length === 0) {
+        $noLabels.style.display = 'block';
+        state.label = null;
+        return;
+      }
+      $noLabels.style.display = 'none';
+
       for (const l of labels){
         const opt = document.createElement('option');
         opt.value = l; opt.textContent = l;
         $label.appendChild(opt);
       }
-      state.label = labels[0] || null;
+      if (!labels.includes(state.label)) state.label = labels[0];
     }
 
     // --- Current table rows
@@ -274,9 +293,10 @@
       const y = getYearObject(state.year) || {};
       const t = (y[state.label]?.totals) || {};
       const tpl = (k,v)=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div></div>`;
-      $totals.innerHTML = [
-        tpl('Artists', (t.artists_count==null?'—':new Intl.NumberFormat('en-US').format(t.artists_count))),
-        tpl('Units', fmtInt(t.units)),
+      const nOrDash = (n)=> (n==null?'—':new Intl.NumberFormat('en-US').format(n));
+      document.getElementById('totalsCards').innerHTML = [
+        tpl('Artists', nOrDash(t.artists_count)),
+        tpl('Units', nOrDash(t.units)),
         tpl('Gross', fmtMoney(t.gross)),
         tpl('Budget', fmtMoney(t.budget)),
         tpl('Debt', fmtMoney(t.debt)),
