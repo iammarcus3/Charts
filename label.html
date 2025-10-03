@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Labels — Yearly from Weekly • No Charts (All Time + Labels-only)</title>
+<title>Labels — Yearly from Weekly • No Charts (All Time + Labels-only + Debt Fix)</title>
 <style>
   :root { --bg:#0f172a; --panel:#111827; --ink:#e5e7eb; --muted:#94a3b8; --line:#1f2937; }
   html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font:14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
@@ -114,17 +114,124 @@
     <p id="datasetWarning" class="muted" style="margin-top:10px;"></p>
   </main>
 
-  <!-- Load your uploaded dataset (defines window.labelYearData) -->
+  <!-- Load your uploaded dataset (must define window.labelYearData = { years: {...} }) -->
   <script src="./label_year_data.global.js"></script>
 
-  <!-- App code (no charts) -->
+  <!-- Debt Policy Engine -->
   <script>
-    // --- Utilities
+    // defensively coerce number
+    const nz = v => (typeof v === 'number' && isFinite(v)) ? v : 0;
+
+    const DEBT_RULES = {
+      "Columbia Records": {
+        artist: { fixedPerArtist: 150_000, yearlyPct: 0,   earlyPctOnce: 0.30 }, // +30% once (earliest year), +150k per artist each year
+        label:  { fixedPerArtist: 85_000,  fixedPerYear: 0, pctOfArtistDebt: 0.05 } // +5% of artist-debt per year
+      },
+      "Def Jam": {
+        artist: { fixedPerArtist: 0,       yearlyPct: 0.45, earlyPctOnce: 0    }, // +45% compounding per year
+        label:  { fixedPerArtist: 120_000, fixedPerYear: 100_000, pctOfArtistDebt: 0 }
+      },
+      "Epic": {
+        artist: { fixedPerArtist: 100_000, yearlyPct: 0, earlyPctOnce: 0 },
+        label:  { fixedPerArtist: 50_000,  fixedPerYear: 0, pctOfArtistDebt: 0.05 }
+      },
+      "Park Wood": {
+        artist: { fixedPerArtist: 45_000,  yearlyPct: 0.20, earlyPctOnce: 0 },
+        label:  { fixedPerArtist: 45_000,  fixedPerYear: 0, pctOfArtistDebt: 0 }
+      },
+      "Republic": {
+        artist: { fixedPerArtist: 0,       yearlyPct: 0.50, earlyPctOnce: 0 },
+        label:  { fixedPerArtist: 0,       fixedPerYear: 165_000, pctOfArtistDebt: 0.10 }
+      },
+      "Sony Music": {
+        artist: { fixedPerArtist: 0,       yearlyPct: 0.10, earlyPctOnce: 0 },
+        label:  { fixedPerArtist: 0,       fixedPerYear: 200_000, pctOfArtistDebt: 0, pctOfArtistNet: 0.02 } // +2% of artist net per year
+      },
+      "Atlantic": {
+        artist: { fixedPerArtist: 0,       yearlyPct: 0.60, earlyPctOnce: 0 },
+        label:  { fixedPerArtist: 35_000,  fixedPerYear: 0, pctOfArtistDebt: 0 }
+      }
+    };
+
+    function recomputeDebt(policyData) {
+      const yearsObj = (policyData && policyData.years) || {};
+      const sortedYears = Object.keys(yearsObj).sort(); // 2018..2025
+
+      // carry state per label across years for compounding
+      const carry = {}; // label -> { artistDebt: number, labelDebt: number }
+
+      for (const year of sortedYears) {
+        const labels = yearsObj[year] || {};
+        for (const [label, block] of Object.entries(labels)) {
+          if (!block || !block.artists || !block.totals) continue;
+
+          const rule = DEBT_RULES[label];
+          if (!rule) continue; // no rule provided → leave as-is
+
+          const artists = block.artists;
+          const artistNames = Object.keys(artists);
+          const artistCount = artistNames.length;
+
+          if (!carry[label]) carry[label] = { artistDebt: 0, labelDebt: 0 };
+          let prevArtistDebt = carry[label].artistDebt;
+          let prevLabelDebt  = carry[label].labelDebt;
+
+          // Artist-side debt for THIS year
+          let thisArtistDebt = prevArtistDebt * (1 + (rule.artist.yearlyPct || 0));
+          thisArtistDebt += (rule.artist.fixedPerArtist || 0) * artistCount;
+
+          // one-time early bump if defined (first year encountered for label)
+          if (prevArtistDebt === 0 && (rule.artist.earlyPctOnce || 0) > 0) {
+            thisArtistDebt *= (1 + rule.artist.earlyPctOnce);
+          }
+
+          // Equal split across artists (change to weighted by units/gross if desired)
+          const perArtistShare = artistCount > 0 ? (thisArtistDebt / artistCount) : 0;
+          for (const name of artistNames) {
+            const a = artists[name] || {};
+            a.debt = nz(perArtistShare); // overwrite per-artist "Debt $"
+            artists[name] = a;
+          }
+
+          // Label-side debt for THIS year
+          let thisLabelDebt = prevLabelDebt;
+          thisLabelDebt += (rule.label.fixedPerYear || 0);
+          thisLabelDebt += (rule.label.fixedPerArtist || 0) * artistCount;
+
+          if (rule.label.pctOfArtistDebt) {
+            thisLabelDebt += thisArtistDebt * rule.label.pctOfArtistDebt;
+          }
+          if (rule.label.pctOfArtistNet) {
+            const sumArtistNet = artistNames.reduce((acc, n) => acc + nz((artists[n]||{}).net), 0);
+            thisLabelDebt += sumArtistNet * rule.label.pctOfArtistNet;
+          }
+
+          // Write combined total debt (artist + label) into label totals for that year
+          block.totals.debt = nz(thisArtistDebt) + nz(thisLabelDebt);
+
+          // update carry for next year
+          carry[label].artistDebt = thisArtistDebt;
+          carry[label].labelDebt  = thisLabelDebt;
+
+          yearsObj[year][label] = block;
+        }
+      }
+    }
+
+    // Run once on load (before building All Time view)
+    if (window.labelYearData && window.labelYearData.years) {
+      recomputeDebt(window.labelYearData);
+    } else {
+      console.warn('labelYearData not found when attempting to recompute debt.');
+    }
+  </script>
+
+  <!-- App code (All Time + labels-only dropdown; table-only UI) -->
+  <script>
     const debounce = (fn, d=200) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), d); }; };
     const fmtMoney = v => (v==null || isNaN(v)) ? '—' : new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v);
     const fmtInt   = v => (v==null || isNaN(v)) ? '—' : new Intl.NumberFormat('en-US').format(Math.round(v));
 
-    // --- Dataset guard
     const warn = document.getElementById('datasetWarning');
     if (!window.labelYearData || !window.labelYearData.years) {
       warn.innerHTML = '<span class="warn">Dataset not found. Make sure <code>label_year_data.global.js</code> is in the same folder and loads before this script.</span>';
@@ -133,11 +240,8 @@
       warn.textContent = 'Loaded dataset' + (window.labelYearData.meta && window.labelYearData.meta.source_file ? ': ' + window.labelYearData.meta.source_file : '');
     }
 
-    // ---------- Helpers ----------
     function isLabelBlock(node) {
-      return node
-        && typeof node === 'object'
-        && !Array.isArray(node)
+      return node && typeof node === 'object' && !Array.isArray(node)
         && node.artists && typeof node.artists === 'object'
         && node.totals  && typeof node.totals  === 'object';
     }
@@ -147,8 +251,7 @@
     let allTimeCache = null;
 
     function buildAllTime(yearsObj){
-      // yearsObj: { "2018": {<label>: {artists:{}, totals:{} }}, ... }
-      const acc = {}; // label -> {artists, totals}
+      const acc = {}; // label -> { artists:{}, totals:{} }
       const sumKeys = ['units','gross','budget','debt','net','artist_revenue','label_revenue','records_count'];
 
       for (const y of Object.keys(yearsObj || {})) {
@@ -173,22 +276,22 @@
             if (a.rank_best != null) tgt.rank_best = (tgt.rank_best == null) ? a.rank_best : Math.min(tgt.rank_best, a.rank_best);
             // max active weeks
             if (a.active_weeks != null) tgt.active_weeks = (tgt.active_weeks == null) ? a.active_weeks : Math.max(tgt.active_weeks, a.active_weeks);
-            // sums
+            // sums (including recomputed per-artist debt)
             for (const k of sumKeys) if (a[k] != null && !isNaN(a[k])) tgt[k] += Number(a[k]);
           }
 
-          // roll up label totals (sum across years)
+          // roll-up label totals (sum across years)
           const t = block.totals || {};
           if (t.units != null) acc[label].totals.units += Number(t.units) || 0;
           if (t.gross != null) acc[label].totals.gross += Number(t.gross) || 0;
           if (t.budget != null) acc[label].totals.budget += Number(t.budget) || 0;
-          if (t.debt != null) acc[label].totals.debt += Number(t.debt) || 0;
+          if (t.debt != null) acc[label].totals.debt += Number(t.debt) || 0; // already includes artist+label side per year
           if (t.net != null) acc[label].totals.net += Number(t.net) || 0;
           if (t.artist_revenue != null) acc[label].totals.artist_revenue += Number(t.artist_revenue) || 0;
           if (t.label_revenue != null) acc[label].totals.label_revenue += Number(t.label_revenue) || 0;
         }
       }
-      // finalize artists_count from unique artists under each label
+      // finalize artists_count
       for (const [label, block] of Object.entries(acc)) {
         block.totals.artists_count = Object.keys(block.artists || {}).length;
       }
@@ -199,7 +302,7 @@
       const years = (window.labelYearData && window.labelYearData.years) || {};
       if (year === ALL_TIME_KEY) {
         if (!allTimeCache) allTimeCache = buildAllTime(years);
-        return allTimeCache; // shape matches a single-year object
+        return allTimeCache;
       }
       return years[year] || {};
     }
@@ -267,7 +370,7 @@
         units: obj.units ?? null,
         gross: obj.gross ?? null,
         budget: obj.budget ?? null,
-        debt: obj.debt ?? null,
+        debt: obj.debt ?? null,                 // recomputed by Debt Engine
         net: obj.net ?? null,
         artist_revenue: obj.artist_revenue ?? null,
         label_revenue: obj.label_revenue ?? null
@@ -294,12 +397,12 @@
       const t = (y[state.label]?.totals) || {};
       const tpl = (k,v)=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div></div>`;
       const nOrDash = (n)=> (n==null?'—':new Intl.NumberFormat('en-US').format(n));
-      document.getElementById('totalsCards').innerHTML = [
+      $totals.innerHTML = [
         tpl('Artists', nOrDash(t.artists_count)),
         tpl('Units', nOrDash(t.units)),
         tpl('Gross', fmtMoney(t.gross)),
         tpl('Budget', fmtMoney(t.budget)),
-        tpl('Debt', fmtMoney(t.debt)),
+        tpl('Debt', fmtMoney(t.debt)),          // totals.debt includes artist + label-side for that year
         tpl('Net', fmtMoney(t.net)),
         tpl('Artist $', fmtMoney(t.artist_revenue)),
         tpl('Label $', fmtMoney(t.label_revenue))
@@ -379,9 +482,12 @@
     $maxRows.addEventListener('change', e=>{ state.maxRows=parseInt(e.target.value,10)||100; requestAnimationFrame(update); });
 
     // --- Init
-    initYears();
-    populateLabels();
-    requestAnimationFrame(update);
+    (function init(){
+      // Build years/labels AFTER debt recompute (so All Time uses updated numbers)
+      initYears();
+      populateLabels();
+      requestAnimationFrame(update);
+    })();
   </script>
 </body>
 </html>
