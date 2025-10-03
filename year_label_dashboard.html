@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Year & Label Dashboard</title>
+  <style>
+    :root{
+      --bg:#0b0f19; --panel:#111726; --muted:#8892a6; --fg:#e6edf3; --accent:#6ea8fe; --grid:#1b2437;
+      --pos:#4ade80; --neg:#f87171;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial;
+         background:linear-gradient(180deg, #0b0f19 0%, #0a0e18 100%); color:var(--fg);}
+    header{position:sticky; top:0; z-index:10; background:rgba(11,15,25,.85); backdrop-filter:saturate(150%) blur(6px);
+           border-bottom:1px solid #1c2540;}
+    .wrap{max-width:1200px; margin:0 auto; padding:16px;}
+    h1{margin:0 0 8px; font-size:22px; letter-spacing:.3px}
+    .controls{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .control{display:flex; flex-direction:column; gap:6px}
+    .control label{font-size:12px; color:var(--muted)}
+    select, input[type="search"]{background:var(--panel); color:var(--fg); border:1px solid #222c45;
+          padding:8px 10px; border-radius:10px; min-width:160px}
+    .pill{padding:6px 10px; border-radius:999px; background:#121a2e; border:1px solid #223156; font-size:12px; color:#b9c6e1}
+    main .grid{display:grid; grid-template-columns:1fr; gap:16px; padding:16px}
+    @media(min-width:900px){ main .grid{grid-template-columns: 1fr 2fr;} }
+    .card{background:var(--panel); border:1px solid #1c2540; border-radius:14px; overflow:hidden}
+    .card h2{font-size:16px; margin:0; padding:12px 14px; border-bottom:1px solid #1c2540; color:#cad6f5}
+    .pad{padding:12px 14px}
+    .summary{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    @media(min-width:680px){ .summary{grid-template-columns:repeat(4,1fr);} }
+    .metric{background:#0e1527; border:1px solid #222c45; border-radius:12px; padding:12px}
+    .metric .k{font-size:12px; color:var(--muted)}
+    .metric .v{font-weight:600; font-size:18px; margin-top:4px}
+    .table-wrap{max-height:70vh; overflow:auto}
+    table{width:100%; border-collapse:collapse; font-size:13px}
+    thead th{position:sticky; top:0; background:#0d1426; z-index:1; border-bottom:1px solid #1c2540}
+    th, td{padding:8px 10px; border-bottom:1px dashed #1e2742; text-align:left; white-space:nowrap}
+    tbody tr:hover{background:#0f1a33}
+    .num{text-align:right; font-variant-numeric: tabular-nums}
+    .muted{color:var(--muted)}
+    footer{color:var(--muted); font-size:12px; text-align:center; padding:12px}
+    .badge{display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; border:1px solid #2a3860; background:#0d1529}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Labels — Yearly from Weekly (Fast, No-CDN)</h1>
+      <div class="controls">
+        <div class="control">
+          <label for="yearSel">Year</label>
+          <select id="yearSel"></select>
+        </div>
+        <div class="control">
+          <label for="labelSel">Label</label>
+          <select id="labelSel"></select>
+        </div>
+        <div class="control">
+          <label for="searchBox">Search Artist</label>
+          <input id="searchBox" type="search" placeholder="Type to filter…" />
+        </div>
+        <div class="pill" id="rowCount">0 rows</div>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="grid">
+      <section class="card">
+        <h2>Per-Label Summary (Selected Year)</h2>
+        <div class="pad summary" id="summary"></div>
+      </section>
+      <section class="card">
+        <h2>Rows</h2>
+        <div class="table-wrap">
+          <table id="dataTable">
+            <thead id="thead"></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer>No Tailwind/CDN. Pure CSS + Vanilla JS. Avoids console warnings. </footer>
+
+  <script type="module">
+    import YearData from './year_data.js';
+
+    // ===== Utility formatting =====
+    const fmtInt = (n)=> new Intl.NumberFormat().format(Math.round(n||0));
+    const fmtMoney = (n)=> {
+      const v = Number.isFinite(n) ? n : 0;
+      return (v<0?'-':'') + '$' + new Intl.NumberFormat(undefined,{maximumFractionDigits:0}).format(Math.abs(v));
+    };
+    const fmtPct = (n)=> (Number.isFinite(n) ? (n*100).toFixed(1)+'%' : '—');
+
+    // ===== Elements =====
+    const yearSel = document.getElementById('yearSel');
+    const labelSel = document.getElementById('labelSel');
+    const searchBox = document.getElementById('searchBox');
+    const thead = document.getElementById('thead');
+    const tbody = document.getElementById('tbody');
+    const summary = document.getElementById('summary');
+    const rowCount = document.getElementById('rowCount');
+
+    // ===== Setup year options =====
+    const years = Object.keys(YearData).sort();
+    years.forEach(y=>{
+      const opt = document.createElement('option');
+      opt.value = y; opt.textContent = y;
+      yearSel.appendChild(opt);
+    });
+    yearSel.value = years[0];
+
+    // ===== Build table columns from the first year's row shape =====
+    const preferred = ['Rank','Artist','Year Sales','Active Weeks','Label','Records','Gross $','Artist $','Label $','Debt $','Net $','Artist Net $','$ per Record','Label Net $','Final Artist % of Gross','Final Label % of Gross'];
+    const columns = (()=>{
+      const sample = YearData[years[0]][0] || {};
+      const cols = [...preferred, ...Object.keys(sample).filter(k=>!preferred.includes(k))];
+      return cols;
+    })();
+
+    function buildThead(){
+      const tr = document.createElement('tr');
+      columns.forEach(c=>{
+        const th = document.createElement('th');
+        th.textContent = c;
+        tr.appendChild(th);
+      });
+      thead.innerHTML = ''; thead.appendChild(tr);
+    }
+    buildThead();
+
+    function labelsForYear(y){
+      const set = new Set(YearData[y].map(r=>r['Label']||'Unknown'));
+      return ['All Labels', ...Array.from(set).sort()];
+    }
+
+    function refreshLabelOptions(){
+      const y = yearSel.value;
+      const labs = labelsForYear(y);
+      labelSel.innerHTML = '';
+      labs.forEach(l=>{
+        const opt = document.createElement('option');
+        opt.value = l; opt.textContent = l;
+        labelSel.appendChild(opt);
+      });
+      labelSel.value = labs[0];
+    }
+    refreshLabelOptions();
+
+    function filterRows(){
+      const y = yearSel.value;
+      const label = labelSel.value;
+      const q = (searchBox.value||'').toLowerCase();
+      let rows = YearData[y] || [];
+      if(label && label !== 'All Labels'){
+        rows = rows.filter(r => (r['Label']||'').toLowerCase() === label.toLowerCase());
+      }
+      if(q){
+        rows = rows.filter(r => (r['Artist']||'').toLowerCase().includes(q));
+      }
+      return rows;
+    }
+
+    function renderTable(){
+      const rows = filterRows();
+      rowCount.textContent = `${rows.length} rows`;
+      tbody.innerHTML = '';
+      const frag = document.createDocumentFragment();
+
+      rows.forEach(r=>{
+        const tr = document.createElement('tr');
+        columns.forEach(c=>{
+          const td = document.createElement('td');
+          const v = r[c];
+          if(['Rank','Year Sales','Active Weeks','Records'].includes(c)){
+            td.className = 'num'; td.textContent = fmtInt(v);
+          }else if(['Gross $','Artist $','Label $','Debt $','Net $','Artist Net $','Label Net $','$ per Record'].includes(c)){
+            td.className = 'num'; td.textContent = fmtMoney(v);
+          }else if(['Final Artist % of Gross','Final Label % of Gross'].includes(c)){
+            td.className = 'num'; td.textContent = Number.isFinite(v) && v>1 ? fmtPct(v/100) : fmtPct(v);
+          }else{
+            td.textContent = (v===0 || v==null) ? '' : String(v);
+          }
+          tr.appendChild(td);
+        });
+        frag.appendChild(tr);
+      });
+      tbody.appendChild(frag);
+    }
+
+    function renderSummary(){
+      const y = yearSel.value;
+      const rows = YearData[y] || [];
+      const byLabel = new Map();
+      for(const r of rows){
+        const label = r['Label'] || 'Unknown';
+        const o = byLabel.get(label) || { artists:0, records:0, gross:0, artist$:0, label$:0, debt:0, net:0 };
+        o.artists += 1;
+        o.records += Number(r['Records']||0);
+        o.gross   += Number(r['Gross $']||0);
+        o.artist$ += Number(r['Artist $']||0);
+        o.label$  += Number(r['Label $']||0);
+        o.debt    += Number(r['Debt $']||0);
+        o.net     += Number(r['Net $']||0);
+        byLabel.set(label, o);
+      }
+      const items = Array.from(byLabel.entries()).sort((a,b)=>b[1].gross - a[1].gross);
+      summary.innerHTML='';
+      const lim = Math.min(items.length, 8);
+      for(let i=0;i<lim;i++){
+        const [label, o] = items[i];
+        const div = document.createElement('div');
+        div.className = 'metric';
+        div.innerHTML = `
+          <div class="k"><span class="badge">${label}</span></div>
+          <div class="v">${fmtMoney(o.gross)}</div>
+          <div class="muted">Artists: ${fmtInt(o.artists)} • Records: ${fmtInt(o.records)}</div>
+          <div class="muted">Artist $: ${fmtMoney(o.artist$)} • Label $: ${fmtMoney(o.label$)}</div>
+          <div class="muted">Debt: ${fmtMoney(o.debt)} • Net: ${fmtMoney(o.net)}</div>
+        `;
+        summary.appendChild(div);
+      }
+    }
+
+    function refreshAll(){
+      refreshLabelOptions();
+      renderSummary();
+      renderTable();
+    }
+
+    yearSel.addEventListener('change', refreshAll);
+    labelSel.addEventListener('change', renderTable);
+    searchBox.addEventListener('input', renderTable);
+
+    // Initial render
+    refreshAll();
+  </script>
+</body>
+</html>
