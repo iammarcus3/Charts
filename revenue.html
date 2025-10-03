@@ -125,7 +125,8 @@ function parseCSV(txt){
       if(c==','){ pushF(); i++; continue; }
       if(c=='
 '){ pushF(); pushR(); i++; continue; }
-      if(c==''){ i++; continue; }
+      if(c=='
+'){ i++; continue; }
       field+=c; i++;
     }
   }
