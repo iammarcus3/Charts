@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Label Finance — Debt • Net • Payouts</title>
+<style>
+  :root { --bg:#0b1220; --card:#0f172a; --muted:#94a3b8; --line:#1f2937; --accent:#fbbf24; --fg:#e5e7eb; --green:#22c55e; --amber:#f59e0b; --red:#ef4444; }
+  html,body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,"Helvetica Neue",Arial}
+  .container{max-width:1200px;margin:0 auto;padding:20px}
+  .title{font-weight:700;font-size:26px;margin:0 0 10px}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .btn{background:#1e293b;border:1px solid #334155;color:var(--fg);padding:8px 12px;border-radius:10px;cursor:pointer}
+  .btn.primary{background:var(--accent);color:#111827;border-color:#d4a816}
+  .input{background:#0f172a;color:var(--fg);border:1px solid #334155;border-radius:10px;padding:8px 10px}
+  .card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;margin:14px 0}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead th{position:sticky;top:0;background:rgba(11,18,32,.95);backdrop-filter:blur(6px);}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line)}
+  th{user-select:none;cursor:pointer}
+  th.sort-asc::after{content:" ▲";color:var(--muted);font-weight:400}
+  th.sort-desc::after{content:" ▼";color:var(--muted);font-weight:400}
+  tfoot td{font-weight:700}
+  .right{text-align:right}.center{text-align:center}
+  .badge{border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700}
+  .b-green{background:rgba(34,197,94,.2);color:#22c55e}
+  .b-amber{background:rgba(245,158,11,.2);color:#f59e0b}
+  .b-red{background:rgba(239,68,68,.2);color:#ef4444}
+  .note{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">Label Finance — Debt, Net & Final Payouts</div>
+  <div class="toolbar">
+    <input id="search" class="input" placeholder="Search: label / year / artist / album…" style="min-width:260px">
+    <select id="group" class="input">
+      <option value="album">Group by Album</option>
+      <option value="artist">Group by Artist</option>
+    </select>
+    <select id="year" class="input"><option value="">All Years</option></select>
+    <select id="label" class="input"><option value="">All Labels</option></select>
+    <label class="note"><input id="clamp" type="checkbox" checked> Clamp Net at $0</label>
+    <button id="btnExport" class="btn">Export CSV</button>
+    <span style="flex:1"></span>
+    <input id="file" type="file" accept=".csv,.json" class="input">
+    <button id="loadSample" class="btn">Load Sample</button>
+  </div>
+
+  <div class="card">
+    <div class="note" style="margin-bottom:8px">
+      Required columns: <code>label,year,artist,album,salePerRecord,artistPct,labelPct,budgets,gross</code>. 
+      Debt rule: <b>for every 100 budgets = $185,000 debt</b>. Final payouts are based on <b>Net</b>.
+    </div>
+    <div style="overflow:auto">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th data-k="label">Label</th>
+            <th data-k="year" class="center">Year</th>
+            <th data-k="artist">Artist</th>
+            <th data-k="album">Album</th>
+            <th data-k="salePerRecord" class="right">Sale / Record</th>
+            <th data-k="budgets" class="right">Budgets</th>
+            <th data-k="debt" class="right">Debt</th>
+            <th data-k="gross" class="right">Gross</th>
+            <th data-k="net" class="right">Net</th>
+            <th data-k="artistPct" class="right">Artist %</th>
+            <th data-k="labelPct" class="right">Label %</th>
+            <th data-k="artist$" class="right">Artist $</th>
+            <th data-k="label$" class="right">Label $</th>
+            <th data-k="status" class="center">Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5" class="right">Totals (visible):</td>
+            <td id="tBudgets" class="right"></td>
+            <td id="tDebt" class="right"></td>
+            <td id="tGross" class="right"></td>
+            <td id="tNet" class="right"></td>
+            <td></td><td></td>
+            <td id="tArtist" class="right"></td>
+            <td id="tLabel" class="right"></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = s=>document.querySelector(s);
+const $$ = s=>Array.from(document.querySelectorAll(s));
+const toNum = v => { if (v==null||v==="") return 0; if (typeof v==="number") return isFinite(v)?v:0; const n=Number(String(v).replace(/[,$\s]/g,"")); return isNaN(n)?0:n; };
+const money = n => "$"+(toNum(n)).toLocaleString("en-US");
+const pct = n => (100*(Number(n)||0)).toFixed(2)+"%";
+const debtFromBudgets = b => (toNum(b)/100)*185000;
+
+function compute(fin, clampZero=true){
+  const gross = toNum(fin.gross);
+  const d = debtFromBudgets(fin.budgets);
+  let net = gross - d;
+  if (clampZero && net<0) net = 0;
+  const a$ = net * (Number(fin.artistPct)||0);
+  const l$ = net * (Number(fin.labelPct)||0);
+  const status = net<=0 ? "In Debt" : (net<1_000_000 ? "Positive" : "Strong");
+  return {debt:d, net, a$, l$, status};
+}
+
+function parseCSV(txt){
+  const rows=[]; let i=0, field="", row=[], inQ=false;
+  const pushF=()=>{ row.push(field); field=""; };
+  const pushR=()=>{ rows.push(row); row=[]; };
+  while(i<txt.length){
+    const c=txt[i];
+    if(inQ){
+      if(c=='"' && txt[i+1]=='"'){ field+='"'; i+=2; continue; }
+      if(c=='"'){ inQ=false; i++; continue; }
+      field+=c; i++; continue;
+    } else {
+      if(c=='"'){ inQ=true; i++; continue; }
+      if(c==','){ pushF(); i++; continue; }
+      if(c=='
+'){ pushF(); pushR(); i++; continue; }
+      if(c==''){ i++; continue; }
+      field+=c; i++;
+    }
+  }
+  if(field!==""||row.length){ pushF(); pushR(); }
+  const headers = rows.shift().map(h=>h.trim());
+  return rows.filter(r=>r.some(x=>String(x).trim()!=="")).map(r=>Object.fromEntries(headers.map((h,idx)=>[h,r[idx]??""])));
+}
+
+function normalize(arr){
+  return arr.map(r=>({
+    label: r.label ?? r.Label ?? "",
+    year: toNum(r.year ?? r.Year),
+    artist: r.artist ?? r.Artist ?? "",
+    album: r.album ?? r.Album ?? "",
+    salePerRecord: toNum(r.salePerRecord ?? r.SalePerRecord),
+    artistPct: Number(r.artistPct ?? r.ArtistPct) || 0,
+    labelPct: Number(r.labelPct ?? r.LabelPct) || 0,
+    budgets: toNum(r.budgets ?? r.Budgets),
+    gross: toNum(r.gross ?? r.Gross),
+  }));
+}
+
+let RAW=[], VIEW=[], SORT={k:"net",dir:"desc"};
+
+function hydrateFilters(rows){
+  const years=[...new Set(rows.map(r=>r.year).filter(Boolean))].sort((a,b)=>a-b);
+  $("#year").innerHTML='<option value="">All Years</option>'+years.map(y=>`<option>${y}</option>`).join("");
+  const labels=[...new Set(rows.map(r=>r.label).filter(Boolean))].sort();
+  $("#label").innerHTML='<option value="">All Labels</option>'+labels.map(l=>`<option>${l}</option>`).join("");
+}
+
+function render(){
+  const q=($("#search").value||"").toLowerCase();
+  const yr=$("#year").value; const lb=$("#label").value;
+  const clamp=$("#clamp").checked; const group=$("#group").value;
+
+  let rows=RAW.filter(r=>{
+    if(yr && String(r.year)!==String(yr)) return false;
+    if(lb && r.label!==lb) return false;
+    const text=(r.label+' '+r.year+' '+r.artist+' '+r.album).toLowerCase();
+    if(q && !text.includes(q)) return false;
+    return true;
+  });
+
+  const key=r=> group==="album" ? `${r.label}||${r.year}||${r.artist}||${r.album}` : `${r.label}||${r.year}||${r.artist}||`;
+  const map=new Map();
+  for(const r of rows){
+    const k=key(r);
+    if(!map.has(k)){
+      map.set(k,{label:r.label,year:r.year,artist:r.artist,album: group==="album"?r.album:"",
+                 salePerRecord:r.salePerRecord,artistPct:r.artistPct,labelPct:r.labelPct,budgets:0,gross:0});
+    }
+    const t=map.get(k); t.budgets+=toNum(r.budgets); t.gross+=toNum(r.gross);
+  }
+
+  VIEW=Array.from(map.values()).map(x=>{
+    const c=compute(x,clamp);
+    return {...x, debt:Math.round(c.debt), net:Math.round(c.net), artist$:Math.round(c.a$), label$:Math.round(c.l$), status:c.status};
+  });
+
+  VIEW.sort((a,b)=>{ const ka=a[SORT.k], kb=b[SORT.k]; if(ka==kb) return 0; const dir=SORT.dir==="asc"?1:-1; return (ka>kb?1:-1)*dir; });
+
+  const tbody=$("#tbody");
+  let tB=0,tD=0,tG=0,tN=0,tA=0,tL=0;
+  tbody.innerHTML = VIEW.map(r=>{
+    tB+=toNum(r.budgets); tD+=toNum(r.debt); tG+=toNum(r.gross); tN+=toNum(r.net); tA+=toNum(r.artist$); tL+=toNum(r.label$);
+    const cls = r.status==="In Debt"?"b-red":(r.status==="Strong"?"b-green":"b-amber");
+    return `<tr>
+      <td>${r.label}</td><td class="center">${r.year||""}</td><td>${r.artist}</td><td>${r.album||""}</td>
+      <td class="right">${money(r.salePerRecord)}</td><td class="right">${toNum(r.budgets).toLocaleString()}</td>
+      <td class="right">${money(r.debt)}</td><td class="right">${money(r.gross)}</td>
+      <td class="right">${money(r.net)}</td><td class="right">${pct(r.artistPct)}</td><td class="right">${pct(r.labelPct)}</td>
+      <td class="right">${money(r.artist$)}</td><td class="right">${money(r.label$)}</td>
+      <td class="center"><span class="badge ${cls}">${r.status}</span></td>
+    </tr>`;
+  }).join("");
+
+  $("#tBudgets").textContent=toNum(tB).toLocaleString();
+  $("#tDebt").textContent=money(tD);
+  $("#tGross").textContent=money(tG);
+  $("#tNet").textContent=money(tN);
+  $("#tArtist").textContent=money(tA);
+  $("#tLabel").textContent=money(tL);
+
+  $$("#tbl thead th").forEach(th=>{
+    th.classList.remove("sort-asc","sort-desc");
+    if(th.dataset.k===SORT.k) th.classList.add(SORT.dir==="asc"?"sort-asc":"sort-desc");
+  });
+}
+
+$("#search").addEventListener("input",render);
+$("#year").addEventListener("input",render);
+$("#label").addEventListener("input",render);
+$("#clamp").addEventListener("input",render);
+$("#group").addEventListener("input",render);
+
+$("#btnExport").addEventListener("click",()=>{
+  const cols=["label","year","artist","album","salePerRecord","budgets","debt","gross","net","artistPct","labelPct","artist$","label$","status"];
+  const head=cols.join(",")+"
+";
+  const body=VIEW.map(r=>cols.map(k=>String(r[k]??"").replace(/,/g,"")).join(",")).join("
+");
+  const blob=new Blob([head+body],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="label_finance_export.csv"; a.click(); URL.revokeObjectURL(url);
+});
+
+$("#loadSample").addEventListener("click",()=>{
+  const sample=[
+    {label:"Columbia Records",year:2025,artist:"Taranda",album:"07",salePerRecord:16.96,artistPct:0.45,labelPct:0.55,budgets:1200,gross:12500000},
+    {label:"Columbia Records",year:2024,artist:"Taranda",album:"07",salePerRecord:15.34,artistPct:0.45,labelPct:0.55,budgets:900,gross:9400000},
+    {label:"Def Jam",year:2025,artist:"Artist X",album:"Mixtape One",salePerRecord:13.60,artistPct:0.32,labelPct:0.68,budgets:700,gross:6600000},
+    {label:"Def Jam",year:2024,artist:"Artist X",album:"Mixtape One",salePerRecord:12.99,artistPct:0.32,labelPct:0.68,budgets:420,gross:4200000},
+    {label:"Epic",year:2025,artist:"New Wave",album:"Pulse",salePerRecord:14.10,artistPct:0.42,labelPct:0.58,budgets:300,gross:3100000}
+  ];
+  RAW = normalize(sample);
+  hydrateFilters(RAW);
+  render();
+});
+
+$("#file").addEventListener("change", async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const text=await f.text();
+  if(f.name.toLowerCase().endsWith(".json")){
+    let obj=[]; try{ obj=JSON.parse(text);}catch{ alert("Invalid JSON"); return; }
+    RAW=normalize(obj);
+  } else {
+    RAW=normalize(parseCSV(text));
+  }
+  hydrateFilters(RAW);
+  render();
+});
+
+$$("#tbl thead th").forEach(th=>{
+  th.addEventListener("click",()=>{
+    const k=th.dataset.k; if(!k) return;
+    if(SORT.k===k){ SORT.dir = SORT.dir==="asc"?"desc":"asc"; }
+    else { SORT.k=k; SORT.dir="desc"; }
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
