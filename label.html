@@ -135,10 +135,10 @@
     const ALLOWED_LABELS = new Set(Object.keys(DEBT_RULES));
 
     // knobs
-    const ARTIST_DEBT_SCALE = 3;  // stronger than 2.5
-    const LABEL_DEBT_SCALE  = 3;
+    const ARTIST_DEBT_SCALE = 0.9;  // stronger than 2.5
+    const LABEL_DEBT_SCALE  = 1.1;
     const MIN_DEBT_ABS      = 1_000_000; // $1M floor
-    const MIN_DEBT_GROSS_PCT= 0.50;      // 50% of gross
+    const MIN_DEBT_GROSS_PCT= 0.40;      // 50% of gross
     const BUDGET_BOOST_PER_RANK = 10_000; // higher rank → more boost
 
     // helper to detect label blocks
