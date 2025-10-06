@@ -274,9 +274,7 @@
         && node.artists && typeof node.artists === 'object'
         && node.totals  && typeof node.totals  === 'object';
     }
-    const ALLOWED_LABELS = new Set(Object.keys((window.DEPT_RULES || {
-      "Columbia Records":1,"Def Jam":1,"Epic":1,"Park Wood":1,"Republic":1,"Sony Music":1,"Atlantic":1
-    })));
+
 
     // ---------- ALL-TIME AGGREGATION ----------
     const ALL_TIME_KEY = 'All Time';
