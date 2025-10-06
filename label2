@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Labels — Yearly from Weekly • Enhanced Debt & Budget Engine</title>
+<style>
+  :root { --bg:#0f172a; --panel:#111827; --ink:#e5e7eb; --muted:#94a3b8; --line:#1f2937; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font:14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+  header { padding:16px 24px; border-bottom:1px solid var(--line); }
+  h1 { margin:0 0 6px; font-size:22px; }
+  .muted { color:var(--muted); font-size:12px; }
+  main { padding:16px 24px; max-width:1400px; margin:0 auto; }
+  .row { display:grid; grid-template-columns: repeat(12, 1fr); gap:12px; }
+  .col-3 { grid-column: span 3; } .col-4 { grid-column: span 4; } .col-5 { grid-column: span 5; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  label.small { display:block; text-transform:uppercase; letter-spacing:.06em; font-size:11px; color:var(--muted); margin:0 0 6px; }
+  select,input { width:100%; background:#0b1220; color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:8px 10px; }
+  .controls .col-3, .controls .col-4, .controls .col-5 { min-width:220px; }
+  .btn { padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:#0b1220; color:var(--ink); cursor:pointer; }
+  .btn:hover { background:#12213d; }
+  .grid3 { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+  .card { background:#0b1220; border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .card .k { font-size:11px; color:var(--muted); text-transform:uppercase; }
+  .card .v { font-size:18px; font-weight:600; }
+  table { width:100%; border-collapse: collapse; font-size:13px; }
+  thead th { position:sticky; top:0; background:#0b1220cc; backdrop-filter: blur(4px); border-bottom:1px solid var(--line); text-transform:uppercase; letter-spacing:.06em; font-size:11px; text-align:left; padding:10px; cursor:default; }
+  thead th.sort { cursor:pointer; }
+  tbody td { border-bottom:1px solid var(--line); padding:8px 10px; }
+  tbody tr:hover { background:#0b1220; }
+  .mono { font-variant-numeric: tabular-nums; }
+  .scroll { overflow:auto; max-height:60vh; }
+  .flex { display:flex; gap:8px; align-items:center; }
+  .warn { color:#fcd34d; }
+  #noLabels { display:none; margin-top:8px; color:#fca5a5; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="flex" style="justify-content:space-between;">
+      <div>
+        <h1>Labels — Yearly from Weekly</h1>
+        <div class="muted">Per year · Per record label · Artists overview · Budgets · Debt · Net · Units · Revenues</div>
+      </div>
+      <div class="flex">
+        <a id="downloadCSV" class="btn" href="#">Download CSV</a>
+        <button id="resetFilters" class="btn">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Controls -->
+    <section class="row controls" style="margin-bottom:12px;">
+      <div class="col-3">
+        <label class="small">Year</label>
+        <select id="yearSelect"></select>
+      </div>
+      <div class="col-5">
+        <label class="small">Record Label</label>
+        <select id="labelSelect"></select>
+        <div id="noLabels">No labels found for this selection.</div>
+      </div>
+      <div class="col-4">
+        <label class="small">Search Artist</label>
+        <div class="flex">
+          <input id="artistSearch" type="text" placeholder="Type to filter artists…"/>
+          <select id="maxRows" style="width:140px;">
+            <option>50</option><option selected>100</option><option>200</option><option>500</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Totals -->
+    <section style="margin:12px 0;">
+      <div class="grid3" id="totalsCards"></div>
+    </section>
+
+    <!-- Table -->
+    <section class="panel" style="margin-top:12px;">
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th><th>Artist</th><th>Active Weeks</th><th>Records</th>
+              <th class="sort" data-key="units">Units</th>
+              <th class="sort" data-key="gross">Gross $</th>
+              <th class="sort" data-key="budget">Budget</th>
+              <th class="sort" data-key="debt">Debt $</th>
+              <th class="sort" data-key="net">Net $</th>
+              <th>Artist $</th><th>Label $</th>
+            </tr>
+          </thead>
+          <tbody id="artistRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <p id="datasetWarning" class="muted" style="margin-top:10px;"></p>
+  </main>
+
+  <!-- Load dataset -->
+  <script src="./label_year_data.global.js"></script>
+
+  <!-- Debt + Budget Engine -->
+  <script>
+    const nz = v => (typeof v === 'number' && isFinite(v)) ? v : 0;
+
+    const DEBT_RULES = {
+      "Columbia Records": { artist: { fixedPerArtist: 150_000, yearlyPct: 0, earlyPctOnce: 0.30 }, label: { fixedPerArtist: 85_000, fixedPerYear: 0, pctOfArtistDebt: 0.05 }},
+      "Def Jam":          { artist: { fixedPerArtist: 0, yearlyPct: 0.45, earlyPctOnce: 0 },        label: { fixedPerArtist: 120_000, fixedPerYear: 100_000, pctOfArtistDebt: 0 }},
+      "Epic":             { artist: { fixedPerArtist: 100_000, yearlyPct: 0, earlyPctOnce: 0 },     label: { fixedPerArtist: 50_000, fixedPerYear: 0, pctOfArtistDebt: 0.05 }},
+      "Park Wood":        { artist: { fixedPerArtist: 45_000, yearlyPct: 0.20, earlyPctOnce: 0 },   label: { fixedPerArtist: 45_000, fixedPerYear: 0, pctOfArtistDebt: 0 }},
+      "Republic":         { artist: { fixedPerArtist: 0, yearlyPct: 0.50, earlyPctOnce: 0 },        label: { fixedPerArtist: 0, fixedPerYear: 165_000, pctOfArtistDebt: 0.10 }},
+      "Sony Music":       { artist: { fixedPerArtist: 0, yearlyPct: 0.10, earlyPctOnce: 0 },        label: { fixedPerArtist: 0, fixedPerYear: 200_000, pctOfArtistDebt: 0, pctOfArtistNet: 0.02 }},
+      "Atlantic":         { artist: { fixedPerArtist: 0, yearlyPct: 0.60, earlyPctOnce: 0 },        label: { fixedPerArtist: 35_000, fixedPerYear: 0, pctOfArtistDebt: 0 }}
+    };
+    const ALLOWED_LABELS = new Set(Object.keys(DEBT_RULES));
+    const MIN_DEBT = 1_000_000;
+    const BUDGET_BOOST = 10000; // extra per rank position
+
+    function recomputeDebt(policyData) {
+      const yearsObj = (policyData && policyData.years) || {};
+      const sortedYears = Object.keys(yearsObj).sort();
+      const carry = {};
+
+      for (const year of sortedYears) {
+        const labels = yearsObj[year] || {};
+        for (const [label, block] of Object.entries(labels)) {
+          if (!ALLOWED_LABELS.has(label)) continue;
+          if (!isLabelBlock(block)) continue;
+
+          const rule = DEBT_RULES[label];
+          const artists = block.artists || {};
+          const artistNames = Object.keys(artists);
+          const artistCount = artistNames.length;
+
+          if (!carry[label]) carry[label] = { artistDebt: 0, labelDebt: 0 };
+          let prevArtistDebt = carry[label].artistDebt;
+          let prevLabelDebt  = carry[label].labelDebt;
+
+          // Artist-side debt base
+          let thisArtistDebt = prevArtistDebt * (1 + (rule.artist.yearlyPct || 0));
+          thisArtistDebt += (rule.artist.fixedPerArtist || 0) * artistCount;
+          if (prevArtistDebt === 0 && (rule.artist.earlyPctOnce || 0) > 0) {
+            thisArtistDebt *= (1 + rule.artist.earlyPctOnce);
+          }
+          thisArtistDebt *= 3; // scale up
+
+          // distribute by units
+          const totalUnits = artistNames.reduce((acc, n)=> acc + nz((artists[n]||{}).units), 0);
+          for (const name of artistNames) {
+            const a = artists[name] || {};
+            const weight = totalUnits > 0 ? nz(a.units) / totalUnits : (artistCount > 0 ? 1/artistCount : 0);
+
+            let debtShare = thisArtistDebt * weight;
+            const gross = nz(a.gross);
+
+            // enforce hybrid floor: at least $1M or 50% of gross
+            debtShare = Math.max(debtShare, MIN_DEBT, gross * 0.5);
+
+            // apply new debt
+            a.debt = nz(debtShare);
+
+            // adjust budget based on rank (higher rank => higher budget)
+            if (a.rank_best != null) {
+              const rankFactor = Math.max(1, 100 - a.rank_best); // closer to 1st = bigger
+              a.budget = nz(a.budget) + (rankFactor * BUDGET_BOOST);
+            }
+
+            // recompute net
+            a.net = nz(a.gross) - nz(a.budget) - nz(a.debt);
+
+            artists[name] = a;
+          }
+
+          // Label-side debt
+          let thisLabelDebt = prevLabelDebt;
+          thisLabelDebt += (rule.label.fixedPerYear || 0);
+          thisLabelDebt += (rule.label.fixedPerArtist || 0) * artistCount;
+          if (rule.label.pctOfArtistDebt) thisLabelDebt += thisArtistDebt * rule.label.pctOfArtistDebt;
+          if (rule.label.pctOfArtistNet) {
+            const sumArtistNet = artistNames.reduce((acc, n) => acc + nz((artists[n]||{}).net), 0);
+            thisLabelDebt += sumArtistNet * rule.label.pctOfArtistNet;
+          }
+          thisLabelDebt *= 3;
+
+          // Totals
+          block.totals = block.totals || {};
+          block.totals.debt = nz(thisArtistDebt) + nz(thisLabelDebt);
+
+          carry[label].artistDebt = thisArtistDebt;
+          carry[label].labelDebt  = thisLabelDebt;
+          yearsObj[year][label] = block;
+        }
+      }
+    }
+
+    if (window.labelYearData && window.labelYearData.years) {
+      recomputeDebt(window.labelYearData);
+    } else {
+      console.warn('labelYearData not found for recomputeDebt.');
+    }
+  </script>
+
+  <!-- App logic (same as before) -->
+  <script>
+    const debounce = (fn, d=200) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), d); }; };
+    const fmtMoney = v => (v==null || isNaN(v)) ? '—' : new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v);
+    const fmtInt   = v => (v==null || isNaN(v)) ? '—' : new Intl.NumberFormat('en-US').format(Math.round(v));
+    const warn = document.getElementById('datasetWarning');
+
+    if (!window.labelYearData || !window.labelYearData.years) {
+      warn.innerHTML = '<span class="warn">Dataset not found.</span>';
+      window.labelYearData = { meta:{}, years:{} };
+    } else {
+      warn.textContent = 'Loaded dataset';
+    }
+
+    function isLabelBlock(node) {
+      return node && typeof node === 'object' && !Array.isArray(node)
+        && node.artists && typeof node.artists === 'object'
+        && node.totals  && typeof node.totals  === 'object';
+    }
+
+    const ALL_TIME_KEY = 'All Time'; let allTimeCache = null;
+    function buildAllTime(yearsObj){
+      const acc = {}; const sumKeys = ['units','gross','budget','debt','net','artist_revenue','label_revenue','records_count'];
+      for (const y of Object.keys(yearsObj || {})) {
+        const yearObj = yearsObj[y] || {};
+        for (const [label, block] of Object.entries(yearObj)) {
+          if (!ALLOWED_LABELS.has(label)) continue;
+          if (!isLabelBlock(block)) continue;
+          if (!acc[label]) acc[label] = { artists: {}, totals: { artists_count: 0, units:0, gross:0, budget:0, debt:0, net:0, artist_revenue:0, label_revenue:0 } };
+          for (const [artist, a] of Object.entries(block.artists || {})) {
+            if (!acc[label].artists[artist]) {
+              acc[label].artists[artist] = { rank_best: a.rank_best ?? null, active_weeks: a.active_weeks ?? null,
+                records_count:0, units:0, gross:0, budget:0, debt:0, net:0, artist_revenue:0, label_revenue:0 };
+            }
+            const tgt = acc[label].artists[artist];
+            if (a.rank_best != null) tgt.rank_best = (tgt.rank_best==null)?a.rank_best:Math.min(tgt.rank_best,a.rank_best);
+            if (a.active_weeks != null) tgt.active_weeks = (tgt.active_weeks==null)?a.active_weeks:Math.max(tgt.active_weeks,a.active_weeks);
+            for (const k of sumKeys) if (a[k]!=null&&!isNaN(a[k])) tgt[k]+=Number(a[k]);
+          }
+          const t = block.totals || {};
+          if (t.units!=null) acc[label].totals.units += Number(t.units)||0;
+          if (t.gross!=null) acc[label].totals.gross += Number(t.gross)||0;
+          if (t.budget!=null) acc[label].totals.budget += Number(t.budget)||0;
+          if (t.debt!=null) acc[label].totals.debt += Number(t.debt)||0;
+          if (t.net!=null) acc[label].totals.net += Number(t.net)||0;
+          if (t.artist_revenue!=null) acc[label].totals.artist_revenue += Number(t.artist_revenue)||0;
+          if (t.label_revenue!=null) acc[label].totals.label_revenue += Number(t.label_revenue)||0;
+        }
+      }
+      for (const [label, block] of Object.entries(acc)) {
+        block.totals.artists_count = Object.keys(block.artists || {}).length;
+      }
+      return acc;
+    }
+    function getYearObject(year){
+      const years = (window.labelYearData && window.labelYearData.years) || {};
+      if (year===ALL_TIME_KEY){ if(!allTimeCache) allTimeCache=buildAllTime(years); return allTimeCache; }
+      return years[year]||{};
+    }
+
+    const $year=document.getElementById('yearSelect'),$label=document.getElementById('labelSelect'),$search=document.getElementById('artistSearch'),$rows=document.getElementById('artistRows'),$totals=document.getElementById('totalsCards'),$reset=document.getElementById('resetFilters'),$download=document.getElementById('downloadCSV'),$maxRows=document.getElementById('maxRows'),$noLabels=document.getElementById('noLabels');
+    let state={year:null,label:null,
