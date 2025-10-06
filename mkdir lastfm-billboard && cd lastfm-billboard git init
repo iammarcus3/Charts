@@ -1,1 +1,10 @@
-  
+lastfm-billboard/
+├─ worker/
+│  ├─ worker.js
+│  └─ wrangler.toml
+├─ web/
+│  └─ index.html
+└─ .github/
+   └─ workflows/
+      └─ deploy-worker.yml
+
