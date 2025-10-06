@@ -6,7 +6,7 @@
 <title>Labels — Yearly from Weekly • Enhanced Debt & Budget Engine</title>
 <style>
   :root { --bg:#0f172a; --panel:#111827; --ink:#e5e7eb; --muted:#94a3b8; --line:#1f2937; }
-  html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font:14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
   header { padding:16px 24px; border-bottom:1px solid var(--line); }
   h1 { margin:0 0 6px; font-size:22px; }
   .muted { color:var(--muted); font-size:12px; }
@@ -17,7 +17,7 @@
   label.small { display:block; text-transform:uppercase; letter-spacing:.06em; font-size:11px; color:var(--muted); margin:0 0 6px; }
   select,input { width:100%; background:#0b1220; color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:8px 10px; }
   .controls .col-3, .controls .col-4, .controls .col-5 { min-width:220px; }
-  .btn { padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:#0b1220; color:var(--ink); cursor:pointer; }
+  .btn { padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:#0b1220; color:var(--ink); cursor:pointer; text-decoration:none; display:inline-block; }
   .btn:hover { background:#12213d; }
   .grid3 { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
   .card { background:#0b1220; border:1px solid var(--line); border-radius:12px; padding:12px; }
@@ -44,7 +44,7 @@
       </div>
       <div class="flex">
         <a id="downloadCSV" class="btn" href="#">Download CSV</a>
-        <button id="resetFilters" class="btn">Reset</button>
+        <button id="resetFilters" class="btn" type="button">Reset</button>
       </div>
     </div>
   </header>
@@ -81,8 +81,8 @@
         <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="budget" checked/> Budget</label>
         <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="debt" checked/> Debt $</label>
         <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="net" checked/> Net $</label>
-        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="artist_revenue"/> Artist $</label>
-        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="label_revenue"/> Label $</label>
+        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="artist_revenue" checked/> Artist $</label>
+        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="label_revenue" checked/> Label $</label>
       </div>
     </section>
 
@@ -103,7 +103,8 @@
               <th class="sort" data-key="budget">Budget</th>
               <th class="sort" data-key="debt">Debt $</th>
               <th class="sort" data-key="net">Net $</th>
-              <th>Artist $</th><th>Label $</th>
+              <th class="sort" data-key="artist_revenue">Artist $</th>
+              <th class="sort" data-key="label_revenue">Label $</th>
             </tr>
           </thead>
           <tbody id="artistRows"></tbody>
@@ -117,12 +118,13 @@
   <!-- Load dataset (must define window.labelYearData = { years: {...} }) -->
   <script src="./label_year_data.global.js"></script>
 
-  <!-- Debt + Budget Engine -->
+  <!-- Core Engine + App -->
   <script>
-    // utils
+    // --------------------- Utilities ---------------------
     const nz = v => (typeof v === 'number' && isFinite(v)) ? v : 0;
+    const clamp01 = x => Math.max(0, Math.min(1, x));
 
-    // policies for 7 labels
+    // --------------------- Policy ------------------------
     const DEBT_RULES = {
       "Columbia Records": { artist: { fixedPerArtist: 150_000, yearlyPct: 0,    earlyPctOnce: 0.30 }, label: { fixedPerArtist: 85_000,  fixedPerYear: 0,      pctOfArtistDebt: 0.05 }},
       "Def Jam":          { artist: { fixedPerArtist: 0,       yearlyPct: 0.45, earlyPctOnce: 0    }, label: { fixedPerArtist: 120_000, fixedPerYear: 100_000, pctOfArtistDebt: 0    }},
@@ -134,21 +136,116 @@
     };
     const ALLOWED_LABELS = new Set(Object.keys(DEBT_RULES));
 
-    // knobs
-    const ARTIST_DEBT_SCALE = 0.9;  // stronger than 2.5
+    // Scaling + floors
+    const ARTIST_DEBT_SCALE = 0.9;
     const LABEL_DEBT_SCALE  = 1.1;
     const MIN_DEBT_ABS      = 1_000_000; // $1M floor
-    const MIN_DEBT_GROSS_PCT= 0.40;      // 50% of gross
-    const BUDGET_BOOST_PER_RANK = 10_000; // higher rank → more boost
+    const MIN_DEBT_GROSS_PCT= 0.40;      // 40% of gross
+    const BUDGET_BOOST_PER_RANK = 10_000;
 
-    // helper to detect label blocks
+    // Optional default label splits (commented). If you want hard defaults, uncomment & fill.
+    /*
+    const REVENUE_SPLITS = {
+      "Columbia Records": { artist: 0.25, label: 0.75 },
+      "Park Wood":        { artist: 0.60, label: 0.40 },
+      "Republic":         { artist: 0.20, label: 0.80 },
+      "Sony Music":       { artist: 0.18, label: 0.82 },
+      "Epic":             { artist: 0.22, label: 0.78 },
+      "Def Jam":          { artist: 0.20, label: 0.80 },
+      "Atlantic":         { artist: 0.24, label: 0.76 }
+    };
+    */
+
+    // --------------------- Split Parsing -----------------
+    function parseArtistSplit(a){
+      if (!a || typeof a !== 'object') return null;
+
+      if (typeof a.split === 'string'){
+        const s = a.split.trim();
+        if (/^\d+(\.\d+)?\s*[%]$/.test(s)){ // "60%"
+          const n = parseFloat(s)/100;
+          return { artist: clamp01(n), label: clamp01(1-n) };
+        }
+        if (/^\d+(\.\d+)?$/.test(s)){ // "0.6" or "60"
+          const n = parseFloat(s);
+          if (n > 1) {
+            const p = clamp01(n/100);
+            return { artist: p, label: 1-p };
+          }
+          return { artist: clamp01(n), label: clamp01(1-n) };
+        }
+        if (/^\s*\d+(\.\d+)?\s*[:/]\s*\d+(\.\d+)?\s*$/.test(s)){ // "60/40" | "60:40"
+          const [l, r] = s.split(/[:/]/).map(x=>parseFloat(x));
+          const sum = (l||0)+(r||0);
+          if (sum>0){
+            const p = clamp01(l/sum);
+            return { artist: p, label: 1-p };
+          }
+        }
+      }
+
+      if (a.split_artist_pct != null){
+        let p = parseFloat(a.split_artist_pct);
+        if (p > 1) p = p/100;
+        return { artist: clamp01(p), label: clamp01(1-p) };
+      }
+      if (a.split_label_pct != null){
+        let p = parseFloat(a.split_label_pct);
+        if (p > 1) p = p/100;
+        return { artist: clamp01(1-p), label: clamp01(p) };
+      }
+      return null;
+    }
+
+    function getSplitFor(label, artistObj){
+      const artistSplit = parseArtistSplit(artistObj);
+      if (artistSplit) return artistSplit;
+
+      if (typeof REVENUE_SPLITS !== 'undefined' && REVENUE_SPLITS && REVENUE_SPLITS[label]){
+        return {
+          artist: clamp01(REVENUE_SPLITS[label].artist ?? 0.5),
+          label:  clamp01(REVENUE_SPLITS[label].label  ?? 0.5)
+        };
+      }
+      return { artist: 0.5, label: 0.5 };
+    }
+
+    // -------------------- Dataset gate -------------------
+    const warn = document.getElementById('datasetWarning');
+    if (!window.labelYearData || !window.labelYearData.years) {
+      warn.innerHTML = '<span class="warn">Dataset not found. Make sure <code>label_year_data.global.js</code> is in the same folder and loads before this script.</span>';
+      window.labelYearData = { meta:{}, years:{} };
+    } else {
+      warn.textContent = 'Loaded dataset' + (window.labelYearData.meta && window.labelYearData.meta.source_file ? ': ' + window.labelYearData.meta.source_file : '');
+    }
+
+    // Helper for label-block shape
     function isLabelBlock(node) {
       return node && typeof node === 'object' && !Array.isArray(node)
         && node.artists && typeof node.artists === 'object'
         && node.totals  && typeof node.totals  === 'object';
     }
 
-    // recompute engine
+    // ---------------- Debt + Budget + Split Engine ----------------
+    function rollupLabelTotals(block){
+      const artists = block.artists || {};
+      const totals = {
+        artists_count: Object.keys(artists).length,
+        units:0, gross:0, budget:0, debt:0, net:0,
+        artist_revenue:0, label_revenue:0
+      };
+      for (const a of Object.values(artists)){
+        totals.units          += nz(a.units);
+        totals.gross          += nz(a.gross);
+        totals.budget         += nz(a.budget);
+        totals.debt           += nz(a.debt);
+        totals.net            += nz(a.net);
+        totals.artist_revenue += nz(a.artist_revenue);
+        totals.label_revenue  += nz(a.label_revenue);
+      }
+      block.totals = Object.assign(block.totals || {}, totals);
+    }
+
     function recomputeDebt(policyData) {
       const yearsObj = (policyData && policyData.years) || {};
       const sortedYears = Object.keys(yearsObj).sort();
@@ -157,7 +254,6 @@
       for (const year of sortedYears) {
         const labels = yearsObj[year] || {};
         for (const [label, block] of Object.entries(labels)) {
-          // only operate on our 7 label blocks
           if (!ALLOWED_LABELS.has(label)) continue;
           if (!isLabelBlock(block)) continue;
 
@@ -176,43 +272,41 @@
           if (prevArtistDebt === 0 && (rule.artist.earlyPctOnce || 0) > 0) {
             thisArtistDebt *= (1 + rule.artist.earlyPctOnce);
           }
-
-          // scale up
           thisArtistDebt *= ARTIST_DEBT_SCALE;
 
-          // distribute debt by units
+          // distribution + rank-scaling refs
           const totalUnits = artistNames.reduce((acc, n)=> acc + nz((artists[n]||{}).units), 0);
-
-          // compute the best (lowest) rank among artists this year for budget scaling reference
           const ranks = artistNames.map(n => nz((artists[n]||{}).rank_best)).filter(x => x>0);
-          const maxRankForScale = ranks.length ? Math.max(...ranks) : 100; // fallback
+          const maxRankForScale = ranks.length ? Math.max(...ranks) : 100;
 
+          // per-artist recompute
           for (const name of artistNames) {
             const a = artists[name] || {};
             const weight = totalUnits > 0 ? nz(a.units) / totalUnits : (artistCount > 0 ? 1/artistCount : 0);
 
-            // proportional share
+            // proportional artist-side debt with hybrid floor
             let debtShare = thisArtistDebt * weight;
-
-            // hybrid minimum: max($1M, 50% of gross)
             const gross = nz(a.gross);
             const floor = Math.max(MIN_DEBT_ABS, gross * MIN_DEBT_GROSS_PCT);
-            debtShare = Math.max(debtShare, floor);
+            a.debt = Math.max(debtShare, floor);
 
-            // assign debt
-            a.debt = nz(debtShare);
-
-            // budget boost by rank: better rank (1) → stronger boost
+            // rank-based budget boost
             const r = a.rank_best;
             if (r != null && isFinite(r) && r > 0) {
-              // invert rank to a positive boost: e.g., rank 1 → large boost, rank max → small
-              // scale factor uses "rankScore": (maxRankForScale - r + 1)
               const rankScore = Math.max(1, (maxRankForScale - r + 1));
               a.budget = nz(a.budget) + rankScore * BUDGET_BOOST_PER_RANK;
+            } else {
+              a.budget = nz(a.budget);
             }
 
-            // recompute net after new budget + debt
+            // recompute net (after budget & debt)
             a.net = nz(a.gross) - nz(a.budget) - nz(a.debt);
+
+            // split ONLY positive net
+            const profit = Math.max(0, a.net);
+            const split = getSplitFor(label, a); // { artist, label }
+            a.artist_revenue = profit * split.artist;
+            a.label_revenue  = profit * split.label;
 
             artists[name] = a;
           }
@@ -223,17 +317,15 @@
           thisLabelDebt += (rule.label.fixedPerArtist || 0) * artistCount;
 
           if (rule.label.pctOfArtistDebt) {
-            thisLabelDebt += thisArtistDebt * rule.label.pctOfArtistDebt; // use scaled artist debt
+            thisLabelDebt += thisArtistDebt * rule.label.pctOfArtistDebt; // already scaled artist debt
           }
           if (rule.label.pctOfArtistNet) {
             const sumArtistNet = artistNames.reduce((acc, n)=> acc + nz((artists[n]||{}).net), 0);
             thisLabelDebt += sumArtistNet * rule.label.pctOfArtistNet;
           }
-
-          // scale label debt too
           thisLabelDebt *= LABEL_DEBT_SCALE;
 
-          // write totals (artist + label)
+          // store total debt (artist+label)
           block.totals = block.totals || {};
           block.totals.debt = nz(thisArtistDebt) + nz(thisLabelDebt);
 
@@ -241,42 +333,23 @@
           carry[label].artistDebt = thisArtistDebt;
           carry[label].labelDebt  = thisLabelDebt;
 
+          // rebuild totals from artists so cards line up
+          block.artists = artists;
+          rollupLabelTotals(block);
+
           yearsObj[year][label] = block;
         }
       }
     }
 
-    // run once on load, before All Time build
+    // Run engine once on load (before building All-Time)
     if (window.labelYearData && window.labelYearData.years) {
       recomputeDebt(window.labelYearData);
     } else {
       console.warn('labelYearData not found for recomputeDebt.');
     }
-  </script>
 
-  <!-- App / UI logic -->
-  <script>
-    const debounce = (fn, d=200) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), d); }; };
-    const fmtMoney = v => (v==null || isNaN(v)) ? '—' : new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v);
-    const fmtInt   = v => (v==null || isNaN(v)) ? '—' : new Intl.NumberFormat('en-US').format(Math.round(v));
-    const warn = document.getElementById('datasetWarning');
-
-    if (!window.labelYearData || !window.labelYearData.years) {
-      warn.innerHTML = '<span class="warn">Dataset not found. Make sure <code>label_year_data.global.js</code> is in the same folder and loads before this script.</span>';
-      window.labelYearData = { meta:{}, years:{} };
-    } else {
-      warn.textContent = 'Loaded dataset' + (window.labelYearData.meta && window.labelYearData.meta.source_file ? ': ' + window.labelYearData.meta.source_file : '');
-    }
-
-    // from engine scope (duplicated here if needed)
-    function isLabelBlock(node) {
-      return node && typeof node === 'object' && !Array.isArray(node)
-        && node.artists && typeof node.artists === 'object'
-        && node.totals  && typeof node.totals  === 'object';
-    }
-
-
-    // ---------- ALL-TIME AGGREGATION ----------
+    // ---------------- All-Time Aggregation ----------------
     const ALL_TIME_KEY = 'All Time';
     let allTimeCache = null;
 
@@ -306,7 +379,7 @@
             if (a.rank_best != null) tgt.rank_best = (tgt.rank_best == null) ? a.rank_best : Math.min(tgt.rank_best, a.rank_best);
             // max active weeks
             if (a.active_weeks != null) tgt.active_weeks = (tgt.active_weeks == null) ? a.active_weeks : Math.max(tgt.active_weeks, a.active_weeks);
-            // sums (including recomputed budget/debt/net)
+            // sums
             for (const k of sumKeys) if (a[k] != null && !isNaN(a[k])) tgt[k] += Number(a[k]);
           }
 
@@ -337,7 +410,7 @@
       return years[year] || {};
     }
 
-    // --- Elements
+    // -------------------- UI Elements --------------------
     const $year   = document.getElementById('yearSelect');
     const $label  = document.getElementById('labelSelect');
     const $search = document.getElementById('artistSearch');
@@ -348,10 +421,15 @@
     const $maxRows  = document.getElementById('maxRows');
     const $noLabels = document.getElementById('noLabels');
 
-    // --- State
+    // -------------------- State --------------------------
     let state = { year:null, label:null, search:'', sortKey:'gross', sortDir:'desc', maxRows:100 };
 
-    // --- Populate years (with All Time first)
+    // -------------------- Helpers ------------------------
+    const debounce = (fn, d=200) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), d); }; };
+    const fmtMoney = v => (v==null || isNaN(v)) ? '—' : new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v);
+    const fmtInt   = v => (v==null || isNaN(v)) ? '—' : new Intl.NumberFormat('en-US').format(Math.round(v));
+
+    // -------------------- Populate years -----------------
     function initYears() {
       const years = Object.keys((window.labelYearData && window.labelYearData.years) || {}).sort();
       const yearsPlus = [ALL_TIME_KEY, ...years];
@@ -364,7 +442,7 @@
       state.year = yearsPlus[0] || ALL_TIME_KEY;
     }
 
-    // --- Labels-only for chosen year / all-time (strictly our labels)
+    // -------------------- Labels for year ----------------
     function populateLabels(){
       $label.innerHTML = '';
       const yearObj = getYearObject(state.year) || {};
@@ -373,10 +451,9 @@
         .filter(k => isLabelBlock(yearObj[k]))
         .sort((a,b)=> a.localeCompare(b));
 
-      // filter to known 7 labels, if present
+      // filter to known set, fallback if dataset uses different keys
       const filtered = labels.filter(l => ALLOWED_LABELS.has(l));
-
-      const toUse = filtered.length ? filtered : labels; // fallback if dataset uses slightly different keys
+      const toUse = filtered.length ? filtered : labels;
 
       if (toUse.length === 0) {
         $noLabels.style.display = 'block';
@@ -393,7 +470,7 @@
       if (!toUse.includes(state.label)) state.label = toUse[0];
     }
 
-    // --- Current table rows
+    // ---------------- Current artist rows ----------------
     function currentArtists(){
       const y = getYearObject(state.year) || {};
       const l = y[state.label] || { artists: {} };
@@ -405,14 +482,14 @@
         units: obj.units ?? null,
         gross: obj.gross ?? null,
         budget: obj.budget ?? null,
-        debt: obj.debt ?? null,                 // recomputed (+floors +scale)
-        net: obj.net ?? null,                   // recomputed after budget/debt
+        debt: obj.debt ?? null,
+        net: obj.net ?? null,
         artist_revenue: obj.artist_revenue ?? null,
         label_revenue: obj.label_revenue ?? null
       }));
     }
 
-    // --- Filter / sort / render
+    // ---------------- Filter / sort / render --------------
     function applyFilters(rows){
       if (!state.search) return rows;
       const q = state.search.toLowerCase();
@@ -437,7 +514,7 @@
         tpl('Units', nOrDash(t.units)),
         tpl('Gross', fmtMoney(t.gross)),
         tpl('Budget', fmtMoney(t.budget)),
-        tpl('Debt', fmtMoney(t.debt)),          // totals.debt includes artist + label-side (scaled)
+        tpl('Debt', fmtMoney(t.debt)),
         tpl('Net', fmtMoney(t.net)),
         tpl('Artist $', fmtMoney(t.artist_revenue)),
         tpl('Label $', fmtMoney(t.label_revenue))
@@ -491,16 +568,22 @@
       const url = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
       const safeLabel = (state.label || 'all').replace(/[^a-z0-9]+/gi,'_');
       const safeYear  = (state.year  || 'All_Time').replace(/[^a-z0-9]+/gi,'_');
-      document.getElementById('downloadCSV').href = url;
-      document.getElementById('downloadCSV').download = `label_${safeLabel}_${safeYear}.csv`;
+      $download.href = url;
+      $download.download = `label_${safeLabel}_${safeYear}.csv`;
     }
 
     function update(){ renderTotals(); renderTable(); updateCSVLink(); }
 
-    // --- Events
-    document.getElementById('yearSelect').addEventListener('change', e=>{ state.year=e.target.value; populateLabels(); requestAnimationFrame(update); });
-    document.getElementById('labelSelect').addEventListener('change', e=>{ state.label=e.target.value; requestAnimationFrame(update); });
-    document.getElementById('artistSearch').addEventListener('input', debounce(e=>{ state.search=e.target.value; requestAnimationFrame(update); },200));
+    // -------------------- Events -------------------------
+    document.getElementById('yearSelect').addEventListener('change', e=>{
+      state.year=e.target.value; populateLabels(); requestAnimationFrame(update);
+    });
+    document.getElementById('labelSelect').addEventListener('change', e=>{
+      state.label=e.target.value; requestAnimationFrame(update);
+    });
+    document.getElementById('artistSearch').addEventListener('input', debounce(e=>{
+      state.search=e.target.value; requestAnimationFrame(update);
+    },200));
     document.querySelectorAll('.sort').forEach(th=>{
       th.addEventListener('click', ()=>{
         const k = th.dataset.key;
@@ -516,10 +599,15 @@
       document.getElementById('maxRows').value='100';
       requestAnimationFrame(update);
     });
-    document.getElementById('maxRows').addEventListener('change', e=>{ state.maxRows=parseInt(e.target.value,10)||100; requestAnimationFrame(update); });
+    document.getElementById('maxRows').addEventListener('change', e=>{
+      state.maxRows=parseInt(e.target.value,10)||100; requestAnimationFrame(update);
+    });
 
-    // --- Init
+    // -------------------- Init ---------------------------
     (function init(){
+      // recompute already called earlier if dataset exists
+      const hasYears = window.labelYearData && window.labelYearData.years && Object.keys(window.labelYearData.years).length>0;
+      if (!hasYears) console.warn('No years found in dataset.');
       initYears();
       populateLabels();
       requestAnimationFrame(update);
