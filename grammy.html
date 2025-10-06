@@ -46,11 +46,13 @@
     <div id="content" style="margin-top:16px;"></div>
     <noscript>This page requires JavaScript to display the data.</noscript>
   </div>
+
 <script src="./grammy_data.js"></script>
 <script>
 // If APP_DATA didn't load, show a friendly message
 if (typeof APP_DATA === 'undefined') {
-  document.body.innerHTML = '<div class="container"><p>Data file not found. Make sure <code>grammy_data.js</code> is in the same folder as this HTML.</p></div>';
+  document.getElementById('content').innerHTML =
+    '<p>⚠️ Data file not found. Please place <code>grammy_data.js</code> in the same folder.</p>';
 }
 
 // Category buckets for quick filtering
@@ -77,11 +79,17 @@ const content = document.getElementById('content');
 const searchInput = document.getElementById('searchInput');
 const chips = Array.from(document.querySelectorAll('.chip'));
 
-let years = Object.keys(APP_DATA);
-years.sort((a,b) => new Date(a.split(" to ")[0]) - new Date(b.split(" to ")[0]));
+let years = Object.keys(APP_DATA || {});
+// Sort years descending by starting year
+years.sort((a, b) => {
+  const startA = parseInt(a.split(" to ")[0], 10);
+  const startB = parseInt(b.split(" to ")[0], 10);
+  return startB - startA;
+});
 let activeYear = years[0] || "";
 let activeFilter = "all";
 
+// Chip filters
 chips.forEach(ch => {
   ch.addEventListener('click', () => {
     chips.forEach(x => x.classList.remove('active'));
@@ -99,6 +107,7 @@ function renderTabs() {
     const btn = document.createElement('button');
     btn.className = "tab" + (yearKey===activeYear ? " active" : "");
     btn.textContent = yearKey.replace(" to ", " → ");
+    btn.setAttribute("aria-pressed", yearKey===activeYear);
     btn.onclick = () => { activeYear = yearKey; render(); };
     yearTabs.appendChild(btn);
   });
@@ -116,38 +125,37 @@ function buildNomineeRow(row) {
   const who = row.Artist || row.artist || "";
   const title = row.Title || row.Album || "";
   const units = row["Impact Units"] || row.impact_units || "";
-  return [
-    '<tr>',
-      '<td><span class="badge ' + (isWinner ? 'w' : 'n') + '">' + (isWinner ? 'Winner' : 'Nominee') + '</span></td>',
-      '<td><b>' + (who || '') + '</b></td>',
-      '<td>' + (title || '') + '</td>',
-      '<td class="right">' + (units || '') + '</td>',
-    '</tr>'
-  ].join('');
+  const impact = units ? units.toLocaleString() : "";
+  return `
+    <tr>
+      <td><span class="badge ${isWinner ? 'w' : 'n'}">${isWinner ? 'Winner' : 'Nominee'}</span></td>
+      <td><b>${who}</b></td>
+      <td>${title}</td>
+      <td class="right">${impact}</td>
+    </tr>`;
 }
 
 function buildCategoryCard(cat, rows) {
   const winners = rows.filter(r => r._winner);
   const nominees = rows.filter(r => !r._winner);
   const allRows = winners.concat(nominees);
-  return [
-    '<div class="card">',
-      '<div style="display:flex; justify-content:space-between; align-items:center;">',
-        '<div style="font-weight:600; font-size:18px;">' + cat + '</div>',
-        '<div class="muted">' + winners.length + ' winner' + (winners.length!==1?'s':'') + ' · ' + nominees.length + ' other nominees</div>',
-      '</div>',
-      '<div style="overflow-x:auto; margin-top:8px;">',
-        '<table>',
-          '<thead><tr>',
-            '<th>Status</th><th>Artist</th><th>Title / Album</th><th class="right">Impact</th>',
-          '</tr></thead>',
-          '<tbody>',
-            allRows.map(buildNomineeRow).join(''),
-          '</tbody>',
-        '</table>',
-      '</div>',
-    '</div>'
-  ].join('');
+  return `
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:600; font-size:18px;">${cat}</div>
+        <div class="muted">${winners.length} winner${winners.length!==1?'s':''} · ${nominees.length} other nominees</div>
+      </div>
+      <div style="overflow-x:auto; margin-top:8px;">
+        <table>
+          <thead><tr>
+            <th>Status</th><th>Artist</th><th>Title / Album</th><th class="right">Impact</th>
+          </tr></thead>
+          <tbody>
+            ${allRows.map(buildNomineeRow).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
 }
 
 function render() {
@@ -161,9 +169,11 @@ function render() {
   const catsOrdered = CATEGORY_ORDER.filter(c => allowedCats.includes(c));
   const chunks = catsOrdered.map(cat => {
     const rows = (yearData[cat] || []).filter(r => rowMatchesSearch(r, q));
+    if (!rows.length) return "";
     return buildCategoryCard(cat, rows);
-  });
-  content.innerHTML = chunks.join('');
+  }).filter(Boolean);
+
+  content.innerHTML = chunks.join('') || "<p>No results found.</p>";
 }
 
 searchInput.addEventListener('input', render);
@@ -171,3 +181,4 @@ render();
 </script>
 </body>
 </html>
+
