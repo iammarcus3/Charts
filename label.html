@@ -72,20 +72,6 @@
       </div>
     </section>
 
-    <!-- (Optional) metric toggles – not used for rendering, kept for parity -->
-    <section class="panel" style="margin-bottom:12px;">
-      <div class="flex" style="flex-wrap:wrap; gap:12px;">
-        <span class="small" style="align-self:center;">Metrics</span>
-        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="units" checked/> Units</label>
-        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="gross" checked/> Gross $</label>
-        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="budget" checked/> Budget</label>
-        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="debt" checked/> Debt $</label>
-        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="net" checked/> Net $</label>
-        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="artist_revenue" checked/> Artist $</label>
-        <label class="flex" style="gap:6px; align-items:center;"><input class="metricToggle" type="checkbox" data-metric="label_revenue" checked/> Label $</label>
-      </div>
-    </section>
-
     <!-- Totals -->
     <section style="margin:12px 0;">
       <div class="grid3" id="totalsCards"></div>
@@ -143,18 +129,28 @@
     const MIN_DEBT_GROSS_PCT= 0.40;      // 40% of gross
     const BUDGET_BOOST_PER_RANK = 10_000;
 
-    // Optional default label splits (commented). If you want hard defaults, uncomment & fill.
-    /*
-    const REVENUE_SPLITS = {
+    // --------------------- Label Default Splits (Active) -----------------
+    // Your requested defaults; we normalize so pairs always sum to 1.0.
+    const REVENUE_SPLITS_RAW = {
       "Columbia Records": { artist: 0.45, label: 0.55 },
       "Park Wood":        { artist: 0.40, label: 0.60 },
-      "Republic":         { artist: 0.35, label: 0.75 },
+      "Republic":         { artist: 0.35, label: 0.65 }, // fixed from 0.75
       "Sony Music":       { artist: 0.50, label: 0.50 },
       "Epic":             { artist: 0.22, label: 0.78 },
       "Def Jam":          { artist: 0.47, label: 0.53 },
-      "Atlantic":         { artist: 0.35, label: 0.75 }
+      "Atlantic":         { artist: 0.35, label: 0.65 }  // fixed from 0.75
     };
-    */
+    function normalizePair(p){
+      const a0 = Number.isFinite(p?.artist) ? p.artist : 0.5;
+      const l0 = Number.isFinite(p?.label)  ? p.label  : (1 - a0);
+      const a  = clamp01(a0); const l = clamp01(l0);
+      const s  = a + l;
+      if (s <= 0) return { artist: 0.5, label: 0.5 };
+      return { artist: a/s, label: l/s };
+    }
+    const REVENUE_SPLITS = Object.fromEntries(
+      Object.entries(REVENUE_SPLITS_RAW).map(([k,v])=>[k, normalizePair(v)])
+    );
 
     // --------------------- Split Parsing -----------------
     function parseArtistSplit(a){
@@ -196,44 +192,13 @@
       }
       return null;
     }
-<script>
-// --- Label-wide default splits (ACTIVE) ---
-const REVENUE_SPLITS = {
-  "Columbia Records": { artist: 0.45, label: 0.55 },
-  "Park Wood":        { artist: 0.40, label: 0.60 },
-  "Republic":         { artist: 0.35, label: 0.65 }, // fixed (was 0.75)
-  "Sony Music":       { artist: 0.50, label: 0.50 },
-  "Epic":             { artist: 0.22, label: 0.78 },
-  "Def Jam":          { artist: 0.47, label: 0.53 },
-  "Atlantic":         { artist: 0.35, label: 0.65 }  // fixed (was 0.75)
-};
 
-// Normalize any {artist,label} to sum to 1.00 and clamp to [0,1]
-function normalizePair(p){
-  const a0 = Number.isFinite(p?.artist) ? p.artist : 0.5;
-  const l0 = Number.isFinite(p?.label)  ? p.label  : (1 - a0);
-  const a  = Math.max(0, Math.min(1, a0));
-  const l  = Math.max(0, Math.min(1, l0));
-  const s  = a + l;
-  if (s <= 0) return { artist: 0.5, label: 0.5 };
-  return { artist: a / s, label: l / s };
-}
-</script>
-<script>
-function getSplitFor(label, artistObj){
-  // 1) artist-level explicit split (string/percent/ratio/fields)
-  const artistSplit = parseArtistSplit(artistObj);
-  if (artistSplit) return normalizePair(artistSplit);
-
-  // 2) label default (now ACTIVE)
-  if (REVENUE_SPLITS && REVENUE_SPLITS[label]){
-    return normalizePair(REVENUE_SPLITS[label]);
-  }
-
-  // 3) fallback 50/50
-  return { artist: 0.5, label: 0.5 };
-}
-</script>
+    function getSplitFor(label, artistObj){
+      const artistSplit = parseArtistSplit(artistObj);
+      if (artistSplit) return normalizePair(artistSplit);
+      if (REVENUE_SPLITS && REVENUE_SPLITS[label]) return REVENUE_SPLITS[label];
+      return { artist: 0.5, label: 0.5 };
+    }
 
     // -------------------- Dataset gate -------------------
     const warn = document.getElementById('datasetWarning');
@@ -400,11 +365,8 @@ function getSplitFor(label, artistObj){
               };
             }
             const tgt = acc[label].artists[artist];
-            // best rank (min)
             if (a.rank_best != null) tgt.rank_best = (tgt.rank_best == null) ? a.rank_best : Math.min(tgt.rank_best, a.rank_best);
-            // max active weeks
             if (a.active_weeks != null) tgt.active_weeks = (tgt.active_weeks == null) ? a.active_weeks : Math.max(tgt.active_weeks, a.active_weeks);
-            // sums
             for (const k of sumKeys) if (a[k] != null && !isNaN(a[k])) tgt[k] += Number(a[k]);
           }
 
@@ -419,7 +381,6 @@ function getSplitFor(label, artistObj){
           if (t.label_revenue != null) acc[label].totals.label_revenue += Number(t.label_revenue) || 0;
         }
       }
-      // finalize artists_count
       for (const [label, block] of Object.entries(acc)) {
         block.totals.artists_count = Object.keys(block.artists || {}).length;
       }
@@ -476,7 +437,6 @@ function getSplitFor(label, artistObj){
         .filter(k => isLabelBlock(yearObj[k]))
         .sort((a,b)=> a.localeCompare(b));
 
-      // filter to known set, fallback if dataset uses different keys
       const filtered = labels.filter(l => ALLOWED_LABELS.has(l));
       const toUse = filtered.length ? filtered : labels;
 
@@ -532,17 +492,19 @@ function getSplitFor(label, artistObj){
     function renderTotals(){
       const y = getYearObject(state.year) || {};
       const t = (y[state.label]?.totals) || {};
-      const tpl = (k,v)=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div></div>`;
+      const card = (k,v)=>(
+        `<div class="card"><div class="k">${k}</div><div class="v">${v}</div></div>`
+      );
       const nOrDash = (n)=> (n==null?'—':new Intl.NumberFormat('en-US').format(n));
       $totals.innerHTML = [
-        tpl('Artists', nOrDash(t.artists_count)),
-        tpl('Units', nOrDash(t.units)),
-        tpl('Gross', fmtMoney(t.gross)),
-        tpl('Budget', fmtMoney(t.budget)),
-        tpl('Debt', fmtMoney(t.debt)),
-        tpl('Net', fmtMoney(t.net)),
-        tpl('Artist $', fmtMoney(t.artist_revenue)),
-        tpl('Label $', fmtMoney(t.label_revenue))
+        card('Artists', nOrDash(t.artists_count)),
+        card('Units', nOrDash(t.units)),
+        card('Gross', fmtMoney(t.gross)),
+        card('Budget', fmtMoney(t.budget)),
+        card('Debt', fmtMoney(t.debt)),
+        card('Net', fmtMoney(t.net)),
+        card('Artist $', fmtMoney(t.artist_revenue)),
+        card('Label $', fmtMoney(t.label_revenue))
       ].join('');
     }
 
@@ -630,7 +592,6 @@ function getSplitFor(label, artistObj){
 
     // -------------------- Init ---------------------------
     (function init(){
-      // recompute already called earlier if dataset exists
       const hasYears = window.labelYearData && window.labelYearData.years && Object.keys(window.labelYearData.years).length>0;
       if (!hasYears) console.warn('No years found in dataset.');
       initYears();
