@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Billboard Hot 100 — Last.fm Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* keep your dark Billboard UI — shortened here for brevity */
+    :root{--bg:#0b0b0c;--panel:#121214;--panel-2:#17171a;--ink:#eaeaea;--muted:#a7a7b1;--cyan:#00ffff;--green:#33ff99;--red:#ff5a5a;--gold:#ffd66b;--border:#23232a;--radius:14px}
+    *{box-sizing:border-box}body{margin:0;background:#0b0b0c;color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}
+    .shell{max-width:1200px;margin:0 auto;padding:20px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;position:sticky;top:0;z-index:50}
+    .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .btn,.select,.input{height:36px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:#17171a;color:var(--ink);font-weight:600}
+    .btn{cursor:pointer}.btn.primary{background:var(--cyan);color:#062;filter:brightness(.9)}
+    .select{color:var(--cyan);font-weight:800}.pill{background:#1f2230;color:#a7a7b1;border:1px solid var(--border);padding:6px 10px;border-radius:999px;font-size:.78rem}
+    .tabs{display:flex;gap:8px;margin:16px 0 10px}.tab{cursor:pointer;padding:10px 14px;border-radius:12px;background:#121214;border:1px solid var(--border);color:#a7a7b1;font-weight:700}
+    .tab.active{background:var(--cyan);color:#081012;border-color:transparent}
+    .board{background:#121214;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .board-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#17171a;border-bottom:1px solid var(--border)}
+    .table-wrap{max-height:68vh;overflow:auto}
+    table{width:100%;border-collapse:collapse}
+    thead th{position:sticky;top:0;background:#17171a;color:#bff;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid var(--border);padding:12px 10px;text-align:left;font-size:.78rem}
+    tbody td{border-bottom:1px solid var(--border);padding:12px 10px;background:#141417}
+    tbody tr:hover td{background:#1a1a1f}.right{text-align:right}.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+    .rank{font-weight:900;display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:32px;border-radius:999px;border:1px solid #202028;background:#0e0e10}
+    .move.up{color:var(--green)}.move.down{color:var(--red)}.move.flat{color:#9aa}
+    .points-bar{height:8px;border-radius:999px;background:#1f1f26;overflow:hidden;border:1px solid #242432;width:120px}
+    .points-bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),#7af8f8)}
+    .pager{display:flex;justify-content:center;gap:8px;padding:12px;background:#17171a;border-top:1px solid var(--border)}
+    .page-btn{min-width:40px;height:36px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:#121214;color:#cfe;font-weight:800;cursor:pointer}
+    .page-btn.active{background:var(--cyan);color:#021015;border-color:transparent}
+    .muted{color:#a7a7b1}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="username" class="input" placeholder="Last.fm username (e.g. rj)" />
+        <button id="loadBtn" class="btn primary">Load</button>
+        <button id="randomBtn" class="btn">Random user</button>
+        <span id="who" class="pill">—</span>
+      </div>
+      <div class="controls">
+        <button class="btn" id="prevWeek" title="Previous week">⟵</button>
+        <select id="weekSelector" class="select" title="Select week"></select>
+        <button class="btn" id="nextWeek" title="Next week">⟶</button>
+        <span class="pill" id="metaType">Tracks</span>
+      </div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <div class="tab active" data-chart="tracks">Tracks</div>
+      <div class="tab" data-chart="albums">Albums</div>
+    </div>
+
+    <div class="board">
+      <div class="board-head">
+        <div id="dateRange">—</div>
+        <div class="muted" id="status">Ready</div>
+      </div>
+
+      <div class="table-wrap">
+        <table id="chart">
+          <thead>
+            <tr>
+              <th style="width:64px;">Rank</th>
+              <th style="width:90px;">Move</th>
+              <th>Title / Album</th>
+              <th>Artist</th>
+              <th class="right">Plays</th>
+              <th>Points</th>
+              <th class="right">Weeks</th>
+              <th class="right">Peak</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="pager" id="pager"></div>
+    </div>
+  </div>
+
+  <script>
+  // ==== CONFIG ====
+  const API_KEY = "YOUR_LASTFM_API_KEY"; // <-- put your key
+  const API_ROOT = "https://ws.audioscrobbler.com/2.0/";
+  const PAGE_SIZE = 100;
+
+  // ==== STATE ====
+  let currentChart = "tracks";
+  let weeks = [];         // [{from, to}]
+  let weekIndex = 0;      // 0 = latest
+  let currentPage = 1;
+  let currentUser = null;
+
+  // ==== UI HOOKS ====
+  const weekSel = document.getElementById("weekSelector");
+  const tbody = document.querySelector("#chart tbody");
+  const pager = document.getElementById("pager");
+  const dateRangeEl = document.getElementById("dateRange");
+  const whoEl = document.getElementById("who");
+  const statusEl = document.getElementById("status");
+  const metaType = document.getElementById("metaType");
+
+  document.querySelectorAll(".tab").forEach(t => {
+    t.onclick = () => {
+      document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+      t.classList.add("active");
+      currentChart = t.dataset.chart;
+      metaType.textContent = currentChart[0].toUpperCase()+currentChart.slice(1);
+      currentPage = 1;
+      loadChart();
+    };
+  });
+
+  document.getElementById("prevWeek").onclick = () => changeWeek(1);
+  document.getElementById("nextWeek").onclick = () => changeWeek(-1);
+  document.getElementById("loadBtn").onclick = () => bootForUser(document.getElementById("username").value.trim());
+  document.getElementById("randomBtn").onclick = pickRandomUser;
+
+  weekSel.onchange = () => {
+    weekIndex = weeks.length - 1 - weekSel.selectedIndex;
+    currentPage = 1;
+    loadChart();
+  };
+
+  // ==== HELPERS ====
+  const qs = p => new URLSearchParams(p).toString();
+  const fmt = ts => {
+    const d = new Date(ts * 1000);
+    return d.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" });
+  };
+  const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
+  const nz = (v,d=0)=>Number.isFinite(+v)?+v:d;
+
+  function changeWeek(delta){
+    weekIndex = clamp(weekIndex+delta, 0, weeks.length-1);
+    weekSel.selectedIndex = weeks.length-1-weekIndex;
+    currentPage = 1;
+    loadChart();
+  }
+
+  async function api(method, params={}){
+    const url = `${API_ROOT}?${qs({ method, api_key: API_KEY, format: "json", ...params })}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.error) throw new Error(`${data.message || "API error"}`);
+    return data;
+  }
+
+  // ==== RANDOM USER STRATEGY ====
+  // No official user search. We derive a username by:
+  // 1) get global top tracks, 2) pick one at random, 3) get that track's top fans → usernames.
+  // (track.getTopFans returns users without auth)
+  async function pickRandomUser(){
+    status("Picking random user…");
+    const top = await api("chart.gettoptracks", { limit: 50 }); // global chart
+    const tracks = top.tracks?.track || [];
+    if (!tracks.length) throw new Error("No top tracks");
+    const choice = tracks[Math.floor(Math.random()*tracks.length)];
+    const artist = choice.artist?.name; const track = choice.name;
+    const fans = await api("track.getTopFans", { artist, track, limit: 50 });
+    const users = fans.topfans?.user || [];
+    if (!users.length) throw new Error("No fans for chosen track");
+    const pick = users[Math.floor(Math.random()*users.length)]?.name;
+    await bootForUser(pick);
+  }
+
+  // ==== BOOT USER ====
+  async function bootForUser(user){
+    if(!user){ alert("Enter a Last.fm username (e.g., rj)"); return; }
+    status(`Loading ${user}…`);
+    // Validate user exists
+    await api("user.getinfo", { user }); // throws if invalid
+    currentUser = user;
+
+    // Get available week ranges (ascending by API doc)
+    const list = await api("user.getweeklychartlist", { user });
+    const items = (list.weeklychartlist?.chart || []).map(r => ({
+      from: +r.from, to: +r.to
+    }));
+    if (!items.length) throw new Error("No weekly charts for this user.");
+    weeks = items; // oldest→newest
+    weekIndex = weeks.length - 1; // latest
+    // Populate selector newest→oldest
+    weekSel.innerHTML = "";
+    [...weeks].reverse().forEach(({from,to},i)=>{
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = `${fmt(from)} – ${fmt(to)}`;
+      weekSel.appendChild(opt);
+    });
+    weekSel.selectedIndex = 0; // latest
+    whoEl.textContent = `@${user}`;
+    currentPage = 1;
+    await loadChart();
+  }
+
+  function status(msg){ statusEl.textContent = msg; }
+
+  // ==== LOAD CHART (for currentUser + weekIndex + chart type) ====
+  async function loadChart(){
+    if(!currentUser) return;
+    const { from, to } = weeks[weekIndex];
+    dateRangeEl.textContent = `${fmt(from)} – ${fmt(to)}`;
+    status("Loading…");
+
+    // Previous week (for movement)
+    const prev = weeks[weekIndex-1];
+
+    if(currentChart === "tracks"){
+      const cur = await api("user.getweeklytrackchart", { user: currentUser, from, to });
+      const curRows = (cur.weeklytrackchart?.track || []).map((t,i)=>({
+        rank: i+1,
+        title: t.name,
+        artist: t.artist?.["#text"],
+        playcount: nz(t.playcount),
+        // map into your table fields
+        sales: nz(t.playcount),        // proxy
+        points: nz(t.playcount),       // proxy
+        radio: 0, streams: 0
+      }));
+
+      let movement = new Map();
+      if(prev){
+        const pre = await api("user.getweeklytrackchart", { user: currentUser, from: prev.from, to: prev.to });
+        (pre.weeklytrackchart?.track || []).forEach((t,i)=>{
+          const key = (t.name||"").toLowerCase()+"|"+(t.artist?.["#text"]||"").toLowerCase();
+          movement.set(key, i+1); // last rank
+        });
+      }
+
+      renderTable(curRows, movement, (row)=> `${row.title}`, (row)=> `${row.artist}`);
+
+    } else { // albums
+      const cur = await api("user.getweeklyalbumchart", { user: currentUser, from, to });
+      const curRows = (cur.weeklyalbumchart?.album || []).map((a,i)=>({
+        rank: i+1,
+        album: a.name,
+        artist: a.artist?.["#text"],
+        playcount: nz(a.playcount),
+        sales: nz(a.playcount), points: nz(a.playcount),
+        radio: 0, streams: 0
+      }));
+
+      let movement = new Map();
+      if(prev){
+        const pre = await api("user.getweeklyalbumchart", { user: currentUser, from: prev.from, to: prev.to });
+        (pre.weeklyalbumchart?.album || []).forEach((a,i)=>{
+          const key = (a.name||"").toLowerCase()+"|"+(a.artist?.["#text"]||"").toLowerCase();
+          movement.set(key, i+1);
+        });
+      }
+
+      renderTable(curRows, movement, (row)=> `${row.album}`, (row)=> `${row.artist}`);
+    }
+
+    status("Loaded");
+  }
+
+  function drawPager(total){
+    pager.innerHTML = "";
+    if(total<=1){ return; }
+    const mk = (label,page,active)=> {
+      const b = document.createElement("button");
+      b.className = "page-btn" + (active ? " active" : "");
+      b.textContent = label;
+      b.onclick = ()=>{ currentPage = page; loadChart(); };
+      return b;
+    };
+    const totalPages = total;
+    const prev = mk("Prev", Math.max(1,currentPage-1), false);
+    const next = mk("Next", Math.min(totalPages,currentPage+1), false);
+    if(currentPage===1) prev.disabled = true;
+    if(currentPage===totalPages) next.disabled = true;
+    pager.append(prev);
+    const items = [];
+    const add = p=>{ if(p>=1 && p<=totalPages && !items.includes(p)) items.push(p); };
+    add(1); add(currentPage-1); add(currentPage); add(currentPage+1); add(totalPages);
+    items.sort((a,b)=>a-b);
+    let last = 0;
+    items.forEach(p=>{
+      if(p>last+1){ const s = document.createElement("span"); s.className="muted"; s.textContent="…"; pager.append(s); }
+      pager.append(mk(p, p, p===currentPage)); last = p;
+    });
+    pager.append(next);
+  }
+
+  function renderTable(rows, movementMap, titleSel, artistSel){
+    // sort by points (playcount proxy)
+    rows.sort((a,b)=> b.points - a.points);
+    const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+    currentPage = clamp(currentPage, 1, totalPages);
+    drawPager(totalPages);
+    const pageRows = rows.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+
+    tbody.innerHTML = "";
+    // Compute simple “weeks” and “peak” from weekly history we have locally (limited): show 1 and current rank
+    pageRows.forEach((row, idx)=>{
+      const key = titleSel(row).toLowerCase()+"|"+artistSel(row).toLowerCase();
+      const lastRank = movementMap.get(key) ?? null;
+      let mvTxt = "—", mvCls = "flat";
+      if(lastRank === null){ mvTxt = "NEW"; }
+      else {
+        const diff = lastRank - (idx+1 + (currentPage-1)*PAGE_SIZE);
+        if(diff>0){ mvTxt = `+${diff}`; mvCls = "up"; }
+        else if(diff<0){ mvTxt = `${diff}`; mvCls = "down"; }
+      }
+
+      const tr = document.createElement("tr");
+      const rankDisplay = (currentPage-1)*PAGE_SIZE + idx + 1;
+      const barW = Math.max(2, (row.points/(pageRows[0]?.points||row.points))*100);
+
+      tr.innerHTML = `
+        <td><span class="rank">${rankDisplay}</span></td>
+        <td class="move ${mvCls}">${mvTxt}</td>
+        <td>${titleSel(row)}</td>
+        <td>${artistSel(row)}</td>
+        <td class="right num">${row.playcount.toLocaleString("en-US")}</td>
+        <td><div class="points-bar" title="${row.points} pts"><i style="width:${barW}%"></i></div></td>
+        <td class="right">—</td>
+        <td class="right">—</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Optional: demo default user
+  bootForUser("rj").catch(e=>status(e.message));
+  </script>
+</body>
+</html>
