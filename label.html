@@ -122,13 +122,14 @@
     // defensively coerce number
     const nz = v => (typeof v === 'number' && isFinite(v)) ? v : 0;
 
+    // ----- Policies (7 labels) -----
     const DEBT_RULES = {
       "Columbia Records": {
         artist: { fixedPerArtist: 150_000, yearlyPct: 0,   earlyPctOnce: 0.30 }, // +30% once (earliest year), +150k per artist each year
-        label:  { fixedPerArtist: 85_000,  fixedPerYear: 0, pctOfArtistDebt: 0.05 } // +5% of artist-debt per year
+        label:  { fixedPerArtist: 85_000,  fixedPerYear: 0, pctOfArtistDebt: 0.05 }
       },
       "Def Jam": {
-        artist: { fixedPerArtist: 0,       yearlyPct: 0.45, earlyPctOnce: 0    }, // +45% compounding per year
+        artist: { fixedPerArtist: 0,       yearlyPct: 0.45, earlyPctOnce: 0    },
         label:  { fixedPerArtist: 120_000, fixedPerYear: 100_000, pctOfArtistDebt: 0 }
       },
       "Epic": {
@@ -145,7 +146,7 @@
       },
       "Sony Music": {
         artist: { fixedPerArtist: 0,       yearlyPct: 0.10, earlyPctOnce: 0 },
-        label:  { fixedPerArtist: 0,       fixedPerYear: 200_000, pctOfArtistDebt: 0, pctOfArtistNet: 0.02 } // +2% of artist net per year
+        label:  { fixedPerArtist: 0,       fixedPerYear: 200_000, pctOfArtistDebt: 0, pctOfArtistNet: 0.02 }
       },
       "Atlantic": {
         artist: { fixedPerArtist: 0,       yearlyPct: 0.60, earlyPctOnce: 0 },
@@ -153,9 +154,12 @@
       }
     };
 
+    const ALLOWED_LABELS = new Set(Object.keys(DEBT_RULES)); // lock dropdown to 7 labels
+
+    // Recompute, scale, and distribute debt
     function recomputeDebt(policyData) {
       const yearsObj = (policyData && policyData.years) || {};
-      const sortedYears = Object.keys(yearsObj).sort(); // 2018..2025
+      const sortedYears = Object.keys(yearsObj).sort(); // e.g., 2018..2025
 
       // carry state per label across years for compounding
       const carry = {}; // label -> { artistDebt: number, labelDebt: number }
@@ -163,12 +167,15 @@
       for (const year of sortedYears) {
         const labels = yearsObj[year] || {};
         for (const [label, block] of Object.entries(labels)) {
-          if (!block || !block.artists || !block.totals) continue;
+
+          // Only operate on the 7 recognized labels and valid blocks
+          if (!ALLOWED_LABELS.has(label)) continue;
+          if (!isLabelBlock(block)) continue;
 
           const rule = DEBT_RULES[label];
-          if (!rule) continue; // no rule provided → leave as-is
+          if (!rule) continue;
 
-          const artists = block.artists;
+          const artists = block.artists || {};
           const artistNames = Object.keys(artists);
           const artistCount = artistNames.length;
 
@@ -176,7 +183,7 @@
           let prevArtistDebt = carry[label].artistDebt;
           let prevLabelDebt  = carry[label].labelDebt;
 
-          // Artist-side debt for THIS year
+          // ---------- Artist-side debt (base) ----------
           let thisArtistDebt = prevArtistDebt * (1 + (rule.artist.yearlyPct || 0));
           thisArtistDebt += (rule.artist.fixedPerArtist || 0) * artistCount;
 
@@ -185,31 +192,39 @@
             thisArtistDebt *= (1 + rule.artist.earlyPctOnce);
           }
 
-          // Equal split across artists (change to weighted by units/gross if desired)
-          const perArtistShare = artistCount > 0 ? (thisArtistDebt / artistCount) : 0;
+          // ---------- Scale by +150% (×2.5) ----------
+          thisArtistDebt *= 2.5;
+
+          // ---------- Distribute across artists (weighted by units) ----------
+          const totalUnits = artistNames.reduce((acc, n)=> acc + nz((artists[n]||{}).units), 0);
           for (const name of artistNames) {
             const a = artists[name] || {};
-            a.debt = nz(perArtistShare); // overwrite per-artist "Debt $"
+            const weight = totalUnits > 0 ? (nz(a.units) / totalUnits) : (artistCount > 0 ? 1/artistCount : 0);
+            a.debt = nz(thisArtistDebt * weight);
             artists[name] = a;
           }
 
-          // Label-side debt for THIS year
+          // ---------- Label-side debt ----------
           let thisLabelDebt = prevLabelDebt;
           thisLabelDebt += (rule.label.fixedPerYear || 0);
           thisLabelDebt += (rule.label.fixedPerArtist || 0) * artistCount;
 
           if (rule.label.pctOfArtistDebt) {
-            thisLabelDebt += thisArtistDebt * rule.label.pctOfArtistDebt;
+            thisLabelDebt += thisArtistDebt * rule.label.pctOfArtistDebt; // uses scaled artist debt
           }
           if (rule.label.pctOfArtistNet) {
             const sumArtistNet = artistNames.reduce((acc, n) => acc + nz((artists[n]||{}).net), 0);
             thisLabelDebt += sumArtistNet * rule.label.pctOfArtistNet;
           }
 
-          // Write combined total debt (artist + label) into label totals for that year
+          // Scale label-side by +150% (×2.5)
+          thisLabelDebt *= 2.5;
+
+          // ---------- Write totals (artist + label) ----------
+          block.totals = block.totals || {};
           block.totals.debt = nz(thisArtistDebt) + nz(thisLabelDebt);
 
-          // update carry for next year
+          // update carry for next year (use scaled)
           carry[label].artistDebt = thisArtistDebt;
           carry[label].labelDebt  = thisLabelDebt;
 
@@ -257,6 +272,8 @@
       for (const y of Object.keys(yearsObj || {})) {
         const yearObj = yearsObj[y] || {};
         for (const [label, block] of Object.entries(yearObj)) {
+          // only aggregate known labels and valid blocks
+          if (!ALLOWED_LABELS.has(label)) continue;
           if (!isLabelBlock(block)) continue;
 
           if (!acc[label]) acc[label] = { artists: {}, totals: { artists_count: 0, units:0, gross:0, budget:0, debt:0, net:0, artist_revenue:0, label_revenue:0 } };
@@ -335,12 +352,13 @@
       state.year = yearsPlus[0] || ALL_TIME_KEY;
     }
 
-    // --- Labels-only for chosen year / all-time
+    // --- Labels-only for chosen year / all-time (strictly 7)
     function populateLabels(){
       $label.innerHTML = '';
       const yearObj = getYearObject(state.year) || {};
+
       const labels = Object.keys(yearObj)
-        .filter(k => isLabelBlock(yearObj[k]))
+        .filter(k => ALLOWED_LABELS.has(k) && isLabelBlock(yearObj[k]))
         .sort((a,b)=> a.localeCompare(b));
 
       if (labels.length === 0) {
@@ -370,7 +388,7 @@
         units: obj.units ?? null,
         gross: obj.gross ?? null,
         budget: obj.budget ?? null,
-        debt: obj.debt ?? null,                 // recomputed by Debt Engine
+        debt: obj.debt ?? null,                 // recomputed by Debt Engine (+150%, weighted)
         net: obj.net ?? null,
         artist_revenue: obj.artist_revenue ?? null,
         label_revenue: obj.label_revenue ?? null
@@ -402,7 +420,7 @@
         tpl('Units', nOrDash(t.units)),
         tpl('Gross', fmtMoney(t.gross)),
         tpl('Budget', fmtMoney(t.budget)),
-        tpl('Debt', fmtMoney(t.debt)),          // totals.debt includes artist + label-side for that year
+        tpl('Debt', fmtMoney(t.debt)),          // totals.debt includes artist + label-side (scaled)
         tpl('Net', fmtMoney(t.net)),
         tpl('Artist $', fmtMoney(t.artist_revenue)),
         tpl('Label $', fmtMoney(t.label_revenue))
