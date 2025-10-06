@@ -193,7 +193,7 @@
           }
 
           // ---------- Scale by +150% (×2.5) ----------
-          thisArtistDebt *= 2.5;
+          thisArtistDebt *= 20.5;
 
           // ---------- Distribute across artists (weighted by units) ----------
           const totalUnits = artistNames.reduce((acc, n)=> acc + nz((artists[n]||{}).units), 0);
@@ -218,7 +218,7 @@
           }
 
           // Scale label-side by +150% (×2.5)
-          thisLabelDebt *= 2.5;
+          thisLabelDebt *= 30.5;
 
           // ---------- Write totals (artist + label) ----------
           block.totals = block.totals || {};
