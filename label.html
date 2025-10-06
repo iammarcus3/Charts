@@ -196,19 +196,44 @@
       }
       return null;
     }
+<script>
+// --- Label-wide default splits (ACTIVE) ---
+const REVENUE_SPLITS = {
+  "Columbia Records": { artist: 0.45, label: 0.55 },
+  "Park Wood":        { artist: 0.40, label: 0.60 },
+  "Republic":         { artist: 0.35, label: 0.65 }, // fixed (was 0.75)
+  "Sony Music":       { artist: 0.50, label: 0.50 },
+  "Epic":             { artist: 0.22, label: 0.78 },
+  "Def Jam":          { artist: 0.47, label: 0.53 },
+  "Atlantic":         { artist: 0.35, label: 0.65 }  // fixed (was 0.75)
+};
 
-    function getSplitFor(label, artistObj){
-      const artistSplit = parseArtistSplit(artistObj);
-      if (artistSplit) return artistSplit;
+// Normalize any {artist,label} to sum to 1.00 and clamp to [0,1]
+function normalizePair(p){
+  const a0 = Number.isFinite(p?.artist) ? p.artist : 0.5;
+  const l0 = Number.isFinite(p?.label)  ? p.label  : (1 - a0);
+  const a  = Math.max(0, Math.min(1, a0));
+  const l  = Math.max(0, Math.min(1, l0));
+  const s  = a + l;
+  if (s <= 0) return { artist: 0.5, label: 0.5 };
+  return { artist: a / s, label: l / s };
+}
+</script>
+<script>
+function getSplitFor(label, artistObj){
+  // 1) artist-level explicit split (string/percent/ratio/fields)
+  const artistSplit = parseArtistSplit(artistObj);
+  if (artistSplit) return normalizePair(artistSplit);
 
-      if (typeof REVENUE_SPLITS !== 'undefined' && REVENUE_SPLITS && REVENUE_SPLITS[label]){
-        return {
-          artist: clamp01(REVENUE_SPLITS[label].artist ?? 0.5),
-          label:  clamp01(REVENUE_SPLITS[label].label  ?? 0.5)
-        };
-      }
-      return { artist: 0.5, label: 0.5 };
-    }
+  // 2) label default (now ACTIVE)
+  if (REVENUE_SPLITS && REVENUE_SPLITS[label]){
+    return normalizePair(REVENUE_SPLITS[label]);
+  }
+
+  // 3) fallback 50/50
+  return { artist: 0.5, label: 0.5 };
+}
+</script>
 
     // -------------------- Dataset gate -------------------
     const warn = document.getElementById('datasetWarning');
