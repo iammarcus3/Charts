@@ -114,31 +114,83 @@ function loadWeekData(filePathRel) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
+
   console.log("DEBUG: Resolved weekdata path =", abs);
 
   if (!fs.existsSync(abs)) {
     throw new Error("weekdata.js not found — refusing to run with empty data");
   }
 
-  const mod = tryRequire(abs);
-  if (mod && typeof mod === "object" && !Array.isArray(mod)) {
-    console.log("DEBUG: Loaded weekdata via require()");
-    return mod;
+  // Try require()
+  try {
+    delete require.cache[abs];
+    const mod = require(abs);
+    if (mod && typeof mod === "object" && !Array.isArray(mod)) {
+      console.log("DEBUG: Loaded weekdata via require()");
+      return mod;
+    }
+  } catch (e) {
+    console.warn("WARN: require() load failed:", e.message);
   }
 
-  const legacy = tryParseLegacy(abs);
-  if (legacy && typeof legacy === "object" && !Array.isArray(legacy)) {
-    console.log("DEBUG: Loaded weekdata via legacy parser");
-    return legacy;
+  // Try legacy parse
+  try {
+    const raw = fs.readFileSync(abs, "utf8");
+    const m = raw.match(
+      /const\s+weekData\s*=\s*(\{[\s\S]*\})\s*;?\s*module\.exports\s*=\s*weekData\s*;?/
+    );
+    if (m) {
+      const legacy = JSON.parse(m[1]);
+      console.log("DEBUG: Loaded weekdata via legacy parser");
+      return legacy;
+    }
+  } catch (e) {
+    console.warn("WARN: legacy parse failed:", e.message);
+  }
+
+  // Hard fail instead of wiping
+  throw new Error("Could not load weekdata.js — aborting to avoid wiping old data.");
+}
+
   }
 
   throw new Error("Could not load weekdata.js (module or legacy parse failed).");
 }
 
-function saveWeekData(filePathRel, dataObj, oldKeyCount) {
+function saveWeekData(filePathRel, newDataObj, oldKeyCount) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
+
+  // Re-load current data from disk to avoid accidental wipe
+  let currentData = {};
+  try {
+    currentData = loadWeekData(filePathRel);
+  } catch (e) {
+    console.warn("WARN: Could not reload existing weekdata, proceeding with new only:", e.message);
+  }
+
+  // Merge: old weeks preserved, new/overwrite applied
+  const merged = { ...currentData, ...newDataObj };
+
+  const keysSorted = Object.keys(merged).map(Number).sort((a, b) => a - b);
+  console.log("DEBUG: Final week keys to save =", keysSorted);
+
+  if (typeof oldKeyCount === "number" && keysSorted.length < oldKeyCount) {
+    throw new Error(
+      `Refusing to save: week count shrank from ${oldKeyCount} to ${keysSorted.length}`
+    );
+  }
+
+  const newContent =
+    "const weekData = " +
+    JSON.stringify(merged, null, 2) +
+    ";\n\nmodule.exports = weekData;\n";
+
+  fs.writeFileSync(abs, newContent);
+  console.log("DEBUG: weekdata.js written at", abs);
+}
+
 
   const keysSorted = Object.keys(dataObj).map(Number).sort((a, b) => a - b);
   console.log("DEBUG: Final week keys to save =", keysSorted);
