@@ -40,16 +40,17 @@ const RADIO_FACTORS = [
   [31, 50, 400.80], [51, 70, 150.90], [71, 85, 90.10], [86, 200, 60.11],
 ];
 function getMultiplierForRank(rank) {
-  if (rank === 1) return 39.45;
-  else if (rank <= 5) return 35.89;
-  else if (rank <= 10) return 32.16;
-  else if (rank <= 20) return 30.99;
-  else if (rank <= 40) return 28.98;
-  else if (rank <= 50) return 26.10;
-  else if (rank <= 60) return 23.78;
-  else if (rank <= 70) return 21.06;
-  else if (rank <= 80) return 20.99;
-  else return 10.9;
+  if (rank === 1) return 40.45;
+  else if (rank <= 5) return 37.89;
+  else if (rank <= 10) return 35.16;
+  else if (rank <= 20) return 32.99;
+  else if (rank <= 40) return 30.98;
+  else if (rank <= 50) return 28.10;
+  else if (rank <= 60) return 25.78;
+  else if (rank <= 70) return 23.06;
+  else if (rank <= 80) return 22.99;
+  else if (rank <= 100) return 21.99;
+  else return 17.9;
 }
 function getFactor(factors, weeks) {
   for (const [s, e, f] of factors) if (s <= weeks && weeks <= e) return f;
