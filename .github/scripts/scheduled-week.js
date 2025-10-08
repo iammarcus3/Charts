@@ -94,7 +94,7 @@ function tryRequire(abs) {
   try {
     delete require.cache[abs];
     return require(abs);
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -110,6 +110,7 @@ function tryParseLegacy(abs) {
     return null;
   }
 }
+
 function loadWeekData(filePathRel) {
   const abs = path.isAbsolute(filePathRel)
     ? filePathRel
@@ -135,12 +136,8 @@ function loadWeekData(filePathRel) {
 
   // Try legacy parse
   try {
-    const raw = fs.readFileSync(abs, "utf8");
-    const m = raw.match(
-      /const\s+weekData\s*=\s*(\{[\s\S]*\})\s*;?\s*module\.exports\s*=\s*weekData\s*;?/
-    );
-    if (m) {
-      const legacy = JSON.parse(m[1]);
+    const legacy = tryParseLegacy(abs);
+    if (legacy && typeof legacy === "object" && !Array.isArray(legacy)) {
       console.log("DEBUG: Loaded weekdata via legacy parser");
       return legacy;
     }
@@ -150,11 +147,6 @@ function loadWeekData(filePathRel) {
 
   // Hard fail instead of wiping
   throw new Error("Could not load weekdata.js — aborting to avoid wiping old data.");
-}
-
-  }
-
-  throw new Error("Could not load weekdata.js (module or legacy parse failed).");
 }
 
 function saveWeekData(filePathRel, newDataObj, oldKeyCount) {
@@ -173,7 +165,7 @@ function saveWeekData(filePathRel, newDataObj, oldKeyCount) {
   // Merge: old weeks preserved, new/overwrite applied
   const merged = { ...currentData, ...newDataObj };
 
-  const keysSorted = Object.keys(merged).map(Number).sort((a, b) => a - b);
+  const keysSorted = Object.keys(merged).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
   console.log("DEBUG: Final week keys to save =", keysSorted);
 
   if (typeof oldKeyCount === "number" && keysSorted.length < oldKeyCount) {
@@ -185,24 +177,6 @@ function saveWeekData(filePathRel, newDataObj, oldKeyCount) {
   const newContent =
     "const weekData = " +
     JSON.stringify(merged, null, 2) +
-    ";\n\nmodule.exports = weekData;\n";
-
-  fs.writeFileSync(abs, newContent);
-  console.log("DEBUG: weekdata.js written at", abs);
-}
-
-
-  const keysSorted = Object.keys(dataObj).map(Number).sort((a, b) => a - b);
-  console.log("DEBUG: Final week keys to save =", keysSorted);
-
-  // Safety: never shrink (except allowed overwrite vs append)
-  if (typeof oldKeyCount === "number" && keysSorted.length < oldKeyCount) {
-    throw new Error(`Refusing to save: week count shrank from ${oldKeyCount} to ${keysSorted.length}`);
-  }
-
-  const newContent =
-    "const weekData = " +
-    JSON.stringify(dataObj, null, 2) +
     ";\n\nmodule.exports = weekData;\n";
 
   fs.writeFileSync(abs, newContent);
@@ -379,3 +353,4 @@ if (require.main === module) {
 }
 
 module.exports = { handler };
+
