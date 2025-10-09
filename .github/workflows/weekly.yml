@@ -2,7 +2,7 @@ name: scheduled-week.js
 
 on:
   schedule:
-    - cron: "0 12 * * FRI"   # Every Friday at 12:00 UTC
+    - cron: "0 22 * * Thu"   # 
   workflow_dispatch:
     inputs:
       dry_run:
