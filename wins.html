@@ -9,82 +9,58 @@
   header { padding:16px 20px; background:#0f172a; position:sticky; top:0; z-index:10; border-bottom:1px solid #1f2937; }
   h1 { margin:0; font-size:18px; letter-spacing:.2px; }
   main { padding: 18px; }
-  .grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; margin-bottom:14px; }
-  .kpi { background:#111827; border:1px solid #1f2937; border-radius:12px; padding:12px; }
-  .kpi h3 { margin:.2rem 0; font-size:12px; color:#9ca3af; font-weight:500; }
-  .kpi p { margin:0; font-size:20px; font-weight:700; }
   .card { background:#0f172a; border:1px solid #1f2937; border-radius:14px; padding:14px; margin-bottom:16px; }
   .controls { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
-  select, input[type="search"] { background:#111827; border:1px solid #1f2937; color:#e5e7eb; padding:8px 10px; border-radius:8px; }
-  .table-wrap { overflow:auto; border-radius:12px; border:1px solid #1f2937; }
-  table { width:100%; border-collapse:collapse; min-width:800px; }
-  th, td { padding:10px 12px; border-bottom:1px solid #1f2937; text-align:left; vertical-align:top; }
-  th { position:sticky; top:0; background:#0b1220; }
-  tr:hover td { background:#0c1627; }
+  input[type="file"], button, select, input[type="search"] { background:#111827; border:1px solid #1f2937; color:#e5e7eb; padding:8px 10px; border-radius:8px; }
   .muted { color:#9ca3af; font-size:12px; }
+  /* The module injects its own styles; nothing else needed */
 </style>
 </head>
 <body>
 <header><h1>Artist Nominations — By Year (from your sheet)</h1></header>
-<main>
-  <div class="grid">
-    <div class="kpi"><h3>Total Artists</h3><p>0</p></div>
-    <div class="kpi"><h3>Total Nominations</h3><p>0</p></div>
-    <div class="kpi"><h3>Years</h3><p>–</p></div>
-    <div class="kpi"><h3>Sheets Read</h3><p>2018, 2019, 2020, 2021, 2022, 2023, 2024</p></div>
-  </div>
 
+<main>
+  <!-- Controls: choose local file OR load from a hosted URL -->
   <div class="card">
     <div class="controls">
-      <label>Year:
-        <select id="year">
-          <option value="all">All</option>
-          
-        </select>
-      </label>
-      <input id="q" type="search" placeholder="Search artist…">
-      <span class="muted">Tip: Filter by year and search an artist. Winners = 'Yes' in the Detail table.</span>
-    </div>
-    <div class="table-wrap">
-      <table id="summary">
-        <thead><tr><th>Year</th><th>Artist</th><th>Nominations</th><th>Wins</th><th>Win %</th><th>Nominated Categories</th><th>Won Categories</th></tr></thead>
-        <tbody>
-          
-        </tbody>
-      </table>
+      <input type="file" id="file" accept=".xlsx" title="Pick your Excel file" />
+      <button id="loadFromUrl" title="Loads Excel from a hosted URL">Load from URL</button>
+      <span class="muted">Tip: Using a local file is easiest when opening this page directly (no CORS).</span>
     </div>
   </div>
 
-  <div class="card">
-    <h3 style="margin-top:0">Detail (Per Entry)</h3>
-    <div class="table-wrap">
-      <table id="detail">
-        <thead><tr><th>Year</th><th>Artist</th><th>Category</th><th>Work</th><th>Winner</th></tr></thead>
-        <tbody>
-          
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <!-- The stats app renders here -->
+  <div id="stats"></div>
 </main>
+
+<!-- 1) SheetJS XLSX (needed to read .xlsx in the browser) -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
+
+<!-- 2) Your stats module (must be in the same folder or update the path) -->
+<script src="artist_nominations_stats.js"></script>
+
 <script>
-  const yearSel = document.getElementById('year');
-  const q = document.getElementById('q');
-  function applyFilters() {
-    const y = yearSel.value;
-    const term = q.value.trim().toLowerCase();
-    for (const t of [document.querySelector('#summary tbody'), document.querySelector('#detail tbody')]) {
-      for (const tr of t.querySelectorAll('tr')) {
-        const yr = tr.getAttribute('data-year');
-        const artist = tr.getAttribute('data-artist') || '';
-        const yearOk = (y === 'all') || (yr === y);
-        const textOk = !term || artist.includes(term);
-        tr.style.display = (yearOk && textOk) ? '' : 'none';
-      }
-    }
-  }
-  yearSel.addEventListener('change', applyFilters);
-  q.addEventListener('input', applyFilters);
+  // === Option A: Local file (recommended if opening this HTML from your computer) ===
+  document.getElementById('file').addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    ArtistNomsStats.render({
+      container: '#stats',
+      xlsxFile: file
+    });
+  });
+
+  // === Option B: Hosted URL ===
+  // Replace with the actual path where your Excel is hosted.
+  // Example: const EXCEL_URL = 'https://your-domain.com/CopyOfGrammyNominations.xlsx';
+  const EXCEL_URL = 'Copy of Grammy_Nominations_ByYear_ONEFILE_no_consecutive_repeats(AutoRecovered).xlsx';
+
+  document.getElementById('loadFromUrl').addEventListener('click', () => {
+    ArtistNomsStats.render({
+      container: '#stats',
+      xlsxUrl: EXCEL_URL
+    });
+  });
 </script>
 </body>
 </html>
