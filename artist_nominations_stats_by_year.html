@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Artist Nominations — By Year (From Your Sheet)</title>
+<style>
+  body { margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#0b0f1a; color:#e5e7eb; }
+  header { padding:16px 20px; background:#0f172a; position:sticky; top:0; z-index:10; border-bottom:1px solid #1f2937; }
+  h1 { margin:0; font-size:18px; letter-spacing:.2px; }
+  main { padding: 18px; }
+  .grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; margin-bottom:14px; }
+  .kpi { background:#111827; border:1px solid #1f2937; border-radius:12px; padding:12px; }
+  .kpi h3 { margin:.2rem 0; font-size:12px; color:#9ca3af; font-weight:500; }
+  .kpi p { margin:0; font-size:20px; font-weight:700; }
+  .card { background:#0f172a; border:1px solid #1f2937; border-radius:14px; padding:14px; margin-bottom:16px; }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  select, input[type="search"] { background:#111827; border:1px solid #1f2937; color:#e5e7eb; padding:8px 10px; border-radius:8px; }
+  .table-wrap { overflow:auto; border-radius:12px; border:1px solid #1f2937; }
+  table { width:100%; border-collapse:collapse; min-width:800px; }
+  th, td { padding:10px 12px; border-bottom:1px solid #1f2937; text-align:left; vertical-align:top; }
+  th { position:sticky; top:0; background:#0b1220; }
+  tr:hover td { background:#0c1627; }
+  .muted { color:#9ca3af; font-size:12px; }
+</style>
+</head>
+<body>
+<header><h1>Artist Nominations — By Year (from your sheet)</h1></header>
+<main>
+  <div class="grid">
+    <div class="kpi"><h3>Total Artists</h3><p>0</p></div>
+    <div class="kpi"><h3>Total Nominations</h3><p>0</p></div>
+    <div class="kpi"><h3>Years</h3><p>–</p></div>
+    <div class="kpi"><h3>Sheets Read</h3><p>2018, 2019, 2020, 2021, 2022, 2023, 2024</p></div>
+  </div>
+
+  <div class="card">
+    <div class="controls">
+      <label>Year:
+        <select id="year">
+          <option value="all">All</option>
+          
+        </select>
+      </label>
+      <input id="q" type="search" placeholder="Search artist…">
+      <span class="muted">Tip: Filter by year and search an artist. Winners = 'Yes' in the Detail table.</span>
+    </div>
+    <div class="table-wrap">
+      <table id="summary">
+        <thead><tr><th>Year</th><th>Artist</th><th>Nominations</th><th>Wins</th><th>Win %</th><th>Nominated Categories</th><th>Won Categories</th></tr></thead>
+        <tbody>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Detail (Per Entry)</h3>
+    <div class="table-wrap">
+      <table id="detail">
+        <thead><tr><th>Year</th><th>Artist</th><th>Category</th><th>Work</th><th>Winner</th></tr></thead>
+        <tbody>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<script>
+  const yearSel = document.getElementById('year');
+  const q = document.getElementById('q');
+  function applyFilters() {
+    const y = yearSel.value;
+    const term = q.value.trim().toLowerCase();
+    for (const t of [document.querySelector('#summary tbody'), document.querySelector('#detail tbody')]) {
+      for (const tr of t.querySelectorAll('tr')) {
+        const yr = tr.getAttribute('data-year');
+        const artist = tr.getAttribute('data-artist') || '';
+        const yearOk = (y === 'all') || (yr === y);
+        const textOk = !term || artist.includes(term);
+        tr.style.display = (yearOk && textOk) ? '' : 'none';
+      }
+    }
+  }
+  yearSel.addEventListener('change', applyFilters);
+  q.addEventListener('input', applyFilters);
+</script>
+</body>
+</html>
