@@ -23,7 +23,11 @@
   tr:hover td { background:#0c1627; }
   .muted { color:#9ca3af; font-size:12px; }
 </style>
+
+<!-- ✅ Load SheetJS BEFORE your script -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
 </head>
+
 <body>
 <header><h1>Artist Nominations — By Year (from your sheet)</h1></header>
 <main>
@@ -63,15 +67,11 @@
   </div>
 </main>
 
-<!-- SheetJS to read .xlsx in-browser -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
-
 <script>
-  // ====== CONFIG: set this to your Excel filename or URL ======
+  // 🔧 Set this to your Excel filename or URL (same folder is easiest)
   const EXCEL_URL = 'Copy of Grammy_Nominations_ByYear_ONEFILE_no_consecutive_repeats(AutoRecovered).xlsx';
-  // ===========================================================
 
-  // Utilities
+  // Utils
   const esc = (s) => (s==null? '' : String(s)
     .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
     .replaceAll('"','&quot;').replaceAll("'",'&#39;'));
@@ -83,7 +83,7 @@
   }
   function tryNum(v){ const n = Number(v); return Number.isFinite(n) ? n : null; }
   function detectCols(headers){
-    const find = (pats)=> headers.findIndex(h => pats.some(p=>p.test(h))) ?? -1;
+    const find = (pats)=> headers.findIndex(h => pats.some(p=>p.test(h)));
     const H = headers.map(h=>String(h||'').trim());
     return {
       year:   find([/\byear\b/i]),
@@ -107,16 +107,17 @@
   }
 
   async function loadXlsx(url){
+    if (!window.XLSX) throw new Error('XLSX library not loaded');
     const buf = await fetch(url).then(r=>{
       if(!r.ok) throw new Error('Failed to fetch Excel: '+r.status);
       return r.arrayBuffer();
     });
-    const wb = XLSX.read(buf, { type:'array' });
+    const wb = window.XLSX.read(buf, { type:'array' });
     const rows = [];
     const sheets = wb.SheetNames.slice();
     for (const sn of wb.SheetNames){
       const ws = wb.Sheets[sn];
-      const arr = XLSX.utils.sheet_to_json(ws, { header:1, defval:'' });
+      const arr = window.XLSX.utils.sheet_to_json(ws, { header:1, defval:'' });
       if (!arr.length) continue;
       const headers = arr[0].map(h=>String(h||'').trim());
       const map = detectCols(headers);
@@ -148,14 +149,12 @@
   }
 
   function compute(rows){
-    // normalize
     rows.forEach(r=>{
       const y = tryNum(r.Year); if (y!=null) r.Year = y;
       r.Category = r.Category ?? ''; r.Artist = r.Artist ?? ''; r.Work = r.Work ?? '';
       r.Winner = !!r.Winner;
     });
 
-    // summary by (Year, Artist)
     const key = (y,a)=>`${y}__${a}`;
     const map = new Map();
     for (const r of rows){
@@ -188,10 +187,10 @@
 
   function paintKpis({rows, years, sheets}){
     const kpis = document.querySelectorAll('.kpi p');
-    if (kpis[0]) kpis[0].textContent = uniq(rows.map(r=>r.Artist)).length;         // Total Artists
-    if (kpis[1]) kpis[1].textContent = rows.length;                                // Total Nominations
-    if (kpis[2]) kpis[2].textContent = years.length ? `${years[0]}–${years[years.length-1]}` : '–'; // Years
-    if (kpis[3]) kpis[3].textContent = sheets && sheets.length ? sheets.join(', ') : '—';            // Sheets Read
+    if (kpis[0]) kpis[0].textContent = uniq(rows.map(r=>r.Artist)).length;
+    if (kpis[1]) kpis[1].textContent = rows.length;
+    if (kpis[2]) kpis[2].textContent = years.length ? `${years[0]}–${years[years.length-1]}` : '–';
+    if (kpis[3]) kpis[3].textContent = sheets && sheets.length ? sheets.join(', ') : '—';
   }
 
   function paintYearDropdown(years){
@@ -234,7 +233,7 @@
       paintYearDropdown(years);
       const data = compute(rows);
       paintTables(data);
-      applyFilters(); // run once after paint
+      applyFilters();
     }catch(err){
       console.error(err);
       alert('Could not load Excel. Check EXCEL_URL or host the file next to this HTML.\n\n' + err.message);
@@ -260,7 +259,7 @@
   yearSel.addEventListener('change', applyFilters);
   q.addEventListener('input', applyFilters);
 
-  // Kickoff
+  // Go
   init();
 </script>
 </body>
