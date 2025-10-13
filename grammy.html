@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grammy Nominations Viewer</title>
+<style>
+  body { background:#0b1220; color:#e5e7eb; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, 'Helvetica Neue', Arial, 'Apple Color Emoji','Segoe UI Emoji'; margin:0; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  .title { font-weight:700; font-size: 26px; }
+  .toolbar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+  .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-top: 12px; }
+  .tab { padding:8px 14px; border-radius: 999px; border:1px solid #334155; background:#0f172a; color:#e5e7eb; cursor:pointer; }
+  .tab.active { background:#f59e0b22; color:#fbbf24; border-color:#f59e0b; }
+  .card { background:#0f172a; border:1px solid #1f2937; border-radius: 12px; padding: 14px; margin: 14px 0; }
+  .badge { border-radius: 9999px; padding:2px 8px; font-size:12px; font-weight:600; }
+  .badge.w { background:#fde047; color:#1f2937; } /* winner: yellow */
+  .badge.n { background:#e5e7eb; color:#111827; } /* nominee: gray */
+  table { width:100%; border-collapse: collapse; }
+  thead th { position: sticky; top: 0; background:#0b1220; }
+  th, td { padding:8px; border-bottom:1px solid #1f2937; }
+  .right { text-align:right; }
+  .search { padding:8px 10px; width: 320px; max-width: 100%; border:1px solid #334155; background:#0f172a; color:#e5e7eb; border-radius:8px; }
+  .muted { color:#94a3b8; font-size: 12px; }
+  .filters { display:flex; gap:8px; flex-wrap:wrap; }
+  .chip { font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid #334155; background:#0f172a; cursor:pointer; }
+  .chip.active { background:#1e293b; border-color:#475569; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="toolbar">
+      <div class="title">Grammy Nominations — All Years</div>
+      <input id="searchInput" class="search" placeholder="Search artist / title / album..." />
+    </div>
+    <div id="yearTabs" class="tabs"></div>
+    <div class="filters" style="margin-top:6px;">
+      <span class="chip" data-filter="all">All categories</span>
+      <span class="chip" data-filter="general">General</span>
+      <span class="chip" data-filter="pop">Pop</span>
+      <span class="chip" data-filter="rnb">R&B + Soul</span>
+      <span class="chip" data-filter="rap">Rap</span>
+      <span class="chip" data-filter="alt">Alternative</span>
+      <span class="chip" data-filter="craft">Producer/Songwriter</span>
+      <span class="chip" data-filter="winners">Winners only</span>
+    </div>
+    <div id="yearSummary" class="muted" style="margin-top:8px;"></div>
+    <div id="content" style="margin-top:16px;"></div>
+    <noscript>This page requires JavaScript to display the data.</noscript>
+  </div>
+
+<script src="./grammy_data.js"></script>
+<script>
+// If APP_DATA didn't load, show a friendly message
+if (typeof APP_DATA === 'undefined') {
+  document.getElementById('content').innerHTML =
+    '<p>⚠️ Data file not found. Please place <code>grammy_data.js</code> in the same folder.</p>';
+}
+
+// Category buckets for quick filtering
+const CAT_BUCKETS = {
+  general: new Set(["Album of the Year","Record of the Year","Song of the Year","Best New Artist"]),
+  pop: new Set(["Best Pop Vocal Album","Best Pop Solo Performance","Best Pop Duo/Group Performance","Best Pop Dance Recording","Best Traditional Pop Vocal Album"]),
+  rnb: new Set(["Best R&B Album","Best Progressive R&B Album","Best R&B Performance","Best Traditional R&B Performance","Best R&B Song","Best Soul Album"]),
+  rap: new Set(["Best Rap Album","Best Rap Performance"]),
+  alt: new Set(["Best Alternative Music Album"]),
+  craft: new Set(["Producer of the Year (Non-Classical)","Songwriter of the Year (Non-Classical)"]),
+};
+
+const BASE_CATEGORY_ORDER = [
+  ...CAT_BUCKETS.general,
+  ...CAT_BUCKETS.pop,
+  ...CAT_BUCKETS.rnb,
+  ...CAT_BUCKETS.rap,
+  ...CAT_BUCKETS.alt,
+  ...CAT_BUCKETS.craft,
+];
+let CATEGORY_ORDER = BASE_CATEGORY_ORDER;
+
+const yearTabs = document.getElementById('yearTabs');
+const content = document.getElementById('content');
+const searchInput = document.getElementById('searchInput');
+const chips = Array.from(document.querySelectorAll('.chip'));
+
+let years = Object.keys(APP_DATA || {});
+// Sort years descending by starting year
+years.sort((a, b) => {
+  const startA = parseInt(a.split(" to ")[0], 10);
+  const startB = parseInt(b.split(" to ")[0], 10);
+  return startB - startA;
+});
+let activeYear = years[0] || "";
+let activeFilter = "all";
+
+// Chip filters
+chips.forEach(ch => {
+  ch.addEventListener('click', () => {
+    chips.forEach(x => x.classList.remove('active'));
+    ch.classList.add('active');
+    activeFilter = ch.dataset.filter;
+    render();
+  });
+});
+// default select "All"
+chips[0].classList.add('active');
+
+function renderTabs() {
+  yearTabs.innerHTML = "";
+  years.forEach((yearKey) => {
+    const btn = document.createElement('button');
+    btn.className = "tab" + (yearKey===activeYear ? " active" : "");
+    btn.textContent = yearKey.replace(" to ", " → ");
+    btn.setAttribute("aria-pressed", yearKey===activeYear);
+    btn.onclick = () => { activeYear = yearKey; render(); };
+    yearTabs.appendChild(btn);
+  });
+}
+
+function rowMatchesSearch(row, q) {
+  if (!q) return true;
+  q = q.toLowerCase();
+  const fields = ["Artist","Title","Album","artist","title","album"];
+  return fields.some(k => (row[k]||"").toString().toLowerCase().includes(q));
+}
+
+function buildNomineeRow(row) {
+  const isWinner = !!row._winner;
+  const who = row.Artist || row.artist || "";
+  const title = row.Title || row.Album || "";
+  const units = row["Impact Units"] || row.impact_units || "";
+  const impact = units ? units.toLocaleString() : "";
+  return `
+    <tr>
+      <td><span class="badge ${isWinner ? 'w' : 'n'}">${isWinner ? 'Winner' : 'Nominee'}</span></td>
+      <td><b>${who}</b></td>
+      <td>${title}</td>
+      <td class="right">${impact}</td>
+    </tr>`;
+}
+
+function buildCategoryCard(cat, rows) {
+  const winners = rows.filter(r => r._winner);
+  const nominees = rows.filter(r => !r._winner);
+  const allRows = winners.concat(nominees);
+  return `
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:600; font-size:18px;">${cat}</div>
+        <div class="muted">${winners.length} winner${winners.length!==1?'s':''} · ${nominees.length} other nominees</div>
+      </div>
+      <div style="overflow-x:auto; margin-top:8px;">
+        <table>
+          <thead><tr>
+            <th>Status</th><th>Artist</th><th>Title / Album</th><th class="right">Impact</th>
+          </tr></thead>
+          <tbody>
+            ${allRows.map(buildNomineeRow).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function render() {
+  renderTabs();
+  const q = (searchInput.value||'').trim().toLowerCase();
+  const yearData = APP_DATA[activeYear] || {};
+  let allowedCats;
+  if (activeFilter === "all") allowedCats = Object.keys(yearData);
+  else allowedCats = Object.keys(yearData).filter(c => CAT_BUCKETS[activeFilter].has(c));
+
+  const catsOrdered = CATEGORY_ORDER.filter(c => allowedCats.includes(c));
+  const chunks = catsOrdered.map(cat => {
+    const rows = (yearData[cat] || []).filter(r => rowMatchesSearch(r, q));
+    if (!rows.length) return "";
+    return buildCategoryCard(cat, rows);
+  }).filter(Boolean);
+
+  content.innerHTML = chunks.join('') || "<p>No results found.</p>";
+}
+
+let winnersOnly = false;
+
+// Update chips handler to toggle winners-only
+chips.forEach(ch => {
+  ch.addEventListener('click', () => {
+    chips.forEach(x => x.classList.remove('active'));
+    ch.classList.add('active');
+    activeFilter = ch.dataset.filter;
+    winnersOnly = (activeFilter === 'winners');
+    render();
+  });
+});
+
+function computeYearSummary(yearData) {
+  let wins = 0, noms = 0;
+  for (const cat of Object.keys(yearData)) {
+    const rows = yearData[cat] || [];
+    wins += rows.filter(r => r._winner).length;
+    noms += rows.length;
+  }
+  return {wins, noms};
+}
+
+function renderTabs() {
+  yearTabs.innerHTML = "";
+  years.forEach((yearKey) => {
+    const btn = document.createElement('button');
+    btn.className = "tab" + (yearKey===activeYear ? " active" : "");
+    btn.textContent = yearKey.replace(" to ", " → ");
+    btn.setAttribute("aria-pressed", yearKey===activeYear);
+    btn.onclick = () => { activeYear = yearKey; render(); };
+    yearTabs.appendChild(btn);
+  });
+}
+
+function render() {
+  renderTabs();
+  const q = (searchInput.value||'').trim().toLowerCase();
+  const yearData = APP_DATA[activeYear] || {};
+  const summary = computeYearSummary(yearData);
+  const summaryEl = document.getElementById('yearSummary');
+  summaryEl.textContent = `${summary.wins} winner${summary.wins!==1?'s':''} • ${summary.noms} total nominations`;
+
+  // derive dynamic category order for this year
+  const allCats = Object.keys(yearData);
+  const extras = allCats.filter(c => !BASE_CATEGORY_ORDER.includes(c)).sort();
+  CATEGORY_ORDER = BASE_CATEGORY_ORDER.concat(extras);
+
+  let allowedCats;
+  if (activeFilter === "all" || activeFilter === "winners") {
+    allowedCats = Object.keys(yearData);
+  } else {
+    allowedCats = Object.keys(yearData).filter(c => CAT_BUCKETS[activeFilter] && CAT_BUCKETS[activeFilter].has(c));
+  }
+
+  const catsOrdered = CATEGORY_ORDER.filter(c => allowedCats.includes(c));
+  const chunks = catsOrdered.map(cat => {
+    let rows = (yearData[cat] || []);
+    if (winnersOnly) rows = rows.filter(r => r._winner);
+    rows = rows.filter(r => rowMatchesSearch(r, q));
+    if (!rows.length) return "";
+    return buildCategoryCard(cat, rows);
+  }).filter(Boolean);
+
+  content.innerHTML = chunks.join('') || "<p>No results found.</p>";
+}
+
+// initial chip default to All
+chips.forEach(ch => ch.classList.remove('active'));
+chips[0].classList.add('active');
+activeFilter = "all";
+winnersOnly = false;
+
+searchInput.addEventListener('input', render);
+render();
+</script>
+</body>
+</html>
+
