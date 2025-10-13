@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Artist Grammy Profile</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:#0b0f1a; color:#e5e7eb; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    header { position:sticky; top:0; z-index:20; background:#0b0f1a; border-bottom:1px solid rgba(255,255,255,.08); padding:14px 16px; }
+    .wrap { max-width:1200px; margin:0 auto; padding:16px; }
+    a { color:#a5b4fc; text-decoration:none; } a:hover { text-decoration:underline; }
+    h1 { font-size:22px; margin:0 0 6px; }
+    .sub { color:#94a3b8; font-size:12px; }
+    .toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px; }
+    .btn { background:#0a1223; border:1px solid rgba(255,255,255,.15); color:#e5e7eb; padding:8px 10px; border-radius:8px; cursor:pointer; font-size:13px; }
+    .btn:hover { border-color:#6366f1; }
+    input[type="text"], select { background:#0a1223; border:1px solid rgba(255,255,255,.15); color:#e5e7eb; padding:8px 10px; border-radius:8px; outline:none; }
+    input[type="text"]:focus, select:focus { border-color:#6366f1; }
+    .kpis { display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin:16px 0; }
+    .kpi { background:linear-gradient(180deg, rgba(79,70,229,.18), rgba(2,6,23,.6)); border:1px solid rgba(99,102,241,.35); border-radius:12px; padding:14px; }
+    .kpi h4 { margin:0 0 6px; font-size:12px; color:#c7d2fe; letter-spacing:.3px; text-transform:uppercase; }
+    .kpi p { margin:0; font-size:22px; font-weight:800; }
+    .grid { display:grid; grid-template-columns:1fr; gap:14px; }
+    @media (min-width: 1000px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .card { border:1px solid rgba(255,255,255,.1); border-radius:14px; background:#0b1224; overflow:hidden; }
+    .card h3 { margin:0; padding:12px 14px; font-size:14px; border-bottom:1px solid rgba(255,255,255,.07); background:rgba(2,6,23,.6); }
+    .pad { padding:10px 14px; }
+    .table-wrap { overflow:auto; max-height:70vh; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th, td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.06); vertical-align:top; }
+    th { position:sticky; top:0; background:rgba(2,6,23,.85); backdrop-filter: blur(4px); text-align:left; z-index:1; }
+    tbody tr:hover { background:rgba(255,255,255,.03); }
+    .bar { height:10px; background:linear-gradient(90deg, #22d3ee, #6366f1); border-radius:999px; }
+    .muted { color:#94a3b8; font-size:12px; }
+    .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .divider { height:1px; background:rgba(255,255,255,.08); margin:10px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="row">
+      <button class="btn" onclick="history.back()">← Back</button>
+      <h1 id="title">Artist</h1>
+    </div>
+    <div class="sub" id="subtitle">Loading…</div>
+    <div class="toolbar">
+      <label class="muted">Go to artist:</label>
+      <input id="artistPicker" list="artistList" placeholder="Type to search…" style="min-width:220px"/>
+      <datalist id="artistList"></datalist>
+      <button id="goBtn" class="btn">Open</button>
+      <button id="copyLinkBtn" class="btn">Copy link</button>
+      <button id="csvBtn" class="btn">Download CSV</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="kpis">
+      <div class="kpi"><h4>Total Nominations</h4><p id="kpiNoms">—</p></div>
+      <div class="kpi"><h4>Wins</h4><p id="kpiWins">—</p></div>
+      <div class="kpi"><h4>Losses</h4><p id="kpiLoss">—</p></div>
+      <div class="kpi"><h4>Win Rate</h4><p id="kpiRate">—</p></div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>By Year</h3>
+        <div class="pad">
+          <div id="yearsBars"></div>
+        </div>
+        <div class="table-wrap">
+          <table id="byYear">
+            <thead>
+              <tr><th>Year</th><th>Noms</th><th>Wins</th><th>Win %</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>By Category</h3>
+        <div class="pad">
+          <div id="catsBars"></div>
+        </div>
+        <div class="table-wrap">
+          <table id="byCat">
+            <thead>
+              <tr><th>Category</th><th>Noms</th><th>Wins</th><th>Win %</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <h3>All Nominations</h3>
+      <div class="table-wrap">
+        <table id="detail">
+          <thead>
+            <tr>
+              <th>Year</th><th>Category</th><th>Work</th><th>Winner</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="muted" id="foot"></div>
+  </div>
+
+  <script src="grammy_noms.winners.js"></script>
+  <script>
+  (function(){
+    const qs = new URLSearchParams(location.search);
+    const target = (qs.get('artist') || '').trim();
+    const title = document.getElementById('title');
+    const subtitle = document.getElementById('subtitle');
+    const kN = document.getElementById('kpiNoms');
+    const kW = document.getElementById('kpiWins');
+    const kL = document.getElementById('kpiLoss');
+    const kR = document.getElementById('kpiRate');
+    const byYearBody = document.querySelector('#byYear tbody');
+    const byCatBody = document.querySelector('#byCat tbody');
+    const detailBody = document.querySelector('#detail tbody');
+    const yearsBars = document.getElementById('yearsBars');
+    const catsBars = document.getElementById('catsBars');
+    const foot = document.getElementById('foot');
+    const picker = document.getElementById('artistPicker');
+    const list = document.getElementById('artistList');
+
+    if (!window.grammyNoms || !window.grammyNoms.years) {
+      subtitle.textContent = 'Dataset not found. Make sure grammy_noms.winners.js is loaded.';
+      return;
+    }
+
+    const data = window.grammyNoms.years;
+    // Build artist list
+    const setArtists = new Set();
+    for (const y of Object.keys(data)) {
+      for (const r of data[y]) {
+        if (r.artist) setArtists.add(r.artist);
+      }
+    }
+    const artists = Array.from(setArtists).sort((a,b)=>a.localeCompare(b));
+    for (const a of artists) {
+      const opt = document.createElement('option');
+      opt.value = a;
+      list.appendChild(opt);
+    }
+
+    document.getElementById('goBtn').onclick = () => {
+      const a = picker.value.trim();
+      if (a) location.search = '?artist=' + encodeURIComponent(a);
+    };
+    document.getElementById('copyLinkBtn').onclick = () => {
+      const a = picker.value.trim() || target;
+      const url = location.origin + location.pathname + '?artist=' + encodeURIComponent(a);
+      navigator.clipboard.writeText(url).then(()=>{
+        subtitle.textContent = 'Link copied';
+        setTimeout(()=>subtitle.textContent='', 1200);
+      });
+    };
+
+    function pct(w, n){ return n ? Math.round((w/n)*100) : 0; }
+    function barRow(label, val, max){
+      const w = max ? Math.round((val/max)*100) : 0;
+      const div = document.createElement('div');
+      div.className = 'row';
+      div.style.margin = '4px 0';
+      div.innerHTML = '<div class="muted" style="width:120px">'+label+'</div>' +
+        '<div style="flex:1"><div class="bar" style="width:'+w+'%"></div></div>' +
+        '<div style="width:60px; text-align:right">'+val+'</div>';
+      return div;
+    }
+
+    function downloadCSV(rows, filename){
+      const esc = (s)=>(''+s).replace(/"/g,'""');
+      const header = 'Year,Category,Work,Winner\\n';
+      const body = rows.map(r => ['"'+esc(r.year)+'"','"'+esc(r.category)+'"','"'+esc(r.work)+'"', r.winner?'Yes':'No'].join(',')).join('\\n');
+      const blob = new Blob([header+body], {type:'text/csv'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+    document.getElementById('csvBtn').onclick = () => {
+      if (!targetName) return;
+      downloadCSV(rows, targetName.replace(/\\s+/g,'_')+'_grammys.csv');
+    };
+
+    // Choose artist
+    let targetName = target || artists[0] || '';
+    picker.value = targetName;
+
+    // Collect rows for this artist
+    const rows = [];
+    for (const y of Object.keys(data)) {
+      for (const r of data[y]) {
+        if ((r.artist||'').toLowerCase() === targetName.toLowerCase()) {
+          rows.push({year:y, category:r.category||'', work:r.work||'', winner: !!r.winner});
+        }
+      }
+    }
+
+    title.textContent = targetName || 'Artist';
+    subtitle.textContent = rows.length ? '' : 'No rows for this artist';
+
+    // KPIs
+    const total = rows.length;
+    const wins = rows.filter(r=>r.winner).length;
+    const loss = total - wins;
+    kN.textContent = total;
+    kW.textContent = wins;
+    kL.textContent = loss;
+    kR.textContent = total ? Math.round((wins/total)*100)+'%' : '0%';
+
+    // Year summary
+    const byY = {};
+    for (const r of rows) {
+      if (!byY[r.year]) byY[r.year] = {n:0, w:0};
+      byY[r.year].n++; if (r.winner) byY[r.year].w++;
+    }
+    const ys = Object.keys(byY).sort((a,b)=>Number(a)-Number(b));
+    let yMax = 0;
+    for (const y of ys) { if (byY[y].n > yMax) yMax = byY[y].n; }
+    for (const y of ys) {
+      const tr = document.createElement('tr');
+      const winPct = pct(byY[y].w, byY[y].n);
+      tr.innerHTML = '<td>'+y+'</td><td>'+byY[y].n+'</td><td>'+byY[y].w+'</td><td>'+winPct+'%</td>';
+      byYearBody.appendChild(tr);
+      yearsBars.appendChild(barRow(y, byY[y].n, yMax));
+    }
+
+    // Category summary
+    const byC = {};
+    for (const r of rows) {
+      const c = r.category || '(Uncategorized)';
+      if (!byC[c]) byC[c] = {n:0, w:0};
+      byC[c].n++; if (r.winner) byC[c].w++;
+    }
+    const cs = Object.keys(byC).sort((a,b)=> byC[b].n - byC[a].n);
+    let cMax = 0;
+    for (const c of cs) { if (byC[c].n > cMax) cMax = byC[c].n; }
+    for (const c of cs) {
+      const tr = document.createElement('tr');
+      const winPct = pct(byC[c].w, byC[c].n);
+      tr.innerHTML = '<td>'+c+'</td><td>'+byC[c].n+'</td><td>'+byC[c].w+'</td><td>'+winPct+'%</td>';
+      byCatBody.appendChild(tr);
+      catsBars.appendChild(barRow(byC[c].n>=10?c.replace(/(.{0,18}).*/,'$1…'):c, byC[c].n, cMax));
+    }
+
+    // Detail table
+    const sortRows = rows.slice().sort((a,b)=> (a.year===b.year? a.category.localeCompare(b.category) : Number(a.year)-Number(b.year)));
+    for (const r of sortRows) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>'+r.year+'</td><td>'+r.category+'</td><td>'+r.work+'</td><td>'+(r.winner?'Yes':'No')+'</td>';
+      detailBody.appendChild(tr);
+    }
+
+    // Footer
+    const meta = window.grammyNoms.meta || {};
+    foot.textContent = 'Source: ' + (meta.source_file || 'JS data') + (meta.notes ? ' — ' + meta.notes : '');
+  })();
+  </script>
+</body>
+</html>
