@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Records from weekdata.js (simple)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Your data file: must define window.weekData -->
+  <!-- Must load BEFORE the script below -->
   <script src="weekdata.js"></script>
   <style>
     body{font:14px/1.4 system-ui,Segoe UI,Roboto,Arial;color:#e7e7ea;background:#0b0b0c;margin:20px}
@@ -21,7 +21,7 @@
   </style>
 </head>
 <body>
-  <h1>Records from <code>weekdata.js</code></h1>
+  <h1>RECORDS FROM <code>WEEKDATA.JS</code></h1>
   <div class="muted" id="meta">Loading…</div>
 
   <div class="cards">
@@ -60,12 +60,11 @@
   </div>
 
   <script>
-    // ---- helpers (simple, no magic) ----
+    // ---- helpers ----
     const nz = (v, d=0)=> (Number.isFinite(+v) ? +v : d);
     const fmtInt = n => Number(n ?? 0).toLocaleString('en-US');
     const abbr = n => {
-      n = nz(n, 0);
-      const a = Math.abs(n);
+      n = nz(n, 0); const a = Math.abs(n);
       if (a >= 1e12) return (n/1e12).toFixed(2).replace(/\.0+$/,'')+'T';
       if (a >= 1e9)  return (n/1e9 ).toFixed(2).replace(/\.0+$/,'')+'B';
       if (a >= 1e6)  return (n/1e6 ).toFixed(2).replace(/\.0+$/,'')+'M';
@@ -80,15 +79,15 @@
     function computeAll(data){
       const weeks = Object.keys(data||{}).map(Number).sort((a,b)=>a-b);
 
-      const songHist = new Map();            // key -> [{week, rank, streams, radio, sales}]
-      const artistSongSet = new Map();       // artist -> Set(titles)
-      const artistNo1Songs = new Map();      // artist -> Set(#1 titles)
-      const debutNo1sByArtist = new Map();   // artist -> count of debut-at-#1
-      const albumNo1Songs = new Map();       // album -> Set(songKey)
-      const streamsBySong = new Map();       // key -> total streams
-      const streamsByArtist = new Map();     // artist -> total streams
-      const yearlyStreamsByArtist = new Map(); // year -> Map(artist->streams)
-      const streamWeekChamp = new Map();     // key -> times it led weekly streams
+      const songHist = new Map();
+      const artistSongSet = new Map();
+      const artistNo1Songs = new Map();
+      const debutNo1sByArtist = new Map();
+      const albumNo1Songs = new Map();
+      const streamsBySong = new Map();
+      const streamsByArtist = new Map();
+      const yearlyStreamsByArtist = new Map();
+      const streamWeekChamp = new Map();
 
       let maxEntriesOneWeek = {artist:null, week:null, count:0};
       let heaviestTop10Week = {week:null, total:-Infinity};
@@ -153,7 +152,7 @@
         if (weekStreamMax.key) streamWeekChamp.set(weekStreamMax.key, (streamWeekChamp.get(weekStreamMax.key)||0)+1);
       }
 
-      // Post-process per song
+      // Per-song post
       let firstNo1 = null;
       let firstDebutNo1 = null;
       let longestNo1Run = {key:null, len:0, start:null, end:null};
@@ -240,7 +239,6 @@
         }
       }
 
-      // Build rows (and apply the skip list you gave)
       const skipSet = new Set([11,12,13,18,20,22,37,38,39,40,41,42,43,44,45,46,47,48,49,50]);
 
       const hotRows = [
@@ -288,11 +286,17 @@
     }
 
     (function run(){
-      if (typeof window.weekData === 'undefined'){
-        document.getElementById('meta').textContent = 'weekData missing. Ensure weekdata.js sets window.weekData.';
+      // ✅ Works whether weekdata.js used `const weekData = …` or `window.weekData = …`
+      const data = (typeof weekData !== 'undefined') ? weekData
+                 : (typeof window !== 'undefined' && typeof window.weekData !== 'undefined') ? window.weekData
+                 : undefined;
+
+      if (!data){
+        document.getElementById('meta').textContent = 'weekData missing. Ensure weekdata.js defines either `const weekData = {...}` (loaded before this) or sets `window.weekData`.';
         return;
       }
-      const res = computeAll(window.weekData);
+
+      const res = computeAll(data);
       const meta = document.getElementById('meta');
       meta.textContent = `Loaded ${fmtInt(res.meta.weeks)} weeks • ${fmtInt(res.meta.songs)} songs • ${fmtInt(res.meta.artists)} artists`;
 
