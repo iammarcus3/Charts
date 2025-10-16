@@ -3,61 +3,61 @@ const APP_DATA = {
   "2018-02-23 to 2019-02-22": {
     "Album of the Year": [
       {
-        "Title": "Queen",
+        "Title": "Nicki Minaj -Queen",
         "_winner": false
       },
       {
-        "Title": "Ella Mai",
+        "Title": "Ella Mai -Ella Mai",
         "_winner": false
       },
       {
-        "Title": "Pink Friday",
+        "Title": "Nicki Minaj -Pink Friday",
         "_winner": false
       },
       {
-        "Title": "BEYONCÉ",
+        "Title": "Beyonce -BEYONCÉ",
         "_winner": false
       },
       {
-        "Title": "The Pinkprint",
+        "Title": "Nicki Minaj -The Pinkprint",
         "_winner": false
       },
       {
-        "Title": "The Thrill of It All",
+        "Title": "Sam Smith -The Thrill of It All",
         "_winner": true
       },
       {
-        "Title": "The Emancipation of Mimi",
+        "Title": "Mariah Carey -The Emancipation of Mimi",
         "_winner": false
       }
     ],
     "Best Alternative Music Album": [
       {
-        "Title": "Queen",
+        "Title": "Nicki Minaj -Queen",
         "_winner": false
       },
       {
-        "Title": "Ella Mai",
+        "Title": "Ella Mai -Ella Mai",
         "_winner": false
       },
       {
-        "Title": "Pink Friday",
+        "Title": "Nicki Minaj -Pink Friday",
         "_winner": false
       },
       {
-        "Title": "BEYONCÉ",
+        "Title": "Beyonce -BEYONCÉ",
         "_winner": true
       },
       {
-        "Title": "The Pinkprint",
+        "Title": "Nicki Minaj -The Pinkprint",
         "_winner": false
       },
       {
-        "Title": "The Thrill of It All",
+        "Title": "Sam Smith -The Thrill of It All",
         "_winner": false
       },
       {
-        "Title": "The Emancipation of Mimi",
+        "Title": "Mariah Carey -The Emancipation of Mimi",
         "_winner": false
       }
     ],
@@ -153,31 +153,31 @@ const APP_DATA = {
     ],
     "Best Dance/Electronic Music Album": [
       {
-        "Title": "Queen",
+        "Title": "Nicki Minaj -Queen",
         "_winner": false
       },
       {
-        "Title": "Ella Mai",
+        "Title": "Ella Mai-Ella Mai",
         "_winner": false
       },
       {
-        "Title": "Pink Friday",
+        "Title": "Nicki Minaj -Pink Friday",
         "_winner": false
       },
       {
-        "Title": "BEYONCÉ",
+        "Title": "Beyonce -BEYONCÉ",
         "_winner": true
       },
       {
-        "Title": "The Pinkprint",
+        "Title": "Nicki Minaj -The Pinkprint",
         "_winner": false
       },
       {
-        "Title": "The Thrill of It All",
+        "Title": "Sam Smith -The Thrill of It All",
         "_winner": false
       },
       {
-        "Title": "The Emancipation of Mimi",
+        "Title": "Mariah Carey -The Emancipation of Mimi",
         "_winner": false
       }
     ],
@@ -213,31 +213,31 @@ const APP_DATA = {
     ],
     "Best Engineered Album (Non-Classical)": [
       {
-        "Title": "Queen",
+        "Title": "Nicki Minaj -Queen",
         "_winner": false
       },
       {
-        "Title": "Ella Mai",
+        "Title": "Ella Mai-Ella Mai",
         "_winner": false
       },
       {
-        "Title": "Pink Friday",
+        "Title": "Nicki Minaj -Pink Friday",
         "_winner": false
       },
       {
-        "Title": "BEYONCÉ",
+        "Title": "Beyonce -BEYONCÉ",
         "_winner": true
       },
       {
-        "Title": "The Pinkprint",
+        "Title": "Nicki Minaj -The Pinkprint",
         "_winner": false
       },
       {
-        "Title": "The Thrill of It All",
+        "Title": "Sam Smith -The Thrill of It All",
         "_winner": false
       },
       {
-        "Title": "The Emancipation of Mimi",
+        "Title": "Mariah Carey -The Emancipation of Mimi",
         "_winner": false
       }
     ],
@@ -483,31 +483,31 @@ const APP_DATA = {
     ],
     "Best Progressive R&B Album": [
       {
-        "Title": "Queen",
+        "Title": "Nicki Minaj -Queen",
         "_winner": false
       },
       {
-        "Title": "Ella Mai",
+        "Title": "Ella Mai -Ella Mai",
         "_winner": true
       },
       {
-        "Title": "Pink Friday",
+        "Title": "Nicki Minaj -Pink Friday",
         "_winner": false
       },
       {
-        "Title": "BEYONCÉ",
+        "Title": "Beyonce -BEYONCÉ",
         "_winner": false
       },
       {
-        "Title": "The Pinkprint",
+        "Title": "Nicki Minaj -The Pinkprint",
         "_winner": false
       },
       {
-        "Title": "The Thrill of It All",
+        "Title": "Sam Smith -The Thrill of It All",
         "_winner": false
       },
       {
-        "Title": "The Emancipation of Mimi",
+        "Title": "Mariah Carey -The Emancipation of Mimi",
         "_winner": false
       }
     ],
