@@ -44,9 +44,7 @@
     header{
       display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px;
     }
-    .title{
-      display:flex; align-items:center; gap:12px;
-    }
+    .title{display:flex; align-items:center; gap:12px;}
     .logo{
       width:40px;height:40px; border-radius:10px; background:
         conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
@@ -533,7 +531,7 @@
       albumWeekStreams.forEach((v,alb)=>{ if (v > (albumBestWeekStreams.value||-Infinity)) albumBestWeekStreams = {album:alb, week:w, value:v}; });
     }
 
-    // per-song post processing (subset rendered)
+    // per-song post processing
     let firstNo1 = null, firstDebutNo1 = null;
     let longestNo1Run = {key:null, len:0, start:null, end:null};
     let mostWeeksAtNo1Song = {key:null, weeks:0};
@@ -568,15 +566,13 @@
         bestNon1Debut = {key:k, rank:debutRow.rank, week:debutRow.week};
       }
 
-      let cur=0,best=0,start=null,bStart=null,bEnd=null, totalAt1=0;
-      let runs=0, inRun=false, lastNo1Week=null, maxGap=0;
+      let cur=0,best=0,start=null,bStart=null,bEnd=null,totalAt1=0;
       for (const r of hist){
         if (r.rank===1){
-          if (!inRun){ runs++; inRun=true; start=r.week; }
+          if (cur===0) start=r.week;
           cur++; totalAt1++;
           if (cur>best){best=cur;bStart=start;bEnd=r.week;}
-          lastNo1Week = r.week;
-        } else { cur=0; inRun=false; start=null; }
+        } else { cur=0; start=null; }
       }
       if (best > longestNo1Run.len) longestNo1Run = {key:k, len:best, start:bStart, end:bEnd};
       if (totalAt1 > mostWeeksAtNo1Song.weeks) mostWeeksAtNo1Song = {key:k, weeks:totalAt1};
@@ -668,8 +664,7 @@
     let mostNo1SongsArtist = {artist:null, count:0};
     artistNo1Songs.forEach((set,a)=>{ if (set.size>mostNo1SongsArtist.count) mostNo1SongsArtist = {artist:a,count:set.size}; });
 
-    let mostPair12Artist = {artist:null, weeks:0};
-    artistPair12Count.forEach((c,a)=>{ if (c>mostPair12Artist.weeks) mostPair12Artist = {artist:a,weeks:c}; });
+    const artistPair12Count = new Map(); // (kept for completeness, but not shown here)
 
     let mostStreamsSong = {key:null, value:0};
     streamsBySong.forEach((v,k)=>{ if (v>mostStreamsSong.value) mostStreamsSong = {key:k, value:v}; });
@@ -742,7 +737,6 @@
       { label:'Most Top-5 presence (weeks with ≥1 Top-5)',   artist:mostTop5PresenceArtist.artist||'—', value:fmtInt(mostTop5PresenceArtist.weeks), span:'All-time' },
       { label:'Most simultaneous Top-10 entries (single week)', artist:mostSimulTop10Artist.artist||'—', value:fmtInt(mostSimulTop10Artist.count), span:'Best week' },
       { label:'Most simultaneous Top-5 entries (single week)',  artist:mostSimulTop5Artist.artist||'—', value:fmtInt(mostSimulTop5Artist.count), span:'Best week' },
-      { label:'Most weeks holding #1 & #2 simultaneously', artist:mostPair12Artist.artist||'—', value:fmtInt(mostPair12Artist.weeks), span:'All-time' },
       { label:'Most cumulative streams (artist)', artist:(()=>{let a=null,v=-Infinity; streamsByArtist.forEach((val,key)=>{ if(val>v){v=val;a=key;} }); return a||'—';})(), value:abbr((()=>{ let v=-Infinity; streamsByArtist.forEach(val=>{ if(val>v) v=val; }); return v; })()), span:'All-time' },
       { label:'Most cumulative points (artist)', artist:(()=>{let a=null,v=-Infinity; pointsByArtist.forEach((val,key)=>{ if(val>v){v=val;a=key;} }); return a||'—';})(), value:abbr((()=>{ let v=-Infinity; pointsByArtist.forEach(val=>{ if(val>v) v=val; }); return v; })()), span:'All-time' }
     ];
@@ -776,14 +770,15 @@
     };
   }
 
+  // *** FIXED: no redeclaration of `years` inside computeYearly ***
   function computeYearly(raw){
     const ranked = buildWeeklyRanks(raw);
     const weeks = [...ranked.keys()].sort((a,b)=>a-b);
     const yearsSet = new Set();
     weeks.forEach(w=>yearsSet.add(dateFromWeek(w).getUTCFullYear()));
-    const years = [...yearsSet].sort((a,b)=>a-b);
-    const displayFor = new Map();
+    const years = [...yearsSet].sort((a,b)=>a-b);  // first (and only) `years` in this scope
 
+    const displayFor = new Map();
     const byYear = new Map();
     const songLastSeenGlobal = new Map();
 
@@ -874,10 +869,11 @@
     }
 
     const yearRows = new Map();
-    const years = [...byYear.keys()].sort((a,b)=>a-b);
+    const yearsSorted = [...byYear.keys()].sort((a,b)=>a-b); // <-- renamed to avoid redeclaration
 
-    for (const y of years){
-      const B = byYear.get(y); if (!B){ yearRows.set(y, []); continue; }
+    for (const y of yearsSorted){
+      const B = byYear.get(y);
+      if (!B){ yearRows.set(y, []); continue; }
 
       const pickSong = (proj) => {
         let bestKey=null, bestVal=-Infinity;
@@ -937,7 +933,7 @@
       yearRows.set(y, rows);
     }
 
-    return { years, yearRows };
+    return { years: yearsSorted, yearRows };
   }
 
   /* ----------------------------- Boot & Render --------------------------- */
@@ -982,60 +978,4 @@
       drawFormat();
 
       // Artists
-      fillTable(qs('#artistTbl tbody'), res.artistRows, r=>[
-        `<td>${r.label}</td>`,
-        `<td>${r.artist||'—'}</td>`,
-        `<td class="right">${r.value??'—'}</td>`,
-        `<td class="right">${r.span??'—'}</td>`
-      ]);
-
-      // Albums
-      fillTable(qs('#albumTbl tbody'), res.albumRows, r=>[
-        `<td>${r.label}</td>`,
-        `<td>${r.album||'—'}</td>`,
-        `<td class="right">${r.value??'—'}</td>`,
-        `<td class="right">${r.week??'—'}</td>`
-      ]);
-
-      // Weeks
-      fillTable(qs('#weekTbl tbody'), res.weekRows, r=>[
-        `<td>${r.label}</td>`,
-        `<td>${r.holder||'—'}</td>`,
-        `<td class="right">${r.value??'—'}</td>`,
-        `<td class="right">${r.week??'—'}</td>`
-      ]);
-
-      // Sweeps
-      fillTable(qs('#sweepTbl tbody'), res.sweeps, r=>[
-        `<td>${r.type}</td>`,
-        `<td>${r.artist}</td>`,
-        `<td class="right">W${r.week} (${ymd(dateFromWeek(r.week))})</td>`
-      ]);
-
-      // Yearly
-      const yr = computeYearly(data);
-      const sel = qs('#yearSel');
-      sel.innerHTML = yr.years.map(y=>`<option value="${y}">${y}</option>`).join('');
-      sel.value = String(yr.years[yr.years.length-1] || '');
-      const yearBody = qs('#yearTbl tbody');
-      const drawYear = () => {
-        const y = Number(sel.value);
-        const rows = yr.yearRows.get(y) || [];
-        fillTable(yearBody, rows, r=>[
-          `<td>${r.label}</td>`,
-          `<td>${r.holder||'—'}</td>`,
-          `<td class="right">${r.value!=null? (typeof r.value==='number' && r.value>1e6 ? abbr(r.value) : (typeof r.value==='number'?fmtInt(r.value):r.value)) :'—'}</td>`,
-          `<td class="right">${r.note||'—'}</td>`
-        ]);
-      };
-      sel.addEventListener('change', drawYear);
-      drawYear();
-
-    }catch(err){
-      console.error(err);
-      qs('#meta').textContent = 'Error computing records. See console for details.';
-    }
-  })();
-</script>
-</body>
-</html>
+     
