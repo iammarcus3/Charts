@@ -2,450 +2,1040 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Chart Records • weekdata.js</title>
+  <title>Chart Records Explorer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Must load first -->
+  <!-- weekdata must load first -->
   <script src="weekdata.js"></script>
   <style>
     :root{
-      /* Light theme */
-      --bg:#f7f8fb; --ink:#1b1e28; --muted:#596078; --panel:#ffffff; --panel-2:#f1f3f8;
-      --border:#e4e7ee; --accent:#375dfb; --accent-2:#00a0a6; --chip:#eef2ff; --shadow:0 8px 28px rgba(0,0,0,.06);
-      --zebra:#fafbff; --hover:#f0f4ff; --sticky:rgba(255,255,255,.88);
+      --bg: #fcfcfd;
+      --panel: #ffffff;
+      --ink: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --accent-2: #0ea5e9;
+      --accent-3: #22c55e;
+      --table-head: #f3f4f6;
+      --tab-bg: #f1f5f9;
+      --shadow: 0 10px 18px rgba(0,0,0,0.06);
+      --ring: 0 0 0 3px rgba(37,99,235,0.15);
     }
     [data-theme="dark"]{
-      /* Dark theme */
-      --bg:#0c0f15; --ink:#e9edf5; --muted:#9aa3b2; --panel:#121725; --panel-2:#0e1320;
-      --border:#242b3b; --accent:#6ea5ff; --accent-2:#18d2d8; --chip:#11192c; --shadow:0 8px 28px rgba(0,0,0,.35);
-      --zebra:#141a2b; --hover:#1a2236; --sticky:rgba(18,23,37,.88);
+      --bg: #0d0f14;
+      --panel: #12151c;
+      --ink: #e5e7eb;
+      --muted: #a1a1aa;
+      --border: #1f2632;
+      --accent: #60a5fa;
+      --accent-2: #38bdf8;
+      --accent-3: #34d399;
+      --table-head: #121923;
+      --tab-bg: #0e131b;
+      --shadow: 0 10px 18px rgba(0,0,0,0.45);
+      --ring: 0 0 0 3px rgba(96,165,250,0.20);
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,Segoe UI,Roboto,Arial}
-
-    /* Layout */
-    .wrap{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-    .side{
-      background:var(--panel-2);border-right:1px solid var(--border);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto
+    body{
+      margin:0; background: var(--bg); color: var(--ink);
+      font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
-    .brand{display:flex;align-items:center;gap:10px;margin:6px 4px 12px}
-    .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 0 0 4px color-mix(in oklab, var(--accent) 15%, transparent)}
-    .brand h1{font-size:15px;letter-spacing:.12em;text-transform:uppercase;margin:0}
-    .nav{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-    .nav button{
-      text-align:left;background:transparent;border:1px solid transparent;color:var(--ink);padding:10px 12px;border-radius:10px;cursor:pointer
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    header{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px;
     }
-    .nav button:hover{background:var(--panel);border-color:var(--border)}
-    .nav button.active{background:var(--chip);border-color:color-mix(in oklab, var(--accent) 40%, var(--border));color:var(--accent);font-weight:600}
-
-    .topbar{
-      display:flex;justify-content:space-between;align-items:center;padding:18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--panel);z-index:3
+    .title{
+      display:flex; align-items:center; gap:12px;
     }
-    .topbar .meta{display:flex;gap:10px;flex-wrap:wrap}
-    .chip{
-      background:var(--chip);color:var(--ink);padding:6px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px
+    .logo{
+      width:40px;height:40px; border-radius:10px; background:
+        conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
+      box-shadow: var(--shadow);
     }
-    .toggles{display:flex;gap:8px}
-    .btn, select{
-      background:var(--panel);border:1px solid var(--border);color:var(--ink);border-radius:10px;padding:8px 10px;cursor:pointer
+    h1{margin:0;font-size:20px;letter-spacing:.02em}
+    .sub{color:var(--muted); font-size:12px}
+    .controls{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    button, select{
+      background:var(--panel); border:1px solid var(--border); color:var(--ink);
+      padding:8px 10px; border-radius:10px; cursor:pointer;
+      box-shadow: var(--shadow);
     }
-    .btn:hover, select:hover{background:var(--hover)}
-    .content{padding:20px;display:grid;gap:16px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:16px}
-    .panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
-    .head{position:sticky;top:0;background:linear-gradient(0deg, transparent, var(--sticky));backdrop-filter:blur(8px);padding:12px 14px;border-bottom:1px solid var(--border)}
-    .head h2{margin:0;font-size:14px;letter-spacing:.12em;text-transform:uppercase}
-    .sub{margin-top:4px;color:var(--muted);font-size:12px}
-    .actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 4px}
-    .stat{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:10px}
-    .stat b{display:block;font-size:20px}
+    button:hover, select:hover{box-shadow: var(--ring)}
+    .tabs{
+      display:flex; gap:6px; flex-wrap:wrap; background:var(--tab-bg);
+      padding:6px; border:1px solid var(--border); border-radius:12px;
+    }
+    .tab{
+      background:var(--panel); border:1px solid var(--border);
+      padding:8px 12px; border-radius:10px; cursor:pointer; color:var(--muted);
+    }
+    .tab.active{color:var(--ink); border-color:var(--accent); box-shadow: var(--ring); font-weight:600}
+    .panels{margin-top:14px}
+    .panel{
+      display:none; background:var(--panel); border:1px solid var(--border); border-radius:14px;
+      padding:14px; box-shadow: var(--shadow);
+    }
+    .panel.active{display:block}
+    .panel h2{
+      margin:0 0 6px; font-size:14px; letter-spacing:.08em; text-transform:uppercase;
+    }
+    .meta{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:8px; color:var(--muted); font-size:12px;
+    }
+    table{width:100%; border-collapse:collapse; margin-top:8px; font-size:13px}
+    th, td{padding:10px;border-bottom:1px solid var(--border); vertical-align:top}
+    thead th{background:var(--table-head); position:sticky; top:0; z-index:1}
+    td.right, th.right{text-align:right}
+    .row-muted{color:var(--muted)}
+    .toolbar{
+      display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin:4px 0 8px;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px;
+      border:1px solid var(--border); background:var(--panel); color:var(--muted);
+    }
     .accent{color:var(--accent)}
     .mono{font-variant-numeric:tabular-nums}
-
-    /* Table */
-    table{width:100%;border-collapse:collapse}
-    th, td{padding:10px;border-bottom:1px solid var(--border);vertical-align:top}
-    tbody tr:nth-child(odd){background:var(--zebra)}
-    tbody tr:hover{background:var(--hover)}
-    th{position:sticky;top:58px;background:var(--sticky);text-align:left;color:var(--muted);font-weight:600}
-    .right{text-align:right}
-    .empty{padding:16px;color:var(--muted);font-style:italic}
-    .tag{display:inline-block;background:var(--chip);border:1px solid var(--border);padding:2px 8px;border-radius:999px;color:var(--accent);font-size:11px;margin-left:6px}
-
-    .hidden{display:none}
+    .footer{margin:18px 0 0; color:var(--muted); font-size:12px}
+    .spacer{flex:1}
+    .toggle{
+      display:inline-flex; gap:8px; align-items:center; padding:8px 12px; border-radius:10px;
+      border:1px solid var(--border); background:var(--panel); cursor:pointer; user-select:none;
+    }
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+    .hint{color:var(--muted); font-size:12px; margin-left:6px}
+    .inline-controls{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    .badge{
+      display:inline-block; font-size:11px; padding:3px 8px; border-radius:999px;
+      background:linear-gradient(90deg, var(--accent), var(--accent-2)); color:white; margin-left:8px;
+    }
+    .empty{color:var(--muted); font-style:italic; padding:8px}
   </style>
 </head>
 <body>
-  <div class="wrap" id="app" data-theme="light">
-    <!-- Sidebar -->
-    <aside class="side">
-      <div class="brand">
-        <div class="dot"></div>
-        <h1>Chart Records</h1>
+<div class="wrap" id="app">
+  <header>
+    <div class="title">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Chart Records Explorer <span class="badge">v2</span></h1>
+        <div class="sub">Explore all-time and yearly records computed from <code>weekdata.js</code></div>
       </div>
-      <div class="nav" id="nav">
-        <button data-view="overview" class="active">Overview</button>
-        <button data-view="formats">Formats & Points</button>
-        <button data-view="artists">Artist Aggregates</button>
-        <button data-view="albums">Album-linked</button>
-        <button data-view="weeks">Week Dominance</button>
-        <button data-view="sweeps">Sweep Weeks</button>
-        <button data-view="year">Year-by-Year Leaders</button>
-      </div>
-    </aside>
+    </div>
+    <div class="controls">
+      <div class="pill" id="meta">Loading…</div>
+      <button id="exportBtn">⬇️ Export CSV (current tab)</button>
+      <label class="toggle" id="themeToggle"><span class="dot"></span> Theme</label>
+    </div>
+  </header>
 
-    <!-- Main -->
-    <main>
-      <div class="topbar">
-        <div class="meta">
-          <span id="meta" class="chip">Loading…</span>
-          <span class="chip">Week 1 = 2018-02-23</span>
-          <span class="chip">Ranks derived by points → per week</span>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="overview">Overview</button>
+    <button class="tab" data-tab="formats">Formats/Points</button>
+    <button class="tab" data-tab="artists">Artists</button>
+    <button class="tab" data-tab="albums">Albums</button>
+    <button class="tab" data-tab="weeks">Weeks</button>
+    <button class="tab" data-tab="sweeps">Sweeps</button>
+    <button class="tab" data-tab="yearly">Yearly Leaders</button>
+  </nav>
+
+  <section class="panels">
+    <!-- Overview -->
+    <div class="panel active" id="panel-overview">
+      <div class="toolbar">
+        <h2>Hot-100 style milestones</h2>
+        <div class="inline-controls">
+          <span class="hint">Movement, longevity, #1 dynamics, volatility</span>
         </div>
-        <div class="toggles">
-          <button class="btn" id="themeBtn">🌗 Theme</button>
+      </div>
+      <table id="hotTbl">
+        <thead><tr><th>Milestone</th><th>Holder</th><th class="right">Value</th><th class="right">Week(s)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="meta">
+        <span>Sorted by <strong>points</strong> → rank per week</span>
+        <span>Week 1 = 2018-02-23</span>
+      </div>
+    </div>
+
+    <!-- Formats -->
+    <div class="panel" id="panel-formats">
+      <div class="toolbar">
+        <h2>Format & points milestones</h2>
+        <div class="inline-controls">
+          <label>
+            <select id="rankScopeSel">
+              <option value="any">Any rank</option>
+              <option value="rank1">#1 weeks only</option>
+            </select>
+          </label>
+          <span class="hint">Switch to restrict records to #1 weeks</span>
         </div>
       </div>
+      <table id="formatTbl">
+        <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-      <div class="content">
-        <!-- Overview -->
-        <section id="view-overview" class="panel">
-          <div class="head">
-            <h2>Hot-100-style milestones <span class="tag">Movement • Longevity • #1 Dynamics</span></h2>
-            <div class="actions">
-              <button class="btn" onclick="downloadCSV('hotTbl')">⬇️ Export CSV</button>
-            </div>
-          </div>
-          <div class="stats">
-            <div class="stat"><span class="muted">Weeks Loaded</span><b id="statWeeks" class="mono accent">—</b></div>
-            <div class="stat"><span class="muted">Songs</span><b id="statSongs" class="mono">—</b></div>
-            <div class="stat"><span class="muted">Artists</span><b id="statArtists" class="mono">—</b></div>
-          </div>
-          <div class="table-wrap">
-            <table id="hotTbl">
-              <thead><tr><th>Milestone</th><th>Holder</th><th class="right">Value</th><th class="right">Week(s)</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </section>
+    <!-- Artists -->
+    <div class="panel" id="panel-artists">
+      <div class="toolbar"><h2>Artist aggregates</h2></div>
+      <table id="artistTbl">
+        <thead><tr><th>Record</th><th>Artist</th><th class="right">Value</th><th class="right">Span / Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-        <!-- Formats -->
-        <section id="view-formats" class="panel hidden">
-          <div class="head">
-            <h2>Format & Points Milestones</h2>
-            <div class="sub">Toggle scope to see extremes at #1 only vs anywhere on the chart.</div>
-            <div class="actions">
-              <select id="rankScopeSel">
-                <option value="any">Any rank</option>
-                <option value="rank1">#1 weeks only</option>
-              </select>
-              <button class="btn" onclick="downloadCSV('formatTbl')">⬇️ Export CSV</button>
-            </div>
-          </div>
-          <table id="formatTbl">
-            <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </section>
+    <!-- Albums -->
+    <div class="panel" id="panel-albums">
+      <div class="toolbar"><h2>Album-linked records</h2></div>
+      <table id="albumTbl">
+        <thead><tr><th>Record</th><th>Album</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-        <!-- Artists -->
-        <section id="view-artists" class="panel hidden">
-          <div class="head">
-            <h2>Artist Aggregates</h2>
-            <div class="actions">
-              <button class="btn" onclick="downloadCSV('artistTbl')">⬇️ Export CSV</button>
-            </div>
-          </div>
-          <table id="artistTbl">
-            <thead><tr><th>Record</th><th>Artist</th><th class="right">Value</th><th class="right">Span / Week</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </section>
+    <!-- Weeks -->
+    <div class="panel" id="panel-weeks">
+      <div class="toolbar"><h2>Week dominance</h2></div>
+      <table id="weekTbl">
+        <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-        <!-- Albums -->
-        <section id="view-albums" class="panel hidden">
-          <div class="head">
-            <h2>Album-linked Records</h2>
-            <div class="actions">
-              <button class="btn" onclick="downloadCSV('albumTbl')">⬇️ Export CSV</button>
-            </div>
-          </div>
-          <table id="albumTbl">
-            <thead><tr><th>Record</th><th>Album</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </section>
+    <!-- Sweeps -->
+    <div class="panel" id="panel-sweeps">
+      <div class="toolbar"><h2>Sweep weeks</h2><span class="hint">Top-3, Top-5 and Top-10 sweeps by a single artist</span></div>
+      <table id="sweepTbl">
+        <thead><tr><th>Type</th><th>Artist</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-        <!-- Weeks -->
-        <section id="view-weeks" class="panel hidden">
-          <div class="head">
-            <h2>Week Dominance</h2>
-            <div class="actions">
-              <button class="btn" onclick="downloadCSV('weekTbl')">⬇️ Export CSV</button>
-            </div>
-          </div>
-          <table id="weekTbl">
-            <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </section>
-
-        <!-- Sweeps -->
-        <section id="view-sweeps" class="panel hidden">
-          <div class="head">
-            <h2>Sweep Weeks</h2>
-            <div class="sub">All-artist sweeps of Top-3, Top-5, Top-10.</div>
-            <div class="actions">
-              <button class="btn" onclick="downloadCSV('sweepTbl')">⬇️ Export CSV</button>
-            </div>
-          </div>
-          <table id="sweepTbl">
-            <thead><tr><th>Type</th><th>Artist</th><th class="right">Week</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </section>
-
-        <!-- Year -->
-        <section id="view-year" class="panel hidden">
-          <div class="head">
-            <h2>Year-by-Year Leaders</h2>
-            <div class="actions">
-              <select id="yearSel"></select>
-              <button class="btn" onclick="downloadCSV('yearTbl')">⬇️ Export CSV</button>
-            </div>
-          </div>
-          <table id="yearTbl">
-            <thead><tr><th>Metric</th><th>Holder</th><th class="right">Value</th><th class="right">Week / Note</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </section>
+    <!-- Yearly -->
+    <div class="panel" id="panel-yearly">
+      <div class="toolbar">
+        <h2>Year-by-Year Leaders</h2>
+        <div class="inline-controls">
+          <select id="yearSel"></select>
+          <span class="hint">Metrics reflect chart weeks whose dates fall inside the chosen calendar year</span>
+        </div>
       </div>
-    </main>
+      <table id="yearTbl">
+        <thead><tr><th>Metric</th><th>Holder</th><th class="right">Value</th><th class="right">Week / Note</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer">
+    Pro-tip: click the theme toggle for a comfy night mode 🌙
   </div>
+</div>
 
-  <script>
-    // ---------- helpers ----------
-    const nz = (v, d=0)=> (Number.isFinite(+v) ? +v : d);
-    const fmtInt = n => Number(n ?? 0).toLocaleString('en-US');
-    const abbr = n => { n=nz(n,0); const a=Math.abs(n);
-      if(a>=1e12) return (n/1e12).toFixed(2).replace(/\.0+$/,'')+'T';
-      if(a>=1e9)  return (n/1e9 ).toFixed(2).replace(/\.0+$/,'')+'B';
-      if(a>=1e6)  return (n/1e6 ).toFixed(2).replace(/\.0+$/,'')+'M';
-      if(a>=1e3)  return (n/1e3 ).toFixed(2).replace(/\.0+$/,'')+'K';
-      return String(n);
-    };
-    const BASE = new Date(Date.UTC(2018,1,23)); // 2018-02-23 UTC
-    const dateFromWeek = w => { const d=new Date(BASE); d.setUTCDate(d.getUTCDate()+((w-1)|0)*7); return d; };
-    const ymd = d => (d && isFinite(d)) ? new Date(d).toISOString().slice(0,10) : '—';
-    const norm = t => String(t??'').toLowerCase().replace(/\(.*?\)|\[.*?]|feat\..*/g,'').replace(/[^a-z0-9]/g,'');
-    const songDisp = r => `${r.title} — ${r.artist}`;
-    const nkey = (title,artist) => norm(title)+'｜'+norm(artist);
-    const isValidAlbum = a => !!a && typeof a==='string' && a.trim().toLowerCase()!=='nan';
+<script>
+  /* ----------------------------- Helpers & UI ----------------------------- */
+  const qs = s => document.querySelector(s);
+  const qsa = s => Array.from(document.querySelectorAll(s));
 
-    function downloadCSV(tableId){
-      const table = document.getElementById(tableId);
-      const rows = [...table.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>`"${td.innerText.replace(/"/g,'""')}"`).join(','));
-      const csv = rows.join('\n');
-      const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = tableId + '.csv'; a.click(); URL.revokeObjectURL(url);
+  // Theme
+  const root = document.documentElement;
+  const themeToggle = qs('#themeToggle');
+  const savedTheme = localStorage.getItem('records_theme') || 'light';
+  if (savedTheme === 'dark') root.setAttribute('data-theme', 'dark');
+  themeToggle.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('records_theme', next);
+  });
+
+  // Tabs
+  const tabsEl = qs('#tabs');
+  tabsEl.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('tab')) return;
+    const t = e.target.getAttribute('data-tab');
+    qsa('.tab').forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === t));
+    qsa('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + t));
+  });
+
+  // CSV export (current panel)
+  qs('#exportBtn').addEventListener('click', () => {
+    const active = qs('.panel.active');
+    if (!active) return;
+    const table = active.querySelector('table');
+    if (!table) return;
+    downloadCSVFromTable(table, active.id.replace('panel-','') + '.csv');
+  });
+
+  function downloadCSVFromTable(table, filename){
+    const rows = [...table.querySelectorAll('tr')].map(tr =>
+      [...tr.children].map(td => `"${td.innerText.replace(/"/g,'""')}"`).join(',')
+    ).join('\n');
+    const blob = new Blob([rows], {type:'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Number formats
+  const nz = (v, d=0)=> (Number.isFinite(+v) ? +v : d);
+  const fmtInt = n => Number(n ?? 0).toLocaleString('en-US');
+  const abbr = n => { n=nz(n,0); const a=Math.abs(n);
+    if(a>=1e12) return (n/1e12).toFixed(2).replace(/\.0+$/,'')+'T';
+    if(a>=1e9)  return (n/1e9 ).toFixed(2).replace(/\.0+$/,'')+'B';
+    if(a>=1e6)  return (n/1e6 ).toFixed(2).replace(/\.0+$/,'')+'M';
+    if(a>=1e3)  return (n/1e3 ).toFixed(2).replace(/\.0+$/,'')+'K';
+    return String(n);
+  };
+
+  // Dates & keys
+  const BASE = new Date(Date.UTC(2018,1,23)); // 2018-02-23 UTC
+  const dateFromWeek = w => { const d=new Date(BASE); d.setUTCDate(d.getUTCDate()+((w-1)|0)*7); return d; };
+  const ymd = d => (d && isFinite(d)) ? new Date(d).toISOString().slice(0,10) : '—';
+  const norm = t => String(t??'').toLowerCase().replace(/\(.*?\)|\[.*?]|feat\..*/g,'').replace(/[^a-z0-9]/g,'');
+  const songDisp = r => `${r.title} — ${r.artist}`;
+  const nkey = (title,artist) => norm(title)+'｜'+norm(artist);
+  const isValidAlbum = a => !!a && typeof a==='string' && a.trim().toLowerCase()!=='nan';
+
+  // Render helper
+  function fillTable(tbody, rows, cols){
+    tbody.innerHTML = '';
+    if (!rows || rows.length === 0){
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="empty" colspan="${tbody.parentElement.tHead.rows[0].cells.length}">— No records found —</td>`;
+      tbody.appendChild(tr);
+      return;
     }
+    rows.forEach(r => {
+      const tr = document.createElement('tr');
+      const parts = (typeof cols === 'function') ? cols(r)
+                   : (Array.isArray(cols) ? cols.map(fn => fn(r)) : []);
+      tr.innerHTML = (Array.isArray(parts) ? parts : [parts]).join('');
+      tbody.appendChild(tr);
+    });
+  }
 
-    // ---------- derive ranks from points per week ----------
-    function buildWeeklyRanks(data){
-      const weeks = Object.keys(data||{}).map(Number).sort((a,b)=>a-b);
-      const ranked = new Map();
-      for (const w of weeks){
-        const rows = (data[w]||[])
-          .filter(r => r && r.title && r.artist)
-          .map(r => ({
-            title:String(r.title), artist:String(r.artist),
-            points:nz(r.points), streams:nz(r.streams), radio:nz(r.radio), sales:nz(r.sales),
-            plays:nz(r.plays), album:r.album
-          }))
-          .sort((a,b)=> b.points - a.points);
-        rows.forEach((r,i)=> r.rank = i+1);
-        ranked.set(w, rows);
+  /* ----------------------------- Core logic ------------------------------ */
+  function buildWeeklyRanks(data){
+    const weeks = Object.keys(data||{}).map(Number).sort((a,b)=>a-b);
+    const ranked = new Map();
+    for (const w of weeks){
+      const rows = (data[w]||[])
+        .filter(r => r && r.title && r.artist)
+        .map(r => ({
+          title:String(r.title), artist:String(r.artist),
+          points:nz(r.points), streams:nz(r.streams), radio:nz(r.radio), sales:nz(r.sales),
+          plays:nz(r.plays), album:r.album
+        }))
+        .sort((a,b)=> b.points - a.points);
+      rows.forEach((r,i)=> r.rank = i+1);
+      ranked.set(w, rows);
+    }
+    return ranked;
+  }
+
+  function computeAll(raw){
+    const ranked = buildWeeklyRanks(raw);
+    const weeks = [...ranked.keys()].sort((a,b)=>a-b);
+
+    const songHist = new Map();   // key -> [{week, rank, points, streams, radio, sales}]
+    const displayFor = new Map(); // key -> "Title — Artist"
+    const artistSongSet = new Map();
+    const albumSongSet = new Map();
+    const albumStreamsCume = new Map();
+
+    const artistNo1Weeks = new Map();
+    const artistTop10Weeks = new Map();
+    const artistTop5Weeks = new Map();
+    const artistTop10SimulMax = new Map();
+    const artistTop5SimulMax = new Map();
+
+    const streamsBySong = new Map();
+    const pointsBySong  = new Map();
+    const streamsByArtist = new Map();
+    const pointsByArtist  = new Map();
+    const yearlyStreamsByArtist = new Map();
+
+    const streamWeekChamp = new Map();
+    const radioWeekChamp  = new Map();
+    const salesWeekChamp  = new Map();
+    const pointsWeekChamp = new Map();
+
+    let bestArtistWeekStreams = {artist:null, week:null, value:-Infinity};
+    let bestArtistWeekPoints  = {artist:null, week:null, value:-Infinity};
+    let mostDebutsWeek = {week:null, count:0};
+    let mostReentriesWeek = {week:null, count:0};
+
+    let heaviestTop10WeekStreams = {week:null, total:-Infinity};
+    let heaviestTop10WeekPoints  = {week:null, total:-Infinity};
+
+    let biggestStream = {key:null, value:-Infinity, week:null};
+    let biggestStreamRank1 = {key:null, value:-Infinity, week:null};
+    let biggestPoints = {key:null, value:-Infinity, week:null};
+    let biggestPointsRank1 = {key:null, value:-Infinity, week:null};
+    let highestRadio = {key:null, value:-Infinity, week:null};
+    let highestRadioRank1 = {key:null, value:-Infinity, week:null};
+    let highestSales = {key:null, value:-Infinity, week:null};
+    let highestSalesRank1 = {key:null, value:-Infinity, week:null};
+    let highestStreamsOutsideTop10 = {key:null, value:-Infinity, week:null, rank:null};
+
+    const artistPair12Count = new Map();
+    const sweeps = [];
+
+    let albumSimulTop10 = {album:null, week:null, count:0};
+    let albumBestWeekStreams = {album:null, week:null, value:-Infinity};
+
+    let maxEntriesOneWeek = {artist:null, week:null, count:0};
+
+    // Track debuts & reentries globally to find "most debuts in a week", etc.
+    const firstSeen = new Map();
+    const lastSeen  = new Map();
+
+    for (const w of weeks){
+      const rows = ranked.get(w) || [];
+      if (!rows.length) continue;
+
+      const artistCountAll = new Map();
+      const artistCountTop10 = new Map();
+      const artistCountTop5 = new Map();
+      const artistWeekStreams = new Map();
+      const artistWeekPoints  = new Map();
+
+      const albumTop10Count = new Map();
+      const albumWeekStreams = new Map();
+
+      let top10StreamsSum = 0;
+      let top10PointsSum  = 0;
+
+      const top3 = rows.slice(0,3), top5 = rows.slice(0,5), top10 = rows.slice(0,10);
+      if (top10.length===10 && new Set(top10.map(r=>r.artist)).size===1) sweeps.push({type:'Top 10 sweep', artist:top10[0].artist, week:w});
+      if (top5.length===5 && new Set(top5.map(r=>r.artist)).size===1)  sweeps.push({type:'Top 5 sweep',  artist:top5[0].artist,  week:w});
+      if (top3.length===3 && new Set(top3.map(r=>r.artist)).size===1)  sweeps.push({type:'Top 3 sweep',  artist:top3[0].artist,  week:w});
+
+      if (rows[0] && rows[1] && rows[0].artist === rows[1].artist){
+        const a = rows[0].artist;
+        artistPair12Count.set(a, (artistPair12Count.get(a)||0)+1);
       }
-      return ranked;
-    }
 
-    // ---------- full-records computation ----------
-    function computeAll(raw){
-      const ranked = buildWeeklyRanks(raw);
-      const weeks = [...ranked.keys()].sort((a,b)=>a-b);
+      let weekTopStream = {key:null, value:-Infinity};
+      let weekTopStreamRank1 = {key:null, value:-Infinity};
+      let weekTopPoints = {key:null, value:-Infinity};
+      let weekTopPointsRank1 = {key:null, value:-Infinity};
+      let weekTopRadio = {key:null, value:-Infinity};
+      let weekTopRadioRank1 = {key:null, value:-Infinity};
+      let weekTopSales = {key:null, value:-Infinity};
+      let weekTopSalesRank1 = {key:null, value:-Infinity};
 
-      const songHist = new Map();   // normalized -> [{week,rank,points,streams,radio,sales}]
-      const displayFor = new Map(); // normalized -> "Title — Artist"
-      const artistSongSet = new Map();
-      const albumSongSet = new Map();
-      const albumStreamsCume = new Map();
+      let wkDebuts = 0, wkReentries = 0;
 
-      const artistNo1Weeks = new Map();
-      const artistTop10Weeks = new Map();
-      const artistTop5Weeks = new Map();
-      const artistTop10SimulMax = new Map();
-      const artistTop5SimulMax = new Map();
+      for (const r of rows){
+        const keyN = nkey(r.title, r.artist);
 
-      const streamsBySong = new Map();
-      const pointsBySong  = new Map();
-      const streamsByArtist = new Map();
-      const pointsByArtist  = new Map();
-      const yearlyStreamsByArtist = new Map();
+        if (!firstSeen.has(keyN)){
+          firstSeen.set(keyN, w);
+          wkDebuts++;
+        } else {
+          const last = lastSeen.get(keyN);
+          if (typeof last === 'number' && w - last > 1) wkReentries++;
+        }
+        lastSeen.set(keyN, w);
 
-      const streamWeekChamp = new Map();
-      const radioWeekChamp  = new Map();
-      const salesWeekChamp  = new Map();
-      const pointsWeekChamp = new Map();
+        if (!songHist.has(keyN)) songHist.set(keyN, []);
+        songHist.get(keyN).push({week:w, rank:r.rank, points:r.points, streams:r.streams, radio:r.radio, sales:r.sales});
+        displayFor.set(keyN, songDisp(r));
 
-      let heaviestTop10WeekStreams = {week:null, total:-Infinity};
-      let heaviestTop10WeekPoints  = {week:null, total:-Infinity};
+        if (!artistSongSet.has(r.artist)) artistSongSet.set(r.artist, new Set());
+        artistSongSet.get(r.artist).add(keyN);
 
-      let biggestStream = {key:null, value:-Infinity, week:null};
-      let biggestStreamRank1 = {key:null, value:-Infinity, week:null};
-      let biggestPoints = {key:null, value:-Infinity, week:null};
-      let biggestPointsRank1 = {key:null, value:-Infinity, week:null};
-      let highestRadio = {key:null, value:-Infinity, week:null};
-      let highestRadioRank1 = {key:null, value:-Infinity, week:null};
-      let highestSales = {key:null, value:-Infinity, week:null};
-      let highestSalesRank1 = {key:null, value:-Infinity, week:null};
-      let highestStreamsOutsideTop10 = {key:null, value:-Infinity, week:null, rank:null};
+        artistCountAll.set(r.artist, (artistCountAll.get(r.artist)||0) + 1);
+        if (r.rank<=10) artistCountTop10.set(r.artist, (artistCountTop10.get(r.artist)||0) + 1);
+        if (r.rank<=5)  artistCountTop5.set(r.artist,  (artistCountTop5.get(r.artist)||0) + 1);
 
-      let maxEntriesOneWeek = {artist:null, week:null, count:0};
-      let mostDebutsWeek = {week:null, count:0};
-      let mostReentriesWeek = {week:null, count:0};
-      let bestArtistWeekStreams = {artist:null, week:null, value:-Infinity};
-      let bestArtistWeekPoints  = {artist:null, week:null, value:-Infinity};
-      const artistPair12Count = new Map();
-      const sweeps = [];
+        if (r.rank===1) artistNo1Weeks.set(r.artist, (artistNo1Weeks.get(r.artist)||0)+1);
 
-      for (const w of weeks){
-        const rows = ranked.get(w) || [];
-        if (!rows.length) continue;
+        artistWeekStreams.set(r.artist, (artistWeekStreams.get(r.artist)||0) + r.streams);
+        artistWeekPoints.set(r.artist,  (artistWeekPoints.get(r.artist)||0)  + r.points);
 
-        const artistCountAll = new Map();
-        const artistCountTop10 = new Map();
-        const artistCountTop5 = new Map();
-        const artistWeekStreams = new Map();
-        const artistWeekPoints  = new Map();
+        if (isValidAlbum(r.album)){
+          if (!albumSongSet.has(r.album)) albumSongSet.set(r.album, new Set());
+          albumSongSet.get(r.album).add(keyN);
 
-        let top10StreamsSum = 0;
-        let top10PointsSum  = 0;
-
-        const top3 = rows.slice(0,3), top5 = rows.slice(0,5), top10 = rows.slice(0,10);
-        if (top10.length===10 && new Set(top10.map(r=>r.artist)).size===1) sweeps.push({type:'Top 10 sweep', artist:top10[0].artist, week:w});
-        if (top5.length===5 && new Set(top5.map(r=>r.artist)).size===1)  sweeps.push({type:'Top 5 sweep',  artist:top5[0].artist,  week:w});
-        if (top3.length===3 && new Set(top3.map(r=>r.artist)).size===1)  sweeps.push({type:'Top 3 sweep',  artist:top3[0].artist,  week:w});
-
-        if (rows[0] && rows[1] && rows[0].artist === rows[1].artist){
-          const a = rows[0].artist;
-          artistPair12Count.set(a, (artistPair12Count.get(a)||0)+1);
+          albumStreamsCume.set(r.album, (albumStreamsCume.get(r.album)||0) + r.streams);
+          if (r.rank<=10) albumTop10Count.set(r.album, (albumTop10Count.get(r.album)||0)+1);
+          albumWeekStreams.set(r.album, (albumWeekStreams.get(r.album)||0)+r.streams);
         }
 
-        let weekTopStream = {key:null, value:-Infinity};
-        let weekTopStreamRank1 = {key:null, value:-Infinity};
-        let weekTopPoints = {key:null, value:-Infinity};
-        let weekTopPointsRank1 = {key:null, value:-Infinity};
-        let weekTopRadio = {key:null, value:-Infinity};
-        let weekTopRadioRank1 = {key:null, value:-Infinity};
-        let weekTopSales = {key:null, value:-Infinity};
-        let weekTopSalesRank1 = {key:null, value:-Infinity};
+        if (r.rank<=10){
+          top10StreamsSum += r.streams;
+          top10PointsSum  += r.points;
+        }
 
-        let wkDebuts = 0, wkReentries = 0;
-        const seenThisWeek = new Set();
+        streamsBySong.set(keyN, (streamsBySong.get(keyN)||0)+r.streams);
+        pointsBySong.set(keyN,  (pointsBySong.get(keyN)||0)+r.points);
 
-        for (const r of rows){
-          const keyN = nkey(r.title, r.artist);
-          if (!seenThisWeek.has(keyN)){
-            if (!songHist.has(keyN)){ wkDebuts++; songHist.set(keyN, []); }
-            else {
-              const last = songHist.get(keyN).at(-1)?.week;
-              if (typeof last === 'number' && w - last > 1) wkReentries++;
-            }
-            seenThisWeek.add(keyN);
-          }
+        streamsByArtist.set(r.artist, (streamsByArtist.get(r.artist)||0)+r.streams);
+        pointsByArtist.set(r.artist,  (pointsByArtist.get(r.artist)||0)+r.points);
+        const year = dateFromWeek(w).getUTCFullYear();
+        if (!yearlyStreamsByArtist.has(year)) yearlyStreamsByArtist.set(year, new Map());
+        const ymap = yearlyStreamsByArtist.get(year);
+        ymap.set(r.artist, (ymap.get(r.artist)||0)+r.streams);
 
-          songHist.get(keyN).push({week:w, rank:r.rank, points:r.points, streams:r.streams, radio:r.radio, sales:r.sales});
-          displayFor.set(keyN, songDisp(r));
+        if (r.streams > weekTopStream.value) weekTopStream = {key:keyN, value:r.streams};
+        if (r.points  > weekTopPoints.value) weekTopPoints = {key:keyN, value:r.points};
+        if (r.radio   > weekTopRadio.value)  weekTopRadio  = {key:keyN, value:r.radio};
+        if (r.sales   > weekTopSales.value)  weekTopSales  = {key:keyN, value:r.sales};
 
-          if (!artistSongSet.has(r.artist)) artistSongSet.set(r.artist, new Set());
-          artistSongSet.get(r.artist).add(keyN);
+        if (r.rank===1){
+          if (r.streams > weekTopStreamRank1.value) weekTopStreamRank1 = {key:keyN, value:r.streams};
+          if (r.points  > weekTopPointsRank1.value) weekTopPointsRank1 = {key:keyN, value:r.points};
+          if (r.radio   > weekTopRadioRank1.value)  weekTopRadioRank1  = {key:keyN, value:r.radio};
+          if (r.sales   > weekTopSalesRank1.value)  weekTopSalesRank1  = {key:keyN, value:r.sales};
+        }
 
-          artistCountAll.set(r.artist, (artistCountAll.get(r.artist)||0) + 1);
-          if (r.rank<=10) artistCountTop10.set(r.artist, (artistCountTop10.get(r.artist)||0) + 1);
-          if (r.rank<=5)  artistCountTop5.set(r.artist,  (artistCountTop5.get(r.artist)||0) + 1);
-
-          if (r.rank===1) artistNo1Weeks.set(r.artist, (artistNo1Weeks.get(r.artist)||0)+1);
-
-          artistWeekStreams.set(r.artist, (artistWeekStreams.get(r.artist)||0) + r.streams);
-          artistWeekPoints.set(r.artist,  (artistWeekPoints.get(r.artist)||0)  + r.points);
-
-          if (isValidAlbum(r.album)){
-            if (!albumSongSet.has(r.album)) albumSongSet.set(r.album, new Set());
-            albumSongSet.get(r.album).add(keyN);
-            albumStreamsCume.set(r.album, (albumStreamsCume.get(r.album)||0) + r.streams);
-          }
-
-          if (r.rank<=10){ top10StreamsSum += r.streams; top10PointsSum  += r.points; }
-
-          streamsBySong.set(keyN, (streamsBySong.get(keyN)||0)+r.streams);
-          pointsBySong.set(keyN,  (pointsBySong.get(keyN)||0)+r.points);
-
-          streamsByArtist.set(r.artist, (streamsByArtist.get(r.artist)||0)+r.streams);
-          pointsByArtist.set(r.artist,  (pointsByArtist.get(r.artist)||0)+r.points);
-          const year = dateFromWeek(w).getUTCFullYear();
-          if (!yearlyStreamsByArtist.has(year)) yearlyStreamsByArtist.set(year, new Map());
-          const ymap = yearlyStreamsByArtist.get(year);
-          ymap.set(r.artist, (ymap.get(r.artist)||0)+r.streams);
-
-          if (r.streams > weekTopStream.value) weekTopStream = {key:keyN, value:r.streams};
-          if (r.points  > weekTopPoints.value) weekTopPoints = {key:keyN, value:r.points};
-          if (r.radio   > weekTopRadio.value)  weekTopRadio  = {key:keyN, value:r.radio};
-          if (r.sales   > weekTopSales.value)  weekTopSales  = {key:keyN, value:r.sales};
-
-          if (r.rank===1){
-            if (r.streams > weekTopStreamRank1.value) weekTopStreamRank1 = {key:keyN, value:r.streams};
-            if (r.points  > weekTopPointsRank1.value) weekTopPointsRank1 = {key:keyN, value:r.points};
-            if (r.radio   > weekTopRadioRank1.value)  weekTopRadioRank1  = {key:keyN, value:r.radio};
-            if (r.sales   > weekTopSalesRank1.value)  weekTopSalesRank1  = {key:keyN, value:r.sales};
-          }
-
-          if (r.rank>10 && r.streams > (highestStreamsOutsideTop10.value||-Infinity)) {
-            highestStreamsOutsideTop10 = {key:keyN, value:r.streams, week:w, rank:r.rank};
-          }
-        } // end rows
-
-        if (wkDebuts > (mostDebutsWeek.count||0)) mostDebutsWeek = {week:w, count:wkDebuts};
-        if (wkReentries > (mostReentriesWeek.count||0)) mostReentriesWeek = {week:w, count:wkReentries};
-
-        if (weekTopStream.key){ streamWeekChamp.set(weekTopStream.key, (streamWeekChamp.get(weekTopStream.key)||0)+1); if (weekTopStream.value > (biggestStream.value||-Infinity)) biggestStream = {...weekTopStream, week:w}; }
-        if (weekTopPoints.key){ pointsWeekChamp.set(weekTopPoints.key, (pointsWeekChamp.get(weekTopPoints.key)||0)+1); if (weekTopPoints.value > (biggestPoints.value||-Infinity)) biggestPoints = {...weekTopPoints, week:w}; }
-        if (weekTopRadio.key){  radioWeekChamp.set(weekTopRadio.key, (radioWeekChamp.get(weekTopRadio.key)||0)+1); if (weekTopRadio.value  > (highestRadio.value||-Infinity))  highestRadio  = {...weekTopRadio, week:w}; }
-        if (weekTopSales.key){  salesWeekChamp.set(weekTopSales.key, (salesWeekChamp.get(weekTopSales.key)||0)+1); if (weekTopSales.value  > (highestSales.value||-Infinity))  highestSales  = {...weekTopSales, week:w}; }
-
-        if (weekTopStreamRank1.key && weekTopStreamRank1.value > (biggestStreamRank1.value||-Infinity)) biggestStreamRank1 = {...weekTopStreamRank1, week:w};
-        if (weekTopPointsRank1.key && weekTopPointsRank1.value > (biggestPointsRank1.value||-Infinity)) biggestPointsRank1 = {...weekTopPointsRank1, week:w};
-        if (weekTopRadioRank1.key  && weekTopRadioRank1.value  > (highestRadioRank1.value||-Infinity))  highestRadioRank1  = {...weekTopRadioRank1, week:w};
-        if (weekTopSalesRank1.key  && weekTopSalesRank1.value  > (highestSalesRank1.value||-Infinity))  highestSalesRank1  = {...weekTopSalesRank1, week:w};
-
-        if (top10StreamsSum > (heaviestTop10WeekStreams.total||-Infinity)) heaviestTop10WeekStreams = {week:w, total:top10StreamsSum};
-        if (top10PointsSum  > (heaviestTop10WeekPoints.total||-Infinity))  heaviestTop10WeekPoints  = {week:w, total:top10PointsSum};
-
-        artistWeekStreams.forEach((v,a)=>{ if (v > (bestArtistWeekStreams.value||-Infinity)) bestArtistWeekStreams = {artist:a, week:w, value:v}; });
-        artistWeekPoints.forEach((v,a)=>{ if (v > (bestArtistWeekPoints.value||-Infinity))  bestArtistWeekPoints  = {artist:a, week:w, value:v}; });
-
-        artistCountAll.forEach((cnt,a)=>{ if (cnt > (maxEntriesOneWeek.count||0)) maxEntriesOneWeek = {artist:a, week:w, count:cnt}; });
-        artistCountTop10.forEach((cnt,a)=>{ artistTop10Weeks.set(a, (artistTop10Weeks.get(a)||0) + 1); artistTop10SimulMax.set(a, Math.max(artistTop10SimulMax.get(a)||0, cnt)); });
-        artistCountTop5.forEach((cnt,a)=>{ artistTop5Weeks.set(a, (artistTop5Weeks.get(a)||0) + 1);  artistTop5SimulMax.set(a, Math.max(artistTop5SimulMax.get(a)||0, cnt)); });
+        if (r.rank>10 && r.streams > (highestStreamsOutsideTop10.value||-Infinity)) {
+          highestStreamsOutsideTop10 = {key:keyN, value:r.streams, week:w, rank:r.rank};
+        }
       }
 
-      // per-song summaries
-      let firstNo1 = null, firstDebutNo1 = null;
-      let longestNo1Run = {key:null, len:0, start:null, end:null};
-      let mostWeeksAtNo1Song = {key:null, weeks:0};
-      let mostWeeksOnChart = {key:null, weeks:0};
-      let mostTop10Weeks = {key:null, weeks:0};
-      let mostTop5Weeks = {key:null, weeks:0};
-      let mostWeeksAt2NoNo1 = {key:null, weeksAt2:0};
-      let biggestJumpTo1 = {key:null, fromRank:null, week:null, jump:0};
-      let biggestFallFrom1 = {key:null, toRank:null, week:null
+      if (wkDebuts > (mostDebutsWeek.count||0)) mostDebutsWeek = {week:w, count:wkDebuts};
+      if (wkReentries > (mostReentriesWeek.count||0)) mostReentriesWeek = {week:w, count:wkReentries};
+
+      if (weekTopStream.key){ streamWeekChamp.set(weekTopStream.key, (streamWeekChamp.get(weekTopStream.key)||0)+1); if (weekTopStream.value > (biggestStream.value||-Infinity)) biggestStream = {...weekTopStream, week:w}; }
+      if (weekTopPoints.key){ pointsWeekChamp.set(weekTopPoints.key, (pointsWeekChamp.get(weekTopPoints.key)||0)+1); if (weekTopPoints.value > (biggestPoints.value||-Infinity)) biggestPoints = {...weekTopPoints, week:w}; }
+      if (weekTopRadio.key){  radioWeekChamp.set(weekTopRadio.key, (radioWeekChamp.get(weekTopRadio.key)||0)+1); if (weekTopRadio.value  > (highestRadio.value||-Infinity))  highestRadio  = {...weekTopRadio, week:w}; }
+      if (weekTopSales.key){  salesWeekChamp.set(weekTopSales.key, (salesWeekChamp.get(weekTopSales.key)||0)+1); if (weekTopSales.value  > (highestSales.value||-Infinity))  highestSales  = {...weekTopSales, week:w}; }
+
+      if (weekTopStreamRank1.key && weekTopStreamRank1.value > (biggestStreamRank1.value||-Infinity)) biggestStreamRank1 = {...weekTopStreamRank1, week:w};
+      if (weekTopPointsRank1.key && weekTopPointsRank1.value > (biggestPointsRank1.value||-Infinity)) biggestPointsRank1 = {...weekTopPointsRank1, week:w};
+      if (weekTopRadioRank1.key  && weekTopRadioRank1.value  > (highestRadioRank1.value||-Infinity))  highestRadioRank1  = {...weekTopRadioRank1, week:w};
+      if (weekTopSalesRank1.key  && weekTopSalesRank1.value  > (highestSalesRank1.value||-Infinity))  highestSalesRank1  = {...weekTopSalesRank1, week:w};
+
+      if (top10StreamsSum > (heaviestTop10WeekStreams.total||-Infinity)) heaviestTop10WeekStreams = {week:w, total:top10StreamsSum};
+      if (top10PointsSum  > (heaviestTop10WeekPoints.total||-Infinity))  heaviestTop10WeekPoints  = {week:w, total:top10PointsSum};
+
+      artistWeekStreams.forEach((v,a)=>{ if (v > (bestArtistWeekStreams.value||-Infinity)) bestArtistWeekStreams = {artist:a, week:w, value:v}; });
+      artistWeekPoints.forEach((v,a)=>{ if (v > (bestArtistWeekPoints.value||-Infinity))  bestArtistWeekPoints  = {artist:a, week:w, value:v}; });
+
+      artistCountAll.forEach((cnt,a)=>{ if (cnt > (maxEntriesOneWeek.count||0)) maxEntriesOneWeek = {artist:a, week:w, count:cnt}; });
+      artistCountTop10.forEach((cnt,a)=>{
+        artistTop10Weeks.set(a, (artistTop10Weeks.get(a)||0) + 1);
+        artistTop10SimulMax.set(a, Math.max(artistTop10SimulMax.get(a)||0, cnt));
+      });
+      artistCountTop5.forEach((cnt,a)=>{
+        artistTop5Weeks.set(a, (artistTop5Weeks.get(a)||0) + 1);
+        artistTop5SimulMax.set(a, Math.max(artistTop5SimulMax.get(a)||0, cnt));
+      });
+
+      const albumTop10CountArr = Array.from(albumTop10Count.entries());
+      albumTop10CountArr.forEach(([alb,cnt])=>{ if (cnt > (albumSimulTop10.count||0)) albumSimulTop10 = {album:alb, week:w, count:cnt}; });
+      albumWeekStreams.forEach((v,alb)=>{ if (v > (albumBestWeekStreams.value||-Infinity)) albumBestWeekStreams = {album:alb, week:w, value:v}; });
+    }
+
+    // per-song post processing (subset rendered)
+    let firstNo1 = null, firstDebutNo1 = null;
+    let longestNo1Run = {key:null, len:0, start:null, end:null};
+    let mostWeeksAtNo1Song = {key:null, weeks:0};
+    let mostWeeksOnChart = {key:null, weeks:0};
+    let mostTop10Weeks = {key:null, weeks:0};
+    let mostTop5Weeks = {key:null, weeks:0};
+    let mostWeeksAt2NoNo1 = {key:null, weeksAt2:0};
+    let biggestJumpTo1 = {key:null, fromRank:null, week:null, jump:0};
+    let biggestFallFrom1 = {key:null, toRank:null, week:null, drop:0};
+    let bestNon1Debut = {key:null, rank:Infinity, week:null};
+    let fastestTo1_exclDebut = {key:null, weeks:Infinity, start:null, hit:null};
+    let slowestTo1 = {key:null, weeks:-Infinity, start:null, hit:null};
+    let mostReentries = {key:null, count:0};
+    let mostCumePointsSong = {key:null, value:0};
+    let biggestRankGain = {key:null, from:null, to:null, week:null, gain:0};
+    let biggestRankDrop = {key:null, from:null, to:null, week:null, drop:0};
+    let biggestPointsGain = {key:null, from:null, to:null, week:null, gain:0};
+    let biggestPointsLoss = {key:null, from:null, to:null, week:null, loss:0};
+    let bestReentryPos = {key:null, rank:Infinity, week:null};
+
+    for (const [k,histRaw] of songHist.entries()){
+      const hist = [...histRaw].sort((a,b)=>a.week-b.week);
+
+      const f1 = hist.find(x=>x.rank===1);
+      if (f1 && (!firstNo1 || f1.week < firstNo1.week)) firstNo1 = {key:k, week:f1.week};
+
+      const debutRow = hist[0];
+      if (debutRow && debutRow.rank===1){
+        if (!firstDebutNo1 || debutRow.week < firstDebutNo1.week) firstDebutNo1 = {key:k, week:debutRow.week};
+      }
+      if (debutRow && debutRow.rank>1 && debutRow.rank < bestNon1Debut.rank){
+        bestNon1Debut = {key:k, rank:debutRow.rank, week:debutRow.week};
+      }
+
+      let cur=0,best=0,start=null,bStart=null,bEnd=null, totalAt1=0;
+      let runs=0, inRun=false, lastNo1Week=null, maxGap=0;
+      for (const r of hist){
+        if (r.rank===1){
+          if (!inRun){ runs++; inRun=true; start=r.week; }
+          cur++; totalAt1++;
+          if (cur>best){best=cur;bStart=start;bEnd=r.week;}
+          lastNo1Week = r.week;
+        } else { cur=0; inRun=false; start=null; }
+      }
+      if (best > longestNo1Run.len) longestNo1Run = {key:k, len:best, start:bStart, end:bEnd};
+      if (totalAt1 > mostWeeksAtNo1Song.weeks) mostWeeksAtNo1Song = {key:k, weeks:totalAt1};
+
+      for (let i=1;i<hist.length;i++){
+        const p = hist[i-1], c = hist[i];
+        const gain = (p.rank||101) - (c.rank||101);
+        const drop = -gain;
+        if (gain > (biggestRankGain.gain||0)) biggestRankGain = {key:k, from:p.rank, to:c.rank, week:c.week, gain};
+        if (drop > (biggestRankDrop.drop||0)) biggestRankDrop = {key:k, from:p.rank, to:c.rank, week:c.week, drop};
+        const dPts = (c.points||0) - (p.points||0);
+        if (dPts > (biggestPointsGain.gain||0)) biggestPointsGain = {key:k, from:p.points, to:c.points, week:c.week, gain:dPts};
+        if (-dPts > (biggestPointsLoss.loss||0)) biggestPointsLoss = {key:k, from:p.points, to:c.points, week:c.week, loss:-dPts};
+      }
+
+      const weeksOn = hist.length;
+      if (weeksOn > mostWeeksOnChart.weeks) mostWeeksOnChart = {key:k, weeks:weeksOn};
+      const top10w = hist.reduce((a,x)=> a + (x.rank<=10?1:0), 0);
+      if (top10w > mostTop10Weeks.weeks) mostTop10Weeks = {key:k, weeks:top10w};
+      const top5w = hist.reduce((a,x)=> a + (x.rank<=5?1:0), 0);
+      if (top5w > mostTop5Weeks.weeks) mostTop5Weeks = {key:k, weeks:top5w};
+      if (!hist.some(x=>x.rank===1)){
+        const at2 = hist.reduce((a,x)=> a + (x.rank===2?1:0), 0);
+        if (at2 > mostWeeksAt2NoNo1.weeksAt2) mostWeeksAt2NoNo1 = {key:k, weeksAt2:at2};
+      }
+
+      if (f1 && debutRow){
+        const delta = f1.week - debutRow.week;
+        if (delta>0 && delta < (fastestTo1_exclDebut.weeks||Infinity)) fastestTo1_exclDebut = {key:k, weeks:delta, start:debutRow.week, hit:f1.week};
+        if (delta >= (slowestTo1.weeks||-Infinity)) slowestTo1 = {key:k, weeks:delta, start:debutRow.week, hit:f1.week};
+      }
+
+      let runCount=1;
+      for (let i=1;i<hist.length;i++){
+        if (hist[i].week - hist[i-1].week > 1){
+          runCount++;
+          const pos = hist[i].rank||101;
+          if (pos < (bestReentryPos.rank||Infinity)) bestReentryPos = {key:k, rank:pos, week:hist[i].week};
+        }
+      }
+      const reentries = Math.max(0, runCount-1);
+      if (reentries > (mostReentries.count||0)) mostReentries = {key:k, count:reentries};
+
+      const cumePts = pointsBySong.get(k)||0;
+      if (cumePts > (mostCumePointsSong.value||0)) mostCumePointsSong = {key:k, value:cumePts};
+
+      for (let i=1;i<hist.length;i++){
+        const p = hist[i-1], c = hist[i];
+        if (c.rank===1 && p){
+          const jump = (p.rank||101) - 1;
+          if (jump > (biggestJumpTo1.jump||0)) biggestJumpTo1 = {key:k, fromRank:p.rank, week:c.week, jump};
+        }
+        if (p.rank===1){
+          const toRank = c ? c.rank : 101;
+          const drop = toRank - 1;
+          if (drop > (biggestFallFrom1.drop||0)) biggestFallFrom1 = {key:k, toRank: (c?c.rank:'OFF'), week: c?c.week:(p.week+1), drop};
+        }
+      }
+    }
+
+    // artist & album leaders
+    let mostDistinctSongsArtist = {artist:null, count:0};
+    for (const [a,set] of artistSongSet.entries()) if (set.size > mostDistinctSongsArtist.count) mostDistinctSongsArtist = {artist:a, count:set.size};
+
+    let mostNo1WeeksArtist = {artist:null, weeks:0};
+    artistNo1Weeks.forEach((wks,a)=>{ if (wks>mostNo1WeeksArtist.weeks) mostNo1WeeksArtist = {artist:a,weeks:wks}; });
+
+    let mostTop10PresenceArtist = {artist:null, weeks:0};
+    artistTop10Weeks.forEach((wks,a)=>{ if (wks>mostTop10PresenceArtist.weeks) mostTop10PresenceArtist = {artist:a,weeks:wks}; });
+
+    let mostTop5PresenceArtist = {artist:null, weeks:0};
+    artistTop5Weeks.forEach((wks,a)=>{ if (wks>mostTop5PresenceArtist.weeks) mostTop5PresenceArtist = {artist:a,weeks:wks}; });
+
+    let mostSimulTop10Artist = {artist:null, count:0};
+    artistTop10SimulMax.forEach((c,a)=>{ if (c>mostSimulTop10Artist.count) mostSimulTop10Artist = {artist:a,count:c}; });
+
+    let mostSimulTop5Artist = {artist:null, count:0};
+    artistTop5SimulMax.forEach((c,a)=>{ if (c>mostSimulTop5Artist.count) mostSimulTop5Artist = {artist:a,count:c}; });
+
+    const artistNo1Songs = new Map();
+    songHist.forEach((hist,k)=>{
+      const disp = displayFor.get(k)||'';
+      const artist = disp.split(' — ').slice(-1)[0] || '';
+      if (hist.some(x=>x.rank===1)){
+        if (!artistNo1Songs.has(artist)) artistNo1Songs.set(artist,new Set());
+        artistNo1Songs.get(artist).add(k);
+      }
+    });
+    let mostNo1SongsArtist = {artist:null, count:0};
+    artistNo1Songs.forEach((set,a)=>{ if (set.size>mostNo1SongsArtist.count) mostNo1SongsArtist = {artist:a,count:set.size}; });
+
+    let mostPair12Artist = {artist:null, weeks:0};
+    artistPair12Count.forEach((c,a)=>{ if (c>mostPair12Artist.weeks) mostPair12Artist = {artist:a,weeks:c}; });
+
+    let mostStreamsSong = {key:null, value:0};
+    streamsBySong.forEach((v,k)=>{ if (v>mostStreamsSong.value) mostStreamsSong = {key:k, value:v}; });
+    let mostStreamsArtist = {artist:null, value:0};
+    streamsByArtist.forEach((v,a)=>{ if (v>mostStreamsArtist.value) mostStreamsArtist = {artist:a, value:v}; });
+
+    let albumMostDistinct = {album:null, count:0};
+    albumSongSet.forEach((set,alb)=>{ if (set.size>albumMostDistinct.count) albumMostDistinct = {album:alb, count:set.size}; });
+    let albumBestCumeStreams = {album:null, value:0};
+    albumStreamsCume.forEach((v,alb)=>{ if (v>albumBestCumeStreams.value) albumBestCumeStreams = {album:alb, value:v}; });
+
+    const disp = k => displayFor.get(k) || '—';
+    const maxFromMap = (map) => { let key=null,val=-Infinity; map.forEach((v,k)=>{ if (v>val){val=v;key=k;} }); return {key, val}; };
+
+    const hotRows = [
+      { label:'First #1 (Week 1)', holder:firstNo1? disp(firstNo1.key):'—', value:firstNo1? `W${firstNo1.week} (${ymd(dateFromWeek(firstNo1.week))})`:'—'},
+      { label:'First song to debut at #1', holder:firstDebutNo1? disp(firstDebutNo1.key):'—', value:firstDebutNo1? `W${firstDebutNo1.week}`:'—' },
+      { label:'Longest consecutive run at #1 (song)', holder:disp(longestNo1Run.key), value:`${fmtInt(longestNo1Run.len)} weeks`, weeks: longestNo1Run.len?`W${longestNo1Run.start}–W${longestNo1Run.end}`:'—'},
+      { label:'Most total weeks at #1 (song)', holder:disp(mostWeeksAtNo1Song.key), value:fmtInt(mostWeeksAtNo1Song.weeks)},
+      { label:'Most total weeks on chart (song)', holder:disp(mostWeeksOnChart.key), value:fmtInt(mostWeeksOnChart.weeks)},
+      { label:'Most weeks in Top 10 (song)', holder:disp(mostTop10Weeks.key), value:fmtInt(mostTop10Weeks.weeks)},
+      { label:'Most weeks in Top 5 (song)', holder:disp(mostTop5Weeks.key), value:fmtInt(mostTop5Weeks.weeks)},
+      { label:'Most weeks at #2 without a #1 (song)', holder:disp(mostWeeksAt2NoNo1.key), value:fmtInt(mostWeeksAt2NoNo1.weeksAt2)},
+      { label:'Biggest jump to #1 (WoW)', holder:disp(biggestJumpTo1.key), value:biggestJumpTo1.jump?`${fmtInt(biggestJumpTo1.jump)} places`:'—', weeks:biggestJumpTo1.week?`W${biggestJumpTo1.week} (from #${biggestJumpTo1.fromRank})`:'—'},
+      { label:'Biggest fall from #1 (next week)', holder:disp(biggestFallFrom1.key), value:biggestFallFrom1.drop?`${fmtInt(biggestFallFrom1.drop)} places`:'—', weeks:biggestFallFrom1.week?`W${biggestFallFrom1.week} (to #${biggestFallFrom1.toRank})`:'—'},
+      { label:'Best non-#1 debut rank', holder:disp(bestNon1Debut.key), value:isFinite(bestNon1Debut.rank)?`#${bestNon1Debut.rank}`:'—', weeks:bestNon1Debut.week?`W${bestNon1Debut.week}`:'—'},
+      { label:'Fastest to #1 (excl. debut)', holder:disp(fastestTo1_exclDebut.key), value:Number.isFinite(fastestTo1_exclDebut.weeks)?`${fastestTo1_exclDebut.weeks} weeks`:'—', weeks:fastestTo1_exclDebut.start?`W${fastestTo1_exclDebut.start}→W${fastestTo1_exclDebut.hit}`:'—'},
+      { label:'Slowest climb to #1', holder:disp(slowestTo1.key), value:(Number.isFinite(slowestTo1.weeks)&&slowestTo1.weeks>=0)?`${slowestTo1.weeks} weeks`:'—', weeks:slowestTo1.start?`W${slowestTo1.start}→W${slowestTo1.hit}`:'—'},
+      { label:'Most re-entries (separate chart runs)', holder:disp(mostReentries.key), value:fmtInt(mostReentries.count)},
+      { label:'Most cumulative points (song)', holder:disp(mostCumePointsSong.key), value:abbr(mostCumePointsSong.value)},
+      { label:'Biggest single-week rank gain (any ranks)', holder:disp(biggestRankGain.key), value:biggestRankGain.gain?`+${fmtInt(biggestRankGain.gain)} places`:'—', weeks:biggestRankGain.week?`W${biggestRankGain.week} (#${biggestRankGain.from}→#${biggestRankGain.to})`:'—'},
+      { label:'Biggest single-week rank drop (any ranks)', holder:disp(biggestRankDrop.key), value:biggestRankDrop.drop?`-${fmtInt(biggestRankDrop.drop)} places`:'—', weeks:biggestRankDrop.week?`W${biggestRankDrop.week} (#${biggestRankDrop.from}→#${biggestRankDrop.to})`:'—'},
+      { label:'Biggest WoW points gain', holder:disp(biggestPointsGain.key), value:abbr(biggestPointsGain.gain), weeks:biggestPointsGain.week?`W${biggestPointsGain.week}`:'—'},
+      { label:'Biggest WoW points loss', holder:disp(biggestPointsLoss.key), value:abbr(biggestPointsLoss.loss), weeks:biggestPointsLoss.week?`W${biggestPointsLoss.week}`:'—'},
+      { label:'Best re-entry position', holder:disp(bestReentryPos.key), value:isFinite(bestReentryPos.rank)?`#${bestReentryPos.rank}`:'—', weeks:bestReentryPos.week?`W${bestReentryPos.week}`:'—'}
+    ];
+
+    const maxStreamChamp = maxFromMap(streamWeekChamp);
+    const maxRadioChamp  = maxFromMap(radioWeekChamp);
+    const maxSalesChamp  = maxFromMap(salesWeekChamp);
+    const maxPointsChamp = maxFromMap(pointsWeekChamp);
+
+    const formatRows_any = [
+      { label:'Biggest single-week streams (any rank)', holder:disp(biggestStream.key), value:abbr(biggestStream.value), week:biggestStream.week?`W${biggestStream.week}`:'—' },
+      { label:'Biggest single-week points (any rank)', holder:disp(biggestPoints.key), value:abbr(biggestPoints.value), week:biggestPoints.week?`W${biggestPoints.week}`:'—' },
+      { label:'Highest weekly radio (any rank)', holder:disp(highestRadio.key), value:abbr(highestRadio.value), week:highestRadio.week?`W${highestRadio.week}`:'—' },
+      { label:'Highest weekly sales (any rank)', holder:disp(highestSales.key), value:abbr(highestSales.value), week:highestSales.week?`W${highestSales.week}`:'—' },
+      { label:'Most weeks as weekly streaming leader', holder:disp(maxStreamChamp.key), value:fmtInt(maxStreamChamp.val) },
+      { label:'Most weeks as weekly radio leader',    holder:disp(maxRadioChamp.key),  value:fmtInt(maxRadioChamp.val) },
+      { label:'Most weeks as weekly sales leader',    holder:disp(maxSalesChamp.key),  value:fmtInt(maxSalesChamp.val) },
+      { label:'Most weeks as weekly points leader',   holder:disp(maxPointsChamp.key), value:fmtInt(maxPointsChamp.val) },
+      { label:'Highest streams outside Top 10', holder:disp(highestStreamsOutsideTop10.key), value:abbr(highestStreamsOutsideTop10.value), week:highestStreamsOutsideTop10.week?`W${highestStreamsOutsideTop10.week} (#${highestStreamsOutsideTop10.rank})`:'—' },
+      { label:'Heaviest Top-10 week by streams (sum)', holder:'Top-10 sum', value:abbr(heaviestTop10WeekStreams.total), week:heaviestTop10WeekStreams.week?`W${heaviestTop10WeekStreams.week}`:'—' },
+      { label:'Heaviest Top-10 week by points (sum)',  holder:'Top-10 sum', value:abbr(heaviestTop10WeekPoints.total),  week:heaviestTop10WeekPoints.week?`W${heaviestTop10WeekPoints.week}`:'—' },
+    ];
+    const formatRows_rank1 = [
+      { label:'Biggest single-week streams (#1 only)', holder:disp(biggestStreamRank1.key), value:abbr(biggestStreamRank1.value), week:biggestStreamRank1.week?`W${biggestStreamRank1.week}`:'—' },
+      { label:'Biggest single-week points (#1 only)',  holder:disp(biggestPointsRank1.key), value:abbr(biggestPointsRank1.value), week:biggestPointsRank1.week?`W${biggestPointsRank1.week}`:'—' },
+      { label:'Highest weekly radio (#1 only)', holder:disp(highestRadioRank1.key), value:abbr(highestRadioRank1.value), week:highestRadioRank1.week?`W${highestRadioRank1.week}`:'—' },
+      { label:'Highest weekly sales (#1 only)', holder:disp(highestSalesRank1.key), value:abbr(highestSalesRank1.value), week:highestSalesRank1.week?`W${highestSalesRank1.week}`:'—' },
+    ];
+
+    const artistRows = [
+      { label:'Most #1 songs (distinct)', artist: (()=>{ // from songHist
+          const map = new Map(); songHist.forEach((hist,k)=>{ const d=displayFor.get(k)||''; const a=d.split(' — ').slice(-1)[0]||''; if(hist.some(x=>x.rank===1)){ if(!map.has(a)) map.set(a,0); map.set(a,map.get(a)+1);} });
+          let best=[null,0]; map.forEach((v,a)=>{ if (v>best[1]) best=[a,v];}); return best[0]||'—';
+        })(), value:(()=>{ const map=new Map(); songHist.forEach((hist,k)=>{ const d=displayFor.get(k)||''; const a=d.split(' — ').slice(-1)[0]||''; if(hist.some(x=>x.rank===1)){ if(!map.has(a)) map.set(a,0); map.set(a,map.get(a)+1);} }); let best=0; map.forEach(v=>{ if(v>best) best=v;}); return fmtInt(best); })(), span:'All-time' },
+      { label:'Most total weeks at #1 (artist)', artist:mostNo1WeeksArtist.artist||'—', value:fmtInt(mostNo1WeeksArtist.weeks), span:'All-time' },
+      { label:'Most Top-10 presence (weeks with ≥1 Top-10)', artist:mostTop10PresenceArtist.artist||'—', value:fmtInt(mostTop10PresenceArtist.weeks), span:'All-time' },
+      { label:'Most Top-5 presence (weeks with ≥1 Top-5)',   artist:mostTop5PresenceArtist.artist||'—', value:fmtInt(mostTop5PresenceArtist.weeks), span:'All-time' },
+      { label:'Most simultaneous Top-10 entries (single week)', artist:mostSimulTop10Artist.artist||'—', value:fmtInt(mostSimulTop10Artist.count), span:'Best week' },
+      { label:'Most simultaneous Top-5 entries (single week)',  artist:mostSimulTop5Artist.artist||'—', value:fmtInt(mostSimulTop5Artist.count), span:'Best week' },
+      { label:'Most weeks holding #1 & #2 simultaneously', artist:mostPair12Artist.artist||'—', value:fmtInt(mostPair12Artist.weeks), span:'All-time' },
+      { label:'Most cumulative streams (artist)', artist:(()=>{let a=null,v=-Infinity; streamsByArtist.forEach((val,key)=>{ if(val>v){v=val;a=key;} }); return a||'—';})(), value:abbr((()=>{ let v=-Infinity; streamsByArtist.forEach(val=>{ if(val>v) v=val; }); return v; })()), span:'All-time' },
+      { label:'Most cumulative points (artist)', artist:(()=>{let a=null,v=-Infinity; pointsByArtist.forEach((val,key)=>{ if(val>v){v=val;a=key;} }); return a||'—';})(), value:abbr((()=>{ let v=-Infinity; pointsByArtist.forEach(val=>{ if(val>v) v=val; }); return v; })()), span:'All-time' }
+    ];
+
+    const albumRows = [
+      { label:'Album with most distinct charting songs', album:albumMostDistinct.album||'—', value:fmtInt(albumMostDistinct.count), week:'—' },
+      { label:'Most simultaneous Top-10 songs (single week)', album:albumSimulTop10.album||'—', value:fmtInt(albumSimulTop10.count), week:albumSimulTop10.week?`W${albumSimulTop10.week}`:'—' },
+      { label:'Highest single-week streams (album)', album:albumBestWeekStreams.album||'—', value:abbr(albumBestWeekStreams.value), week:albumBestWeekStreams.week?`W${albumBestWeekStreams.week}`:'—' },
+      { label:'Most cumulative streams (album)', album:albumBestCumeStreams.album||'—', value:abbr(albumBestCumeStreams.value), week:'—' },
+    ];
+
+    const weekRows = [
+      { label:'Most debuts in a week', holder:'—', value:fmtInt(mostDebutsWeek.count), week:mostDebutsWeek.week?`W${mostDebutsWeek.week}`:'—' },
+      { label:'Most re-entries in a week', holder:'—', value:fmtInt(mostReentriesWeek.count), week:mostReentriesWeek.week?`W${mostReentriesWeek.week}`:'—' },
+      { label:'Highest single-week artist streams (week)', holder:bestArtistWeekStreams.artist||'—', value:abbr(bestArtistWeekStreams.value), week:bestArtistWeekStreams.week?`W${bestArtistWeekStreams.week}`:'—' },
+      { label:'Highest single-week artist points (week)',  holder:bestArtistWeekPoints.artist||'—',  value:abbr(bestArtistWeekPoints.value),  week:bestArtistWeekPoints.week?`W${bestArtistWeekPoints.week}`:'—' },
+      { label:'Week with heaviest Top-10 by streams', holder:'Top-10 sum', value:abbr(heaviestTop10WeekStreams.total), week:heaviestTop10WeekStreams.week?`W${heaviestTop10WeekStreams.week}`:'—' },
+      { label:'Week with heaviest Top-10 by points',  holder:'Top-10 sum', value:abbr(heaviestTop10WeekPoints.total),  week:heaviestTop10WeekPoints.week?`W${heaviestTop10WeekPoints.week}`:'—' },
+      { label:'Week with most simultaneous entries (single artist)', holder:maxEntriesOneWeek.artist||'—', value:fmtInt(maxEntriesOneWeek.count), week:maxEntriesOneWeek.week?`W${maxEntriesOneWeek.week}`:'—' },
+    ];
+
+    return {
+      hotRows,
+      formatRows_any,
+      formatRows_rank1,
+      albumRows,
+      artistRows,
+      weekRows,
+      sweeps,
+      meta:{weeks:weeks.length, songs:displayFor.size, artists:artistSongSet.size},
+    };
+  }
+
+  function computeYearly(raw){
+    const ranked = buildWeeklyRanks(raw);
+    const weeks = [...ranked.keys()].sort((a,b)=>a-b);
+    const yearsSet = new Set();
+    weeks.forEach(w=>yearsSet.add(dateFromWeek(w).getUTCFullYear()));
+    const years = [...yearsSet].sort((a,b)=>a-b);
+    const displayFor = new Map();
+
+    const byYear = new Map();
+    const songLastSeenGlobal = new Map();
+
+    function bucket(y){
+      if (!byYear.has(y)){
+        byYear.set(y, {
+          song: new Map(), artist: new Map(), album: new Map(),
+          heaviestTop10Streams: {week:null,total:-Infinity},
+          heaviestTop10Points:  {week:null,total:-Infinity},
+          bestArtistWeekStreams: {artist:null,week:null,value:-Infinity},
+          bestArtistWeekPoints:  {artist:null,week:null,value:-Infinity},
+          weekMostDebuts:    {week:null,count:0},
+          weekMostReentries: {week:null,count:0},
+        });
+      }
+      return byYear.get(y);
+    }
+
+    for (const w of weeks){
+      const rows = ranked.get(w) || [];
+      if (!rows.length) continue;
+      const y = dateFromWeek(w).getUTCFullYear();
+      const B = bucket(y);
+
+      let top10StreamsSum = 0, top10PointsSum = 0;
+      const artistCountTop10 = new Map();
+      const artistWeekStreams = new Map();
+      const artistWeekPoints  = new Map();
+      const albumTop10Count = new Map();
+      const albumWeekStreams = new Map();
+
+      let wkDebuts = 0, wkReentries = 0;
+
+      for (const r of rows){
+        const key = nkey(r.title, r.artist);
+        displayFor.set(key, songDisp(r));
+
+        if (!songLastSeenGlobal.has(key)){ wkDebuts++; songLastSeenGlobal.set(key, w); }
+        else {
+          const last = songLastSeenGlobal.get(key);
+          if (w - last > 1){ wkReentries++; }
+          songLastSeenGlobal.set(key, w);
+        }
+
+        if (!B.song.has(key)) B.song.set(key, {streams:0, points:0, weeksAt1:0, weeksTop10:0});
+        const s = B.song.get(key);
+        s.streams += nz(r.streams);
+        s.points  += nz(r.points);
+        if (r.rank===1) s.weeksAt1 += 1;
+        if (r.rank<=10) s.weeksTop10 += 1;
+
+        if (!B.artist.has(r.artist)) B.artist.set(r.artist, {streams:0, points:0, no1weeks:0, weeksTop10:new Set(), simulTop10Max:0});
+        const a = B.artist.get(r.artist);
+        a.streams += nz(r.streams);
+        a.points  += nz(r.points);
+        if (r.rank===1) a.no1weeks += 1;
+        if (r.rank<=10) a.weeksTop10.add(w);
+
+        if (r.rank<=10) artistCountTop10.set(r.artist, (artistCountTop10.get(r.artist)||0)+1);
+        artistWeekStreams.set(r.artist, (artistWeekStreams.get(r.artist)||0) + nz(r.streams));
+        artistWeekPoints.set(r.artist,  (artistWeekPoints.get(r.artist)||0)  + nz(r.points));
+
+        if (isValidAlbum(r.album)){
+          if (!B.album.has(r.album)) B.album.set(r.album, {streams:0, distinct:new Set(), simulTop10Max:0, bestWeekStreams:0, bestWeekStreamsWeek:null});
+          const al = B.album.get(r.album);
+          al.streams += nz(r.streams);
+          al.distinct.add(key);
+          if (r.rank<=10) albumTop10Count.set(r.album, (albumTop10Count.get(r.album)||0)+1);
+          albumWeekStreams.set(r.album, (albumWeekStreams.get(r.album)||0)+nz(r.streams));
+        }
+
+        if (r.rank<=10){ top10StreamsSum += nz(r.streams); top10PointsSum += nz(r.points); }
+      }
+
+      if (top10StreamsSum > (B.heaviestTop10Streams.total||-Infinity)) B.heaviestTop10Streams = {week:w, total:top10StreamsSum};
+      if (top10PointsSum  > (B.heaviestTop10Points.total||-Infinity))  B.heaviestTop10Points  = {week:w, total:top10PointsSum};
+
+      artistWeekStreams.forEach((v,artist)=>{ if (v > (B.bestArtistWeekStreams.value||-Infinity)) B.bestArtistWeekStreams = {artist,week:w,value:v}; });
+      artistWeekPoints.forEach((v,artist)=>{ if (v > (B.bestArtistWeekPoints.value||-Infinity))  B.bestArtistWeekPoints  = {artist,week:w,value:v}; });
+
+      artistCountTop10.forEach((cnt,artist)=>{ const cur=(B.artist.get(artist)||{}).simulTop10Max||0; if (cnt>cur) B.artist.get(artist).simulTop10Max = cnt; });
+
+      albumTop10Count.forEach((cnt,alb)=>{ const cur=(B.album.get(alb)||{}).simulTop10Max||0; if (cnt>cur) B.album.get(alb).simulTop10Max = cnt; });
+      albumWeekStreams.forEach((v,alb)=>{ const A=B.album.get(alb); if (v > (A.bestWeekStreams||0)){ A.bestWeekStreams = v; A.bestWeekStreamsWeek = w; } });
+
+      if (wkDebuts > (B.weekMostDebuts.count||0)) B.weekMostDebuts = {week:w, count:wkDebuts};
+      if (wkReentries > (B.weekMostReentries.count||0)) B.weekMostReentries = {week:w, count:wkReentries};
+    }
+
+    const yearRows = new Map();
+    const years = [...byYear.keys()].sort((a,b)=>a-b);
+
+    for (const y of years){
+      const B = byYear.get(y); if (!B){ yearRows.set(y, []); continue; }
+
+      const pickSong = (proj) => {
+        let bestKey=null, bestVal=-Infinity;
+        B.song.forEach((v,k)=>{ const val=proj(v); if (val>bestVal){bestVal=val;bestKey=k;} });
+        return {holder: displayFor.get(bestKey)||'—', value: bestVal};
+      };
+      const pickArtist = (proj) => {
+        let bestName=null, bestVal=-Infinity;
+        B.artist.forEach((v,name)=>{ const val=proj(v); if (val>bestVal){bestVal=val;bestName=name;} });
+        return {artist: bestName||'—', value: bestVal};
+      };
+      const pickAlbum = (proj) => {
+        let bestAlb=null, bestVal=-Infinity;
+        B.album.forEach((v,alb)=>{ const val=proj(v); if (val>bestVal){bestVal=val;bestAlb=alb;} });
+        return {album: bestAlb||'—', value: bestVal};
+      };
+
+      const topSongStreams = pickSong(s=>s.streams);
+      const topSongPoints  = pickSong(s=>s.points);
+      const topSongNo1Wks  = pickSong(s=>s.weeksAt1);
+      const topSongTop10W  = pickSong(s=>s.weeksTop10);
+
+      const topArtistStreams = pickArtist(a=>a.streams);
+      const topArtistPoints  = pickArtist(a=>a.points);
+      const topArtistNo1Wks  = pickArtist(a=>a.no1weeks);
+      const topArtistTop10Presence = pickArtist(a=> (a.weeksTop10 ? a.weeksTop10.size : 0));
+      const topArtistSimulTop10    = pickArtist(a=>a.simulTop10Max);
+
+      const albumDistinct = pickAlbum(a=> (a.distinct ? a.distinct.size : 0));
+      const albumCumeStr  = pickAlbum(a=>a.streams);
+      const albumSimulT10 = pickAlbum(a=>a.simulTop10Max);
+      const albumBestWk   = pickAlbum(a=>a.bestWeekStreams);
+
+      const rows = [
+        { label:`${y} • Top song by streams`, holder:topSongStreams.holder, value:abbr(topSongStreams.value), note:'Cumulative in year' },
+        { label:`${y} • Top song by points`,  holder:topSongPoints.holder,  value:abbr(topSongPoints.value),  note:'Cumulative in year' },
+        { label:`${y} • Most #1 weeks (song)`, holder:topSongNo1Wks.holder, value:fmtInt(topSongNo1Wks.value), note:'Weeks at #1 in year' },
+        { label:`${y} • Most Top-10 weeks (song)`, holder:topSongTop10W.holder, value:fmtInt(topSongTop10W.value), note:'Weeks in Top-10 in year' },
+
+        { label:`${y} • Top artist by streams`, holder:topArtistStreams.artist, value:abbr(topArtistStreams.value), note:'Cumulative in year' },
+        { label:`${y} • Top artist by points`,  holder:topArtistPoints.artist,  value:abbr(topArtistPoints.value),  note:'Cumulative in year' },
+        { label:`${y} • Most #1 weeks (artist)`, holder:topArtistNo1Wks.artist,  value:fmtInt(topArtistNo1Wks.value),  note:'Weeks holding #1 in year' },
+        { label:`${y} • Most Top-10 presence (artist)`, holder:topArtistTop10Presence.artist, value:fmtInt(topArtistTop10Presence.value), note:'Weeks w/ ≥1 song in Top-10' },
+        { label:`${y} • Most simultaneous Top-10 (artist)`, holder:topArtistSimulTop10.artist, value:fmtInt(topArtistSimulTop10.value), note:'Max in one week' },
+
+        { label:`${y} • Heaviest Top-10 by streams`, holder:'Top-10 sum', value:abbr(B.heaviestTop10Streams.total), note: B.heaviestTop10Streams.week ? `W${B.heaviestTop10Streams.week} (${ymd(dateFromWeek(B.heaviestTop10Streams.week))})` : '—' },
+        { label:`${y} • Heaviest Top-10 by points`,  holder:'Top-10 sum', value:abbr(B.heaviestTop10Points.total),  note: B.heaviestTop10Points.week ?  `W${B.heaviestTop10Points.week} (${ymd(dateFromWeek(B.heaviestTop10Points.week))})` : '—' },
+
+        { label:`${y} • Most debuts in a week`, holder:'—', value:fmtInt(B.weekMostDebuts.count), note: B.weekMostDebuts.week ? `W${B.weekMostDebuts.week}` : '—' },
+        { label:`${y} • Most re-entries in a week`, holder:'—', value:fmtInt(B.weekMostReentries.count), note: B.weekMostReentries.week ? `W${B.weekMostReentries.week}` : '—' },
+
+        { label:`${y} • Album: most distinct charting songs`, holder:albumDistinct.album, value:fmtInt(albumDistinct.value), note:'Within year' },
+        { label:`${y} • Album: most cumulative streams`,      holder:albumCumeStr.album, value:abbr(albumCumeStr.value), note:'Within year' },
+        { label:`${y} • Album: most simultaneous Top-10`,     holder:albumSimulT10.album, value:fmtInt(albumSimulT10.value), note:'Max in one week' },
+        { label:`${y} • Album: highest single-week streams`,  holder:albumBestWk.album, value:abbr(albumBestWk.value), note: (B.album.get(albumBestWk.album)?.bestWeekStreamsWeek ? `W${B.album.get(albumBestWk.album).bestWeekStreamsWeek}` : '—') },
+      ];
+      yearRows.set(y, rows);
+    }
+
+    return { years, yearRows };
+  }
+
+  /* ----------------------------- Boot & Render --------------------------- */
+  (function run(){
+    const data = (typeof weekData!=='undefined') ? weekData
+               : (typeof window!=='undefined' && window.weekData) ? window.weekData
+               : undefined;
+
+    if (!data){
+      qs('#meta').textContent='Could not find `weekdata.js`. Load it above.';
+      return;
+    }
+
+    try{
+      const res = computeAll(data);
+      qs('#meta').innerHTML =
+        `Loaded <span class="accent mono">${fmtInt(res.meta.weeks)}</span> weeks • `+
+        `<span class="accent mono">${fmtInt(res.meta.songs)}</span> songs • `+
+        `<span class="accent mono">${fmtInt(res.meta.artists)}</span> artists`;
+
+      // Overview
+      fillTable(qs('#hotTbl tbody'), res.hotRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.holder||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.weeks??'—'}</td>`
+      ]);
+
+      // Formats
+      const formatBody = qs('#formatTbl tbody');
+      const rankSel = qs('#rankScopeSel');
+      const drawFormat = () => {
+        const list = (rankSel.value==='rank1') ? res.formatRows_rank1 : res.formatRows_any;
+        fillTable(formatBody, list, r=>[
+          `<td>${r.label}</td>`,
+          `<td>${r.holder||'—'}</td>`,
+          `<td class="right">${r.value??'—'}</td>`,
+          `<td class="right">${r.week??'—'}</td>`
+        ]);
+      };
+      rankSel.addEventListener('change', drawFormat);
+      drawFormat();
+
+      // Artists
+      fillTable(qs('#artistTbl tbody'), res.artistRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.artist||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.span??'—'}</td>`
+      ]);
+
+      // Albums
+      fillTable(qs('#albumTbl tbody'), res.albumRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.album||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??'—'}</td>`
+      ]);
+
+      // Weeks
+      fillTable(qs('#weekTbl tbody'), res.weekRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.holder||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??'—'}</td>`
+      ]);
+
+      // Sweeps
+      fillTable(qs('#sweepTbl tbody'), res.sweeps, r=>[
+        `<td>${r.type}</td>`,
+        `<td>${r.artist}</td>`,
+        `<td class="right">W${r.week} (${ymd(dateFromWeek(r.week))})</td>`
+      ]);
+
+      // Yearly
+      const yr = computeYearly(data);
+      const sel = qs('#yearSel');
+      sel.innerHTML = yr.years.map(y=>`<option value="${y}">${y}</option>`).join('');
+      sel.value = String(yr.years[yr.years.length-1] || '');
+      const yearBody = qs('#yearTbl tbody');
+      const drawYear = () => {
+        const y = Number(sel.value);
+        const rows = yr.yearRows.get(y) || [];
+        fillTable(yearBody, rows, r=>[
+          `<td>${r.label}</td>`,
+          `<td>${r.holder||'—'}</td>`,
+          `<td class="right">${r.value!=null? (typeof r.value==='number' && r.value>1e6 ? abbr(r.value) : (typeof r.value==='number'?fmtInt(r.value):r.value)) :'—'}</td>`,
+          `<td class="right">${r.note||'—'}</td>`
+        ]);
+      };
+      sel.addEventListener('change', drawYear);
+      drawYear();
+
+    }catch(err){
+      console.error(err);
+      qs('#meta').textContent = 'Error computing records. See console for details.';
+    }
+  })();
+</script>
+</body>
+</html>
