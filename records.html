@@ -111,7 +111,7 @@
     <a href="top_albums.html">💿 Top Albums</a>
     <a href="top_songs.html">🎵 Top Songs</a>
     <a href="top_artists.html">🎤 Top Artists</a>
-  <a href="albumrecord.html">📀 Album Records</a> 
+    <a href="albumrecord.html">📀 Album Records</a> 
   </nav>
 
   <h1>🎤 Top 100 Artists</h1>
@@ -123,17 +123,18 @@
           <th data-sort="rank">Rank</th>
           <th data-sort="name">Artist</th>
           <th data-sort="totalStreams">Total Streams</th>
-          <th data-sort="monthlyStreams">Avg Monthly Streams</th>
           <th data-sort="totalSales">Total Sales</th>
           <th data-sort="num1Songs">#1 Songs</th>
           <th data-sort="top10Songs">Top 10 Songs</th>
           <th data-sort="num1Albums">#1 Albums</th>
           <th data-sort="top10Albums">Top 10 Albums</th>
-          <th data-sort="weeklyStreams">Avg Weekly Streams</th>
+          <th data-sort="songEntriesTop100">Song Entries (Top 100)</th>
+          <th data-sort="weeksOnChart">Weeks on Chart</th>
+          <th data-sort="top30Songs">Top 30 Records</th>
         </tr>
       </thead>
       <tbody id="artistTable">
-        <tr><td colspan="10">Loading data...</td></tr>
+        <tr><td colspan="11">Loading data...</td></tr>
       </tbody>
     </table>
   </div>
@@ -154,12 +155,16 @@
 
       for (const week in weekData) {
         weekData[week].forEach(entry => {
-          const artists = (entry.artist || "").split(/,|&| and | with | feat\.? | featuring /i).map(a => a.trim()).filter(Boolean);
+          const artists = (entry.artist || "")
+            .split(/,|&| and | with | feat\.? | featuring /i)
+            .map(a => a.trim())
+            .filter(Boolean);
+
           const album = entry.album || "";
           const title = entry.title || "";
           const rank = parseInt(entry.rank);
           const sales = parseFloat(entry.sales) || 0;
-          const streams = parseFloat(entry.streams) || 0; // <- using streams from weekData
+          const streams = parseFloat(entry.streams) || 0;
 
           artists.forEach(rawName => {
             const normName = rawName.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -170,14 +175,15 @@
                 weeks: new Set(),
                 songs: {},
                 albums: {},
-                totalStreams: 0  // <- new field to sum streams
+                totalStreams: 0
               };
               artistNameMap[normName] = rawName;
             }
+
             const artistStats = artistMap[normName];
             artistStats.rawSales += sales;
             artistStats.weeks.add(week);
-            artistStats.totalStreams += streams; // <- sum streams
+            artistStats.totalStreams += streams;
 
             const songKey = (title || "").toUpperCase().replace(/[^A-Z0-9]/g, '');
             if (!artistStats.songs[songKey]) artistStats.songs[songKey] = Infinity;
@@ -195,14 +201,14 @@
       }
 
       const artistList = Object.entries(artistMap).map(([normName, stats]) => {
-        const totalStreams = stats.totalStreams; // <- use summed streams
-        const months = stats.weeks.size / 4.33;
+        const totalStreams = stats.totalStreams;
         const weeks = stats.weeks.size;
 
-        let num1Songs = 0, top10Songs = 0;
+        let num1Songs = 0, top10Songs = 0, top30Songs = 0;
         Object.values(stats.songs).forEach(r => {
           if (r === 1) num1Songs++;
           if (r <= 10) top10Songs++;
+          if (r <= 30) top30Songs++;
         });
 
         let num1Albums = 0, top10Albums = 0;
@@ -211,20 +217,25 @@
           if (r <= 10) top10Albums++;
         });
 
+        const songEntriesTop100 = Object.keys(stats.songs).length; // unique charting songs
+        const weeksOnChart = weeks;
+
         return {
           name: artistNameMap[normName],
           totalStreams,
-          monthlyStreams: totalStreams / (months || 1),
           totalSales: stats.rawSales * 1750,
           num1Songs,
           top10Songs,
           num1Albums,
           top10Albums,
-          weeklyStreams: totalStreams / (weeks || 1),
+          songEntriesTop100,
+          weeksOnChart,
+          top30Songs,
           rank: 0
         };
       });
 
+      // Default ranking by totalStreams
       artistList.sort((a,b) => b.totalStreams - a.totalStreams);
       artistList.forEach((a,i) => a.rank = i+1);
 
@@ -236,13 +247,14 @@
             <td>${a.rank}</td>
             <td><a href="artist.html?artist=${encodeURIComponent(a.name)}">${a.name}</a></td>
             <td>${formatNumber(a.totalStreams)}</td>
-            <td>${formatNumber(a.monthlyStreams)}</td>
             <td>${formatNumber(a.totalSales)}</td>
             <td>${a.num1Songs}</td>
             <td>${a.top10Songs}</td>
             <td>${a.num1Albums}</td>
             <td>${a.top10Albums}</td>
-            <td>${formatNumber(a.weeklyStreams)}</td>
+            <td>${a.songEntriesTop100}</td>
+            <td>${a.weeksOnChart}</td>
+            <td>${a.top30Songs}</td>
           `;
           tbody.appendChild(tr);
         });
@@ -278,6 +290,7 @@
             }
           });
 
+          // If sorting by rank or one of the primary totals, recompute ranks to match current order
           if (['rank', 'totalStreams', 'totalSales'].includes(currentSort.key)) {
             artistList.forEach((a,i) => a.rank = i+1);
           }
@@ -287,6 +300,10 @@
       });
     });
   </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
