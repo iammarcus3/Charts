@@ -85,8 +85,7 @@
     .legend{display:flex; gap:8px; flex-wrap:wrap}
     .key{display:flex; align-items:center; gap:6px; color:var(--muted); font-size:.85rem}
     .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
-    .dot.sales{background:var(--green)}
-    .dot.radio{background:var(--gold)}
+    /* keep only re-entry legend */
     .dot.reentry{background:#9aa}
 
     .table-wrap{max-height:68vh; overflow:auto}
@@ -104,6 +103,7 @@
       font-weight:900; width:1%; white-space:nowrap; color:#dff;
       display:inline-flex; align-items:center; justify-content:center; min-width:42px; height:32px;
       padding:0 10px; border-radius:999px; background:var(--rank); border:1px solid #202028;
+      cursor:pointer;
     }
     .move{font-weight:800; font-size:.92rem}
     .move.up{color:var(--green)}
@@ -117,12 +117,9 @@
       border:1px solid var(--border); background:var(--chip); color:#cfd6ff;
     }
     .badge.hot{background:linear-gradient(90deg,#f82aaa,#ff8ad2); color:#0b0b0c}
-    .badge.gainer{background:linear-gradient(90deg,#33ff99,#bbffc7); color:#05110a}
     .badge.re{background:linear-gradient(90deg,#9aa,#d0d0da); color:#0b0b0c}
 
     .num{font-variant-numeric:tabular-nums; white-space:nowrap}
-    .peak{opacity:.95}
-    .weeks{opacity:.8}
     .points-bar{
       height:8px; border-radius:999px; background:#1f1f26; overflow:hidden; border:1px solid #242432; width:120px
     }
@@ -157,7 +154,7 @@
         <div class="logo" aria-hidden="true"></div>
         <div class="title">
           <h1>Billboard Hot 100</h1>
-          <div class="subtitle">Dark Edition • Keyboard: ←/→ week, 1–6 tabs</div>
+          <div class="subtitle">Dark Edition • Keyboard: ←/→ week, 1–2 tabs</div>
         </div>
       </div>
       <div class="controls">
@@ -174,11 +171,6 @@
     <div class="tabs" role="tablist" aria-label="Chart type">
       <div class="tab" data-chart="tracks" data-key="1" role="tab" aria-selected="true" tabindex="0"><span>Tracks</span></div>
       <div class="tab" data-chart="albums" data-key="2" role="tab" aria-selected="false" tabindex="0"><span>Albums</span></div>
-      <!-- NEW: extra tabs -->
-      <div class="tab" data-chart="sales" data-key="3" role="tab" aria-selected="false" tabindex="0"><span>Sales (Top 20)</span></div>
-      <div class="tab" data-chart="streams" data-key="4" role="tab" aria-selected="false" tabindex="0"><span>Streams (Top 20)</span></div>
-      <div class="tab" data-chart="radio" data-key="5" role="tab" aria-selected="false" tabindex="0"><span>Radio (Top 20)</span></div>
-      <div class="tab" data-chart="artists" data-key="6" role="tab" aria-selected="false" tabindex="0"><span>Artists (Weekly Sales)</span></div>
     </div>
 
     <!-- Board -->
@@ -186,8 +178,6 @@
       <div class="board-head">
         <div class="date-range" id="dateRange">—</div>
         <div class="legend">
-          <div class="key"><i class="dot sales"></i> Best Sales</div>
-          <div class="key"><i class="dot radio"></i> Best Radio</div>
           <div class="key"><i class="dot reentry"></i> Re-Entry</div>
         </div>
       </div>
@@ -200,10 +190,7 @@
               <th style="width:90px;">Move</th>
               <th>Title</th>
               <th>Artist</th>
-              <th class="right">Sales</th>
               <th>Points</th>
-              <th class="right">Weeks</th>
-              <th class="right">Peak</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -231,24 +218,11 @@
       .replace(/[^a-z0-9]/g,'');
     const getFuzzyKey = (title,artist)=> normalize(title)+normalize(artist);
 
-    // split artists for collabs/features; each listed artist gets credit for sales
-    function splitArtists(artistStr){
-      const raw = String(artistStr||'');
-      // split on common conjunctions and feature markers
-      const parts = raw.split(/\s*(?:,|&|×|x|\/|\+| with | and | feat\. | ft\. )\s*/i)
-        .map(s=>s.trim()).filter(Boolean);
-      // de-dup while preserving first-seen case
-      const seen = new Set(); const out = [];
-      for(const p of parts){ const key = normalize(p); if(!seen.has(key)){ seen.add(key); out.push(p); } }
-      return out.length? out : [raw.trim()].filter(Boolean);
-    }
-
     // ---------- State ----------
     let currentWeek = 1;
     let currentChart = 'tracks';
     let currentPage = 1;
     const PAGE_SIZE = 100;
-    const TOP_N = 20; // for the Top 20 tabs
 
     const weekSel = document.getElementById('weekSelector');
     const dateRangeEl = document.getElementById('dateRange');
@@ -274,29 +248,18 @@
     function setTableHeader(kind){
       let cols;
       if(kind==='tracks'){
-        cols = ['Rank','Move','Title','Artist','Sales','Points','Weeks','Peak'];
+        cols = ['Rank','Move','Title','Artist','Points'];
       } else if(kind==='albums'){
-        cols = ['Rank','Move','Album','Artist','Sales','Index','Weeks','Peak'];
-      } else if(kind==='sales'){
-        cols = ['Rank','Move','Title','Artist','Sales','Index','Weeks','Peak'];
-      } else if(kind==='streams'){
-        cols = ['Rank','Move','Title','Artist','Streams','Index','Weeks','Peak'];
-      } else if(kind==='radio'){
-        cols = ['Rank','Move','Title','Artist','Radio','Index','Weeks','Peak'];
-      } else if(kind==='artists'){
-        cols = ['Rank','Move','—','Artist','Total Sales','Index','Songs','Peak'];
+        cols = ['Rank','Move','Album','Artist','Index'];
       } else {
-        cols = ['Rank','Move','Title','Artist','Metric','Index','Weeks','Peak'];
+        cols = ['Rank','Move','Title','Artist','Points'];
       }
       thead.innerHTML = `<tr>
         <th style="width:64px;">${cols[0]}</th>
         <th style="width:90px;">${cols[1]}</th>
         <th>${cols[2]}</th>
         <th>${cols[3]}</th>
-        <th class="right">${cols[4]}</th>
-        <th>${cols[5]}</th>
-        <th class="right">${cols[6]}</th>
-        <th class="right">${cols[7]}</th>
+        <th>${cols[4]}</th>
       </tr>`;
     }
 
@@ -339,11 +302,11 @@
       loadWeek(w);
     };
 
-    // Keyboard shortcuts: week nav + number keys for tabs
+    // Keyboard shortcuts: week nav + number keys for tabs (1–2)
     window.addEventListener('keydown',(e)=>{
       if(e.key==='ArrowLeft') stepWeek(-1);
       if(e.key==='ArrowRight') stepWeek(+1);
-      if(/^[1-6]$/.test(e.key)){
+      if(/^[1-2]$/.test(e.key)){
         const tab = document.querySelector(`.tab[data-key="${e.key}"]`);
         if(tab) activateTab(tab);
       }
@@ -368,7 +331,7 @@
       return history;
     }
 
-    // ---------- Render: Tracks (unchanged) ----------
+    // ---------- Render: Tracks ----------
     function renderTrackChart(entries, weekNumber){
       const history = buildTrackHistory(weekNumber);
       const currentTracks = (entries||[]).filter(r=>r && r.title && r.artist);
@@ -382,18 +345,11 @@
           totalWeeks,
           bestPeak: Number.isFinite(bestPeak) ? bestPeak : '—',
           points: nz(row.points),
-          sales: nz(row.sales),
-          radio: nz(row.radio),
-          streams: nz(row.streams),
           _key:key
         };
       });
 
       enriched.sort((a,b)=> b.points - a.points);
-
-      // badges
-      const bestSales = enriched.reduce((a,b)=> (a.sales >= b.sales? a : b), {sales:-Infinity});
-      const bestRadio = enriched.reduce((a,b)=> (a.radio >= b.radio? a : b), {radio:-Infinity});
 
       // Pagination
       metaCount.textContent = `${enriched.length.toLocaleString()} entries`;
@@ -420,39 +376,33 @@
         }
 
         const tr = document.createElement('tr');
-        if (row === bestSales) tr.style.outline = `2px solid var(--green)`;
-        if (row === bestRadio) tr.style.outline = `2px solid var(--gold)`;
 
         const rankDisplay = ((currentPage-1)*PAGE_SIZE + i + 1);
         const hotShot = past.length===0 ? `<span class="badge hot">Hot Shot Debut</span>` : '';
         const re = (past.length>0 && !wasLast) ? `<span class="badge re">Re-Entry</span>` : '';
-        const gainer = (row === bestSales || row === bestRadio) ? `<span class="badge gainer">Greatest Gainer</span>` : '';
 
         const barWidth = Math.max(2, Math.min(100, row.points>0 ? (row.points / (slice[0]?.points || row.points)) * 100 : 0));
 
         tr.innerHTML = `
-          <td><span class="rank">${rankDisplay}</span></td>
+          <td><span class="rank" title="Show details">${rankDisplay}</span></td>
           <td class="move ${move.cls}">${move.txt}</td>
           <td class="title-cell">
             <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
               <a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${row.title || '—'}</a>
-              <span class="badges">${hotShot}${re}${gainer}</span>
+              <span class="badges">${hotShot}${re}</span>
             </div>
           </td>
           <td class="artist-cell"><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist || '—'}</a></td>
-          <td class="right num">${fmtK(row.sales)}</td>
           <td>
             <div class="points-bar" title="${row.points.toFixed(2)} pts"><i style="width:${barWidth}%"></i></div>
           </td>
-          <td class="right weeks">${fmtInt(row.totalWeeks)}</td>
-          <td class="right peak">${fmtInt(row.bestPeak)}</td>
         `;
         tr.querySelector('.rank').addEventListener('click', ()=> showTrackDetails(row, weekNumber, tr));
         tbody.appendChild(tr);
       });
     }
 
-    // ---------- Render: Albums (unchanged) ----------
+    // ---------- Render: Albums ----------
     function renderAlbumChart(entries, weekNumber){
       const albumsMap = {};
       for(const row of (entries||[])){
@@ -510,7 +460,6 @@
       const slice = qualified.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
 
       tbody.innerHTML='';
-      const bestSalesOnPage = slice.reduce((a,b)=> (a && a.sales>=b.sales ? a : b), null);
 
       const prevOrder = {};
       if(weekData[weekNumber-1]){
@@ -540,177 +489,27 @@
 
         const hot = (history[a._key]||[]).length===0 ? `<span class="badge hot">Hot Shot Debut</span>` : '';
         const re = (!wasLast && (history[a._key]||[]).length>0) ? `<span class="badge re">Re-Entry</span>` : '';
-        const gainer = (a===bestSalesOnPage) ? `<span class="badge gainer">Greatest Gainer</span>` : '';
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><span class="rank">${currentRank}</span></td>
+          <td><span class="rank" title="Show details">${currentRank}</span></td>
           <td class="move ${move.cls}">${move.txt}</td>
           <td class="title-cell">
             <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
               <a href="album_data.html?album=${encodeURIComponent(a.album)}&artist=${encodeURIComponent(a.artist)}">${a.album}</a>
-              <span class="badges">${hot}${re}${gainer}</span>
+              <span class="badges">${hot}${re}</span>
             </div>
           </td>
           <td class="artist-cell"><a href="artist.html?artist=${encodeURIComponent(a.artist)}">${a.artist || '—'}</a></td>
-          <td class="right num">${fmtK(a.sales)}</td>
           <td>
-            <div class="points-bar" title="Album sales proxy">
+            <div class="points-bar" title="Album index">
               <i style="width:${Math.max(2, (a.sales>0? (a.sales/(slice[0]?.sales||a.sales))*100:0))}%"></i>
             </div>
           </td>
-          <td class="right weeks">${fmtInt(a.totalWeeks)}</td>
-          <td class="right peak">—</td>
         `;
         tr.querySelector('.rank').addEventListener('click', ()=> showAlbumDetails(a, weekNumber, tr));
         tbody.appendChild(tr);
       });
-    }
-
-    // ---------- NEW: Generic Top 20 by metric (sales/streams/radio) ----------
-    function renderMetricTop20(entries, weekNumber, metricKey, label){
-      const rows = (entries||[]).filter(r=>r && r.title && r.artist)
-        .map(r=>({...r, sales:nz(r.sales), streams:nz(r.streams), radio:nz(r.radio)}));
-
-      // prev-week full order by same metric
-      const prev = weekData[weekNumber-1] || [];
-      const prevOrder = {};
-      prev.filter(r=>r && r.title && r.artist)
-        .map(r=>({...r, sales:nz(r.sales), streams:nz(r.streams), radio:nz(r.radio)}))
-        .sort((a,b)=> nz(b[metricKey]) - nz(a[metricKey]))
-        .forEach((r,i)=> prevOrder[getFuzzyKey(r.title, r.artist)] = i+1);
-
-      // rank current by metric
-      const sorted = rows
-        .filter(r=> nz(r[metricKey]) > 0)
-        .sort((a,b)=> nz(b[metricKey]) - nz(a[metricKey]));
-
-      const top = sorted.slice(0, TOP_N);
-
-      metaCount.textContent = `Top ${top.length} • ${label}`;
-      drawPager(1); // Top 20 only
-      tbody.innerHTML='';
-
-      const bestVal = top[0]?.[metricKey] || 0;
-
-      top.forEach((row, idx)=>{
-        const key = getFuzzyKey(row.title, row.artist);
-        let move = {txt:'NEW', cls:'flat'};
-        if(prevOrder[key]){
-          const diff = prevOrder[key] - (idx+1);
-          move = fmtMove(diff);
-        }
-
-        const tr = document.createElement('tr');
-        const barWidth = Math.max(2, Math.min(100, bestVal>0 ? (nz(row[metricKey]) / bestVal)*100 : 0));
-        const metricDisplay = fmtK(row[metricKey]);
-
-        tr.innerHTML = `
-          <td><span class="rank">${idx+1}</span></td>
-          <td class="move ${move.cls}">${move.txt}</td>
-          <td class="title-cell">
-            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
-              <a href="track_detail.html?title=${encodeURIComponent(row.title)}&artist=${encodeURIComponent(row.artist)}">${row.title}</a>
-            </div>
-          </td>
-          <td class="artist-cell"><a href="artist.html?artist=${encodeURIComponent(row.artist)}">${row.artist}</a></td>
-          <td class="right num">${metricDisplay}</td>
-          <td><div class="points-bar" title="${label}"><i style="width:${barWidth}%"></i></div></td>
-          <td class="right weeks">—</td>
-          <td class="right peak">—</td>
-        `;
-        tr.querySelector('.rank').addEventListener('click', ()=> showMetricDetails(row, weekNumber, tr, metricKey, label, prevOrder));
-        tbody.appendChild(tr);
-      });
-    }
-
-    function showMetricDetails(row, weekNumber, trEl, metricKey, label, prevOrder){
-      const prevRank = prevOrder[getFuzzyKey(row.title,row.artist)] || '—';
-      const html = `
-        <div class="detail-grid">
-          <div class="detail-item"><strong>${label}</strong><div>${fmtK(row[metricKey])}</div></div>
-          <div class="detail-item"><strong>Last Week (by ${label})</strong><div>${prevRank}</div></div>
-          <div class="detail-item"><strong>Artist</strong><div>${row.artist}</div></div>
-          <div class="detail-item"><strong>Title</strong><div>${row.title}</div></div>
-        </div>
-      `;
-      toggleDetails(trEl, html);
-    }
-
-    // ---------- NEW: Artists (weekly total sales) ----------
-    function renderArtistSalesTop(entries, weekNumber){
-      // build this-week totals
-      const map = new Map(); // key = normalized artist, value = {name, sales, songs:Set, contrib:[{title,sales}]}
-      for(const r of (entries||[])){
-        const val = nz(r?.sales);
-        if(!r || !r.artist || !(val>0)) continue;
-        const artists = splitArtists(r.artist);
-        for(const a of artists){
-          const key = normalize(a);
-          if(!map.has(key)) map.set(key, { name:a, sales:0, songs:new Map() });
-          const node = map.get(key);
-          node.sales += val;
-          node.songs.set(r.title, (node.songs.get(r.title) || 0) + val);
-        }
-      }
-      const list = [...map.values()].sort((a,b)=> b.sales - a.sales).slice(0, TOP_N);
-
-      // prev-week totals (for move)
-      const prevMap = new Map();
-      for(const r of (weekData[weekNumber-1]||[])){
-        const val = nz(r?.sales);
-        if(!r || !r.artist || !(val>0)) continue;
-        for(const a of splitArtists(r.artist)){
-          const k = normalize(a);
-          prevMap.set(k, (prevMap.get(k)||0) + val);
-        }
-      }
-      const prevOrder = {};
-      [...prevMap.entries()].sort((a,b)=> b[1]-a[1]).forEach(([k,_],i)=> prevOrder[k]=i+1);
-
-      metaCount.textContent = `Top ${list.length} • Artist Weekly Sales`;
-      drawPager(1);
-      tbody.innerHTML='';
-
-      const bestSales = list[0]?.sales || 0;
-
-      list.forEach((a,idx)=>{
-        const move = prevOrder[normalize(a.name)] ? fmtMove(prevOrder[normalize(a.name)] - (idx+1)) : {txt:'NEW', cls:'flat'};
-        const songsCount = a.songs.size;
-        const topSong = [...a.songs.entries()].sort((x,y)=> y[1]-x[1])[0]?.[0] || '—';
-        const barWidth = Math.max(2, Math.min(100, bestSales>0 ? (a.sales / bestSales)*100 : 0));
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><span class="rank">${idx+1}</span></td>
-          <td class="move ${move.cls}">${move.txt}</td>
-          <td class="title-cell"><div style="opacity:.8">—</div></td>
-          <td class="artist-cell"><a href="artist.html?artist=${encodeURIComponent(a.name)}">${a.name}</a></td>
-          <td class="right num">${fmtK(a.sales)}</td>
-          <td><div class="points-bar" title="Artist total sales"><i style="width:${barWidth}%"></i></div></td>
-          <td class="right weeks">${fmtInt(songsCount)}</td>
-          <td class="right peak">—</td>
-        `;
-        tr.querySelector('.rank').addEventListener('click', ()=> showArtistDetails(a, weekNumber, tr));
-        tbody.appendChild(tr);
-      });
-    }
-
-    function showArtistDetails(artistObj, weekNumber, trEl){
-      const topContrib = [...artistObj.songs.entries()].sort((a,b)=> b[1]-a[1]).slice(0,5);
-      const html = `
-        <div class="detail-grid">
-          <div class="detail-item"><strong>Artist</strong><div>${artistObj.name}</div></div>
-          <div class="detail-item"><strong>Total Sales</strong><div>${fmtK(artistObj.sales)}</div></div>
-          <div class="detail-item" style="grid-column:1/-1">
-            <strong>Top contributing tracks (this week)</strong>
-            <div style="margin-top:6px">
-              ${topContrib.map(([t,v])=>`<div class="nowrap">${t} — <span class="num">${fmtK(v)}</span></div>`).join('')}
-            </div>
-          </div>
-        </div>
-      `;
-      toggleDetails(trEl, html);
     }
 
     // ---------- Details (expand/collapse) ----------
@@ -722,7 +521,8 @@
       if(expandedRow) { expandedRow.remove(); expandedRow = null; }
       const tr = document.createElement('tr');
       tr.className = 'details-row';
-      const td = document.createElement('td'); td.colSpan = 8;
+      const td = document.createElement('td');
+      td.colSpan = document.querySelectorAll('#thead th').length; // span current column count
       td.innerHTML = detailsHTML;
       tr.appendChild(td);
       rowEl.parentNode.insertBefore(tr, rowEl.nextSibling);
@@ -738,35 +538,19 @@
 
       const html = `
         <div class="detail-grid">
-          <div class="detail-item"><strong>Sales</strong><div>${fmtK(row.sales)}K</div></div>
-          <div class="detail-item"><strong>Radio</strong><div>${(nz(row.radio)/1_000_000).toFixed(2)}K</div></div>
-          <div class="detail-item"><strong>Streams</strong><div>${(nz(row.streams)/1_000_000).toFixed(2)}M</div></div>
           <div class="detail-item"><strong>Last Week Rank</strong><div>${lastRank}</div></div>
-          <div class="detail-item"><strong>Change</strong><div>${pct}</div></div>
+          <div class="detail-item"><strong>Change (pts)</strong><div>${pct}</div></div>
+          <div class="detail-item"><strong>Weeks on Chart</strong><div>${fmtInt(row.totalWeeks)}</div></div>
+          <div class="detail-item"><strong>Peak Position</strong><div>${fmtInt(row.bestPeak)}</div></div>
         </div>
       `;
       toggleDetails(trEl, html);
     }
 
     function showAlbumDetails(albumObj, weekNumber, trEl){
-      let prevSales = null;
-      if(weekData[weekNumber-1]){
-        const prevMap={};
-        for(const r of weekData[weekNumber-1]){
-          if(!r.album) continue;
-          const k = normalize(r.album)+'||'+normalize(r.artist||'');
-          (prevMap[k] ||= {sales:0, tracks:new Set()});
-          prevMap[k].sales += nz(r.sales);
-          prevMap[k].tracks.add(normalize(r.title));
-        }
-        prevSales = prevMap[albumObj._key]?.sales ?? null;
-      }
-      const pct = (prevSales && prevSales>0) ? (((albumObj.sales - prevSales)/prevSales)*100).toFixed(1)+'%' : '—';
       const html = `
         <div class="detail-grid">
-          <div class="detail-item"><strong>Sales</strong><div>${fmtK(albumObj.sales)}</div></div>
-          <div class="detail-item"><strong>Last Week Sales</strong><div>${prevSales? fmtK(prevSales): '—'}</div></div>
-          <div class="detail-item"><strong>Change</strong><div>${pct}</div></div>
+          <div class="detail-item"><strong>Weeks qualified</strong><div>${fmtInt(albumObj.totalWeeks)}</div></div>
           <div class="detail-item"><strong>Tracks charting</strong><div>${albumObj.tracks?.size ?? '—'}</div></div>
         </div>
       `;
@@ -836,10 +620,6 @@
 
       if(currentChart==='tracks') renderTrackChart(entries, weekNumber);
       else if(currentChart==='albums') renderAlbumChart(entries, weekNumber);
-      else if(currentChart==='sales') renderMetricTop20(entries, weekNumber, 'sales', 'Sales');
-      else if(currentChart==='streams') renderMetricTop20(entries, weekNumber, 'streams', 'Streams');
-      else if(currentChart==='radio') renderMetricTop20(entries, weekNumber, 'radio', 'Radio');
-      else if(currentChart==='artists') renderArtistSalesTop(entries, weekNumber);
       else renderTrackChart(entries, weekNumber);
     }
 
@@ -848,7 +628,7 @@
       const weeks = populateWeekSelector();
       restoreState();
       if(!weeks.length){
-        tbody.innerHTML = `<tr><td colspan="8" class="muted">No data found in <code>weekdata.js</code>.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="muted">No data found in <code>weekdata.js</code>.</td></tr>`;
         return;
       }
       if(!weeks.includes(currentWeek)) currentWeek = weeks[weeks.length-1];
