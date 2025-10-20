@@ -85,7 +85,6 @@
     .legend{display:flex; gap:8px; flex-wrap:wrap}
     .key{display:flex; align-items:center; gap:6px; color:var(--muted); font-size:.85rem}
     .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
-    /* keep only re-entry legend */
     .dot.reentry{background:#9aa}
 
     .table-wrap{max-height:68vh; overflow:auto}
@@ -345,6 +344,8 @@
           totalWeeks,
           bestPeak: Number.isFinite(bestPeak) ? bestPeak : '—',
           points: nz(row.points),
+          radio: nz(row.radio),
+          streams: nz(row.streams),
           _key:key
         };
       });
@@ -400,6 +401,28 @@
         tr.querySelector('.rank').addEventListener('click', ()=> showTrackDetails(row, weekNumber, tr));
         tbody.appendChild(tr);
       });
+    }
+
+    // ---------- Albums helpers: compute peak rank across weeks ----------
+    function computeAlbumPeak(weekNumber, albumKey){
+      let peak = Infinity;
+      for(let i=1;i<=weekNumber;i++){
+        const entries = weekData[i] || [];
+        const m = {};
+        for(const r of entries){
+          if(!r || !r.album || typeof r.album!=='string' || r.album.trim().toLowerCase()==='nan') continue;
+          const k = normalize(r.album)+'||'+normalize(r.artist||'');
+          (m[k] ||= {sales:0, tracks:new Set()});
+          m[k].sales += nz(r.sales);
+          m[k].tracks.add(normalize(r.title));
+        }
+        const qualified = Object.entries(m)
+          .filter(([,v])=> v.tracks.size>=2)
+          .sort((a,b)=> b[1].sales - a[1].sales);
+        const idx = qualified.findIndex(([k])=> k===albumKey);
+        if(idx>=0) peak = Math.min(peak, idx+1);
+      }
+      return Number.isFinite(peak) ? peak : '—';
     }
 
     // ---------- Render: Albums ----------
@@ -538,6 +561,8 @@
 
       const html = `
         <div class="detail-grid">
+          <div class="detail-item"><strong>Radio</strong><div>${(nz(row.radio)/1_000_000).toFixed(2)}M</div></div>
+          <div class="detail-item"><strong>Streams</strong><div>${(nz(row.streams)/1_000_000).toFixed(2)}M</div></div>
           <div class="detail-item"><strong>Last Week Rank</strong><div>${lastRank}</div></div>
           <div class="detail-item"><strong>Change (pts)</strong><div>${pct}</div></div>
           <div class="detail-item"><strong>Weeks on Chart</strong><div>${fmtInt(row.totalWeeks)}</div></div>
@@ -548,9 +573,11 @@
     }
 
     function showAlbumDetails(albumObj, weekNumber, trEl){
+      const peak = computeAlbumPeak(weekNumber, albumObj._key);
       const html = `
         <div class="detail-grid">
           <div class="detail-item"><strong>Weeks qualified</strong><div>${fmtInt(albumObj.totalWeeks)}</div></div>
+          <div class="detail-item"><strong>Peak Position</strong><div>${fmtInt(peak)}</div></div>
           <div class="detail-item"><strong>Tracks charting</strong><div>${albumObj.tracks?.size ?? '—'}</div></div>
         </div>
       `;
@@ -637,6 +664,7 @@
   </script>
 </body>
 </html>
+
 
 
 
