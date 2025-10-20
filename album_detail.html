@@ -41,6 +41,10 @@
       text-decoration: underline;
       color: #007acc;
     }
+    .cert {
+      font-weight: 700;
+      margin-top: 0.8rem;
+    }
     ul {
       list-style: none;
       padding-left: 0;
@@ -58,6 +62,19 @@
     }
     ul li a {
       flex-grow: 1;
+    }
+    ul li span.cert-icon {
+      white-space: nowrap;
+      margin-left: 10px;
+      font-size: 0.95rem;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cert-icon img {
+      height: 20px;
+      vertical-align: middle;
     }
     .error {
       color: #d33;
@@ -112,6 +129,9 @@
     body.dark ul li {
       border-color: #444;
     }
+    body.dark ul li span.cert-icon {
+      color: #aaa;
+    }
     body.dark .error {
       color: #ff6666;
     }
@@ -161,7 +181,7 @@
     <p><strong>Weeks at #1:</strong> <span id="weeksAt1">0</span></p>
     <p><strong>Peak Position:</strong> <span id="peak">—</span></p>
     <p><strong>Debut Week:</strong> <span id="debutWeek">—</span></p>
-    <p><strong>Certification:</strong> <span id="albumCert">—</span></p>
+    <p class="cert"><strong>Certification:</strong> <span id="albumCert">—</span></p>
     <div id="certTimeline" aria-label="Certification timeline"></div>
   </div>
 
@@ -192,18 +212,34 @@
 
     function getAlbumCertIcons(sales) {
       const scaled = sales * 500;
-      if (scaled >= 10_000_000) return `Diamond`;
-      if (scaled >= 9_000_000) return `9× Platinum`;
-      if (scaled >= 8_000_000) return `8× Platinum`;
-      if (scaled >= 7_000_000) return `7× Platinum`;
-      if (scaled >= 6_000_000) return `6× Platinum`;
-      if (scaled >= 5_000_000) return `5× Platinum`;
-      if (scaled >= 4_000_000) return `4× Platinum`;
-      if (scaled >= 3_000_000) return `3× Platinum`;
-      if (scaled >= 2_000_000) return `2× Platinum`;
-      if (scaled >= 1_000_000) return `Platinum`;
-      if (scaled >= 500_000) return `Gold`;
+      if (scaled >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+      if (scaled >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
+      if (scaled >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
+      if (scaled >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
+      if (scaled >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
+      if (scaled >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
+      if (scaled >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
+      if (scaled >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
+      if (scaled >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
+      if (scaled >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
+      if (scaled >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
       return "—";
+    }
+
+    function getTrackCertIcon(sales) {
+      const scaled = sales * 1750;
+      if (scaled >= 10_000_000) return `<img src="Diamond.png" class="cert-icon" title="Diamond"> Diamond`;
+      if (scaled >= 9_000_000) return `<img src="9x Platinum.png" class="cert-icon" title="9× Platinum"> 9× Platinum`;
+      if (scaled >= 8_000_000) return `<img src="8x Platinum.png" class="cert-icon" title="8× Platinum"> 8× Platinum`;
+      if (scaled >= 7_000_000) return `<img src="7x Platinum.png" class="cert-icon" title="7× Platinum"> 7× Platinum`;
+      if (scaled >= 6_000_000) return `<img src="6x Platinum.png" class="cert-icon" title="6× Platinum"> 6× Platinum`;
+      if (scaled >= 5_000_000) return `<img src="5x Platinum.png" class="cert-icon" title="5× Platinum"> 5× Platinum`;
+      if (scaled >= 4_000_000) return `<img src="4x Platinum.png" class="cert-icon" title="4× Platinum"> 4× Platinum`;
+      if (scaled >= 3_000_000) return `<img src="3x Platinum.png" class="cert-icon" title="3× Platinum"> 3× Platinum`;
+      if (scaled >= 2_000_000) return `<img src="2x Platinum.png" class="cert-icon" title="2× Platinum"> 2× Platinum`;
+      if (scaled >= 1_000_000) return `<img src="Platinum.png" class="cert-icon" title="Platinum"> Platinum`;
+      if (scaled >= 500_000) return `<img src="Gold.png" class="cert-icon" title="Gold"> Gold`;
+      return "";
     }
 
     const albumLink = document.getElementById("albumLink");
@@ -264,7 +300,7 @@
       }
     }
 
-    // --- MAIN DATA CALCULATION ---
+    // ----- Main change: use streams from weekdata.js instead of calculating -----
     let totalStreams = 0;
     let rawSales = 0;
     const tracks = {};
@@ -273,12 +309,13 @@
       for (const entry of weekData[week]) {
         if (normalize(entry.artist) === normArtist && normalizeAlbum(entry.album) === normAlbum) {
           rawSales += parseFloat(entry.sales) || 0;
-          totalStreams += parseFloat(entry.streams) || 0;
+          totalStreams += parseFloat(entry.streams) || 0; // <- use streams directly
           const trackKey = normalizeTitle(entry.title);
           if (!tracks[trackKey]) {
-            tracks[trackKey] = { title: entry.title, artist: entry.artist, streams: 0 };
+            tracks[trackKey] = { title: entry.title, artist: entry.artist, sales: 0, streams: 0 };
           }
-          tracks[trackKey].streams += parseFloat(entry.streams) || 0;
+          tracks[trackKey].sales += parseFloat(entry.sales) || 0;
+          tracks[trackKey].streams += parseFloat(entry.streams) || 0; // <- track streams
         }
       }
     }
@@ -289,16 +326,17 @@
     weeksAt1El.textContent = weeksAt1;
     debutEl.textContent = debutWeek || "—";
     peakEl.textContent = peakRank === Infinity ? "—" : `#${peakRank}`;
-    albumCertEl.textContent = getAlbumCertIcons(rawSales);
+    albumCertEl.innerHTML = getAlbumCertIcons(rawSales);
 
-    const sortedTracks = Object.values(tracks).sort((a, b) => b.streams - a.streams);
+    const sortedTracks = Object.values(tracks).sort((a, b) => b.streams - a.streams); // sort by streams
     if (sortedTracks.length === 0) {
       errorEl.textContent = "⚠️ No matching album data found in weekdata.js.";
     } else {
       sortedTracks.forEach(track => {
+        const cert = getTrackCertIcon(track.sales);
         const trackURL = `track_detail.html?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`;
         const li = document.createElement("li");
-        li.innerHTML = `<a href="${trackURL}">${track.title}</a> <span>${formatNumber(track.streams)} streams</span>`;
+        li.innerHTML = `<a href="${trackURL}">${track.title}</a> <span class="cert-icon">${cert}</span>`;
         trackList.appendChild(li);
       });
     }
@@ -307,7 +345,6 @@
       return Math.round(num).toLocaleString("en-US");
     }
 
-    // --- Certification timeline (still based on sales) ---
     const certLevels = [
       { label: "Diamond", threshold: 10_000_000 },
       { label: "9× Platinum", threshold: 9_000_000 },
@@ -346,7 +383,7 @@
               }
             }
           }
-          if (cumSales * 5000 >= threshold) {
+          if (cumSales * 500 >= threshold) {
             certDates.push({ label, weekNum });
             break;
           }
