@@ -30,13 +30,12 @@
     .close{ position:absolute; top:12px; right:16px; font-size:2rem; font-weight:bold; cursor:pointer; color:#aaa; }
     .close:hover{ color:#fff; }
 
-    /* NEW: tiny type badges */
-    .badge {
-      display:inline-block; font-size:.8rem; padding:.15rem .5rem; border-radius:6px;
-      background:#333; color:#bbb; margin-left:.5rem; border:1px solid #444;
-    }
+    .badge { display:inline-block; font-size:.8rem; padding:.15rem .5rem; border-radius:6px; background:#333; color:#bbb; margin-left:.5rem; border:1px solid #444; }
     .badge.album   { color:#ffd166; border-color:#665500; }
     .badge.single  { color:#9ccaff; border-color:#224a66; }
+
+    /* top banner for ambiguous items */
+    .banner { max-width:820px; margin:0 auto 1rem auto; padding:.75rem 1rem; border-radius:8px; background:#2a2a2a; border-left:6px solid #665500; }
   </style>
 </head>
 <body>
@@ -63,9 +62,17 @@
   <script>
     // ───────────────── CONFIG ─────────────────
     // Singles/tracks use your existing 2000 rule; albums use 500.
-    const UNITS_PER_SALE_TRACK  = 2000; // ← set to 1750 if that's your rule for tracks
-    const UNITS_PER_SALE_ALBUM  = 500;  // album rule requested
+    const UNITS_PER_SALE_TRACK  = 2000; // set to 1750 if that's your track rule
+    const UNITS_PER_SALE_ALBUM  = 500;  // album rule
     const EPS = 0.000001;
+
+    // Force type per Title|Artist (canonical). Values: "album" | "single"
+    // Example:
+    // "midnights|taylor swift": "album",
+    // "drivers license|olivia rodrigo": "single",
+    const FORCE_TYPE = {
+      // "standing on the sun|beyoncé": "single",
+    };
 
     const thresholds = [
       { level: "🥇 Gold",      value: 500000,   class: "gold"     },
@@ -81,10 +88,12 @@
       { level: "💎 Diamond",   value: 10000000, class: "diamond"  }
     ];
 
-    // Map common field names automatically
-    const WEEKLY_FIELDS = ['sales','units','weeklySales','weekSales','week_units','weekUnits','thisWeekSales','points']; // first match wins
+    // Field priority (first match wins)
+    // If you want points to drive certs, move 'points' to the front.
+    const WEEKLY_FIELDS = ['sales','units','weeklySales','weekSales','week_units','weekUnits','thisWeekSales','points'];
     const CUME_FIELDS   = ['totalSales','total_units','cumulativeSales','cume','total','unitsTotal','lifetimeSales','runningTotal','cumUnits'];
 
+    // ─────────────── Helpers ───────────────
     function num(x){ const n = Number(x); return Number.isFinite(n) ? n : 0; }
     function pick(obj, fields){ for (const f of fields) if (obj != null && obj[f] != null) return obj[f]; return undefined; }
 
@@ -102,18 +111,22 @@
       return `${canonicalize(title)}|${canonicalize(artist)}`;
     }
 
-    // NEW: detect if an entry is an Album vs Single
+    // Detect Album vs Single (true = album, false = single)
     function isAlbumEntry(entry){
-      if (entry?.isAlbum === true) return true;
+      if (entry?.isAlbum === true)  return true;
       if (entry?.isSingle === true) return false;
 
+      const k = keyFor(entry?.title, entry?.artist);
+      if (FORCE_TYPE[k] === 'album')  return true;
+      if (FORCE_TYPE[k] === 'single') return false;
+
       const fmt = String(entry?.format || '').toLowerCase();
-      if (/(^|\s)(album|lp|long\s*play)\b/.test(fmt)) return true;
-      if (/(^|\s)(single|song|track)\b/.test(fmt)) return false;
+      if (/(^|\s)(album|lp|long\s*play)\b/.test(fmt))  return true;
+      if (/(^|\s)(single|song|track)\b/.test(fmt))     return false;
 
       if ('albumUnits' in entry || 'albumSales' in entry) return true;
 
-      // default to single/track if unknown
+      // default to single if unknown
       return false;
     }
 
@@ -154,9 +167,13 @@
     const weeksAsc  = Object.keys(wk).map(Number).sort((a,b)=>a-b);
     const weeksDesc = weeksAsc.slice().reverse();
 
-    const certMaxByKey = Object.create(null);  // highest cert value previously reached
-    const runningTotals = Object.create(null); // if cume missing, we build it from weekly
+    const certMaxByKey   = Object.create(null); // highest cert value previously reached
+    const runningTotals  = Object.create(null); // if cume missing, build from weekly
     const newCertsByWeek = Object.create(null);
+
+    // Debug tracking
+    const ambiguousType = [];
+    const debugCounts = { albums: 0, singles: 0 };
 
     weeksAsc.forEach(weekNum => {
       const entries = Array.isArray(wk[weekNum]) ? wk[weekNum] : [];
@@ -164,55 +181,63 @@
       const newCerts = [];
 
       for (const song of entries) {
-        const rawTitle  = song.title ?? '';
-        const rawArtist = song.artist ?? '';
-        const title = String(rawTitle).trim();
-        const artist = String(rawArtist).trim();
+        const title  = String(song?.title ?? '').trim();
+        const artist = String(song?.artist ?? '').trim();
         if (!title || !artist) continue;
 
         const k = keyFor(title, artist);
         if (seenThisWeek.has(k)) continue; // avoid double-processing same track in week
         seenThisWeek.add(k);
 
-        // Pull weekly base and cumulative base using flexible field detection
+        // Weekly and cumulative bases
         const weeklyBaseRaw = pick(song, WEEKLY_FIELDS);
         const cumeBaseRaw   = pick(song, CUME_FIELDS);
 
         const weeklyBase = num(weeklyBaseRaw);
         let cumeBase = (cumeBaseRaw !== undefined) ? num(cumeBaseRaw) : undefined;
 
-        // If cumulative is missing, build from running totals
         if (cumeBase === undefined) {
           runningTotals[k] = (runningTotals[k] || 0) + weeklyBase;
           cumeBase = runningTotals[k];
         } else {
-          // If we have both: guard against cume going backwards (bad data)
           const last = runningTotals[k] || 0;
           if (cumeBase + EPS < last) {
-            cumeBase = last + weeklyBase; // repair: treat provided cume as stale, build forward
+            cumeBase = last + weeklyBase; // repair: stale cume
           }
-          // keep runningTotals in sync
           runningTotals[k] = cumeBase;
         }
 
-        // Choose album vs single multiplier
+        // Album vs Single
         const album = isAlbumEntry(song);
-        const UNITS_PER_SALE = album ? UNITS_PER_SALE_ALBUM : UNITS_PER_SALE_TRACK;
+        if (album) debugCounts.albums++; else debugCounts.singles++;
 
+        const hadExplicitType = (song?.isAlbum === true || song?.isSingle === true);
+        const kfmt = String(song?.format || '').toLowerCase();
+        const hasTypeHints =
+          hadExplicitType ||
+          /(album|lp|long\s*play|single|song|track)\b/.test(kfmt) ||
+          ('albumUnits' in song) || ('albumSales' in song) ||
+          (FORCE_TYPE[k] != null);
+
+        if (!album && !hasTypeHints) {
+          ambiguousType.push({ title, artist, reason: 'no type hints → defaulted to single' });
+        }
+
+        const UNITS_PER_SALE = album ? UNITS_PER_SALE_ALBUM : UNITS_PER_SALE_TRACK;
         const cumeUnits   = cumeBase   * UNITS_PER_SALE;
         const weeklyUnits = weeklyBase * UNITS_PER_SALE;
 
         const prevMax = certMaxByKey[k] || 0;
 
         if (cumeUnits > prevMax + EPS) {
-          // find ALL thresholds newly crossed this week
+          // thresholds newly crossed this week
           const crossed = thresholds
             .filter(t => t.value - EPS > prevMax && t.value <= cumeUnits + EPS)
             .sort((a,b) => a.value - b.value);
 
-          // NEW: Only push the most recent/highest plaque this week (one entry per week)
+          // Only the most recent/highest plaque this week (one entry per week)
           if (crossed.length){
-            const t = crossed[crossed.length - 1]; // latest/highest
+            const t = crossed[crossed.length - 1];
             newCerts.push({
               title, artist,
               certLevel: t.level,
@@ -226,10 +251,29 @@
         }
       }
 
-      // nicer ordering: highest award first, then title
+      // Order: highest award first, then title
       newCerts.sort((a,b) => b.cumulativeUnitsAtCert - a.cumulativeUnitsAtCert || a.title.localeCompare(b.title));
       newCertsByWeek[weekNum] = newCerts;
     });
+
+    // Debug summary + optional banner
+    console.log('[Cert Debug] Type counts:', debugCounts);
+    if (ambiguousType.length){
+      console.group('[Cert Debug] Ambiguous entries (defaulted to single)');
+      console.table(ambiguousType);
+      console.groupEnd();
+    }
+    (function(){
+      if (!ambiguousType.length) return;
+      const banner = document.createElement('div');
+      banner.className = 'banner';
+      banner.innerHTML = `
+        <strong>${ambiguousType.length}</strong> item(s) defaulted to <em>Single</em> due to missing type hints.
+        <br>Fix by adding <code>isAlbum:true</code> / <code>isSingle:true</code> in weekdata.js,
+        setting <code>format:"Album"</code>, or adding a key in <code>FORCE_TYPE</code>.
+      `;
+      document.body.insertBefore(banner, document.getElementById('nav'));
+    })();
 
     // ─────────────── UI ───────────────
     const output    = document.getElementById('output');
@@ -290,7 +334,6 @@
     prevBtn.addEventListener('click', () => { if (currentWeekIndex < weeksDesc.length - 1){ currentWeekIndex++; renderWeek(currentWeekIndex);} });
     nextBtn.addEventListener('click', () => { if (currentWeekIndex > 0){ currentWeekIndex--; renderWeek(currentWeekIndex);} });
 
-    // UPDATED: show album/single
     function showSalesModal(title, artist, certLevel, weeklyUnits, cumulativeUnits, isAlbum = false) {
       const modal = document.getElementById('salesModal');
       document.getElementById('modalTitle').textContent = `${title} — ${artist}`;
