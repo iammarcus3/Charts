@@ -29,6 +29,14 @@
     .modal-content h2{ color:#66ccff; }
     .close{ position:absolute; top:12px; right:16px; font-size:2rem; font-weight:bold; cursor:pointer; color:#aaa; }
     .close:hover{ color:#fff; }
+
+    /* NEW: tiny type badges */
+    .badge {
+      display:inline-block; font-size:.8rem; padding:.15rem .5rem; border-radius:6px;
+      background:#333; color:#bbb; margin-left:.5rem; border:1px solid #444;
+    }
+    .badge.album   { color:#ffd166; border-color:#665500; }
+    .badge.single  { color:#9ccaff; border-color:#224a66; }
   </style>
 </head>
 <body>
@@ -54,7 +62,9 @@
   <script src="weekdata.js"></script>
   <script>
     // ───────────────── CONFIG ─────────────────
-    const UNITS_PER_SALE = 2000; // ← set to 1750 if that's your rule
+    // Singles/tracks use your existing 2000 rule; albums use 500.
+    const UNITS_PER_SALE_TRACK  = 2000; // ← set to 1750 if that's your rule for tracks
+    const UNITS_PER_SALE_ALBUM  = 500;  // album rule requested
     const EPS = 0.000001;
 
     const thresholds = [
@@ -90,6 +100,21 @@
     }
     function keyFor(title, artist){
       return `${canonicalize(title)}|${canonicalize(artist)}`;
+    }
+
+    // NEW: detect if an entry is an Album vs Single
+    function isAlbumEntry(entry){
+      if (entry?.isAlbum === true) return true;
+      if (entry?.isSingle === true) return false;
+
+      const fmt = String(entry?.format || '').toLowerCase();
+      if (/(^|\s)(album|lp|long\s*play)\b/.test(fmt)) return true;
+      if (/(^|\s)(single|song|track)\b/.test(fmt)) return false;
+
+      if ('albumUnits' in entry || 'albumSales' in entry) return true;
+
+      // default to single/track if unknown
+      return false;
     }
 
     function getCertImage(level) {
@@ -170,9 +195,14 @@
           runningTotals[k] = cumeBase;
         }
 
-        const prevMax = certMaxByKey[k] || 0;
+        // NEW: choose album vs single multiplier
+        const album = isAlbumEntry(song);
+        const UNITS_PER_SALE = album ? UNITS_PER_SALE_ALBUM : UNITS_PER_SALE_TRACK;
+
         const cumeUnits   = cumeBase   * UNITS_PER_SALE;
         const weeklyUnits = weeklyBase * UNITS_PER_SALE;
+
+        const prevMax = certMaxByKey[k] || 0;
 
         if (cumeUnits > prevMax + EPS) {
           // find ALL thresholds newly crossed this week
@@ -186,7 +216,8 @@
               certLevel: t.level,
               certClass: t.class,
               weeklyUnits,
-              cumulativeUnitsAtCert: Math.max(t.value, cumeUnits)
+              cumulativeUnitsAtCert: Math.max(t.value, cumeUnits),
+              isAlbum: album // keep type for UI
             });
           });
 
@@ -228,16 +259,20 @@
           const trackLink  = `track_detail.html?title=${encodeURIComponent(c.title)}&artist=${encodeURIComponent(c.artist)}`;
           const artistLink = `artist.html?name=${encodeURIComponent(c.artist)}`;
           const img = getCertImage(c.certLevel);
+          const typeBadge = c.isAlbum
+            ? `<span class="badge album" title="Album">Album</span>`
+            : `<span class="badge single" title="Single">Single</span>`;
 
           const el = document.createElement('div');
           el.className = `cert ${c.certClass}`;
           el.innerHTML = `
             <a href="javascript:void(0)"
-               onclick="showSalesModal('${c.title.replace(/'/g,"&#39;")}', '${c.artist.replace(/'/g,"&#39;")}', '${c.certLevel}', ${Math.round(c.weeklyUnits)}, ${Math.round(c.cumulativeUnitsAtCert)})">
+               onclick="showSalesModal('${c.title.replace(/'/g,"&#39;")}', '${c.artist.replace(/'/g,"&#39;")}', '${c.certLevel}', ${Math.round(c.weeklyUnits)}, ${Math.round(c.cumulativeUnitsAtCert)}, ${c.isAlbum})">
                ${img}
             </a>
             <a href="${trackLink}">${c.title}</a> by
             <a href="${artistLink}">${c.artist}</a>
+            ${typeBadge}
             <span class="meta">${c.certLevel}</span>
           `;
           div.appendChild(el);
@@ -254,10 +289,12 @@
     prevBtn.addEventListener('click', () => { if (currentWeekIndex < weeksDesc.length - 1){ currentWeekIndex++; renderWeek(currentWeekIndex);} });
     nextBtn.addEventListener('click', () => { if (currentWeekIndex > 0){ currentWeekIndex--; renderWeek(currentWeekIndex);} });
 
-    function showSalesModal(title, artist, certLevel, weeklyUnits, cumulativeUnits) {
+    // UPDATED: show album/single
+    function showSalesModal(title, artist, certLevel, weeklyUnits, cumulativeUnits, isAlbum = false) {
       const modal = document.getElementById('salesModal');
       document.getElementById('modalTitle').textContent = `${title} — ${artist}`;
       document.getElementById('modalBody').innerHTML = `
+        <strong>Type:</strong> ${isAlbum ? 'Album' : 'Single'}<br>
         <strong>Certification:</strong> ${certLevel}<br>
         <strong>Sales this week:</strong> ${fmt(weeklyUnits)} units<br>
         <strong>Total certified units:</strong> ${fmt(cumulativeUnits)}
@@ -272,3 +309,4 @@
   </script>
 </body>
 </html>
+
