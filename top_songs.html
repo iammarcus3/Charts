@@ -195,7 +195,7 @@
           runningTotals[k] = cumeBase;
         }
 
-        // NEW: choose album vs single multiplier
+        // Choose album vs single multiplier
         const album = isAlbumEntry(song);
         const UNITS_PER_SALE = album ? UNITS_PER_SALE_ALBUM : UNITS_PER_SALE_TRACK;
 
@@ -210,18 +210,19 @@
             .filter(t => t.value - EPS > prevMax && t.value <= cumeUnits + EPS)
             .sort((a,b) => a.value - b.value);
 
-          crossed.forEach(t => {
+          // NEW: Only push the most recent/highest plaque this week (one entry per week)
+          if (crossed.length){
+            const t = crossed[crossed.length - 1]; // latest/highest
             newCerts.push({
               title, artist,
               certLevel: t.level,
               certClass: t.class,
               weeklyUnits,
               cumulativeUnitsAtCert: Math.max(t.value, cumeUnits),
-              isAlbum: album // keep type for UI
+              isAlbum: album
             });
-          });
-
-          if (crossed.length) certMaxByKey[k] = crossed[crossed.length - 1].value;
+            certMaxByKey[k] = t.value;
+          }
         }
       }
 
