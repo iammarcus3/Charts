@@ -190,6 +190,7 @@
               <th>Title</th>
               <th>Artist</th>
               <th>Points</th>
+              <th class="right">Sales</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -243,23 +244,25 @@
       return Object.keys(weekData || {}).map(k => +k).filter(n=>!isNaN(n)).sort((a,b)=>a-b);
     }
 
-    // ---------- Dynamic header ----------
+    // ---------- Dynamic header (with Sales column) ----------
     function setTableHeader(kind){
       let cols;
       if(kind==='tracks'){
-        cols = ['Rank','Move','Title','Artist','Points'];
+        cols = ['Rank','Move','Title','Artist','Points','Sales'];
       } else if(kind==='albums'){
-        cols = ['Rank','Move','Album','Artist','Index'];
+        cols = ['Rank','Move','Album','Artist','Index','Sales'];
       } else {
-        cols = ['Rank','Move','Title','Artist','Points'];
+        cols = ['Rank','Move','Title','Artist','Points','Sales'];
       }
-      thead.innerHTML = `<tr>
+      let html = `<tr>
         <th style="width:64px;">${cols[0]}</th>
         <th style="width:90px;">${cols[1]}</th>
         <th>${cols[2]}</th>
         <th>${cols[3]}</th>
-        <th>${cols[4]}</th>
-      </tr>`;
+        <th>${cols[4]}</th>`;
+      if (cols[5]) html += `<th class="right">${cols[5]}</th>`;
+      html += `</tr>`;
+      thead.innerHTML = html;
     }
 
     // ---------- Tabs ----------
@@ -346,6 +349,7 @@
           points: nz(row.points),
           radio: nz(row.radio),
           streams: nz(row.streams),
+          sales: nz(row.sales),
           _key:key
         };
       });
@@ -397,6 +401,7 @@
           <td>
             <div class="points-bar" title="${row.points.toFixed(2)} pts"><i style="width:${barWidth}%"></i></div>
           </td>
+          <td class="right num">${nz(row.sales)>0 ? fmtInt(row.sales) : '—'}</td>
         `;
         tr.querySelector('.rank').addEventListener('click', ()=> showTrackDetails(row, weekNumber, tr));
         tbody.appendChild(tr);
@@ -529,6 +534,7 @@
               <i style="width:${Math.max(2, (a.sales>0? (a.sales/(slice[0]?.sales||a.sales))*100:0))}%"></i>
             </div>
           </td>
+          <td class="right num">${nz(a.sales)>0 ? fmtInt(a.sales) : '—'}</td>
         `;
         tr.querySelector('.rank').addEventListener('click', ()=> showAlbumDetails(a, weekNumber, tr));
         tbody.appendChild(tr);
@@ -655,7 +661,7 @@
       const weeks = populateWeekSelector();
       restoreState();
       if(!weeks.length){
-        tbody.innerHTML = `<tr><td colspan="5" class="muted">No data found in <code>weekdata.js</code>.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="muted">No data found in <code>weekdata.js</code>.</td></tr>`;
         return;
       }
       if(!weeks.includes(currentWeek)) currentWeek = weeks[weeks.length-1];
