@@ -94,25 +94,41 @@ function lastFridayToThursdayRange() {
 function tryParseByRegex(abs) {
   const raw = fs.readFileSync(abs, "utf8");
 
-  // 1) const weekData = { ... }; module.exports = weekData;
-  let m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?\s*module\.exports\s*=\s*weekData\b/);
-  if (m) { return JSON.parse(m[1]); }
+  // A) "const weekData = { ... };" (no export required)
+  let m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?/);
+  if (m) {
+    try { return JSON.parse(m[1]); } catch {}
+  }
 
-  // 2) module.exports = { ... };
+  // B) "const weekData = { ... }; module.exports = weekData;"
+  m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?\s*module\.exports\s*=\s*weekData\b/);
+  if (m) {
+    try { return JSON.parse(m[1]); } catch {}
+  }
+
+  // C) "module.exports = { ... };"
   m = raw.match(/module\.exports\s*=\s*(\{[\s\S]*?\})\s*;?/);
-  if (m) { return JSON.parse(m[1]); }
+  if (m) {
+    try { return JSON.parse(m[1]); } catch {}
+  }
 
-  // 3) export default { ... }
+  // D) "export default { ... }"
   m = raw.match(/export\s+default\s+(\{[\s\S]*?\})\s*;?/);
-  if (m) { return JSON.parse(m[1]); }
+  if (m) {
+    try { return JSON.parse(m[1]); } catch {}
+  }
 
-  // 4) export const weekData = { ... }
+  // E) "export const weekData = { ... }"
   m = raw.match(/export\s+const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?/);
-  if (m) { return JSON.parse(m[1]); }
+  if (m) {
+    try { return JSON.parse(m[1]); } catch {}
+  }
 
-  // 5) const weekData = { ... }; export default weekData;
+  // F) "const weekData = { ... }; export default weekData;"
   m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?\s*export\s+default\s+weekData\b/);
-  if (m) { return JSON.parse(m[1]); }
+  if (m) {
+    try { return JSON.parse(m[1]); } catch {}
+  }
 
   return null; // unknown format
 }
@@ -125,14 +141,14 @@ function tryParseByVM(abs) {
     module: { exports: {} },
     exports: {},
     require: function () { throw new Error("require() disabled in parser"); },
-    process: { env: {} },        // minimal stub
-    console: { log(){}, warn(){}, error(){} }, // silence any logs
+    process: { env: {} },
+    console: { log(){}, warn(){}, error(){} },
     globalThis: undefined,
   };
   vm.createContext(sandbox);
 
   try {
-    // Try ESM-ish: replace top-level `export default` and `export const` with assignments to exports
+    // make ESM-ish shapes look like CJS
     const transformed = code
       .replace(/\bexport\s+default\s+/g, "module.exports = ")
       .replace(/\bexport\s+const\s+(\w+)\s*=\s*/g, "const $1 = ")
@@ -141,7 +157,6 @@ function tryParseByVM(abs) {
     const script = new vm.Script(transformed, { filename: abs, displayErrors: true });
     script.runInContext(sandbox, { timeout: 1000 });
 
-    // prefer explicit module.exports, then default, then named
     let out = sandbox.module && sandbox.module.exports;
     if (!out || (typeof out !== "object")) {
       if (sandbox.exports && typeof sandbox.exports === "object" && sandbox.exports.default) {
@@ -192,7 +207,7 @@ function loadWeekData(filePathRel) {
     return vmObj;
   }
 
-  // 3) Fallback: require() (CJS only). Keep last, since your file might be ESM.
+  // 3) Fallback: require()
   try {
     delete require.cache[abs];
     const mod = require(abs);
