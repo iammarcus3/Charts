@@ -1,187 +1,255 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Weekly Last.fm Chart</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Last.fm Weekly Charts</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 24px; }
-    h1 { margin-bottom: 8px; }
-    .input-group { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
-    label { font-size: 14px; }
-    input { padding: 8px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
-    button { padding: 10px 16px; border: 0; border-radius: 8px; background: #111; color: #fff; cursor: pointer; }
-    button:disabled { opacity: 0.6; cursor: default; }
-    .muted { color: #666; font-size: 13px; margin-top: 6px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 8px 10px; border-bottom: 1px solid #eee; font-size: 14px; text-align: left; }
-    th { background: #f5f5f5; position: sticky; top: 0; }
+    body { font-family: sans-serif; margin: 2em; background: #f9f9f9; }
+    h1 { font-size: 1.5em; }
+    .form { margin-bottom: 1em; }
+    input[type=text] { padding: 0.3em; font-size: 1em; }
+    button { padding: 0.4em 0.8em; font-size: 1em; cursor: pointer; }
+    .message { color: #d00; margin: 0.5em 0 1em; }
+    .controls { margin: 1em 0; }
+    select { font-size: 1em; padding: 0.2em; }
+    .table-container { max-width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #ccc; }
+    th { background: #eaeaea; }
+    tr:nth-child(even) td { background: #f7f7f7; }
+    /* Center-align numeric columns (Rank, Last Week, Peak, Weeks) */
+    td:nth-child(1), td:nth-child(4), td:nth-child(5), td:nth-child(6),
+    th:nth-child(1), th:nth-child(4), th:nth-child(5), th:nth-child(6) {
+      text-align: center;
+    }
+    /* Allow long text to wrap in Title/Artist columns */
+    td:nth-child(2), td:nth-child(3) { word-break: break-word; }
   </style>
 </head>
 <body>
-  <h1>Last.fm Weekly Chart</h1>
-  <p class="muted">Enter your Last.fm username to see your top tracks from the last full week (Friday to Thursday).</p>
 
-  <div class="input-group">
-    <label for="user">Username:</label>
-    <input id="user" placeholder="yourusername" />
-    <button id="run">Get Weekly Chart</button>
+<h1>Last.fm Weekly Charts</h1>
+
+<div class="form">
+  <label>Last.fm Username: 
+    <input type="text" id="usernameInput" placeholder="Enter username" />
+  </label>
+  <button id="loadBtn">Load Charts</button>
+</div>
+
+<div id="chartArea" style="display:none;">
+  <div class="controls">
+    <label for="weekSelect">Select Week:</label>
+    <select id="weekSelect"></select>
   </div>
+  <div class="table-container">
+    <table id="chartTable">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Title</th>
+          <th>Artist</th>
+          <th>Last&nbsp;Week</th>
+          <th>Peak</th>
+          <th>Weeks&nbsp;on&nbsp;Chart</th>
+        </tr>
+      </thead>
+      <tbody id="chartBody">
+        <!-- Rows will be inserted here -->
+      </tbody>
+    </table>
+  </div>
+</div>
 
-  <div class="muted" id="rangeText"></div>
-  <div id="status" class="muted"></div>
-  <div id="results"></div>
+<div id="message" class="message"></div>
 
-  <script>
-    const API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822"; // embedded securely in code
-    const STREAMS_FACTORS = [
-      [1,1,48.50],[2,2,46.78],[3,5,30.90],[6,6,20.90],[7,10,22.90],
-      [11,15,27.85],[16,25,25.90],[26,30,42.70],[31,50,33.95],
-      [51,70,50.90],[71,85,46.50],[86,200,70.00],
-    ];
-    const RADIO_FACTORS = [
-      [1,1,186.90],[2,2,450.10],[3,5,620.20],[6,6,930.30],
-      [7,10,1840.40],[11,15,800.50],[16,25,700.60],[26,30,650.70],
-      [31,50,400.80],[51,70,150.90],[71,85,90.10],[86,200,60.11],
-    ];
-    function getMultiplierForRank(rank) {
-      if (rank === 1) return 39.45;
-      else if (rank <= 5) return 35.89;
-      else if (rank <= 10) return 32.16;
-      else if (rank <= 20) return 30.99;
-      else if (rank <= 40) return 28.98;
-      else if (rank <= 50) return 26.10;
-      else if (rank <= 60) return 23.78;
-      else if (rank <= 70) return 21.06;
-      else if (rank <= 80) return 20.99;
-      else return 10.9;
-    }
-    function getFactor(table, weeks) {
-      for (const [s, e, f] of table) {
-        if (s <= weeks && weeks <= e) return f;
-      }
-      return table[table.length - 1][2];
-    }
-    function calcSales(plays, m) {
-      return plays * m;
-    }
-    function calcStreams(sales, weeks) {
-      return sales * getFactor(STREAMS_FACTORS, weeks) * 8500;
-    }
-    function calcRadio(sales, weeks) {
-      return sales * getFactor(RADIO_FACTORS, weeks) * 1000;
-    }
-    function calcPoints(sales, streams, radio, maxS, maxSt, maxR) {
-      if (!maxS) maxS = 1; if (!maxSt) maxSt = 1; if (!maxR) maxR = 1;
-      return Math.round(200 * (0.3 * (sales / maxS) + 0.3 * (streams / maxSt) + 0.4 * (radio / maxR)));
-    }
-    function keyOf(t, a) {
-      return String(t).toLowerCase().trim() + "||" + String(a).toLowerCase().trim();
-    }
-    function weekRange() {
-      const TZ = 2 * 3600;
-      const now = Math.floor(Date.now() / 1000) + TZ;
-      const d = new Date(now * 1000);
-      const localMidnight = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-      const dow = localMidnight.getUTCDay();
-      const sinceFri = (dow - 5 + 7) % 7;
-      const thisFri = new Date(localMidnight.getTime() - sinceFri * 86400 * 1000);
-      const prevFri = new Date(thisFri.getTime() - 7 * 86400 * 1000);
-      const from = Math.floor((prevFri.getTime() - TZ * 1000) / 1000);
-      const to = Math.floor((thisFri.getTime() - TZ * 1000) / 1000);
-      return { from, to, start: prevFri, end: thisFri };
-    }
-    function fmt(d) {
-      return d.toISOString().slice(0, 10);
-    }
-    async function fetchScrobbles(user, from, to) {
-      let page = 1, totalPages = 1, all = [];
-      while (page <= totalPages) {
-        const url = `https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user=${encodeURIComponent(user)}&api_key=${API_KEY}&format=json&from=${from}&to=${to}&limit=200&page=${page}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Last.fm ${res.status}`);
-        const j = await res.json();
-        const arr = (j.recenttracks && j.recenttracks.track) || [];
-        for (const t of arr) {
-          if (t.date) all.push(t);
-        }
-        const attr = j.recenttracks && j.recenttracks['@attr'];
-        totalPages = attr ? parseInt(attr.totalPages || "1", 10) : 1;
-        page++;
-      }
-      return all;
-    }
-    function aggregatePlays(scrobbles) {
-      const m = new Map();
-      for (const t of scrobbles) {
-        const title = t.name;
-        const artist = t.artist?.['#text'] || t.artist?.name || '';
-        const album = t.album?.['#text'] || 'Unknown';
-        const k = keyOf(title, artist);
-        const cur = m.get(k) || { title, artist, album, plays: 0 };
-        cur.plays++;
-        m.set(k, cur);
-      }
-      return [...m.values()];
-    }
-    function scoreWeek(rows, topN = 100) {
-      rows.sort((a, b) => b.plays - a.plays);
-      let maxS = 0, maxSt = 0, maxR = 0;
-      const provisional = rows.slice(0, Math.max(topN, rows.length)).map((r, i) => {
-        const rank = i + 1, weeks = 1, mult = getMultiplierForRank(rank);
-        const sales = calcSales(r.plays, mult);
-        const streams = calcStreams(sales, weeks);
-        const radio = calcRadio(sales, weeks);
-        maxS = Math.max(maxS, sales); maxSt = Math.max(maxSt, streams); maxR = Math.max(maxR, radio);
-        return { ...r, rank, weeks, sales, streams, radio };
-      });
-      const final = provisional.map(e => ({
-        rank: e.rank, movement: "NEW", title: e.title, artist: e.artist, album: e.album, plays: e.plays,
-        sales: e.sales, totalSales: e.sales, weeks: e.weeks, peak: e.rank,
-        streams: Math.trunc(e.streams), radio: e.radio,
-        points: calcPoints(e.sales, e.streams, e.radio, maxS, maxSt, maxR)
-      })).sort((a, b) => b.points - a.points);
-      return final.map((e, i) => ({ ...e, rank: i + 1 }));
-    }
-    function renderTable(target, week, rows) {
-      const cols = ["rank", "movement", "title", "artist", "plays", "sales", "streams", "radio", "points"];
-      let html = `<h2>Chart for ${fmt(week.start)} to ${fmt(week.end)}</h2>`;
-      html += `<table><thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>`;
-      for (const r of rows) {
-        html += `<tr>${cols.map(c => `<td>${typeof r[c] === "number" ? r[c].toLocaleString() : r[c]}</td>`).join("")}</tr>`;
-      }
-      html += `</tbody></table>`;
-      target.innerHTML = html;
-    }
+<script>
+(() => {
+  const API_KEY = 'YOUR_LASTFM_API_KEY_HERE';  // ←—— Embed your Last.fm API key here
+  const baseURL = 'https://ws.audioscrobbler.com/2.0/';
+  const usernameInput = document.getElementById('usernameInput');
+  const loadBtn = document.getElementById('loadBtn');
+  const chartArea = document.getElementById('chartArea');
+  const weekSelect = document.getElementById('weekSelect');
+  const chartBody = document.getElementById('chartBody');
+  const messageEl = document.getElementById('message');
 
-    document.getElementById('run').addEventListener('click', async () => {
-      const user = document.getElementById('user').value.trim();
-      const status = document.getElementById('status');
-      const results = document.getElementById('results');
-      status.textContent = ''; results.innerHTML = ''; document.getElementById('run').disabled = true;
-      if (!user) {
-        status.textContent = "Please enter a Last.fm username.";
-        document.getElementById('run').disabled = false;
-        return;
-      }
+  let chartsData = [];    // Array of weekly charts (each is an array of track entries)
+  let chartDates = [];    // Array of week end date labels corresponding to chartsData
 
-      const { from, to, start, end } = weekRange();
-      document.getElementById('rangeText').textContent = `Week: ${fmt(start)} to ${fmt(end)}`;
+  // Helper: fetch JSON from Last.fm API with given params object
+  async function fetchLastFM(params) {
+    params.api_key = API_KEY;
+    params.format = 'json';
+    const query = new URLSearchParams(params);
+    const url = baseURL + '?' + query.toString();
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    return response.json();
+  }
 
-      try {
-        status.textContent = 'Fetching scrobbles…';
-        const scrobbles = await fetchScrobbles(user, from, to);
-        status.textContent = `Fetched ${scrobbles.length.toLocaleString()} scrobbles. Processing…`;
-        const rows = aggregatePlays(scrobbles);
-        const scored = scoreWeek(rows);
-        status.textContent = `Done. Showing top ${Math.min(100, scored.length)}.`;
-        renderTable(results, { start, end }, scored.slice(0, 100));
-      } catch (err) {
-        status.textContent = `Error: ${err.message}`;
-      } finally {
-        document.getElementById('run').disabled = false;
-      }
+  // Helper: Clear any existing message and show a new one (for errors)
+  function showMessage(msg) {
+    messageEl.textContent = msg;
+  }
+
+  // Populate the week dropdown and display a given week's chart
+  function renderWeekOptionsAndChart(selectedIndex) {
+    // Populate dropdown options
+    weekSelect.innerHTML = '';
+    chartDates.forEach((label, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = label;
+      weekSelect.appendChild(opt);
     });
-  </script>
+    // Select the requested week index
+    weekSelect.value = selectedIndex;
+    // Render the chart table for that week
+    renderChartTable(selectedIndex);
+  }
+
+  // Render the chart table for a given week index (in chartsData)
+  function renderChartTable(weekIndex) {
+    const currentWeekTracks = chartsData[weekIndex];  // array of track objects for this week
+    const prevWeekIndex = weekIndex > 0 ? weekIndex - 1 : null;
+    // Build table rows
+    chartBody.innerHTML = '';
+    currentWeekTracks.forEach(track => {
+      const { rank, name, artist } = track;
+      // Compute last week, peak, weeks on chart for this track as of the selected week
+      let lastWeekPos = '–';
+      let peakPos = rank;
+      let weeksCount = 1;
+      // Find the track in other weeks up to current weekIndex
+      for (let j = 0; j < chartsData.length; j++) {
+        if (j > weekIndex) break;  // only consider up to current week
+        if (j === weekIndex) continue;  // skip current week (we already count it)
+        const found = chartsData[j].find(t => t.name === name && t.artist === artist);
+        if (found) {
+          weeksCount++;
+          const prevRank = parseInt(found.rank);
+          if (prevRank < peakPos) peakPos = prevRank;
+          // If this was last week, store the position for display
+          if (j === prevWeekIndex) {
+            lastWeekPos = prevRank.toString();
+          }
+        }
+      }
+      // If the track never appeared before this week in our data, weeksCount remains 1 and lastWeekPos stays "–"
+      // Create table row
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${rank}</td>
+        <td>${name}</td>
+        <td>${artist}</td>
+        <td>${lastWeekPos}</td>
+        <td>${peakPos}</td>
+        <td>${weeksCount}</td>`;
+      chartBody.appendChild(tr);
+    });
+  }
+
+  // Main function to load charts for the given username
+  async function loadCharts(username) {
+    showMessage('');  // clear any previous messages
+    chartArea.style.display = 'none';
+    chartsData = [];
+    chartDates = [];
+    try {
+      // Fetch weekly chart list (all available weeks for user)
+      const listData = await fetchLastFM({ method: 'user.getWeeklyChartList', user: username });
+      if (!listData.weeklychartlist || !listData.weeklychartlist.chart) {
+        throw new Error('No chart data available for this user.');
+      }
+      let chartList = listData.weeklychartlist.chart;
+      // If only one chart, ensure it's in an array
+      if (!Array.isArray(chartList)) {
+        chartList = [ chartList ];
+      }
+      if (chartList.length === 0) {
+        throw new Error('No weekly charts found for this user.');
+      }
+      // Determine how many weeks to fetch (last 10 weeks or fewer if not available)
+      const totalWeeks = chartList.length;
+      const weeksToFetch = totalWeeks >= 10 ? 10 : totalWeeks;
+      const startIndex = totalWeeks - weeksToFetch;
+      const recentCharts = chartList.slice(startIndex, totalWeeks);
+      // Fetch each weekly chart (top tracks)
+      for (let i = 0; i < recentCharts.length; i++) {
+        const { from, to } = recentCharts[i];
+        const chartData = await fetchLastFM({
+          method: 'user.getWeeklyTrackChart',
+          user: username,
+          from: from,
+          to: to,
+          limit: 100
+        });
+        if (!chartData.weeklytrackchart) {
+          continue; // skip if no data (though should not happen if list gave it)
+        }
+        let tracks = chartData.weeklytrackchart.track;
+        if (!tracks) {
+          tracks = [];
+        } else if (!Array.isArray(tracks)) {
+          // If only one track, wrap it in array
+          tracks = [ tracks ];
+        }
+        // Convert track entries to a normalized format
+        const weekTracks = tracks.map(t => {
+          const rank = t["@attr"] ? parseInt(t["@attr"].rank) : parseInt(t.rank);
+          const name = t.name || '';
+          const artist = t.artist && (t.artist.name || t.artist) ? (t.artist.name || t.artist) : '';
+          return { rank: rank, name: name, artist: artist };
+        });
+        // Sort by rank just in case (API should already return ordered by rank)
+        weekTracks.sort((a, b) => a.rank - b.rank);
+        chartsData.push(weekTracks);
+        // Prepare a label for this week (use the 'to' date as week ending date)
+        const endDate = new Date(parseInt(to) * 1000);
+        // Format date as e.g. "Week ending Feb 20, 2005"
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        const endDateStr = endDate.toLocaleDateString(undefined, options); 
+        chartDates.push(`Week ending ${endDateStr}`);
+      }
+      // Ensure chartsData and chartDates are aligned (oldest to newest). 
+      // The API list is usually chronological; we sliced the last part in order, 
+      // so chartsData[0] corresponds to the oldest of the fetched weeks and last index is newest.
+      // Show the chart area and render the most recent week (last index).
+      if (chartsData.length > 0) {
+        chartArea.style.display = 'block';
+        const latestIndex = chartsData.length - 1;
+        renderWeekOptionsAndChart(latestIndex);
+      } else {
+        throw new Error('No weekly chart tracks found.');
+      }
+    } catch (error) {
+      showMessage(error.message || 'Failed to load charts. Please try again.');
+    }
+  }
+
+  // Event handlers
+  loadBtn.addEventListener('click', () => {
+    const user = usernameInput.value.trim();
+    if (!user) {
+      showMessage('Please enter a Last.fm username.');
+      return;
+    }
+    loadCharts(user);
+  });
+
+  weekSelect.addEventListener('change', () => {
+    const idx = parseInt(weekSelect.value);
+    if (!isNaN(idx)) {
+      renderChartTable(idx);
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
+
