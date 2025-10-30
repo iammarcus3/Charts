@@ -5,6 +5,7 @@
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
+const vm = require("vm");
 
 // --- Settings: Last.fm credentials ---
 const API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822";
@@ -89,7 +90,7 @@ function lastFridayToThursdayRange() {
   return { from, to };
 }
 
-// ---- Robust parsers (handle CommonJS + ESM + legacy styles) ----
+// ---- Robust parsers (Regex + sandboxed VM to capture exports) ----
 function tryParseByRegex(abs) {
   const raw = fs.readFileSync(abs, "utf8");
 
@@ -109,7 +110,53 @@ function tryParseByRegex(abs) {
   m = raw.match(/export\s+const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?/);
   if (m) { return JSON.parse(m[1]); }
 
+  // 5) const weekData = { ... }; export default weekData;
+  m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?\s*export\s+default\s+weekData\b/);
+  if (m) { return JSON.parse(m[1]); }
+
   return null; // unknown format
+}
+
+function tryParseByVM(abs) {
+  const code = fs.readFileSync(abs, "utf8");
+
+  // sandbox that blocks require and hides globals
+  const sandbox = {
+    module: { exports: {} },
+    exports: {},
+    require: function () { throw new Error("require() disabled in parser"); },
+    process: { env: {} },        // minimal stub
+    console: { log(){}, warn(){}, error(){} }, // silence any logs
+    globalThis: undefined,
+  };
+  vm.createContext(sandbox);
+
+  try {
+    // Try ESM-ish: replace top-level `export default` and `export const` with assignments to exports
+    const transformed = code
+      .replace(/\bexport\s+default\s+/g, "module.exports = ")
+      .replace(/\bexport\s+const\s+(\w+)\s*=\s*/g, "const $1 = ")
+      .concat("\nif (typeof module !== 'undefined' && module.exports == null && typeof exports !== 'undefined' && exports.default) module.exports = exports.default;\n");
+
+    const script = new vm.Script(transformed, { filename: abs, displayErrors: true });
+    script.runInContext(sandbox, { timeout: 1000 });
+
+    // prefer explicit module.exports, then default, then named
+    let out = sandbox.module && sandbox.module.exports;
+    if (!out || (typeof out !== "object")) {
+      if (sandbox.exports && typeof sandbox.exports === "object" && sandbox.exports.default) {
+        out = sandbox.exports.default;
+      } else if (sandbox.exports && typeof sandbox.exports === "object") {
+        out = sandbox.exports;
+      }
+    }
+    if (out && typeof out === "object" && !Array.isArray(out)) {
+      return out;
+    }
+  } catch (e) {
+    console.warn("WARN: VM parse failed:", e.message);
+  }
+  return null;
 }
 
 function loadWeekData(filePathRel) {
@@ -123,14 +170,12 @@ function loadWeekData(filePathRel) {
     throw new Error("weekdata.js not found — refusing to run with empty data");
   }
 
-  // Preferred: tolerant text parse (supports ESM/CJS/legacy)
+  // 1) Regex parse (fast path)
   try {
     const parsed = tryParseByRegex(abs);
     if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
       const keys = Object.keys(parsed).map(Number).filter(Number.isFinite);
-      if (keys.length === 0) {
-        throw new Error("Parsed object has no week keys — aborting to protect history");
-      }
+      if (keys.length === 0) throw new Error("Parsed object has no week keys — aborting to protect history");
       console.log("DEBUG: Loaded via regex parser with weeks:", keys.sort((a,b)=>a-b));
       return parsed;
     }
@@ -138,7 +183,16 @@ function loadWeekData(filePathRel) {
     console.warn("WARN: regex parse failed:", e.message);
   }
 
-  // Fallback: require() (works for CJS or transpiled ESM)
+  // 2) Sandboxed VM evaluation to capture exports (handles ESM/CJS hybrids)
+  const vmObj = tryParseByVM(abs);
+  if (vmObj) {
+    const keys = Object.keys(vmObj).map(Number).filter(Number.isFinite);
+    if (keys.length === 0) throw new Error("VM parse produced object with no week keys — aborting to protect history");
+    console.log("DEBUG: Loaded via VM parser with weeks:", keys.sort((a,b)=>a-b));
+    return vmObj;
+  }
+
+  // 3) Fallback: require() (CJS only). Keep last, since your file might be ESM.
   try {
     delete require.cache[abs];
     const mod = require(abs);
@@ -147,9 +201,7 @@ function loadWeekData(filePathRel) {
       : null;
     if (obj && !Array.isArray(obj)) {
       const keys = Object.keys(obj).map(Number).filter(Number.isFinite);
-      if (keys.length === 0) {
-        throw new Error("require() returned object with no week keys — aborting to protect history");
-      }
+      if (keys.length === 0) throw new Error("require() returned object with no week keys — aborting to protect history");
       console.log("DEBUG: Loaded via require() with weeks:", keys.sort((a,b)=>a-b));
       return obj;
     }
@@ -177,6 +229,7 @@ function saveWeekData(filePathRel, newDataObj, oldKeyCount) {
     throw new Error(`Refusing to save: week count shrank from ${oldKeyCount} to ${keysSorted.length}`);
   }
 
+  // Always write as CommonJS to keep runtime simple
   const newContent =
     "const weekData = " +
     JSON.stringify(merged, null, 2) +
@@ -366,4 +419,5 @@ if (require.main === module) {
 }
 
 module.exports = { handler };
+
 
