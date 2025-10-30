@@ -206,9 +206,29 @@
       const rows = arr.map(t=>({
         rank: Number(t['@attr']?.rank ?? t.rank ?? 0),
         name: t.name || '',
-        artist: (t.artist?.name ?? t.artist ?? '')
+        artist: (t.artist?.name ?? t.artist?.['#text'] ?? t.artist ?? '')
       })).filter(r=>r.rank>0).sort((a,b)=> a.rank-b.rank);
       return rows;
+    }
+
+    // Find first week that actually has tracks, trim older empty weeks
+    async function trimLeadingEmptyWeeks(){
+      let firstWithData = -1;
+      for(let i=0;i<WEEK_LIST.length;i++){
+        await ensureWeekLoaded(i, true);
+        const w = WEEK_LIST[i];
+        const k = `${w.from}-${w.to}`;
+        const rows = WEEK_MAP.get(k)?.tracks || [];
+        if(rows.length>0){ firstWithData = i; break; }
+      }
+      if(firstWithData>0){
+        // drop weeks before firstWithData
+        const drop = WEEK_LIST.slice(0, firstWithData);
+        WEEK_LIST = WEEK_LIST.slice(firstWithData);
+        // remove dropped from map
+        for(const w of drop){ WEEK_MAP.delete(`${w.from}-${w.to}`); }
+        saveCache(username);
+      }
     }
 
     // Lazy load a week if not loaded yet
@@ -376,7 +396,11 @@
 
       // Show panel
       elPanel.style.display='block';
-      // Choose the newest week as default
+
+      // Ensure we don't include weeks before user's first actual scrobble week
+      await trimLeadingEmptyWeeks();
+
+      // Choose the newest week as default (after trimming)
       const newest = WEEK_LIST.length-1;
       const startIdx = Math.max(0, WEEK_LIST.length-INITIAL_WEEKS_TO_SHOW);
       // Prefetch a window of recent weeks in background
@@ -409,4 +433,5 @@
   </script>
 </body>
 </html>
+
 
