@@ -2,69 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Live Last.fm Debug (Fri→Thu / Fri→Now)</title>
+  <title>Weekly Last.fm Chart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
-    h1 { margin: 0 0 8px; }
-    .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: end; }
-    label { display: block; font-size: 12px; color: #555; margin-bottom: 4px; }
-    input, select { padding: 8px; border: 1px solid #ccc; border-radius: 8px; }
-    button { padding: 10px 14px; border: 0; border-radius: 8px; background: #111; color: #fff; cursor: pointer; }
-    button:disabled { opacity: .6; cursor: default; }
-    .muted { color: #666; font-size: 12px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-    th, td { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
-    th { background: #fafafa; position: sticky; top: 0; }
-    .pill { display:inline-block; padding:2px 8px; border-radius:999px; background:#efefef; font-size:12px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 12px; margin: 16px 0; }
-    .card { border:1px solid #eee; border-radius:12px; padding:12px; }
+    body { font-family: system-ui, sans-serif; margin: 24px; }
+    h1 { margin-bottom: 8px; }
+    .input-group { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+    label { font-size: 14px; }
+    input { padding: 8px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
+    button { padding: 10px 16px; border: 0; border-radius: 8px; background: #111; color: #fff; cursor: pointer; }
+    button:disabled { opacity: 0.6; cursor: default; }
+    .muted { color: #666; font-size: 13px; margin-top: 6px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 8px 10px; border-bottom: 1px solid #eee; font-size: 14px; text-align: left; }
+    th { background: #f5f5f5; position: sticky; top: 0; }
   </style>
 </head>
 <body>
-  <h1>Live Last.fm Debug</h1>
-  <p class="muted">Compare last committed week with a live recalculation (Fri→Thu completed or Fri→now ongoing).</p>
+  <h1>Last.fm Weekly Chart</h1>
+  <p class="muted">Enter your Last.fm username to see your top tracks from the last full week (Friday to Thursday).</p>
 
-  <div class="grid">
-    <div class="card">
-      <div class="row">
-        <div>
-          <label for="user">Last.fm user</label>
-          <input id="user" value="IAMMARCUS3" />
-        </div>
-        <div>
-          <label for="key">API key</label>
-          <input id="key" value="ed9c6dcac73ea1adcd3750efeea9b822" />
-        </div>
-        <div>
-          <label for="limit">Show top</label>
-          <input id="limit" type="number" value="100" min="1" max="200" />
-        </div>
-        <div>
-          <label for="mode">Mode</label>
-          <select id="mode">
-            <option value="completed">Last completed week (Fri→Thu)</option>
-            <option value="ongoing" selected>Current ongoing week (Fri→Now)</option>
-          </select>
-        </div>
-        <div>
-          <button id="run">Run Live Check</button>
-        </div>
-      </div>
-      <div style="margin-top:8px" class="muted" id="rangeText"></div>
-      <div id="status" style="margin-top:8px;"></div>
-    </div>
-
-    <div class="card">
-      <div><strong>Latest committed week in <code>weekdata.js</code>:</strong> <span id="latestWeek" class="pill">—</span></div>
-      <div style="margin-top:8px" id="compareNote" class="muted"></div>
-    </div>
+  <div class="input-group">
+    <label for="user">Username:</label>
+    <input id="user" placeholder="yourusername" />
+    <button id="run">Get Weekly Chart</button>
   </div>
 
+  <div class="muted" id="rangeText"></div>
+  <div id="status" class="muted"></div>
   <div id="results"></div>
 
   <script>
-    // === FACTORS / FORMULA (exact from your Python) ===
+    const API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822"; // embedded securely in code
     const STREAMS_FACTORS = [
       [1,1,48.50],[2,2,46.78],[3,5,30.90],[6,6,20.90],[7,10,22.90],
       [11,15,27.85],[16,25,25.90],[26,30,42.70],[31,50,33.95],
@@ -75,153 +44,144 @@
       [7,10,1840.40],[11,15,800.50],[16,25,700.60],[26,30,650.70],
       [31,50,400.80],[51,70,150.90],[71,85,90.10],[86,200,60.11],
     ];
-    function getMultiplierForRank(rank){
-      if (rank===1) return 39.45;
-      else if (rank<=5) return 35.89;
-      else if (rank<=10) return 32.16;
-      else if (rank<=20) return 30.99;
-      else if (rank<=40) return 28.98;
-      else if (rank<=50) return 26.10;
-      else if (rank<=60) return 23.78;
-      else if (rank<=70) return 21.06;
-      else if (rank<=80) return 20.99;
+    function getMultiplierForRank(rank) {
+      if (rank === 1) return 39.45;
+      else if (rank <= 5) return 35.89;
+      else if (rank <= 10) return 32.16;
+      else if (rank <= 20) return 30.99;
+      else if (rank <= 40) return 28.98;
+      else if (rank <= 50) return 26.10;
+      else if (rank <= 60) return 23.78;
+      else if (rank <= 70) return 21.06;
+      else if (rank <= 80) return 20.99;
       else return 10.9;
     }
-    function getFactor(table, weeks){ for(const [s,e,f] of table){ if(s<=weeks && weeks<=e) return f; } return table[table.length-1][2]; }
-    function calcSales(plays,m){ return plays*m; }
-    function calcStreams(sales,weeks){ return sales*getFactor(STREAMS_FACTORS,weeks)*8500; }
-    function calcRadio(sales,weeks){ return sales*getFactor(RADIO_FACTORS,weeks)*1_000; }
-    function calcPoints(sales,streams,radio,maxS,maxSt,maxR){
-      if(!maxS) maxS=1; if(!maxSt) maxSt=1; if(!maxR) maxR=1;
-      return Math.round(200*(0.3*(sales/maxS)+0.3*(streams/maxSt)+0.4*(radio/maxR)));
-    }
-    function keyOf(t,a){ return String(t).toLowerCase().trim()+"||"+String(a).toLowerCase().trim(); }
-
-    // === Week window: Completed vs Ongoing ===
-    function weekRange(mode="completed"){
-      const TZ = 2*3600;
-      const now = Math.floor(Date.now()/1000)+TZ;
-      const d = new Date(now*1000);
-      const localMidnight = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-      const dow = localMidnight.getUTCDay(); // 0=Sun..6=Sat
-      const sinceFri = (dow - 5 + 7) % 7;
-      const thisFri = new Date(localMidnight.getTime() - sinceFri*86400*1000);
-      const prevFri = new Date(thisFri.getTime() - 7*86400*1000);
-
-      if(mode==="completed"){
-        const from = Math.floor((prevFri.getTime()-TZ*1000)/1000);
-        const to   = Math.floor((thisFri.getTime()-TZ*1000)/1000);
-        return {from,to,start:prevFri,end:thisFri};
-      } else {
-        const from = Math.floor((thisFri.getTime()-TZ*1000)/1000);
-        const to   = Math.floor(Date.now()/1000); // now UTC
-        return {from,to,start:thisFri,end:new Date()};
+    function getFactor(table, weeks) {
+      for (const [s, e, f] of table) {
+        if (s <= weeks && weeks <= e) return f;
       }
+      return table[table.length - 1][2];
     }
-    function fmt(d){ return d.toISOString().slice(0,10); }
-
-    // === Fetch scrobbles with pagination ===
-    async function fetchScrobbles(user, apiKey, from, to){
-      let page=1,totalPages=1,all=[];
-      while(page<=totalPages){
-        const url=`https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user=${encodeURIComponent(user)}&api_key=${apiKey}&format=json&from=${from}&to=${to}&limit=200&page=${page}`;
-        const res=await fetch(url); if(!res.ok) throw new Error(`Last.fm ${res.status}`);
-        const j=await res.json();
-        const arr=(j.recenttracks&&j.recenttracks.track)||[];
-        for(const t of arr){ if(t.date) all.push(t); }
-        const attr=j.recenttracks&&j.recenttracks['@attr'];
-        totalPages=attr?parseInt(attr.totalPages||"1",10):1;
+    function calcSales(plays, m) {
+      return plays * m;
+    }
+    function calcStreams(sales, weeks) {
+      return sales * getFactor(STREAMS_FACTORS, weeks) * 8500;
+    }
+    function calcRadio(sales, weeks) {
+      return sales * getFactor(RADIO_FACTORS, weeks) * 1000;
+    }
+    function calcPoints(sales, streams, radio, maxS, maxSt, maxR) {
+      if (!maxS) maxS = 1; if (!maxSt) maxSt = 1; if (!maxR) maxR = 1;
+      return Math.round(200 * (0.3 * (sales / maxS) + 0.3 * (streams / maxSt) + 0.4 * (radio / maxR)));
+    }
+    function keyOf(t, a) {
+      return String(t).toLowerCase().trim() + "||" + String(a).toLowerCase().trim();
+    }
+    function weekRange() {
+      const TZ = 2 * 3600;
+      const now = Math.floor(Date.now() / 1000) + TZ;
+      const d = new Date(now * 1000);
+      const localMidnight = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+      const dow = localMidnight.getUTCDay();
+      const sinceFri = (dow - 5 + 7) % 7;
+      const thisFri = new Date(localMidnight.getTime() - sinceFri * 86400 * 1000);
+      const prevFri = new Date(thisFri.getTime() - 7 * 86400 * 1000);
+      const from = Math.floor((prevFri.getTime() - TZ * 1000) / 1000);
+      const to = Math.floor((thisFri.getTime() - TZ * 1000) / 1000);
+      return { from, to, start: prevFri, end: thisFri };
+    }
+    function fmt(d) {
+      return d.toISOString().slice(0, 10);
+    }
+    async function fetchScrobbles(user, from, to) {
+      let page = 1, totalPages = 1, all = [];
+      while (page <= totalPages) {
+        const url = `https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user=${encodeURIComponent(user)}&api_key=${API_KEY}&format=json&from=${from}&to=${to}&limit=200&page=${page}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Last.fm ${res.status}`);
+        const j = await res.json();
+        const arr = (j.recenttracks && j.recenttracks.track) || [];
+        for (const t of arr) {
+          if (t.date) all.push(t);
+        }
+        const attr = j.recenttracks && j.recenttracks['@attr'];
+        totalPages = attr ? parseInt(attr.totalPages || "1", 10) : 1;
         page++;
       }
       return all;
     }
-    function aggregatePlays(scrobbles){
-      const m=new Map();
-      for(const t of scrobbles){
-        const title=t.name;
-        const artist=t.artist?.['#text']||t.artist?.name||'';
-        const album=t.album?.['#text']||'Unknown';
-        const k=keyOf(title,artist);
-        const cur=m.get(k)||{title,artist,album,plays:0};
+    function aggregatePlays(scrobbles) {
+      const m = new Map();
+      for (const t of scrobbles) {
+        const title = t.name;
+        const artist = t.artist?.['#text'] || t.artist?.name || '';
+        const album = t.album?.['#text'] || 'Unknown';
+        const k = keyOf(title, artist);
+        const cur = m.get(k) || { title, artist, album, plays: 0 };
         cur.plays++;
-        m.set(k,cur);
+        m.set(k, cur);
       }
       return [...m.values()];
     }
-    function scoreWeek(rows,topN){
-      rows.sort((a,b)=>b.plays-a.plays);
-      let maxS=0,maxSt=0,maxR=0;
-      const provisional=rows.slice(0,Math.max(topN,rows.length)).map((r,i)=>{
-        const rank=i+1,weeks=1,mult=getMultiplierForRank(rank);
-        const sales=calcSales(r.plays,mult);
-        const streams=calcStreams(sales,weeks);
-        const radio=calcRadio(sales,weeks);
-        maxS=Math.max(maxS,sales); maxSt=Math.max(maxSt,streams); maxR=Math.max(maxR,radio);
-        return {...r,rank,weeks,sales,streams,radio};
+    function scoreWeek(rows, topN = 100) {
+      rows.sort((a, b) => b.plays - a.plays);
+      let maxS = 0, maxSt = 0, maxR = 0;
+      const provisional = rows.slice(0, Math.max(topN, rows.length)).map((r, i) => {
+        const rank = i + 1, weeks = 1, mult = getMultiplierForRank(rank);
+        const sales = calcSales(r.plays, mult);
+        const streams = calcStreams(sales, weeks);
+        const radio = calcRadio(sales, weeks);
+        maxS = Math.max(maxS, sales); maxSt = Math.max(maxSt, streams); maxR = Math.max(maxR, radio);
+        return { ...r, rank, weeks, sales, streams, radio };
       });
-      const final=provisional.map(e=>({
-        rank:e.rank,movement:"NEW",title:e.title,artist:e.artist,album:e.album,plays:e.plays,
-        sales:e.sales,totalSales:e.sales,weeks:e.weeks,peak:e.rank,
-        streams:Math.trunc(e.streams),radio:e.radio,
-        points:calcPoints(e.sales,e.streams,e.radio,maxS,maxSt,maxR)
-      })).sort((a,b)=>b.points-a.points);
-      return final.map((e,i)=>({...e,rank:i+1}));
+      const final = provisional.map(e => ({
+        rank: e.rank, movement: "NEW", title: e.title, artist: e.artist, album: e.album, plays: e.plays,
+        sales: e.sales, totalSales: e.sales, weeks: e.weeks, peak: e.rank,
+        streams: Math.trunc(e.streams), radio: e.radio,
+        points: calcPoints(e.sales, e.streams, e.radio, maxS, maxSt, maxR)
+      })).sort((a, b) => b.points - a.points);
+      return final.map((e, i) => ({ ...e, rank: i + 1 }));
     }
-    function renderTable(target,week,rows,mode){
-      const cols=["rank","movement","title","artist","plays","sales","streams","radio","points"];
-      let html=`<h2>${mode==="completed"?"Completed":"Ongoing"} week</h2>`;
-      html+=`<div class="muted">${fmt(week.start)} → ${fmt(week.end)} (Africa/Johannesburg)</div>`;
-      html+=`<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>`;
-      for(const r of rows){
-        html+=`<tr>${cols.map(c=>`<td>${typeof r[c]==="number"?r[c].toLocaleString():r[c]}</td>`).join("")}</tr>`;
+    function renderTable(target, week, rows) {
+      const cols = ["rank", "movement", "title", "artist", "plays", "sales", "streams", "radio", "points"];
+      let html = `<h2>Chart for ${fmt(week.start)} to ${fmt(week.end)}</h2>`;
+      html += `<table><thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>`;
+      for (const r of rows) {
+        html += `<tr>${cols.map(c => `<td>${typeof r[c] === "number" ? r[c].toLocaleString() : r[c]}</td>`).join("")}</tr>`;
       }
-      html+=`</tbody></table>`;
-      target.innerHTML=html;
+      html += `</tbody></table>`;
+      target.innerHTML = html;
     }
 
-    // === Load latest committed week ===
-    async function loadCommittedWeekInfo(){
-      try{
-        await new Promise((res,rej)=>{
-          const s=document.createElement('script');
-          s.src='weekdata.js'; s.onload=res; s.onerror=()=>rej(new Error('Failed to load weekdata.js'));
-          document.head.appendChild(s);
-        });
-        if(window.weekData){
-          const keys=Object.keys(window.weekData).map(n=>parseInt(n,10)).filter(n=>!isNaN(n)).sort((a,b)=>a-b);
-          const last=keys[keys.length-1];
-          document.getElementById('latestWeek').textContent=String(last??"—");
-          document.getElementById('compareNote').textContent=last?`Repo’s latest committed week is ${last}.`:'';
-        }
-      }catch(e){ document.getElementById('latestWeek').textContent="not found"; }
-    }
+    document.getElementById('run').addEventListener('click', async () => {
+      const user = document.getElementById('user').value.trim();
+      const status = document.getElementById('status');
+      const results = document.getElementById('results');
+      status.textContent = ''; results.innerHTML = ''; document.getElementById('run').disabled = true;
+      if (!user) {
+        status.textContent = "Please enter a Last.fm username.";
+        document.getElementById('run').disabled = false;
+        return;
+      }
 
-    // === Run button ===
-    document.getElementById('run').addEventListener('click',async()=>{
-      const user=document.getElementById('user').value.trim();
-      const key=document.getElementById('key').value.trim();
-      const limit=parseInt(document.getElementById('limit').value,10)||100;
-      const mode=document.getElementById('mode').value;
-      const status=document.getElementById('status');
-      const results=document.getElementById('results');
-      status.textContent=''; results.innerHTML=''; document.getElementById('run').disabled=true;
+      const { from, to, start, end } = weekRange();
+      document.getElementById('rangeText').textContent = `Week: ${fmt(start)} to ${fmt(end)}`;
 
-      const {from,to,start,end}=weekRange(mode);
-      document.getElementById('rangeText').textContent=`${mode==="completed"?"Completed":"Ongoing"} week: ${fmt(start)} to ${fmt(end)}`;
-
-      try{
-        status.textContent='Fetching scrobbles…';
-        const scrobbles=await fetchScrobbles(user,key,from,to);
-        status.innerHTML=`Fetched <strong>${scrobbles.length.toLocaleString()}</strong> scrobbles. Processing…`;
-        const rows=aggregatePlays(scrobbles);
-        const scored=scoreWeek(rows,limit);
-        status.innerHTML=`Done. Showing top ${Math.min(limit,scored.length)}.`;
-        renderTable(results,{start,end},scored.slice(0,limit),mode);
-      }catch(err){ status.innerHTML=`Error: ${err.message}`; }
-      finally{ document.getElementById('run').disabled=false; }
+      try {
+        status.textContent = 'Fetching scrobbles…';
+        const scrobbles = await fetchScrobbles(user, from, to);
+        status.textContent = `Fetched ${scrobbles.length.toLocaleString()} scrobbles. Processing…`;
+        const rows = aggregatePlays(scrobbles);
+        const scored = scoreWeek(rows);
+        status.textContent = `Done. Showing top ${Math.min(100, scored.length)}.`;
+        renderTable(results, { start, end }, scored.slice(0, 100));
+      } catch (err) {
+        status.textContent = `Error: ${err.message}`;
+      } finally {
+        document.getElementById('run').disabled = false;
+      }
     });
-
-    loadCommittedWeekInfo();
   </script>
 </body>
 </html>
