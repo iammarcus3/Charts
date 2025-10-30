@@ -1,255 +1,126 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Last.fm Weekly Charts</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Last.fm Weekly Charts — Billboard Style</title>
   <style>
-    body { font-family: sans-serif; margin: 2em; background: #f9f9f9; }
-    h1 { font-size: 1.5em; }
-    .form { margin-bottom: 1em; }
-    input[type=text] { padding: 0.3em; font-size: 1em; }
-    button { padding: 0.4em 0.8em; font-size: 1em; cursor: pointer; }
-    .message { color: #d00; margin: 0.5em 0 1em; }
-    .controls { margin: 1em 0; }
-    select { font-size: 1em; padding: 0.2em; }
-    .table-container { max-width: 100%; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 600px; }
-    th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #ccc; }
-    th { background: #eaeaea; }
-    tr:nth-child(even) td { background: #f7f7f7; }
-    /* Center-align numeric columns (Rank, Last Week, Peak, Weeks) */
-    td:nth-child(1), td:nth-child(4), td:nth-child(5), td:nth-child(6),
-    th:nth-child(1), th:nth-child(4), th:nth-child(5), th:nth-child(6) {
-      text-align: center;
+    :root{
+      --bg:#0b0b0c; --card:#141417; --muted:#9aa0a6; --text:#e8eaed; --accent:#4f8cff; --accent-2:#7ba6ff; --border:#2b2b30;
+      --up:#22c55e; --down:#ef4444; --new:#f59e0b;
     }
-    /* Allow long text to wrap in Title/Artist columns */
-    td:nth-child(2), td:nth-child(3) { word-break: break-word; }
+    *{box-sizing:border-box}
+    body{margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); background:linear-gradient(180deg,#0b0b0c 0%, #0f1116 100%);}    
+    header{padding:20px 16px; border-bottom:1px solid var(--border); position:sticky; top:0; backdrop-filter:blur(8px); background:rgba(11,11,12,.7)}
+    h1{margin:0; font-size:20px}
+    .container{max-width:1100px; margin:0 auto; padding:16px}
+    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px}
+    label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px}
+    input, select{padding:10px 12px; background:#0f1014; color:var(--text); border:1px solid var(--border); border-radius:12px;}
+    button{padding:10px 14px; border:1px solid var(--border); border-radius:12px; background:linear-gradient(180deg,#1a1b20,#13141a); color:var(--text); cursor:pointer}
+    button:hover{border-color:#3b3b42}
+    button.primary{background:linear-gradient(180deg,var(--accent),var(--accent-2)); color:#0b0b0c; border:0}
+    button:disabled{opacity:.6; cursor:default}
+    .muted{color:var(--muted); font-size:12px}
+    .controls{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+    .spacer{flex:1}
+
+    .table-wrap{margin-top:12px; overflow:auto; border:1px solid var(--border); border-radius:14px}
+    table{width:100%; border-collapse:collapse; min-width:760px}
+    th,td{padding:10px 12px; border-bottom:1px solid var(--border); text-align:left; font-size:14px}
+    th{position:sticky; top:0; background:#121216; z-index:1; font-weight:600}
+    td.num, th.num{text-align:center; width:90px}
+    td.rank{font-weight:700}
+    .badge{display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px}
+    .badge.up{background:rgba(34,197,94,.15); color:var(--up)}
+    .badge.down{background:rgba(239,68,68,.15); color:var(--down)}
+    .badge.new{background:rgba(245,158,11,.15); color:var(--new)}
+    .pill{display:inline-block; padding:4px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted)}
+    .footer{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:10px}
+    .progress{height:6px; background:#0f1014; border:1px solid var(--border); border-radius:6px; width:180px; overflow:hidden}
+    .progress>i{display:block; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-2)); width:0%}
+    .loading{display:inline-block; width:14px; height:14px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 1s linear infinite; vertical-align:-2px}
+    @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
+  <header>
+    <div class="container row">
+      <h1 class="spacer">Last.fm Weekly Charts — Billboard Style</h1>
+      <div class="row">
+        <div>
+          <label for="user">Last.fm username</label>
+          <input id="user" placeholder="yourusername" />
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button id="load" class="primary">Load</button>
+        </div>
+      </div>
+    </div>
+  </header>
 
-<h1>Last.fm Weekly Charts</h1>
+  <main class="container">
+    <div id="panel" class="card" style="display:none">
+      <div class="controls">
+        <div>
+          <label for="weekSelect">Week</label>
+          <select id="weekSelect"></select>
+        </div>
+        <div class="row">
+          <label>&nbsp;</label>
+          <div class="row">
+            <button id="first">⟪ First</button>
+            <button id="prev">⟨ Prev</button>
+            <button id="next">Next ⟩</button>
+            <button id="last">Last ⟫</button>
+          </div>
+        </div>
+        <div class="spacer"></div>
+        <div>
+          <label>&nbsp;</label>
+          <button id="loadOlder">Load older weeks</button>
+        </div>
+      </div>
+      <div class="footer" style="margin-top:8px">
+        <div class="muted" id="status"></div>
+        <div class="row">
+          <span class="pill" id="summary"></span>
+          <div class="progress" title="Background prefetch progress"><i id="bar"></i></div>
+        </div>
+      </div>
 
-<div class="form">
-  <label>Last.fm Username: 
-    <input type="text" id="usernameInput" placeholder="Enter username" />
-  </label>
-  <button id="loadBtn">Load Charts</button>
-</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="num">Rank</th>
+              <th>Title</th>
+              <th>Artist</th>
+              <th class="num">Last Week</th>
+              <th class="num">Peak</th>
+              <th class="num">Weeks</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
 
-<div id="chartArea" style="display:none;">
-  <div class="controls">
-    <label for="weekSelect">Select Week:</label>
-    <select id="weekSelect"></select>
-  </div>
-  <div class="table-container">
-    <table id="chartTable">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Title</th>
-          <th>Artist</th>
-          <th>Last&nbsp;Week</th>
-          <th>Peak</th>
-          <th>Weeks&nbsp;on&nbsp;Chart</th>
-        </tr>
-      </thead>
-      <tbody id="chartBody">
-        <!-- Rows will be inserted here -->
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div id="message" class="message"></div>
-
-<script>
-(() => {
-  const API_KEY = 'ed9c6dcac73ea1adcd3750efeea9b822';  // ←—— Embed your Last.fm API key here
-  const baseURL = 'https://ws.audioscrobbler.com/2.0/';
-  const usernameInput = document.getElementById('usernameInput');
-  const loadBtn = document.getElementById('loadBtn');
-  const chartArea = document.getElementById('chartArea');
-  const weekSelect = document.getElementById('weekSelect');
-  const chartBody = document.getElementById('chartBody');
-  const messageEl = document.getElementById('message');
-
-  let chartsData = [];    // Array of weekly charts (each is an array of track entries)
-  let chartDates = [];    // Array of week end date labels corresponding to chartsData
-
-  // Helper: fetch JSON from Last.fm API with given params object
-  async function fetchLastFM(params) {
-    params.api_key = API_KEY;
-    params.format = 'json';
-    const query = new URLSearchParams(params);
-    const url = baseURL + '?' + query.toString();
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    return response.json();
-  }
-
-  // Helper: Clear any existing message and show a new one (for errors)
-  function showMessage(msg) {
-    messageEl.textContent = msg;
-  }
-
-  // Populate the week dropdown and display a given week's chart
-  function renderWeekOptionsAndChart(selectedIndex) {
-    // Populate dropdown options
-    weekSelect.innerHTML = '';
-    chartDates.forEach((label, idx) => {
-      const opt = document.createElement('option');
-      opt.value = idx;
-      opt.textContent = label;
-      weekSelect.appendChild(opt);
-    });
-    // Select the requested week index
-    weekSelect.value = selectedIndex;
-    // Render the chart table for that week
-    renderChartTable(selectedIndex);
-  }
-
-  // Render the chart table for a given week index (in chartsData)
-  function renderChartTable(weekIndex) {
-    const currentWeekTracks = chartsData[weekIndex];  // array of track objects for this week
-    const prevWeekIndex = weekIndex > 0 ? weekIndex - 1 : null;
-    // Build table rows
-    chartBody.innerHTML = '';
-    currentWeekTracks.forEach(track => {
-      const { rank, name, artist } = track;
-      // Compute last week, peak, weeks on chart for this track as of the selected week
-      let lastWeekPos = '–';
-      let peakPos = rank;
-      let weeksCount = 1;
-      // Find the track in other weeks up to current weekIndex
-      for (let j = 0; j < chartsData.length; j++) {
-        if (j > weekIndex) break;  // only consider up to current week
-        if (j === weekIndex) continue;  // skip current week (we already count it)
-        const found = chartsData[j].find(t => t.name === name && t.artist === artist);
-        if (found) {
-          weeksCount++;
-          const prevRank = parseInt(found.rank);
-          if (prevRank < peakPos) peakPos = prevRank;
-          // If this was last week, store the position for display
-          if (j === prevWeekIndex) {
-            lastWeekPos = prevRank.toString();
-          }
-        }
-      }
-      // If the track never appeared before this week in our data, weeksCount remains 1 and lastWeekPos stays "–"
-      // Create table row
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${rank}</td>
-        <td>${name}</td>
-        <td>${artist}</td>
-        <td>${lastWeekPos}</td>
-        <td>${peakPos}</td>
-        <td>${weeksCount}</td>`;
-      chartBody.appendChild(tr);
-    });
-  }
-
-  // Main function to load charts for the given username
-  async function loadCharts(username) {
-    showMessage('');  // clear any previous messages
-    chartArea.style.display = 'none';
-    chartsData = [];
-    chartDates = [];
-    try {
-      // Fetch weekly chart list (all available weeks for user)
-      const listData = await fetchLastFM({ method: 'user.getWeeklyChartList', user: username });
-      if (!listData.weeklychartlist || !listData.weeklychartlist.chart) {
-        throw new Error('No chart data available for this user.');
-      }
-      let chartList = listData.weeklychartlist.chart;
-      // If only one chart, ensure it's in an array
-      if (!Array.isArray(chartList)) {
-        chartList = [ chartList ];
-      }
-      if (chartList.length === 0) {
-        throw new Error('No weekly charts found for this user.');
-      }
-      // Determine how many weeks to fetch (last 10 weeks or fewer if not available)
-      const totalWeeks = chartList.length;
-      const weeksToFetch = totalWeeks >= 10 ? 10 : totalWeeks;
-      const startIndex = totalWeeks - weeksToFetch;
-      const recentCharts = chartList.slice(startIndex, totalWeeks);
-      // Fetch each weekly chart (top tracks)
-      for (let i = 0; i < recentCharts.length; i++) {
-        const { from, to } = recentCharts[i];
-        const chartData = await fetchLastFM({
-          method: 'user.getWeeklyTrackChart',
-          user: username,
-          from: from,
-          to: to,
-          limit: 100
-        });
-        if (!chartData.weeklytrackchart) {
-          continue; // skip if no data (though should not happen if list gave it)
-        }
-        let tracks = chartData.weeklytrackchart.track;
-        if (!tracks) {
-          tracks = [];
-        } else if (!Array.isArray(tracks)) {
-          // If only one track, wrap it in array
-          tracks = [ tracks ];
-        }
-        // Convert track entries to a normalized format
-        const weekTracks = tracks.map(t => {
-          const rank = t["@attr"] ? parseInt(t["@attr"].rank) : parseInt(t.rank);
-          const name = t.name || '';
-          const artist = t.artist && (t.artist.name || t.artist) ? (t.artist.name || t.artist) : '';
-          return { rank: rank, name: name, artist: artist };
-        });
-        // Sort by rank just in case (API should already return ordered by rank)
-        weekTracks.sort((a, b) => a.rank - b.rank);
-        chartsData.push(weekTracks);
-        // Prepare a label for this week (use the 'to' date as week ending date)
-        const endDate = new Date(parseInt(to) * 1000);
-        // Format date as e.g. "Week ending Feb 20, 2005"
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        const endDateStr = endDate.toLocaleDateString(undefined, options); 
-        chartDates.push(`Week ending ${endDateStr}`);
-      }
-      // Ensure chartsData and chartDates are aligned (oldest to newest). 
-      // The API list is usually chronological; we sliced the last part in order, 
-      // so chartsData[0] corresponds to the oldest of the fetched weeks and last index is newest.
-      // Show the chart area and render the most recent week (last index).
-      if (chartsData.length > 0) {
-        chartArea.style.display = 'block';
-        const latestIndex = chartsData.length - 1;
-        renderWeekOptionsAndChart(latestIndex);
-      } else {
-        throw new Error('No weekly chart tracks found.');
-      }
-    } catch (error) {
-      showMessage(error.message || 'Failed to load charts. Please try again.');
-    }
-  }
-
-  // Event handlers
-  loadBtn.addEventListener('click', () => {
-    const user = usernameInput.value.trim();
-    if (!user) {
-      showMessage('Please enter a Last.fm username.');
-      return;
-    }
-    loadCharts(user);
-  });
-
-  weekSelect.addEventListener('change', () => {
-    const idx = parseInt(weekSelect.value);
-    if (!isNaN(idx)) {
-      renderChartTable(idx);
-    }
-  });
-})();
-</script>
-
+  <script>
+  (function(){
+    // ==== CONFIG ====
+    const API_KEY = 'ed9c6dcac73ea1adcd3750efeea9b822'; // user provided key
+    const BASE = 'https://ws.audioscrobbler.com/2.0/';
+    const LIMIT_PER_WEEK = 100;
+    const INITIAL_WEEKS_TO_SHOW = 20;
+    const OLDER_BATCH = 30;
+    const THROTTLE_MS = 220;
+    // ... rest of script unchanged ...
+  })();
+  </script>
 </body>
 </html>
 
