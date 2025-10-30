@@ -14,8 +14,6 @@ const USER = "IAMMARCUS3";
 // --- Settings: repo + file ---
 const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js"; // relative to repo root
 const DRY_RUN = process.env.DRY_RUN === "true";
-// Force a specific week (e.g. 396) to overwrite that week.
-// If unset, the script appends the next week after the current max.
 const TARGET_WEEK = process.env.TARGET_WEEK ? parseInt(process.env.TARGET_WEEK, 10) : null;
 
 // --- Debug ---
@@ -74,13 +72,13 @@ function getKey(title, artist) {
   return title.toLowerCase().trim() + "||" + artist.toLowerCase().trim();
 }
 
-// --- Last Friday→Thursday (South Africa, UTC+2). Returns the last *completed* window.
+// --- Determine last Friday→Thursday range ---
 function lastFridayToThursdayRange() {
-  const TZ_OFFSET = 2 * 3600; // seconds
+  const TZ_OFFSET = 2 * 3600;
   const nowSec = Math.floor(Date.now() / 1000) + TZ_OFFSET;
   const now = new Date(nowSec * 1000);
   const localMidnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-  const dow = localMidnight.getUTCDay(); // 0=Sun..6=Sat
+  const dow = localMidnight.getUTCDay();
   const daysSinceFri = (dow - 5 + 7) % 7;
   const thisFri = new Date(localMidnight.getTime() - daysSinceFri * 86400 * 1000);
   const prevFri = new Date(thisFri.getTime() - 7 * 86400 * 1000);
@@ -90,84 +88,79 @@ function lastFridayToThursdayRange() {
   return { from, to };
 }
 
-// ---- Robust parsers (Regex + sandboxed VM to capture exports) ----
-function tryParseByRegex(abs) {
+// --- File parsers ---
+
+function tryParseByBraceExtraction(abs) {
   const raw = fs.readFileSync(abs, "utf8");
+  const startDecl = raw.indexOf("const weekData");
+  if (startDecl === -1) return null;
+  const eq = raw.indexOf("=", startDecl);
+  if (eq === -1) return null;
+  let i = raw.indexOf("{", eq);
+  if (i === -1) return null;
 
-  // A) "const weekData = { ... };" (no export required)
-  let m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?/);
-  if (m) {
-    try { return JSON.parse(m[1]); } catch {}
+  let depth = 0;
+  let inStr = false;
+  let strCh = null;
+  let prev = null;
+  const len = raw.length;
+  const startObj = i;
+
+  for (; i < len; i++) {
+    const ch = raw[i];
+    if (inStr) {
+      if (ch === strCh && prev !== "\\") { inStr = false; strCh = null; }
+      prev = ch; continue;
+    } else if (ch === '"' || ch === "'" || ch === "`") { inStr = true; strCh = ch; prev = ch; continue; }
+    if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (depth === 0) {
+        const objText = raw.slice(startObj, i + 1);
+        try { return JSON.parse(objText); }
+        catch {
+          try {
+            const stub = "module.exports = " + objText + ";";
+            const sandbox = { module: { exports: {} } };
+            vm.createContext(sandbox);
+            new vm.Script(stub).runInContext(sandbox, { timeout: 1000 });
+            return sandbox.module.exports;
+          } catch {}
+        }
+        break;
+      }
+    }
+    prev = ch;
   }
-
-  // B) "const weekData = { ... }; module.exports = weekData;"
-  m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?\s*module\.exports\s*=\s*weekData\b/);
-  if (m) {
-    try { return JSON.parse(m[1]); } catch {}
-  }
-
-  // C) "module.exports = { ... };"
-  m = raw.match(/module\.exports\s*=\s*(\{[\s\S]*?\})\s*;?/);
-  if (m) {
-    try { return JSON.parse(m[1]); } catch {}
-  }
-
-  // D) "export default { ... }"
-  m = raw.match(/export\s+default\s+(\{[\s\S]*?\})\s*;?/);
-  if (m) {
-    try { return JSON.parse(m[1]); } catch {}
-  }
-
-  // E) "export const weekData = { ... }"
-  m = raw.match(/export\s+const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?/);
-  if (m) {
-    try { return JSON.parse(m[1]); } catch {}
-  }
-
-  // F) "const weekData = { ... }; export default weekData;"
-  m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?\s*export\s+default\s+weekData\b/);
-  if (m) {
-    try { return JSON.parse(m[1]); } catch {}
-  }
-
-  return null; // unknown format
+  return null;
 }
 
 function tryParseByVM(abs) {
   const code = fs.readFileSync(abs, "utf8");
-
-  // sandbox that blocks require and hides globals
   const sandbox = {
     module: { exports: {} },
     exports: {},
     require: function () { throw new Error("require() disabled in parser"); },
     process: { env: {} },
     console: { log(){}, warn(){}, error(){} },
-    globalThis: undefined,
   };
   vm.createContext(sandbox);
 
   try {
-    // make ESM-ish shapes look like CJS
-    const transformed = code
-      .replace(/\bexport\s+default\s+/g, "module.exports = ")
-      .replace(/\bexport\s+const\s+(\w+)\s*=\s*/g, "const $1 = ")
-      .concat("\nif (typeof module !== 'undefined' && module.exports == null && typeof exports !== 'undefined' && exports.default) module.exports = exports.default;\n");
+    const transformed =
+      code
+        .replace(/\bexport\s+default\s+/g, "module.exports = ")
+        .replace(/\bexport\s+const\s+(\w+)\s*=\s*/g, "const $1 = ")
+      + `
+; if (typeof module !== 'undefined' && typeof weekData !== 'undefined' && Object.keys(module.exports).length === 0) {
+    module.exports = weekData;
+  }`;
 
-    const script = new vm.Script(transformed, { filename: abs, displayErrors: true });
+    const script = new vm.Script(transformed, { filename: abs });
     script.runInContext(sandbox, { timeout: 1000 });
-
-    let out = sandbox.module && sandbox.module.exports;
-    if (!out || (typeof out !== "object")) {
-      if (sandbox.exports && typeof sandbox.exports === "object" && sandbox.exports.default) {
-        out = sandbox.exports.default;
-      } else if (sandbox.exports && typeof sandbox.exports === "object") {
-        out = sandbox.exports;
-      }
-    }
-    if (out && typeof out === "object" && !Array.isArray(out)) {
-      return out;
-    }
+    let out = sandbox.module.exports;
+    if ((!out || typeof out !== "object") && typeof sandbox.weekData !== "undefined") out = sandbox.weekData;
+    return out && typeof out === "object" ? out : null;
   } catch (e) {
     console.warn("WARN: VM parse failed:", e.message);
   }
@@ -175,97 +168,52 @@ function tryParseByVM(abs) {
 }
 
 function loadWeekData(filePathRel) {
-  const abs = path.isAbsolute(filePathRel)
-    ? filePathRel
-    : path.resolve(process.cwd(), filePathRel);
-
+  const abs = path.resolve(process.cwd(), filePathRel);
   console.log("DEBUG: Resolved weekdata path =", abs);
+  if (!fs.existsSync(abs)) throw new Error("weekdata.js not found");
 
-  if (!fs.existsSync(abs)) {
-    throw new Error("weekdata.js not found — refusing to run with empty data");
+  const braceObj = tryParseByBraceExtraction(abs);
+  if (braceObj) {
+    const keys = Object.keys(braceObj).map(Number);
+    console.log("DEBUG: Loaded via brace parser with weeks:", keys);
+    return braceObj;
   }
 
-  // 1) Regex parse (fast path)
-  try {
-    const parsed = tryParseByRegex(abs);
-    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
-      const keys = Object.keys(parsed).map(Number).filter(Number.isFinite);
-      if (keys.length === 0) throw new Error("Parsed object has no week keys — aborting to protect history");
-      console.log("DEBUG: Loaded via regex parser with weeks:", keys.sort((a,b)=>a-b));
-      return parsed;
-    }
-  } catch (e) {
-    console.warn("WARN: regex parse failed:", e.message);
-  }
-
-  // 2) Sandboxed VM evaluation to capture exports (handles ESM/CJS hybrids)
   const vmObj = tryParseByVM(abs);
   if (vmObj) {
-    const keys = Object.keys(vmObj).map(Number).filter(Number.isFinite);
-    if (keys.length === 0) throw new Error("VM parse produced object with no week keys — aborting to protect history");
-    console.log("DEBUG: Loaded via VM parser with weeks:", keys.sort((a,b)=>a-b));
+    const keys = Object.keys(vmObj).map(Number);
+    console.log("DEBUG: Loaded via VM parser with weeks:", keys);
     return vmObj;
   }
 
-  // 3) Fallback: require()
-  try {
-    delete require.cache[abs];
-    const mod = require(abs);
-    const obj = (mod && typeof mod === "object")
-      ? (mod.default && typeof mod.default === "object" ? mod.default : mod)
-      : null;
-    if (obj && !Array.isArray(obj)) {
-      const keys = Object.keys(obj).map(Number).filter(Number.isFinite);
-      if (keys.length === 0) throw new Error("require() returned object with no week keys — aborting to protect history");
-      console.log("DEBUG: Loaded via require() with weeks:", keys.sort((a,b)=>a-b));
-      return obj;
-    }
-  } catch (e) {
-    console.warn("WARN: require() load failed:", e.message);
-  }
-
-  // Hard fail instead of wiping
-  throw new Error("Could not load weekdata.js in any known format — aborting to avoid wiping old data.");
+  throw new Error("Could not load weekdata.js — aborting to protect history.");
 }
 
 function saveWeekData(filePathRel, newDataObj, oldKeyCount) {
-  const abs = path.isAbsolute(filePathRel)
-    ? filePathRel
-    : path.resolve(process.cwd(), filePathRel);
-
-  // Re-load from disk to detect accidental shrink (throws if bad)
+  const abs = path.resolve(process.cwd(), filePathRel);
   const currentData = loadWeekData(filePathRel);
   const merged = { ...currentData, ...newDataObj };
-
-  const keysSorted = Object.keys(merged).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+  const keysSorted = Object.keys(merged).map(Number).sort((a,b)=>a-b);
   console.log("DEBUG: Final week keys to save =", keysSorted);
-
-  if (typeof oldKeyCount === "number" && keysSorted.length < oldKeyCount) {
-    throw new Error(`Refusing to save: week count shrank from ${oldKeyCount} to ${keysSorted.length}`);
-  }
-
-  // Always write as CommonJS to keep runtime simple
-  const newContent =
-    "const weekData = " +
-    JSON.stringify(merged, null, 2) +
-    ";\n\nmodule.exports = weekData;\n";
-
+  if (keysSorted.length < oldKeyCount)
+    throw new Error("Refusing to save: week count shrank");
+  const newContent = "const weekData = " + JSON.stringify(merged, null, 2) + ";\n\nmodule.exports = weekData;\n";
   fs.writeFileSync(abs, newContent);
-  console.log("DEBUG: weekdata.js written at", abs);
+  console.log("DEBUG: weekdata.js written");
 }
 
-// --- Last.fm fetchers (Node 18+ has global fetch) ---
+// --- Last.fm fetchers ---
 async function fetchScrobbles(from, to) {
   let page = 1, totalPages = 1;
   const all = [];
   while (page <= totalPages) {
-    console.log(`DEBUG: Fetching Last.fm scrobbles page ${page}/${totalPages}`);
+    console.log(`DEBUG: Fetching Last.fm page ${page}`);
     const url = `https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user=${encodeURIComponent(USER)}&api_key=${API_KEY}&format=json&from=${from}&to=${to}&limit=200&page=${page}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Last.fm error ${res.status}`);
     const j = await res.json();
     const arr = j.recenttracks?.track || [];
-    for (const t of arr) if (t.date) all.push(t); // ignore "now playing"
+    for (const t of arr) if (t.date) all.push(t);
     const attr = j.recenttracks?.["@attr"];
     totalPages = attr ? parseInt(attr.totalPages || "1", 10) : 1;
     page++;
@@ -294,27 +242,20 @@ async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
-    // 1) Load weekdata — hard fail if empty/unknown to protect history
     const weekData = loadWeekData(WEEKDATA_PATH);
-    const preKeys = Object.keys(weekData).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
+    const preKeys = Object.keys(weekData).map(Number).sort((a,b)=>a-b);
     const preCount = preKeys.length;
-    if (preCount === 0) {
-      throw new Error("Loaded weekdata has 0 weeks — refusing to run to protect history.");
-    }
     console.log("DEBUG: Weeks present BEFORE =", preKeys);
 
-    // 2) Decide target week number
     const maxExisting = preKeys[preCount - 1];
-    const targetWeek = Number.isInteger(TARGET_WEEK) ? TARGET_WEEK : (maxExisting + 1);
+    const targetWeek = Number.isInteger(TARGET_WEEK) ? TARGET_WEEK : maxExisting + 1;
     const overwriting = Number.isInteger(TARGET_WEEK);
-    console.log(`DEBUG: Max existing=${maxExisting}. Target week=${targetWeek}. Mode=${overwriting ? "OVERWRITE" : "APPEND"}.`);
+    console.log(`DEBUG: Target week=${targetWeek} Mode=${overwriting ? "OVERWRITE" : "APPEND"}`);
 
-    // 3) Pull scrobbles for the last full week
     const { from, to } = lastFridayToThursdayRange();
     const scrobbles = await fetchScrobbles(from, to);
-    const plays = aggregatePlays(scrobbles).sort((a, b) => b.plays - a.plays);
+    const plays = aggregatePlays(scrobbles).sort((a,b)=>b.plays - a.plays);
 
-    // 4) Build song history (from all prior weeks)
     const songHistory = new Map();
     for (const [w, entries] of Object.entries(weekData)) {
       for (const e of entries) {
@@ -323,12 +264,11 @@ async function handler() {
           weeks: e.weeks,
           lastRank: e.rank,
           peak: e.peak,
-          last_seen: parseInt(w, 10)
+          last_seen: parseInt(w, 10),
         });
       }
     }
 
-    // 5) Compute provisional metrics
     let maxSales = 0, maxStreams = 0, maxRadio = 0;
     const provisional = plays.map((p, i) => {
       const rank = i + 1;
@@ -344,20 +284,17 @@ async function handler() {
       return { ...p, rank, sales, streams, radio, weeks, hist };
     });
 
-    // 6) Points + ranking
     const withPoints = provisional.map(e => ({
       ...e,
       points: calcPoints(e.sales, e.streams, e.radio, maxSales, maxStreams, maxRadio)
-    })).sort((a, b) => b.points - a.points);
+    })).sort((a,b)=>b.points - a.points);
 
-    const prevWeekNumber = overwriting ? (targetWeek - 1) : maxExisting;
-
-    // 7) Final entries for the week
-    const entries = withPoints.slice(0, MAX_ENTRIES).map((e, i) => {
+    const prevWeek = overwriting ? targetWeek - 1 : maxExisting;
+    const entries = withPoints.slice(0, MAX_ENTRIES).map((e,i) => {
       const rank = i + 1;
       let movement = "NEW";
       if (e.hist) {
-        if (e.hist.last_seen !== prevWeekNumber) movement = "RE";
+        if (e.hist.last_seen !== prevWeek) movement = "RE";
         else if (rank < e.hist.lastRank) movement = "UP";
         else if (rank > e.hist.lastRank) movement = "DOWN";
         else movement = "—";
@@ -365,73 +302,43 @@ async function handler() {
       const totalSales = (e.hist?.totalSales || 0) + e.sales;
       const peak = e.hist ? Math.min(rank, e.hist.peak) : rank;
       return {
-        rank,
-        movement,
-        title: e.title,
-        artist: e.artist,
-        album: e.album,
-        plays: e.plays,
-        sales: e.sales,
-        totalSales,
-        weeks: e.weeks,
-        peak,
-        streams: Math.trunc(e.streams),
-        radio: e.radio,
-        points: e.points
+        rank, movement, title: e.title, artist: e.artist, album: e.album,
+        plays: e.plays, sales: e.sales, totalSales, weeks: e.weeks, peak,
+        streams: Math.trunc(e.streams), radio: e.radio, points: e.points
       };
     });
 
     console.log("DEBUG: Final entries prepared =", entries.length);
 
-    // 8) Dry-run vs publish
     if (DRY_RUN) {
-      console.log(`=== DRY RUN PREVIEW (${overwriting ? "Overwriting week " + targetWeek : "Appending week " + targetWeek}) Top 20 ===`);
-      for (const e of entries.slice(0, 20)) {
-        console.log(`#${e.rank} ${e.title} — ${e.artist} | Plays: ${e.plays} | Sales: ${e.sales.toFixed(2)} | Points: ${e.points}`);
-      }
+      console.log("=== DRY RUN PREVIEW ===");
+      for (const e of entries.slice(0, 20))
+        console.log(`#${e.rank} ${e.title} — ${e.artist} (${e.points} pts)`);
       console.log("=== END PREVIEW ===");
       return;
     }
 
-    // 9) Safety pre-check: ensure we won’t lose early weeks accidentally
     const postTest = { ...weekData, [targetWeek]: entries };
-    const postTestKeys = Object.keys(postTest).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
-    console.log("DEBUG: Weeks that would be present AFTER =", postTestKeys);
-    if (postTestKeys.length < preCount) {
-      throw new Error(`Safety: about to write fewer weeks (${postTestKeys.length}) than before (${preCount}). Aborting.`);
-    }
+    const postKeys = Object.keys(postTest).map(Number).sort((a,b)=>a-b);
+    if (postKeys.length < preCount)
+      throw new Error("Refusing to shrink week count!");
 
-    // 10) Write & commit — PRESERVE ALL OLD WEEKS
-    weekData[targetWeek] = entries;
-
-    const postKeys = Object.keys(weekData).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
-    console.log("DEBUG: Weeks present AFTER  =", postKeys);
-    if (postKeys.length < preCount) {
-      throw new Error(`Refusing to save: week count shrank from ${preCount} to ${postKeys.length}`);
-    }
-
-    saveWeekData(WEEKDATA_PATH, weekData, preCount);
+    saveWeekData(WEEKDATA_PATH, { [targetWeek]: entries }, preCount);
 
     execSync('git config user.name "github-actions[bot]"');
     execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
     execSync(`git add ${WEEKDATA_PATH}`);
     execSync(`sh -lc 'git commit -m "${overwriting ? "overwrite" : "add"} week ${targetWeek} (Last.fm)" || echo "No changes to commit"'`);
     execSync("git push");
-    console.log("SUCCESS: Week", targetWeek, overwriting ? "overwritten" : "added", "and committed");
+    console.log("SUCCESS: Week", targetWeek, overwriting ? "overwritten" : "added");
   } catch (err) {
     console.error("FATAL ERROR:", err.message);
-    console.error(err.stack);
     process.exitCode = 1;
   }
 }
 
 // --- Run when executed directly ---
-if (require.main === module) {
-  handler().catch(err => {
-    console.error("UNHANDLED:", err);
-    process.exit(1);
-  });
-}
+if (require.main === module) handler();
 
 module.exports = { handler };
 
