@@ -89,26 +89,27 @@ function lastFridayToThursdayRange() {
   return { from, to };
 }
 
-// --- Load/save that PRESERVE your exact file format ---
-function tryRequire(abs) {
-  try {
-    delete require.cache[abs];
-    return require(abs);
-  } catch {
-    return null;
-  }
-}
-function tryParseLegacy(abs) {
-  // Fallback: read file and extract JSON between "const weekData =" and "module.exports"
+// ---- Robust parsers (handle CommonJS + ESM + legacy styles) ----
+function tryParseByRegex(abs) {
   const raw = fs.readFileSync(abs, "utf8");
-  const m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*\})\s*;?\s*module\.exports\s*=\s*weekData\s*;?/);
-  if (!m) return null;
-  try {
-    return JSON.parse(m[1]);
-  } catch (e) {
-    console.error("ERROR parsing legacy weekdata.js:", e.message);
-    return null;
-  }
+
+  // 1) const weekData = { ... }; module.exports = weekData;
+  let m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?\s*module\.exports\s*=\s*weekData\b/);
+  if (m) { return JSON.parse(m[1]); }
+
+  // 2) module.exports = { ... };
+  m = raw.match(/module\.exports\s*=\s*(\{[\s\S]*?\})\s*;?/);
+  if (m) { return JSON.parse(m[1]); }
+
+  // 3) export default { ... }
+  m = raw.match(/export\s+default\s+(\{[\s\S]*?\})\s*;?/);
+  if (m) { return JSON.parse(m[1]); }
+
+  // 4) export const weekData = { ... }
+  m = raw.match(/export\s+const\s+weekData\s*=\s*(\{[\s\S]*?\})\s*;?/);
+  if (m) { return JSON.parse(m[1]); }
+
+  return null; // unknown format
 }
 
 function loadWeekData(filePathRel) {
@@ -122,31 +123,42 @@ function loadWeekData(filePathRel) {
     throw new Error("weekdata.js not found — refusing to run with empty data");
   }
 
-  // Try require()
+  // Preferred: tolerant text parse (supports ESM/CJS/legacy)
+  try {
+    const parsed = tryParseByRegex(abs);
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      const keys = Object.keys(parsed).map(Number).filter(Number.isFinite);
+      if (keys.length === 0) {
+        throw new Error("Parsed object has no week keys — aborting to protect history");
+      }
+      console.log("DEBUG: Loaded via regex parser with weeks:", keys.sort((a,b)=>a-b));
+      return parsed;
+    }
+  } catch (e) {
+    console.warn("WARN: regex parse failed:", e.message);
+  }
+
+  // Fallback: require() (works for CJS or transpiled ESM)
   try {
     delete require.cache[abs];
     const mod = require(abs);
-    if (mod && typeof mod === "object" && !Array.isArray(mod)) {
-      console.log("DEBUG: Loaded weekdata via require()");
-      return mod;
+    const obj = (mod && typeof mod === "object")
+      ? (mod.default && typeof mod.default === "object" ? mod.default : mod)
+      : null;
+    if (obj && !Array.isArray(obj)) {
+      const keys = Object.keys(obj).map(Number).filter(Number.isFinite);
+      if (keys.length === 0) {
+        throw new Error("require() returned object with no week keys — aborting to protect history");
+      }
+      console.log("DEBUG: Loaded via require() with weeks:", keys.sort((a,b)=>a-b));
+      return obj;
     }
   } catch (e) {
     console.warn("WARN: require() load failed:", e.message);
   }
 
-  // Try legacy parse
-  try {
-    const legacy = tryParseLegacy(abs);
-    if (legacy && typeof legacy === "object" && !Array.isArray(legacy)) {
-      console.log("DEBUG: Loaded weekdata via legacy parser");
-      return legacy;
-    }
-  } catch (e) {
-    console.warn("WARN: legacy parse failed:", e.message);
-  }
-
   // Hard fail instead of wiping
-  throw new Error("Could not load weekdata.js — aborting to avoid wiping old data.");
+  throw new Error("Could not load weekdata.js in any known format — aborting to avoid wiping old data.");
 }
 
 function saveWeekData(filePathRel, newDataObj, oldKeyCount) {
@@ -154,24 +166,15 @@ function saveWeekData(filePathRel, newDataObj, oldKeyCount) {
     ? filePathRel
     : path.resolve(process.cwd(), filePathRel);
 
-  // Re-load current data from disk to avoid accidental wipe
-  let currentData = {};
-  try {
-    currentData = loadWeekData(filePathRel);
-  } catch (e) {
-    console.warn("WARN: Could not reload existing weekdata, proceeding with new only:", e.message);
-  }
-
-  // Merge: old weeks preserved, new/overwrite applied
+  // Re-load from disk to detect accidental shrink (throws if bad)
+  const currentData = loadWeekData(filePathRel);
   const merged = { ...currentData, ...newDataObj };
 
   const keysSorted = Object.keys(merged).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
   console.log("DEBUG: Final week keys to save =", keysSorted);
 
   if (typeof oldKeyCount === "number" && keysSorted.length < oldKeyCount) {
-    throw new Error(
-      `Refusing to save: week count shrank from ${oldKeyCount} to ${keysSorted.length}`
-    );
+    throw new Error(`Refusing to save: week count shrank from ${oldKeyCount} to ${keysSorted.length}`);
   }
 
   const newContent =
@@ -223,14 +226,17 @@ async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
-    // 1) Load weekdata
+    // 1) Load weekdata — hard fail if empty/unknown to protect history
     const weekData = loadWeekData(WEEKDATA_PATH);
     const preKeys = Object.keys(weekData).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
     const preCount = preKeys.length;
+    if (preCount === 0) {
+      throw new Error("Loaded weekdata has 0 weeks — refusing to run to protect history.");
+    }
     console.log("DEBUG: Weeks present BEFORE =", preKeys);
 
     // 2) Decide target week number
-    const maxExisting = preCount ? preKeys[preCount - 1] : 0;
+    const maxExisting = preKeys[preCount - 1];
     const targetWeek = Number.isInteger(TARGET_WEEK) ? TARGET_WEEK : (maxExisting + 1);
     const overwriting = Number.isInteger(TARGET_WEEK);
     console.log(`DEBUG: Max existing=${maxExisting}. Target week=${targetWeek}. Mode=${overwriting ? "OVERWRITE" : "APPEND"}.`);
@@ -319,10 +325,17 @@ async function handler() {
       return;
     }
 
-    // 9) Write & commit — PRESERVE ALL OLD WEEKS
+    // 9) Safety pre-check: ensure we won’t lose early weeks accidentally
+    const postTest = { ...weekData, [targetWeek]: entries };
+    const postTestKeys = Object.keys(postTest).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
+    console.log("DEBUG: Weeks that would be present AFTER =", postTestKeys);
+    if (postTestKeys.length < preCount) {
+      throw new Error(`Safety: about to write fewer weeks (${postTestKeys.length}) than before (${preCount}). Aborting.`);
+    }
+
+    // 10) Write & commit — PRESERVE ALL OLD WEEKS
     weekData[targetWeek] = entries;
 
-    // Safety: ensure we didn't lose early weeks accidentally
     const postKeys = Object.keys(weekData).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
     console.log("DEBUG: Weeks present AFTER  =", postKeys);
     if (postKeys.length < preCount) {
