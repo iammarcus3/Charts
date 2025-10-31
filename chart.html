@@ -2,335 +2,340 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Weekly Billboard — By Main Genre (Top 50)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <!-- use the version we created with genres -->
-  <script src="weekdata.with_genres.js"></script>
+  <title>Genre Charts — From weekdata.js</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="weekdata.js"></script>
   <style>
     :root{
       --bg:#0b0b0c;
       --panel:#121214;
-      --panel2:#18181c;
-      --ink:#f4f4f5;
-      --muted:#93939d;
+      --panel-2:#17171a;
+      --ink:#eaeaea;
+      --muted:#a7a7b1;
       --cyan:#00ffff;
-      --accent:#f82aaa;
-      --border:#23232a;
+      --cyan-600:#00d6d6;
       --row:#141417;
       --row-hover:#1a1a1f;
+      --border:#23232a;
       --rank:#0e0e10;
-      --gold:#ffd66b;
+      --chip:#1f2230;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:14px;
+      --danger:#ff5a5a;
     }
-    *{box-sizing:border-box;}
+    *{box-sizing:border-box}
     body{
-      margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      margin:0; background:linear-gradient(180deg,#0b0b0c 0%, #0d0d0f 30%, #101015 100%);
+      color:var(--ink); font: 15px/1.5 "Inter","Helvetica Neue",Arial,system-ui,sans-serif;
     }
-    header{
-      padding:16px 20px 5px;
-      border-bottom:1px solid #111;
-    }
-    h1{
-      margin:0;
-      font-size:1.35rem;
-      letter-spacing:.02em;
-    }
-    .muted{color:var(--muted);font-size:.78rem;}
-    .tabs{
-      display:flex;
-      gap:8px;
-      padding:10px 20px;
-      overflow:auto;
-      background:rgba(0,0,0,.05);
-    }
-    .tab-btn{
-      background:rgba(255,255,255,.02);
-      border:1px solid transparent;
-      color:var(--muted);
-      padding:6px 14px 7px;
-      border-radius:999px;
-      font-size:.75rem;
-      cursor:pointer;
-      white-space:nowrap;
-    }
-    .tab-btn.active{
-      background:rgba(0,255,255,.14);
-      border-color:rgba(0,255,255,.5);
-      color:var(--ink);
-    }
-    .container{
-      padding:14px 18px 32px;
-    }
-    .panel{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px 12px 4px;
-      box-shadow:0 18px 35px rgba(0,0,0,.32);
-    }
-    .panel-title{
-      font-size:.7rem;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      color:var(--muted);
-      margin-bottom:6px;
-    }
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:.78rem;
-    }
-    th,td{
-      padding:6px 6px 6px;
-      text-align:left;
-      border-bottom:1px solid rgba(255,255,255,.02);
-    }
-    th{
-      font-size:.65rem;
-      text-transform:uppercase;
-      letter-spacing:.04em;
-      background:rgba(0,0,0,.2);
-      position:sticky;
-      top:0;
-      z-index:2;
-    }
-    tbody tr:nth-child(even){background:rgba(255,255,255,.01);}
-    tbody tr:hover{background:var(--row-hover);}
-    .rank-badge{
-      background:var(--rank);
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:6px;
-      display:inline-block;
-      width:38px;
-      text-align:center;
-      font-size:.7rem;
-      padding:3px 0 4px;
-    }
-    .song-title{font-weight:600;}
-    .song-meta{color:var(--muted);font-size:.7rem;}
-    .badge{
-      display:inline-block;
-      background:rgba(0,255,255,.08);
-      border:1px solid rgba(0,255,255,.2);
-      color:var(--ink);
-      border-radius:999px;
-      padding:1px 8px 2px;
-      font-size:.62rem;
-      margin-right:4px;
-      margin-top:2px;
-    }
-    .tab-panel{display:none;}
-    .tab-panel.active{display:block;}
+    .shell{max-width:1200px;margin:0 auto;padding:20px}
     .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:8px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+      padding:12px 16px; box-shadow:var(--shadow); position:sticky; top:0; z-index:50; backdrop-filter: blur(6px);
     }
-    select{
-      background:rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.08);
-      color:var(--ink);
-      border-radius:6px;
-      padding:3px 6px;
-      font-size:.68rem;
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:40px;height:40px;border-radius:10px;background:conic-gradient(from 210deg,#00ffff,#ff89ff,#00ffff);
+      box-shadow:0 0 0 2px #111, 0 8px 22px rgba(0,0,0,.45);
     }
-    .small{font-size:.7rem;color:var(--muted);}
+    .title h1{margin:0;font-size:1.05rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
+    .subtitle{font-size:.78rem;color:var(--muted)}
+    .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .btn,.select{
+      height:34px; padding:0 12px; border-radius:10px; border:1px solid var(--border);
+      background:var(--panel-2); color:var(--ink); font-weight:600; cursor:pointer;
+    }
+    .btn.primary{background:var(--cyan); color:#02060a; border:none}
+    .pill{background:var(--chip); color:var(--muted); border:1px solid var(--border);
+      padding:5px 10px; border-radius:999px; font-size:.72rem}
+    /* genre tabs */
+    .tabs{display:flex; gap:8px; margin:16px 0 10px; flex-wrap:wrap}
+    .tab{
+      background:var(--panel); border:1px solid var(--border); border-radius:12px;
+      padding:8px 14px; cursor:pointer; font-weight:700; color:var(--muted); font-size:.78rem;
+    }
+    .tab.active{background:var(--cyan); color:#05090c; border-color:transparent; box-shadow:0 4px 20px rgba(0,255,255,.25)}
+    .board{
+      background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+      box-shadow:var(--shadow); overflow:hidden;
+    }
+    .board-head{
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      background:var(--panel-2); border-bottom:1px solid var(--border); padding:10px 14px;
+    }
+    .date-range{font-weight:700; color:#dff; letter-spacing:.04em}
+    .table-wrap{max-height:66vh; overflow:auto}
+    table{width:100%; border-collapse:collapse}
+    thead th{
+      position:sticky; top:0; background:var(--panel-2); z-index:2;
+      text-align:left; padding:10px 8px; font-size:.68rem; text-transform:uppercase; letter-spacing:.12em; color:#c6f3ff;
+      border-bottom:1px solid var(--border);
+    }
+    tbody td{
+      padding:10px 8px; border-bottom:1px solid #1f1f25; background:var(--row); font-size:.78rem
+    }
+    tbody tr:hover td{background:var(--row-hover)}
+    .rank-badge{
+      background:var(--rank); border:1px solid #2f3a48; border-radius:999px;
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:38px; height:30px; font-weight:900; color:#eaffff;
+    }
+    .right{text-align:right; font-variant-numeric:tabular-nums}
+    .muted{color:var(--muted)}
+    .empty{padding:50px 20px;text-align:center;color:var(--muted)}
+    .badge-sweep{color:var(--danger);font-weight:700}
+    @media(max-width:800px){
+      .topbar{flex-direction:column;align-items:flex-start}
+      .board{max-height:none}
+      .table-wrap{max-height:60vh}
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Weekly Billboard — by Main Genre</h1>
-    <div class="muted">Top 50 | POP, RNB, HIP-HOP, ROCK, DANCE, COUNTRY, JAZZ, ELECTRONIC (from weekdata.with_genres.js)</div>
-  </header>
-
-  <div class="tabs" id="genreTabs">
-    <button class="tab-btn active" data-genre="POP">POP</button>
-    <button class="tab-btn" data-genre="RNB">RNB</button>
-    <button class="tab-btn" data-genre="HIP-HOP">HIP-HOP</button>
-    <button class="tab-btn" data-genre="ROCK">ROCK</button>
-    <button class="tab-btn" data-genre="DANCE">DANCE</button>
-    <button class="tab-btn" data-genre="COUNTRY">COUNTRY</button>
-    <button class="tab-btn" data-genre="JAZZ">JAZZ</button>
-    <button class="tab-btn" data-genre="ELECTRONIC">ELECTRONIC</button>
-  </div>
-
-  <div class="container">
+  <div class="shell">
     <div class="topbar">
-      <div class="small" id="weekLabel">Week: —</div>
-      <div>
-        <label class="small">Select week:</label>
-        <select id="weekSelect"></select>
+      <div class="brand">
+        <div class="logo"></div>
+        <div class="title">
+          <h1>Genre Charts</h1>
+          <div class="subtitle">Source: weekdata.js • Tabs = genres • Top 20 only</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn" id="prevWeek">⟵</button>
+        <select id="weekSelector" class="select"></select>
+        <button class="btn" id="nextWeek">⟶</button>
+        <span class="pill" id="metaCount">—</span>
+        <span class="pill" id="metaGenre">—</span>
+        <button class="btn primary" id="latestBtn">Latest</button>
       </div>
     </div>
 
-    <!-- one panel, we just swap tbody -->
-    <div class="panel">
-      <div class="panel-title" id="panelTitle">POP — Top 50</div>
-      <div style="max-height:420px;overflow:auto;">
+    <div class="tabs" id="genreTabs"></div>
+
+    <div class="board">
+      <div class="board-head">
+        <div class="date-range" id="dateRange">—</div>
+        <div class="muted" id="status">Loaded from weekdata.js</div>
+      </div>
+      <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th style="width:50px;">#</th>
-              <th>Song</th>
-              <th style="width:110px;">Artist</th>
-              <th style="width:120px;">Sub Genre(s)</th>
-              <th style="width:90px;">Score</th>
+              <th style="width:70px;">Rank</th>
+              <th>Title</th>
+              <th>Artist</th>
+              <th class="right">Points</th>
+              <th class="right">Sales</th>
             </tr>
           </thead>
-          <tbody id="chartBody"></tbody>
+          <tbody id="tbody"></tbody>
         </table>
       </div>
     </div>
-
-    <div id="datasetWarning" class="small" style="margin-top:6px;"></div>
   </div>
 
-  <script>
-    // --------------- utils to read your weekdata (object or array) ---------------
-    function getRawWeekData(){
-      return window.weekdata || window.weekData || window.week_data || null;
+<script>
+(function(){
+  // ---------- helpers ----------
+  const nz = (v,d=0)=> {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : d;
+  };
+  const trimText = (t, n=38)=> String(t||'').length>n ? String(t).slice(0,n-1)+'…' : t;
+  const startDate = new Date(2018,1,23); // 23 Feb 2018
+  const formatRange = (weekNum)=>{
+    const d1 = new Date(startDate); d1.setDate(d1.getDate() + (weekNum-1)*7);
+    const d2 = new Date(d1); d2.setDate(d1.getDate()+6);
+    const opt = {day:'numeric', month:'short', year:'numeric'};
+    return d1.toLocaleDateString('en-GB',opt) + ' – ' + d2.toLocaleDateString('en-GB',opt);
+  };
+
+  // ---------- load raw ----------
+  const raw = window.weekdata || window.weekData || window.WEEKDATA || [];
+  let weekData = {};
+  if (Array.isArray(raw)) {
+    // array -> group
+    for (const row of raw){
+      const w = row.week || row.Week || row.w;
+      if (!w) continue;
+      (weekData[w] ||= []).push(row);
     }
+  } else if (typeof raw === 'object' && raw !== null) {
+    weekData = raw;
+  }
 
-    function getWeekKeys(raw){
-      // object: { "2018-02-23": [...], "2018-03-02": [...] }
-      if (!raw) return [];
-      if (Array.isArray(raw)){
-        // array style (rare in your case)
-        return raw.map((w,i)=>w.week || w.Week || (i+1));
-      } else {
-        return Object.keys(raw);
-      }
+  const weekSelector = document.getElementById('weekSelector');
+  const genreTabs = document.getElementById('genreTabs');
+  const tbody = document.getElementById('tbody');
+  const dateRangeEl = document.getElementById('dateRange');
+  const statusEl = document.getElementById('status');
+  const metaCount = document.getElementById('metaCount');
+  const metaGenre = document.getElementById('metaGenre');
+  const prevBtn = document.getElementById('prevWeek');
+  const nextBtn = document.getElementById('nextWeek');
+  const latestBtn = document.getElementById('latestBtn');
+
+  const allWeeks = Object.keys(weekData).map(n=>+n).filter(n=>!isNaN(n)).sort((a,b)=>a-b);
+  if (!allWeeks.length){
+    statusEl.textContent = 'No weeks in weekdata.js';
+    tbody.innerHTML = '<tr><td colspan="5" class="empty">No data</td></tr>';
+    return;
+  }
+
+  // week state
+  let currentWeek = allWeeks[allWeeks.length-1];
+  let currentGenre = null;
+
+  // fill week dropdown
+  function fillWeekSelector(){
+    weekSelector.innerHTML = '';
+    for (const w of allWeeks){
+      const opt = document.createElement('option');
+      opt.value = w;
+      opt.textContent = formatRange(w);
+      weekSelector.appendChild(opt);
     }
+  }
 
-    function getWeekEntries(raw, key){
-      if (!raw) return [];
-      if (Array.isArray(raw)){
-        // find by week number
-        const found = raw.find(w => (w.week||w.Week) == key);
-        return found && (found.tracks || found.songs || []) || [];
-      } else {
-        return raw[key] || [];
-      }
+  // get week rows, trim 200, sort by rank
+  function getWeekRows(weekNum){
+    const rows = (weekData[weekNum] || []).slice();
+    // sort by rank first
+    rows.sort((a,b)=>{
+      const ra = nz(a.rank ?? a.position ?? a.pos, 9999);
+      const rb = nz(b.rank ?? b.position ?? b.pos, 9999);
+      return ra - rb;
+    });
+    // keep 200
+    return rows.slice(0,200).filter(r=>{
+      const title = (r.title || r.song || '').toString();
+      return !/sweep week/i.test(title); // remove sweep weeks
+    });
+  }
+
+  // detect genres for week
+  function detectGenres(rows){
+    const counts = {};
+    for (const r of rows){
+      const g = r.genre || (Array.isArray(r.genres) && r.genres[0]) || 'Unknown';
+      counts[g] = (counts[g]||0)+1;
     }
+    // sort by count desc
+    return Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([g])=>g);
+  }
 
-    // score function — you can change this to streams, radio, etc
-    function getSongScore(song){
-      // prefer sales, then streams, then points
-      return Number(song.sales || song.Sales || song.streams || song.Streams || song.points || 0);
-    }
-
-    // --------------- main logic ---------------
-    const GENRES = ['POP','RNB','HIP-HOP','ROCK','DANCE','COUNTRY','JAZZ','ELECTRONIC'];
-    let RAW = null;
-    let WEEK_KEYS = [];
-    let CURRENT_WEEK = null;
-    let CURRENT_GENRE = 'POP';
-
-    function buildWeekSelect(){
-      const sel = document.getElementById('weekSelect');
-      sel.innerHTML = '';
-      // sort descending (latest first)
-      const sorted = [...WEEK_KEYS].sort((a,b)=>{
-        // try numeric
-        const na = Number(a), nb = Number(b);
-        if (!isNaN(na) && !isNaN(nb)) return nb - na;
-        // else string
-        return (''+b).localeCompare(''+a);
+  // render genre tabs
+  function renderTabs(genres){
+    genreTabs.innerHTML = '';
+    genres.forEach((g,idx)=>{
+      const tab = document.createElement('div');
+      tab.className = 'tab' + (g===currentGenre ? ' active' : '');
+      tab.textContent = g;
+      tab.dataset.genre = g;
+      tab.dataset.key = (idx+1); // for keyboard
+      tab.addEventListener('click', ()=>{
+        currentGenre = g;
+        renderTabs(genres);
+        renderTable();
       });
-      sorted.forEach(k=>{
-        const opt = document.createElement('option');
-        opt.value = k;
-        opt.textContent = k;
-        sel.appendChild(opt);
-      });
-      // set current = first (latest)
-      CURRENT_WEEK = sorted[0] || null;
-      sel.value = CURRENT_WEEK;
-      document.getElementById('weekLabel').textContent = 'Week: '+(CURRENT_WEEK || '—');
-    }
+      genreTabs.appendChild(tab);
+    });
+  }
 
-    function filterAndRank(weekKey, mainGenre){
-      const entries = getWeekEntries(RAW, weekKey);
-      // your real data is usually array of songs {title, artist, sales, mainGenre, subGenres...}
-      const filtered = entries
-        .filter(s => s && (s.mainGenre || s.genre_main || '').toUpperCase() === mainGenre.toUpperCase())
-        .map(s => {
-          const mg = (s.mainGenre || s.genre_main || '').toUpperCase();
-          const subs = Array.isArray(s.subGenres || s.genre_sub) ? (s.subGenres || s.genre_sub) : [];
-          return {
-            title: s.title || s.Title || '—',
-            artist: s.artist || s.Artist || '—',
-            mainGenre: mg,
-            subGenres: subs,
-            score: getSongScore(s)
-          };
-        })
-        .sort((a,b)=>b.score - a.score)
-        .slice(0,50);
-      return filtered;
-    }
+  // render table for current week + genre
+  function renderTable(){
+    const rows = getWeekRows(currentWeek);
+    // if no genre selected, pick first from detected
+    const genres = detectGenres(rows);
+    if (!currentGenre || !genres.includes(currentGenre)) currentGenre = genres[0] || 'Unknown';
 
-    function renderChart(){
-      if (!CURRENT_WEEK) return;
-      const data = filterAndRank(CURRENT_WEEK, CURRENT_GENRE);
-      const body = document.getElementById('chartBody');
-      body.innerHTML = '';
-      data.forEach((row,idx)=>{
+    // filter by genre
+    const filtered = rows.filter(r=>{
+      const g = r.genre || (Array.isArray(r.genres) && r.genres[0]) || 'Unknown';
+      return g === currentGenre;
+    });
+
+    // sort: points desc -> sales desc -> title
+    filtered.sort((a,b)=>{
+      const pa = nz(a.points || a.Points, 0);
+      const pb = nz(b.points || b.Points, 0);
+      if (pb !== pa) return pb - pa;
+      const sa = nz(a.sales || a.Sales, 0);
+      const sb = nz(b.sales || b.Sales, 0);
+      if (sb !== sa) return sb - sa;
+      return String(a.title||'').localeCompare(String(b.title||''));
+    });
+
+    const top20 = filtered.slice(0,20);
+
+    tbody.innerHTML = '';
+    if (!top20.length){
+      tbody.innerHTML = '<tr><td colspan="5" class="empty">No songs for this genre in this week.</td></tr>';
+    } else {
+      top20.forEach((row,idx)=>{
         const tr = document.createElement('tr');
+        const rank = idx+1;
+        const title = row.title || row.song || '—';
+        const artist = row.artist || row.Artist || '—';
+        const pts = nz(row.points || row.Points, 0);
+        const sales = nz(row.sales || row.Sales, 0);
         tr.innerHTML = `
-          <td><span class="rank-badge">${idx+1}</span></td>
-          <td>
-            <div class="song-title">${row.title}</div>
-            <div class="song-meta">${row.mainGenre}</div>
-          </td>
-          <td>${row.artist}</td>
-          <td>
-            ${row.subGenres.map(s=>`<span class="badge">${s}</span>`).join('')}
-          </td>
-          <td>${row.score.toLocaleString()}</td>
+          <td><span class="rank-badge">${rank}</span></td>
+          <td title="${title}">${trimText(title,42)}</td>
+          <td title="${artist}">${trimText(artist,38)}</td>
+          <td class="right">${pts ? pts.toLocaleString() : '—'}</td>
+          <td class="right">${sales ? sales.toLocaleString() : '—'}</td>
         `;
-        body.appendChild(tr);
+        tbody.appendChild(tr);
       });
-      document.getElementById('panelTitle').textContent = `${CURRENT_GENRE} — Top 50`;
-      document.getElementById('weekLabel').textContent = 'Week: '+CURRENT_WEEK;
     }
 
-    // --------------- init ---------------
-    (function init(){
-      const warn = document.getElementById('datasetWarning');
-      RAW = getRawWeekData();
-      if (!RAW){
-        warn.textContent = 'No dataset found. Make sure weekdata.with_genres.js is loaded.';
-        return;
-      }
-      WEEK_KEYS = getWeekKeys(RAW);
-      if (!WEEK_KEYS.length){
-        warn.textContent = 'Dataset loaded but no weeks found.';
-        return;
-      }
-      warn.textContent = 'Dataset loaded: '+WEEK_KEYS.length+' weeks.';
-      buildWeekSelect();
-      renderChart();
+    dateRangeEl.textContent = formatRange(currentWeek);
+    metaCount.textContent = `${top20.length}/20 • week ${currentWeek}`;
+    metaGenre.textContent = currentGenre;
+    statusEl.textContent = `Showing top 20 for ${currentGenre} — trimmed to 200 rows for this week`;
+    renderTabs(genres);
+  }
 
-      // week change
-      document.getElementById('weekSelect').addEventListener('change', e=>{
-        CURRENT_WEEK = e.target.value;
-        renderChart();
-      });
+  // week change
+  function loadWeek(weekNum){
+    currentWeek = weekNum;
+    weekSelector.value = weekNum;
+    renderTable();
+  }
 
-      // tabs
-      document.querySelectorAll('#genreTabs .tab-btn').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          document.querySelectorAll('#genreTabs .tab-btn').forEach(b=>b.classList.remove('active'));
-          btn.classList.add('active');
-          CURRENT_GENRE = btn.dataset.genre;
-          renderChart();
-        });
-      });
-    })();
-  </script>
+  // controls
+  prevBtn.addEventListener('click', ()=>{
+    const idx = allWeeks.indexOf(currentWeek);
+    if (idx>0) loadWeek(allWeeks[idx-1]);
+  });
+  nextBtn.addEventListener('click', ()=>{
+    const idx = allWeeks.indexOf(currentWeek);
+    if (idx<allWeeks.length-1) loadWeek(allWeeks[idx+1]);
+  });
+  latestBtn.addEventListener('click', ()=>{
+    loadWeek(allWeeks[allWeeks.length-1]);
+  });
+  weekSelector.addEventListener('change', ()=>{
+    loadWeek(+weekSelector.value);
+  });
+
+  // keyboard
+  window.addEventListener('keydown', (e)=>{
+    if (e.key === 'ArrowLeft'){ prevBtn.click(); }
+    if (e.key === 'ArrowRight'){ nextBtn.click(); }
+    if (/^[1-9]$/.test(e.key)){
+      const tab = document.querySelector(`.tab[data-key="${e.key}"]`);
+      if (tab) tab.click();
+    }
+  });
+
+  // boot
+  fillWeekSelector();
+  loadWeek(currentWeek);
+})();
+</script>
 </body>
 </html>
