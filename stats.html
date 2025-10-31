@@ -47,7 +47,7 @@
     <!-- HOT 100 style -->
     <div class="card">
       <h2>Hot-100-style milestones <span class="badge">chart mechanics</span></h2>
-      <div class="sub">Includes movement, longevity & #1 dynamics. (We still skip your hidden ID list internally.)</div>
+      <div class="sub">Movement, longevity & #1 dynamics — from your weekly data.</div>
       <div class="actions">
         <button onclick="downloadCSV('hotTbl')">⬇️ CSV</button>
       </div>
@@ -109,15 +109,23 @@
       </table>
     </div>
 
-    <!-- Sweeps -->
+    <!-- RIAA milestones (new) -->
     <div class="card" style="grid-column:1/-1">
-      <h2>Sweep weeks <span class="badge">dominance snapshots</span></h2>
-      <div class="sub">Top-3, Top-5 and Top-10 sweeps by a single artist.</div>
+      <h2>RIAA-style milestones <span class="badge">Gold / Platinum / Diamond</span></h2>
+      <div class="sub">Sales → tracks × 1750 • album titles (grouped) × 500</div>
       <div class="actions">
-        <button onclick="downloadCSV('sweepTbl')">⬇️ CSV</button>
+        <button onclick="downloadCSV('riaaTbl')">⬇️ CSV</button>
       </div>
-      <table id="sweepTbl">
-        <thead><tr><th>Type</th><th>Artist</th><th class="right">Week</th></tr></thead>
+      <table id="riaaTbl">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Title / Album</th>
+            <th>Artist / Label</th>
+            <th class="right">Level</th>
+            <th class="right">Units</th>
+          </tr>
+        </thead>
         <tbody></tbody>
       </table>
     </div>
@@ -169,15 +177,15 @@
       return ranked;
     }
 
-    // ---------- compute records (EXTENDED++) ----------
+    // ---------- compute chart records (sweeps removed) ----------
     function computeAll(raw){
       const ranked = buildWeeklyRanks(raw);
       const weeks = [...ranked.keys()].sort((a,b)=>a-b);
 
-      const songHist = new Map();   // normalized -> [{week,rank,points,streams,radio,sales}]
-      const displayFor = new Map(); // normalized -> "Title — Artist"
+      const songHist = new Map();
+      const displayFor = new Map();
       const artistSongSet = new Map();
-      const albumSongSet = new Map(); // album -> set of songs
+      const albumSongSet = new Map();
       const albumStreamsCume = new Map();
 
       const artistNo1Weeks = new Map();
@@ -192,21 +200,19 @@
       const pointsByArtist  = new Map();
       const yearlyStreamsByArtist = new Map();
 
-      const firstSeen = new Map();  // song -> week
-      const lastSeen  = new Map();  // song -> last week present
+      const firstSeen = new Map();
+      const lastSeen  = new Map();
 
-      const debutsByWeek = new Map();                // week -> count
-      const debutsByWeekArtist = new Map();          // week -> Map(artist->count)
-      const reentriesByWeek = new Map();             // week -> count
-      const reentriesByWeekArtist = new Map();       // week -> Map(artist->count)
+      const debutsByWeek = new Map();
+      const reentriesByWeek = new Map();
+      const debutsByWeekArtist = new Map();
+      const reentriesByWeekArtist = new Map();
 
-      // “Leader of the week” tallies (# of weeks as leader)
       const streamWeekChamp = new Map();
       const radioWeekChamp  = new Map();
       const salesWeekChamp  = new Map();
       const pointsWeekChamp = new Map();
 
-      // week-level extremes for artists
       let bestArtistWeekStreams = {artist:null, week:null, value:-Infinity};
       let bestArtistWeekPoints  = {artist:null, week:null, value:-Infinity};
       let mostDebutsWeek = {week:null, count:0};
@@ -214,11 +220,9 @@
       let mostDebutsWeekByArtist = {artist:null, week:null, count:0};
       let mostReentriesWeekByArtist = {artist:null, week:null, count:0};
 
-      // overall week heavies
       let heaviestTop10WeekStreams = {week:null, total:-Infinity};
       let heaviestTop10WeekPoints  = {week:null, total:-Infinity};
 
-      // single-song week highs (any rank and #1 only)
       let biggestStream = {key:null, value:-Infinity, week:null};
       let biggestStreamRank1 = {key:null, value:-Infinity, week:null};
       let biggestPoints = {key:null, value:-Infinity, week:null};
@@ -229,42 +233,28 @@
       let highestSalesRank1 = {key:null, value:-Infinity, week:null};
       let highestStreamsOutsideTop10 = {key:null, value:-Infinity, week:null, rank:null};
 
-      // artist “pair 1–2” weeks
       const artistPair12Count = new Map();
 
-      // sweeps
-      const sweeps = [];
-
-      // album weekly feats
       let albumSimulTop10 = {album:null, week:null, count:0};
       let albumBestWeekStreams = {album:null, week:null, value:-Infinity};
 
-      // artist simultaneous entries max in any week
       let maxEntriesOneWeek = {artist:null, week:null, count:0};
 
-      // iterate weeks
       for (const w of weeks){
         const rows = ranked.get(w) || [];
         if (!rows.length) continue;
 
-        // per-week accumulators
         const artistCountAll = new Map();
         const artistCountTop10 = new Map();
         const artistCountTop5 = new Map();
         const artistWeekStreams = new Map();
         const artistWeekPoints  = new Map();
 
-        const albumTop10Count = new Map();  // per week
-        const albumWeekStreams = new Map(); // per week
+        const albumTop10Count = new Map();
+        const albumWeekStreams = new Map();
 
         let top10StreamsSum = 0;
         let top10PointsSum  = 0;
-
-        // sweeps
-        const top3 = rows.slice(0,3), top5 = rows.slice(0,5), top10 = rows.slice(0,10);
-        if (top10.length===10 && new Set(top10.map(r=>r.artist)).size===1) sweeps.push({type:'Top 10 sweep', artist:top10[0].artist, week:w});
-        if (top5.length===5 && new Set(top5.map(r=>r.artist)).size===1)  sweeps.push({type:'Top 5 sweep',  artist:top5[0].artist,  week:w});
-        if (top3.length===3 && new Set(top3.map(r=>r.artist)).size===1)  sweeps.push({type:'Top 3 sweep',  artist:top3[0].artist,  week:w});
 
         // #1 / #2 same-artist?
         if (rows[0] && rows[1] && rows[0].artist === rows[1].artist){
@@ -272,7 +262,6 @@
           artistPair12Count.set(a, (artistPair12Count.get(a)||0)+1);
         }
 
-        // week leaders (within this week)
         let weekTopStream = {key:null, value:-Infinity};
         let weekTopStreamRank1 = {key:null, value:-Infinity};
         let weekTopPoints = {key:null, value:-Infinity};
@@ -282,7 +271,6 @@
         let weekTopSales = {key:null, value:-Infinity};
         let weekTopSalesRank1 = {key:null, value:-Infinity};
 
-        // debut/reentry counters this week
         let wkDebuts = 0, wkReentries = 0;
         const wkDebutsArtist = new Map();
         const wkReentriesArtist = new Map();
@@ -290,7 +278,6 @@
         for (const r of rows){
           const keyN = nkey(r.title, r.artist);
 
-          // first/last seen tracking
           if (!firstSeen.has(keyN)){
             firstSeen.set(keyN, w);
             wkDebuts++;
@@ -304,12 +291,10 @@
           }
           lastSeen.set(keyN, w);
 
-          // song history
           if (!songHist.has(keyN)) songHist.set(keyN, []);
           songHist.get(keyN).push({week:w, rank:r.rank, points:r.points, streams:r.streams, radio:r.radio, sales:r.sales});
           displayFor.set(keyN, songDisp(r));
 
-          // artist aggregates
           if (!artistSongSet.has(r.artist)) artistSongSet.set(r.artist, new Set());
           artistSongSet.get(r.artist).add(keyN);
 
@@ -322,27 +307,22 @@
           artistWeekStreams.set(r.artist, (artistWeekStreams.get(r.artist)||0) + r.streams);
           artistWeekPoints.set(r.artist,  (artistWeekPoints.get(r.artist)||0)  + r.points);
 
-          // album aggregates
           if (isValidAlbum(r.album)){
             if (!albumSongSet.has(r.album)) albumSongSet.set(r.album, new Set());
             albumSongSet.get(r.album).add(keyN);
-
             albumStreamsCume.set(r.album, (albumStreamsCume.get(r.album)||0) + r.streams);
             if (r.rank<=10) albumTop10Count.set(r.album, (albumTop10Count.get(r.album)||0)+1);
             albumWeekStreams.set(r.album, (albumWeekStreams.get(r.album)||0)+r.streams);
           }
 
-          // top10 sums
           if (r.rank<=10){
             top10StreamsSum += r.streams;
             top10PointsSum  += r.points;
           }
 
-          // per-song totals
           streamsBySong.set(keyN, (streamsBySong.get(keyN)||0)+r.streams);
           pointsBySong.set(keyN,  (pointsBySong.get(keyN)||0)+r.points);
 
-          // per-artist totals (all-time)
           streamsByArtist.set(r.artist, (streamsByArtist.get(r.artist)||0)+r.streams);
           pointsByArtist.set(r.artist,  (pointsByArtist.get(r.artist)||0)+r.points);
           const year = dateFromWeek(w).getUTCFullYear();
@@ -350,36 +330,30 @@
           const ymap = yearlyStreamsByArtist.get(year);
           ymap.set(r.artist, (ymap.get(r.artist)||0)+r.streams);
 
-          // weekly bests (any rank)
           if (r.streams > weekTopStream.value) weekTopStream = {key:keyN, value:r.streams};
           if (r.points  > weekTopPoints.value) weekTopPoints = {key:keyN, value:r.points};
           if (r.radio   > weekTopRadio.value)  weekTopRadio  = {key:keyN, value:r.radio};
           if (r.sales   > weekTopSales.value)  weekTopSales  = {key:keyN, value:r.sales};
-          // weekly bests (#1 only)
           if (r.rank===1){
             if (r.streams > weekTopStreamRank1.value) weekTopStreamRank1 = {key:keyN, value:r.streams};
             if (r.points  > weekTopPointsRank1.value) weekTopPointsRank1 = {key:keyN, value:r.points};
             if (r.radio   > weekTopRadioRank1.value)  weekTopRadioRank1  = {key:keyN, value:r.radio};
             if (r.sales   > weekTopSalesRank1.value)  weekTopSalesRank1  = {key:keyN, value:r.sales};
           }
-          // streams outside Top 10
           if (r.rank>10 && r.streams > (highestStreamsOutsideTop10.value||-Infinity)) {
             highestStreamsOutsideTop10 = {key:keyN, value:r.streams, week:w, rank:r.rank};
           }
         } // rows
 
-        // persist weekly debut/reentry stats
         debutsByWeek.set(w, wkDebuts);
         reentriesByWeek.set(w, wkReentries);
         if (wkDebuts > (mostDebutsWeek.count||0)) mostDebutsWeek = {week:w, count:wkDebuts};
         if (wkReentries > (mostReentriesWeek.count||0)) mostReentriesWeek = {week:w, count:wkReentries};
-
         debutsByWeekArtist.set(w, wkDebutsArtist);
         reentriesByWeekArtist.set(w, wkReentriesArtist);
         wkDebutsArtist.forEach((c,a)=>{ if (c > (mostDebutsWeekByArtist.count||0)) mostDebutsWeekByArtist = {artist:a, week:w, count:c}; });
         wkReentriesArtist.forEach((c,a)=>{ if (c > (mostReentriesWeekByArtist.count||0)) mostReentriesWeekByArtist = {artist:a, week:w, count:c}; });
 
-        // update weekly leader tallies
         if (weekTopStream.key){ streamWeekChamp.set(weekTopStream.key, (streamWeekChamp.get(weekTopStream.key)||0)+1); if (weekTopStream.value > (biggestStream.value||-Infinity)) biggestStream = {...weekTopStream, week:w}; }
         if (weekTopPoints.key){ pointsWeekChamp.set(weekTopPoints.key, (pointsWeekChamp.get(weekTopPoints.key)||0)+1); if (weekTopPoints.value > (biggestPoints.value||-Infinity)) biggestPoints = {...weekTopPoints, week:w}; }
         if (weekTopRadio.key){  radioWeekChamp.set(weekTopRadio.key, (radioWeekChamp.get(weekTopRadio.key)||0)+1); if (weekTopRadio.value  > (highestRadio.value||-Infinity))  highestRadio  = {...weekTopRadio, week:w}; }
@@ -390,15 +364,12 @@
         if (weekTopRadioRank1.key  && weekTopRadioRank1.value  > (highestRadioRank1.value||-Infinity))  highestRadioRank1  = {...weekTopRadioRank1, week:w};
         if (weekTopSalesRank1.key  && weekTopSalesRank1.value  > (highestSalesRank1.value||-Infinity))  highestSalesRank1  = {...weekTopSalesRank1, week:w};
 
-        // heaviest Top-10
         if (top10StreamsSum > (heaviestTop10WeekStreams.total||-Infinity)) heaviestTop10WeekStreams = {week:w, total:top10StreamsSum};
         if (top10PointsSum  > (heaviestTop10WeekPoints.total||-Infinity))  heaviestTop10WeekPoints  = {week:w, total:top10PointsSum};
 
-        // artist weekly extremes
         artistWeekStreams.forEach((v,a)=>{ if (v > (bestArtistWeekStreams.value||-Infinity)) bestArtistWeekStreams = {artist:a, week:w, value:v}; });
         artistWeekPoints.forEach((v,a)=>{ if (v > (bestArtistWeekPoints.value||-Infinity))  bestArtistWeekPoints  = {artist:a, week:w, value:v}; });
 
-        // simultaneous entries maxima
         artistCountAll.forEach((cnt,a)=>{ if (cnt > (maxEntriesOneWeek.count||0)) maxEntriesOneWeek = {artist:a, week:w, count:cnt}; });
         artistCountTop10.forEach((cnt,a)=>{
           artistTop10Weeks.set(a, (artistTop10Weeks.get(a)||0) + 1);
@@ -409,12 +380,11 @@
           artistTop5SimulMax.set(a, Math.max(artistTop5SimulMax.get(a)||0, cnt));
         });
 
-        // album weekly feats
         albumTop10Count.forEach((cnt,alb)=>{ if (cnt > (albumSimulTop10.count||0)) albumSimulTop10 = {album:alb, week:w, count:cnt}; });
         albumWeekStreams.forEach((v,alb)=>{ if (v > (albumBestWeekStreams.value||-Infinity)) albumBestWeekStreams = {album:alb, week:w, value:v}; });
       }
 
-      // Per-song post-processing (movement, #1 dynamics, etc.)
+      // per-song post-processing
       let firstNo1 = null;
       let firstDebutNo1 = null;
       let longestNo1Run = {key:null, len:0, start:null, end:null};
@@ -431,7 +401,6 @@
       let mostReentries = {key:null, count:0};
       let mostCumePointsSong = {key:null, value:0};
 
-      // NEW: movement & volatility
       let biggestRankGain = {key:null, from:null, to:null, week:null, gain:0};
       let biggestRankDrop = {key:null, from:null, to:null, week:null, drop:0};
       let biggestPointsGain = {key:null, from:null, to:null, week:null, gain:0};
@@ -439,18 +408,15 @@
       let bestReentryPos = {key:null, rank:Infinity, week:null};
       let mostNo1Runs = {key:null, runs:0};
       let longestGapBetweenNo1s = {key:null, gapWeeks:0, from:null, to:null};
-      // NEW: Top10 timing
       let fastestToTop10 = {key:null, weeks:Infinity, start:null, hit:null};
       let slowestToTop10 = {key:null, weeks:-Infinity, start:null, hit:null};
 
       for (const [k,hist] of songHist.entries()){
         hist.sort((a,b)=>a.week-b.week);
 
-        // first #1
         const f1 = hist.find(x=>x.rank===1);
         if (f1 && (!firstNo1 || f1.week < firstNo1.week)) firstNo1 = {key:k, week:f1.week};
 
-        // debut row
         const debutRow = hist[0];
         if (debutRow && debutRow.rank===1){
           if (!firstDebutNo1 || debutRow.week < firstDebutNo1.week) firstDebutNo1 = {key:k, week:debutRow.week};
@@ -459,7 +425,6 @@
           bestNon1Debut = {key:k, rank:debutRow.rank, week:debutRow.week};
         }
 
-        // longest consecutive #1 + total #1 weeks & runs
         let cur=0,best=0,start=null,bStart=null,bEnd=null, totalAt1=0;
         let runs=0, inRun=false, lastNo1Week=null, maxGap=0, gapFrom=null, gapTo=null;
         for (const r of hist){
@@ -479,20 +444,17 @@
         if (runs > (mostNo1Runs.runs||0)) mostNo1Runs = {key:k, runs};
         if (maxGap > (longestGapBetweenNo1s.gapWeeks||0) && runs>1) longestGapBetweenNo1s = {key:k, gapWeeks:maxGap, from:gapFrom, to:gapTo};
 
-        // WoW movement & points
         for (let i=1;i<hist.length;i++){
           const p = hist[i-1], c = hist[i];
           const gain = (p.rank||101) - (c.rank||101);
           const drop = -gain;
           if (gain > (biggestRankGain.gain||0)) biggestRankGain = {key:k, from:p.rank, to:c.rank, week:c.week, gain};
           if (drop > (biggestRankDrop.drop||0)) biggestRankDrop = {key:k, from:p.rank, to:c.rank, week:c.week, drop};
-
           const dPts = (c.points||0) - (p.points||0);
           if (dPts > (biggestPointsGain.gain||0)) biggestPointsGain = {key:k, from:p.points, to:c.points, week:c.week, gain:dPts};
           if (-dPts > (biggestPointsLoss.loss||0)) biggestPointsLoss = {key:k, from:p.points, to:c.points, week:c.week, loss:-dPts};
         }
 
-        // totals & sections
         const weeksOn = hist.length;
         if (weeksOn > mostWeeksOnChart.weeks) mostWeeksOnChart = {key:k, weeks:weeksOn};
         const top10w = hist.reduce((a,x)=> a + (x.rank<=10?1:0), 0);
@@ -504,19 +466,16 @@
           if (at2 > mostWeeksAt2NoNo1.weeksAt2) mostWeeksAt2NoNo1 = {key:k, weeksAt2:at2};
         }
 
-        // fastest/slowest to #1 (by weeks since first appearance)
         if (f1 && debutRow){
           const delta = f1.week - debutRow.week;
           if (delta>0 && delta < (fastestTo1_exclDebut.weeks||Infinity)) fastestTo1_exclDebut = {key:k, weeks:delta, start:debutRow.week, hit:f1.week};
           if (delta >= (slowestTo1.weeks||-Infinity)) slowestTo1 = {key:k, weeks:delta, start:debutRow.week, hit:f1.week};
         }
 
-        // re-entries count + best re-entry position
         let runCount=1;
         for (let i=1;i<hist.length;i++){
           if (hist[i].week - hist[i-1].week > 1){
             runCount++;
-            // re-entry at i
             const pos = hist[i].rank||101;
             if (pos < (bestReentryPos.rank||Infinity)) bestReentryPos = {key:k, rank:pos, week:hist[i].week};
           }
@@ -524,11 +483,9 @@
         const reentries = Math.max(0, runCount-1);
         if (reentries > (mostReentries.count||0)) mostReentries = {key:k, count:reentries};
 
-        // cumulative points best
         const cumePts = pointsBySong.get(k)||0;
         if (cumePts > (mostCumePointsSong.value||0)) mostCumePointsSong = {key:k, value:cumePts};
 
-        // biggest jump to/from #1
         for (let i=1;i<hist.length;i++){
           const p = hist[i-1], c = hist[i];
           if (c.rank===1 && p){
@@ -542,7 +499,6 @@
           }
         }
 
-        // Top 10 timing (exclude debut-at-top10 if you want; here we include delta including 0 if debuted in T10)
         const firstTop10 = hist.find(x=>x.rank<=10);
         if (firstTop10 && debutRow){
           const delta10 = firstTop10.week - debutRow.week;
@@ -551,7 +507,6 @@
         }
       }
 
-      // artist leaders
       let mostDistinctSongsArtist = {artist:null, count:0};
       for (const [a,set] of artistSongSet.entries()) if (set.size > mostDistinctSongsArtist.count) mostDistinctSongsArtist = {artist:a, count:set.size};
 
@@ -570,8 +525,7 @@
       let mostSimulTop5Artist = {artist:null, count:0};
       for (const [a,c] of artistTop5SimulMax.entries()) if (c > mostSimulTop5Artist.count) mostSimulTop5Artist = {artist:a, count:c};
 
-      // most #1 songs (distinct)
-      const artistNo1Songs = new Map(); // artist -> Set of songs that ever hit #1
+      const artistNo1Songs = new Map();
       songHist.forEach((hist,k)=>{
         const disp = displayFor.get(k)||'';
         const artist = disp.split(' — ').slice(-1)[0] || '';
@@ -583,13 +537,9 @@
       let mostNo1SongsArtist = {artist:null, count:0};
       for (const [a,set] of artistNo1Songs.entries()) if (set.size > mostNo1SongsArtist.count) mostNo1SongsArtist = {artist:a, count:set.size};
 
-      // artist #1&#2 same-week leader
       let mostPair12Artist = {artist:null, weeks:0};
       for (const [a,c] of artistPair12Count.entries()) if (c > mostPair12Artist.weeks) mostPair12Artist = {artist:a, weeks:c};
 
-      // artist single-week extremes already captured in bestArtistWeekStreams/Points
-
-      // best in calendar year by streams
       let artistYearLeader = {year:null, artist:null, value:0};
       for (const [y,map] of yearlyStreamsByArtist.entries()){
         for (const [a,v] of map.entries()){
@@ -597,13 +547,11 @@
         }
       }
 
-      // album feats
       let albumMostDistinct = {album:null, count:0};
       for (const [alb,set] of albumSongSet.entries()) if (set.size > (albumMostDistinct.count||0)) albumMostDistinct = {album:alb, count:set.size};
       let albumBestCumeStreams = {album:null, value:0};
       for (const [alb,v] of albumStreamsCume.entries()) if (v > (albumBestCumeStreams.value||0)) albumBestCumeStreams = {album:alb, value:v};
 
-      // assemble tables
       const disp = k => displayFor.get(k) || '—';
 
       const hotRows = [
@@ -622,7 +570,6 @@
         { label:'Slowest climb to #1', holder:disp(slowestTo1.key), value:Number.isFinite(slowestTo1.weeks)&&slowestTo1.weeks>=0?`${slowestTo1.weeks} weeks`:'—', weeks:slowestTo1.start?`W${slowestTo1.start}→W${slowestTo1.hit}`:'—'},
         { label:'Most re-entries (separate chart runs)', holder:disp(mostReentries.key), value:fmtInt(mostReentries.count)},
         { label:'Most cumulative points (song)', holder:disp(mostCumePointsSong.key), value:abbr(mostCumePointsSong.value)},
-        // NEW movement & volatility
         { label:'Biggest single-week rank gain (any ranks)', holder:disp(biggestRankGain.key), value:biggestRankGain.gain?`+${fmtInt(biggestRankGain.gain)} places`:'—', weeks:biggestRankGain.week?`W${biggestRankGain.week} (#${biggestRankGain.from}→#${biggestRankGain.to})`:'—'},
         { label:'Biggest single-week rank drop (any ranks)', holder:disp(biggestRankDrop.key), value:biggestRankDrop.drop?`-${fmtInt(biggestRankDrop.drop)} places`:'—', weeks:biggestRankDrop.week?`W${biggestRankDrop.week} (#${biggestRankDrop.from}→#${biggestRankDrop.to})`:'—'},
         { label:'Biggest WoW points gain', holder:disp(biggestPointsGain.key), value:abbr(biggestPointsGain.gain), weeks:biggestPointsGain.week?`W${biggestPointsGain.week}`:'—'},
@@ -696,11 +643,11 @@
         albumRows,
         artistRows,
         weekRows,
-        sweeps,
-        meta:{weeks:weeks.length, songs:displayFor.size, artists:artistSongSet.size}
+        meta:{weeks:weeks.length, songs:displayFor.size, artists:artistSongSet.size},
+        displayFor,
+        songHist
       };
 
-      // helpers for assembly
       function maxFromMap(map){
         let key=null,val=-Infinity;
         map.forEach((v,k)=>{ if (v>val){val=v;key=k;} });
@@ -711,7 +658,7 @@
         map.forEach((v,k)=>{ if (v>val){val=v;label=k;} });
         return {label, val};
       }
-      function maxFromSetMapLabel(setMap, predicateFn){ // pick album with most songs matching predicateFn
+      function maxFromSetMapLabel(setMap, predicateFn){
         let label=null, val=0;
         setMap.forEach((set,alb)=>{
           const c = [...set].filter(s=>predicateFn(s)).length;
@@ -723,6 +670,93 @@
         const hist = songHist.get(songKey)||[];
         return hist.some(x=>x.rank===1);
       }
+    }
+
+    // ---------- RIAA builder (tracks ×1750, albums ×500) ----------
+    function buildRiaaMilestonesFromWeekdata(raw){
+      const TRACK_MULT = 1750;
+      const ALBUM_MULT = 500;
+      const LEVELS = [
+        {name:'Diamond', units:10_000_000},
+        {name:'9× Platinum', units:9_000_000},
+        {name:'8× Platinum', units:8_000_000},
+        {name:'7× Platinum', units:7_000_000},
+        {name:'6× Platinum', units:6_000_000},
+        {name:'5× Platinum', units:5_000_000},
+        {name:'4× Platinum', units:4_000_000},
+        {name:'3× Platinum', units:3_000_000},
+        {name:'2× Platinum', units:2_000_000},
+        {name:'Platinum', units:1_000_000},
+        {name:'Gold', units:500_000},
+      ];
+      const tracksTotal = new Map();  // nkey -> units
+      const tracksInfo  = new Map();  // nkey -> {title,artist,label}
+      const albumsTotal = new Map();  // album -> units
+      const albumsInfo  = new Map();  // album -> first artist
+
+      const weeks = Object.keys(raw||{});
+      for (const wk of weeks){
+        const rows = raw[wk] || [];
+        for (const r of rows){
+          if (!r || !r.title || !r.artist) continue;
+          const keyN = nkey(r.title, r.artist);
+          const units = nz(r.sales) * TRACK_MULT;
+          if (units>0){
+            tracksTotal.set(keyN, (tracksTotal.get(keyN)||0) + units);
+            tracksInfo.set(keyN, {title:r.title, artist:r.artist, label:r.label || r.Label || ''});
+          }
+          if (isValidAlbum(r.album)){
+            const albUnits = nz(r.sales) * ALBUM_MULT;
+            albumsTotal.set(r.album, (albumsTotal.get(r.album)||0) + albUnits);
+            if (!albumsInfo.has(r.album)) albumsInfo.set(r.album, {artist:r.artist || '', label:r.label || ''});
+          }
+        }
+      }
+
+      function levelFor(units){
+        for (const lvl of LEVELS){
+          if (units >= lvl.units) return lvl.name;
+        }
+        return null;
+      }
+
+      const trackRows = [];
+      tracksTotal.forEach((units,key)=>{
+        const lvl = levelFor(units);
+        if (!lvl) return;
+        const info = tracksInfo.get(key) || {};
+        trackRows.push({
+          type:'Track',
+          title:info.title || '—',
+          artist:info.artist || '—',
+          label:info.label || '',
+          level:lvl,
+          units
+        });
+      });
+
+      const albumRows = [];
+      albumsTotal.forEach((units,album)=>{
+        const lvl = levelFor(units);
+        if (!lvl) return;
+        const info = albumsInfo.get(album) || {};
+        albumRows.push({
+          type:'Album',
+          title:album,
+          artist:info.artist || '—',
+          label:info.label || '',
+          level:lvl,
+          units
+        });
+      });
+
+      // sort biggest first
+      trackRows.sort((a,b)=>b.units - a.units);
+      albumRows.sort((a,b)=>b.units - a.units);
+
+      // combine (tracks first)
+      const combined = [...trackRows, ...albumRows];
+      return combined;
     }
 
     // ---------- render ----------
@@ -772,7 +806,6 @@
           `<td class="right">${r.weeks??'—'}</td>`
         ]);
 
-        // format table with scope toggle
         const formatBody = document.querySelector('#formatTbl tbody');
         const rankSel = document.getElementById('rankScopeSel');
         const drawFormat = () => {
@@ -808,11 +841,16 @@
           `<td class="right">${r.week??'—'}</td>`
         ]);
 
-        fillTable(document.querySelector('#sweepTbl tbody'), res.sweeps, r=>[
+        // build & render RIAA
+        const riaa = buildRiaaMilestonesFromWeekdata(data);
+        fillTable(document.querySelector('#riaaTbl tbody'), riaa, r=>[
           `<td>${r.type}</td>`,
-          `<td>${r.artist}</td>`,
-          `<td class="right">W${r.week} (${ymd(dateFromWeek(r.week))})</td>`
+          `<td>${r.title}</td>`,
+          `<td>${r.artist}${r.label?` (${r.label})`:''}</td>`,
+          `<td class="right">${r.level}</td>`,
+          `<td class="right">${abbr(r.units)}</td>`
         ]);
+
       }catch(err){
         console.error(err);
         document.getElementById('meta').textContent = 'Error computing records. See console for details.';
