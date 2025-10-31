@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Weekly Billboard — By Main Genre (Top 50)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- use the version we created with genres -->
+  <script src="weekdata.with_genres.js"></script>
+  <style>
+    :root{
+      --bg:#0b0b0c;
+      --panel:#121214;
+      --panel2:#18181c;
+      --ink:#f4f4f5;
+      --muted:#93939d;
+      --cyan:#00ffff;
+      --accent:#f82aaa;
+      --border:#23232a;
+      --row:#141417;
+      --row-hover:#1a1a1f;
+      --rank:#0e0e10;
+      --gold:#ffd66b;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    header{
+      padding:16px 20px 5px;
+      border-bottom:1px solid #111;
+    }
+    h1{
+      margin:0;
+      font-size:1.35rem;
+      letter-spacing:.02em;
+    }
+    .muted{color:var(--muted);font-size:.78rem;}
+    .tabs{
+      display:flex;
+      gap:8px;
+      padding:10px 20px;
+      overflow:auto;
+      background:rgba(0,0,0,.05);
+    }
+    .tab-btn{
+      background:rgba(255,255,255,.02);
+      border:1px solid transparent;
+      color:var(--muted);
+      padding:6px 14px 7px;
+      border-radius:999px;
+      font-size:.75rem;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .tab-btn.active{
+      background:rgba(0,255,255,.14);
+      border-color:rgba(0,255,255,.5);
+      color:var(--ink);
+    }
+    .container{
+      padding:14px 18px 32px;
+    }
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px 12px 4px;
+      box-shadow:0 18px 35px rgba(0,0,0,.32);
+    }
+    .panel-title{
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:.78rem;
+    }
+    th,td{
+      padding:6px 6px 6px;
+      text-align:left;
+      border-bottom:1px solid rgba(255,255,255,.02);
+    }
+    th{
+      font-size:.65rem;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      background:rgba(0,0,0,.2);
+      position:sticky;
+      top:0;
+      z-index:2;
+    }
+    tbody tr:nth-child(even){background:rgba(255,255,255,.01);}
+    tbody tr:hover{background:var(--row-hover);}
+    .rank-badge{
+      background:var(--rank);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:6px;
+      display:inline-block;
+      width:38px;
+      text-align:center;
+      font-size:.7rem;
+      padding:3px 0 4px;
+    }
+    .song-title{font-weight:600;}
+    .song-meta{color:var(--muted);font-size:.7rem;}
+    .badge{
+      display:inline-block;
+      background:rgba(0,255,255,.08);
+      border:1px solid rgba(0,255,255,.2);
+      color:var(--ink);
+      border-radius:999px;
+      padding:1px 8px 2px;
+      font-size:.62rem;
+      margin-right:4px;
+      margin-top:2px;
+    }
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    select{
+      background:rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--ink);
+      border-radius:6px;
+      padding:3px 6px;
+      font-size:.68rem;
+    }
+    .small{font-size:.7rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Weekly Billboard — by Main Genre</h1>
+    <div class="muted">Top 50 | POP, RNB, HIP-HOP, ROCK, DANCE, COUNTRY, JAZZ, ELECTRONIC (from weekdata.with_genres.js)</div>
+  </header>
+
+  <div class="tabs" id="genreTabs">
+    <button class="tab-btn active" data-genre="POP">POP</button>
+    <button class="tab-btn" data-genre="RNB">RNB</button>
+    <button class="tab-btn" data-genre="HIP-HOP">HIP-HOP</button>
+    <button class="tab-btn" data-genre="ROCK">ROCK</button>
+    <button class="tab-btn" data-genre="DANCE">DANCE</button>
+    <button class="tab-btn" data-genre="COUNTRY">COUNTRY</button>
+    <button class="tab-btn" data-genre="JAZZ">JAZZ</button>
+    <button class="tab-btn" data-genre="ELECTRONIC">ELECTRONIC</button>
+  </div>
+
+  <div class="container">
+    <div class="topbar">
+      <div class="small" id="weekLabel">Week: —</div>
+      <div>
+        <label class="small">Select week:</label>
+        <select id="weekSelect"></select>
+      </div>
+    </div>
+
+    <!-- one panel, we just swap tbody -->
+    <div class="panel">
+      <div class="panel-title" id="panelTitle">POP — Top 50</div>
+      <div style="max-height:420px;overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:50px;">#</th>
+              <th>Song</th>
+              <th style="width:110px;">Artist</th>
+              <th style="width:120px;">Sub Genre(s)</th>
+              <th style="width:90px;">Score</th>
+            </tr>
+          </thead>
+          <tbody id="chartBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="datasetWarning" class="small" style="margin-top:6px;"></div>
+  </div>
+
+  <script>
+    // --------------- utils to read your weekdata (object or array) ---------------
+    function getRawWeekData(){
+      return window.weekdata || window.weekData || window.week_data || null;
+    }
+
+    function getWeekKeys(raw){
+      // object: { "2018-02-23": [...], "2018-03-02": [...] }
+      if (!raw) return [];
+      if (Array.isArray(raw)){
+        // array style (rare in your case)
+        return raw.map((w,i)=>w.week || w.Week || (i+1));
+      } else {
+        return Object.keys(raw);
+      }
+    }
+
+    function getWeekEntries(raw, key){
+      if (!raw) return [];
+      if (Array.isArray(raw)){
+        // find by week number
+        const found = raw.find(w => (w.week||w.Week) == key);
+        return found && (found.tracks || found.songs || []) || [];
+      } else {
+        return raw[key] || [];
+      }
+    }
+
+    // score function — you can change this to streams, radio, etc
+    function getSongScore(song){
+      // prefer sales, then streams, then points
+      return Number(song.sales || song.Sales || song.streams || song.Streams || song.points || 0);
+    }
+
+    // --------------- main logic ---------------
+    const GENRES = ['POP','RNB','HIP-HOP','ROCK','DANCE','COUNTRY','JAZZ','ELECTRONIC'];
+    let RAW = null;
+    let WEEK_KEYS = [];
+    let CURRENT_WEEK = null;
+    let CURRENT_GENRE = 'POP';
+
+    function buildWeekSelect(){
+      const sel = document.getElementById('weekSelect');
+      sel.innerHTML = '';
+      // sort descending (latest first)
+      const sorted = [...WEEK_KEYS].sort((a,b)=>{
+        // try numeric
+        const na = Number(a), nb = Number(b);
+        if (!isNaN(na) && !isNaN(nb)) return nb - na;
+        // else string
+        return (''+b).localeCompare(''+a);
+      });
+      sorted.forEach(k=>{
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.textContent = k;
+        sel.appendChild(opt);
+      });
+      // set current = first (latest)
+      CURRENT_WEEK = sorted[0] || null;
+      sel.value = CURRENT_WEEK;
+      document.getElementById('weekLabel').textContent = 'Week: '+(CURRENT_WEEK || '—');
+    }
+
+    function filterAndRank(weekKey, mainGenre){
+      const entries = getWeekEntries(RAW, weekKey);
+      // your real data is usually array of songs {title, artist, sales, mainGenre, subGenres...}
+      const filtered = entries
+        .filter(s => s && (s.mainGenre || s.genre_main || '').toUpperCase() === mainGenre.toUpperCase())
+        .map(s => {
+          const mg = (s.mainGenre || s.genre_main || '').toUpperCase();
+          const subs = Array.isArray(s.subGenres || s.genre_sub) ? (s.subGenres || s.genre_sub) : [];
+          return {
+            title: s.title || s.Title || '—',
+            artist: s.artist || s.Artist || '—',
+            mainGenre: mg,
+            subGenres: subs,
+            score: getSongScore(s)
+          };
+        })
+        .sort((a,b)=>b.score - a.score)
+        .slice(0,50);
+      return filtered;
+    }
+
+    function renderChart(){
+      if (!CURRENT_WEEK) return;
+      const data = filterAndRank(CURRENT_WEEK, CURRENT_GENRE);
+      const body = document.getElementById('chartBody');
+      body.innerHTML = '';
+      data.forEach((row,idx)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="rank-badge">${idx+1}</span></td>
+          <td>
+            <div class="song-title">${row.title}</div>
+            <div class="song-meta">${row.mainGenre}</div>
+          </td>
+          <td>${row.artist}</td>
+          <td>
+            ${row.subGenres.map(s=>`<span class="badge">${s}</span>`).join('')}
+          </td>
+          <td>${row.score.toLocaleString()}</td>
+        `;
+        body.appendChild(tr);
+      });
+      document.getElementById('panelTitle').textContent = `${CURRENT_GENRE} — Top 50`;
+      document.getElementById('weekLabel').textContent = 'Week: '+CURRENT_WEEK;
+    }
+
+    // --------------- init ---------------
+    (function init(){
+      const warn = document.getElementById('datasetWarning');
+      RAW = getRawWeekData();
+      if (!RAW){
+        warn.textContent = 'No dataset found. Make sure weekdata.with_genres.js is loaded.';
+        return;
+      }
+      WEEK_KEYS = getWeekKeys(RAW);
+      if (!WEEK_KEYS.length){
+        warn.textContent = 'Dataset loaded but no weeks found.';
+        return;
+      }
+      warn.textContent = 'Dataset loaded: '+WEEK_KEYS.length+' weeks.';
+      buildWeekSelect();
+      renderChart();
+
+      // week change
+      document.getElementById('weekSelect').addEventListener('change', e=>{
+        CURRENT_WEEK = e.target.value;
+        renderChart();
+      });
+
+      // tabs
+      document.querySelectorAll('#genreTabs .tab-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          document.querySelectorAll('#genreTabs .tab-btn').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          CURRENT_GENRE = btn.dataset.genre;
+          renderChart();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
