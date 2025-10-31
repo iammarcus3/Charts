@@ -8,9 +8,22 @@
     h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
     h2 { margin-top: 2rem; font-size: 1.5rem; border-bottom: 2px solid #fff; padding-bottom: 0.3rem; }
     .stats { font-size: 1rem; margin-top: 0.5rem; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; background-color: #1a1a1a; }
+
+    .table-wrap {
+      max-height: 55vh;
+      overflow: auto;
+      border: 1px solid #444;
+      border-radius: 6px;
+      margin-top: 1rem;
+    }
+
+    table { width: 100%; border-collapse: collapse; background-color: #1a1a1a; }
     th, td { padding: 0.8rem; border: 1px solid #444; text-align: left; font-size: 0.95rem; }
-    th { background-color: #222; text-transform: uppercase; }
+    th {
+      background-color: #222; text-transform: uppercase;
+      position: sticky; top: 0; z-index: 5;
+    }
+
     a { color: #4DB8FF; text-decoration: none; }
     a:hover { text-decoration: underline; }
     .cert-icon { height: 20px; vertical-align: middle; margin-right: 6px; }
@@ -23,35 +36,38 @@
   <div class="stats" id="artistStats"></div>
 
   <h2>Albums</h2>
-  <table id="albumsTable">
-    <thead><tr><th>Album</th><th>Certification</th></tr></thead>
-    <tbody></tbody>
-  </table>
+  <div class="table-wrap">
+    <table id="albumsTable">
+      <thead><tr><th>Album</th><th>Certification</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <h2>Songs</h2>
-  <table id="songsTable">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Certification</th>
-        <th>Streams</th>
-        <th>Weeks</th>
-        <th>Peak</th>
-        <th>POP Peak</th>
-        <th>RNB Peak</th>
-        <th>HIP-HOP Peak</th>
-        <th>#1s</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="table-wrap">
+    <table id="songsTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Certification</th>
+          <th>Streams</th>
+          <th>Weeks</th>
+          <th>Peak</th>
+          <th>POP Peak</th>
+          <th>RNB Peak</th>
+          <th>HIP-HOP Peak</th>
+          <th>#1s</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <div class="summary" id="certTotals"></div>
 
   <script src="weekdata.js"></script>
   <script>
   document.addEventListener("DOMContentLoaded", () => {
-    // ─────────────── Config ───────────────
     const BASE_WEEK_START = new Date("2018-02-23T00:00:00Z");
     const SONG_SALE_MULTIPLIER  = 1750;
     const ALBUM_SALE_MULTIPLIER = 500;
@@ -59,13 +75,11 @@
     const ALBUM_SIM_THRESHOLD   = 0.98;
     const INF_RANK = 999999;
 
-    // ─────────────── Params ───────────────
     const params = new URLSearchParams(location.search);
     const artistParam = params.get("artist") || "";
     document.getElementById("artistName").textContent = artistParam;
     const artistKey = normalize(artistParam);
 
-    // ─────────────── Normalizers ───────────────
     function normalize(str){ return String(str || "").toUpperCase().replace(/[^A-Z0-9]/g, "").trim(); }
     const normalizeTitle = str => normalize(
       String(str || "")
@@ -76,7 +90,6 @@
       String(str || "")
         .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
     );
-
     function preferDisplayTitle(oldT, newT){
       const o = String(oldT||""); const n = String(newT||"");
       const oHasFeat = /\b(feat\.?|featuring| x | with | duet with )/i.test(o);
@@ -85,8 +98,6 @@
       if (!nHasFeat && oHasFeat) return o;
       return n.length >= o.length ? n : o;
     }
-
-    // ─────────────── Levenshtein ───────────────
     function levenshtein(a, b) {
       const m = a.length, n = b.length;
       if (!m) return n; if (!n) return m;
@@ -113,7 +124,6 @@
       return 1 - (levenshtein(a, b) / maxLen);
     }
 
-    // ─────────────── Field mapping ───────────────
     const RANK_FIELDS      = ['rank', 'position', 'pos'];
     const WEEKLY_SALES_F   = ['sales', 'units', 'weeklySales', 'weekSales', 'points'];
     const CUME_SALES_F     = ['totalSales', 'cumulativeSales', 'cume', 'lifetimeSales', 'unitsTotal', 'total_units'];
@@ -122,7 +132,6 @@
     function pick(obj, fields) { for (const f of fields) if (obj && obj[f] != null) return obj[f]; }
     function num(x){ const n = Number(x); return Number.isFinite(n) ? n : 0; }
 
-    // ─────────────── Cert helpers ───────────────
     function trackCertLabel(salesBase) {
       const adj = salesBase * SONG_SALE_MULTIPLIER;
       if (adj >= 10_000_000) return "Diamond";
@@ -180,7 +189,6 @@
                  : n >= 1_000 ? (n/1_000).toFixed(0)+'K'
                  : String(Math.round(n));
 
-    // ─────────────── Artist participation ───────────────
     function splitArtistList(str){
       return String(str || "")
         .split(/,|&| and | with | feat\.? | featuring | vs | x | presents | duet with /i)
@@ -203,7 +211,7 @@
       return inTitleFeat;
     }
 
-    // ─────────────── 5-genre helpers (same logic) ───────────────
+    // 5-genre helpers
     function genreTokensFromRow(r){
       const arr = [];
       if (r.mainGenre) arr.push(r.mainGenre);
@@ -224,22 +232,18 @@
       return Array.from(buckets);
     }
 
-    // ─────────────── Data structures ───────────────
     const albumsMap = {};
-    const songsMap  = {}; // canon -> {.., popPeak, rnbPeak, hiphopPeak }
+    const songsMap  = {};
     const songKeys  = [];
-
     const runningCumeSales   = {};
     const runningCumeStreams = {};
 
-    // ─────────────── Iterate weeks (global) ───────────────
     const weekList = Object.keys(weekData).map(k => ({
       num: parseInt(String(k).replace(/\D/g,''), 10) || 0,
       entries: Array.isArray(weekData[k]) ? weekData[k] : []
     })).sort((a,b)=>a.num-b.num);
 
     for (const {num:weekNum, entries} of weekList) {
-      // 1) build week rows like 5-genre: sort, take 200, drop sweep week, attach buckets
       const base = entries.slice().sort((a,b)=>{
         const ra = Number(a.rank ?? a.position ?? a.pos ?? 9999);
         const rb = Number(b.rank ?? b.position ?? b.pos ?? 9999);
@@ -253,8 +257,7 @@
         return { ...r, _buckets: buckets };
       });
 
-      // 2) for each of POP/RNB/HIPHOP, sort inside bucket like 5-genre and assign bucket rank
-      const bucketRanks = {}; // songKey -> {POP:rank, RNB:rank, HIPHOP:rank}
+      const bucketRanks = {};
       ['POP','RNB','HIPHOP'].forEach(bucketName => {
         const bucketRows = base.filter(r => r._buckets && r._buckets.includes(bucketName));
         if (!bucketRows.length) return;
@@ -274,11 +277,9 @@
         });
       });
 
-      // 3) now walk the same 200 rows again, but only pull in ones that involve this artist
       for (const row of base) {
         if (!trackInvolvesArtist(row)) continue;
 
-        // find / create canonical song key (fuzzy)
         const titleNorm = normalizeTitle(row.title);
         let canonSongKey = null;
         for (const k of songKeys) {
@@ -305,11 +306,9 @@
           songsMap[canonSongKey].titleDisplay = preferDisplayTitle(songsMap[canonSongKey].titleDisplay, row.title);
         }
 
-        // flexible fields
         const rankRaw = pick(row, RANK_FIELDS);
         const rank = Number.isFinite(Number(rankRaw)) ? Number(rankRaw) : INF_RANK;
 
-        // weekly sales
         let weeklySalesBase = 0;
         const wSales = pick(row, WEEKLY_SALES_F);
         const cSales = pick(row, CUME_SALES_F);
@@ -322,7 +321,6 @@
           runningCumeSales[canonSongKey] = cumeNow;
         }
 
-        // weekly streams
         let weeklyStreamsBase = 0;
         const wStreams = pick(row, WEEKLY_STREAMS_F);
         const cStreams = pick(row, CUME_STREAMS_F);
@@ -347,14 +345,12 @@
         if (rank < S.peak) S.peak = rank;
         if (rank === 1) S.num1s++;
 
-        // update genre peaks based on bucketRanks computed above
         const simpleKey = normalizeTitle(row.title || row.song || '');
         const br = bucketRanks[simpleKey] || {};
         if (br.POP && br.POP < S.popPeak) S.popPeak = br.POP;
         if (br.RNB && br.RNB < S.rnbPeak) S.rnbPeak = br.RNB;
         if (br.HIPHOP && br.HIPHOP < S.hiphopPeak) S.hiphopPeak = br.HIPHOP;
 
-        // album aggregation
         const albNorm = normalizeAlbum(row.album);
         if (albNorm && albNorm !== "NAN") {
           let canonAlbKey = null;
@@ -371,7 +367,6 @@
       }
     }
 
-    // ─────────────── Render Albums (≥2 tracks) ───────────────
     const albumsTBody = document.querySelector("#albumsTable tbody");
     Object.values(albumsMap)
       .filter(a => a.tracks.size >= 2)
@@ -384,7 +379,6 @@
         albumsTBody.appendChild(tr);
       });
 
-    // ─────────────── Render Songs (Top 100 only) ───────────────
     const songsTBody = document.querySelector("#songsTable tbody");
     const allSongsRaw = Object.values(songsMap).map(S => ({
       ...S,
@@ -437,7 +431,6 @@
       songsTBody.appendChild(tr);
     });
 
-    // ─────────────── Artist Stats ───────────────
     const statsEl = document.getElementById("artistStats");
     const totalSongs = songsArr.length;
     const distinctNum1Songs = songsArr.filter(x => x.peak === 1).length;
@@ -453,7 +446,6 @@
       <span class="pill">#1 Debuts: ${debutAt1}</span>
     `;
 
-    // ─────────────── Certification Totals ───────────────
     const certTotalsEl = document.getElementById("certTotals");
     const albumCounts = {};
     Object.values(albumsMap)
@@ -462,20 +454,16 @@
         const label = albumCertLabel(a.salesBase);
         if (label !== "—") albumCounts[label] = (albumCounts[label] || 0) + 1;
       });
-
     const trackCounts = {};
     songsArr.forEach(S => {
       const label = S.certLabel;
       if (label !== "—") trackCounts[label] = (trackCounts[label] || 0) + 1;
     });
-
     function toLine(obj){
       return Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${k}: ${v}`).join(" | ");
     }
-
     const albumsLine = toLine(albumCounts);
     const tracksLine = toLine(trackCounts);
-
     certTotalsEl.innerHTML =
       (albumsLine ? `ALBUM CERTS — ${albumsLine}` : `ALBUM CERTS — None`) +
       ' &nbsp;&nbsp; | &nbsp;&nbsp; ' +
@@ -484,7 +472,6 @@
   </script>
 </body>
 </html>
-
 
 
 
