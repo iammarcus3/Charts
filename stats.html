@@ -4,126 +4,69 @@
   <meta charset="UTF-8" />
   <title>RIAA Milestones — from weekdata.js</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- your dataset -->
   <script src="weekdata.js"></script>
   <style>
     :root{
-      --bg:#0b0b0c; --panel:#121214; --border:#23232a; --ink:#e7e7ea;
-      --muted:#a0a3ad; --cyan:#00ffff; --warn:#ff6b6b;
+      --bg:#0b0b0c; --panel:#121214; --panel2:#16171b; --border:#23232a; --ink:#e7e7ea;
+      --muted:#a0a3ad; --cyan:#00ffff; --warn:#ff6b6b; --green:#2df7a7; --amber:#ffda6b;
     }
     *{box-sizing:border-box}
-    body{background:var(--bg);color:var(--ink);font:14px/1.4 system-ui,Segoe UI,Roboto,Arial;margin:20px}
+    body{background:var(--bg);color:var(--ink);font:14px/1.4 system-ui,Segoe UI,Roboto,Arial;margin:16px}
     h1{margin:0 0 12px;font-size:20px;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase}
     .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-    .chip{background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:6px 10px;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
-    .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px;overflow:hidden}
-    .card h2{font-size:13px;margin:0 0 6px;text-transform:uppercase;letter-spacing:.09em;color:#bff}
+    .chip{background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:6px 10px;color:var(--muted);white-space:nowrap}
+    .main-shell{background:transparent;display:flex;flex-direction:column;gap:12px}
+    .year-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+    .year-tabs button{background:var(--panel);border:1px solid transparent;color:var(--ink);padding:6px 10px;border-radius:999px;cursor:pointer;white-space:nowrap}
+    .year-tabs button.active{border-color:var(--cyan);background:rgba(0,255,255,.08);color:#fff}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:10px;overflow:hidden}
+    .card h2{font-size:13px;margin:0 0 6px;text-transform:uppercase;letter-spacing:.08em;color:#c6ffff}
     .sub{font-size:12px;color:var(--muted);margin-bottom:6px}
     table{width:100%;border-collapse:collapse;font-size:13px}
     th,td{border-bottom:1px dashed rgba(255,255,255,.04);padding:6px 6px;text-align:left;vertical-align:top}
-    th{color:#bff;background:rgba(13,13,15,.3);position:sticky;top:28px}
+    th{color:#bff;background:rgba(13,13,15,.3);position:sticky;top:26px;z-index:2}
     .right{text-align:right}
     .empty{color:#888;font-style:italic}
-    button{background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.04);border-radius:8px;padding:5px 10px;color:inherit;cursor:pointer}
-    .kpis{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-    .kpi{background:rgba(0,0,0,.12);border:1px solid rgba(255,255,255,.02);border-radius:10px;padding:6px 10px;min-width:140px}
+    button.action{background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.03);border-radius:8px;padding:4px 10px;color:inherit;cursor:pointer;font-size:12px}
+    .kpis{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+    .kpi{background:rgba(0,0,0,.12);border:1px solid rgba(255,255,255,.02);border-radius:10px;padding:5px 8px;min-width:140px}
     .kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-    .kpi-value{font-size:16px;font-weight:600}
+    .kpi-value{font-size:15px;font-weight:600}
+    code{background:rgba(0,255,255,.08);border:1px solid rgba(0,255,255,.2);border-radius:4px;padding:1px 5px}
+    .muted{color:var(--muted)}
   </style>
 </head>
 <body>
-  <h1>RIAA MILESTONES FROM <code>weekdata.js</code></h1>
+  <h1>RIAA MILESTONES — <code>weekdata.js</code></h1>
   <div class="toolbar">
-    <span class="chip" id="meta">Loading…</span>
-    <span class="chip" id="latestYear">—</span>
+    <span id="meta" class="chip">Loading…</span>
+    <span id="latestTag" class="chip">—</span>
+    <span class="chip">Unit logic: tracks×1750, albums×500</span>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <h2>Yearly RIAA activity</h2>
-      <div class="sub">Counts every time a track (sales×1750) or album (sales×500) crosses Gold/Platinum/Multi/Diamond.</div>
-      <div class="kpis" id="yearKpis"></div>
-      <div style="margin-top:6px;"><button onclick="downloadCSV('yearTbl')">⬇️ CSV</button></div>
-      <table id="yearTbl">
-        <thead><tr><th>Year</th><th class="right">Certs</th><th class="right">Tracks</th><th class="right">Albums</th><th class="right">% vs prev</th></tr></thead>
-        <tbody></tbody>
-      </table>
+  <div class="main-shell">
+    <!-- year tabs -->
+    <div class="year-tabs" id="yearTabs">
+      <!-- JS will inject: All time, 2018, 2019, ... -->
     </div>
 
-    <div class="card">
-      <h2>Top artists — latest year</h2>
-      <div class="sub">Top 10 by # of plaques, then by units added.</div>
-      <div style="margin-bottom:4px;"><button onclick="downloadCSV('yearArtistsTbl')">⬇️ CSV</button></div>
-      <table id="yearArtistsTbl">
-        <thead><tr><th>Artist</th><th class="right">Certs</th><th class="right">Units</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h2>Top labels — latest year</h2>
-      <div class="sub">“Most-active label of the year” = #1 in this list.</div>
-      <div style="margin-bottom:4px;"><button onclick="downloadCSV('yearLabelsTbl')">⬇️ CSV</button></div>
-      <table id="yearLabelsTbl">
-        <thead><tr><th>Label</th><th class="right">Certs</th><th class="right">Units</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h2>Upgraded titles — latest year</h2>
-      <div class="sub">Top 10 songs upgraded / re-certified this year.</div>
-      <div style="margin-bottom:4px;"><button onclick="downloadCSV('yearTitlesTbl')">⬇️ CSV</button></div>
-      <table id="yearTitlesTbl">
-        <thead><tr><th>Title</th><th class="right">New level</th><th class="right">Units</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h2>All-time RIAA</h2>
-      <div class="kpis" id="allKpis"></div>
-      <div style="margin-top:6px;">
-        <button onclick="downloadCSV('allArtistsTbl')">⬇️ Top artists</button>
-        <button onclick="downloadCSV('allLabelsTbl')">⬇️ Top labels</button>
-        <button onclick="downloadCSV('allSpecialTbl')">⬇️ Special</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>All-time artists (units)</h2>
-      <table id="allArtistsTbl">
-        <thead><tr><th>Artist</th><th class="right">Plaques</th><th class="right">Units</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h2>All-time labels</h2>
-      <table id="allLabelsTbl">
-        <thead><tr><th>Label</th><th class="right">Titles</th><th class="right">Units</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h2>Special / anomalies</h2>
-      <table id="allSpecialTbl">
-        <thead><tr><th>Metric</th><th class="right">Value</th><th class="right">Who / When</th></tr></thead>
-        <tbody></tbody>
-      </table>
+    <!-- view -->
+    <div id="view" class="grid">
+      <!-- JS -->
     </div>
   </div>
 
   <script>
+    // ===== small helpers =====
     const nz = (v, d=0)=> (Number.isFinite(+v) ? +v : d);
     const fmtInt = n => Number(n ?? 0).toLocaleString('en-US');
-    const abbr = n => {
-      n=nz(n,0); const a=Math.abs(n);
-      if(a>=1e12) return (n/1e12).toFixed(2).replace(/\.0+$/,'')+'T';
-      if(a>=1e9)  return (n/1e9 ).toFixed(2).replace(/\.0+$/,'')+'B';
-      if(a>=1e6)  return (n/1e6 ).toFixed(2).replace(/\.0+$/,'')+'M';
-      if(a>=1e3)  return (n/1e3 ).toFixed(2).replace(/\.0+$/,'')+'K';
+    const abbr = n => { n=nz(n,0); const a=Math.abs(n);
+      if (a>=1e12) return (n/1e12).toFixed(2).replace(/\.0+$/,'')+'T';
+      if (a>=1e9)  return (n/1e9 ).toFixed(2).replace(/\.0+$/,'')+'B';
+      if (a>=1e6)  return (n/1e6 ).toFixed(2).replace(/\.0+$/,'')+'M';
+      if (a>=1e3)  return (n/1e3 ).toFixed(2).replace(/\.0+$/,'')+'K';
       return String(n);
     };
     const BASE = new Date(Date.UTC(2018,1,23));
@@ -133,19 +76,20 @@
     const nkey = (title,artist) => norm(title)+'｜'+norm(artist);
     const getLabel = r => r.label || r.Label || r.LABEL || '—';
 
-    function downloadCSV(id){
-      const table = document.getElementById(id);
-      const rows = [...table.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>`"${td.innerText.replace(/"/g,'""')}"`).join(','));
-      const csv = rows.join('\n');
-      const blob = new Blob([csv], {type:'text/csv'});
+    function downloadTableAsCSV(tableId){
+      const t = document.getElementById(tableId);
+      if (!t) return;
+      const rows = [...t.querySelectorAll('tr')].map(tr => [...tr.children].map(td => `"${td.innerText.replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([rows], {type:'text/csv'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = id + '.csv';
+      a.download = tableId + '.csv';
       a.click();
       URL.revokeObjectURL(url);
     }
 
+    // ===== core RIAA builder =====
     function buildRiaa(raw){
       const TRACK_MULT = 1750;
       const ALBUM_MULT = 500;
@@ -168,34 +112,45 @@
       };
 
       const weeks = Object.keys(raw||{}).map(Number).sort((a,b)=>a-b);
-      const firstSeen = new Map();
-      const trackState = new Map();
-      const albumState = new Map();
-      const events = [];
+
+      // track+album running states
+      const trackState = new Map(); // key -> {units,levelRank,title,artist,label,album,firstYear,firstWeek}
+      const albumState = new Map(); // album -> same
+      const events = []; // EACH CERTIFICATION
 
       for (const w of weeks){
-        const rows = raw[w]||[];
+        const rows = raw[w] || [];
         const d = dateFromWeek(w);
         const year = d.getUTCFullYear();
 
         for (const r of rows){
           if (!r || !r.title || !r.artist) continue;
-          const key = nkey(r.title,r.artist);
+          const key = nkey(r.title, r.artist);
           const label = getLabel(r);
           const album = r.album && String(r.album).trim().toLowerCase()!=='nan' ? r.album : null;
-          if (!firstSeen.has(key)) firstSeen.set(key, w);
 
-          // track
+          // ---- TRACK ----
           const addTrackUnits = nz(r.sales) * TRACK_MULT;
           if (addTrackUnits>0){
             if (!trackState.has(key)){
-              trackState.set(key,{units:0, levelRank:0, title:r.title, artist:r.artist, label, album, firstYear:year});
+              trackState.set(key,{
+                units:0,
+                levelRank:0,
+                title:r.title,
+                artist:r.artist,
+                label,
+                album,
+                firstYear:year,
+                firstWeek:w
+              });
             }
             const st = trackState.get(key);
+            const before = st.units;
             st.units += addTrackUnits;
             const newLevel = levelFor(st.units);
             if (newLevel && newLevel.rank > st.levelRank){
               const skipped = (st.levelRank>0 && newLevel.rank - st.levelRank > 1);
+              const addedUnits = st.units - before;
               st.levelRank = newLevel.rank;
               events.push({
                 type:'track',
@@ -209,40 +164,54 @@
                 level:newLevel.name,
                 levelRank:newLevel.rank,
                 units:st.units,
+                addedUnits,
                 firstYear:st.firstYear,
+                firstWeek:st.firstWeek,
                 isCatalog:(year - st.firstYear) > 3,
                 skipped
               });
             }
           }
 
-          // album
+          // ---- ALBUM ----
           if (album){
             const addAlbumUnits = nz(r.sales) * ALBUM_MULT;
             if (addAlbumUnits>0){
               if (!albumState.has(album)){
-                albumState.set(album,{units:0, levelRank:0, title:album, artist:r.artist, label, firstYear:year});
+                albumState.set(album,{
+                  units:0,
+                  levelRank:0,
+                  title:album,
+                  artist:r.artist,
+                  label,
+                  firstYear:year,
+                  firstWeek:w
+                });
               }
-              const as = albumState.get(album);
-              as.units += addAlbumUnits;
-              const newLevelA = levelFor(as.units);
-              if (newLevelA && newLevelA.rank > as.levelRank){
-                const skipped = (as.levelRank>0 && newLevelA.rank - as.levelRank > 1);
-                as.levelRank = newLevelA.rank;
+              const al = albumState.get(album);
+              const before = al.units;
+              al.units += addAlbumUnits;
+              const newLevelA = levelFor(al.units);
+              if (newLevelA && newLevelA.rank > al.levelRank){
+                const skipped = (al.levelRank>0 && newLevelA.rank - al.levelRank > 1);
+                const addedUnits = al.units - before;
+                al.levelRank = newLevelA.rank;
                 events.push({
                   type:'album',
-                  title:as.title,
-                  artist:as.artist,
-                  label:as.label,
-                  album:as.title,
+                  title:al.title,
+                  artist:al.artist,
+                  label:al.label,
+                  album:al.title,
                   year,
                   week:w,
                   date:ymd(d),
                   level:newLevelA.name,
                   levelRank:newLevelA.rank,
-                  units:as.units,
-                  firstYear:as.firstYear,
-                  isCatalog:(year - as.firstYear) > 3,
+                  units:al.units,
+                  addedUnits,
+                  firstYear:al.firstYear,
+                  firstWeek:al.firstWeek,
+                  isCatalog:(year - al.firstYear) > 3,
                   skipped
                 });
               }
@@ -251,262 +220,578 @@
         }
       }
 
-      // yearly
+      // ===== YEARLY AGG =====
       const yearly = new Map();
-      const artistFirstYear = new Map();
-      const labelDiamonds = new Map();
-      const albumTrackCount = new Map();
-      const titleEventCount = new Map();
-      const artistUnitsAll = new Map();
-      const artistPlaquesAll = new Map();
-      const labelUnitsAll = new Map();
-      const labelTitlesAll = new Map();
+      const artistFirstYear = new Map(); // artist -> first cert year (artist-level)
+      const titleAllEvents = new Map(); // titleKey -> array of events (for all-time most-upgraded)
 
-      for (const ev of events){
-        if (!yearly.has(ev.year)){
-          yearly.set(ev.year,{
+      events.forEach(ev=>{
+        const year = ev.year;
+        if (!yearly.has(year)){
+          yearly.set(year,{
             certs:0, tracks:0, albums:0,
             units:0,
-            byArtist:new Map(),
-            byLabel:new Map(),
-            byTitle:[],
-            perTitleCount:new Map(),
+            byArtist:new Map(), // artist -> {certs, units}
+            byLabel:new Map(),  // label -> {certs, units}
+            byTitle:[],         // events
+            perTitleCount:new Map(), // titleKey -> count this year
             catalog:0, fresh:0,
-            firstCert:null,
-            firstDiamond:null
+            firstCert:null, firstDiamond:null,
           });
         }
-        const y = yearly.get(ev.year);
-        y.certs++;
-        if (ev.type==='track') y.tracks++;
-        if (ev.type==='album') y.albums++;
-        y.units += ev.units;
-        y.byTitle.push(ev);
+        const yobj = yearly.get(year);
+        yobj.certs++;
+        if (ev.type==='track') yobj.tracks++;
+        if (ev.type==='album') yobj.albums++;
+        yobj.units += ev.addedUnits; // yearly units = units added THIS year (not cumu)
+        yobj.byTitle.push(ev);
+        const tKey = ev.type+':'+ev.title+':'+ev.artist;
+        yobj.perTitleCount.set(tKey, (yobj.perTitleCount.get(tKey)||0)+1);
+        if (!yobj.firstCert || ev.week < yobj.firstCert.week) yobj.firstCert = ev;
+        if (ev.level==='Diamond' && !yobj.firstDiamond) yobj.firstDiamond = ev;
+        if (ev.isCatalog) yobj.catalog++; else yobj.fresh++;
 
-        if (!y.byArtist.has(ev.artist)) y.byArtist.set(ev.artist,{certs:0,units:0});
-        const ya = y.byArtist.get(ev.artist);
-        ya.certs++; ya.units += ev.units;
+        // artist yearly
+        if (!yobj.byArtist.has(ev.artist)) yobj.byArtist.set(ev.artist,{certs:0,units:0});
+        const ya = yobj.byArtist.get(ev.artist);
+        ya.certs++;
+        ya.units += ev.addedUnits;
 
-        if (!y.byLabel.has(ev.label)) y.byLabel.set(ev.label,{certs:0,units:0});
-        const yl = y.byLabel.get(ev.label);
-        yl.certs++; yl.units += ev.units;
+        // label yearly
+        if (!yobj.byLabel.has(ev.label)) yobj.byLabel.set(ev.label,{certs:0,units:0});
+        const yl = yobj.byLabel.get(ev.label);
+        yl.certs++;
+        yl.units += ev.addedUnits;
 
-        const tkey = ev.type+':'+ev.title+':'+ev.artist;
-        y.perTitleCount.set(tkey, (y.perTitleCount.get(tkey)||0)+1);
-
-        if (!y.firstCert || ev.week < y.firstCert.week) y.firstCert = ev;
-        if (ev.level==='Diamond' && !y.firstDiamond) y.firstDiamond = ev;
-
-        if (ev.isCatalog) y.catalog++; else y.fresh++;
-
+        // artist first year
         if (!artistFirstYear.has(ev.artist)) artistFirstYear.set(ev.artist, ev.year);
 
-        const atkey = ev.artist;
-        artistUnitsAll.set(atkey, (artistUnitsAll.get(atkey)||0)+ev.units);
-        artistPlaquesAll.set(atkey, (artistPlaquesAll.get(atkey)||0)+1);
-
-        labelUnitsAll.set(ev.label, (labelUnitsAll.get(ev.label)||0)+ev.units);
-        labelTitlesAll.set(ev.label, (labelTitlesAll.get(ev.label)||0)+1);
-
-        if (ev.album && ev.type==='track'){
-          if (!albumTrackCount.has(ev.album)) albumTrackCount.set(ev.album,new Set());
-          albumTrackCount.get(ev.album).add(ev.title);
-        }
-
-        if (ev.level==='Diamond'){
-          labelDiamonds.set(ev.label,(labelDiamonds.get(ev.label)||0)+1);
-        }
-
-        titleEventCount.set(tkey,(titleEventCount.get(tkey)||0)+1);
-      }
-
-      const years = [...yearly.keys()].sort((a,b)=>a-b);
-      const yearSummary = years.map(y=>{
-        const d = yearly.get(y);
-        const prev = yearly.get(y-1);
-        return {
-          year:y,
-          certs:d.certs,
-          tracks:d.tracks,
-          albums:d.albums,
-          pct: prev ? (((d.certs - prev.certs)/prev.certs)*100).toFixed(1)+'%' : '—'
-        };
+        // all-time per title
+        if (!titleAllEvents.has(tKey)) titleAllEvents.set(tKey, []);
+        titleAllEvents.get(tKey).push(ev);
       });
 
+      const years = [...yearly.keys()].sort((a,b)=>a-b);
       const latestYear = years.length ? years[years.length-1] : null;
-      const latestData = latestYear ? yearly.get(latestYear) : null;
 
-      const topArtistsYear = latestData
-        ? [...latestData.byArtist.entries()].map(([artist,info])=>({artist,certs:info.certs,units:info.units}))
-          .sort((a,b)=> b.certs - a.certs || b.units - a.units).slice(0,10)
-        : [];
-
-      const labelYearRows = latestData
-        ? [...latestData.byLabel.entries()].map(([label,info])=>({label,certs:info.certs,units:info.units}))
-          .sort((a,b)=> b.certs - a.certs || b.units - a.units)
-        : [];
-
-      const titlesYear = latestData
-        ? latestData.byTitle.filter(e=>e.type==='track').sort((a,b)=>b.units - a.units).slice(0,10)
-        : [];
-
-      // all-time
+      // ===== all-time aggregates =====
       const totalCerts = events.length;
       const totalGold = events.filter(e=>e.level==='Gold').length;
       const totalPlatinum = events.filter(e=>e.level==='Platinum').length;
       const totalMultiPlatinum = events.filter(e=>/^(\d+× Platinum)$/.test(e.level)).length;
       const totalDiamond = events.filter(e=>e.level==='Diamond').length;
 
-      const allArtists = [...artistUnitsAll.entries()]
-        .map(([artist,units])=>({artist,units,plaques:artistPlaquesAll.get(artist)||0}))
+      // all-time artists (units + plaques + titles count)
+      const artistUnitsAll = new Map();
+      const artistPlaquesAll = new Map();
+      const artistTitlesAll = new Map(); // distinct titles
+      const labelUnitsAll = new Map();
+      const labelTitlesAll = new Map();
+      const labelDiamonds = new Map();
+
+      events.forEach(ev=>{
+        artistUnitsAll.set(ev.artist,(artistUnitsAll.get(ev.artist)||0)+ev.addedUnits);
+        artistPlaquesAll.set(ev.artist,(artistPlaquesAll.get(ev.artist)||0)+1);
+        const atKey = ev.type+':'+ev.title;
+        if (!artistTitlesAll.has(ev.artist)) artistTitlesAll.set(ev.artist,new Set());
+        artistTitlesAll.get(ev.artist).add(atKey);
+
+        labelUnitsAll.set(ev.label,(labelUnitsAll.get(ev.label)||0)+ev.addedUnits);
+        labelTitlesAll.set(ev.label,(labelTitlesAll.get(ev.label)||0)+1);
+        if (ev.level==='Diamond') labelDiamonds.set(ev.label,(labelDiamonds.get(ev.label)||0)+1);
+      });
+
+      const allTimeArtists = [...artistUnitsAll.entries()]
+        .map(([artist,units])=>({
+          artist,
+          units,
+          plaques: artistPlaquesAll.get(artist)||0,
+          titles: (artistTitlesAll.get(artist)||new Set()).size
+        }))
         .sort((a,b)=>b.units - a.units)
         .slice(0,20);
 
-      const allLabels = [...labelUnitsAll.entries()]
-        .map(([label,units])=>({label,units,titles:labelTitlesAll.get(label)||0}))
+      const allTimeLabels = [...labelUnitsAll.entries()]
+        .map(([label,units])=>({
+          label,
+          units,
+          titles: labelTitlesAll.get(label)||0
+        }))
         .sort((a,b)=>b.units - a.units)
         .slice(0,10);
 
-      const mostUpgradedTitle = [...titleEventCount.entries()]
-        .sort((a,b)=>b[1]-a[1])[0] || null;
+      // most-certified song / album (highest level)
+      let mostCertifiedTitle = null;
+      titleAllEvents.forEach((arr,key)=>{
+        const best = arr.reduce((m,e)=> !m || e.levelRank>m.levelRank ? e : m , null);
+        if (!mostCertifiedTitle || (best && best.levelRank > mostCertifiedTitle.levelRank)) mostCertifiedTitle = best;
+      });
 
-      const firstDiamond = events.filter(e=>e.level==='Diamond').sort((a,b)=>a.week - b.week)[0] || null;
+      // artists with Diamond / multiple Diamonds
+      const artistDiamondCount = new Map();
+      events.filter(e=>e.level==='Diamond').forEach(e=>{
+        artistDiamondCount.set(e.artist,(artistDiamondCount.get(e.artist)||0)+1);
+      });
+      const artistsWithDiamond = [...artistDiamondCount.entries()].map(([artist,count])=>({artist,count})).sort((a,b)=>b.count-a.count);
 
-      const albumCycles = [...albumTrackCount.entries()].filter(([alb,set])=>set.size>=5).map(([alb,set])=>({album:alb,tracks:set.size}));
+      // 10+ / 25+ certified titles
+      const artists10plus = [...artistTitlesAll.entries()].filter(([a,set])=>set.size>=10).map(([a,set])=>({artist:a,titles:set.size})).sort((a,b)=>b.titles-a.titles);
+      const artists25plus = [...artistTitlesAll.entries()].filter(([a,set])=>set.size>=25).map(([a,set])=>({artist:a,titles:set.size})).sort((a,b)=>b.titles-a.titles);
 
-      const labelDom = [...labelDiamonds.entries()].map(([label,count])=>({label,count})).sort((a,b)=>b.count - a.count);
+      // album cycles with 5+ certified tracks (tracks that belong to same album)
+      const albumTrackCerts = new Map(); // album -> Set(trackTitles)
+      events.filter(e=>e.type==='track' && e.album).forEach(e=>{
+        if (!albumTrackCerts.has(e.album)) albumTrackCerts.set(e.album, new Set());
+        albumTrackCerts.get(e.album).add(e.title);
+      });
+      const albumCycles = [...albumTrackCerts.entries()]
+        .filter(([alb,set])=>set.size>=5)
+        .map(([alb,set])=>({album:alb, tracks:set.size}))
+        .sort((a,b)=>b.tracks-a.tracks);
+
+      // label dominance (most Diamonds)
+      const labelDom = [...labelDiamonds.entries()].map(([label,count])=>({label,count})).sort((a,b)=>b.count-a.count);
 
       return {
         events,
-        yearSummary,
+        years,
+        yearly,
         latestYear,
-        latestData,
-        topArtistsYear,
-        labelYearRows,
-        titlesYear,
         totalCerts,
         totalGold,
         totalPlatinum,
         totalMultiPlatinum,
         totalDiamond,
-        allArtists,
-        allLabels,
-        mostUpgradedTitle,
-        firstDiamond,
+        allTimeArtists,
+        allTimeLabels,
+        mostCertifiedTitle,
+        artistsWithDiamond,
+        artists10plus,
+        artists25plus,
         albumCycles,
-        labelDom
+        labelDom,
+        artistFirstYear
       };
     }
 
-    function fillTable(tbody, rows, cols){
-      tbody.innerHTML = '';
-      if (!rows || !rows.length){
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.className='empty';
-        td.colSpan=10;
-        td.textContent='— no data —';
-        tr.appendChild(td);
-        tbody.appendChild(tr);
+    // ===== renderers =====
+    function renderYearView(root, year, data){
+      // year = 'all' or number
+      root.innerHTML = '';
+      if (year === 'all'){
+        // ALL TIME VIEW
+        const wrap = document.createElement('div');
+        wrap.className = 'grid';
+
+        // card 1: KPIs
+        const c1 = document.createElement('div');
+        c1.className = 'card';
+        c1.innerHTML = `
+          <h2>All-time totals</h2>
+          <div class="kpis">
+            <div class="kpi"><div class="kpi-label">Total certs</div><div class="kpi-value">${fmtInt(data.totalCerts)}</div></div>
+            <div class="kpi"><div class="kpi-label">Gold</div><div class="kpi-value">${fmtInt(data.totalGold)}</div></div>
+            <div class="kpi"><div class="kpi-label">Platinum</div><div class="kpi-value">${fmtInt(data.totalPlatinum)}</div></div>
+            <div class="kpi"><div class="kpi-label">Multi-P</div><div class="kpi-value">${fmtInt(data.totalMultiPlatinum)}</div></div>
+            <div class="kpi"><div class="kpi-label">Diamond</div><div class="kpi-value">${fmtInt(data.totalDiamond)}</div></div>
+            ${data.mostCertifiedTitle ? `<div class="kpi"><div class="kpi-label">Most-certified title</div><div class="kpi-value">${data.mostCertifiedTitle.title} — ${data.mostCertifiedTitle.artist}</div></div>`:''}
+            ${data.labelDom[0] ? `<div class="kpi"><div class="kpi-label">Label dominance</div><div class="kpi-value">${data.labelDom[0].label} (${data.labelDom[0].count} Diamonds)</div></div>`:''}
+          </div>
+        `;
+        wrap.appendChild(c1);
+
+        // card 2: all-time artists
+        const c2 = document.createElement('div');
+        c2.className = 'card';
+        c2.innerHTML = `
+          <h2>All-time top 20 artists (units)</h2>
+          <div class="sub">Sorted by certified units added (2018→now).</div>
+          <button class="action" onclick="downloadTableAsCSV('allArtistsTbl')">⬇️ CSV</button>
+          <table id="allArtistsTbl">
+            <thead><tr><th>#</th><th>Artist</th><th class="right">Plaques</th><th class="right">Titles</th><th class="right">Units</th></tr></thead>
+            <tbody>
+              ${data.allTimeArtists.map((r,i)=>`
+                <tr>
+                  <td>${i+1}</td>
+                  <td>${r.artist}</td>
+                  <td class="right">${fmtInt(r.plaques)}</td>
+                  <td class="right">${fmtInt(r.titles)}</td>
+                  <td class="right">${abbr(r.units)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+        wrap.appendChild(c2);
+
+        // card 3: labels
+        const c3 = document.createElement('div');
+        c3.className = 'card';
+        c3.innerHTML = `
+          <h2>All-time labels</h2>
+          <div class="sub">Top 10 by certified units.</div>
+          <button class="action" onclick="downloadTableAsCSV('allLabelsTbl')">⬇️ CSV</button>
+          <table id="allLabelsTbl">
+            <thead><tr><th>#</th><th>Label</th><th class="right">Titles</th><th class="right">Units</th></tr></thead>
+            <tbody>
+              ${data.allTimeLabels.map((r,i)=>`
+                <tr>
+                  <td>${i+1}</td>
+                  <td>${r.label}</td>
+                  <td class="right">${fmtInt(r.titles)}</td>
+                  <td class="right">${abbr(r.units)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+        wrap.appendChild(c3);
+
+        // card 4: artists w/ Diamonds
+        const c4 = document.createElement('div');
+        c4.className = 'card';
+        c4.innerHTML = `
+          <h2>Artists with Diamonds</h2>
+          <div class="sub">Sorted by Diamond count.</div>
+          <table id="diamArtistsTbl">
+            <thead><tr><th>Artist</th><th class="right">Diamonds</th></tr></thead>
+            <tbody>
+              ${data.artistsWithDiamond.map(a=>`
+                <tr><td>${a.artist}</td><td class="right">${fmtInt(a.count)}</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+        wrap.appendChild(c4);
+
+        // card 5: 10+ / 25+
+        const c5 = document.createElement('div');
+        c5.className = 'card';
+        c5.innerHTML = `
+          <h2>Threshold artists</h2>
+          <div class="sub">10+ certified titles / 25+ certified titles.</div>
+          <table>
+            <thead><tr><th>Artist</th><th class="right">Titles</th><th class="right">Tier</th></tr></thead>
+            <tbody>
+              ${data.artists10plus.map(a=>`
+                <tr><td>${a.artist}</td><td class="right">${fmtInt(a.titles)}</td><td class="right">10+</td></tr>
+              `).join('')}
+              ${data.artists25plus.map(a=>`
+                <tr><td>${a.artist}</td><td class="right">${fmtInt(a.titles)}</td><td class="right">25+</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+        wrap.appendChild(c5);
+
+        // card 6: album cycles
+        const c6 = document.createElement('div');
+        c6.className = 'card';
+        c6.innerHTML = `
+          <h2>Album cycles (5+ certified tracks)</h2>
+          <div class="sub">Shows big eras.</div>
+          <table id="albumCyclesTbl">
+            <thead><tr><th>Album</th><th class="right">Tracks</th></tr></thead>
+            <tbody>
+              ${data.albumCycles.map(a=>`
+                <tr><td>${a.album}</td><td class="right">${fmtInt(a.tracks)}</td></tr>
+              `).join('') || '<tr><td colspan="2" class="empty">— none —</td></tr>'}
+            </tbody>
+          </table>
+        `;
+        wrap.appendChild(c6);
+
+        root.appendChild(wrap);
         return;
       }
-      rows.forEach(r=>{
-        const tr = document.createElement('tr');
-        tr.innerHTML = cols(r).join('');
-        tbody.appendChild(tr);
-      });
+
+      // ===== PER-YEAR VIEW =====
+      const y = data.yearly.get(year);
+      if (!y){
+        root.innerHTML = '<div class="card"><h2>No data</h2><p class="sub">No certifications for this year.</p></div>';
+        return;
+      }
+
+      // top 10 artists by # of certs
+      const artistsRank = [...y.byArtist.entries()]
+        .map(([artist,v])=>({artist,certs:v.certs,units:v.units}))
+        .sort((a,b)=>b.certs - a.certs || b.units - a.units)
+        .slice(0,10);
+
+      // top 10 by units
+      const artistsByUnits = [...y.byArtist.entries()]
+        .map(([artist,v])=>({artist,certs:v.certs,units:v.units}))
+        .sort((a,b)=>b.units - a.units)
+        .slice(0,10);
+
+      // top 10 songs upgraded
+      const songsUpgraded = y.byTitle
+        .filter(e=>e.type==='track')
+        .sort((a,b)=>b.addedUnits - a.addedUnits)
+        .slice(0,10);
+
+      // top 5 albums upgraded
+      const albumsUpgraded = y.byTitle
+        .filter(e=>e.type==='album')
+        .sort((a,b)=>b.addedUnits - a.addedUnits)
+        .slice(0,5);
+
+      // labels
+      const labelsRank = [...y.byLabel.entries()]
+        .map(([label,v])=>({label,certs:v.certs,units:v.units}))
+        .sort((a,b)=>b.certs - a.certs || b.units - a.units);
+
+      // new artists certified this year
+      const newArtists = [...data.artistFirstYear.entries()]
+        .filter(([artist,yr])=>yr===year)
+        .map(([artist])=>artist)
+        .sort();
+
+      // re-certification streaks
+      const recert = [...y.perTitleCount.entries()]
+        .filter(([k,c])=>c>1)
+        .map(([k,c])=>{
+          const evs = y.byTitle.filter(e=>{
+            const tKey = e.type+':'+e.title+':'+e.artist;
+            return tKey===k;
+          }).sort((a,b)=>a.week-b.week);
+          return {
+            key:k,
+            count:c,
+            title:evs[0].title,
+            artist:evs[0].artist,
+            level:evs[evs.length-1].level
+          };
+        })
+        .sort((a,b)=>b.count - a.count);
+
+      // fastest-to-Gold this year
+      const fastGold = y.byTitle
+        .filter(e=>e.level==='Gold' && e.firstYear===year)
+        .map(e=>({title:e.title,artist:e.artist,weekDiff:e.week - e.firstWeek,week:e.week}))
+        .sort((a,b)=>a.weekDiff - b.weekDiff)
+        .slice(0,10);
+
+      // fastest-to-Platinum this year
+      const fastPlat = y.byTitle
+        .filter(e=>(e.level==='Platinum' || /Platinum$/.test(e.level)) && e.firstYear===year)
+        .map(e=>({title:e.title,artist:e.artist,weekDiff:e.week - e.firstWeek,week:e.week,level:e.level}))
+        .sort((a,b)=>a.weekDiff - b.weekDiff)
+        .slice(0,10);
+
+      // biggest unit jump in 1 year
+      const biggestJump = y.byTitle
+        .slice()
+        .sort((a,b)=>b.addedUnits - a.addedUnits)[0] || null;
+
+      // most-upgraded catalog title (this year)
+      const mostUpgCatalog = y.byTitle
+        .filter(e=>e.isCatalog)
+        .sort((a,b)=>b.addedUnits - a.addedUnits)[0] || null;
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+
+      // card: year KPIs
+      const cYear = document.createElement('div');
+      cYear.className = 'card';
+      cYear.innerHTML = `
+        <h2>${year} — KPIs</h2>
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-label">Total certs</div><div class="kpi-value">${fmtInt(y.certs)}</div></div>
+          <div class="kpi"><div class="kpi-label">Tracks / Albums</div><div class="kpi-value">${fmtInt(y.tracks)} / ${fmtInt(y.albums)}</div></div>
+          <div class="kpi"><div class="kpi-label">Catalog vs New</div><div class="kpi-value">${fmtInt(y.catalog)} / ${fmtInt(y.fresh)}</div></div>
+          <div class="kpi"><div class="kpi-label">New artists</div><div class="kpi-value">${fmtInt(newArtists.length)}</div></div>
+          <div class="kpi"><div class="kpi-label">First cert</div><div class="kpi-value">${y.firstCert ? (y.firstCert.title+' — '+y.firstCert.artist) : '—'}</div></div>
+          <div class="kpi"><div class="kpi-label">First Diamond</div><div class="kpi-value">${y.firstDiamond ? (y.firstDiamond.title+' — '+y.firstDiamond.artist) : '—'}</div></div>
+          ${biggestJump ? `<div class="kpi"><div class="kpi-label">Biggest unit jump</div><div class="kpi-value">${biggestJump.title}</div></div>`:''}
+          ${mostUpgCatalog ? `<div class="kpi"><div class="kpi-label">Most-upgraded catalog</div><div class="kpi-value">${mostUpgCatalog.title}</div></div>`:''}
+        </div>
+        <p class="sub">Year vs previous year growth is visible in the “Yearly RIAA activity” card under ALL TIME tab.</p>
+      `;
+      grid.appendChild(cYear);
+
+      // card: top 10 artists by certs
+      const cArtists = document.createElement('div');
+      cArtists.className = 'card';
+      cArtists.innerHTML = `
+        <h2>Top 10 artists by # of certifications</h2>
+        <button class="action" onclick="downloadTableAsCSV('yearArtists_${year}')">⬇️ CSV</button>
+        <table id="yearArtists_${year}">
+          <thead><tr><th>#</th><th>Artist</th><th class="right">Certs</th><th class="right">Units</th></tr></thead>
+          <tbody>
+            ${artistsRank.map((r,i)=>`
+              <tr><td>${i+1}</td><td>${r.artist}</td><td class="right">${fmtInt(r.certs)}</td><td class="right">${abbr(r.units)}</td></tr>
+            `).join('') || '<tr><td colspan="4" class="empty">— none —</td></tr>'}
+          </tbody>
+        </table>
+      `;
+      grid.appendChild(cArtists);
+
+      // card: top 10 artists by units
+      const cArtistsUnits = document.createElement('div');
+      cArtistsUnits.className = 'card';
+      cArtistsUnits.innerHTML = `
+        <h2>Top 10 artists by certified units added</h2>
+        <table>
+          <thead><tr><th>#</th><th>Artist</th><th class="right">Units</th><th class="right">Certs</th></tr></thead>
+          <tbody>
+            ${artistsByUnits.map((r,i)=>`
+              <tr><td>${i+1}</td><td>${r.artist}</td><td class="right">${abbr(r.units)}</td><td class="right">${fmtInt(r.certs)}</td></tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+      grid.appendChild(cArtistsUnits);
+
+      // card: songs upgraded
+      const cSongs = document.createElement('div');
+      cSongs.className = 'card';
+      cSongs.innerHTML = `
+        <h2>Top 10 songs upgraded</h2>
+        <table>
+          <thead><tr><th>Title</th><th class="right">New level</th><th class="right">Units +</th></tr></thead>
+          <tbody>
+            ${songsUpgraded.map(s=>`
+              <tr>
+                <td>${s.title} — <span class="muted">${s.artist}</span></td>
+                <td class="right">${s.level}</td>
+                <td class="right">${abbr(s.addedUnits)}</td>
+              </tr>
+            `).join('') || '<tr><td colspan="3" class="empty">— none —</td></tr>'}
+          </tbody>
+        </table>
+      `;
+      grid.appendChild(cSongs);
+
+      // card: albums upgraded
+      const cAlbums = document.createElement('div');
+      cAlbums.className = 'card';
+      cAlbums.innerHTML = `
+        <h2>Top 5 albums upgraded</h2>
+        <table>
+          <thead><tr><th>Album</th><th class="right">Artist</th><th class="right">New level</th><th class="right">Units +</th></tr></thead>
+          <tbody>
+            ${albumsUpgraded.map(a=>`
+              <tr><td>${a.title}</td><td class="right">${a.artist}</td><td class="right">${a.level}</td><td class="right">${abbr(a.addedUnits)}</td></tr>
+            `).join('') || '<tr><td colspan="4" class="empty">— none —</td></tr>'}
+          </tbody>
+        </table>
+      `;
+      grid.appendChild(cAlbums);
+
+      // card: labels
+      const cLabels = document.createElement('div');
+      cLabels.className = 'card';
+      cLabels.innerHTML = `
+        <h2>Labels — activity ${year}</h2>
+        <table>
+          <thead><tr><th>#</th><th>Label</th><th class="right">Certs</th><th class="right">Units</th></tr></thead>
+          <tbody>
+            ${labelsRank.map((l,i)=>`
+              <tr><td>${i+1}</td><td>${l.label}</td><td class="right">${fmtInt(l.certs)}</td><td class="right">${abbr(l.units)}</td></tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+      grid.appendChild(cLabels);
+
+      // card: new artists
+      const cNewArtists = document.createElement('div');
+      cNewArtists.className = 'card';
+      cNewArtists.innerHTML = `
+        <h2>New artists certified</h2>
+        <div class="sub">Artists whose first plaque is in ${year}.</div>
+        <table>
+          <thead><tr><th>Artist</th></tr></thead>
+          <tbody>
+            ${newArtists.map(a=>`<tr><td>${a}</td></tr>`).join('') || '<tr><td class="empty">— none —</td></tr>'}
+          </tbody>
+        </table>
+      `;
+      grid.appendChild(cNewArtists);
+
+      // card: re-cert streaks
+      const cRecert = document.createElement('div');
+      cRecert.className = 'card';
+      cRecert.innerHTML = `
+        <h2>Re-certification streaks</h2>
+        <div class="sub">Titles upgraded more than once in ${year}.</div>
+        <table>
+          <thead><tr><th>Title</th><th class="right">Count</th><th class="right">Latest level</th></tr></thead>
+          <tbody>
+            ${recert.map(r=>`
+              <tr><td>${r.title} — <span class="muted">${r.artist}</span></td><td class="right">${fmtInt(r.count)}</td><td class="right">${r.level}</td></tr>
+            `).join('') || '<tr><td colspan="3" class="empty">— none —</td></tr>'}
+          </tbody>
+        </table>
+      `;
+      grid.appendChild(cRecert);
+
+      // card: fastest-to-Gold / Platinum
+      const cFast = document.createElement('div');
+      cFast.className = 'card';
+      cFast.innerHTML = `
+        <h2>Fastest-to-Gold / Platinum (${year})</h2>
+        <div class="sub">Only titles whose first appearance is ${year}.</div>
+        <table>
+          <thead><tr><th>Title</th><th class="right">To</th><th class="right">Weeks</th></tr></thead>
+          <tbody>
+            ${fastGold.map(f=>`
+              <tr><td>${f.title} — <span class="muted">${f.artist}</span></td><td class="right">Gold</td><td class="right">${fmtInt(f.weekDiff)}</td></tr>
+            `).join('')}
+            ${fastPlat.map(f=>`
+              <tr><td>${f.title} — <span class="muted">${f.artist}</span></td><td class="right">${f.level}</td><td class="right">${fmtInt(f.weekDiff)}</td></tr>
+            `).join('') || ''}
+            ${(!fastGold.length && !fastPlat.length) ? '<tr><td colspan="3" class="empty">— none —</td></tr>' : ''}
+          </tbody>
+        </table>
+      `;
+      grid.appendChild(cFast);
+
+      root.appendChild(grid);
     }
 
-    function run(){
+    // ===== boot =====
+    (function init(){
       const data = (typeof weekData!=='undefined') ? weekData
                  : (typeof window!=='undefined' && window.weekData) ? window.weekData
                  : null;
       if (!data){
-        document.getElementById('meta').textContent = 'weekdata.js not found';
+        document.getElementById('meta').textContent = 'Could not find weekdata.js';
         return;
       }
       const R = buildRiaa(data);
-      document.getElementById('meta').textContent = `Events: ${fmtInt(R.totalCerts)} • Years: ${R.yearSummary.length}`;
-      if (R.latestYear) document.getElementById('latestYear').textContent = `Latest RIAA year: ${R.latestYear}`;
+      document.getElementById('meta').textContent =
+        `Loaded ${fmtInt(R.events.length)} certification events • ${R.years.length} years`;
+      if (R.latestYear) document.getElementById('latestTag').textContent = 'Latest year: '+R.latestYear;
 
-      // yearly
-      fillTable(document.querySelector('#yearTbl tbody'), R.yearSummary, r=>[
-        `<td>${r.year}</td>`,
-        `<td class="right">${fmtInt(r.certs)}</td>`,
-        `<td class="right">${fmtInt(r.tracks)}</td>`,
-        `<td class="right">${fmtInt(r.albums)}</td>`,
-        `<td class="right">${r.pct}</td>`
-      ]);
+      // build tabs
+      const tabs = document.getElementById('yearTabs');
+      const years = R.years;
+      const allBtn = document.createElement('button');
+      allBtn.textContent = 'ALL TIME';
+      allBtn.dataset.year = 'all';
+      allBtn.className = 'active';
+      tabs.appendChild(allBtn);
+      years.forEach(y=>{
+        const b = document.createElement('button');
+        b.textContent = y;
+        b.dataset.year = y;
+        tabs.appendChild(b);
+      });
 
-      // yearly kpis
-      const kpis = [];
-      if (R.latestData){
-        kpis.push(`<div class="kpi"><div class="kpi-label">First cert</div><div class="kpi-value">${R.latestData.firstCert ? (R.latestData.firstCert.title+' — '+R.latestData.firstCert.artist) : '—'}</div></div>`);
-        kpis.push(`<div class="kpi"><div class="kpi-label">First Diamond</div><div class="kpi-value">${R.latestData.firstDiamond ? R.latestData.firstDiamond.title : '—'}</div></div>`);
-        kpis.push(`<div class="kpi"><div class="kpi-label">Catalog vs new</div><div class="kpi-value">${fmtInt(R.latestData.catalog)} / ${fmtInt(R.latestData.fresh)}</div></div>`);
-      }
-      document.getElementById('yearKpis').innerHTML = kpis.join('');
+      const view = document.getElementById('view');
+      renderYearView(view, 'all', R);
 
-      // top artists
-      fillTable(document.querySelector('#yearArtistsTbl tbody'), R.topArtistsYear, r=>[
-        `<td>${r.artist}</td>`,
-        `<td class="right">${fmtInt(r.certs)}</td>`,
-        `<td class="right">${abbr(r.units)}</td>`
-      ]);
-
-      // labels
-      fillTable(document.querySelector('#yearLabelsTbl tbody'), R.labelYearRows, r=>[
-        `<td>${r.label}</td>`,
-        `<td class="right">${fmtInt(r.certs)}</td>`,
-        `<td class="right">${abbr(r.units)}</td>`
-      ]);
-
-      // titles
-      fillTable(document.querySelector('#yearTitlesTbl tbody'), R.titlesYear, r=>[
-        `<td>${r.title} — <span class="muted">${r.artist}</span></td>`,
-        `<td class="right">${r.level}</td>`,
-        `<td class="right">${abbr(r.units)}</td>`
-      ]);
-
-      // all-time KPIs
-      const allKpis = [
-        `<div class="kpi"><div class="kpi-label">Total certs</div><div class="kpi-value">${fmtInt(R.totalCerts)}</div></div>`,
-        `<div class="kpi"><div class="kpi-label">Gold</div><div class="kpi-value">${fmtInt(R.totalGold)}</div></div>`,
-        `<div class="kpi"><div class="kpi-label">Platinum</div><div class="kpi-value">${fmtInt(R.totalPlatinum)}</div></div>`,
-        `<div class="kpi"><div class="kpi-label">Multi-P</div><div class="kpi-value">${fmtInt(R.totalMultiPlatinum)}</div></div>`,
-        `<div class="kpi"><div class="kpi-label">Diamond</div><div class="kpi-value">${fmtInt(R.totalDiamond)}</div></div>`
-      ];
-      if (R.firstDiamond){
-        allKpis.push(`<div class="kpi"><div class="kpi-label">First Diamond</div><div class="kpi-value">${R.firstDiamond.title}</div></div>`);
-      }
-      document.getElementById('allKpis').innerHTML = allKpis.join('');
-
-      // all-time artists
-      fillTable(document.querySelector('#allArtistsTbl tbody'), R.allArtists, r=>[
-        `<td>${r.artist}</td>`,
-        `<td class="right">${fmtInt(r.plaques)}</td>`,
-        `<td class="right">${abbr(r.units)}</td>`
-      ]);
-
-      // all-time labels
-      fillTable(document.querySelector('#allLabelsTbl tbody'), R.allLabels, r=>[
-        `<td>${r.label}</td>`,
-        `<td class="right">${fmtInt(r.titles)}</td>`,
-        `<td class="right">${abbr(r.units)}</td>`
-      ]);
-
-      // special
-      const specials = [];
-      specials.push({metric:'Most-upgraded title', value:R.mostUpgradedTitle ? R.mostUpgradedTitle[1] : '—', who:R.mostUpgradedTitle ? R.mostUpgradedTitle[0] : '—'});
-      specials.push({metric:'Album cycles (5+ tracks)', value:R.albumCycles.length, who:R.albumCycles.slice(0,5).map(x=>x.album+'('+x.tracks+')').join(', ')});
-      specials.push({metric:'Label dominance (Diamonds)', value:R.labelDom[0] ? R.labelDom[0].count : '—', who:R.labelDom[0] ? R.labelDom[0].label : '—'});
-      fillTable(document.querySelector('#allSpecialTbl tbody'), specials, r=>[
-        `<td>${r.metric}</td>`,
-        `<td class="right">${r.value}</td>`,
-        `<td class="right">${r.who}</td>`
-      ]);
-    }
-    run();
+      tabs.addEventListener('click', e=>{
+        if (e.target.tagName!=='BUTTON') return;
+        tabs.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+        e.target.classList.add('active');
+        const y = e.target.dataset.year;
+        renderYearView(view, y==='all'?'all':Number(y), R);
+      });
+    })();
   </script>
 </body>
 </html>
