@@ -47,7 +47,7 @@
       border-collapse: collapse;
       background-color: #1e1e1e;
       color: #f0f0f0;
-      min-width: 1000px;
+      min-width: 1200px;
     }
 
     th, td {
@@ -125,6 +125,9 @@
           <th data-sort="totalStreams">Total Streams</th>
           <th data-sort="totalSales">Total Sales</th>
           <th data-sort="num1Songs">#1 Songs</th>
+          <th data-sort="num1Pop">#1 POP</th>
+          <th data-sort="num1Rnb">#1 RNB</th>
+          <th data-sort="num1HipHop">#1 HIP-HOP</th>
           <th data-sort="top10Songs">Top 10 Songs</th>
           <th data-sort="num1Albums">#1 Albums</th>
           <th data-sort="top10Albums">Top 10 Albums</th>
@@ -134,13 +137,16 @@
         </tr>
       </thead>
       <tbody id="artistTable">
-        <tr><td colspan="11">Loading data...</td></tr>
+        <tr><td colspan="14">Loading data...</td></tr>
       </tbody>
     </table>
   </div>
 
   <script src="weekdata.js"></script>
   <script>
+    // some files call it weekdata, some weekData
+    const weekData = window.weekData || window.weekdata || window.WEEKDATA || {};
+
     function formatNumber(n) {
       if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
       if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
@@ -148,23 +154,47 @@
       return n.toString();
     }
 
+    // map entry -> our 3 buckets
+    function getGenreBucket(entry) {
+      const cand = [];
+      if (entry.mainGenre) cand.push(String(entry.mainGenre));
+      if (Array.isArray(entry.subGenres) && entry.subGenres.length) cand.push(String(entry.subGenres[0]));
+      if (entry.genre) cand.push(String(entry.genre));
+      if (Array.isArray(entry.genres) && entry.genres.length) cand.push(String(entry.genres[0]));
+
+      const low = cand.map(x => x.toLowerCase());
+
+      // POP
+      if (low.some(t => t.includes('pop'))) return 'POP';
+
+      // R&B / SOUL
+      if (low.some(t => t.includes('r&b') || t.includes('rnb') || t.includes('soul'))) return 'RNB';
+
+      // HIP-HOP
+      if (low.some(t => t.includes('hip') || t.includes('rap') || t.includes('trap'))) return 'HIPHOP';
+
+      return null;
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
       const tbody = document.getElementById('artistTable');
       const artistMap = {};
       const artistNameMap = {};
 
+      // walk all weeks
       for (const week in weekData) {
-        weekData[week].forEach(entry => {
+        (weekData[week] || []).forEach(entry => {
           const artists = (entry.artist || "")
             .split(/,|&| and | with | feat\.? | featuring /i)
             .map(a => a.trim())
             .filter(Boolean);
 
           const album = entry.album || "";
-          const title = entry.title || "";
+          const title = entry.title || entry.song || "";
           const rank = parseInt(entry.rank);
           const sales = parseFloat(entry.sales) || 0;
           const streams = parseFloat(entry.streams) || 0;
+          const bucket = getGenreBucket(entry); // POP / RNB / HIPHOP / null
 
           artists.forEach(rawName => {
             const normName = rawName.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -175,7 +205,11 @@
                 weeks: new Set(),
                 songs: {},
                 albums: {},
-                totalStreams: 0
+                totalStreams: 0,
+                // new bucket #1 counters
+                num1Pop: 0,
+                num1Rnb: 0,
+                num1HipHop: 0
               };
               artistNameMap[normName] = rawName;
             }
@@ -185,10 +219,19 @@
             artistStats.weeks.add(week);
             artistStats.totalStreams += streams;
 
+            // songs
             const songKey = (title || "").toUpperCase().replace(/[^A-Z0-9]/g, '');
             if (!artistStats.songs[songKey]) artistStats.songs[songKey] = Infinity;
             if (rank < artistStats.songs[songKey]) artistStats.songs[songKey] = rank;
 
+            // bucket-specific #1
+            if (rank === 1 && bucket) {
+              if (bucket === 'POP') artistStats.num1Pop += 1;
+              else if (bucket === 'RNB') artistStats.num1Rnb += 1;
+              else if (bucket === 'HIPHOP') artistStats.num1HipHop += 1;
+            }
+
+            // albums
             const albumKey = String(album || "").toUpperCase()
               .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
               .replace(/[^A-Z0-9]/g, '');
@@ -217,7 +260,7 @@
           if (r <= 10) top10Albums++;
         });
 
-        const songEntriesTop100 = Object.keys(stats.songs).length; // unique charting songs
+        const songEntriesTop100 = Object.keys(stats.songs).length;
         const weeksOnChart = weeks;
 
         return {
@@ -225,6 +268,10 @@
           totalStreams,
           totalSales: stats.rawSales * 1750,
           num1Songs,
+          // new bucket counts
+          num1Pop: stats.num1Pop,
+          num1Rnb: stats.num1Rnb,
+          num1HipHop: stats.num1HipHop,
           top10Songs,
           num1Albums,
           top10Albums,
@@ -235,7 +282,7 @@
         };
       });
 
-      // Default ranking by totalStreams
+      // default sort
       artistList.sort((a,b) => b.totalStreams - a.totalStreams);
       artistList.forEach((a,i) => a.rank = i+1);
 
@@ -249,6 +296,9 @@
             <td>${formatNumber(a.totalStreams)}</td>
             <td>${formatNumber(a.totalSales)}</td>
             <td>${a.num1Songs}</td>
+            <td>${a.num1Pop}</td>
+            <td>${a.num1Rnb}</td>
+            <td>${a.num1HipHop}</td>
             <td>${a.top10Songs}</td>
             <td>${a.num1Albums}</td>
             <td>${a.top10Albums}</td>
@@ -262,6 +312,7 @@
 
       renderTable(artistList);
 
+      // sorting
       let currentSort = { key: 'rank', asc: true };
       const headers = document.querySelectorAll("th[data-sort]");
 
@@ -290,7 +341,6 @@
             }
           });
 
-          // If sorting by rank or one of the primary totals, recompute ranks to match current order
           if (['rank', 'totalStreams', 'totalSales'].includes(currentSort.key)) {
             artistList.forEach((a,i) => a.rank = i+1);
           }
@@ -300,10 +350,6 @@
       });
     });
   </script>
-
-</body>
-</html>
-
 
 </body>
 </html>
