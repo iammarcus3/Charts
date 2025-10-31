@@ -93,7 +93,7 @@
         <div class="logo"></div>
         <div class="title">
           <h1>Genre Charts</h1>
-          <div class="subtitle">5 fixed genres • from weekdata.js • top 20 • trimmed 200</div>
+          <div class="subtitle">5 fixed genres • weekdata.js • top 20 • multi-tab per song</div>
         </div>
       </div>
       <div class="controls">
@@ -138,7 +138,6 @@
 
 <script>
 (function(){
-  // get raw
   const raw = window.weekdata || window.weekData || window.WEEKDATA || {};
   let weekData = {};
   if (Array.isArray(raw)){
@@ -171,47 +170,61 @@
     return;
   }
 
-  // buckets
-  function normalizeGenreText(x){
-    return String(x||'').toLowerCase();
+  // map ANY genre string to one or more of our 5 buckets
+  function genreTokensFromRow(r){
+    const arr = [];
+    if (r.mainGenre) arr.push(r.mainGenre);
+    if (Array.isArray(r.subGenres)) arr.push(...r.subGenres);
+    if (r.genre) arr.push(r.genre);
+    if (Array.isArray(r.genres)) arr.push(...r.genres);
+    return arr
+      .map(x => String(x).trim())
+      .filter(Boolean);
   }
-  function rowToBucket(r){
-    const m = r.mainGenre || null;
-    const sub = Array.isArray(r.subGenres) && r.subGenres.length ? r.subGenres[0] : null;
-    const g = r.genre || (Array.isArray(r.genres)&&r.genres[0]) || null;
-    const cand = [m, sub, g].filter(Boolean).map(normalizeGenreText);
+
+  function tokensToBuckets(tokens){
+    const buckets = new Set();
+    const lows = tokens.map(t => t.toLowerCase());
 
     // POP
-    if (cand.some(t=> t.includes('pop') && !t.includes('k-pop'))) return 'POP';
+    if (lows.some(t => t.includes('pop'))) buckets.add('POP');
 
-    // R&B / Soul
-    if (cand.some(t=> t.includes('r&b') || t.includes('rnb') || t.includes('soul') || t.includes('neo-soul'))) return 'RNB';
+    // RNB
+    if (lows.some(t => t.includes('r&b') || t.includes('rnb') || t.includes('soul') || t.includes('neo-soul'))) buckets.add('RNB');
 
-    // HIP-HOP
-    if (cand.some(t=> t.includes('hip') || t.includes('rap') || t.includes('trap'))) return 'HIPHOP';
+    // HIPHOP
+    if (lows.some(t => t.includes('hip') || t.includes('rap') || t.includes('trap'))) buckets.add('HIPHOP');
 
-    // ALT / INDIE
-    if (cand.some(t=> t.includes('alt') || t.includes('indie'))) return 'ALT';
+    // ALT
+    if (lows.some(t => t.includes('alt') || t.includes('indie'))) buckets.add('ALT');
 
-    // DANCE / ELECTRONIC
-    if (cand.some(t=> t.includes('dance') || t.includes('edm') || t.includes('electro'))) return 'DANCE';
+    // DANCE
+    if (lows.some(t => t.includes('dance') || t.includes('edm') || t.includes('electro'))) buckets.add('DANCE');
 
-    // fallback: if main was literally 'Pop' etc
-    if (m === 'Pop') return 'POP';
-    return 'POP'; // default pop if unknown (so it shows somewhere)
+    // if after all that, still nothing → DEFAULT to POP (so "cannot be blank")
+    if (buckets.size === 0) buckets.add('POP');
+
+    return Array.from(buckets);
   }
 
-  // week -> rows (trim 200 + remove sweep)
-  function getWeekRows(w){
-    const rows = (weekData[w] || []).slice();
-    rows.sort((a,b)=>{
+  function getWeekRowsExpanded(w){
+    // step 1: sorted & trimmed 200
+    const base = (weekData[w] || []).slice();
+    base.sort((a,b)=>{
       const ra = Number(a.rank ?? a.position ?? a.pos ?? 9999);
       const rb = Number(b.rank ?? b.position ?? b.pos ?? 9999);
       return ra - rb;
     });
-    return rows.slice(0,200).filter(r=>{
+    const trimmed = base.slice(0,200).filter(r=>{
       const t = (r.title || r.song || '').toString();
       return !/sweep week/i.test(t);
+    });
+
+    // step 2: attach buckets (multiple ok)
+    return trimmed.map(r=>{
+      const tokens = genreTokensFromRow(r);
+      const buckets = tokensToBuckets(tokens);
+      return {...r, _buckets: buckets};
     });
   }
 
@@ -236,10 +249,12 @@
   let currentBucket = 'POP';
 
   function renderTable(){
-    const rows = getWeekRows(currentWeek);
-    const bucketRows = rows.filter(r=> rowToBucket(r) === currentBucket);
+    const rows = getWeekRowsExpanded(currentWeek);
+    // pick only rows that include this bucket (multi allowed)
+    const list = rows.filter(r => Array.isArray(r._buckets) && r._buckets.includes(currentBucket));
 
-    bucketRows.sort((a,b)=>{
+    // sort by points then sales then title
+    list.sort((a,b)=>{
       const pa = Number(a.points || a.Points || 0);
       const pb = Number(b.points || b.Points || 0);
       if (pb !== pa) return pb - pa;
@@ -249,11 +264,12 @@
       return String(a.title||'').localeCompare(String(b.title||''));
     });
 
-    const top20 = bucketRows.slice(0,20);
+    const top20 = list.slice(0,20);
 
     tbody.innerHTML = '';
     if (!top20.length){
-      tbody.innerHTML = '<tr><td colspan="5" class="empty">No tracks for this genre in this week.</td></tr>';
+      // because we ALWAYS default to POP, this should basically not happen
+      tbody.innerHTML = '<tr><td colspan="5" class="empty">No tracks for this genre (check data).</td></tr>';
     } else {
       top20.forEach((r,idx)=>{
         const title = r.title || r.song || '—';
@@ -274,19 +290,19 @@
 
     dateRangeEl.textContent = fmtRange(currentWeek);
     metaCount.textContent = `${top20.length}/20 • week ${currentWeek}`;
-    metaGenre.textContent = {
+    const names = {
       POP:'Pop',
       RNB:'R&B / Soul',
       HIPHOP:'Hip-Hop / Rap',
       ALT:'Alternative / Indie',
       DANCE:'Dance / Electronic'
-    }[currentBucket] || currentBucket;
+    };
+    metaGenre.textContent = names[currentBucket] || currentBucket;
+    statusEl.textContent = `Top 20 for ${metaGenre.textContent} • using mainGenre + ALL subGenres (multi-tab allowed)`;
 
-    statusEl.textContent = `Top 20 for ${metaGenre.textContent} (from mainGenre/subGenres/genre)`;
     tabs.forEach(t=> t.classList.toggle('active', t.dataset.bucket === currentBucket));
   }
 
-  // events
   fillWeekSel();
   weekSel.value = currentWeek;
   renderTable();
