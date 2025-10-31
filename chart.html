@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>5 Genre Charts — weekdata.js</title>
+  <title>5 Main Genre Charts — weekdata.js</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="weekdata.js"></script>
   <style>
@@ -92,8 +92,8 @@
       <div class="brand">
         <div class="logo"></div>
         <div class="title">
-          <h1>Genre Charts</h1>
-          <div class="subtitle">5 fixed genres • weekdata.js • top 20 • multi-tab per song</div>
+          <h1>5 Main Genre Charts</h1>
+          <div class="subtitle">POP • RNB • HIP-HOP • ROCK • DANCE — weekdata.js — top 20</div>
         </div>
       </div>
       <div class="controls">
@@ -110,7 +110,7 @@
       <div class="tab" data-bucket="POP" data-key="1">Pop</div>
       <div class="tab" data-bucket="RNB" data-key="2">R&amp;B / Soul</div>
       <div class="tab" data-bucket="HIPHOP" data-key="3">Hip-Hop / Rap</div>
-      <div class="tab" data-bucket="ALT" data-key="4">Alternative / Indie</div>
+      <div class="tab" data-bucket="ROCK" data-key="4">Rock / Alt</div>
       <div class="tab" data-bucket="DANCE" data-key="5">Dance / Electronic</div>
     </div>
 
@@ -170,45 +170,56 @@
     return;
   }
 
-  // map ANY genre string to one or more of our 5 buckets
+  // fallback tokenizer for old data
   function genreTokensFromRow(r){
     const arr = [];
     if (r.mainGenre) arr.push(r.mainGenre);
     if (Array.isArray(r.subGenres)) arr.push(...r.subGenres);
     if (r.genre) arr.push(r.genre);
     if (Array.isArray(r.genres)) arr.push(...r.genres);
-    return arr
-      .map(x => String(x).trim())
-      .filter(Boolean);
+    return arr.map(x => String(x).trim()).filter(Boolean);
   }
 
-  function tokensToBuckets(tokens){
+  // use your new simple fields first (genre5 / subgenre5), then guess
+  function rowToBuckets(r){
     const buckets = new Set();
-    const lows = tokens.map(t => t.toLowerCase());
 
-    // POP
-    if (lows.some(t => t.includes('pop'))) buckets.add('POP');
+    // 1) hard main
+    const g5 = (r.genre5 || "").toUpperCase();
+    if (g5 === "POP") buckets.add("POP");
+    else if (g5 === "RNB") buckets.add("RNB");
+    else if (g5 === "HIP-HOP") buckets.add("HIPHOP");
+    else if (g5 === "HIPHOP") buckets.add("HIPHOP");
+    else if (g5 === "ROCK") buckets.add("ROCK");
+    else if (g5 === "DANCE") buckets.add("DANCE");
 
-    // RNB
-    if (lows.some(t => t.includes('r&b') || t.includes('rnb') || t.includes('soul') || t.includes('neo-soul'))) buckets.add('RNB');
+    // 2) subgenres string like "TRAP-SOUL;EDM"
+    const sg = (r.subgenre5 || "").split(";").map(s=>s.trim().toUpperCase()).filter(Boolean);
+    sg.forEach(code=>{
+      if (code === "ALT-POP" || code === "AFRO-POP" || code === "ADULT-POP") buckets.add("POP");
+      else if (code === "ALT-RNB" || code === "TRAP-SOUL" || code === "CLASSIC-RNB") buckets.add("RNB");
+      else if (code === "TRAP" || code === "DRILL" || code === "BOOM-BAP") buckets.add("HIPHOP");
+      else if (code === "ALT-ROCK" || code === "POP-ROCK" || code === "PUNK-EMO") buckets.add("ROCK");
+      else if (code === "EDM" || code === "HOUSE" || code === "CLUB") buckets.add("DANCE");
+    });
 
-    // HIPHOP
-    if (lows.some(t => t.includes('hip') || t.includes('rap') || t.includes('trap'))) buckets.add('HIPHOP');
+    // 3) if still empty, guess from old fields
+    if (buckets.size === 0){
+      const lows = genreTokensFromRow(r).map(t => t.toLowerCase());
+      if (lows.some(t => t.includes('pop'))) buckets.add('POP');
+      if (lows.some(t => t.includes('r&b') || t.includes('rnb') || t.includes('soul'))) buckets.add('RNB');
+      if (lows.some(t => t.includes('hip') || t.includes('rap') || t.includes('trap') || t.includes('drill'))) buckets.add('HIPHOP');
+      if (lows.some(t => t.includes('rock') || t.includes('alt') || t.includes('indie') || t.includes('punk') || t.includes('emo'))) buckets.add('ROCK');
+      if (lows.some(t => t.includes('dance') || t.includes('edm') || t.includes('electro') || t.includes('house') || t.includes('club'))) buckets.add('DANCE');
+    }
 
-    // ALT
-    if (lows.some(t => t.includes('alt') || t.includes('indie'))) buckets.add('ALT');
-
-    // DANCE
-    if (lows.some(t => t.includes('dance') || t.includes('edm') || t.includes('electro'))) buckets.add('DANCE');
-
-    // if after all that, still nothing → DEFAULT to POP (so "cannot be blank")
+    // 4) still nothing → POP
     if (buckets.size === 0) buckets.add('POP');
 
     return Array.from(buckets);
   }
 
   function getWeekRowsExpanded(w){
-    // step 1: sorted & trimmed 200
     const base = (weekData[w] || []).slice();
     base.sort((a,b)=>{
       const ra = Number(a.rank ?? a.position ?? a.pos ?? 9999);
@@ -219,11 +230,8 @@
       const t = (r.title || r.song || '').toString();
       return !/sweep week/i.test(t);
     });
-
-    // step 2: attach buckets (multiple ok)
     return trimmed.map(r=>{
-      const tokens = genreTokensFromRow(r);
-      const buckets = tokensToBuckets(tokens);
+      const buckets = rowToBuckets(r);
       return {...r, _buckets: buckets};
     });
   }
@@ -250,10 +258,8 @@
 
   function renderTable(){
     const rows = getWeekRowsExpanded(currentWeek);
-    // pick only rows that include this bucket (multi allowed)
     const list = rows.filter(r => Array.isArray(r._buckets) && r._buckets.includes(currentBucket));
 
-    // sort by points then sales then title
     list.sort((a,b)=>{
       const pa = Number(a.points || a.Points || 0);
       const pb = Number(b.points || b.Points || 0);
@@ -268,8 +274,7 @@
 
     tbody.innerHTML = '';
     if (!top20.length){
-      // because we ALWAYS default to POP, this should basically not happen
-      tbody.innerHTML = '<tr><td colspan="5" class="empty">No tracks for this genre (check data).</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" class="empty">No tracks for this genre.</td></tr>';
     } else {
       top20.forEach((r,idx)=>{
         const title = r.title || r.song || '—';
@@ -294,11 +299,11 @@
       POP:'Pop',
       RNB:'R&B / Soul',
       HIPHOP:'Hip-Hop / Rap',
-      ALT:'Alternative / Indie',
+      ROCK:'Rock / Alt',
       DANCE:'Dance / Electronic'
     };
     metaGenre.textContent = names[currentBucket] || currentBucket;
-    statusEl.textContent = `Top 20 for ${metaGenre.textContent} • using mainGenre + ALL subGenres (multi-tab allowed)`;
+    statusEl.textContent = `Top 20 for ${metaGenre.textContent} • multi-chart via subgenre5`;
 
     tabs.forEach(t=> t.classList.toggle('active', t.dataset.bucket === currentBucket));
   }
