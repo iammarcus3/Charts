@@ -142,10 +142,16 @@
     </table>
   </div>
 
+  <!-- your dataset -->
   <script src="weekdata.js"></script>
+
+  <!-- fixed script: no re-declare of weekData -->
   <script>
-    // some files call it weekdata, some weekData
-    const weekData = window.weekData || window.weekdata || window.WEEKDATA || {};
+  (() => {
+    // reuse whatever the dataset script created, but DON'T redeclare weekData
+    const data =
+      window.__WEEKDATA__ ||
+      (window.__WEEKDATA__ = (window.weekData || window.weekdata || window.WEEKDATA || {}));
 
     function formatNumber(n) {
       if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
@@ -182,8 +188,8 @@
       const artistNameMap = {};
 
       // walk all weeks
-      for (const week in weekData) {
-        (weekData[week] || []).forEach(entry => {
+      for (const week in data) {
+        (data[week] || []).forEach(entry => {
           const artists = (entry.artist || "")
             .split(/,|&| and | with | feat\.? | featuring /i)
             .map(a => a.trim())
@@ -206,7 +212,6 @@
                 songs: {},
                 albums: {},
                 totalStreams: 0,
-                // new bucket #1 counters
                 num1Pop: 0,
                 num1Rnb: 0,
                 num1HipHop: 0
@@ -266,9 +271,8 @@
         return {
           name: artistNameMap[normName],
           totalStreams,
-          totalSales: stats.rawSales * 1750,
+          totalSales: stats.rawSales * 1750, // your conversion
           num1Songs,
-          // new bucket counts
           num1Pop: stats.num1Pop,
           num1Rnb: stats.num1Rnb,
           num1HipHop: stats.num1HipHop,
@@ -349,6 +353,7 @@
         });
       });
     });
+  })();
   </script>
 
 </body>
