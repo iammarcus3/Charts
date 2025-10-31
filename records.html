@@ -56,13 +56,17 @@
       z-index: 2;
       user-select: none;
     }
-    th:first-child, td:first-child {
+    th:first-child,
+    td:first-child {
       position: sticky;
       left: 0;
       background: #222;
       z-index: 3;
     }
-    a { color: #1DB954; text-decoration: none; }
+    a {
+      color: #1DB954;
+      text-decoration: none;
+    }
     a:hover { text-decoration: underline; }
     th.asc::after { content: " ▲"; color: #1DB954; }
     th.desc::after { content: " ▼"; color: #1DB954; }
@@ -111,10 +115,66 @@
   <script src="weekdata.js"></script>
   <script>
   (() => {
-    // use the dataset already loaded
-    const data =
+    const raw =
       window.__WEEKDATA__ ||
       (window.__WEEKDATA__ = (window.weekData || window.weekdata || window.WEEKDATA || {}));
+
+    // --- 100% same logic style as your 5-genre page ---
+
+    // turn any row -> list of genre strings we can test
+    function genreTokensFromRow(r){
+      const arr = [];
+      if (r.mainGenre) arr.push(r.mainGenre);
+      if (Array.isArray(r.subGenres)) arr.push(...r.subGenres);
+      if (r.genre) arr.push(r.genre);
+      if (Array.isArray(r.genres)) arr.push(...r.genres);
+      return arr.map(x => String(x).trim()).filter(Boolean);
+    }
+
+    // map tokens -> 5 buckets, then we will only read POP/RNB/HIPHOP
+    function tokensToBuckets(tokens){
+      const buckets = new Set();
+      const lows = tokens.map(t => t.toLowerCase());
+      if (lows.some(t => t.includes('pop'))) buckets.add('POP');
+      if (lows.some(t => t.includes('r&b') || t.includes('rnb') || t.includes('soul') || t.includes('neo-soul'))) buckets.add('RNB');
+      if (lows.some(t => t.includes('hip') || t.includes('rap') || t.includes('trap'))) buckets.add('HIPHOP');
+      if (lows.some(t => t.includes('alt') || t.includes('indie'))) buckets.add('ALT');
+      if (lows.some(t => t.includes('dance') || t.includes('edm') || t.includes('electro'))) buckets.add('DANCE');
+      if (!buckets.size) buckets.add('POP'); // cannot be blank
+      return Array.from(buckets);
+    }
+
+    // EXACT: sort by rank, take 200, drop sweep week, attach _buckets
+    function getWeekRowsExpanded(weekNum, weekData){
+      const base = (weekData[weekNum] || []).slice();
+      base.sort((a,b)=>{
+        const ra = Number(a.rank ?? a.position ?? a.pos ?? 9999);
+        const rb = Number(b.rank ?? b.position ?? b.pos ?? 9999);
+        return ra - rb;
+      });
+      const trimmed = base.slice(0,200).filter(r=>{
+        const t = (r.title || r.song || '').toString();
+        return !/sweep week/i.test(t);
+      });
+      return trimmed.map(r=>{
+        const tokens = genreTokensFromRow(r);
+        const buckets = tokensToBuckets(tokens);
+        return { ...r, _buckets: buckets };
+      });
+    }
+
+    function songKey(title, artist){
+      const t = String(title || '').toUpperCase().replace(/[^A-Z0-9]/g,'');
+      const a = String(artist || '').toUpperCase().replace(/[^A-Z0-9]/g,'');
+      return t + '//' + a;
+    }
+
+    function splitArtists(str){
+      return (str || "")
+        .split(/,|&| and | with | feat\.? | featuring /i)
+        .map(a => a.trim())
+        .filter(Boolean);
+    }
 
     function formatNumber(n) {
       if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
@@ -123,85 +183,97 @@
       return n.toString();
     }
 
-    // expand genres like the 5-genre chart
-    function getBuckets(entry) {
-      const tokens = [];
-      if (entry.mainGenre) tokens.push(entry.mainGenre);
-      if (Array.isArray(entry.subGenres)) tokens.push(...entry.subGenres);
-      if (entry.genre) tokens.push(entry.genre);
-      if (Array.isArray(entry.genres)) tokens.push(...entry.genres);
-
-      const lows = tokens.map(t => String(t).toLowerCase().trim());
-      const out = [];
-
-      if (lows.some(t => t.includes('pop'))) out.push('POP');
-      if (lows.some(t => t.includes('r&b') || t.includes('rnb') || t.includes('soul') || t.includes('neo-soul'))) out.push('RNB');
-      if (lows.some(t => t.includes('hip') || t.includes('rap') || t.includes('trap'))) out.push('HIPHOP');
-
-      // cannot be blank
-      if (!out.length) out.push('POP');
-
-      // only 3 buckets for this page
-      return out;
-    }
-
-    // song key to dedupe per song per bucket
-    function songKey(title, artist) {
-      const t = String(title || '').toUpperCase().replace(/[^A-Z0-9]/g,'');
-      const a = String(artist || '').toUpperCase().replace(/[^A-Z0-9]/g,'');
-      return t + '//' + a;
-    }
-
-    // split artists the same way you do everywhere
-    function splitArtists(str){
-      return (str || "")
-        .split(/,|&| and | with | feat\.? | featuring /i)
-        .map(a => a.trim())
-        .filter(Boolean);
-    }
-
     window.addEventListener("DOMContentLoaded", () => {
       const tbody = document.getElementById('artistTable');
+
+      // normalize data to object of weeks
+      let weekData = {};
+      if (Array.isArray(raw)) {
+        raw.forEach(r=>{
+          const w = r.week || r.Week || r.w;
+          if (!w) return;
+          (weekData[w] ||= []).push(r);
+        });
+      } else {
+        weekData = raw;
+      }
+
+      const weeks = Object.keys(weekData).map(n=>+n).filter(n=>!isNaN(n)).sort((a,b)=>a-b);
+
       const artistMap = {};
       const artistNameMap = {};
 
-      // go week by week
-      for (const week in data) {
-        // 1) sort, trim 200, remove "sweep week"
-        const rows = (data[week] || [])
-          .slice()
-          .sort((a,b)=>{
-            const ra = Number(a.rank ?? a.position ?? a.pos ?? 9999);
-            const rb = Number(b.rank ?? b.position ?? b.pos ?? 9999);
-            return ra - rb;
-          })
-          .slice(0,200)
-          .filter(r=>{
-            const t = (r.title || r.song || '').toString();
-            return !/sweep week/i.test(t);
+      // 1) walk weeks, first pass: create artists + add sales/streams/songs/albums
+      for (const w of weeks) {
+        const rows = getWeekRowsExpanded(w, weekData);
+
+        rows.forEach(entry=>{
+          const artists = splitArtists(entry.artist || entry.Artist || '');
+          const album = entry.album || '';
+          const title = entry.title || entry.song || '';
+          const rank = Number(entry.rank ?? entry.position ?? entry.pos ?? 9999);
+          const sales = parseFloat(entry.sales) || 0;
+          const streams = parseFloat(entry.streams) || 0;
+
+          artists.forEach(rawName=>{
+            const normName = rawName.toUpperCase().replace(/[^A-Z0-9]/g,'');
+
+            if (!artistMap[normName]) {
+              artistMap[normName] = {
+                rawSales: 0,
+                weeks: new Set(),
+                songs: {},
+                albums: {},
+                totalStreams: 0,
+                num1Pop: 0,
+                num1Rnb: 0,
+                num1HipHop: 0,
+                seenPop: new Set(),
+                seenRnb: new Set(),
+                seenHipHop: new Set(),
+              };
+              artistNameMap[normName] = rawName;
+            }
+
+            const st = artistMap[normName];
+            st.rawSales += sales;
+            st.totalStreams += streams;
+            st.weeks.add(w);
+
+            // song peaks
+            const songKeySimple = (title || "").toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (!st.songs[songKeySimple]) st.songs[songKeySimple] = Infinity;
+            if (rank < st.songs[songKeySimple]) st.songs[songKeySimple] = rank;
+
+            // album peaks
+            const albumKey = String(album || "").toUpperCase()
+              .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
+              .replace(/[^A-Z0-9]/g,'');
+            if (albumKey) {
+              if (!st.albums[albumKey]) st.albums[albumKey] = Infinity;
+              if (rank < st.albums[albumKey]) st.albums[albumKey] = rank;
+            }
           });
-
-        // 2) expand with buckets for this week
-        const expanded = rows.map(r => {
-          const b = getBuckets(r);
-          return { ...r, _buckets: b };
         });
+      }
 
-        // 3) for each bucket, find THAT WEEK'S #1 (like your chart)
+      // 2) second pass: per-week, per-genre pick the #1 just like the 5-genre chart
+      for (const w of weeks) {
+        const rows = getWeekRowsExpanded(w, weekData);
+
         ['POP','RNB','HIPHOP'].forEach(bucketName => {
-          // filter rows that belong to this bucket
-          const bucketRows = expanded.filter(r => r._buckets && r._buckets.includes(bucketName));
-
+          const bucketRows = rows.filter(r => Array.isArray(r._buckets) && r._buckets.includes(bucketName));
           if (!bucketRows.length) return;
 
-          // sort like the chart: by points desc, fallback to rank asc
+          // sort like the chart: points desc, sales desc, title asc
           bucketRows.sort((a,b)=>{
             const pa = Number(a.points || a.Points || 0);
             const pb = Number(b.points || b.Points || 0);
             if (pb !== pa) return pb - pa;
-            const ra = Number(a.rank ?? a.position ?? a.pos ?? 9999);
-            const rb = Number(b.rank ?? b.position ?? b.pos ?? 9999);
-            return ra - rb;
+            const sa = Number(a.sales || a.Sales || 0);
+            const sb = Number(b.sales || b.Sales || 0);
+            if (sb !== sa) return sb - sa;
+            return String(a.title||a.song||'').localeCompare(String(b.title||b.song||''));
           });
 
           const top = bucketRows[0]; // this is THE #1 for that genre that week
@@ -210,174 +282,74 @@
           const sKey = songKey(title, artistStr);
           const artists = splitArtists(artistStr);
 
-          artists.forEach(rawName => {
+          artists.forEach(rawName=>{
             const normName = rawName.toUpperCase().replace(/[^A-Z0-9]/g,'');
+            const st = artistMap[normName];
+            if (!st) return;
 
-            if (!artistMap[normName]) {
-              artistMap[normName] = {
-                rawSales: 0,
-                weeks: new Set(),
-                songs: {},
-                albums: {},
-                totalStreams: 0,
-                num1Pop: 0,
-                num1Rnb: 0,
-                num1HipHop: 0,
-                seenPop: new Set(),
-                seenRnb: new Set(),
-                seenHipHop: new Set()
-              };
-              artistNameMap[normName] = rawName;
-            }
-
-            const artistStats = artistMap[normName];
-
-            // even though this is chart-based, still accumulate sales/streams from whole week
-          });
-
-          // also: add sales/streams to every artist from EVERY row (not only #1s)
-          // we do that below outside this bucket loop
-        });
-
-        // 4) now do normal per-row accumulation (sales/streams/songs/albums)
-        rows.forEach(entry => {
-          const artists = splitArtists(entry.artist || entry.Artist || '');
-          const album = entry.album || "";
-          const title = entry.title || entry.song || "";
-          const rank = parseInt(entry.rank);
-          const sales = parseFloat(entry.sales) || 0;
-          const streams = parseFloat(entry.streams) || 0;
-          const buckets = getBuckets(entry);
-          const sKey = songKey(title, entry.artist || entry.Artist || "");
-
-          artists.forEach(rawName => {
-            const normName = rawName.toUpperCase().replace(/[^A-Z0-9]/g,'');
-
-            if (!artistMap[normName]) {
-              artistMap[normName] = {
-                rawSales: 0,
-                weeks: new Set(),
-                songs: {},
-                albums: {},
-                totalStreams: 0,
-                num1Pop: 0,
-                num1Rnb: 0,
-                num1HipHop: 0,
-                seenPop: new Set(),
-                seenRnb: new Set(),
-                seenHipHop: new Set()
-              };
-              artistNameMap[normName] = rawName;
-            }
-
-            const artistStats = artistMap[normName];
-            artistStats.rawSales += sales;
-            artistStats.weeks.add(week);
-            artistStats.totalStreams += streams;
-
-            // song-level peaks
-            const songKeySimple = (title || "").toUpperCase().replace(/[^A-Z0-9]/g, '');
-            if (!artistStats.songs[songKeySimple]) artistStats.songs[songKeySimple] = Infinity;
-            if (rank < artistStats.songs[songKeySimple]) artistStats.songs[songKeySimple] = rank;
-
-            // album-level
-            const albumKey = String(album || "").toUpperCase()
-              .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
-              .replace(/[^A-Z0-9]/g, '');
-            if (albumKey) {
-              if (!artistStats.albums[albumKey]) artistStats.albums[albumKey] = Infinity;
-              if (rank < artistStats.albums[albumKey]) artistStats.albums[albumKey] = rank;
-            }
-          });
-        });
-
-        // 5) important: actually give the #1-per-genre credit now (AFTER we know artists exist)
-        ['POP','RNB','HIPHOP'].forEach(bucketName => {
-          const bucketRows = expanded.filter(r => r._buckets && r._buckets.includes(bucketName));
-          if (!bucketRows.length) return;
-          bucketRows.sort((a,b)=>{
-            const pa = Number(a.points || a.Points || 0);
-            const pb = Number(b.points || b.Points || 0);
-            if (pb !== pa) return pb - pa;
-            const ra = Number(a.rank ?? a.position ?? a.pos ?? 9999);
-            const rb = Number(b.rank ?? b.position ?? b.pos ?? 9999);
-            return ra - rb;
-          });
-          const top = bucketRows[0];
-          const title = top.title || top.song || '';
-          const artistStr = top.artist || top.Artist || '';
-          const sKey = songKey(title, artistStr);
-          const artists = splitArtists(artistStr);
-
-          artists.forEach(rawName => {
-            const normName = rawName.toUpperCase().replace(/[^A-Z0-9]/g,'');
-            const artistStats = artistMap[normName];
-            if (!artistStats) return;
             if (bucketName === 'POP') {
-              if (!artistStats.seenPop.has(sKey)) {
-                artistStats.seenPop.add(sKey);
-                artistStats.num1Pop += 1;
+              if (!st.seenPop.has(sKey)) {
+                st.seenPop.add(sKey);
+                st.num1Pop += 1;
               }
             } else if (bucketName === 'RNB') {
-              if (!artistStats.seenRnb.has(sKey)) {
-                artistStats.seenRnb.add(sKey);
-                artistStats.num1Rnb += 1;
+              if (!st.seenRnb.has(sKey)) {
+                st.seenRnb.add(sKey);
+                st.num1Rnb += 1;
               }
             } else if (bucketName === 'HIPHOP') {
-              if (!artistStats.seenHipHop.has(sKey)) {
-                artistStats.seenHipHop.add(sKey);
-                artistStats.num1HipHop += 1;
+              if (!st.seenHipHop.has(sKey)) {
+                st.seenHipHop.add(sKey);
+                st.num1HipHop += 1;
               }
             }
           });
         });
-      } // end weeks
+      }
 
-      // turn into list
-      const artistList = Object.entries(artistMap).map(([normName, stats]) => {
-        const totalStreams = stats.totalStreams;
-        const weeks = stats.weeks.size;
+      // 3) build list
+      const artistList = Object.entries(artistMap).map(([normName, st])=>{
+        const weeks = st.weeks.size;
 
         let num1Songs = 0, top10Songs = 0, top30Songs = 0;
-        Object.values(stats.songs).forEach(r => {
+        Object.values(st.songs).forEach(r =>{
           if (r === 1) num1Songs++;
           if (r <= 10) top10Songs++;
           if (r <= 30) top30Songs++;
         });
 
         let num1Albums = 0, top10Albums = 0;
-        Object.values(stats.albums).forEach(r => {
+        Object.values(st.albums).forEach(r =>{
           if (r === 1) num1Albums++;
           if (r <= 10) top10Albums++;
         });
 
         return {
           name: artistNameMap[normName],
-          totalStreams,
-          totalSales: stats.rawSales * 1750,
+          totalStreams: st.totalStreams,
+          totalSales: st.rawSales * 1750,
           num1Songs,
-          num1Pop: stats.num1Pop,
-          num1Rnb: stats.num1Rnb,
-          num1HipHop: stats.num1HipHop,
+          num1Pop: st.num1Pop,
+          num1Rnb: st.num1Rnb,
+          num1HipHop: st.num1HipHop,
           top10Songs,
           num1Albums,
           top10Albums,
-          songEntriesTop100: Object.keys(stats.songs).length,
+          songEntriesTop100: Object.keys(st.songs).length,
           weeksOnChart: weeks,
           top30Songs,
           rank: 0
         };
       });
 
-      // default sort
-      artistList.sort((a,b) => b.totalStreams - a.totalStreams);
-      artistList.forEach((a,i) => a.rank = i+1);
+      // 4) default sort
+      artistList.sort((a,b)=> b.totalStreams - a.totalStreams);
+      artistList.forEach((a,i)=> a.rank = i+1);
 
-      function renderTable(data) {
-        const tbody = document.getElementById('artistTable');
+      function renderTable(data){
         tbody.innerHTML = "";
-        data.forEach(a => {
-          const tr = document.createElement("tr");
+        data.forEach(a=>{
+          const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>${a.rank}</td>
             <td><a href="artist.html?artist=${encodeURIComponent(a.name)}">${a.name}</a></td>
@@ -400,36 +372,34 @@
 
       renderTable(artistList);
 
-      // sorting
-      let currentSort = { key: 'rank', asc: true };
+      // 5) sorting
+      let currentSort = { key:'rank', asc:true };
       const headers = document.querySelectorAll("th[data-sort]");
 
-      headers.forEach(header => {
-        header.addEventListener("click", () => {
-          const key = header.getAttribute("data-sort");
-          if (currentSort.key === key) {
+      headers.forEach(header=>{
+        header.addEventListener('click', ()=>{
+          const key = header.getAttribute('data-sort');
+          if (currentSort.key === key){
             currentSort.asc = !currentSort.asc;
           } else {
             currentSort.key = key;
-            currentSort.asc = true;
-            if (key !== 'name') currentSort.asc = false;
+            currentSort.asc = key === 'name' ? true : false;
           }
 
-          headers.forEach(h => h.classList.remove("asc", "desc"));
-          header.classList.add(currentSort.asc ? "asc" : "desc");
+          headers.forEach(h=>h.classList.remove('asc','desc'));
+          header.classList.add(currentSort.asc ? 'asc' : 'desc');
 
-          artistList.sort((a,b) => {
-            const valA = a[key];
-            const valB = b[key];
-            if (typeof valA === "string") {
-              return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+          artistList.sort((a,b)=>{
+            const va = a[key], vb = b[key];
+            if (typeof va === 'string') {
+              return currentSort.asc ? va.localeCompare(vb) : vb.localeCompare(va);
             } else {
-              return currentSort.asc ? valA - valB : valB - valA;
+              return currentSort.asc ? va - vb : vb - va;
             }
           });
 
-          if (['rank','totalStreams','totalSales'].includes(currentSort.key)) {
-            artistList.forEach((a,i)=> a.rank = i+1);
+          if (['rank','totalStreams','totalSales'].includes(key)){
+            artistList.forEach((a,i)=>a.rank=i+1);
           }
 
           renderTable(artistList);
@@ -438,6 +408,5 @@
     });
   })();
   </script>
-
 </body>
 </html>
