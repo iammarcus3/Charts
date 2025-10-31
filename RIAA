@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RIAA Milestones — Yearly & All-Time</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- your data -->
+  <script src="weekdata.js"></script>
+  <style>
+    :root{
+      --bg:#0b0b0c;
+      --panel:#111116;
+      --ink:#f4f4f5;
+      --muted:#a7a7b1;
+      --cyan:#00ffff;
+      --accent:#f82aaa;
+      --border:#23232a;
+      --row:#141418;
+      --row-hover:#1a1a1f;
+    }
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      margin:0;
+      padding:0;
+    }
+    header{
+      padding:16px 20px 8px;
+      border-bottom:1px solid #141417;
+    }
+    h1{
+      margin:0;
+      font-size:1.35rem;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+    .muted{color:var(--muted);font-size:.8rem;}
+    .tabs{
+      display:flex;
+      gap:8px;
+      padding:12px 20px 0;
+    }
+    .tab-btn{
+      background:transparent;
+      border:1px solid transparent;
+      color:var(--muted);
+      padding:6px 14px 7px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:500;
+      font-size:.8rem;
+    }
+    .tab-btn.active{
+      background:rgba(0,255,255,.12);
+      border-color:rgba(0,255,255,.35);
+      color:var(--ink);
+    }
+    .container{
+      padding:14px 20px 40px;
+    }
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      margin-bottom:16px;
+      box-shadow:0 18px 35px rgba(0,0,0,.32);
+    }
+    .panel-title{
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+      color:var(--muted);
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:.78rem;
+    }
+    th,td{
+      padding:7px 8px;
+      text-align:left;
+      border-bottom:1px solid rgba(255,255,255,.02);
+    }
+    th{
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      background:rgba(10,10,12,.45);
+      position:sticky;
+      top:0;
+      z-index:2;
+    }
+    tbody tr:nth-child(even){background:rgba(255,255,255,.01);}
+    tbody tr:hover{background:var(--row-hover);}
+    .flex-row{display:flex;gap:14px;flex-wrap:wrap;}
+    .stat-card{
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.03);
+      border-radius:12px;
+      padding:10px 12px 9px;
+      min-width:120px;
+    }
+    .stat-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+    .stat-value{font-size:1.25rem;font-weight:600;line-height:1.15;}
+    .hidden{display:none!important;}
+    .tiny{font-size:.68rem;color:var(--muted);}
+    .cert-icon{height:16px;vertical-align:-2px;margin-right:4px;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>RIAA Milestones — From weekdata.js</h1>
+    <div class="muted">Yearly breakdown (2018 → 2025) + all-time leaders</div>
+  </header>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="yearly">Yearly Stats</button>
+    <button class="tab-btn" data-tab="alltime">All-Time Stats</button>
+  </div>
+  <div class="container">
+    <div id="yearly" class="tab-panel">
+      <div class="panel">
+        <div class="panel-title">Yearly RIAA Activity</div>
+        <div style="max-height:380px;overflow:auto;">
+          <table id="yearlyTable">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Total Certs</th>
+                <th>Gold</th>
+                <th>Platinum</th>
+                <th>Multi</th>
+                <th>Diamond</th>
+                <th>Top Artist (by plaques)</th>
+                <th>Top Title (by upgrades)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="alltime" class="tab-panel hidden">
+      <div class="panel">
+        <div class="panel-title">All-Time Totals</div>
+        <div class="flex-row" id="alltimeTotals"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">All-Time Top Artists (by certified units)</div>
+        <div style="max-height:240px;overflow:auto;">
+          <table id="alltimeArtists">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Artist</th>
+                <th>Certified Units</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">All-Time Top Labels (by certified units)</div>
+        <div style="max-height:200px;overflow:auto;">
+          <table id="alltimeLabels">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Label</th>
+                <th>Certified Units</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Most-Upgraded Titles (songs/albums that hit multiple levels)</div>
+        <div style="max-height:260px;overflow:auto;">
+          <table id="alltimeTitles">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Type</th>
+                <th>Upgrades</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="datasetWarning" class="muted tiny"></div>
+  </div>
+
+  <script>
+    // ---------------- CONFIG ----------------
+    const RIAA = {
+      ALBUM_MULT: 500,    // your album scaling
+      TRACK_MULT: 1750,   // your track scaling
+      LEVELS: [
+        { name: 'Diamond', units: 10_000_000 },
+        { name: '9× Platinum', units: 9_000_000 },
+        { name: '8× Platinum', units: 8_000_000 },
+        { name: '7× Platinum', units: 7_000_000 },
+        { name: '6× Platinum', units: 6_000_000 },
+        { name: '5× Platinum', units: 5_000_000 },
+        { name: '4× Platinum', units: 4_000_000 },
+        { name: '3× Platinum', units: 3_000_000 },
+        { name: '2× Platinum', units: 2_000_000 },
+        { name: 'Platinum', units: 1_000_000 },
+        { name: 'Gold', units: 500_000 },
+      ]
+    };
+
+    function getRiaaLevelName(units){
+      for (const lvl of RIAA.LEVELS){
+        if (units >= lvl.units) return lvl.name;
+      }
+      return null;
+    }
+
+    // estimate year from week index (week 1 = 2018-02-23 in your world)
+    function getYearFromWeek(weekNumber){
+      const startYear = 2018;
+      const weeksPerYear = 52;
+      return startYear + Math.floor((weekNumber - 1)/weeksPerYear);
+    }
+
+    // ------------- MAIN BUILDER (from earlier) -------------
+    function buildRiaaMilestones(weekdata) {
+      const milestones = [];
+      const seenByTitle = Object.create(null);
+      const artistTotals = Object.create(null);
+      const labelTotals = Object.create(null);
+
+      for (const wk of weekdata) {
+        const year = getYearFromWeek(wk.week || wk.Week || wk.id || 1);
+
+        // tracks
+        if (wk.tracks) {
+          for (const t of wk.tracks) {
+            const key = `track:${t.title}::${t.artist}`;
+            const units = (t.sales || 0) * RIAA.TRACK_MULT;
+            const level = getRiaaLevelName(units);
+            if (!level) continue;
+            const prev = seenByTitle[key];
+            if (!prev || prev.level !== level) {
+              milestones.push({week:wk.week,year,type:'track',title:t.title,artist:t.artist,label:t.label,level,units});
+              seenByTitle[key] = { level, units };
+              if (t.artist) artistTotals[t.artist] = (artistTotals[t.artist]||0)+units;
+              if (t.label) labelTotals[t.label] = (labelTotals[t.label]||0)+units;
+            }
+          }
+        }
+
+        // albums
+        if (wk.albums) {
+          for (const a of wk.albums) {
+            const key = `album:${a.title}::${a.artist}`;
+            const units = (a.sales || 0) * RIAA.ALBUM_MULT;
+            const level = getRiaaLevelName(units);
+            if (!level) continue;
+            const prev = seenByTitle[key];
+            if (!prev || prev.level !== level) {
+              milestones.push({week:wk.week,year,type:'album',title:a.title,artist:a.artist,label:a.label,level,units});
+              seenByTitle[key] = { level, units };
+              if (a.artist) artistTotals[a.artist] = (artistTotals[a.artist]||0)+units;
+              if (a.label) labelTotals[a.label] = (labelTotals[a.label]||0)+units;
+            }
+          }
+        }
+      }
+
+      const topArtists = Object.entries(artistTotals)
+        .map(([artist,units]) => ({artist,units}))
+        .sort((a,b)=>b.units-a.units)
+        .slice(0,50);
+
+      const topLabels = Object.entries(labelTotals)
+        .map(([label,units]) => ({label,units}))
+        .sort((a,b)=>b.units-a.units)
+        .slice(0,50);
+
+      return { milestones, topArtists, topLabels };
+    }
+
+    // ------------- YEARLY STATS -------------
+    function buildYearlyRiaaStats(milestones){
+      const byYear = Object.create(null);
+      for (const m of milestones){
+        const y = m.year || 0;
+        if (!byYear[y]){
+          byYear[y] = {
+            year:y,
+            total:0,
+            gold:0,
+            platinum:0,
+            multi:0,
+            diamond:0,
+            artists:Object.create(null),
+            titles:Object.create(null)
+          };
+        }
+        const bucket = byYear[y];
+        bucket.total++;
+        if (m.level === 'Gold') bucket.gold++;
+        else if (m.level === 'Platinum') bucket.platinum++;
+        else if (m.level === 'Diamond') bucket.diamond++;
+        else bucket.multi++;
+
+        if (m.artist){
+          bucket.artists[m.artist] = (bucket.artists[m.artist]||0)+1;
+        }
+        const tkey = m.title + ' — ' + (m.artist||'');
+        bucket.titles[tkey] = (bucket.titles[tkey]||0)+1;
+      }
+
+      return Object.values(byYear).sort((a,b)=>a.year-b.year).map(y=>{
+        const topArtist = Object.entries(y.artists)
+          .map(([artist,cnt])=>({artist,cnt}))
+          .sort((a,b)=>b.cnt-a.cnt)[0] || null;
+        const topTitle = Object.entries(y.titles)
+          .map(([title,cnt])=>({title,cnt}))
+          .sort((a,b)=>b.cnt-a.cnt)[0] || null;
+        return {
+          year:y.year,
+          total:y.total,
+          gold:y.gold,
+          platinum:y.platinum,
+          multi:y.multi,
+          diamond:y.diamond,
+          topArtist:topArtist ? `${topArtist.artist} (${topArtist.cnt})` : '—',
+          topTitle:topTitle ? `${topTitle.title} (${topTitle.cnt})` : '—'
+        };
+      });
+    }
+
+    // ------------- ALL-TIME STATS -------------
+    function buildAllTimeRiaaStats(riaaData){
+      const { milestones, topArtists, topLabels } = riaaData;
+      const levelTotals = {total:0,gold:0,platinum:0,multi:0,diamond:0};
+      const titleBumps = Object.create(null);
+
+      for (const m of milestones){
+        levelTotals.total++;
+        if (m.level === 'Gold') levelTotals.gold++;
+        else if (m.level === 'Platinum') levelTotals.platinum++;
+        else if (m.level === 'Diamond') levelTotals.diamond++;
+        else levelTotals.multi++;
+
+        const key = (m.type||'')+'::'+m.title+'::'+(m.artist||'');
+        titleBumps[key] = (titleBumps[key]||0)+1;
+      }
+
+      const mostUpgradedTitles = Object.entries(titleBumps)
+        .map(([key,bumps])=>{
+          const [type,title,artist] = key.split('::');
+          return {type,title,artist,bumps};
+        })
+        .sort((a,b)=>b.bumps-a.bumps)
+        .slice(0,50);
+
+      return { totals:levelTotals, topArtists, topLabels, mostUpgradedTitles };
+    }
+
+    // ------------- RENDERING -------------
+    function renderYearly(yearly){
+      const tbody = document.querySelector('#yearlyTable tbody');
+      tbody.innerHTML = '';
+      yearly.forEach(row=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.year}</td>
+          <td>${row.total}</td>
+          <td>${row.gold}</td>
+          <td>${row.platinum}</td>
+          <td>${row.multi}</td>
+          <td>${row.diamond}</td>
+          <td>${row.topArtist}</td>
+          <td>${row.topTitle}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderAllTime(all){
+      const totalsWrap = document.getElementById('alltimeTotals');
+      totalsWrap.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-label">Total Certifications</div>
+          <div class="stat-value">${all.totals.total}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Gold</div>
+          <div class="stat-value">${all.totals.gold}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Platinum</div>
+          <div class="stat-value">${all.totals.platinum}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Multi</div>
+          <div class="stat-value">${all.totals.multi}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Diamond</div>
+          <div class="stat-value">${all.totals.diamond}</div>
+        </div>
+      `;
+
+      const artTbody = document.querySelector('#alltimeArtists tbody');
+      artTbody.innerHTML = '';
+      all.topArtists.forEach((a,idx)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${idx+1}</td>
+          <td>${a.artist}</td>
+          <td>${a.units.toLocaleString()}</td>
+        `;
+        artTbody.appendChild(tr);
+      });
+
+      const labelTbody = document.querySelector('#alltimeLabels tbody');
+      labelTbody.innerHTML = '';
+      all.topLabels.forEach((l,idx)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${idx+1}</td>
+          <td>${l.label}</td>
+          <td>${l.units.toLocaleString()}</td>
+        `;
+        labelTbody.appendChild(tr);
+      });
+
+      const titleTbody = document.querySelector('#alltimeTitles tbody');
+      titleTbody.innerHTML = '';
+      all.mostUpgradedTitles.forEach((t,idx)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${idx+1}</td>
+          <td>${t.title}</td>
+          <td>${t.artist}</td>
+          <td>${t.type}</td>
+          <td>${t.bumps}</td>
+        `;
+        titleTbody.appendChild(tr);
+      });
+    }
+
+    // ------------- TABS -------------
+    document.querySelectorAll('.tab-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
+        document.getElementById(tab).classList.remove('hidden');
+      });
+    });
+
+    // ------------- BOOT -------------
+    (function init(){
+      const warn = document.getElementById('datasetWarning');
+      if (!window.weekdata || !Array.isArray(window.weekdata) || !window.weekdata.length){
+        warn.textContent = 'Dataset not found. Make sure weekdata.js is loaded and has weekdata = [...].';
+        return;
+      }
+      warn.textContent = 'Dataset loaded: ' + window.weekdata.length + ' weeks.';
+      const riaaData = buildRiaaMilestones(window.weekdata);
+      const yearlyStats = buildYearlyRiaaStats(riaaData.milestones);
+      const allTimeStats = buildAllTimeRiaaStats(riaaData);
+      renderYearly(yearlyStats);
+      renderAllTime(allTimeStats);
+    })();
+  </script>
+</body>
+</html>
