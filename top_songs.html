@@ -36,6 +36,7 @@
 
     /* top banner for ambiguous items */
     .banner { max-width:820px; margin:0 auto 1rem auto; padding:.75rem 1rem; border-radius:8px; background:#2a2a2a; border-left:6px solid #665500; }
+    .banner button { font-size:1rem; padding:.3rem .6rem; margin-left:.5rem; }
   </style>
 </head>
 <body>
@@ -117,9 +118,7 @@
     function normalizeFormat(entry){
       const raw =
         (entry?.type ?? entry?.format ?? entry?.releaseType ?? '')
-          .toString()
-          .toLowerCase()
-          .trim();
+          .toString().toLowerCase().trim();
 
       if (/\b(lp|long\s*play|album|mixtape|compilation|soundtrack)\b/.test(raw)) return 'album';
       if (/\b(ep)\b/.test(raw)) return 'ep';
@@ -132,31 +131,48 @@
       if (entry?.isAlbum === true)  return true;
       if (entry?.isSingle === true) return false;
 
-      if (entry?.album === true)  return true;   // some feeds use these
+      // other booleans sometimes found in feeds
+      if (entry?.album === true)  return true;
       if (entry?.single === true) return false;
 
+      // FORCE map (Title|Artist)
       const k = keyFor(entry?.title, entry?.artist);
       if (FORCE_TYPE[k] === 'album')  return true;
       if (FORCE_TYPE[k] === 'single') return false;
 
+      // normalized format / type strings
       const fmt = normalizeFormat(entry);
       if (fmt === 'album') return true;
       if (fmt === 'single') return false;
-      if (fmt === 'ep')     return true; // treat EP as album for unit rule
+      if (fmt === 'ep')     return true; // treat EPs as album for certification math
 
+      // album-ish structural hints
       if ('albumUnits' in entry || 'albumSales' in entry) return true;
 
+      // track list length
       const tracks = Array.isArray(entry?.tracks) ? entry.tracks
                     : Array.isArray(entry?.tracklist) ? entry.tracklist
                     : null;
       if (tracks && tracks.length >= 5) return true;
-      if (tracks && tracks.length >= 2) return true; // EP (2–4) → album bucket
+      if (tracks && tracks.length >= 2) return true; // EP bucket
       if (tracks && tracks.length === 1) return false;
 
+      // metadata cues
+      const hasISRC  = typeof entry?.isrc === 'string' && entry.isrc.trim();
+      const hasUPC   = typeof entry?.upc  === 'string' && entry.upc.trim();
+      const discs    = Number(entry?.discs || entry?.discCount || 0);
+      const minutes  = Number(entry?.lengthMinutes || 0);
+      if (discs >= 2) return true;
+      if (minutes >= 20) return true;       // long play length → album
+      if (hasUPC && !hasISRC) return true;  // UPC w/o ISRC often album-level
+      if (hasISRC && !hasUPC) return false; // ISRC only often track-level
+
+      // title keywords (deluxe editions etc.)
       const title = String(entry?.title || '').toLowerCase();
       if (/\b(deluxe|expanded|anniversary|special edition)\b/.test(title)) return true;
 
-      return false; // default
+      // Still unknown → default to single
+      return false;
     }
 
     function getCertImage(level) {
@@ -201,12 +217,13 @@
     const newCertsByWeek = Object.create(null);
 
     // Debug tracking
-    const ambiguousType = [];
-    const debugCounts = { albums: 0, singles: 0 };
+    const ambiguousType = [];        // for console/table
+    const ambiguousSet  = new Set(); // unique key set
+    const debugCounts   = { albums: 0, singles: 0 };
 
     weeksAsc.forEach(weekNum => {
       const entries = Array.isArray(wk[weekNum]) ? wk[weekNum] : [];
-      const seenThisWeek = new Set();
+      const seenThisWeek = new Set(); // merge duplicates within the same week
       const newCerts = [];
 
       for (const song of entries) {
@@ -215,11 +232,13 @@
         if (!title || !artist) continue;
 
         const k = keyFor(title, artist);
-        if (seenThisWeek.has(k)) continue;
+        if (seenThisWeek.has(k)) continue; // avoid double-processing same track in week
         seenThisWeek.add(k);
 
+        // Weekly and cumulative bases
         const weeklyBaseRaw = pick(song, WEEKLY_FIELDS);
         const cumeBaseRaw   = pick(song, CUME_FIELDS);
+
         const weeklyBase = num(weeklyBaseRaw);
         let cumeBase = (cumeBaseRaw !== undefined) ? num(cumeBaseRaw) : undefined;
 
@@ -234,6 +253,7 @@
           runningTotals[k] = cumeBase;
         }
 
+        // Album vs Single
         const album = isAlbumEntry(song);
         if (album) debugCounts.albums++; else debugCounts.singles++;
 
@@ -248,7 +268,11 @@
           (Array.isArray(song?.tracklist) && song.tracklist.length > 0);
 
         if (!album && !hasTypeHints) {
-          ambiguousType.push({ title, artist, reason: 'no type hints → defaulted to single' });
+          // only count each Title|Artist once across all weeks
+          if (!ambiguousSet.has(k)) {
+            ambiguousSet.add(k);
+            ambiguousType.push({ title, artist, reason: 'no type hints → defaulted to single' });
+          }
         }
 
         const UNITS_PER_SALE = album ? UNITS_PER_SALE_ALBUM : UNITS_PER_SALE_TRACK;
@@ -258,10 +282,12 @@
         const prevMax = certMaxByKey[k] || 0;
 
         if (cumeUnits > prevMax + EPS) {
+          // thresholds newly crossed this week
           const crossed = thresholds
             .filter(t => t.value - EPS > prevMax && t.value <= cumeUnits + EPS)
             .sort((a,b) => a.value - b.value);
 
+          // Only the most recent/highest plaque this week (one entry per week)
           if (crossed.length){
             const t = crossed[crossed.length - 1];
             newCerts.push({
@@ -277,29 +303,52 @@
         }
       }
 
+      // Order: highest award first, then title
       newCerts.sort((a,b) => b.cumulativeUnitsAtCert - a.cumulativeUnitsAtCert || a.title.localeCompare(b.title));
       newCertsByWeek[weekNum] = newCerts;
     });
 
-    // Debug summary + optional banner
+    // Debug summary + optional banner + quick export
     console.log('[Cert Debug] Type counts:', debugCounts);
     if (ambiguousType.length){
-      console.group('[Cert Debug] Ambiguous entries (defaulted to single)');
+      console.group('[Cert Debug] Ambiguous entries (defaulted to single) — UNIQUE:', ambiguousType.length);
       console.table(ambiguousType);
       console.groupEnd();
+
+      // Build a FORCE_TYPE template you can paste in
+      const forceTemplate = {};
+      ambiguousSet.forEach(k => { forceTemplate[k] = 'single'; });
+      console.log('Paste into FORCE_TYPE if desired:\n', JSON.stringify(forceTemplate, null, 2));
     }
+
     (function(){
       if (!SHOW_AMBIGUOUS_BANNER) return;
       if (!ambiguousType.length) return;
       const banner = document.createElement('div');
       banner.className = 'banner';
       banner.innerHTML = `
-        <strong>${ambiguousType.length}</strong> item(s) defaulted to <em>Single</em> due to missing type hints.
+        <strong>${ambiguousType.length}</strong> unique item(s) defaulted to <em>Single</em> due to missing type hints.
         <br>Fix by adding <code>isAlbum:true</code> / <code>isSingle:true</code> in weekdata.js,
         setting <code>format:"Album"</code> (or <code>type:"EP"</code>/<code>"Mixtape"</code>),
         including a <code>tracks</code> array, or adding a key in <code>FORCE_TYPE</code>.
+        <button id="dlForce">Download FORCE_TYPE.json</button>
+        <button id="hideBanner">Hide</button>
       `;
       document.body.insertBefore(banner, document.getElementById('nav'));
+
+      // download FORCE_TYPE.json (all ambiguous defaulted to 'single')
+      document.getElementById('dlForce').onclick = () => {
+        const obj = {};
+        ambiguousSet.forEach(k => { obj[k] = 'single'; });
+        const blob = new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'});
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href = url; a.download = 'FORCE_TYPE.json'; a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      // hide banner quickly
+      document.getElementById('hideBanner').onclick = () => banner.remove();
     })();
 
     // ─────────────── UI ───────────────
@@ -380,4 +429,5 @@
   </script>
 </body>
 </html>
+
 
