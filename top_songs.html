@@ -58,13 +58,16 @@
     </div>
   </div>
 
+  <!-- Your week data file must define a global "weekData" object -->
   <script src="weekdata.js"></script>
   <script>
     // ───────────────── CONFIG ─────────────────
-    // Singles/tracks use your existing 2000 rule; albums use 500.
-    const UNITS_PER_SALE_TRACK  = 1750; // set to 1750 if that's your track rule
+    const UNITS_PER_SALE_TRACK  = 1750; // track rule
     const UNITS_PER_SALE_ALBUM  = 500;  // album rule
     const EPS = 0.000001;
+
+    // Show the banner that lists ambiguous items?
+    const SHOW_AMBIGUOUS_BANNER = true;
 
     // Force type per Title|Artist (canonical). Values: "album" | "single"
     // Example:
@@ -89,7 +92,6 @@
     ];
 
     // Field priority (first match wins)
-    // If you want points to drive certs, move 'points' to the front.
     const WEEKLY_FIELDS = ['sales','units','weeklySales','weekSales','week_units','weekUnits','thisWeekSales','points'];
     const CUME_FIELDS   = ['totalSales','total_units','cumulativeSales','cume','total','unitsTotal','lifetimeSales','runningTotal','cumUnits'];
 
@@ -111,23 +113,50 @@
       return `${canonicalize(title)}|${canonicalize(artist)}`;
     }
 
+    // Normalize "format"/"type" style fields
+    function normalizeFormat(entry){
+      const raw =
+        (entry?.type ?? entry?.format ?? entry?.releaseType ?? '')
+          .toString()
+          .toLowerCase()
+          .trim();
+
+      if (/\b(lp|long\s*play|album|mixtape|compilation|soundtrack)\b/.test(raw)) return 'album';
+      if (/\b(ep)\b/.test(raw)) return 'ep';
+      if (/\b(single|song|track)\b/.test(raw)) return 'single';
+      return '';
+    }
+
     // Detect Album vs Single (true = album, false = single)
     function isAlbumEntry(entry){
       if (entry?.isAlbum === true)  return true;
       if (entry?.isSingle === true) return false;
 
+      if (entry?.album === true)  return true;   // some feeds use these
+      if (entry?.single === true) return false;
+
       const k = keyFor(entry?.title, entry?.artist);
       if (FORCE_TYPE[k] === 'album')  return true;
       if (FORCE_TYPE[k] === 'single') return false;
 
-      const fmt = String(entry?.format || '').toLowerCase();
-      if (/(^|\s)(album|lp|long\s*play)\b/.test(fmt))  return true;
-      if (/(^|\s)(single|song|track)\b/.test(fmt))     return false;
+      const fmt = normalizeFormat(entry);
+      if (fmt === 'album') return true;
+      if (fmt === 'single') return false;
+      if (fmt === 'ep')     return true; // treat EP as album for unit rule
 
       if ('albumUnits' in entry || 'albumSales' in entry) return true;
 
-      // default to single if unknown
-      return false;
+      const tracks = Array.isArray(entry?.tracks) ? entry.tracks
+                    : Array.isArray(entry?.tracklist) ? entry.tracklist
+                    : null;
+      if (tracks && tracks.length >= 5) return true;
+      if (tracks && tracks.length >= 2) return true; // EP (2–4) → album bucket
+      if (tracks && tracks.length === 1) return false;
+
+      const title = String(entry?.title || '').toLowerCase();
+      if (/\b(deluxe|expanded|anniversary|special edition)\b/.test(title)) return true;
+
+      return false; // default
     }
 
     function getCertImage(level) {
@@ -177,7 +206,7 @@
 
     weeksAsc.forEach(weekNum => {
       const entries = Array.isArray(wk[weekNum]) ? wk[weekNum] : [];
-      const seenThisWeek = new Set(); // merge duplicates within the same week
+      const seenThisWeek = new Set();
       const newCerts = [];
 
       for (const song of entries) {
@@ -186,13 +215,11 @@
         if (!title || !artist) continue;
 
         const k = keyFor(title, artist);
-        if (seenThisWeek.has(k)) continue; // avoid double-processing same track in week
+        if (seenThisWeek.has(k)) continue;
         seenThisWeek.add(k);
 
-        // Weekly and cumulative bases
         const weeklyBaseRaw = pick(song, WEEKLY_FIELDS);
         const cumeBaseRaw   = pick(song, CUME_FIELDS);
-
         const weeklyBase = num(weeklyBaseRaw);
         let cumeBase = (cumeBaseRaw !== undefined) ? num(cumeBaseRaw) : undefined;
 
@@ -207,17 +234,18 @@
           runningTotals[k] = cumeBase;
         }
 
-        // Album vs Single
         const album = isAlbumEntry(song);
         if (album) debugCounts.albums++; else debugCounts.singles++;
 
-        const hadExplicitType = (song?.isAlbum === true || song?.isSingle === true);
-        const kfmt = String(song?.format || '').toLowerCase();
+        const hadExplicitType = (song?.isAlbum === true || song?.isSingle === true || song?.album === true || song?.single === true);
+        const kfmt = String(song?.format || song?.type || '').toLowerCase();
         const hasTypeHints =
           hadExplicitType ||
-          /(album|lp|long\s*play|single|song|track)\b/.test(kfmt) ||
+          /(album|lp|long\s*play|single|song|track|ep|mixtape|compilation|soundtrack)\b/.test(kfmt) ||
           ('albumUnits' in song) || ('albumSales' in song) ||
-          (FORCE_TYPE[k] != null);
+          (FORCE_TYPE[k] != null) ||
+          (Array.isArray(song?.tracks) && song.tracks.length > 0) ||
+          (Array.isArray(song?.tracklist) && song.tracklist.length > 0);
 
         if (!album && !hasTypeHints) {
           ambiguousType.push({ title, artist, reason: 'no type hints → defaulted to single' });
@@ -230,12 +258,10 @@
         const prevMax = certMaxByKey[k] || 0;
 
         if (cumeUnits > prevMax + EPS) {
-          // thresholds newly crossed this week
           const crossed = thresholds
             .filter(t => t.value - EPS > prevMax && t.value <= cumeUnits + EPS)
             .sort((a,b) => a.value - b.value);
 
-          // Only the most recent/highest plaque this week (one entry per week)
           if (crossed.length){
             const t = crossed[crossed.length - 1];
             newCerts.push({
@@ -251,7 +277,6 @@
         }
       }
 
-      // Order: highest award first, then title
       newCerts.sort((a,b) => b.cumulativeUnitsAtCert - a.cumulativeUnitsAtCert || a.title.localeCompare(b.title));
       newCertsByWeek[weekNum] = newCerts;
     });
@@ -264,13 +289,15 @@
       console.groupEnd();
     }
     (function(){
+      if (!SHOW_AMBIGUOUS_BANNER) return;
       if (!ambiguousType.length) return;
       const banner = document.createElement('div');
       banner.className = 'banner';
       banner.innerHTML = `
         <strong>${ambiguousType.length}</strong> item(s) defaulted to <em>Single</em> due to missing type hints.
         <br>Fix by adding <code>isAlbum:true</code> / <code>isSingle:true</code> in weekdata.js,
-        setting <code>format:"Album"</code>, or adding a key in <code>FORCE_TYPE</code>.
+        setting <code>format:"Album"</code> (or <code>type:"EP"</code>/<code>"Mixtape"</code>),
+        including a <code>tracks</code> array, or adding a key in <code>FORCE_TYPE</code>.
       `;
       document.body.insertBefore(banner, document.getElementById('nav'));
     })();
