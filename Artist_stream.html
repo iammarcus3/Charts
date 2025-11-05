@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Artist Stream Stats — Monthly Plays (Top 50)</title>
+  <title>Artist Stream Stats — Monthly Plays (Top 50) + Awards</title>
   <style>
     :root { color-scheme: dark; }
     body { background-color: #000; color: #fff; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; padding: 20px; }
@@ -21,6 +21,24 @@
     .right { text-align:right; }
     .nowrap { white-space:nowrap; }
     .sticky { position:sticky; top:0; background:#000; z-index:5; }
+
+    /* ------- Awards styling ------- */
+    .awards-wrap { margin-top: 12px; }
+    .awards-header { display:flex; align-items:center; gap:8px; margin: 8px 0 10px; }
+    .awards-header h3 { margin:0; font-size:1.05rem; letter-spacing:.3px; }
+    .awards-badges { display:flex; flex-wrap:wrap; gap:10px; }
+    .badge { position:relative; display:inline-flex; align-items:center; gap:8px; padding:.55rem .8rem; border-radius:12px; border:1px solid #202020; background:linear-gradient(180deg,#0b0b0b,#070707); box-shadow: inset 0 1px rgba(255,255,255,.04); }
+    .badge .icon { font-size:1.1rem; }
+    .badge .label { font-weight:700; font-size:.92rem; letter-spacing:.2px; }
+    .badge .sub { font-size:.75rem; opacity:.75; }
+    .badge.locked { opacity:.55; filter:saturate(.8); }
+    .badge.achieved { border-color:#2c2c2c; background: radial-gradient(120% 140% at 10% 10%, #1b1b1b 0%, #0a0a0a 45%, #050505 100%); box-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 8px 18px rgba(230,0,0,.15); }
+    .badge.achieved::after { content:""; position:absolute; inset:-1px; border-radius:12px; background: conic-gradient(from 0deg, rgba(230,0,0,.22), transparent 40%, rgba(230,0,0,.22) 80%, transparent 100%); mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000); mask-composite: exclude; padding:1px; opacity:.65; }
+    .sparkle { position:absolute; inset:0; pointer-events:none; background:radial-gradient(8px 8px at 15% 30%, rgba(255,255,255,.55), transparent 70%), radial-gradient(6px 6px at 70% 20%, rgba(255,255,255,.35), transparent 70%), radial-gradient(5px 5px at 40% 80%, rgba(255,255,255,.25), transparent 70%); opacity:.75; filter: blur(.2px); }
+
+    .progress { margin-top:10px; background:#0a0a0a; border:1px solid #1d1d1d; border-radius:999px; height:12px; position:relative; overflow:hidden; }
+    .progress > .bar { height:100%; width:0%; background:linear-gradient(90deg, #5a0000, #e60000); box-shadow: 0 0 18px rgba(230,0,0,.35); transition: width .8s ease; }
+    .progress-meta { display:flex; justify-content:space-between; font-size:.78rem; opacity:.8; margin-top:6px; }
   </style>
 </head>
 <body>
@@ -32,6 +50,22 @@
       <p id="monthlyListeners" class="muted"></p>
       <p id="billionSongs" class="muted"></p>
       <p id="globalRank" class="muted"></p>
+
+      <!-- Awards block -->
+      <div id="awards" class="awards-wrap" hidden>
+        <div class="awards-header">
+          <h3>Stream Milestones</h3>
+          <span class="pill">All‑time</span>
+        </div>
+        <div class="awards-badges" id="awardsBadges"></div>
+        <div class="progress" title="Progress to next award">
+          <div class="bar" id="awardsBar"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="awardsNow"></span>
+          <span id="awardsNext"></span>
+        </div>
+      </div>
 
       <h2>Top 10 Songs (Last 6 Months)</h2>
       <table id="recentTopSongs">
@@ -67,6 +101,7 @@
   <script>
     // ---------- Utilities ----------
     const formatNumber = n => (
+      n >= 1e12 ? (n / 1e12).toFixed(2) + 'T' :
       n >= 1e9 ? (n / 1e9).toFixed(2) + 'B' :
       n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' :
       n >= 1e3 ? (n / 1e3).toFixed(1) + 'K' :
@@ -156,7 +191,6 @@
         const involved = [...primary, ...features];
 
         // If the artist's literal name appears in the title, also count it for them
-        // (helps cases where title embeds a name that wasn't parsed above)
         if (entry.title) {
           for (const name of primary) {
             const nk = deepNormalize(name);
@@ -252,6 +286,62 @@
       const pos = monthlyRanked.findIndex(r => deepNormalize(r.name) === artistParamKey || artistParamKey.includes(r.key) || r.key.includes(artistParamKey));
       document.getElementById("globalRank").innerHTML =
         (pos >= 0 ? `Ranking: <span class="rank-icon">#${pos+1}</span> (Top 50 by Monthly Plays)` : `Ranking: Not in Top 50`);
+
+      // ------- Awards (All-time total streams) -------
+      const totalStreamsAllTime = Object.values(songMapAllTime).reduce((a,b) => a + b, 0);
+      const awardsRoot = document.getElementById('awards');
+      const badges = document.getElementById('awardsBadges');
+      const bar = document.getElementById('awardsBar');
+      const nowEl = document.getElementById('awardsNow');
+      const nextEl = document.getElementById('awardsNext');
+
+      const awardTiers = [
+        { threshold: 1e9,  label: 'Platinum Comet', emoji: '☄️' },   // 1B
+        { threshold: 5e9,  label: 'Diamond Nebula', emoji: '💎' },    // 5B
+        { threshold: 1e10, label: 'Titan Eclipse',   emoji: '🌑' },    // 10B
+        { threshold: 2e10, label: 'Celestial Crown', emoji: '👑' },    // 20B
+        { threshold: 5e10, label: 'Pantheon Legend', emoji: '🏛️' },   // 50B
+      ];
+
+      // Render badges
+      badges.innerHTML = '';
+      let achievedCount = 0;
+      awardTiers.forEach(tier => {
+        const achieved = totalStreamsAllTime >= tier.threshold;
+        if (achieved) achievedCount++;
+        const cls = achieved ? 'badge achieved' : 'badge locked';
+        const html = `
+          <div class="${cls}" title="${tier.label} — ${formatNumber(tier.threshold)} streams">
+            <div class="icon">${tier.emoji}</div>
+            <div>
+              <div class="label">${tier.label}</div>
+              <div class="sub">${formatNumber(tier.threshold)}</div>
+            </div>
+            ${achieved ? '<div class="sparkle"></div>' : ''}
+          </div>`;
+        badges.insertAdjacentHTML('beforeend', html);
+      });
+
+      // Progress to next tier
+      const nextTier = awardTiers.find(t => totalStreamsAllTime < t.threshold) || awardTiers[awardTiers.length - 1];
+      const prevIndex = Math.max(0, awardTiers.findIndex(t => t === nextTier) - 1);
+      const prevThreshold = awardTiers[prevIndex].threshold;
+
+      let pct = 100;
+      if (totalStreamsAllTime < nextTier.threshold) {
+        const span = nextTier.threshold - prevThreshold;
+        pct = Math.max(0, Math.min(100, ((totalStreamsAllTime - prevThreshold) / span) * 100));
+      }
+      bar.style.width = pct.toFixed(2) + '%';
+
+      nowEl.textContent = `Total: ${formatNumber(totalStreamsAllTime)}`;
+      if (totalStreamsAllTime < nextTier.threshold) {
+        nextEl.textContent = `Next: ${nextTier.emoji} ${nextTier.label} at ${formatNumber(nextTier.threshold)} (need ${formatNumber(nextTier.threshold - totalStreamsAllTime)})`;
+      } else {
+        nextEl.textContent = `${nextTier.emoji} Max tier reached (${nextTier.label})`;
+      }
+
+      awardsRoot.hidden = false;
     } else {
       document.getElementById("monthlyListeners").textContent = '';
       document.getElementById("billionSongs").textContent = '';
@@ -278,4 +368,5 @@
   </script>
 </body>
 </html>
+
 
