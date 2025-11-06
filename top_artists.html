@@ -3,159 +3,395 @@
 <head>
   <meta charset="UTF-8" />
   <title>Top Artists by Year</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 2rem;
-      color: #222;
+    :root{
+      --bg:#f5f5f5; --ink:#222; --panel:#fff; --muted:#666;
+      --thead:#eee; --border:#d9d9d9; --shadow:0 2px 8px rgba(0,0,0,.08);
+      --chip:#333; --chip-ink:#fff; --accent:#007acc;
+      --thead-sticky:#f7f7f7;
     }
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
+    *{box-sizing:border-box}
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      background:var(--bg); color:var(--ink);
+      margin:0; padding:2rem;
     }
-    section {
-      margin-bottom: 3rem;
+    h1{
+      text-align:center; font-size:2rem; margin:0 0 1rem;
     }
-    h2 {
-      background: #333;
-      color: white;
-      padding: 0.5rem 1rem;
-      margin-bottom: 0;
+    .sub{
+      text-align:center; color:var(--muted); margin-bottom:1.25rem; font-size:.95rem;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    .toolbar{
+      display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin:0 auto 1.25rem;
     }
-    th, td {
-      padding: 0.7rem;
-      border: 1px solid #ccc;
-      text-align: left;
+    .toolbar .btn, .toolbar select{
+      border:1px solid var(--border); background:var(--panel); padding:.55rem .75rem; border-radius:8px; cursor:pointer;
+      box-shadow:var(--shadow); font-size:.9rem;
     }
-    th {
-      background: #eee;
-      text-transform: uppercase;
-      font-size: 0.85rem;
+    .toolbar .btn:hover{ border-color:#bbb }
+    .chip{
+      display:inline-block; background:var(--chip); color:var(--chip-ink); padding:.25rem .5rem; border-radius:999px; font-size:.8rem; margin-left:.4rem
     }
-    td a {
-      color: #007acc;
-      text-decoration: none;
+    section{ margin:1.5rem auto 2.25rem; max-width:1200px }
+    .year-head{
+      display:flex; align-items:center; justify-content:space-between; background:#333; color:#fff; padding:.6rem 1rem; border-radius:10px 10px 0 0;
     }
-    td a:hover {
-      text-decoration: underline;
+    .year-head h2{ margin:0; font-size:1.1rem; letter-spacing:.02em }
+    .kpis{ display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
+    .kpis .k{ background:rgba(255,255,255,.13); padding:.35rem .55rem; border-radius:8px; font-size:.85rem }
+    .table-wrap{
+      background:var(--panel); box-shadow:var(--shadow); border:1px solid var(--border);
+      border-top:none; border-radius:0 0 10px 10px; overflow:auto; max-height:520px;
     }
+    table{ width:100%; border-collapse:collapse; }
+    thead th{
+      position:sticky; top:0; z-index:1;
+      background:var(--thead-sticky); border-bottom:1px solid var(--border);
+      text-transform:uppercase; font-size:.78rem; letter-spacing:.05em; color:#333;
+    }
+    th, td{ padding:.65rem .6rem; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap }
+    tbody tr:nth-child(odd){ background:#fafafa }
+    tbody tr:hover{ background:#f3f7ff }
+    th.sortable{ cursor:pointer }
+    th.sortable .arrow{ opacity:.35; margin-left:.35rem; font-size:.8rem }
+    td a{ color:var(--accent); text-decoration:none }
+    td a:hover{ text-decoration:underline }
+    .rank{ font-weight:700 }
+    .muted{ color:var(--muted) }
+    .right{ text-align:right }
+    .nowrap{ white-space:nowrap }
+    .tools-row{ display:flex; gap:.5rem; align-items:center }
+    .year-anchor{ scroll-margin-top:90px }
   </style>
 </head>
 <body>
-  <h1>🎤 Top 20 Artists by Year (Units Sold)</h1>
+  <h1>🎤 Top 20 Artists by Year</h1>
+  <p class="sub">Ranked by <strong>Sales Units</strong> (your sales×1750 conversion). Bonus columns show raw Sales/Streams/Radio, #1s, #1 weeks, peak rank, distinct tracks, and more.</p>
 
-  <div id="container">
-    <p>Loading data...</p>
+  <div class="toolbar">
+    <select id="jumpYear" title="Jump to year"></select>
+    <button class="btn" id="expandAll">Expand all</button>
+    <button class="btn" id="collapseAll">Collapse all</button>
   </div>
 
+  <div id="container">
+    <p class="muted" style="text-align:center">Loading data…</p>
+  </div>
+
+  <!-- Load your data AFTER the container -->
   <script src="weekdata.js"></script>
   <script>
-    function formatNumber(n) {
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
-      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
-      return n.toString();
+  (() => {
+    'use strict';
+
+    // ---------- Helpers ----------
+    const byId = (id) => document.getElementById(id);
+
+    const formatNum = (n) => {
+      if (!isFinite(n)) return '0';
+      const abs = Math.abs(n);
+      if (abs >= 1_000_000_000) return (n/1_000_000_000).toFixed(2).replace(/\.0+$/,'') + 'B';
+      if (abs >= 1_000_000) return (n/1_000_000).toFixed(2).replace(/\.0+$/,'') + 'M';
+      if (abs >= 1_000) return (n/1_000).toFixed(0) + 'K';
+      return String(Math.round(n));
+    };
+
+    const parseNum = (v) => {
+      const n = parseFloat(v);
+      return Number.isFinite(n) ? n : 0;
+    };
+
+    const artistKey = (name) => (name || '').toUpperCase().replace(/[^A-Z0-9]/g,'');
+
+    const splitArtists = (s) =>
+      (s || '')
+        .split(/,|&| and | with | feat\.? | featuring | x | \+ /gi)
+        .map(x => x.trim())
+        .filter(Boolean);
+
+    // Use entry.year if present; else map week index buckets (52 weeks from Week 1 = 2018-02-23)
+    const resolveYear = (weekIndex, entry) => {
+      if (entry && entry.year) {
+        const y = parseInt(entry.year,10);
+        return Number.isFinite(y) ? y : 2018 + Math.floor((weekIndex - 1) / 52);
+      }
+      return 2018 + Math.floor((weekIndex - 1) / 52);
+    };
+
+    // Your sales→units rule kept here so it’s easy to tweak in one place if needed.
+    const salesToUnits = (salesRaw) => salesRaw * 1750;
+
+    // ---------- Build yearly stats ----------
+    const yearly = {};        // { [year]: { [artistKey]: Agg } }
+    const yearsSeen = new Set();
+
+    // Detect if any of these optional fields exist in your data so we can show optional columns
+    let hasRnb = false, hasHiphop = false, hasPop = false;
+
+    for (const weekStr in weekData) {
+      if (!Object.prototype.hasOwnProperty.call(weekData, weekStr)) continue;
+      const weekIndex = parseInt(weekStr, 10);
+      if (!Number.isFinite(weekIndex)) continue;
+
+      const entries = weekData[weekStr] || [];
+      for (const e of entries) {
+        const rank = parseInt(e.rank, 10);
+        if (!Number.isFinite(rank)) continue; // skip broken rows
+
+        const y = resolveYear(weekIndex, e);
+        yearsSeen.add(y);
+        if (!yearly[y]) yearly[y] = {};
+
+        const salesRaw = parseNum(e.sales);
+        const streamsRaw = parseNum(e.streams);
+        const radioRaw = parseNum(e.radio);
+
+        // Presence flags for optional peaks
+        if (e.rnbRank !== undefined) hasRnb = true;
+        if (e.hiphopRank !== undefined) hasHiphop = true;
+        if (e.popRank !== undefined) hasPop = true;
+
+        const title = (e.title || '').trim();
+        const trackKey = (title.toUpperCase().replace(/[^A-Z0-9]/g,'')) || 'UNTITLED';
+
+        const artists = splitArtists(e.artist);
+        for (const name of artists) {
+          const key = artistKey(name);
+          if (!yearly[y][key]) {
+            yearly[y][key] = {
+              name,
+              unitsSales: 0,       // your ranking metric (sales→units)
+              salesRaw: 0,
+              streamsRaw: 0,
+              radioRaw: 0,
+              weeks: new Set(),
+              tracks: new Set(),
+              num1Tracks: new Set(),
+              num1Weeks: 0,
+              peak: Infinity,
+              top20s: 0,
+              rnbPeak: Infinity,
+              hiphopPeak: Infinity,
+              popPeak: Infinity,
+              firstWeek: Infinity,
+              lastWeek: -Infinity
+            };
+          }
+          const a = yearly[y][key];
+
+          // Totals
+          a.unitsSales += salesToUnits(salesRaw);
+          a.salesRaw   += salesRaw;
+          a.streamsRaw += streamsRaw;
+          a.radioRaw   += radioRaw;
+
+          // Week/track tracking
+          a.weeks.add(weekIndex);
+          a.tracks.add(trackKey);
+          a.firstWeek = Math.min(a.firstWeek, weekIndex);
+          a.lastWeek  = Math.max(a.lastWeek, weekIndex);
+
+          // Peaks and counters
+          if (rank === 1) {
+            a.num1Tracks.add(trackKey);
+            a.num1Weeks += 1;
+          }
+          if (rank <= 20) a.top20s += 1;
+          a.peak = Math.min(a.peak, rank);
+
+          // Optional genre peaks if available on entry
+          const rnbR = parseInt(e.rnbRank,10);      if (Number.isFinite(rnbR)) a.rnbPeak = Math.min(a.rnbPeak, rnbR);
+          const hhR  = parseInt(e.hiphopRank,10);   if (Number.isFinite(hhR))  a.hiphopPeak = Math.min(a.hiphopPeak, hhR);
+          const popR = parseInt(e.popRank,10);      if (Number.isFinite(popR)) a.popPeak = Math.min(a.popPeak, popR);
+        }
+      }
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const container = document.getElementById("container");
-      const yearlyArtistStats = {};
+    // ---------- Render ----------
+    const container = byId('container');
+    container.innerHTML = '';
 
-      for (const week in weekData) {
-        const entries = weekData[week];
-        const year = 2018 + Math.floor((parseInt(week) - 1) / 52);
-
-        if (!yearlyArtistStats[year]) yearlyArtistStats[year] = {};
-
-        entries.forEach(entry => {
-          const sales = parseFloat(entry.sales) || 0;
-          const rank = parseInt(entry.rank);
-          const title = entry.title || "";
-          const artists = (entry.artist || "").split(/,|&| and | with | feat\.? | featuring /i).map(s => s.trim());
-
-          artists.forEach(artist => {
-            const key = artist.toUpperCase().replace(/[^A-Z0-9]/g, '');
-            if (!yearlyArtistStats[year][key]) {
-              yearlyArtistStats[year][key] = {
-                name: artist,
-                totalSales: 0,
-                weeks: new Set(),
-                num1TracksSet: new Set(),
-                top10s: 0
-              };
-            }
-
-            const artistObj = yearlyArtistStats[year][key];
-            artistObj.totalSales += sales * 1750;
-            artistObj.weeks.add(week);
-
-            if (rank === 1) {
-              const trackKey = title.toUpperCase().replace(/[^A-Z0-9]/g, '');
-              artistObj.num1TracksSet.add(trackKey);
-            }
-            if (rank <= 20) artistObj.top20s++;
-          });
-        });
-      }
-
-      container.innerHTML = "";
-
-      Object.keys(yearlyArtistStats).sort().forEach(year => {
-        const artistArray = Object.values(yearlyArtistStats[year]).map(artistObj => ({
-          name: artistObj.name,
-          totalSales: artistObj.totalSales,
-          weeks: artistObj.weeks.size,
-          num1s: artistObj.num1TracksSet.size,
-          top10s: artistObj.top10s
-        }));
-
-        artistArray.sort((a, b) => b.totalSales - a.totalSales);
-        const top10 = artistArray.slice(0, 20);
-
-        const section = document.createElement("section");
-        const header = document.createElement("h2");
-        header.textContent = year;
-        section.appendChild(header);
-
-        const table = document.createElement("table");
-        const thead = document.createElement("thead");
-        thead.innerHTML = `
-          <tr>
-            <th>Rank</th>
-            <th>Artist</th>
-            <th>Total Sales</th>
-            <th>Weeks Charted</th>
-            <th>#1s</th>
-            <th>Top 10s</th>
-          </tr>`;
-        table.appendChild(thead);
-
-        const tbody = document.createElement("tbody");
-        top10.forEach((a, i) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${i + 1}</td>
-            <td><a href="artist.html?artist=${encodeURIComponent(a.name)}">${a.name}</a></td>
-            <td>${formatNumber(a.totalSales)}</td>
-            <td>${a.weeks}</td>
-            <td>${a.num1s}</td>
-            <td>${a.top10s}</td>
-          `;
-          tbody.appendChild(row);
-        });
-
-        table.appendChild(tbody);
-        section.appendChild(table);
-        container.appendChild(section);
-      });
+    const allYears = Array.from(yearsSeen).sort((a,b)=>a-b);
+    // Jump-to-Year select
+    const jump = byId('jumpYear');
+    jump.innerHTML = '<option value="">Jump to year…</option>' + allYears.map(y=>`<option value="y${y}">${y}</option>`).join('');
+    jump.addEventListener('change', () => {
+      const id = jump.value;
+      if (!id) return;
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
     });
+
+    // Controls: expand/collapse (toggle table height between 520px and auto)
+    byId('expandAll').addEventListener('click', () => {
+      document.querySelectorAll('.table-wrap').forEach(tw => tw.style.maxHeight = 'unset');
+    });
+    byId('collapseAll').addEventListener('click', () => {
+      document.querySelectorAll('.table-wrap').forEach(tw => tw.style.maxHeight = '520px');
+    });
+
+    // Build each year’s section
+    for (const y of allYears) {
+      const artistsArr = Object.values(yearly[y]).map(a => ({
+        name: a.name,
+        unitsSales: a.unitsSales,
+        salesRaw: a.salesRaw,
+        streamsRaw: a.streamsRaw,
+        radioRaw: a.radioRaw,
+        weeks: a.weeks.size,
+        tracks: a.tracks.size,
+        num1Tracks: a.num1Tracks.size,
+        num1Weeks: a.num1Weeks,
+        peak: Number.isFinite(a.peak) ? a.peak : '',
+        top20s: a.top20s,
+        rnbPeak: Number.isFinite(a.rnbPeak) ? a.rnbPeak : '',
+        hiphopPeak: Number.isFinite(a.hiphopPeak) ? a.hiphopPeak : '',
+        popPeak: Number.isFinite(a.popPeak) ? a.popPeak : '',
+        firstWeek: a.firstWeek === Infinity ? '' : a.firstWeek,
+        lastWeek: a.lastWeek === -Infinity ? '' : a.lastWeek
+      }));
+
+      // Sort by Sales Units desc (default) and take Top 20
+      artistsArr.sort((a,b)=>b.unitsSales - a.unitsSales);
+      const top = artistsArr.slice(0, 20);
+
+      const sec = document.createElement('section');
+      sec.innerHTML = `
+        <a id="y${y}" class="year-anchor"></a>
+        <div class="year-head">
+          <h2>${y}</h2>
+          <div class="kpis">
+            <div class="k">Top 20 total <span class="chip">${formatNum(top.reduce((s,x)=>s+x.unitsSales,0))}</span></div>
+            <div class="k">Most #1 weeks <span class="chip">${(() => {
+              const m = top.reduce((best,x)=> x.num1Weeks > best.num1Weeks ? x : best, {num1Weeks:-1});
+              return `${m.name} — ${m.num1Weeks}`;
+            })()}</span></div>
+            <div class="k">Most weeks charted <span class="chip">${(() => {
+              const m = top.reduce((best,x)=> x.weeks > best.weeks ? x : best, {weeks:-1});
+              return `${m.name} — ${m.weeks}`;
+            })()}</span></div>
+            <button class="btn" data-export="${y}" title="Download CSV for ${y}">Export CSV</button>
+          </div>
+        </div>
+      `;
+
+      // Build table
+      const wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+
+      const table = document.createElement('table');
+
+      // Columns (conditionally include R&B/HipHop/Pop peaks if present at least once)
+      const cols = [
+        {key:'rank', label:'Rank', align:'left'},
+        {key:'name', label:'Artist', align:'left'},
+        {key:'unitsSales', label:'Sales Units', align:'right', fmt:formatNum},
+        {key:'salesRaw', label:'Sales (raw)', align:'right', fmt:formatNum},
+        {key:'streamsRaw', label:'Streams (raw)', align:'right', fmt:formatNum},
+        {key:'radioRaw', label:'Radio (raw)', align:'right', fmt:formatNum},
+        {key:'weeks', label:'Weeks', align:'right'},
+        {key:'tracks', label:'Tracks', align:'right'},
+        {key:'num1Tracks', label:'#1 Tracks', align:'right'},
+        {key:'num1Weeks', label:'#1 Weeks', align:'right'},
+        {key:'peak', label:'Peak', align:'right'},
+        {key:'top20s', label:'Top 20s', align:'right'},
+        {key:'firstWeek', label:'First Wk', align:'right'},
+        {key:'lastWeek', label:'Last Wk', align:'right'}
+      ];
+
+      if (hasRnb)    cols.push({key:'rnbPeak', label:'R&B Peak', align:'right'});
+      if (hasHiphop) cols.push({key:'hiphopPeak', label:'Hip-Hop Peak', align:'right'});
+      if (hasPop)    cols.push({key:'popPeak', label:'Pop Peak', align:'right'});
+
+      const thead = document.createElement('thead');
+      thead.innerHTML = `<tr>${cols.map(c =>
+        `<th class="sortable" data-key="${c.key}" style="text-align:${c.align}">
+          ${c.label}<span class="arrow">▲▼</span>
+        </th>`
+      ).join('')}</tr>`;
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      const rowsData = top.map((row, idx) => ({...row, rank: idx+1}));
+
+      const renderRows = (arr) => {
+        tbody.innerHTML = '';
+        for (const r of arr) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = cols.map(c => {
+            let val = r[c.key];
+            const shown = (c.fmt ? c.fmt(val) : val);
+            if (c.key === 'name') {
+              return `<td style="text-align:${c.align}"><a class="nowrap" href="artist.html?artist=${encodeURIComponent(r.name)}">${r.name}</a></td>`;
+            }
+            if (c.key === 'rank') {
+              return `<td class="rank" style="text-align:${c.align}">${shown}</td>`;
+            }
+            return `<td class="${c.align==='right'?'right':''}">${shown === Infinity || shown === '' ? '' : shown}</td>`;
+          }).join('');
+          tbody.appendChild(tr);
+        }
+      };
+      renderRows(rowsData);
+
+      // Sorting
+      let sortState = { key:'rank', dir:'asc' };
+      thead.addEventListener('click', (ev) => {
+        const th = ev.target.closest('th.sortable');
+        if (!th) return;
+        const key = th.getAttribute('data-key');
+        if (!key) return;
+        sortState = (sortState.key === key)
+          ? { key, dir: (sortState.dir === 'asc' ? 'desc' : 'asc') }
+          : { key, dir:'desc' }; // default to desc for metrics
+
+        const sorted = [...rowsData].sort((a,b) => {
+          const va = a[key], vb = b[key];
+          const na = (typeof va === 'number') ? va : (typeof va === 'string' ? va.toUpperCase() : va ?? '');
+          const nb = (typeof vb === 'number') ? vb : (typeof vb === 'string' ? vb.toUpperCase() : vb ?? '');
+          if (na < nb) return sortState.dir === 'asc' ? -1 : 1;
+          if (na > nb) return sortState.dir === 'asc' ? 1 : -1;
+          return 0;
+        });
+
+        // Re-number rank column when sorting by something else
+        if (key !== 'rank') {
+          sorted.forEach((r, i) => r.rank = i+1);
+        } else {
+          sorted.sort((a,b)=>a.rank-b.rank);
+        }
+
+        renderRows(sorted);
+      });
+
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+      sec.appendChild(wrap);
+      container.appendChild(sec);
+
+      // Export CSV for this year
+      sec.querySelector('[data-export]').addEventListener('click', () => {
+        const headers = cols.map(c=>c.label);
+        const lines = [headers.join(',')];
+        const csvRows = Array.from(tbody.querySelectorAll('tr')).map(tr =>
+          Array.from(tr.children).map(td => {
+            const txt = td.textContent.replace(/\u00a0/g,' ').trim();
+            // quote if needed
+            return /[",\n]/.test(txt) ? `"${txt.replace(/"/g,'""')}"` : txt;
+          }).join(',')
+        );
+        lines.push(...csvRows);
+        const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `top_artists_${y}.csv`;
+        document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+      });
+    }
+  })();
   </script>
 </body>
 </html>
