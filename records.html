@@ -63,15 +63,13 @@
       background: #222;
       z-index: 3;
     }
-    a {
-      color: #1DB954;
-      text-decoration: none;
-    }
+    a { color: #1DB954; text-decoration: none; }
     a:hover { text-decoration: underline; }
     th.asc::after { content: " ▲"; color: #1DB954; }
     th.desc::after { content: " ▼"; color: #1DB954; }
     tr:nth-child(even) { background-color: #181818; }
     tr:hover { background-color: #2a2a2a; }
+    .error { margin: 12px 0 0; padding: 10px 12px; border: 1px solid #3a1a1a; background:#221314; color:#ff8a8a; border-radius:8px; }
   </style>
 </head>
 <body>
@@ -112,12 +110,23 @@
     </table>
   </div>
 
-  <script src="weekdata.js"></script>
+  <!-- Ensure this loads before our logic; bump ?v= when weekdata.js changes -->
+  <script src="weekdata.js?v=402" defer></script>
+
   <script>
   (() => {
-    const raw =
-      window.__WEEKDATA__ ||
-      (window.__WEEKDATA__ = (window.weekData || window.weekdata || window.WEEKDATA || {}));
+    'use strict';
+
+    if (globalThis.__TOP_ARTISTS_INIT__) return;
+    globalThis.__TOP_ARTISTS_INIT__ = true;
+
+    function formatNumber(n) {
+      const x = Number(n) || 0;
+      if (x >= 1_000_000_000) return (x / 1_000_000_000).toFixed(1) + 'B';
+      if (x >= 1_000_000) return (x / 1_000_000).toFixed(1) + 'M';
+      if (x >= 1_000) return (x / 1_000).toFixed(0) + 'K';
+      return x.toString();
+    }
 
     function genreTokensFromRow(r){
       const arr = [];
@@ -125,12 +134,10 @@
       if (Array.isArray(r.subGenres)) arr.push(...r.subGenres);
       if (r.genre) arr.push(r.genre);
       if (Array.isArray(r.genres)) arr.push(...r.genres);
-      // also support new fields you added
       if (r.genre5) arr.push(r.genre5);
       if (r.subgenre5) arr.push(r.subgenre5);
       return arr.map(x => String(x).trim()).filter(Boolean);
     }
-
     function tokensToBuckets(tokens){
       const buckets = new Set();
       const lows = tokens.map(t => t.toLowerCase());
@@ -142,7 +149,6 @@
       if (!buckets.size) buckets.add('POP');
       return Array.from(buckets);
     }
-
     function getWeekRowsExpanded(weekNum, weekData){
       const base = (weekData[weekNum] || []).slice();
       base.sort((a,b)=>{
@@ -160,7 +166,6 @@
         return { ...r, _buckets: buckets };
       });
     }
-
     function splitArtists(str){
       return (str || "")
         .split(/,|&| and | with | feat\.? | featuring /i)
@@ -168,16 +173,74 @@
         .filter(Boolean);
     }
 
-    function formatNumber(n) {
-      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
-      if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K';
-      return n.toString();
+    // ---------- Robust loader for weekdata.js ----------
+    async function loadWeekData() {
+      // 1) Preferred: global injected by weekdata.js UMD footer
+      const g = globalThis.weekData || globalThis.WEEKDATA || globalThis.weekdata;
+      if (g && typeof g === 'object' && Object.keys(g).length) return g;
+
+      // 2) Fallback: fetch and parse the object literal out of weekdata.js
+      try {
+        const res = await fetch('weekdata.js?v=402', { cache: 'no-store' });
+        const txt = await res.text();
+        const obj = extractWeekDataFromText(txt);
+        if (obj && typeof obj === 'object') return obj;
+      } catch (e) {
+        console.warn('Could not fetch/parse weekdata.js:', e);
+      }
+      return {};
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
+    function extractWeekDataFromText(raw) {
+      const startDecl = raw.indexOf('const weekData');
+      if (startDecl === -1) return null;
+      const eq = raw.indexOf('=', startDecl);
+      if (eq === -1) return null;
+      let i = raw.indexOf('{', eq);
+      if (i === -1) return null;
+
+      let depth = 0, inStr = false, strCh = '', prev = '';
+      const len = raw.length;
+      const startObj = i;
+      for (; i < len; i++) {
+        const ch = raw[i];
+        if (inStr) {
+          if (ch === strCh && prev !== '\\') { inStr = false; strCh = ''; }
+          prev = ch; continue;
+        }
+        if (ch === '"' || ch === "'" || ch === '`') { inStr = true; strCh = ch; prev = ch; continue; }
+        if (ch === '{') depth++;
+        else if (ch === '}') {
+          depth--;
+          if (depth === 0) {
+            const objText = raw.slice(startObj, i + 1);
+            try {
+              // Try pure JS evaluation (safer here than JSON; allows trailing commas)
+              // eslint-disable-next-line no-new-func
+              return (new Function('return ' + objText))();
+            } catch {
+              try { return JSON.parse(objText); } catch {}
+            }
+            break;
+          }
+        }
+        prev = ch;
+      }
+      return null;
+    }
+    // ---------------------------------------------------
+
+    window.addEventListener("DOMContentLoaded", async () => {
       const tbody = document.getElementById('artistTable');
 
+      // Load data
+      const raw = await loadWeekData();
+      if (!raw || !Object.keys(raw).length) {
+        tbody.innerHTML = `<tr><td colspan="14"><div class="error">weekData not found or empty. Ensure weekdata.js is present and exported.</div></td></tr>`;
+        return;
+      }
+
+      // Normalize to {week: rows}
       let weekData = {};
       if (Array.isArray(raw)) {
         raw.forEach(r=>{
@@ -243,7 +306,7 @@
         });
       }
 
-      // PASS 2: per-week, per-genre #1 — NOW COUNTING PER WEEK (no song de-dupe)
+      // PASS 2: per-week, per-genre #1 — count every week’s #1 per bucket
       for (const w of weeks) {
         const rows = getWeekRowsExpanded(w, weekData);
 
@@ -262,21 +325,20 @@
           });
 
           const top = bucketRows[0];
-          const artistStr = top.artist || top.Artist || '';
-          const artists = splitArtists(artistStr);
+          const artists = splitArtists(top.artist || top.Artist || '');
 
           artists.forEach(rawName=>{
             const normName = rawName.toUpperCase().replace(/[^A-Z0-9]/g,'');
             const st = artistMap[normName];
             if (!st) return;
-            if (bucketName === 'POP')      st.num1Pop += 1;     // count every POP week #1
-            if (bucketName === 'RNB')      st.num1Rnb += 1;     // count every RNB week #1
-            if (bucketName === 'HIPHOP')   st.num1HipHop += 1;  // count every HIP-HOP week #1
+            if (bucketName === 'POP')      st.num1Pop += 1;
+            if (bucketName === 'RNB')      st.num1Rnb += 1;
+            if (bucketName === 'HIPHOP')   st.num1HipHop += 1;
           });
         });
       }
 
-      // build list
+      // Build final list
       const artistList = Object.entries(artistMap).map(([normName, st])=>{
         const weeksCount = st.weeks.size;
 
@@ -311,11 +373,12 @@
         };
       });
 
-      // default sort
+      // default sort by streams
       artistList.sort((a,b)=> b.totalStreams - a.totalStreams);
       artistList.forEach((a,i)=> a.rank = i+1);
 
       function renderTable(data){
+        const tbody = document.getElementById('artistTable');
         tbody.innerHTML = "";
         data.slice(0,100).forEach(a=>{
           const tr = document.createElement('tr');
@@ -352,7 +415,7 @@
             currentSort.asc = !currentSort.asc;
           } else {
             currentSort.key = key;
-            currentSort.asc = key === 'name' ? true : false;
+            currentSort.asc = key === 'name';
           }
 
           headers.forEach(h=>h.classList.remove('asc','desc'));
