@@ -29,6 +29,7 @@
     .cert-icon { height: 20px; vertical-align: middle; margin-right: 6px; }
     .summary { margin-top: 2rem; font-weight: bold; color: #ccc; }
     .pill { display:inline-block; padding:.2rem .5rem; border:1px solid #444; border-radius:999px; font-size:.9rem; margin-left:.6rem; background:#000; color:#4DB8FF; }
+    .error { margin-top: 12px; padding:10px 12px; border:1px solid #3a1a1a; background:#221314; color:#ff8a8a; border-radius:8px; }
   </style>
 </head>
 <body>
@@ -65,426 +66,509 @@
     </table>
   </div>
 
+  <div id="err" class="error" style="display:none"></div>
   <div class="summary" id="certTotals"></div>
 
-  <script src="weekdata.js"></script>
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const BASE_WEEK_START = new Date("2018-02-23T00:00:00Z");
-    const SONG_SALE_MULTIPLIER  = 1750;
-    const ALBUM_SALE_MULTIPLIER = 500;
-    const TITLE_SIM_THRESHOLD   = 0.95;
-    const ALBUM_SIM_THRESHOLD   = 0.98;
-    const INF_RANK = 999999;
+  <!-- Load data file first; ?v=… busts cache. Even if this throws, the fallback below still works. -->
+  <script src="weekdata.js?v=402" defer></script>
 
-    const params = new URLSearchParams(location.search);
-    const artistParam = params.get("artist") || "";
-    document.getElementById("artistName").textContent = artistParam;
-    const artistKey = normalize(artistParam);
+  <script defer>
+  (() => {
+    'use strict';
+    if (globalThis.__ARTIST_PROFILE_INIT__) return;
+    globalThis.__ARTIST_PROFILE_INIT__ = true;
 
-    function normalize(str){ return String(str || "").toUpperCase().replace(/[^A-Z0-9]/g, "").trim(); }
-    const normalizeTitle = str => normalize(
-      String(str || "")
-        .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
-        .replace(/&/g, "AND")
-    );
-    const normalizeAlbum = str => normalize(
-      String(str || "")
-        .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
-    );
-    function preferDisplayTitle(oldT, newT){
-      const o = String(oldT||""); const n = String(newT||"");
-      const oHasFeat = /\b(feat\.?|featuring| x | with | duet with )/i.test(o);
-      const nHasFeat = /\b(feat\.?|featuring| x | with | duet with )/i.test(n);
-      if (nHasFeat && !oHasFeat) return n;
-      if (!nHasFeat && oHasFeat) return o;
-      return n.length >= o.length ? n : o;
+    // ---------- Robust loader for weekdata.js ----------
+    async function loadWeekData() {
+      // 1) Preferred: global injected by UMD footer
+      const g = globalThis.weekData || globalThis.WEEKDATA || globalThis.weekdata;
+      if (g && typeof g === 'object' && Object.keys(g).length) return g;
+
+      // 2) Fallback: fetch and extract the object literal
+      try {
+        const res = await fetch('weekdata.js?v=402', { cache: 'no-store' });
+        const txt = await res.text();
+        const obj = extractWeekDataFromText(txt);
+        if (obj && typeof obj === 'object') return obj;
+      } catch (e) {
+        console.warn('Could not fetch/parse weekdata.js:', e);
+      }
+      return {};
     }
-    function levenshtein(a, b) {
-      const m = a.length, n = b.length;
-      if (!m) return n; if (!n) return m;
-      const dp = new Array(n + 1);
-      for (let j = 0; j <= n; j++) dp[j] = j;
-      for (let i = 1; i <= m; i++) {
-        let prev = dp[0]; dp[0] = i;
-        for (let j = 1; j <= n; j++) {
-          const tmp = dp[j];
-          dp[j] = Math.min(
-            dp[j] + 1,
-            dp[j - 1] + 1,
-            prev + (a[i - 1] === b[j - 1] ? 0 : 1)
-          );
-          prev = tmp;
+    function extractWeekDataFromText(raw) {
+      const startDecl = raw.indexOf('const weekData');
+      if (startDecl === -1) return null;
+      const eq = raw.indexOf('=', startDecl);
+      if (eq === -1) return null;
+      let i = raw.indexOf('{', eq);
+      if (i === -1) return null;
+
+      let depth = 0, inStr = false, strCh = '', prev = '';
+      const len = raw.length;
+      const startObj = i;
+      for (; i < len; i++) {
+        const ch = raw[i];
+        if (inStr) {
+          if (ch === strCh && prev !== '\\') { inStr = false; strCh = ''; }
+          prev = ch; continue;
+        }
+        if (ch === '"' || ch === "'" || ch === '`') { inStr = true; strCh = ch; prev = ch; continue; }
+        if (ch === '{') depth++;
+        else if (ch === '}') {
+          depth--;
+          if (depth === 0) {
+            const objText = raw.slice(startObj, i + 1);
+            try { return (new Function('return ' + objText))(); } catch {}
+            try { return JSON.parse(objText); } catch {}
+            break;
+          }
+        }
+        prev = ch;
+      }
+      return null;
+    }
+    // ---------------------------------------------------
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const showErr = (msg) => { const el = document.getElementById('err'); el.textContent = msg; el.style.display = 'block'; };
+
+      const BASE_WEEK_START = new Date("2018-02-23T00:00:00Z");
+      const SONG_SALE_MULTIPLIER  = 1750;
+      const ALBUM_SALE_MULTIPLIER = 500;
+      const TITLE_SIM_THRESHOLD   = 0.95;
+      const ALBUM_SIM_THRESHOLD   = 0.98;
+      const INF_RANK = 999999;
+
+      const params = new URLSearchParams(location.search);
+      const artistParam = params.get("artist") || "";
+      document.getElementById("artistName").textContent = artistParam;
+      const artistKey = normalize(artistParam);
+
+      function normalize(str){ return String(str || "").toUpperCase().replace(/[^A-Z0-9]/g, "").trim(); }
+      const normalizeTitle = str => normalize(
+        String(str || "")
+          .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+          .replace(/&/g, "AND")
+      );
+      const normalizeAlbum = str => normalize(
+        String(str || "")
+          .replace(/\(.*?\)|\[.*?\]|DELUXE|BONUS|VERSION|REMASTERED|EXPANDED|EP/gi, "")
+      );
+      function preferDisplayTitle(oldT, newT){
+        const o = String(oldT||""); const n = String(newT||"");
+        const oHasFeat = /\b(feat\.?|featuring| x | with | duet with )/i.test(o);
+        const nHasFeat = /\b(feat\.?|featuring| x | with | duet with )/i.test(n);
+        if (nHasFeat && !oHasFeat) return n;
+        if (!nHasFeat && oHasFeat) return o;
+        return n.length >= o.length ? n : o;
+      }
+      function levenshtein(a, b) {
+        const m = a.length, n = b.length;
+        if (!m) return n; if (!n) return m;
+        const dp = new Array(n + 1);
+        for (let j = 0; j <= n; j++) dp[j] = j;
+        for (let i = 1; i <= m; i++) {
+          let prev = dp[0]; dp[0] = i;
+          for (let j = 1; j <= n; j++) {
+            const tmp = dp[j];
+            dp[j] = Math.min(
+              dp[j] + 1,
+              dp[j - 1] + 1,
+              prev + (a[i - 1] === b[j - 1] ? 0 : 1)
+            );
+            prev = tmp;
+          }
+        }
+        return dp[n];
+      }
+      function similarity(a, b) {
+        a = String(a || ""); b = String(b || "");
+        const maxLen = Math.max(a.length, b.length);
+        if (!maxLen) return 1;
+        return 1 - (levenshtein(a, b) / maxLen);
+      }
+
+      const RANK_FIELDS      = ['rank', 'position', 'pos'];
+      const WEEKLY_SALES_F   = ['sales', 'units', 'weeklySales', 'weekSales', 'points'];
+      const CUME_SALES_F     = ['totalSales', 'cumulativeSales', 'cume', 'lifetimeSales', 'unitsTotal', 'total_units'];
+      const WEEKLY_STREAMS_F = ['streams', 'weeklyStreams', 'plays', 'plays_million', 'plays_millions'];
+      const CUME_STREAMS_F   = ['totalStreams', 'cumulativeStreams', 'streamsTotal'];
+      function pick(obj, fields) { for (const f of fields) if (obj && obj[f] != null) return obj[f]; }
+      function num(x){ const n = Number(x); return Number.isFinite(n) ? n : 0; }
+
+      function trackCertLabel(salesBase) {
+        const adj = salesBase * SONG_SALE_MULTIPLIER;
+        if (adj >= 10_000_000) return "Diamond";
+        if (adj >=  9_000_000) return "9× Platinum";
+        if (adj >=  8_000_000) return "8× Platinum";
+        if (adj >=  7_000_000) return "7× Platinum";
+        if (adj >=  6_000_000) return "6× Platinum";
+        if (adj >=  5_000_000) return "5× Platinum";
+        if (adj >=  4_000_000) return "4× Platinum";
+        if (adj >=  3_000_000) return "3× Platinum";
+        if (adj >=  2_000_000) return "2× Platinum";
+        if (adj >=  1_000_000) return "Platinum";
+        if (adj >=    500_000) return "Gold";
+        return "—";
+      }
+      function trackCertHTML(salesBase) {
+        const label = trackCertLabel(salesBase);
+        if (label === "—") return "—";
+        const map = {
+          "Diamond":"Diamond.png","9× Platinum":"9x Platinum.png","8× Platinum":"8x Platinum.png",
+          "7× Platinum":"7x Platinum.png","6× Platinum":"6x Platinum.png","5× Platinum":"5x Platinum.png",
+          "4× Platinum":"4x Platinum.png","3× Platinum":"3x Platinum.png","2× Platinum":"2x Platinum.png",
+          "Platinum":"Platinum.png","Gold":"Gold.png"
+        };
+        return `<img src="${map[label] || 'Platinum.png'}" class="cert-icon" title="${label}"> ${label}`;
+      }
+      function albumCertLabel(salesBase) {
+        const adj = salesBase * ALBUM_SALE_MULTIPLIER;
+        if (adj >= 10_000_000) return `Diamond`;
+        if (adj >=  9_000_000) return `9× Platinum`;
+        if (adj >=  8_000_000) return `8× Platinum`;
+        if (adj >=  7_000_000) return `7× Platinum`;
+        if (adj >=  6_000_000) return `6× Platinum`;
+        if (adj >=  5_000_000) return `5× Platinum`;
+        if (adj >=  4_000_000) return `4× Platinum`;
+        if (adj >=  3_000_000) return `3× Platinum`;
+        if (adj >=  2_000_000) return `2× Platinum`;
+        if (adj >=  1_000_000) return `Platinum`;
+        if (adj >=    500_000) return `Gold`;
+        return "—";
+      }
+      function albumCertHTML(salesBase) {
+        const label = albumCertLabel(salesBase);
+        if (label === "—") return "—";
+        const map = {
+          "Diamond":"Diamond.png","9× Platinum":"9x Platinum.png","8× Platinum":"8x Platinum.png",
+          "7× Platinum":"7x Platinum.png","6× Platinum":"6x Platinum.png","5× Platinum":"5x Platinum.png",
+          "4× Platinum":"4x Platinum.png","3× Platinum":"3x Platinum.png","2× Platinum":"2x Platinum.png",
+          "Platinum":"Platinum.png","Gold":"Gold.png"
+        };
+        return `<img src="${map[label] || 'Platinum.png'}" class="cert-icon" title="${label}"> ${label}`;
+      }
+      const fmt = n => n >= 1_000_000_000 ? (n/1_000_000_000).toFixed(1)+'B'
+                   : n >= 1_000_000 ? (n/1_000_000).toFixed(1)+'M'
+                   : n >= 1_000 ? (n/1_000).toFixed(0)+'K'
+                   : String(Math.round(n));
+
+      function splitArtistList(str){
+        return String(str || "")
+          .split(/,|&| and | with | feat\.? | featuring | vs | x | presents | duet with /i)
+          .map(a => normalize(a)).filter(Boolean);
+      }
+      function extractFeaturedFromTitle(title){
+        const s = String(title || "");
+        const found = [];
+        const reParens = /\((?:FEAT\.?|FEATURING|WITH|DUET WITH|X)\s+([^)]+)\)/gi;
+        let m;
+        while ((m = reParens.exec(s)) !== null) found.push(m[1]);
+        const reInline = /(?:FEAT\.?|FEATURING|WITH|DUET WITH|X)\s+([^\-\(\)\[\]\|•]+)/gi;
+        while ((m = reInline.exec(s)) !== null) found.push(m[1]);
+        return found.flatMap(ch => ch.split(/,|&| and | x | with | vs /i)).map(normalize).filter(Boolean);
+      }
+      function trackInvolvesArtist(row){
+        const inArtistField = splitArtistList(row.artist).includes(artistKey);
+        if (inArtistField) return true;
+        const inTitleFeat = extractFeaturedFromTitle(row.title).includes(artistKey);
+        return inTitleFeat;
+      }
+
+      // 5-genre helpers
+      function genreTokensFromRow(r){
+        const arr = [];
+        if (r.mainGenre) arr.push(r.mainGenre);
+        if (Array.isArray(r.subGenres)) arr.push(...r.subGenres);
+        if (r.genre) arr.push(r.genre);
+        if (Array.isArray(r.genres)) arr.push(...r.genres);
+        if (r.genre5) arr.push(r.genre5);
+        if (r.subgenre5) arr.push(r.subgenre5);
+        return arr.map(x => String(x).trim()).filter(Boolean);
+      }
+      function tokensToBuckets(tokens){
+        const buckets = new Set();
+        const lows = tokens.map(t => t.toLowerCase());
+        if (lows.some(t => t.includes('pop'))) buckets.add('POP');
+        if (lows.some(t => t.includes('r&b') || t.includes('rnb') || t.includes('soul') || t.includes('neo-soul'))) buckets.add('RNB');
+        if (lows.some(t => t.includes('hip') || t.includes('rap') || t.includes('trap'))) buckets.add('HIPHOP');
+        if (lows.some(t => t.includes('rock') || t.includes('alt') || t.includes('indie') || t.includes('punk') || t.includes('emo'))) buckets.add('ROCK');
+        if (lows.some(t => t.includes('dance') || t.includes('edm') || t.includes('electro') || t.includes('house') || t.includes('club'))) buckets.add('DANCE');
+        if (!buckets.size) buckets.add('POP');
+        return Array.from(buckets);
+      }
+
+      // ------- LOAD DATA -------
+      const raw = await loadWeekData();
+      if (!raw || !Object.keys(raw).length) {
+        showErr('weekData not found or empty. Ensure weekdata.js exists and exports a global, or keep this page’s fallback.');
+        return;
+      }
+
+      const weekData = Array.isArray(raw)
+        ? raw.reduce((acc, r) => {
+            const w = r.week || r.Week || r.w;
+            if (w) (acc[w] ||= []).push(r);
+            return acc;
+          }, {})
+        : raw;
+
+      const weekList = Object.keys(weekData).map(k => ({
+        num: parseInt(String(k).replace(/\D/g,''), 10) || 0,
+        entries: Array.isArray(weekData[k]) ? weekData[k] : []
+      })).sort((a,b)=>a.num-b.num);
+
+      const albumsMap = {};
+      const songsMap  = {};
+      const songKeys  = [];
+      const runningCumeSales   = {};
+      const runningCumeStreams = {};
+
+      for (const {num:weekNum, entries} of weekList) {
+        const base = entries.slice().sort((a,b)=>{
+          const ra = Number(a.rank ?? a.position ?? a.pos ?? 9999);
+          const rb = Number(b.rank ?? b.position ?? b.pos ?? 9999);
+          return ra - rb;
+        }).slice(0,200).filter(r=>{
+          const t = (r.title || r.song || '').toString();
+          return !/sweep week/i.test(t);
+        }).map(r=>{
+          const tokens = genreTokensFromRow(r);
+          const buckets = tokensToBuckets(tokens);
+          return { ...r, _buckets: buckets };
+        });
+
+        // build bucket rank maps for ALL 5
+        const bucketRanks = {};
+        ['POP','RNB','HIPHOP','ROCK','DANCE'].forEach(bucketName => {
+          const bucketRows = base.filter(r => r._buckets && r._buckets.includes(bucketName));
+          if (!bucketRows.length) return;
+          bucketRows.sort((a,b)=>{
+            const pa = Number(a.points || a.Points || 0);
+            const pb = Number(b.points || b.Points || 0);
+            if (pb !== pa) return pb - pa;
+            const sa = Number(a.sales || a.Sales || 0);
+            const sb = Number(b.sales || b.Sales || 0);
+            if (sb !== sa) return sb - sa;
+            return String(a.title||a.song||'').localeCompare(String(b.title||b.song||''));
+          });
+          bucketRows.forEach((r,idx)=>{
+            const sKey = normalizeTitle(r.title || r.song || '');
+            (bucketRanks[sKey] ||= {});
+            bucketRanks[sKey][bucketName] = idx+1;
+          });
+        });
+
+        for (const row of base) {
+          if (!trackInvolvesArtist(row)) continue;
+
+          const titleNorm = normalizeTitle(row.title);
+          let canonSongKey = null;
+          for (const k of songKeys) {
+            if (similarity(titleNorm, k) >= TITLE_SIM_THRESHOLD) { canonSongKey = k; break; }
+          }
+          if (!canonSongKey) {
+            canonSongKey = titleNorm || `UNTITLED_${songKeys.length+1}`;
+            songKeys.push(canonSongKey);
+            songsMap[canonSongKey] = {
+              titleDisplay: row.title || 'Untitled',
+              artistDisplay: row.artist || artistParam,
+              salesBase: 0,
+              streamsBase: 0,
+              weeksSeen: new Set(),
+              peak: INF_RANK,
+              num1s: 0,
+              firstWeek: null,
+              firstRank: null,
+              popPeak: INF_RANK,
+              rnbPeak: INF_RANK,
+              hiphopPeak: INF_RANK,
+              rockPeak: INF_RANK,
+              dancePeak: INF_RANK
+            };
+          } else {
+            songsMap[canonSongKey].titleDisplay = preferDisplayTitle(songsMap[canonSongKey].titleDisplay, row.title);
+          }
+
+          const RANK_FIELDS      = ['rank', 'position', 'pos'];
+          const WEEKLY_SALES_F   = ['sales', 'units', 'weeklySales', 'weekSales', 'points'];
+          const CUME_SALES_F     = ['totalSales', 'cumulativeSales', 'cume', 'lifetimeSales', 'unitsTotal', 'total_units'];
+          const WEEKLY_STREAMS_F = ['streams', 'weeklyStreams', 'plays', 'plays_million', 'plays_millions'];
+          const CUME_STREAMS_F   = ['totalStreams', 'cumulativeStreams', 'streamsTotal'];
+
+          const rankRaw = pick(row, RANK_FIELDS);
+          const rank = Number.isFinite(Number(rankRaw)) ? Number(rankRaw) : INF_RANK;
+
+          let weeklySalesBase = 0;
+          const wSales = pick(row, WEEKLY_SALES_F);
+          const cSales = pick(row, CUME_SALES_F);
+          if (wSales != null) {
+            weeklySalesBase = num(wSales);
+          } else if (cSales != null) {
+            const cumeNow = num(cSales);
+            const prev = runningCumeSales[canonSongKey] || 0;
+            weeklySalesBase = Math.max(0, cumeNow - prev);
+            runningCumeSales[canonSongKey] = cumeNow;
+          }
+
+          let weeklyStreamsBase = 0;
+          const wStreams = pick(row, WEEKLY_STREAMS_F);
+          const cStreams = pick(row, CUME_STREAMS_F);
+          if (wStreams != null) {
+            weeklyStreamsBase = num(wStreams);
+          } else if (cStreams != null) {
+            const cumeNowS = num(cStreams);
+            const prevS = runningCumeStreams[canonSongKey] || 0;
+            weeklyStreamsBase = Math.max(0, cumeNowS - prevS);
+            runningCumeStreams[canonSongKey] = cumeNowS;
+          }
+
+          const S = songsMap[canonSongKey];
+          S.salesBase += weeklySalesBase;
+          S.streamsBase += weeklyStreamsBase;
+
+          if (!S.firstWeek || weekNum < S.firstWeek) {
+            S.firstWeek = weekNum;
+            S.firstRank = (rank === INF_RANK ? null : rank);
+          }
+          S.weeksSeen.add(weekNum);
+          if (rank < S.peak) S.peak = rank;
+          if (rank === 1) S.num1s++;
+
+          const simpleKey = normalizeTitle(row.title || row.song || '');
+          const br = bucketRanks[simpleKey] || {};
+          if (br.POP && br.POP < S.popPeak) S.popPeak = br.POP;
+          if (br.RNB && br.RNB < S.rnbPeak) S.rnbPeak = br.RNB;
+          if (br.HIPHOP && br.HIPHOP < S.hiphopPeak) S.hiphopPeak = br.HIPHOP;
+          if (br.ROCK && br.ROCK < S.rockPeak) S.rockPeak = br.ROCK;
+          if (br.DANCE && br.DANCE < S.dancePeak) S.dancePeak = br.DANCE;
+
+          const albNorm = normalizeAlbum(row.album);
+          if (albNorm && albNorm !== "NAN") {
+            let canonAlbKey = null;
+            for (const k of Object.keys(albumsMap)) {
+              if (similarity(albNorm, k) >= ALBUM_SIM_THRESHOLD) { canonAlbKey = k; break; }
+            }
+            if (!canonAlbKey) {
+              canonAlbKey = albNorm;
+              albumsMap[canonAlbKey] = { name: row.album || 'Unknown Album', salesBase: 0, tracks: new Set() };
+            }
+            albumsMap[canonAlbKey].salesBase += weeklySalesBase;
+            albumsMap[canonAlbKey].tracks.add(canonSongKey);
+          }
         }
       }
-      return dp[n];
-    }
-    function similarity(a, b) {
-      a = String(a || ""); b = String(b || "");
-      const maxLen = Math.max(a.length, b.length);
-      if (!maxLen) return 1;
-      return 1 - (levenshtein(a, b) / maxLen);
-    }
 
-    const RANK_FIELDS      = ['rank', 'position', 'pos'];
-    const WEEKLY_SALES_F   = ['sales', 'units', 'weeklySales', 'weekSales', 'points'];
-    const CUME_SALES_F     = ['totalSales', 'cumulativeSales', 'cume', 'lifetimeSales', 'unitsTotal', 'total_units'];
-    const WEEKLY_STREAMS_F = ['streams', 'weeklyStreams', 'plays', 'plays_million', 'plays_millions'];
-    const CUME_STREAMS_F   = ['totalStreams', 'cumulativeStreams', 'streamsTotal'];
-    function pick(obj, fields) { for (const f of fields) if (obj && obj[f] != null) return obj[f]; }
-    function num(x){ const n = Number(x); return Number.isFinite(n) ? n : 0; }
-
-    function trackCertLabel(salesBase) {
-      const adj = salesBase * SONG_SALE_MULTIPLIER;
-      if (adj >= 10_000_000) return "Diamond";
-      if (adj >=  9_000_000) return "9× Platinum";
-      if (adj >=  8_000_000) return "8× Platinum";
-      if (adj >=  7_000_000) return "7× Platinum";
-      if (adj >=  6_000_000) return "6× Platinum";
-      if (adj >=  5_000_000) return "5× Platinum";
-      if (adj >=  4_000_000) return "4× Platinum";
-      if (adj >=  3_000_000) return "3× Platinum";
-      if (adj >=  2_000_000) return "2× Platinum";
-      if (adj >=  1_000_000) return "Platinum";
-      if (adj >=    500_000) return "Gold";
-      return "—";
-    }
-    function trackCertHTML(salesBase) {
-      const label = trackCertLabel(salesBase);
-      if (label === "—") return "—";
-      const map = {
-        "Diamond":"Diamond.png","9× Platinum":"9x Platinum.png","8× Platinum":"8x Platinum.png",
-        "7× Platinum":"7x Platinum.png","6× Platinum":"6x Platinum.png","5× Platinum":"5x Platinum.png",
-        "4× Platinum":"4x Platinum.png","3× Platinum":"3x Platinum.png","2× Platinum":"2x Platinum.png",
-        "Platinum":"Platinum.png","Gold":"Gold.png"
-      };
-      return `<img src="${map[label] || 'Platinum.png'}" class="cert-icon" title="${label}"> ${label}`;
-    }
-    function albumCertLabel(salesBase) {
-      const adj = salesBase * ALBUM_SALE_MULTIPLIER;
-      if (adj >= 10_000_000) return `Diamond`;
-      if (adj >=  9_000_000) return `9× Platinum`;
-      if (adj >=  8_000_000) return `8× Platinum`;
-      if (adj >=  7_000_000) return `7× Platinum`;
-      if (adj >=  6_000_000) return `6× Platinum`;
-      if (adj >=  5_000_000) return `5× Platinum`;
-      if (adj >=  4_000_000) return `4× Platinum`;
-      if (adj >=  3_000_000) return `3× Platinum`;
-      if (adj >=  2_000_000) return `2× Platinum`;
-      if (adj >=  1_000_000) return `Platinum`;
-      if (adj >=    500_000) return `Gold`;
-      return "—";
-    }
-    function albumCertHTML(salesBase) {
-      const label = albumCertLabel(salesBase);
-      if (label === "—") return "—";
-      const map = {
-        "Diamond":"Diamond.png","9× Platinum":"9x Platinum.png","8× Platinum":"8x Platinum.png",
-        "7× Platinum":"7x Platinum.png","6× Platinum":"6x Platinum.png","5× Platinum":"5x Platinum.png",
-        "4× Platinum":"4x Platinum.png","3× Platinum":"3x Platinum.png","2× Platinum":"2x Platinum.png",
-        "Platinum":"Platinum.png","Gold":"Gold.png"
-      };
-      return `<img src="${map[label] || 'Platinum.png'}" class="cert-icon" title="${label}"> ${label}`;
-    }
-    const fmt = n => n >= 1_000_000_000 ? (n/1_000_000_000).toFixed(1)+'B'
-                 : n >= 1_000_000 ? (n/1_000_000).toFixed(1)+'M'
-                 : n >= 1_000 ? (n/1_000).toFixed(0)+'K'
-                 : String(Math.round(n));
-
-    function splitArtistList(str){
-      return String(str || "")
-        .split(/,|&| and | with | feat\.? | featuring | vs | x | presents | duet with /i)
-        .map(a => normalize(a)).filter(Boolean);
-    }
-    function extractFeaturedFromTitle(title){
-      const s = String(title || "");
-      const found = [];
-      const reParens = /\((?:FEAT\.?|FEATURING|WITH|DUET WITH|X)\s+([^)]+)\)/gi;
-      let m;
-      while ((m = reParens.exec(s)) !== null) found.push(m[1]);
-      const reInline = /(?:FEAT\.?|FEATURING|WITH|DUET WITH|X)\s+([^\-\(\)\[\]\|•]+)/gi;
-      while ((m = reInline.exec(s)) !== null) found.push(m[1]);
-      return found.flatMap(ch => ch.split(/,|&| and | x | with | vs /i)).map(normalize).filter(Boolean);
-    }
-    function trackInvolvesArtist(row){
-      const inArtistField = splitArtistList(row.artist).includes(artistKey);
-      if (inArtistField) return true;
-      const inTitleFeat = extractFeaturedFromTitle(row.title).includes(artistKey);
-      return inTitleFeat;
-    }
-
-    // 5-genre helpers
-    function genreTokensFromRow(r){
-      const arr = [];
-      if (r.mainGenre) arr.push(r.mainGenre);
-      if (Array.isArray(r.subGenres)) arr.push(...r.subGenres);
-      if (r.genre) arr.push(r.genre);
-      if (Array.isArray(r.genres)) arr.push(...r.genres);
-      // support new flat fields too if present
-      if (r.genre5) arr.push(r.genre5);
-      if (r.subgenre5) arr.push(r.subgenre5);
-      return arr.map(x => String(x).trim()).filter(Boolean);
-    }
-    function tokensToBuckets(tokens){
-      const buckets = new Set();
-      const lows = tokens.map(t => t.toLowerCase());
-      if (lows.some(t => t.includes('pop'))) buckets.add('POP');
-      if (lows.some(t => t.includes('r&b') || t.includes('rnb') || t.includes('soul') || t.includes('neo-soul'))) buckets.add('RNB');
-      if (lows.some(t => t.includes('hip') || t.includes('rap') || t.includes('trap'))) buckets.add('HIPHOP');
-      if (lows.some(t => t.includes('rock') || t.includes('alt') || t.includes('indie') || t.includes('punk') || t.includes('emo'))) buckets.add('ROCK');
-      if (lows.some(t => t.includes('dance') || t.includes('edm') || t.includes('electro') || t.includes('house') || t.includes('club'))) buckets.add('DANCE');
-      if (!buckets.size) buckets.add('POP');
-      return Array.from(buckets);
-    }
-
-    const albumsMap = {};
-    const songsMap  = {};
-    const songKeys  = [];
-    const runningCumeSales   = {};
-    const runningCumeStreams = {};
-
-    // normalise weekdata
-    const weekData = window.weekData || window.weekdata || window.WEEKDATA || {};
-    const weekList = Object.keys(weekData).map(k => ({
-      num: parseInt(String(k).replace(/\D/g,''), 10) || 0,
-      entries: Array.isArray(weekData[k]) ? weekData[k] : []
-    })).sort((a,b)=>a.num-b.num);
-
-    for (const {num:weekNum, entries} of weekList) {
-      const base = entries.slice().sort((a,b)=>{
-        const ra = Number(a.rank ?? a.position ?? a.pos ?? 9999);
-        const rb = Number(b.rank ?? b.position ?? b.pos ?? 9999);
-        return ra - rb;
-      }).slice(0,200).filter(r=>{
-        const t = (r.title || r.song || '').toString();
-        return !/sweep week/i.test(t);
-      }).map(r=>{
-        const tokens = genreTokensFromRow(r);
-        const buckets = tokensToBuckets(tokens);
-        return { ...r, _buckets: buckets };
-      });
-
-      // build bucket rank maps for ALL 5
-      const bucketRanks = {};
-      ['POP','RNB','HIPHOP','ROCK','DANCE'].forEach(bucketName => {
-        const bucketRows = base.filter(r => r._buckets && r._buckets.includes(bucketName));
-        if (!bucketRows.length) return;
-        bucketRows.sort((a,b)=>{
-          const pa = Number(a.points || a.Points || 0);
-          const pb = Number(b.points || b.Points || 0);
-          if (pb !== pa) return pb - pa;
-          const sa = Number(a.sales || a.Sales || 0);
-          const sb = Number(b.sales || b.Sales || 0);
-          if (sb !== sa) return sb - sa;
-          return String(a.title||a.song||'').localeCompare(String(b.title||b.song||''));
+      // ----- Render Albums -----
+      const albumsTBody = document.querySelector("#albumsTable tbody");
+      Object.values(albumsMap)
+        .filter(a => a.tracks.size >= 2)
+        .sort((a,b)=> b.salesBase - a.salesBase)
+        .forEach(a => {
+          const cert = albumCertHTML(a.salesBase);
+          const url = `album_detail.html?album=${encodeURIComponent(a.name)}&artist=${encodeURIComponent(artistParam)}`;
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td><a href="${url}">${a.name}</a></td><td>${cert}</td>`;
+          albumsTBody.appendChild(tr);
         });
-        bucketRows.forEach((r,idx)=>{
-          const sKey = normalizeTitle(r.title || r.song || '');
-          (bucketRanks[sKey] ||= {});
-          bucketRanks[sKey][bucketName] = idx+1;
-        });
-      });
 
-      for (const row of base) {
-        if (!trackInvolvesArtist(row)) continue;
+      // ----- Render Songs -----
+      const songsTBody = document.querySelector("#songsTable tbody");
+      const allSongsRaw = Object.values(songsMap).map(S => ({
+        ...S,
+        weeks: S.weeksSeen.size,
+        certLabel: trackCertLabel(S.salesBase),
+        certHTML: trackCertHTML(S.salesBase),
+        debutYear: S.firstWeek ? new Date(BASE_WEEK_START.getTime() + (S.firstWeek-1)*7*24*3600*1000).getFullYear() : '—'
+      }));
 
-        const titleNorm = normalizeTitle(row.title);
-        let canonSongKey = null;
-        for (const k of songKeys) {
-          if (similarity(titleNorm, k) >= TITLE_SIM_THRESHOLD) { canonSongKey = k; break; }
-        }
-        if (!canonSongKey) {
-          canonSongKey = titleNorm || `UNTITLED_${songKeys.length+1}`;
-          songKeys.push(canonSongKey);
-          songsMap[canonSongKey] = {
-            titleDisplay: row.title || 'Untitled',
-            artistDisplay: row.artist || artistParam,
-            salesBase: 0,
-            streamsBase: 0,
-            weeksSeen: new Set(),
-            peak: INF_RANK,
-            num1s: 0,
-            firstWeek: null,
-            firstRank: null,
-            popPeak: INF_RANK,
-            rnbPeak: INF_RANK,
-            hiphopPeak: INF_RANK,
-            rockPeak: INF_RANK,
-            dancePeak: INF_RANK
-          };
-        } else {
-          songsMap[canonSongKey].titleDisplay = preferDisplayTitle(songsMap[canonSongKey].titleDisplay, row.title);
+      const songsArr = allSongsRaw
+        .filter(S => typeof S.peak === 'number' && S.peak <= 100)
+        .sort((a,b) => (a.firstWeek||INF_RANK) - (b.firstWeek||INF_RANK));
+
+      let lastYear = null;
+      songsArr.forEach(S => {
+        const year = S.debutYear;
+        if (year !== lastYear) {
+          const yearRow = document.createElement("tr");
+          yearRow.innerHTML = `<td colspan="11" style="background:#000;color:#4DB8FF;font-weight:bold;">${year}</td>`;
+          songsTBody.appendChild(yearRow);
+
+          const yrSongs = songsArr.filter(x => x.debutYear === year);
+          const songsCount = yrSongs.length;
+          const distinctNum1s = yrSongs.filter(x => x.peak === 1).length;
+          const top10s = yrSongs.filter(x => x.peak <= 10).length;
+          const statsRow = document.createElement("tr");
+          statsRow.innerHTML = `<td colspan="11" style="background:#111;color:#ccc;font-style:italic;">🎵 Songs: ${songsCount} | 🥇 #1 songs: ${distinctNum1s} | 🔟 Top 10s: ${top10s}</td>`;
+          songsTBody.appendChild(statsRow);
+
+          lastYear = year;
         }
 
-        const rankRaw = pick(row, RANK_FIELDS);
-        const rank = Number.isFinite(Number(rankRaw)) ? Number(rankRaw) : INF_RANK;
+        const url = `track_detail.html?title=${encodeURIComponent(S.titleDisplay)}&artist=${encodeURIComponent(S.artistDisplay)}`;
+        const popPk   = S.popPeak   < INF_RANK ? '#'+S.popPeak   : '—';
+        const rnbPk   = S.rnbPeak   < INF_RANK ? '#'+S.rnbPeak   : '—';
+        const hipPk   = S.hiphopPeak< INF_RANK ? '#'+S.hiphopPeak: '—';
+        const rockPk  = S.rockPeak  < INF_RANK ? '#'+S.rockPeak  : '—';
+        const dancePk = S.dancePeak < INF_RANK ? '#'+S.dancePeak : '—';
 
-        let weeklySalesBase = 0;
-        const wSales = pick(row, WEEKLY_SALES_F);
-        const cSales = pick(row, CUME_SALES_F);
-        if (wSales != null) {
-          weeklySalesBase = num(wSales);
-        } else if (cSales != null) {
-          const cumeNow = num(cSales);
-          const prev = runningCumeSales[canonSongKey] || 0;
-          weeklySalesBase = Math.max(0, cumeNow - prev);
-          runningCumeSales[canonSongKey] = cumeNow;
-        }
-
-        let weeklyStreamsBase = 0;
-        const wStreams = pick(row, WEEKLY_STREAMS_F);
-        const cStreams = pick(row, CUME_STREAMS_F);
-        if (wStreams != null) {
-          weeklyStreamsBase = num(wStreams);
-        } else if (cStreams != null) {
-          const cumeNowS = num(cStreams);
-          const prevS = runningCumeStreams[canonSongKey] || 0;
-          weeklyStreamsBase = Math.max(0, cumeNowS - prevS);
-          runningCumeStreams[canonSongKey] = cumeNowS;
-        }
-
-        const S = songsMap[canonSongKey];
-        S.salesBase += weeklySalesBase;
-        S.streamsBase += weeklyStreamsBase;
-
-        if (!S.firstWeek || weekNum < S.firstWeek) {
-          S.firstWeek = weekNum;
-          S.firstRank = (rank === INF_RANK ? null : rank);
-        }
-        S.weeksSeen.add(weekNum);
-        if (rank < S.peak) S.peak = rank;
-        if (rank === 1) S.num1s++;
-
-        const simpleKey = normalizeTitle(row.title || row.song || '');
-        const br = bucketRanks[simpleKey] || {};
-        if (br.POP && br.POP < S.popPeak) S.popPeak = br.POP;
-        if (br.RNB && br.RNB < S.rnbPeak) S.rnbPeak = br.RNB;
-        if (br.HIPHOP && br.HIPHOP < S.hiphopPeak) S.hiphopPeak = br.HIPHOP;
-        if (br.ROCK && br.ROCK < S.rockPeak) S.rockPeak = br.ROCK;
-        if (br.DANCE && br.DANCE < S.dancePeak) S.dancePeak = br.DANCE;
-
-        const albNorm = normalizeAlbum(row.album);
-        if (albNorm && albNorm !== "NAN") {
-          let canonAlbKey = null;
-          for (const k of Object.keys(albumsMap)) {
-            if (similarity(albNorm, k) >= ALBUM_SIM_THRESHOLD) { canonAlbKey = k; break; }
-          }
-          if (!canonAlbKey) {
-            canonAlbKey = albNorm;
-            albumsMap[canonAlbKey] = { name: row.album || 'Unknown Album', salesBase: 0, tracks: new Set() };
-          }
-          albumsMap[canonAlbKey].salesBase += weeklySalesBase;
-          albumsMap[canonAlbKey].tracks.add(canonSongKey);
-        }
-      }
-    }
-
-    const albumsTBody = document.querySelector("#albumsTable tbody");
-    Object.values(albumsMap)
-      .filter(a => a.tracks.size >= 2)
-      .sort((a,b)=> b.salesBase - a.salesBase)
-      .forEach(a => {
-        const cert = albumCertHTML(a.salesBase);
-        const url = `album_detail.html?album=${encodeURIComponent(a.name)}&artist=${encodeURIComponent(artistParam)}`;
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td><a href="${url}">${a.name}</a></td><td>${cert}</td>`;
-        albumsTBody.appendChild(tr);
+        tr.innerHTML = `
+          <td><a href="${url}">${S.titleDisplay}</a></td>
+          <td>${S.certHTML}</td>
+          <td>${fmt(S.streamsBase)}</td>
+          <td>${S.weeks}</td>
+          <td>#${S.peak}</td>
+          <td>${popPk}</td>
+          <td>${rnbPk}</td>
+          <td>${hipPk}</td>
+          <td>${rockPk}</td>
+          <td>${dancePk}</td>
+          <td>${S.num1s}</td>
+        `;
+        songsTBody.appendChild(tr);
       });
 
-    const songsTBody = document.querySelector("#songsTable tbody");
-    const allSongsRaw = Object.values(songsMap).map(S => ({
-      ...S,
-      weeks: S.weeksSeen.size,
-      certLabel: trackCertLabel(S.salesBase),
-      certHTML: trackCertHTML(S.salesBase),
-      debutYear: S.firstWeek ? new Date(BASE_WEEK_START.getTime() + (S.firstWeek-1)*7*24*3600*1000).getFullYear() : '—'
-    }));
+      // ----- Header stats + cert totals -----
+      const statsEl = document.getElementById("artistStats");
+      const totalSongs = songsArr.length;
+      const distinctNum1Songs = songsArr.filter(x => x.peak === 1).length;
+      const totalNum1Weeks = songsArr.reduce((s,x)=> s + x.num1s, 0);
+      const totalTop10s = songsArr.filter(x => x.peak <= 10).length;
+      const debutAt1 = songsArr.filter(x => x.firstRank === 1).length;
 
-    const songsArr = allSongsRaw
-      .filter(S => typeof S.peak === 'number' && S.peak <= 100)
-      .sort((a,b) => (a.firstWeek||INF_RANK) - (b.firstWeek||INF_RANK));
-
-    let lastYear = null;
-    songsArr.forEach(S => {
-      const year = S.debutYear;
-      if (year !== lastYear) {
-        const yearRow = document.createElement("tr");
-        yearRow.innerHTML = `<td colspan="11" style="background:#000;color:#4DB8FF;font-weight:bold;">${year}</td>`;
-        songsTBody.appendChild(yearRow);
-
-        const yrSongs = songsArr.filter(x => x.debutYear === year);
-        const songsCount = yrSongs.length;
-        const distinctNum1s = yrSongs.filter(x => x.peak === 1).length;
-        const top10s = yrSongs.filter(x => x.peak <= 10).length;
-        const statsRow = document.createElement("tr");
-        statsRow.innerHTML = `<td colspan="11" style="background:#111;color:#ccc;font-style:italic;">🎵 Songs: ${songsCount} | 🥇 #1 songs: ${distinctNum1s} | 🔟 Top 10s: ${top10s}</td>`;
-        songsTBody.appendChild(statsRow);
-
-        lastYear = year;
-      }
-
-      const url = `track_detail.html?title=${encodeURIComponent(S.titleDisplay)}&artist=${encodeURIComponent(S.artistDisplay)}`;
-      const popPk   = S.popPeak   < INF_RANK ? '#'+S.popPeak   : '—';
-      const rnbPk   = S.rnbPeak   < INF_RANK ? '#'+S.rnbPeak   : '—';
-      const hipPk   = S.hiphopPeak< INF_RANK ? '#'+S.hiphopPeak: '—';
-      const rockPk  = S.rockPeak  < INF_RANK ? '#'+S.rockPeak  : '—';
-      const dancePk = S.dancePeak < INF_RANK ? '#'+S.dancePeak : '—';
-
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><a href="${url}">${S.titleDisplay}</a></td>
-        <td>${S.certHTML}</td>
-        <td>${fmt(S.streamsBase)}</td>
-        <td>${S.weeks}</td>
-        <td>#${S.peak}</td>
-        <td>${popPk}</td>
-        <td>${rnbPk}</td>
-        <td>${hipPk}</td>
-        <td>${rockPk}</td>
-        <td>${dancePk}</td>
-        <td>${S.num1s}</td>
+      statsEl.innerHTML = `
+        Songs Charted (Top 100): ${totalSongs}
+        <span class="pill">#1 Songs: ${distinctNum1Songs}</span>
+        <span class="pill">Weeks at #1: ${totalNum1Weeks}</span>
+        <span class="pill">Top 10s: ${totalTop10s}</span>
+        <span class="pill">#1 Debuts: ${debutAt1}</span>
       `;
-      songsTBody.appendChild(tr);
-    });
 
-    const statsEl = document.getElementById("artistStats");
-    const totalSongs = songsArr.length;
-    const distinctNum1Songs = songsArr.filter(x => x.peak === 1).length;
-    const totalNum1Weeks = songsArr.reduce((s,x)=> s + x.num1s, 0);
-    const totalTop10s = songsArr.filter(x => x.peak <= 10).length;
-    const debutAt1 = songsArr.filter(x => x.firstRank === 1).length;
-
-    statsEl.innerHTML = `
-      Songs Charted (Top 100): ${totalSongs}
-      <span class="pill">#1 Songs: ${distinctNum1Songs}</span>
-      <span class="pill">Weeks at #1: ${totalNum1Weeks}</span>
-      <span class="pill">Top 10s: ${totalTop10s}</span>
-      <span class="pill">#1 Debuts: ${debutAt1}</span>
-    `;
-
-    const certTotalsEl = document.getElementById("certTotals");
-    const albumCounts = {};
-    Object.values(albumsMap)
-      .filter(a => a.tracks.size >= 2)
-      .forEach(a => {
-        const label = albumCertLabel(a.salesBase);
-        if (label !== "—") albumCounts[label] = (albumCounts[label] || 0) + 1;
+      const certTotalsEl = document.getElementById("certTotals");
+      const albumCounts = {};
+      Object.values(albumsMap)
+        .filter(a => a.tracks.size >= 2)
+        .forEach(a => {
+          const label = albumCertLabel(a.salesBase);
+          if (label !== "—") albumCounts[label] = (albumCounts[label] || 0) + 1;
+        });
+      const trackCounts = {};
+      songsArr.forEach(S => {
+        const label = S.certLabel;
+        if (label !== "—") trackCounts[label] = (trackCounts[label] || 0) + 1;
       });
-    const trackCounts = {};
-    songsArr.forEach(S => {
-      const label = S.certLabel;
-      if (label !== "—") trackCounts[label] = (trackCounts[label] || 0) + 1;
+      function toLine(obj){
+        return Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${k}: ${v}`).join(" | ");
+      }
+      const albumsLine = toLine(albumCounts);
+      const tracksLine = toLine(trackCounts);
+      certTotalsEl.innerHTML =
+        (albumsLine ? `ALBUM CERTS — ${albumsLine}` : `ALBUM CERTS — None`) +
+        ' &nbsp;&nbsp; | &nbsp;&nbsp; ' +
+        (tracksLine ? `TRACK CERTS — ${tracksLine}` : `TRACK CERTS — None`);
     });
-    function toLine(obj){
-      return Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${k}: ${v}`).join(" | ");
-    }
-    const albumsLine = toLine(albumCounts);
-    const tracksLine = toLine(trackCounts);
-    certTotalsEl.innerHTML =
-      (albumsLine ? `ALBUM CERTS — ${albumsLine}` : `ALBUM CERTS — None`) +
-      ' &nbsp;&nbsp; | &nbsp;&nbsp; ' +
-      (tracksLine ? `TRACK CERTS — ${tracksLine}` : `TRACK CERTS — None`);
-  });
+  })();
   </script>
 </body>
 </html>
