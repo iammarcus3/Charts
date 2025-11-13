@@ -111,23 +111,27 @@
         .map(x => x.trim())
         .filter(Boolean);
 
-    // Use entry.year if present; else map week index buckets (52 weeks from Week 1 = 2018-02-23)
+    // --- ✅ FIXED: accurate year resolution based on real calendar weeks ---
+    // Week 1 starts on Friday, 23 Feb 2018, and each week runs Fri→Thu.
+    const weekStartDate = new Date(2018, 1, 23); // Feb = month 1 (0-based)
+    const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+
     const resolveYear = (weekIndex, entry) => {
       if (entry && entry.year) {
-        const y = parseInt(entry.year,10);
-        return Number.isFinite(y) ? y : 2018 + Math.floor((weekIndex - 1) / 52);
+        const y = parseInt(entry.year, 10);
+        if (Number.isFinite(y)) return y;
       }
-      return 2018 + Math.floor((weekIndex - 1) / 52);
+      const d = new Date(weekStartDate.getTime() + (weekIndex - 1) * msPerWeek);
+      return d.getFullYear();
     };
+    // ----------------------------------------------------------------------
 
-    // Your sales→units rule kept here so it’s easy to tweak in one place if needed.
     const salesToUnits = (salesRaw) => salesRaw * 1750;
 
     // ---------- Build yearly stats ----------
-    const yearly = {};        // { [year]: { [artistKey]: Agg } }
+    const yearly = {};        
     const yearsSeen = new Set();
 
-    // Detect if any of these optional fields exist in your data so we can show optional columns
     let hasRnb = false, hasHiphop = false, hasPop = false;
 
     for (const weekStr in weekData) {
@@ -138,7 +142,7 @@
       const entries = weekData[weekStr] || [];
       for (const e of entries) {
         const rank = parseInt(e.rank, 10);
-        if (!Number.isFinite(rank)) continue; // skip broken rows
+        if (!Number.isFinite(rank)) continue;
 
         const y = resolveYear(weekIndex, e);
         yearsSeen.add(y);
@@ -148,7 +152,6 @@
         const streamsRaw = parseNum(e.streams);
         const radioRaw = parseNum(e.radio);
 
-        // Presence flags for optional peaks
         if (e.rnbRank !== undefined) hasRnb = true;
         if (e.hiphopRank !== undefined) hasHiphop = true;
         if (e.popRank !== undefined) hasPop = true;
@@ -162,7 +165,7 @@
           if (!yearly[y][key]) {
             yearly[y][key] = {
               name,
-              unitsSales: 0,       // your ranking metric (sales→units)
+              unitsSales: 0,
               salesRaw: 0,
               streamsRaw: 0,
               radioRaw: 0,
@@ -181,19 +184,16 @@
           }
           const a = yearly[y][key];
 
-          // Totals
           a.unitsSales += salesToUnits(salesRaw);
           a.salesRaw   += salesRaw;
           a.streamsRaw += streamsRaw;
           a.radioRaw   += radioRaw;
 
-          // Week/track tracking
           a.weeks.add(weekIndex);
           a.tracks.add(trackKey);
           a.firstWeek = Math.min(a.firstWeek, weekIndex);
           a.lastWeek  = Math.max(a.lastWeek, weekIndex);
 
-          // Peaks and counters
           if (rank === 1) {
             a.num1Tracks.add(trackKey);
             a.num1Weeks += 1;
@@ -201,7 +201,6 @@
           if (rank <= 20) a.top20s += 1;
           a.peak = Math.min(a.peak, rank);
 
-          // Optional genre peaks if available on entry
           const rnbR = parseInt(e.rnbRank,10);      if (Number.isFinite(rnbR)) a.rnbPeak = Math.min(a.rnbPeak, rnbR);
           const hhR  = parseInt(e.hiphopRank,10);   if (Number.isFinite(hhR))  a.hiphopPeak = Math.min(a.hiphopPeak, hhR);
           const popR = parseInt(e.popRank,10);      if (Number.isFinite(popR)) a.popPeak = Math.min(a.popPeak, popR);
@@ -214,7 +213,6 @@
     container.innerHTML = '';
 
     const allYears = Array.from(yearsSeen).sort((a,b)=>a-b);
-    // Jump-to-Year select
     const jump = byId('jumpYear');
     jump.innerHTML = '<option value="">Jump to year…</option>' + allYears.map(y=>`<option value="y${y}">${y}</option>`).join('');
     jump.addEventListener('change', () => {
@@ -224,7 +222,6 @@
       if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
     });
 
-    // Controls: expand/collapse (toggle table height between 520px and auto)
     byId('expandAll').addEventListener('click', () => {
       document.querySelectorAll('.table-wrap').forEach(tw => tw.style.maxHeight = 'unset');
     });
@@ -232,7 +229,6 @@
       document.querySelectorAll('.table-wrap').forEach(tw => tw.style.maxHeight = '520px');
     });
 
-    // Build each year’s section
     for (const y of allYears) {
       const artistsArr = Object.values(yearly[y]).map(a => ({
         name: a.name,
@@ -253,7 +249,6 @@
         lastWeek: a.lastWeek === -Infinity ? '' : a.lastWeek
       }));
 
-      // Sort by Sales Units desc (default) and take Top 20
       artistsArr.sort((a,b)=>b.unitsSales - a.unitsSales);
       const top = artistsArr.slice(0, 20);
 
@@ -277,13 +272,10 @@
         </div>
       `;
 
-      // Build table
       const wrap = document.createElement('div');
       wrap.className = 'table-wrap';
-
       const table = document.createElement('table');
 
-      // Columns (conditionally include R&B/HipHop/Pop peaks if present at least once)
       const cols = [
         {key:'rank', label:'Rank', align:'left'},
         {key:'name', label:'Artist', align:'left'},
@@ -336,7 +328,6 @@
       };
       renderRows(rowsData);
 
-      // Sorting
       let sortState = { key:'rank', dir:'asc' };
       thead.addEventListener('click', (ev) => {
         const th = ev.target.closest('th.sortable');
@@ -345,7 +336,7 @@
         if (!key) return;
         sortState = (sortState.key === key)
           ? { key, dir: (sortState.dir === 'asc' ? 'desc' : 'asc') }
-          : { key, dir:'desc' }; // default to desc for metrics
+          : { key, dir:'desc' };
 
         const sorted = [...rowsData].sort((a,b) => {
           const va = a[key], vb = b[key];
@@ -356,7 +347,6 @@
           return 0;
         });
 
-        // Re-number rank column when sorting by something else
         if (key !== 'rank') {
           sorted.forEach((r, i) => r.rank = i+1);
         } else {
@@ -371,14 +361,12 @@
       sec.appendChild(wrap);
       container.appendChild(sec);
 
-      // Export CSV for this year
       sec.querySelector('[data-export]').addEventListener('click', () => {
         const headers = cols.map(c=>c.label);
         const lines = [headers.join(',')];
         const csvRows = Array.from(tbody.querySelectorAll('tr')).map(tr =>
           Array.from(tr.children).map(td => {
             const txt = td.textContent.replace(/\u00a0/g,' ').trim();
-            // quote if needed
             return /[",\n]/.test(txt) ? `"${txt.replace(/"/g,'""')}"` : txt;
           }).join(',')
         );
@@ -395,3 +383,4 @@
   </script>
 </body>
 </html>
+
