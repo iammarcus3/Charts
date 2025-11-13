@@ -36,13 +36,13 @@ const MAX_ENTRIES = 200;
 
 // --- Factor tables (EXACT from your Python) ---
 const STREAMS_FACTORS = [
-  [1, 1, 58.50], [2, 2, 46.78], [3, 5, 30.90], [6, 6, 25.90], [7, 10, 28.90],
-  [11, 15, 27.85], [16, 25, 30.90], [26, 30, 45.70], [31, 50, 40.95],
+  [1, 1, 58.50], [2, 2, 46.78], [3, 5, 30.90], [6, 8, 25.90], [9, 13, 28.90],
+  [14, 18, 27.85], [19, 25, 30.90], [26, 30, 45.70], [31, 50, 40.95],
   [51, 70, 50.90], [71, 85, 46.50], [86, 200, 70.00],
 ];
 const RADIO_FACTORS = [
-  [1, 1, 186.90], [2, 2, 450.10], [3, 5, 620.20], [6, 6, 1130.30],
-  [7, 10, 1940.40], [11, 15, 900.50], [16, 25, 800.60], [26, 30, 750.70],
+  [1, 1, 186.90], [2, 2, 450.10], [3, 5, 620.20], [6, 9, 1130.30],
+  [9, 15, 1940.40], [16, 20, 900.50], [21, 25, 800.60], [26, 30, 750.70],
   [31, 50, 500.80], [51, 70, 450.90], [71, 85, 200.10], [86, 200, 100.11],
 ];
 function getMultiplierForRank(rank) {
@@ -304,7 +304,7 @@ function aggregatePlays(tracks) {
   for (const t of tracks) {
     const title = t.name;
     const artist = t.artist?.["#text"] || "";
-    theconst album = t.album?.["#text"] || "Unknown";
+    const album = t.album?.["#text"] || "Unknown";
     const key = getKey(title, artist);
     const cur = map.get(key) || { title, artist, album, plays: 0 };
     cur.plays++;
@@ -432,5 +432,4 @@ async function handler() {
 if (require.main === module) handler();
 
 module.exports = { handler };
-
 
