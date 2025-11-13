@@ -9,25 +9,11 @@
   .tabs { display:flex; justify-content:center; background:#1f1f1f; border-bottom:2px solid #ff004c; flex-wrap:wrap; }
   .tab { padding:10px 20px; cursor:pointer; color:#fff; transition: background 0.3s; margin:2px; }
   .tab:hover, .tab.active { background:#ff004c; color:#fff; }
-
-  /* Make the content scrollable so sticky headers can stick during vertical scroll */
   .tab-content { display:none; padding:1rem 2rem; overflow-x:auto; }
-
   table { width:100%; border-collapse:collapse; margin-top:1rem; background-color:#1f1f1f; }
   th, td { padding:8px 10px; border:1px solid #333; text-align:center; cursor:pointer; }
   th { background-color:#2a2a2a; color:#ff004c; }
-
-  /* 🔒 Freeze the top row (headers) */
-  thead th {
-    position: sticky;
-    top: 0;
-    z-index: 2;            /* keeps headers above rows during scroll */
-    background-color:#2a2a2a; /* re-affirm background so it doesn't become transparent */
-  }
-
-  /* Optional visual: subtle divider under sticky header */
-  thead th { box-shadow: 0 2px 0 #00000040; }
-
+  thead th { position: sticky; top: 0; z-index: 2; background-color:#2a2a2a; box-shadow: 0 2px 0 #00000040; }
   tr:nth-child(even) { background-color:#1a1a1a; }
 </style>
 </head>
@@ -59,14 +45,16 @@ Object.keys(weekData).forEach(weekNum=>{
     });
 });
 
-// Process albums
+// Process albums with scaled sales
 function processAlbums(data){
     const albums={};
     const weeklyTracks={};
 
-    // Map track to album
     data.forEach(track=>{
         const albumKey = track.album + '||' + track.artist;
+        const scaled = (track.sales || 0) * 500; // 🔹 apply multiplier
+        track.scaledSales = scaled;
+
         if(!albums[albumKey]){
             albums[albumKey]={
                 album: track.album,
@@ -89,29 +77,24 @@ function processAlbums(data){
         }
         const alb = albums[albumKey];
 
-        // Track object
         alb.tracks[track.title] = alb.tracks[track.title] || [];
         alb.tracks[track.title].push(track);
 
-        // Weeks
         alb.chartWeeks.add(track.week);
         if(track.rank <=10) alb.top10Weeks.add(track.week);
         if(track.rank===1) alb.num1Weeks.add(track.week);
 
-        // Date hit #1
         if(track.rank===1 && !alb.dateHit1) alb.dateHit1 = getWeekStartDate(track.week);
 
-        // Yearly sales placeholder
         const year = new Date(getWeekStartDate(track.week)).getFullYear();
         alb.yearlySales[year] = alb.yearlySales[year] || 0;
 
-        // Weekly sales map (for peak calculation)
         const weekKey = albumKey + '||' + track.week;
         weeklyTracks[weekKey] = weeklyTracks[weekKey] || [];
         weeklyTracks[weekKey].push(track);
     });
 
-    // Compute debut sales (first week with ≥2 songs)
+    // Compute debut sales (first week with ≥3 songs)
     Object.values(albums).forEach(alb=>{
         const weeksSorted = Array.from(alb.chartWeeks).sort((a,b)=>a-b);
         for(const w of weeksSorted){
@@ -119,21 +102,21 @@ function processAlbums(data){
                 .map(tlist=>tlist.find(t=>t.week===w))
                 .filter(Boolean);
             if(weekTracks.length>=3){
-                alb.debutSales = weekTracks.reduce((sum,t)=>sum+t.sales,0);
+                alb.debutSales = weekTracks.reduce((sum,t)=>sum+t.scaledSales,0);
                 alb.debutDate = getWeekStartDate(w);
                 break;
             }
         }
     });
 
-    // Compute peak sales (sum of all songs in the highest-sales week)
+    // Compute peak sales (sum of all songs in highest week)
     Object.values(albums).forEach(alb=>{
         let peak=0, peakDate=null;
         alb.chartWeeks.forEach(w=>{
             const weekTotal = Object.values(alb.tracks)
                 .map(tlist=>{
                     const t = tlist.find(t=>t.week===w);
-                    return t? t.sales : 0;
+                    return t? t.scaledSales : 0;
                 }).reduce((a,b)=>a+b,0);
             if(weekTotal>peak){
                 peak = weekTotal;
@@ -144,30 +127,34 @@ function processAlbums(data){
         alb.peakDate = peakDate;
     });
 
-    // Compute songs stats and total sales
+    // Compute songs stats & yearly sales
     Object.values(albums).forEach(alb=>{
         const countedNum1 = new Set();
         const countedTop10 = new Set();
         const countedHot100 = new Set();
+
         Object.values(alb.tracks).forEach(trackList=>{
             countedHot100.add(trackList[0].title);
             if(trackList.some(t=>t.rank===1)) countedNum1.add(trackList[0].title);
             if(trackList.some(t=>t.rank<=10)) countedTop10.add(trackList[0].title);
         });
+
         alb.songsNum1 = countedNum1.size;
         alb.songsTop10 = countedTop10.size;
         alb.songsHot100 = countedHot100.size;
 
-        // Yearly sales sum per track
+        // Yearly sales
         Object.entries(alb.tracks).forEach(([title,tlist])=>{
             tlist.forEach(t=>{
                 const y = new Date(getWeekStartDate(t.week)).getFullYear();
-                alb.yearlySales[y] += t.sales;
+                alb.yearlySales[y] += t.scaledSales;
             });
         });
-        // To-date sales sum
+
+        // Total sales to date
         alb.totalSalesToDate = Object.values(alb.tracks)
-            .reduce((sum,tlist)=>sum+tlist.reduce((s,t)=>s+t.sales,0),0);
+            .reduce((sum,tlist)=>sum+tlist.reduce((s,t)=>s+t.scaledSales,0),0);
+
         alb.weeksOnChart = alb.chartWeeks.size;
         alb.weeksTop10 = alb.top10Weeks.size;
         alb.weeksAt1 = alb.num1Weeks.size;
@@ -249,22 +236,39 @@ function generateTabs(data){
 
     // All-Time top 100
     const allTimeTab = document.createElement('div');
-    allTimeTab.classList.add('tab','active'); allTimeTab.innerText='All-Time';
+    allTimeTab.classList.add('tab','active');
+    allTimeTab.innerText='All-Time';
     tabContainer.appendChild(allTimeTab);
-    const allTimeContent=document.createElement('div'); allTimeContent.classList.add('tab-content'); allTimeContent.style.display='block';
-    const top100 = Object.values(albums).filter(a=>a.songsHot100>=2).sort((a,b)=>b.totalSalesToDate-a.totalSalesToDate).slice(0,100);
-    const allTimeAlbums={}; top100.forEach(a=>allTimeAlbums[a.album+'||'+a.artist]=a);
+
+    const allTimeContent=document.createElement('div');
+    allTimeContent.classList.add('tab-content');
+    allTimeContent.style.display='block';
+    const top100 = Object.values(albums)
+        .filter(a=>a.songsHot100>=2)
+        .sort((a,b)=>b.totalSalesToDate-a.totalSalesToDate)
+        .slice(0,100);
+    const allTimeAlbums={};
+    top100.forEach(a=>allTimeAlbums[a.album+'||'+a.artist]=a);
     allTimeContent.innerHTML=generateTable(allTimeAlbums);
     contentContainer.appendChild(allTimeContent);
     allTimeTab.addEventListener('click',()=>switchTab(allTimeTab,allTimeContent));
 
     // Year tabs top 20
     Object.keys(years).sort().forEach(year=>{
-        const tab=document.createElement('div'); tab.classList.add('tab'); tab.innerText=year;
+        const tab=document.createElement('div');
+        tab.classList.add('tab');
+        tab.innerText=year;
         tabContainer.appendChild(tab);
-        const content=document.createElement('div'); content.classList.add('tab-content');
-        const sorted = Object.values(years[year]).sort((a,b)=>(b.yearlySales[year]||0)-(a.yearlySales[year]||0)).slice(0,20);
-        const yearAlbums={}; sorted.forEach(a=>yearAlbums[a.album+'||'+a.artist]=a);
+
+        const content=document.createElement('div');
+        content.classList.add('tab-content');
+
+        const sorted = Object.values(years[year])
+            .sort((a,b)=>(b.yearlySales[year]||0)-(a.yearlySales[year]||0))
+            .slice(0,20);
+        const yearAlbums={};
+        sorted.forEach(a=>yearAlbums[a.album+'||'+a.artist]=a);
+
         content.innerHTML=generateTable(yearAlbums,year);
         contentContainer.appendChild(content);
         tab.addEventListener('click',()=>switchTab(tab,content));
@@ -285,3 +289,4 @@ else{ console.error("weekData is not defined. Make sure weekdata.js is loaded be
 </script>
 </body>
 </html>
+
