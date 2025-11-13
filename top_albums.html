@@ -115,11 +115,23 @@
       return n.toString();
     }
 
+    // ✅ Correct calendar-year resolution (Week 1 = 23 Feb 2018)
+    const weekStartDate = new Date(2018, 1, 23); // month index 1 = Feb
+    const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+
+    function getWeekYear(weekNum, entry) {
+      if (entry && entry.date) {
+        const d = new Date(entry.date);
+        if (!isNaN(d)) return d.getFullYear();
+      }
+      const date = new Date(weekStartDate.getTime() + (weekNum - 1) * msPerWeek);
+      return date.getFullYear();
+    }
+
+    // Determine which years exist in data
     const weekYears = Object.keys(weekData).map(Number).map(weekNum => {
       const entry = weekData[weekNum][0];
-      return entry && entry.date
-        ? new Date(entry.date).getFullYear()
-        : 2018 + Math.floor((weekNum - 1) / 52);
+      return getWeekYear(weekNum, entry);
     });
 
     const uniqueYears = [...new Set(weekYears)].sort((a, b) => b - a);
@@ -136,9 +148,7 @@
 
       for (const [weekKey, entries] of Object.entries(weekData)) {
         const weekNum = parseInt(weekKey);
-        const entryYear = entries[0] && entries[0].date
-          ? new Date(entries[0].date).getFullYear()
-          : 2018 + Math.floor((weekNum - 1) / 52);
+        const entryYear = getWeekYear(weekNum, entries[0]);
 
         for (const entry of entries) {
           if (!entry.album || !entry.artist) continue;
@@ -156,13 +166,13 @@
           // 🔹 Apply multiplier (×500)
           const weekSales = (entry.sales || 0) * 500;
 
-          // ✅ Only add sales/weeks if in selected year
+          // ✅ Only count this year's weeks/sales
           if (entryYear === parseInt(year)) {
             albumInfo.salesThisYear += weekSales;
             albumInfo.weeks += 1;
           }
 
-          // Lifetime sales
+          // Lifetime totals
           albumInfo.totalSales += weekSales;
           if (entry.rank < albumInfo.peak) albumInfo.peak = entry.rank;
 
@@ -194,7 +204,6 @@
           <td class="number">${album.weeks}</td>
           <td class="number">${album.peak}</td>
         `;
-
         tableBody.appendChild(row);
       });
     }
@@ -203,6 +212,7 @@
       renderTable(e.target.value);
     });
 
+    // Initial render = latest year
     renderTable(uniqueYears[0]);
     yearSelect.value = uniqueYears[0];
   </script>
