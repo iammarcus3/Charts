@@ -148,7 +148,7 @@ function computeAlbumRanksByWeek() {
         sorted.forEach(([key, weekSales], idx) => {
             ranks[weekNum][key] = {
                 rank: idx + 1,
-                weekSales // NOT USED FOR TOTAL SALES (A1 logic), but needed for debut/peak display
+                weekSales
             };
         });
     }
@@ -158,7 +158,7 @@ function computeAlbumRanksByWeek() {
 
 const albumRanksByWeek = computeAlbumRanksByWeek();
 
-// ========== PROCESS ALBUMS (A1 SALES LOGIC) ==========
+// ========== PROCESS ALBUMS (FIXED A1 SALES LOGIC) ==========
 function processAlbums(data) {
     const albums = {};
 
@@ -185,7 +185,7 @@ function processAlbums(data) {
 
                 tracks: {},
                 yearlyRawSales: {},
-                totalRawSales: 0,        // A1 — sum of ALL track sales
+                totalRawSales: 0,
 
                 weeksOnChart: 0,
                 weeksTop10: 0,
@@ -205,7 +205,7 @@ function processAlbums(data) {
 
         const alb = albums[albumKey];
 
-        // TRACK DEDUP (same as album_detail)
+        // TRACK DEDUP
         const tKey = normalizeTitle(entry.title || "");
         if (!alb.tracks[tKey]) {
             alb.tracks[tKey] = {
@@ -220,9 +220,6 @@ function processAlbums(data) {
         t.hasHot100 = true;
         if (rank <= 10) t.hasTop10 = true;
         if (rank === 1) t.hasNum1 = true;
-
-        // A1 SALES: add ALL raw weekly track sales
-        alb.totalRawSales += rawSales;
 
         // YEARLY SALES
         const year = new Date(getWeekStartDate(week)).getFullYear();
@@ -267,6 +264,15 @@ function processAlbums(data) {
         alb.songsHot100 = trackArr.length;
         alb.songsTop10 = trackArr.filter(t => t.hasTop10).length;
         alb.songsNum1 = trackArr.filter(t => t.hasNum1).length;
+
+        // ===== FIXED A1 TOTAL SALES =====
+        alb.totalRawSales = 0;
+        for (const weekStr in albumRanksByWeek) {
+            const weekNum = parseInt(weekStr, 10);
+            const info = albumRanksByWeek[weekNum][alb.key];
+            if (!info) continue;
+            alb.totalRawSales += info.weekSales;
+        }
     });
 
     return albums;
