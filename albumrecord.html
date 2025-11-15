@@ -76,33 +76,26 @@
 
 <script src="weekdata.js"></script>
 <script>
-
 // ========== CONFIG ==========
 const week1Start = new Date("2018-02-23");
 const saleMultiplier = 500;
 
-// ========== NORMALIZATION (same as album_detail.html) ==========
+// ========== NORMALIZATION ==========
 const normalize = s =>
-    typeof s === "string"
-        ? s.toUpperCase().replace(/[^A-Z0-9]/g, "").trim()
-        : "";
+    typeof s === "string" ? s.toUpperCase().replace(/[^A-Z0-9]/g, "").trim() : "";
 
 const normalizeAlbum = s =>
-    typeof s === "string"
-        ? s.toUpperCase()
-            .replace(/\(.*?\)|\[.*?\]/g, "")
-            .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
-            .replace(/[^A-Z0-9]/g, "")
-            .trim()
-        : "";
+    typeof s === "string" ? s.toUpperCase()
+        .replace(/\(.*?\)|\[.*?\]/g, "")
+        .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
+        .replace(/[^A-Z0-9]/g, "")
+        .trim() : "";
 
 const normalizeTitle = s =>
-    typeof s === "string"
-        ? s.toUpperCase()
-            .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
-            .replace(/[^A-Z0-9]/g, "")
-            .trim()
-        : "";
+    typeof s === "string" ? s.toUpperCase()
+        .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+        .replace(/[^A-Z0-9]/g, "")
+        .trim() : "";
 
 // ========== GET WEEK START DATE ==========
 function getWeekStartDate(weekNumber) {
@@ -116,52 +109,39 @@ const allTracks = [];
 Object.keys(weekData).forEach(weekKey => {
     const weekNum = parseInt(String(weekKey).replace(/\D/g, ""), 10);
     if (!Number.isFinite(weekNum)) return;
-
     weekData[weekKey].forEach(entry => {
         allTracks.push({ ...entry, week: weekNum });
     });
 });
 
-// ========== ALBUM RANKS (album-level weekly positions) ==========
+// ========== ALBUM RANKS ==========
 function computeAlbumRanksByWeek() {
     const ranks = {};
-
     for (const weekKey in weekData) {
         const weekNum = parseInt(String(weekKey).replace(/\D/g, ""), 10);
         if (!Number.isFinite(weekNum)) continue;
-
         const albumSalesMap = {};
-
         for (const entry of weekData[weekKey]) {
             if (!entry.album || !entry.artist) continue;
-
             const key = normalizeAlbum(entry.album) + "||" + normalize(entry.artist);
             const sales = parseFloat(entry.sales) || 0;
-
             albumSalesMap[key] = (albumSalesMap[key] || 0) + sales;
         }
-
         const sorted = Object.entries(albumSalesMap)
             .sort(([, a], [, b]) => b - a);
-
         ranks[weekNum] = {};
         sorted.forEach(([key, weekSales], idx) => {
-            ranks[weekNum][key] = {
-                rank: idx + 1,
-                weekSales
-            };
+            ranks[weekNum][key] = { rank: idx + 1, weekSales };
         });
     }
-
     return ranks;
 }
 
 const albumRanksByWeek = computeAlbumRanksByWeek();
 
-// ========== PROCESS ALBUMS (FIXED A1 SALES LOGIC) ==========
+// ========== PROCESS ALBUMS ==========
 function processAlbums(data) {
     const albums = {};
-
     data.forEach(entry => {
         if (!entry.album || !entry.artist) return;
 
@@ -173,7 +153,6 @@ function processAlbums(data) {
         if (!Number.isFinite(week)) return;
 
         const rawSales = parseFloat(entry.sales) || 0;
-        const rank = typeof entry.rank === "number" ? entry.rank : parseInt(entry.rank, 10);
 
         if (!albums[albumKey]) {
             albums[albumKey] = {
@@ -182,11 +161,9 @@ function processAlbums(data) {
                 artist: entry.artist,
                 normAlbum,
                 normArtist,
-
                 tracks: {},
                 yearlyRawSales: {},
                 totalRawSales: 0,
-
                 weeksOnChart: 0,
                 weeksTop10: 0,
                 weeksAt1: 0,
@@ -208,22 +185,10 @@ function processAlbums(data) {
         // TRACK DEDUP
         const tKey = normalizeTitle(entry.title || "");
         if (!alb.tracks[tKey]) {
-            alb.tracks[tKey] = {
-                title: entry.title,
-                hasHot100: false,
-                hasTop10: false,
-                hasNum1: false
-            };
+            alb.tracks[tKey] = { title: entry.title, hasHot100: false, hasTop10: false, hasNum1: false };
         }
-
         const t = alb.tracks[tKey];
         t.hasHot100 = true;
-        if (rank <= 10) t.hasTop10 = true;
-        if (rank === 1) t.hasNum1 = true;
-
-        // YEARLY SALES
-        const year = new Date(getWeekStartDate(week)).getFullYear();
-        alb.yearlyRawSales[year] = (alb.yearlyRawSales[year] || 0) + rawSales;
     });
 
     // ========== ADD WEEKLY CHART BEHAVIOR ==========
@@ -237,12 +202,10 @@ function processAlbums(data) {
             const weekSalesRaw = info.weekSales;
 
             alb.weeksOnChart++;
-
-            // DEBUT
-            if (alb.debutWeek === null || weekNum < alb.debutWeek) {
-                alb.debutWeek = weekNum;
-                alb.debutDate = getWeekStartDate(weekNum);
-                alb.debutSalesRaw = weekSalesRaw;
+            if (rank <= 10) alb.weeksTop10++;
+            if (rank === 1) {
+                alb.weeksAt1++;
+                if (!alb.dateHit1) alb.dateHit1 = getWeekStartDate(weekNum);
             }
 
             // PEAK
@@ -252,30 +215,29 @@ function processAlbums(data) {
                 alb.peakDate = getWeekStartDate(weekNum);
             }
 
-            if (rank <= 10) alb.weeksTop10++;
-            if (rank === 1) {
-                alb.weeksAt1++;
-                if (!alb.dateHit1) alb.dateHit1 = getWeekStartDate(weekNum);
+            // DEBUT — only when album has at least 3 Hot 100 tracks
+            const trackArr = Object.values(alb.tracks).filter(t => t.hasHot100);
+            if (trackArr.length >= 3 && alb.debutWeek === null) {
+                alb.debutWeek = weekNum;
+                alb.debutDate = getWeekStartDate(weekNum);
+                alb.debutSalesRaw = weekSalesRaw;
             }
+
+            alb.totalRawSales += weekSalesRaw;
         }
 
-        // SONG COUNTS
         const trackArr = Object.values(alb.tracks);
         alb.songsHot100 = trackArr.length;
         alb.songsTop10 = trackArr.filter(t => t.hasTop10).length;
         alb.songsNum1 = trackArr.filter(t => t.hasNum1).length;
-
-        // ===== FIXED A1 TOTAL SALES =====
-        alb.totalRawSales = 0;
-        for (const weekStr in albumRanksByWeek) {
-            const weekNum = parseInt(weekStr, 10);
-            const info = albumRanksByWeek[weekNum][alb.key];
-            if (!info) continue;
-            alb.totalRawSales += info.weekSales;
-        }
     });
 
     return albums;
+}
+
+// ========== FORMAT SALES ==========
+function formatSales(n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // ========== GENERATE TABLE ==========
@@ -310,13 +272,10 @@ function generateTable(albums, year = null) {
     Object.values(albums).forEach(alb => {
         if (alb.songsHot100 < 2) return;
 
-        const debutSales = (alb.debutSalesRaw * saleMultiplier).toFixed(0);
-        const peakSales  = (alb.peakSalesRaw  * saleMultiplier).toFixed(0);
-        const totalSales = (alb.totalRawSales * saleMultiplier).toFixed(0);
-
-        const yearlySales = year
-            ? ((alb.yearlyRawSales[year] || 0) * saleMultiplier).toFixed(0)
-            : "";
+        const debutSales = formatSales(Math.round(alb.debutSalesRaw * saleMultiplier));
+        const peakSales  = formatSales(Math.round(alb.peakSalesRaw * saleMultiplier));
+        const totalSales = formatSales(Math.round(alb.totalRawSales * saleMultiplier));
+        const yearlySales = year ? formatSales(Math.round((alb.yearlyRawSales[year] || 0) * saleMultiplier)) : "";
 
         html += `
         <tr>
@@ -338,7 +297,6 @@ function generateTable(albums, year = null) {
             <td>${totalSales}</td>
         </tr>
         `;
-
         rank++;
     });
 
@@ -359,13 +317,8 @@ function sortTable(header, colIdx) {
 
         const numA = parseFloat(A.replace(/[^0-9.-]/g, ""));
         const numB = parseFloat(B.replace(/[^0-9.-]/g, ""));
-
-        if (!isNaN(numA) && !isNaN(numB)) {
-            A = numA; B = numB;
-        } else {
-            A = A.toLowerCase();
-            B = B.toLowerCase();
-        }
+        if (!isNaN(numA) && !isNaN(numB)) { A = numA; B = numB; } 
+        else { A = A.toLowerCase(); B = B.toLowerCase(); }
 
         if (A > B) return asc ? 1 : -1;
         if (A < B) return asc ? -1 : 1;
@@ -409,10 +362,8 @@ function generateTabs(data) {
 
     const topMap = {};
     top100.forEach(a => topMap[a.key] = a);
-
     allContent.innerHTML = generateTable(topMap);
     contentContainer.appendChild(allContent);
-
     allTab.addEventListener("click", () => switchTab(allTab, allContent));
 
     // YEAR TABS
@@ -451,7 +402,6 @@ if (typeof weekData !== "undefined") {
 } else {
     console.error("weekData not loaded");
 }
-
 </script>
 
 </body>
