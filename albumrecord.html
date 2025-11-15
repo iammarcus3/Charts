@@ -3,384 +3,451 @@
 <head>
 <meta charset="UTF-8">
 <title>Album Records 2018-2025</title>
+
 <style>
-  body { font-family: 'Arial', sans-serif; background-color: #121212; color: #f0f0f0; margin:0; padding:0; }
-  h1 { text-align:center; padding:1rem; color:#ff004c; }
-  .tabs { display:flex; justify-content:center; background:#1f1f1f; border-bottom:2px solid #ff004c; flex-wrap:wrap; }
-  .tab { padding:10px 20px; cursor:pointer; color:#fff; transition: background 0.3s; margin:2px; }
-  .tab:hover, .tab.active { background:#ff004c; color:#fff; }
-  .tab-content { display:none; padding:1rem 2rem; overflow-x:auto; }
-  table { width:100%; border-collapse:collapse; margin-top:1rem; background-color:#1f1f1f; }
-  th, td { padding:8px 10px; border:1px solid #333; text-align:center; cursor:pointer; }
-  th { background-color:#2a2a2a; color:#ff004c; }
-  thead th { position: sticky; top: 0; z-index: 2; background-color:#2a2a2a; box-shadow: 0 2px 0 #00000040; }
-  tr:nth-child(even) { background-color:#1a1a1a; }
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #121212;
+        color: #f0f0f0;
+        margin:0; padding:0;
+    }
+    h1 {
+        text-align:center;
+        padding:1rem;
+        color:#ff004c;
+    }
+    .tabs {
+        display:flex;
+        justify-content:center;
+        background:#1f1f1f;
+        border-bottom:2px solid #ff004c;
+        flex-wrap:wrap;
+    }
+    .tab {
+        padding:10px 20px;
+        cursor:pointer;
+        color:#fff;
+        transition: background 0.3s;
+        margin:2px;
+    }
+    .tab:hover, .tab.active {
+        background:#ff004c;
+        color:#fff;
+    }
+    .tab-content {
+        display:none;
+        padding:1rem 2rem;
+        overflow-x:auto;
+    }
+    table {
+        width:100%;
+        border-collapse:collapse;
+        margin-top:1rem;
+        background-color:#1f1f1f;
+    }
+    th, td {
+        padding:8px 10px;
+        border:1px solid #333;
+        text-align:center;
+        cursor:pointer;
+    }
+    th {
+        background-color:#2a2a2a;
+        color:#ff004c;
+    }
+    thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background-color:#2a2a2a;
+        box-shadow: 0 2px 0 #00000040;
+    }
+    tr:nth-child(even) {
+        background-color:#1a1a1a;
+    }
 </style>
 </head>
+
 <body>
 
 <h1>Album Records 2018-2025</h1>
-
 <div class="tabs" id="yearTabs"></div>
 <div id="tabContents"></div>
 
 <script src="weekdata.js"></script>
 <script>
-// CONFIG
+
+// ========== CONFIG ==========
 const week1Start = new Date("2018-02-23");
 const saleMultiplier = 500;
 
-// ---- Normalization (same logic as album_detail.html) ----
+// ========== NORMALIZATION (same as album_detail.html) ==========
 const normalize = s =>
-  typeof s === "string"
-    ? s.toUpperCase().replace(/[^A-Z0-9]/g, "").trim()
-    : "";
+    typeof s === "string"
+        ? s.toUpperCase().replace(/[^A-Z0-9]/g, "").trim()
+        : "";
 
 const normalizeAlbum = s =>
-  typeof s === "string"
-    ? s.toUpperCase()
-        .replace(/\(.*?\)|\[.*?\]/g, "")
-        .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
-        .replace(/[^A-Z0-9]/g, "")
-        .trim()
-    : "";
+    typeof s === "string"
+        ? s.toUpperCase()
+            .replace(/\(.*?\)|\[.*?\]/g, "")
+            .replace(/DELUXE|BONUS|VERSION|REMIX|EP|REMASTERED|EXPANDED/gi, "")
+            .replace(/[^A-Z0-9]/g, "")
+            .trim()
+        : "";
 
 const normalizeTitle = s =>
-  typeof s === "string"
-    ? s.toUpperCase()
-        .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
-        .replace(/[^A-Z0-9]/g, "")
-        .trim()
-    : "";
+    typeof s === "string"
+        ? s.toUpperCase()
+            .replace(/\(.*?\)|\[.*?\]|REMIX|RADIO EDIT|FEAT\.?|FEATURING|VERSION|SINGLE/gi, "")
+            .replace(/[^A-Z0-9]/g, "")
+            .trim()
+        : "";
 
-// Helper: get week start date (YYYY-MM-DD)
+// ========== GET WEEK START DATE ==========
 function getWeekStartDate(weekNumber) {
-  const date = new Date(week1Start);
-  date.setDate(week1Start.getDate() + (weekNumber - 1) * 7);
-  return date.toISOString().split("T")[0];
+    const date = new Date(week1Start);
+    date.setDate(week1Start.getDate() + (weekNumber - 1) * 7);
+    return date.toISOString().split("T")[0];
 }
 
-// Flatten weekData → allTracks with numeric week
+// ========== FLATTEN ALL TRACK DATA ==========
 const allTracks = [];
 Object.keys(weekData).forEach(weekKey => {
-  const weekNum = parseInt(String(weekKey).replace(/\D/g, ""), 10);
-  if (!Number.isFinite(weekNum)) return;
-  weekData[weekKey].forEach(entry => {
-    const copy = { ...entry, week: weekNum };
-    allTracks.push(copy);
-  });
+    const weekNum = parseInt(String(weekKey).replace(/\D/g, ""), 10);
+    if (!Number.isFinite(weekNum)) return;
+
+    weekData[weekKey].forEach(entry => {
+        allTracks.push({ ...entry, week: weekNum });
+    });
 });
 
-// ---- Album ranks per week (same counting idea as album_detail) ----
+// ========== ALBUM RANKS (album-level weekly positions) ==========
 function computeAlbumRanksByWeek() {
-  const ranks = {};
-  for (const weekKey in weekData) {
-    const weekNum = parseInt(String(weekKey).replace(/\D/g, ""), 10);
-    if (!Number.isFinite(weekNum)) continue;
+    const ranks = {};
 
-    const albumSalesMap = {};
-    for (const entry of weekData[weekKey]) {
-      if (!entry.album || !entry.artist) continue;
-      const key = normalizeAlbum(entry.album) + "||" + normalize(entry.artist);
-      const sales = parseFloat(entry.sales) || 0;
-      albumSalesMap[key] = (albumSalesMap[key] || 0) + sales;
+    for (const weekKey in weekData) {
+        const weekNum = parseInt(String(weekKey).replace(/\D/g, ""), 10);
+        if (!Number.isFinite(weekNum)) continue;
+
+        const albumSalesMap = {};
+
+        for (const entry of weekData[weekKey]) {
+            if (!entry.album || !entry.artist) continue;
+
+            const key = normalizeAlbum(entry.album) + "||" + normalize(entry.artist);
+            const sales = parseFloat(entry.sales) || 0;
+
+            albumSalesMap[key] = (albumSalesMap[key] || 0) + sales;
+        }
+
+        const sorted = Object.entries(albumSalesMap)
+            .sort(([, a], [, b]) => b - a);
+
+        ranks[weekNum] = {};
+        sorted.forEach(([key, weekSales], idx) => {
+            ranks[weekNum][key] = {
+                rank: idx + 1,
+                weekSales // NOT USED FOR TOTAL SALES (A1 logic), but needed for debut/peak display
+            };
+        });
     }
 
-    const sorted = Object.entries(albumSalesMap).sort(([, a], [, b]) => b - a);
-    ranks[weekNum] = {};
-    sorted.forEach(([key, weekSales], idx) => {
-      ranks[weekNum][key] = {
-        rank: idx + 1,
-        weekSales // raw (unscaled) album sales for that week
-      };
-    });
-  }
-  return ranks;
+    return ranks;
 }
 
 const albumRanksByWeek = computeAlbumRanksByWeek();
 
-// ---- Process albums using SAME logic as album_detail for totals ----
+// ========== PROCESS ALBUMS (A1 SALES LOGIC) ==========
 function processAlbums(data) {
-  const albums = {};
+    const albums = {};
 
-  data.forEach(entry => {
-    if (!entry.album || !entry.artist) return;
+    data.forEach(entry => {
+        if (!entry.album || !entry.artist) return;
 
-    const normArtist = normalize(entry.artist);
-    const normAlbum = normalizeAlbum(entry.album);
-    const albumKey = normAlbum + "||" + normArtist;
+        const normArtist = normalize(entry.artist);
+        const normAlbum = normalizeAlbum(entry.album);
+        const albumKey = normAlbum + "||" + normArtist;
 
-    const week = typeof entry.week === "number"
-      ? entry.week
-      : parseInt(String(entry.week).replace(/\D/g, ""), 10);
-    if (!Number.isFinite(week)) return;
+        const week = parseInt(String(entry.week).replace(/\D/g, ""), 10);
+        if (!Number.isFinite(week)) return;
 
-    const rawSales = parseFloat(entry.sales) || 0;
-    const rank = typeof entry.rank === "number" ? entry.rank : parseInt(entry.rank, 10);
+        const rawSales = parseFloat(entry.sales) || 0;
+        const rank = typeof entry.rank === "number" ? entry.rank : parseInt(entry.rank, 10);
 
-    if (!albums[albumKey]) {
-      albums[albumKey] = {
-        key: albumKey,
-        album: entry.album,
-        artist: entry.artist,
-        normAlbum,
-        normArtist,
-        tracks: {},          // normalized title → { ... }
-        weeksOnChart: 0,
-        weeksTop10: 0,
-        weeksAt1: 0,
-        debutWeek: null,
-        debutDate: null,
-        peakRank: Infinity,
-        debutSalesRaw: 0,
-        peakSalesRaw: 0,
-        peakDate: null,
-        songsNum1: 0,
-        songsTop10: 0,
-        songsHot100: 0,
-        dateHit1: null,
-        yearlyRawSales: {},  // year → raw sales
-        totalRawSales: 0     // total raw sales (before * 500)
-      };
-    }
+        if (!albums[albumKey]) {
+            albums[albumKey] = {
+                key: albumKey,
+                album: entry.album,
+                artist: entry.artist,
+                normAlbum,
+                normArtist,
 
-    const alb = albums[albumKey];
+                tracks: {},
+                yearlyRawSales: {},
+                totalRawSales: 0,        // A1 — sum of ALL track sales
 
-    // Tracks deduped just like album_detail (REMIX/feat/etc collapsed)
-    const tKey = normalizeTitle(entry.title || "");
-    if (!alb.tracks[tKey]) {
-      alb.tracks[tKey] = {
-        title: entry.title,
-        hasHot100: false,
-        hasTop10: false,
-        hasNum1: false
-      };
-    }
-    const t = alb.tracks[tKey];
-    t.hasHot100 = true;
-    if (Number.isFinite(rank)) {
-      if (rank <= 10) t.hasTop10 = true;
-      if (rank === 1) t.hasNum1 = true;
-    }
+                weeksOnChart: 0,
+                weeksTop10: 0,
+                weeksAt1: 0,
+                debutWeek: null,
+                debutDate: null,
+                debutSalesRaw: 0,
+                peakRank: Infinity,
+                peakSalesRaw: 0,
+                peakDate: null,
+                songsNum1: 0,
+                songsTop10: 0,
+                songsHot100: 0,
+                dateHit1: null
+            };
+        }
 
-    // Sales totals
-    alb.totalRawSales += rawSales;
-    const year = new Date(getWeekStartDate(week)).getFullYear();
-    alb.yearlyRawSales[year] = (alb.yearlyRawSales[year] || 0) + rawSales;
-  });
+        const alb = albums[albumKey];
 
-  // Now use albumRanksByWeek to compute weeks / peak / debut exactly like album_detail
-  Object.values(albums).forEach(alb => {
-    for (const weekNumStr in albumRanksByWeek) {
-      const weekNum = parseInt(weekNumStr, 10);
-      if (!Number.isFinite(weekNum)) continue;
+        // TRACK DEDUP (same as album_detail)
+        const tKey = normalizeTitle(entry.title || "");
+        if (!alb.tracks[tKey]) {
+            alb.tracks[tKey] = {
+                title: entry.title,
+                hasHot100: false,
+                hasTop10: false,
+                hasNum1: false
+            };
+        }
 
-      const info = albumRanksByWeek[weekNum][alb.key];
-      if (!info) continue;
+        const t = alb.tracks[tKey];
+        t.hasHot100 = true;
+        if (rank <= 10) t.hasTop10 = true;
+        if (rank === 1) t.hasNum1 = true;
 
-      const rank = info.rank;
-      const weekSalesRaw = info.weekSales;
+        // A1 SALES: add ALL raw weekly track sales
+        alb.totalRawSales += rawSales;
 
-      // weeks on chart (album present at all)
-      alb.weeksOnChart++;
-
-      // debut week + debut sales = first week it appears in the album rankings
-      if (alb.debutWeek === null || weekNum < alb.debutWeek) {
-        alb.debutWeek = weekNum;
-        alb.debutDate = getWeekStartDate(weekNum);
-        alb.debutSalesRaw = weekSalesRaw;
-      }
-
-      // peak rank + peak sales (album chart peak)
-      if (rank < alb.peakRank) {
-        alb.peakRank = rank;
-        alb.peakSalesRaw = weekSalesRaw;
-        alb.peakDate = getWeekStartDate(weekNum);
-      }
-
-      // weeks in top 10 / at #1
-      if (rank <= 10) alb.weeksTop10++;
-      if (rank === 1) {
-        alb.weeksAt1++;
-        if (!alb.dateHit1) alb.dateHit1 = getWeekStartDate(weekNum);
-      }
-    }
-
-    // Song counts using de-duplicated titles
-    const tracksArr = Object.values(alb.tracks);
-    alb.songsHot100 = tracksArr.filter(t => t.hasHot100).length;
-    alb.songsTop10  = tracksArr.filter(t => t.hasTop10).length;
-    alb.songsNum1   = tracksArr.filter(t => t.hasNum1).length;
-  });
-
-  return albums;
-}
-
-// ---- Generate table HTML ----
-function generateTable(albums, year = null) {
-  let html = '<table><thead><tr>';
-  const headers = [
-    "Rank","Album","Artist","Weeks on Chart","Weeks Top 10","Weeks at #1",
-    "Debut Sales","Debut Date","Peak Sales","Peak Date",
-    "#Songs #1","#Songs Top 10","#Songs Hot 100","Date Hit #1"
-  ];
-  if (year) headers.push(`Sales (${year})`);
-  headers.push("To-Date Sales");
-
-  headers.forEach((h, i) => {
-    html += `<th onclick="sortTable(this,${i})">${h}</th>`;
-  });
-  html += '</tr></thead><tbody>';
-
-  let rank = 1;
-  Object.values(albums).forEach(alb => {
-    // Keep your ≥2 Hot 100 songs filter
-    if (alb.songsHot100 >= 2) {
-      const yearlyRaw   = year ? (alb.yearlyRawSales[year] || 0)       : 0;
-      const yearlySales = year ? yearlyRaw * saleMultiplier            : 0;
-      const debutSales  = alb.debutSalesRaw * saleMultiplier;
-      const peakSales   = alb.peakSalesRaw * saleMultiplier;
-      const totalSales  = alb.totalRawSales * saleMultiplier;
-
-      html += `<tr>
-        <td>${rank}</td>
-        <td>${alb.album}</td>
-        <td>${alb.artist}</td>
-        <td>${alb.weeksOnChart}</td>
-        <td>${alb.weeksTop10}</td>
-        <td>${alb.weeksAt1}</td>
-        <td>${debutSales.toFixed(0)}</td>
-        <td>${alb.debutDate || "-"}</td>
-        <td>${peakSales.toFixed(0)}</td>
-        <td>${alb.peakDate || "-"}</td>
-        <td>${alb.songsNum1}</td>
-        <td>${alb.songsTop10}</td>
-        <td>${alb.songsHot100}</td>
-        <td>${alb.dateHit1 || "-"}</td>
-        ${year ? `<td>${yearlySales.toFixed(0)}</td>` : ""}
-        <td>${totalSales.toFixed(0)}</td>
-      </tr>`;
-      rank++;
-    }
-  });
-
-  html += '</tbody></table>';
-  return html;
-}
-
-// ---- Sort table ----
-function sortTable(header, colIndex) {
-  const table = header.closest("table");
-  const tbody = table.querySelector("tbody");
-  const rows = Array.from(tbody.querySelectorAll("tr"));
-  const asc = !header.asc;
-
-  rows.sort((a, b) => {
-    let valA = a.children[colIndex].innerText;
-    let valB = b.children[colIndex].innerText;
-
-    const numA = parseFloat(valA.replace(/[^0-9.-]/g, ""));
-    const numB = parseFloat(valB.replace(/[^0-9.-]/g, ""));
-    if (!isNaN(numA) && !isNaN(numB)) {
-      valA = numA; valB = numB;
-    } else {
-      valA = valA.toLowerCase();
-      valB = valB.toLowerCase();
-    }
-
-    if (valA > valB) return asc ? 1 : -1;
-    if (valA < valB) return asc ? -1 : 1;
-    return 0;
-  });
-
-  header.asc = asc;
-  rows.forEach(r => tbody.appendChild(r));
-}
-
-// ---- Generate tabs ----
-function generateTabs(data) {
-  const albums = processAlbums(data);
-  const years = {};
-
-  // Group albums by debut year (like your yearly tabs)
-  Object.values(albums).forEach(alb => {
-    if (!alb.debutDate) return;
-    const y = new Date(alb.debutDate).getFullYear();
-    if (!years[y]) years[y] = {};
-    if (alb.songsHot100 >= 2) {
-      years[y][alb.key] = alb;
-    }
-  });
-
-  const tabContainer = document.getElementById("yearTabs");
-  const contentContainer = document.getElementById("tabContents");
-
-  // All-Time tab (Top 100 by total sales, using the same sales logic as album_detail)
-  const allTimeTab = document.createElement("div");
-  allTimeTab.classList.add("tab", "active");
-  allTimeTab.innerText = "All-Time";
-  tabContainer.appendChild(allTimeTab);
-
-  const allTimeContent = document.createElement("div");
-  allTimeContent.classList.add("tab-content");
-  allTimeContent.style.display = "block";
-
-  const top100 = Object.values(albums)
-    .filter(a => a.songsHot100 >= 2)
-    .sort((a, b) => b.totalRawSales - a.totalRawSales)
-    .slice(0, 100);
-
-  const allTimeAlbums = {};
-  top100.forEach(a => {
-    allTimeAlbums[a.key] = a;
-  });
-
-  allTimeContent.innerHTML = generateTable(allTimeAlbums);
-  contentContainer.appendChild(allTimeContent);
-  allTimeTab.addEventListener("click", () => switchTab(allTimeTab, allTimeContent));
-
-  // Year tabs (Top 20 by that year's sales)
-  Object.keys(years).sort().forEach(year => {
-    const tab = document.createElement("div");
-    tab.classList.add("tab");
-    tab.innerText = year;
-    tabContainer.appendChild(tab);
-
-    const content = document.createElement("div");
-    content.classList.add("tab-content");
-
-    const sorted = Object.values(years[year])
-      .sort((a, b) =>
-        (b.yearlyRawSales[year] || 0) - (a.yearlyRawSales[year] || 0)
-      )
-      .slice(0, 20);
-
-    const yearAlbums = {};
-    sorted.forEach(a => {
-      yearAlbums[a.key] = a;
+        // YEARLY SALES
+        const year = new Date(getWeekStartDate(week)).getFullYear();
+        alb.yearlyRawSales[year] = (alb.yearlyRawSales[year] || 0) + rawSales;
     });
 
-    content.innerHTML = generateTable(yearAlbums, year);
-    contentContainer.appendChild(content);
-    tab.addEventListener("click", () => switchTab(tab, content));
-  });
+    // ========== ADD WEEKLY CHART BEHAVIOR ==========
+    Object.values(albums).forEach(alb => {
+        for (const weekStr in albumRanksByWeek) {
+            const weekNum = parseInt(weekStr, 10);
+            const info = albumRanksByWeek[weekNum][alb.key];
+            if (!info) continue;
+
+            const rank = info.rank;
+            const weekSalesRaw = info.weekSales;
+
+            alb.weeksOnChart++;
+
+            // DEBUT
+            if (alb.debutWeek === null || weekNum < alb.debutWeek) {
+                alb.debutWeek = weekNum;
+                alb.debutDate = getWeekStartDate(weekNum);
+                alb.debutSalesRaw = weekSalesRaw;
+            }
+
+            // PEAK
+            if (rank < alb.peakRank) {
+                alb.peakRank = rank;
+                alb.peakSalesRaw = weekSalesRaw;
+                alb.peakDate = getWeekStartDate(weekNum);
+            }
+
+            if (rank <= 10) alb.weeksTop10++;
+            if (rank === 1) {
+                alb.weeksAt1++;
+                if (!alb.dateHit1) alb.dateHit1 = getWeekStartDate(weekNum);
+            }
+        }
+
+        // SONG COUNTS
+        const trackArr = Object.values(alb.tracks);
+        alb.songsHot100 = trackArr.length;
+        alb.songsTop10 = trackArr.filter(t => t.hasTop10).length;
+        alb.songsNum1 = trackArr.filter(t => t.hasNum1).length;
+    });
+
+    return albums;
+}
+
+// ========== GENERATE TABLE ==========
+function generateTable(albums, year = null) {
+    let html = `
+    <table>
+    <thead>
+    <tr>
+        <th onclick="sortTable(this,0)">Rank</th>
+        <th onclick="sortTable(this,1)">Album</th>
+        <th onclick="sortTable(this,2)">Artist</th>
+        <th onclick="sortTable(this,3)">Weeks on Chart</th>
+        <th onclick="sortTable(this,4)">Weeks Top 10</th>
+        <th onclick="sortTable(this,5)">Weeks at #1</th>
+        <th onclick="sortTable(this,6)">Debut Sales</th>
+        <th onclick="sortTable(this,7)">Debut Date</th>
+        <th onclick="sortTable(this,8)">Peak Sales</th>
+        <th onclick="sortTable(this,9)">Peak Date</th>
+        <th onclick="sortTable(this,10)">#Songs #1</th>
+        <th onclick="sortTable(this,11)">#Songs Top 10</th>
+        <th onclick="sortTable(this,12)">#Songs Hot 100</th>
+        <th onclick="sortTable(this,13)">Date Hit #1</th>
+        ${year ? `<th onclick="sortTable(this,14)">Sales (${year})</th>` : ""}
+        <th onclick="sortTable(this,${year ? 15 : 14})">To-Date Sales</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
+
+    let rank = 1;
+
+    Object.values(albums).forEach(alb => {
+        if (alb.songsHot100 < 2) return;
+
+        const debutSales = (alb.debutSalesRaw * saleMultiplier).toFixed(0);
+        const peakSales  = (alb.peakSalesRaw  * saleMultiplier).toFixed(0);
+        const totalSales = (alb.totalRawSales * saleMultiplier).toFixed(0);
+
+        const yearlySales = year
+            ? ((alb.yearlyRawSales[year] || 0) * saleMultiplier).toFixed(0)
+            : "";
+
+        html += `
+        <tr>
+            <td>${rank}</td>
+            <td>${alb.album}</td>
+            <td>${alb.artist}</td>
+            <td>${alb.weeksOnChart}</td>
+            <td>${alb.weeksTop10}</td>
+            <td>${alb.weeksAt1}</td>
+            <td>${debutSales}</td>
+            <td>${alb.debutDate || "-"}</td>
+            <td>${peakSales}</td>
+            <td>${alb.peakDate || "-"}</td>
+            <td>${alb.songsNum1}</td>
+            <td>${alb.songsTop10}</td>
+            <td>${alb.songsHot100}</td>
+            <td>${alb.dateHit1 || "-"}</td>
+            ${year ? `<td>${yearlySales}</td>` : ""}
+            <td>${totalSales}</td>
+        </tr>
+        `;
+
+        rank++;
+    });
+
+    html += "</tbody></table>";
+    return html;
+}
+
+// ========== SORTING ==========
+function sortTable(header, colIdx) {
+    const table = header.closest("table");
+    const tbody = table.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    const asc = !header.asc;
+
+    rows.sort((a, b) => {
+        let A = a.children[colIdx].innerText;
+        let B = b.children[colIdx].innerText;
+
+        const numA = parseFloat(A.replace(/[^0-9.-]/g, ""));
+        const numB = parseFloat(B.replace(/[^0-9.-]/g, ""));
+
+        if (!isNaN(numA) && !isNaN(numB)) {
+            A = numA; B = numB;
+        } else {
+            A = A.toLowerCase();
+            B = B.toLowerCase();
+        }
+
+        if (A > B) return asc ? 1 : -1;
+        if (A < B) return asc ? -1 : 1;
+        return 0;
+    });
+
+    header.asc = asc;
+    rows.forEach(r => tbody.appendChild(r));
+}
+
+// ========== TABS ==========
+function generateTabs(data) {
+    const albums = processAlbums(data);
+    const years = {};
+
+    // YEAR GROUPS
+    Object.values(albums).forEach(alb => {
+        if (!alb.debutDate) return;
+        const y = new Date(alb.debutDate).getFullYear();
+        if (!years[y]) years[y] = {};
+        if (alb.songsHot100 >= 2) years[y][alb.key] = alb;
+    });
+
+    const tabContainer = document.getElementById("yearTabs");
+    const contentContainer = document.getElementById("tabContents");
+
+    // ALL-TIME TAB
+    const allTab = document.createElement("div");
+    allTab.classList.add("tab", "active");
+    allTab.innerText = "All-Time";
+    tabContainer.appendChild(allTab);
+
+    const allContent = document.createElement("div");
+    allContent.classList.add("tab-content");
+    allContent.style.display = "block";
+
+    const top100 = Object.values(albums)
+        .filter(a => a.songsHot100 >= 2)
+        .sort((a, b) => b.totalRawSales - a.totalRawSales)
+        .slice(0, 100);
+
+    const topMap = {};
+    top100.forEach(a => topMap[a.key] = a);
+
+    allContent.innerHTML = generateTable(topMap);
+    contentContainer.appendChild(allContent);
+
+    allTab.addEventListener("click", () => switchTab(allTab, allContent));
+
+    // YEAR TABS
+    Object.keys(years).sort().forEach(year => {
+        const tab = document.createElement("div");
+        tab.classList.add("tab");
+        tab.innerText = year;
+        tabContainer.appendChild(tab);
+
+        const content = document.createElement("div");
+        content.classList.add("tab-content");
+
+        const sorted = Object.values(years[year])
+            .sort((a, b) => (b.yearlyRawSales[year] || 0) - (a.yearlyRawSales[year] || 0))
+            .slice(0, 20);
+
+        const map = {};
+        sorted.forEach(a => map[a.key] = a);
+
+        content.innerHTML = generateTable(map, year);
+        contentContainer.appendChild(content);
+
+        tab.addEventListener("click", () => switchTab(tab, content));
+    });
 }
 
 function switchTab(tab, content) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  document.querySelectorAll(".tab-content").forEach(c => c.style.display = "none");
-  tab.classList.add("active");
-  content.style.display = "block";
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(c => c.style.display = "none");
+    tab.classList.add("active");
+    content.style.display = "block";
 }
 
-// Initialize
 if (typeof weekData !== "undefined") {
-  generateTabs(allTracks);
+    generateTabs(allTracks);
 } else {
-  console.error("weekData is not defined. Make sure weekdata.js is loaded before this script.");
+    console.error("weekData not loaded");
 }
+
 </script>
+
 </body>
 </html>
 
