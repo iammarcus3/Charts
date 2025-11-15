@@ -223,7 +223,19 @@ function processAlbums(data) {
                 alb.debutSalesRaw = weekSalesRaw;
             }
 
+            // ADD WEEKLY SALES TO YEARLY TOTAL
+            const albumYear = new Date(getWeekStartDate(weekNum)).getFullYear();
+            alb.yearlyRawSales[albumYear] = (alb.yearlyRawSales[albumYear] || 0) + weekSalesRaw;
+
+            // UPDATE TOTAL SALES
             alb.totalRawSales += weekSalesRaw;
+
+            // UPDATE SONGS TOP10 / NUM1
+            for (const tKey in alb.tracks) {
+                const t = alb.tracks[tKey];
+                if (rank <= 10) t.hasTop10 = true;
+                if (rank === 1) t.hasNum1 = true;
+            }
         }
 
         const trackArr = Object.values(alb.tracks);
@@ -406,4 +418,5 @@ if (typeof weekData !== "undefined") {
 
 </body>
 </html>
+
 
