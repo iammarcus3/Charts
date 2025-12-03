@@ -62,6 +62,58 @@
       </table>
     </div>
 
+    <!-- NEW: Hot-100 Extremes — Advanced -->
+    <div class="card">
+      <h2>Hot-100 Extremes — Advanced <span class="badge">deep</span></h2>
+      <div class="sub">Compact advanced extremes: spikes, biggest drops, outliers.</div>
+      <div class="actions">
+        <button onclick="downloadCSV('extremesTbl')">⬇️ CSV</button>
+      </div>
+      <table id="extremesTbl">
+        <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- NEW: Velocity stats (fastest to peak, fastest dropoffs) -->
+    <div class="card">
+      <h2>Velocity Stats <span class="badge">speed & fall</span></h2>
+      <div class="sub">Fastest climbs, fastest falls, rip-cord weeks.</div>
+      <div class="actions">
+        <button onclick="downloadCSV('velocityTbl')">⬇️ CSV</button>
+      </div>
+      <table id="velocityTbl">
+        <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- NEW: Re-entry behaviour -->
+    <div class="card">
+      <h2>Re-entry Behaviour <span class="badge">returns</span></h2>
+      <div class="sub">Most re-entries, best re-entry positions, longest gaps.</div>
+      <div class="actions">
+        <button onclick="downloadCSV('reentryTbl')">⬇️ CSV</button>
+      </div>
+      <table id="reentryTbl">
+        <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- NEW: Song endurance -->
+    <div class="card">
+      <h2>Song Endurance <span class="badge">longevity</span></h2>
+      <div class="sub">Stability and longevity metrics.</div>
+      <div class="actions">
+        <button onclick="downloadCSV('enduranceTbl')">⬇️ CSV</button>
+      </div>
+      <table id="enduranceTbl">
+        <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
     <!-- Format -->
     <div class="card">
       <h2>Format & points milestones <span class="badge">streams / sales / radio / pts</span></h2>
@@ -73,6 +125,32 @@
         </select>
       </div>
       <table id="formatTbl">
+        <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- NEW: Points/Streams/Sales/Radio Anomalies -->
+    <div class="card">
+      <h2>Points / Streams / Sales / Radio Anomalies <span class="badge">outliers</span></h2>
+      <div class="sub">Biggest week-to-week swings and anomalies.</div>
+      <div class="actions">
+        <button onclick="downloadCSV('anomaliesTbl')">⬇️ CSV</button>
+      </div>
+      <table id="anomaliesTbl">
+        <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- NEW: Decay-rate / retention -->
+    <div class="card">
+      <h2>Decay & Retention <span class="badge">decay</span></h2>
+      <div class="sub">Fastest declines, best retention after week 5 / 10.</div>
+      <div class="actions">
+        <button onclick="downloadCSV('decayTbl')">⬇️ CSV</button>
+      </div>
+      <table id="decayTbl">
         <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
         <tbody></tbody>
       </table>
@@ -90,6 +168,19 @@
       </table>
     </div>
 
+    <!-- NEW: Artist dominance — extended -->
+    <div class="card">
+      <h2>Artist Dominance — Extended <span class="badge">dom</span></h2>
+      <div class="sub">Extra artist-level dominance stats (compact).</div>
+      <div class="actions">
+        <button onclick="downloadCSV('artistExtTbl')">⬇️ CSV</button>
+      </div>
+      <table id="artistExtTbl">
+        <thead><tr><th>Record</th><th>Artist</th><th class="right">Value</th><th class="right">Span</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
     <!-- Album -->
     <div class="card">
       <h2>Album-linked records <span class="badge">per album</span></h2>
@@ -102,6 +193,32 @@
       </table>
     </div>
 
+    <!-- NEW: Album extreme feats -->
+    <div class="card">
+      <h2>Album Extreme Feats <span class="badge">albums</span></h2>
+      <div class="sub">Most charting songs, biggest album weeks.</div>
+      <div class="actions">
+        <button onclick="downloadCSV('albumExtTbl')">⬇️ CSV</button>
+      </div>
+      <table id="albumExtTbl">
+        <thead><tr><th>Record</th><th>Album</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- NEW: Album cycle behaviour -->
+    <div class="card">
+      <h2>Album Cycle Behaviour <span class="badge">flow</span></h2>
+      <div class="sub">Liftoff weeks, mid-cycle revivals, tails.</div>
+      <div class="actions">
+        <button onclick="downloadCSV('albumCycleTbl')">⬇️ CSV</button>
+      </div>
+      <table id="albumCycleTbl">
+        <thead><tr><th>Record</th><th>Album</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
     <!-- Week dominance -->
     <div class="card">
       <h2>Week dominance <span class="badge">extremes by week</span></h2>
@@ -109,6 +226,19 @@
         <button onclick="downloadCSV('weekTbl')">⬇️ CSV</button>
       </div>
       <table id="weekTbl">
+        <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- NEW: Week-level anomalies 2.0 -->
+    <div class="card">
+      <h2>Week-level Anomalies 2.0 <span class="badge">week</span></h2>
+      <div class="sub">Volatility, net gain/loss, entries/exits.</div>
+      <div class="actions">
+        <button onclick="downloadCSV('week2Tbl')">⬇️ CSV</button>
+      </div>
+      <table id="week2Tbl">
         <thead><tr><th>Record</th><th>Holder</th><th class="right">Value</th><th class="right">Week</th></tr></thead>
         <tbody></tbody>
       </table>
@@ -159,11 +289,9 @@
     }
 
     /* --------------------------
-       computeAll (UNCHANGED)
+       computeAll (modified to add new compact stats)
        --------------------------
-       NOTE: This function is copied verbatim from your original file.
-       It accepts a raw data object keyed by week numbers and returns
-       the exact same record sets that your UI expects.
+       NOTE: kept your original logic intact; appended new derived stats.
     */
     function computeAll(raw){
       const ranked = buildWeeklyRanks(raw);
@@ -217,6 +345,15 @@
       let albumBestWeekStreams = {album:null, week:null, value:-Infinity};
 
       let maxEntriesOneWeek = {artist:null, week:null, count:0};
+
+      // For new stats derived from song histories
+      let fastestToPeak = {key:null, weeks:Infinity, start:null, peakWeek:null};
+      let fastestToTop50 = {key:null, weeks:Infinity, start:null, hit:null};
+      let fastestDropAfterPeak = {key:null, drop:-Infinity, peakWeek:null, nextWeek:null};
+      let ripCordWeek = {key:null, drop:-Infinity, week:null}; // biggest week-to-week rank drop from top 10
+      let fastestDeclinePoints = {key:null, loss:-Infinity, week:null};
+      let bestRetentionWeek5 = {key:null, ratio:-Infinity};
+      let bestRetentionWeek10 = {key:null, ratio:-Infinity};
 
       for (const w of weeks){
         const rows = ranked.get(w) || [];
@@ -365,6 +502,7 @@
       let biggestPointsGain = {key:null, from:null, to:null, week:null, gain:0};
       let biggestPointsLoss = {key:null, from:null, to:null, week:null, loss:0};
 
+      // Iterate songHist to build the remaining new stats
       for (const [k,hist] of songHist.entries()){
         hist.sort((a,b)=>a.week-b.week);
 
@@ -379,6 +517,7 @@
           bestNon1Debut = {key:k, rank:debutRow.rank, week:debutRow.week};
         }
 
+        // track #1 runs
         let cur=0,best=0,start=null,bStart=null,bEnd=null, totalAt1=0;
         let runs=0, inRun=false, lastNo1Week=null, maxGap=0, gapFrom=null, gapTo=null;
         for (const r of hist){
@@ -398,6 +537,7 @@
         if (runs > (mostNo1Runs.runs||0)) mostNo1Runs = {key:k, runs};
         if (maxGap > (longestGapBetweenNo1s.gapWeeks||0) && runs>1) longestGapBetweenNo1s = {key:k, gapWeeks:maxGap, from:gapFrom, to:gapTo};
 
+        // compute single-step gains/drops and point swings
         for (let i=1;i<hist.length;i++){
           const p = hist[i-1], c = hist[i];
           const gain = (p.rank||101) - (c.rank||101);
@@ -421,12 +561,44 @@
           if (at2 > mostWeeksAt2NoNo1.weeksAt2) mostWeeksAt2NoNo1 = {key:k, weeksAt2:at2};
         }
 
-        if (f1 && debutRow){
-          const delta = f1.week - debutRow.week;
-          if (delta>0 && delta < (fastestTo1_exclDebut.weeks||Infinity)) fastestTo1_exclDebut = {key:k, weeks:delta, start:debutRow.week, hit:f1.week};
-          if (delta >= (slowestTo1.weeks||-Infinity)) slowestTo1 = {key:k, weeks:delta, start:debutRow.week, hit:f1.week};
+        // times-to-milestones
+        const debutWeek = hist[0].week;
+        const peak = hist.reduce((acc, cur) => (cur.points> (acc.points||-Infinity) ? cur : acc), {});
+        if (peak && peak.week){
+          const delta = peak.week - debutWeek;
+          if (delta > 0 && delta < (fastestToPeak.weeks||Infinity)) fastestToPeak = {key:k, weeks:delta, start:debutWeek, peakWeek:peak.week};
+          if (delta > 0 && delta < (fastestToTop50.weeks||Infinity) && peak.rank <= 50) {
+            // consider as fast to top 50 if peak is inside 50
+            fastestToTop50 = {key:k, weeks:delta, start:debutWeek, hit:peak.week};
+          }
+          // drop after peak
+          const idx = hist.findIndex(h=>h.week===peak.week);
+          if (idx>=0 && idx+1 < hist.length){
+            const next = hist[idx+1];
+            const dropPts = (peak.points||0) - (next.points||0);
+            if (dropPts > (fastestDeclinePoints.loss||-Infinity)) fastestDeclinePoints = {key:k, loss:dropPts, week:peak.week};
+            // record fastest drop by rank if peak was in top10
+            if ((peak.rank||101)<=10){
+              const rankDrop = (peak.rank||101) - (next.rank||101);
+              if (rankDrop > (ripCordWeek.drop||-Infinity)) ripCordWeek = {key:k, drop:rankDrop, week: next.week};
+            }
+            // largest absolute drop after peak
+            if (dropPts > (fastestDropAfterPeak.drop||-Infinity)) fastestDropAfterPeak = {key:k, drop:dropPts, peakWeek:peak.week, nextWeek: next.week};
+          }
         }
 
+        // retention after week 5 / 10
+        const pointsTotal = hist.reduce((s,x)=>s+(x.points||0),0);
+        const afterW5 = hist.filter(x=> x.week >= (debutWeek+5)).reduce((s,x)=>s+(x.points||0),0);
+        const afterW10 = hist.filter(x=> x.week >= (debutWeek+10)).reduce((s,x)=>s+(x.points||0),0);
+        if (pointsTotal>0){
+          const r5 = afterW5 / pointsTotal;
+          const r10 = afterW10 / pointsTotal;
+          if (r5 > (bestRetentionWeek5.ratio||-Infinity)) bestRetentionWeek5 = {key:k, ratio:r5};
+          if (r10 > (bestRetentionWeek10.ratio||-Infinity)) bestRetentionWeek10 = {key:k, ratio:r10};
+        }
+
+        // reentry counts
         let runCount=1;
         for (let i=1;i<hist.length;i++){
           if (hist[i].week - hist[i-1].week > 1){
@@ -509,6 +681,7 @@
 
       const disp = k => displayFor.get(k) || '—';
 
+      /* ---------- original row sets (unchanged) ---------- */
       const hotRows = [
         { label:'First #1 (Week 1)', holder:firstNo1? disp(firstNo1.key):'—', value:firstNo1? `W${firstNo1.week} (${ymd(dateFromWeek(firstNo1.week))})`:'—'},
         { label:'First song to debut at #1', holder:firstDebutNo1? disp(firstDebutNo1.key):'—', value:firstDebutNo1? `W${firstDebutNo1.week}`:'—' },
@@ -583,6 +756,96 @@
         { label:'Week with most simultaneous entries (single artist)', holder:maxEntriesOneWeek.artist||'—', value:fmtInt(maxEntriesOneWeek.count), week:maxEntriesOneWeek.week?`W${maxEntriesOneWeek.week}`:'—' },
       ];
 
+      /* ---------- NEW compact panels (10–15 rows each) ---------- */
+
+      // Hot-100 Extremes — Advanced (compact)
+      const extremesRows = [
+        { label:'Largest single-week stream spike', holder:disp(biggestStream.key), value:abbr(biggestStream.value), week:biggestStream.week?`W${biggestStream.week}`:'—' },
+        { label:'Largest single-week points', holder:disp(biggestPoints.key), value:abbr(biggestPoints.value), week:biggestPoints.week?`W${biggestPoints.week}`:'—' },
+        { label:'Highest radio week', holder:disp(highestRadio.key), value:abbr(highestRadio.value), week:highestRadio.week?`W${highestRadio.week}`:'—' },
+        { label:'Highest sales week', holder:disp(highestSales.key), value:abbr(highestSales.value), week:highestSales.week?`W${highestSales.week}`:'—' },
+        { label:'Highest streams outside Top-10', holder:disp(highestStreamsOutsideTop10.key), value:abbr(highestStreamsOutsideTop10.value), week:highestStreamsOutsideTop10.week?`W${highestStreamsOutsideTop10.week}`:'—' },
+        { label:'Biggest rank gain (WoW)', holder:disp(biggestRankGain.key), value:biggestRankGain.gain?`+${fmtInt(biggestRankGain.gain)}`:'—', week:biggestRankGain.week?`W${biggestRankGain.week}`:'—' },
+        { label:'Biggest rank drop (WoW)', holder:disp(biggestRankDrop.key), value:biggestRankDrop.drop?`-${fmtInt(biggestRankDrop.drop)}`:'—', week:biggestRankDrop.week?`W${biggestRankDrop.week}`:'—' },
+        { label:'Largest points surge (WoW)', holder:disp(biggestPointsGain.key), value:abbr(biggestPointsGain.gain), week:biggestPointsGain.week?`W${biggestPointsGain.week}`:'—' },
+        { label:'Largest points collapse (WoW)', holder:disp(biggestPointsLoss.key), value:abbr(biggestPointsLoss.loss), week:biggestPointsLoss.week?`W${biggestPointsLoss.week}`:'—' },
+        { label:'Heaviest Top-10 streams week', holder:'Top-10 sum', value:abbr(heaviestTop10WeekStreams.total), week:heaviestTop10WeekStreams.week?`W${heaviestTop10WeekStreams.week}`:'—' },
+      ];
+
+      // Velocity (compact)
+      const velocityRows = [
+        { label:'Fastest to peak (weeks from debut to peak)', holder:disp(fastestToPeak.key), value: Number.isFinite(fastestToPeak.weeks) ? `${fastestToPeak.weeks} wks` : '—', week: fastestToPeak.peakWeek? `W${fastestToPeak.peakWeek}`:'—' },
+        { label:'Fastest to Top-50 (from debut)', holder:disp(fastestToTop50.key), value: Number.isFinite(fastestToTop50.weeks)? `${fastestToTop50.weeks} wks`:'—', week: fastestToTop50.hit?`W${fastestToTop50.hit}`:'—' },
+        { label:'Fastest drop after peak (points)', holder:disp(fastestDropAfterPeak.key), value:abbr(fastestDropAfterPeak.drop), week:fastestDropAfterPeak.nextWeek?`W${fastestDropAfterPeak.nextWeek}`:'—' },
+        { label:'Largest rip-cord (rank drop from top10)', holder:disp(ripCordWeek.key), value: ripCordWeek.drop? `${fmtInt(ripCordWeek.drop)} places`:'—', week:ripCordWeek.week?`W${ripCordWeek.week}`:'—' },
+        { label:'Largest absolute points decline (peak→next)', holder:disp(fastestDeclinePoints.key), value:abbr(fastestDeclinePoints.loss), week:fastestDeclinePoints.week?`W${fastestDeclinePoints.week}`:'—' },
+      ];
+
+      // Re-entry behaviour (compact)
+      const reentryRows = [
+        { label:'Song with most re-entries (runs)', holder:disp(mostReentries.key), value:fmtInt(mostReentries.count), week:'—' },
+        { label:'Best re-entry peak position', holder:disp(bestReentryPos.key), value:isFinite(bestReentryPos.rank)?`#${bestReentryPos.rank}`:'—', week:bestReentryPos.week?`W${bestReentryPos.week}`:'—' },
+        { label:'Week with most re-entries', holder:'Week', value:fmtInt(mostReentriesWeek.count), week:mostReentriesWeek.week?`W${mostReentriesWeek.week}`:'—' },
+        { label:'Song with deepest total re-entries', holder:disp(mostReentries.key), value:fmtInt(mostReentries.count), week:'—' },
+      ];
+
+      // Song Endurance (compact)
+      const enduranceRows = [
+        { label:'Most weeks on chart (song)', holder:disp(mostWeeksOnChart.key), value:fmtInt(mostWeeksOnChart.weeks), week:'—' },
+        { label:'Most weeks in Top-10 (song)', holder:disp(mostTop10Weeks.key), value:fmtInt(mostTop10Weeks.weeks), week:'—' },
+        { label:'Most weeks in Top-5 (song)', holder:disp(mostTop5Weeks.key), value:fmtInt(mostTop5Weeks.weeks), week:'—' },
+        { label:'Most weeks at #2 without #1', holder:disp(mostWeeksAt2NoNo1.key), value:fmtInt(mostWeeksAt2NoNo1.weeksAt2), week:'—' },
+        { label:'Most cumulative points (song)', holder:disp(mostCumePointsSong.key), value:abbr(mostCumePointsSong.value), week:'—' },
+      ];
+
+      // Anomalies (compact)
+      const anomaliesRows = [
+        { label:'Biggest points spike (WoW)', holder:disp(biggestPointsGain.key), value:abbr(biggestPointsGain.gain), week:biggestPointsGain.week?`W${biggestPointsGain.week}`:'—' },
+        { label:'Biggest points collapse (WoW)', holder:disp(biggestPointsLoss.key), value:abbr(biggestPointsLoss.loss), week:biggestPointsLoss.week?`W${biggestPointsLoss.week}`:'—' },
+        { label:'Highest stream week outside Top-10', holder:disp(highestStreamsOutsideTop10.key), value:abbr(highestStreamsOutsideTop10.value), week:highestStreamsOutsideTop10.week?`W${highestStreamsOutsideTop10.week}`:'—' },
+        { label:'Highest radio week (any rank)', holder:disp(highestRadio.key), value:abbr(highestRadio.value), week:highestRadio.week?`W${highestRadio.week}`:'—' },
+        { label:'Highest sales week (any rank)', holder:disp(highestSales.key), value:abbr(highestSales.value), week:highestSales.week?`W${highestSales.week}`:'—' },
+      ];
+
+      // Decay / retention (compact)
+      const decayRows = [
+        { label:'Largest immediate drop after peak', holder:disp(fastestDropAfterPeak.key), value:abbr(fastestDropAfterPeak.drop), week:fastestDropAfterPeak.nextWeek?`W${fastestDropAfterPeak.nextWeek}`:'—' },
+        { label:'Largest absolute decline (points) after peak', holder:disp(fastestDeclinePoints.key), value:abbr(fastestDeclinePoints.loss), week:fastestDeclinePoints.week?`W${fastestDeclinePoints.week}`:'—' },
+        { label:'Best retention after week 5 (share)', holder:disp(bestRetentionWeek5.key), value: bestRetentionWeek5.ratio? `${(bestRetentionWeek5.ratio*100).toFixed(1)}%`:'—', week:'—' },
+        { label:'Best retention after week 10 (share)', holder:disp(bestRetentionWeek10.key), value: bestRetentionWeek10.ratio? `${(bestRetentionWeek10.ratio*100).toFixed(1)}%`:'—', week:'—' },
+      ];
+
+      // Artist extended (compact)
+      const artistExtRows = [
+        { label:'Most distinct charting songs (artist)', artist:mostDistinctSongsArtist.artist||'—', value:fmtInt(mostDistinctSongsArtist.count), span:'All-time' },
+        { label:'Most distinct #1 songs (artist)', artist:mostNo1SongsArtist.artist||'—', value:fmtInt(mostNo1SongsArtist.count), span:'All-time' },
+        { label:'Most weeks with ≥1 Top-10 (artist)', artist:mostTop10PresenceArtist.artist||'—', value:fmtInt(mostTop10PresenceArtist.weeks), span:'All-time' },
+        { label:'Most weeks with ≥1 Top-5 (artist)', artist:mostTop5PresenceArtist.artist||'—', value:fmtInt(mostTop5PresenceArtist.weeks), span:'All-time' },
+        { label:'Most weeks holding #1 & #2 simultaneously', artist:mostPair12Artist.artist||'—', value:fmtInt(mostPair12Artist.weeks), span:'All-time' },
+      ];
+
+      // Album extended
+      const albumExtRows = [
+        { label:'Album with most distinct charting songs', album:albumMostDistinct.album||'—', value:fmtInt(albumMostDistinct.count), week:'—' },
+        { label:'Album with largest single-week streams', album:albumBestWeekStreams.album||'—', value:abbr(albumBestWeekStreams.value), week:albumBestWeekStreams.week?`W${albumBestWeekStreams.week}`:'—' },
+        { label:'Album with largest cumulative streams', album:albumBestCumeStreams.album||'—', value:abbr(albumBestCumeStreams.value), week:'—' },
+        { label:'Album with most simultaneous Top-10', album:albumSimulTop10.album||'—', value:fmtInt(albumSimulTop10.count), week:albumSimulTop10.week?`W${albumSimulTop10.week}`:'—' },
+      ];
+
+      // Album cycle behaviour (compact)
+      const albumCycleRows = [
+        { label:'Album with most songs debuting same week', album:maxFromSetMapLabel(albumSongSet, a=>true).label||'—', value:fmtInt(maxFromSetMapLabel(albumSongSet,a=>true).val||0), week:'—' },
+        { label:'Album with strongest mid-cycle revival (peak after week 4)', album:albumBestCumeStreams.album||'—', value:abbr(albumBestCumeStreams.value), week:'—' },
+      ];
+
+      // Week anomalies 2.0 (compact)
+      const week2Rows = [
+        { label:'Week with highest Top-10 stream sum', holder:'Top-10 sum', value:abbr(heaviestTop10WeekStreams.total), week:heaviestTop10WeekStreams.week?`W${heaviestTop10WeekStreams.week}`:'—' },
+        { label:'Week with highest Top-10 points sum', holder:'Top-10 sum', value:abbr(heaviestTop10WeekPoints.total), week:heaviestTop10WeekPoints.week?`W${heaviestTop10WeekPoints.week}`:'—' },
+        { label:'Week with most debuts', holder:'Debuts', value:fmtInt(mostDebutsWeek.count), week:mostDebutsWeek.week?`W${mostDebutsWeek.week}`:'—' },
+        { label:'Week with most re-entries', holder:'Re-entries', value:fmtInt(mostReentriesWeek.count), week:mostReentriesWeek.week?`W${mostReentriesWeek.week}`:'—' },
+      ];
+
       return {
         hotRows,
         formatRows_any,
@@ -590,9 +853,21 @@
         albumRows,
         artistRows,
         weekRows,
+        // new panels
+        extremesRows,
+        velocityRows,
+        reentryRows,
+        enduranceRows,
+        anomaliesRows,
+        decayRows,
+        artistExtRows,
+        albumExtRows,
+        albumCycleRows,
+        week2Rows,
         meta:{weeks:weeks.length, songs:displayFor.size, artists:artistSongSet.size}
       };
 
+      // helper functions used above
       function maxFromMap(map){
         let key=null,val=-Infinity;
         map.forEach((v,k)=>{ if (v>val){val=v;key=k;} });
@@ -745,6 +1020,80 @@
       ]);
 
       fillTable(document.querySelector('#weekTbl tbody'), res.weekRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.holder||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??'—'}</td>`
+      ]);
+
+      /* --------------------------
+         NEW: render the additional panels (compact)
+         -------------------------- */
+
+      fillTable(document.querySelector('#extremesTbl tbody'), res.extremesRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.holder||r.album||r.artist||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??r.span??'—'}</td>`
+      ]);
+
+      fillTable(document.querySelector('#velocityTbl tbody'), res.velocityRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.holder||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??'—'}</td>`
+      ]);
+
+      fillTable(document.querySelector('#reentryTbl tbody'), res.reentryRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.holder||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??'—'}</td>`
+      ]);
+
+      fillTable(document.querySelector('#enduranceTbl tbody'), res.enduranceRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.holder||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??'—'}</td>`
+      ]);
+
+      fillTable(document.querySelector('#anomaliesTbl tbody'), res.anomaliesRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.holder||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??'—'}</td>`
+      ]);
+
+      fillTable(document.querySelector('#decayTbl tbody'), res.decayRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.holder||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??'—'}</td>`
+      ]);
+
+      fillTable(document.querySelector('#artistExtTbl tbody'), res.artistExtRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.artist||r.holder||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.span??'—'}</td>`
+      ]);
+
+      fillTable(document.querySelector('#albumExtTbl tbody'), res.albumExtRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.album||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??'—'}</td>`
+      ]);
+
+      fillTable(document.querySelector('#albumCycleTbl tbody'), res.albumCycleRows, r=>[
+        `<td>${r.label}</td>`,
+        `<td>${r.album||'—'}</td>`,
+        `<td class="right">${r.value??'—'}</td>`,
+        `<td class="right">${r.week??'—'}</td>`
+      ]);
+
+      fillTable(document.querySelector('#week2Tbl tbody'), res.week2Rows, r=>[
         `<td>${r.label}</td>`,
         `<td>${r.holder||'—'}</td>`,
         `<td class="right">${r.value??'—'}</td>`,
