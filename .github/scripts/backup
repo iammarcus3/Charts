@@ -2,20 +2,26 @@
 // process with your exact logic, and persist to weekdata.js
 // — respects your file format and NEVER wipes prior weeks.
 
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
+const vm = require("vm");
 
-// --- Settings: Last.fm credentials ---
-const API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822";
-const USER = "IAMMARCUS3";
+// --- Settings: Last.fm credentials (prefer GitHub Secrets) ---
+const API_KEY = process.env.LASTFM_API_KEY || "ed9c6dcac73ea1adcd3750efeea9b822";
+const USER = process.env.LASTFM_USER || "IAMMARCUS3";
 
 // --- Settings: repo + file ---
 const WEEKDATA_PATH = process.env.WEEKDATA_PATH || "weekdata.js"; // relative to repo root
 const DRY_RUN = process.env.DRY_RUN === "true";
-// Force a specific week (e.g. 396) to overwrite that week.
-// If unset, the script appends the next week after the current max.
 const TARGET_WEEK = process.env.TARGET_WEEK ? parseInt(process.env.TARGET_WEEK, 10) : null;
+
+// --- Retry/UA knobs ---
+const UA = process.env.USER_AGENT || "ChartsBot/1.0 (+github actions)";
+const MAX_TRIES = parseInt(process.env.MAX_TRIES || "6", 10);
+const ALLOW_PARTIAL = process.env.ALLOW_PARTIAL === "true";
 
 // --- Debug ---
 console.log("DEBUG: Starting weekly update job");
@@ -30,14 +36,14 @@ const MAX_ENTRIES = 200;
 
 // --- Factor tables (EXACT from your Python) ---
 const STREAMS_FACTORS = [
-  [1, 1, 48.50], [2, 2, 46.78], [3, 5, 30.90], [6, 6, 20.90], [7, 10, 22.90],
-  [11, 15, 27.85], [16, 25, 25.90], [26, 30, 42.70], [31, 50, 33.95],
+  [1, 1, 58.50], [2, 2, 46.78], [3, 5, 30.90], [6, 8, 25.90], [9, 13, 28.90],
+  [14, 18, 27.85], [19, 25, 30.90], [26, 30, 45.70], [31, 50, 40.95],
   [51, 70, 50.90], [71, 85, 46.50], [86, 200, 70.00],
 ];
 const RADIO_FACTORS = [
-  [1, 1, 186.90], [2, 2, 450.10], [3, 5, 620.20], [6, 6, 930.30],
-  [7, 10, 1840.40], [11, 15, 800.50], [16, 25, 700.60], [26, 30, 650.70],
-  [31, 50, 400.80], [51, 70, 150.90], [71, 85, 90.10], [86, 200, 60.11],
+  [1, 1, 186.90], [2, 2, 450.10], [3, 5, 620.20], [6, 9, 1130.30],
+  [9, 15, 1940.40], [16, 20, 900.50], [21, 25, 800.60], [26, 30, 750.70],
+  [31, 50, 500.80], [51, 70, 450.90], [71, 85, 200.10], [86, 200, 100.11],
 ];
 function getMultiplierForRank(rank) {
   if (rank === 1) return 40.45;
@@ -65,21 +71,21 @@ function calcPoints(sales, streams, radio, maxSales, maxStreams, maxRadio) {
   if (maxRadio === 0) maxRadio = 1;
   return Math.round(200 * (
     0.3 * (sales / maxSales) +
-    0.3 * (streams / maxStreams) +
-    0.4 * (radio / maxRadio)
+    0.2 * (streams / maxStreams) +
+    0.5 * (radio / maxRadio)
   ));
 }
 function getKey(title, artist) {
   return title.toLowerCase().trim() + "||" + artist.toLowerCase().trim();
 }
 
-// --- Last Friday→Thursday (South Africa, UTC+2). Returns the last *completed* window.
+// --- Determine last Friday→Thursday range (Africa/Johannesburg, UTC+2) ---
 function lastFridayToThursdayRange() {
   const TZ_OFFSET = 2 * 3600; // seconds
   const nowSec = Math.floor(Date.now() / 1000) + TZ_OFFSET;
   const now = new Date(nowSec * 1000);
   const localMidnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-  const dow = localMidnight.getUTCDay(); // 0=Sun..6=Sat
+  const dow = localMidnight.getUTCDay(); // 0 Sun .. 6 Sat
   const daysSinceFri = (dow - 5 + 7) % 7;
   const thisFri = new Date(localMidnight.getTime() - daysSinceFri * 86400 * 1000);
   const prevFri = new Date(thisFri.getTime() - 7 * 86400 * 1000);
@@ -89,116 +95,206 @@ function lastFridayToThursdayRange() {
   return { from, to };
 }
 
-// --- Load/save that PRESERVE your exact file format ---
-function tryRequire(abs) {
-  try {
-    delete require.cache[abs];
-    return require(abs);
-  } catch {
-    return null;
+// --- Helpers / Retry ---
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+async function fetchJSONWithRetry(url, tries = MAX_TRIES) {
+  for (let i = 1; i <= tries; i++) {
+    try {
+      const res = await fetch(url, { headers: { "User-Agent": UA } });
+
+      // Try to parse JSON body either way
+      let body = null;
+      try { body = await res.json(); } catch { body = null; }
+
+      // If HTTP OK but Last.fm returned API-level error, handle it
+      const apiErr = body && typeof body.error !== "undefined" ? Number(body.error) : null;
+
+      if (res.ok && apiErr == null) {
+        return body || {};
+      }
+
+      const status = res.status;
+      const retryAfter = res.headers.get("retry-after");
+      const retriableHttp = status >= 500 || status === 429;
+      const retriableApi = apiErr === 29 || apiErr === 11 || apiErr === 16; // rate limit or temp errors
+
+      if (!(retriableHttp || retriableApi) || i === tries) {
+        const reason = apiErr != null
+          ? `Last.fm API error ${apiErr}: ${(body && body.message) || "unknown"}`
+          : `HTTP ${status}`;
+        throw new Error(reason);
+      }
+
+      const backoff = retryAfter
+        ? (parseInt(retryAfter, 10) || 1) * 1000
+        : Math.min(60000, 500 * 2 ** (i - 1)) + Math.floor(Math.random() * 250);
+
+      console.warn(`WARN: ${apiErr != null ? "API" : "HTTP"} error on attempt ${i}/${tries}; sleeping ${backoff}ms`);
+      await sleep(backoff);
+    } catch (err) {
+      if (i === tries) throw err;
+      const backoff = Math.min(60000, 500 * 2 ** (i - 1)) + Math.floor(Math.random() * 250);
+      console.warn(`WARN: Network/parse error "${err.message}" on attempt ${i}/${tries}; sleeping ${backoff}ms`);
+      await sleep(backoff);
+    }
   }
+  throw new Error("Unexpected retry loop exhaustion");
 }
-function tryParseLegacy(abs) {
-  // Fallback: read file and extract JSON between "const weekData =" and "module.exports"
+
+// --- File parsers ---
+function tryParseByBraceExtraction(abs) {
   const raw = fs.readFileSync(abs, "utf8");
-  const m = raw.match(/const\s+weekData\s*=\s*(\{[\s\S]*\})\s*;?\s*module\.exports\s*=\s*weekData\s*;?/);
-  if (!m) return null;
-  try {
-    return JSON.parse(m[1]);
-  } catch (e) {
-    console.error("ERROR parsing legacy weekdata.js:", e.message);
-    return null;
+  const startDecl = raw.indexOf("const weekData");
+  if (startDecl === -1) return null;
+  const eq = raw.indexOf("=", startDecl);
+  if (eq === -1) return null;
+  let i = raw.indexOf("{", eq);
+  if (i === -1) return null;
+
+  let depth = 0;
+  let inStr = false;
+  let strCh = null;
+  let prev = null;
+  const len = raw.length;
+  const startObj = i;
+
+  for (; i < len; i++) {
+    const ch = raw[i];
+    if (inStr) {
+      if (ch === strCh && prev !== "\\") { inStr = false; strCh = null; }
+      prev = ch; continue;
+    } else if (ch === '"' || ch === "'" || ch === "`") { inStr = true; strCh = ch; prev = ch; continue; }
+    if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (depth === 0) {
+        const objText = raw.slice(startObj, i + 1);
+        try { return JSON.parse(objText); }
+        catch {
+          try {
+            const stub = "module.exports = " + objText + ";";
+            const sandbox = { module: { exports: {} } };
+            vm.createContext(sandbox);
+            new vm.Script(stub).runInContext(sandbox, { timeout: 1000 });
+            return sandbox.module.exports;
+          } catch {}
+        }
+        break;
+      }
+    }
+    prev = ch;
   }
+  return null;
+}
+
+function tryParseByVM(abs) {
+  const code = fs.readFileSync(abs, "utf8");
+  const sandbox = {
+    module: { exports: {} },
+    exports: {},
+    require: function () { throw new Error("require() disabled in parser"); },
+    process: { env: {} },
+    console: { log(){}, warn(){}, error(){} },
+  };
+  vm.createContext(sandbox);
+
+  try {
+    const transformed =
+      code
+        .replace(/\bexport\s+default\s+/g, "module.exports = ")
+        .replace(/\bexport\s+const\s+(\w+)\s*=\s*/g, "const $1 = ")
+      + `
+; if (typeof module !== 'undefined' && typeof weekData !== 'undefined' && Object.keys(module.exports).length === 0) {
+    module.exports = weekData;
+  }`;
+
+    const script = new vm.Script(transformed, { filename: abs });
+    script.runInContext(sandbox, { timeout: 1000 });
+    let out = sandbox.module.exports;
+    if ((!out || typeof out !== "object") && typeof sandbox.weekData !== "undefined") out = sandbox.weekData;
+    return out && typeof out === "object" ? out : null;
+  } catch (e) {
+    console.warn("WARN: VM parse failed:", e.message);
+  }
+  return null;
 }
 
 function loadWeekData(filePathRel) {
-  const abs = path.isAbsolute(filePathRel)
-    ? filePathRel
-    : path.resolve(process.cwd(), filePathRel);
-
+  const abs = path.resolve(process.cwd(), filePathRel);
   console.log("DEBUG: Resolved weekdata path =", abs);
+  if (!fs.existsSync(abs)) throw new Error("weekdata.js not found");
 
-  if (!fs.existsSync(abs)) {
-    throw new Error("weekdata.js not found — refusing to run with empty data");
+  const braceObj = tryParseByBraceExtraction(abs);
+  if (braceObj) {
+    const keys = Object.keys(braceObj).map(Number);
+    console.log("DEBUG: Loaded via brace parser with weeks:", keys);
+    return braceObj;
   }
 
-  // Try require()
-  try {
-    delete require.cache[abs];
-    const mod = require(abs);
-    if (mod && typeof mod === "object" && !Array.isArray(mod)) {
-      console.log("DEBUG: Loaded weekdata via require()");
-      return mod;
-    }
-  } catch (e) {
-    console.warn("WARN: require() load failed:", e.message);
+  const vmObj = tryParseByVM(abs);
+  if (vmObj) {
+    const keys = Object.keys(vmObj).map(Number);
+    console.log("DEBUG: Loaded via VM parser with weeks:", keys);
+    return vmObj;
   }
 
-  // Try legacy parse
-  try {
-    const legacy = tryParseLegacy(abs);
-    if (legacy && typeof legacy === "object" && !Array.isArray(legacy)) {
-      console.log("DEBUG: Loaded weekdata via legacy parser");
-      return legacy;
-    }
-  } catch (e) {
-    console.warn("WARN: legacy parse failed:", e.message);
-  }
-
-  // Hard fail instead of wiping
-  throw new Error("Could not load weekdata.js — aborting to avoid wiping old data.");
+  throw new Error("Could not load weekdata.js — aborting to protect history.");
 }
 
 function saveWeekData(filePathRel, newDataObj, oldKeyCount) {
-  const abs = path.isAbsolute(filePathRel)
-    ? filePathRel
-    : path.resolve(process.cwd(), filePathRel);
-
-  // Re-load current data from disk to avoid accidental wipe
-  let currentData = {};
-  try {
-    currentData = loadWeekData(filePathRel);
-  } catch (e) {
-    console.warn("WARN: Could not reload existing weekdata, proceeding with new only:", e.message);
-  }
-
-  // Merge: old weeks preserved, new/overwrite applied
+  const abs = path.resolve(process.cwd(), filePathRel);
+  const currentData = loadWeekData(filePathRel);
   const merged = { ...currentData, ...newDataObj };
-
-  const keysSorted = Object.keys(merged).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+  const keysSorted = Object.keys(merged).map(Number).sort((a,b)=>a-b);
   console.log("DEBUG: Final week keys to save =", keysSorted);
+  if (keysSorted.length < oldKeyCount)
+    throw new Error("Refusing to save: week count shrank");
 
-  if (typeof oldKeyCount === "number" && keysSorted.length < oldKeyCount) {
-    throw new Error(
-      `Refusing to save: week count shrank from ${oldKeyCount} to ${keysSorted.length}`
-    );
-  }
-
+  // --- UMD-style export so weekdata.js works in Node AND the browser
   const newContent =
-    "const weekData = " +
-    JSON.stringify(merged, null, 2) +
-    ";\n\nmodule.exports = weekData;\n";
+    "// Auto-generated by scheduled-week.js — UMD-style export\n" +
+    "const weekData = " + JSON.stringify(merged, null, 2) + ";\n" +
+    "(function(g){ g.weekData = weekData; })(typeof globalThis!=='undefined'?globalThis:window);\n" +
+    "if (typeof module !== 'undefined' && module.exports) module.exports = weekData;\n";
 
   fs.writeFileSync(abs, newContent);
-  console.log("DEBUG: weekdata.js written at", abs);
+  console.log("DEBUG: weekdata.js written");
 }
 
-// --- Last.fm fetchers (Node 18+ has global fetch) ---
+// --- Last.fm fetchers (with retries & partial fallback) ---
 async function fetchScrobbles(from, to) {
   let page = 1, totalPages = 1;
   const all = [];
+
   while (page <= totalPages) {
-    console.log(`DEBUG: Fetching Last.fm scrobbles page ${page}/${totalPages}`);
-    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user=${encodeURIComponent(USER)}&api_key=${API_KEY}&format=json&from=${from}&to=${to}&limit=200&page=${page}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Last.fm error ${res.status}`);
-    const j = await res.json();
-    const arr = j.recenttracks?.track || [];
-    for (const t of arr) if (t.date) all.push(t); // ignore "now playing"
-    const attr = j.recenttracks?.["@attr"];
-    totalPages = attr ? parseInt(attr.totalPages || "1", 10) : 1;
-    page++;
+    console.log(`DEBUG: Fetching Last.fm page ${page}`);
+    const url =
+      `https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks` +
+      `&user=${encodeURIComponent(USER)}` +
+      `&api_key=${API_KEY}` +
+      `&format=json` +
+      `&from=${from}&to=${to}` +
+      `&limit=200&page=${page}`;
+
+    try {
+      const j = await fetchJSONWithRetry(url);
+
+      const arr = j.recenttracks?.track || [];
+      for (const t of arr) if (t.date) all.push(t);
+
+      const attr = j.recenttracks?.["@attr"];
+      totalPages = attr ? parseInt(attr.totalPages || "1", 10) : 1;
+      page++;
+    } catch (err) {
+      if (ALLOW_PARTIAL && all.length > 0) {
+        console.warn(`WARN: Using partial scrobbles due to upstream errors after page ${page}: ${err.message}`);
+        break;
+      }
+      throw err;
+    }
   }
+
   console.log("DEBUG: Total scrobbles fetched =", all.length);
   return all;
 }
@@ -223,24 +319,24 @@ async function handler() {
   try {
     console.log("DEBUG: Handler started");
 
-    // 1) Load weekdata
     const weekData = loadWeekData(WEEKDATA_PATH);
-    const preKeys = Object.keys(weekData).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
+    const preKeys = Object.keys(weekData).map(Number).sort((a,b)=>a-b);
     const preCount = preKeys.length;
     console.log("DEBUG: Weeks present BEFORE =", preKeys);
 
-    // 2) Decide target week number
-    const maxExisting = preCount ? preKeys[preCount - 1] : 0;
-    const targetWeek = Number.isInteger(TARGET_WEEK) ? TARGET_WEEK : (maxExisting + 1);
+    const maxExisting = preKeys[preCount - 1];
+    const targetWeek = Number.isInteger(TARGET_WEEK) ? TARGET_WEEK : maxExisting + 1;
     const overwriting = Number.isInteger(TARGET_WEEK);
-    console.log(`DEBUG: Max existing=${maxExisting}. Target week=${targetWeek}. Mode=${overwriting ? "OVERWRITE" : "APPEND"}.`);
+    console.log(`DEBUG: Target week=${targetWeek} Mode=${overwriting ? "OVERWRITE" : "APPEND"}`);
 
-    // 3) Pull scrobbles for the last full week
     const { from, to } = lastFridayToThursdayRange();
-    const scrobbles = await fetchScrobbles(from, to);
-    const plays = aggregatePlays(scrobbles).sort((a, b) => b.plays - a.plays);
 
-    // 4) Build song history (from all prior weeks)
+    let scrobbles = [];
+    scrobbles = await fetchScrobbles(from, to);
+
+    const plays = aggregatePlays(scrobbles).sort((a,b)=>b.plays - a.plays);
+
+    // Build song history map
     const songHistory = new Map();
     for (const [w, entries] of Object.entries(weekData)) {
       for (const e of entries) {
@@ -249,12 +345,12 @@ async function handler() {
           weeks: e.weeks,
           lastRank: e.rank,
           peak: e.peak,
-          last_seen: parseInt(w, 10)
+          last_seen: parseInt(w, 10),
         });
       }
     }
 
-    // 5) Compute provisional metrics
+    // Compute provisional stats
     let maxSales = 0, maxStreams = 0, maxRadio = 0;
     const provisional = plays.map((p, i) => {
       const rank = i + 1;
@@ -270,20 +366,17 @@ async function handler() {
       return { ...p, rank, sales, streams, radio, weeks, hist };
     });
 
-    // 6) Points + ranking
     const withPoints = provisional.map(e => ({
       ...e,
       points: calcPoints(e.sales, e.streams, e.radio, maxSales, maxStreams, maxRadio)
-    })).sort((a, b) => b.points - a.points);
+    })).sort((a,b)=>b.points - a.points);
 
-    const prevWeekNumber = overwriting ? (targetWeek - 1) : maxExisting;
-
-    // 7) Final entries for the week
-    const entries = withPoints.slice(0, MAX_ENTRIES).map((e, i) => {
+    const prevWeek = overwriting ? targetWeek - 1 : maxExisting;
+    const entries = withPoints.slice(0, MAX_ENTRIES).map((e,i) => {
       const rank = i + 1;
       let movement = "NEW";
       if (e.hist) {
-        if (e.hist.last_seen !== prevWeekNumber) movement = "RE";
+        if (e.hist.last_seen !== prevWeek) movement = "RE";
         else if (rank < e.hist.lastRank) movement = "UP";
         else if (rank > e.hist.lastRank) movement = "DOWN";
         else movement = "—";
@@ -291,65 +384,51 @@ async function handler() {
       const totalSales = (e.hist?.totalSales || 0) + e.sales;
       const peak = e.hist ? Math.min(rank, e.hist.peak) : rank;
       return {
-        rank,
-        movement,
-        title: e.title,
-        artist: e.artist,
-        album: e.album,
-        plays: e.plays,
-        sales: e.sales,
-        totalSales,
-        weeks: e.weeks,
-        peak,
-        streams: Math.trunc(e.streams),
-        radio: e.radio,
-        points: e.points
+        rank, movement, title: e.title, artist: e.artist, album: e.album,
+        plays: e.plays, sales: e.sales, totalSales, weeks: e.weeks, peak,
+        streams: Math.trunc(e.streams), radio: e.radio, points: e.points
       };
     });
 
     console.log("DEBUG: Final entries prepared =", entries.length);
 
-    // 8) Dry-run vs publish
     if (DRY_RUN) {
-      console.log(`=== DRY RUN PREVIEW (${overwriting ? "Overwriting week " + targetWeek : "Appending week " + targetWeek}) Top 20 ===`);
-      for (const e of entries.slice(0, 20)) {
-        console.log(`#${e.rank} ${e.title} — ${e.artist} | Plays: ${e.plays} | Sales: ${e.sales.toFixed(2)} | Points: ${e.points}`);
-      }
+      console.log("=== DRY RUN PREVIEW ===");
+      for (const e of entries.slice(0, 20))
+        console.log(`#${e.rank} ${e.title} — ${e.artist} (${e.points} pts)`);
       console.log("=== END PREVIEW ===");
       return;
     }
 
-    // 9) Write & commit — PRESERVE ALL OLD WEEKS
-    weekData[targetWeek] = entries;
-
-    // Safety: ensure we didn't lose early weeks accidentally
-    const postKeys = Object.keys(weekData).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
-    console.log("DEBUG: Weeks present AFTER  =", postKeys);
-    if (postKeys.length < preCount) {
-      throw new Error(`Refusing to save: week count shrank from ${preCount} to ${postKeys.length}`);
+    if (entries.length === 0) {
+      if (ALLOW_PARTIAL) {
+        console.warn("WARN: Zero entries produced; skipping write due to ALLOW_PARTIAL");
+        return;
+      }
+      throw new Error("No entries produced for this window");
     }
 
-    saveWeekData(WEEKDATA_PATH, weekData, preCount);
+    const postTest = { ...weekData, [targetWeek]: entries };
+    const postKeys = Object.keys(postTest).map(Number).sort((a,b)=>a-b);
+    if (postKeys.length < preCount)
+      throw new Error("Refusing to shrink week count!");
 
+    saveWeekData(WEEKDATA_PATH, { [targetWeek]: entries }, preCount);
+
+    // Commit/push
     execSync('git config user.name "github-actions[bot]"');
     execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
     execSync(`git add ${WEEKDATA_PATH}`);
     execSync(`sh -lc 'git commit -m "${overwriting ? "overwrite" : "add"} week ${targetWeek} (Last.fm)" || echo "No changes to commit"'`);
     execSync("git push");
-    console.log("SUCCESS: Week", targetWeek, overwriting ? "overwritten" : "added", "and committed");
+    console.log("SUCCESS: Week", targetWeek, overwriting ? "overwritten" : "added");
   } catch (err) {
     console.error("FATAL ERROR:", err.message);
-    console.error(err.stack);
     process.exitCode = 1;
   }
 }
 
 // --- Run when executed directly ---
-if (require.main === module) {
-  handler().catch(err => {
-    console.error("UNHANDLED:", err);
-    process.exit(1);
-  });
-}
+if (require.main === module) handler();
 
 module.exports = { handler };
