@@ -70,7 +70,7 @@
   </style>
 </head>
 <body>
-  <h1>Top 20 Albums by Sales Per Year</h1>
+  <h1>Top 30 Albums by Sales Per Year</h1>
   <label for="yearSelect">Select Year:</label>
   <select id="yearSelect"></select>
 
@@ -183,7 +183,7 @@
       return [...albumMap.values()]
         .filter(a => a.salesThisYear > 0)
         .sort((a, b) => b.salesThisYear - a.salesThisYear)
-        .slice(0, 20);
+        .slice(0, 30);
     }
 
     function renderTable(year) {
