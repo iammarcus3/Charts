@@ -462,7 +462,7 @@ function generateTabs(albums) {
 
         const sorted = Object.values(years[year])
             .sort((a, b) => (b.yearlyRawSales[year] || 0) - (a.yearlyRawSales[year] || 0))
-            .slice(0, 20);
+            .slice(0, 30);
 
         const map = {};
         sorted.forEach(a => map[a.key] = a);
