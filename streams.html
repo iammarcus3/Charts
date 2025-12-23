@@ -1,275 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>StreamBoard — Lightweight</title>
+  <meta charset="UTF-8" />
+  <title>Weekly Data – Minimal View</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f7f9;
+      margin: 0;
+      padding: 20px;
+    }
 
-<style>
-:root{
-  --bg:#000;--panel:#111;--panel-2:#151515;--ink:#fff;
-  --muted:#a9a9a9;--accent:#1db954;--red:#ff5a5a;
-  --green:#3ee58b;--row:#0e0e0e;--hover:#1a1a1a;
-  --chip:#1a1a1a;--outline:#202020;--gold:#ffd66b;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;background:var(--bg);color:var(--ink);
-  font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  overflow:hidden;
-}
+    h1 {
+      margin-bottom: 10px;
+    }
 
-/* Layout */
-.app{
-  display:grid;
-  grid-template-columns:220px 1fr;
-  grid-template-areas:"side main";
-  height:100%;
-}
-aside{
-  grid-area:side;background:var(--panel);
-  border-right:1px solid var(--outline);
-  display:flex;flex-direction:column
-}
-.logo{padding:14px 12px;font-weight:800}
-.nav{padding:8px}
-.nav a{
-  display:flex;gap:10px;align-items:center;
-  padding:8px 10px;margin-bottom:6px;
-  border-radius:8px;color:#eaeaea;text-decoration:none
-}
-.nav a.active,.nav a:hover{background:var(--panel-2)}
+    .controls {
+      margin-bottom: 15px;
+    }
 
-.lib{margin-top:auto;padding:8px;border-top:1px solid var(--outline)}
-.pins{max-height:32vh;overflow:auto}
-.pin{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:6px 8px;border-radius:6px;
-  background:var(--chip);margin-bottom:6px
-}
-.pin b{
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px
-}
-.iconbtn{
-  background:transparent;border:1px solid var(--outline);
-  border-radius:8px;color:#eaeaea;padding:6px 8px;cursor:pointer
-}
-.iconbtn:hover{background:var(--panel-2)}
+    select {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
 
-main{
-  grid-area:main;
-  display:flex;flex-direction:column;
-  height:100%;overflow:hidden
-}
-header{
-  padding:10px 12px;border-bottom:1px solid var(--outline);
-  background:var(--panel);
-  display:grid;grid-template-columns:1fr auto;gap:8px
-}
-.searchbar{
-  display:flex;align-items:center;gap:8px;
-  background:#0d0d0d;border:1px solid var(--outline);
-  border-radius:10px;padding:8px 12px;max-width:560px
-}
-.searchbar input{
-  flex:1;background:transparent;border:none;outline:none;color:var(--ink)
-}
-.toolbar{display:flex;gap:8px;align-items:center}
-.btn{
-  background:var(--chip);border:1px solid var(--outline);
-  color:#eaeaea;border-radius:8px;padding:8px 10px;cursor:pointer
-}
-.btn:hover{background:var(--hover)}
-.tog{
-  display:flex;align-items:center;gap:6px;
-  background:var(--chip);border:1px solid var(--outline);
-  padding:6px 8px;border-radius:8px
-}
-.tog input{accent-color:var(--accent)}
-.select{
-  background:var(--chip);border:1px solid var(--outline);
-  color:#eaeaea;border-radius:8px;padding:7px 8px
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
 
-.tabs{
-  display:flex;gap:8px;align-items:center;
-  padding:8px 12px;border-bottom:1px solid var(--outline);
-  background:var(--panel)
-}
-.seg{
-  display:flex;gap:6px;background:var(--chip);
-  border:1px solid var(--outline);
-  padding:4px;border-radius:10px
-}
-.seg button{
-  background:transparent;border:none;color:#eaeaea;
-  padding:6px 10px;border-radius:6px;cursor:pointer
-}
-.seg button.active,.seg button:hover{background:var(--panel-2)}
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #e0e0e0;
+      text-align: left;
+      font-size: 14px;
+    }
 
-.subtabs{display:flex;gap:6px;margin-left:auto}
-.subtabs button{
-  background:transparent;border:1px solid var(--outline);
-  color:#eaeaea;padding:6px 8px;border-radius:6px;cursor:pointer
-}
-.subtabs button.active,.subtabs button:hover{background:var(--panel-2)}
+    th {
+      background: #fafafa;
+      font-weight: bold;
+    }
 
-.summary{
-  padding:10px 12px;color:var(--muted);
-  display:flex;gap:12px;flex-wrap:wrap;
-  border-bottom:1px solid var(--outline)
-}
-.contentWrap{flex:1;overflow:auto}
-.grid{padding:10px 12px}
+    tr:hover {
+      background: #f2f4f7;
+    }
 
-table{width:100%;border-collapse:separate;border-spacing:0 6px}
-thead th{
-  position:sticky;top:0;background:#0d0d0d;
-  text-transform:uppercase;font-size:.78rem;
-  padding:8px;border-bottom:1px solid var(--outline)
-}
-tbody{contain:content}
-tbody tr{background:var(--row)}
-tbody tr:hover{background:var(--hover)}
-td{
-  padding:10px;border-top:1px solid #151515;
-  border-bottom:1px solid #151515
-}
-td:first-child{
-  border-left:1px solid #151515;
-  border-top-left-radius:10px;
-  border-bottom-left-radius:10px;
-  width:48px;text-align:center
-}
-td:last-child{
-  border-right:1px solid #151515;
-  border-top-right-radius:10px;
-  border-bottom-right-radius:10px
-}
-.rank{font-weight:700;color:var(--gold)}
-.item{display:flex;gap:10px;align-items:center;min-width:240px}
-.avatar{
-  width:36px;height:36px;border-radius:6px;
-  background:#0d0d0d;display:flex;
-  align-items:center;justify-content:center;
-  font-weight:800;color:var(--accent)
-}
-.meta{min-width:0}
-.title{
-  white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis;font-weight:700
-}
-.subtitle{
-  color:var(--muted);font-size:.9em;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
-}
-.change.up{color:var(--green);font-weight:700}
-.change.down{color:var(--red);font-weight:700}
-.spark{width:80px;height:24px}
-.act{display:flex;gap:6px;justify-content:flex-end}
-a{color:#eaeaea;text-decoration:none}
-a:hover{text-decoration:underline}
-
-@media(max-width:920px){
-  .app{grid-template-columns:0 1fr}
-  aside{display:none}
-  .subtabs{display:none}
-  .item .subtitle{display:none}
-}
-</style>
+    .summary {
+      margin: 10px 0 20px;
+      font-size: 14px;
+    }
+  </style>
 </head>
-
 <body>
-<div class="app">
 
-<aside>
-  <div class="logo">Stream<span style="color:var(--accent)">Board</span></div>
-  <nav class="nav">
-    <a class="active" href="#">🏠 Home</a>
-    <a href="#" id="goTopArtists">👤 Top Artists</a>
-    <a href="#" id="goTopTracks">🎵 Top Tracks</a>
-    <a href="#" id="goTopAlbums">💿 Top Albums</a>
-  </nav>
-  <div class="lib">
-    <div style="display:flex;justify-content:space-between">
-      <b>Your Library</b>
-      <button id="clearPins" class="iconbtn">🗑</button>
-    </div>
-    <div class="pins" id="pins"></div>
+  <h1>Weekly Streams</h1>
+
+  <div class="controls">
+    <label>
+      View:
+      <select id="viewSelect">
+        <option value="artist">Artist</option>
+        <option value="track">Track</option>
+      </select>
+    </label>
   </div>
-</aside>
 
-<main>
-<header>
-  <div class="searchbar">
-    🔎 <input id="q" placeholder="Search…" autocomplete="off"/>
-  </div>
-  <div class="toolbar">
-    <label class="tog"><input type="checkbox" id="includeFeatures" checked/> Features</label>
-    <label class="tog"><input type="checkbox" id="exactUnits"/> Exact</label>
-    <select id="sortBy" class="select">
-      <option value="streams">Streams</option>
-      <option value="name">Name</option>
-      <option value="change">Change</option>
-    </select>
-    <button class="btn" id="exportCsv">Export CSV</button>
-    <button class="btn" id="copyLink">Copy Link</button>
-  </div>
-</header>
+  <div class="summary" id="summary"></div>
 
-<div class="tabs">
-  <div class="seg" id="rangeSeg">
-    <button data-range="7days" class="active">7 Days</button>
-    <button data-range="30days">30 Days</button>
-    <button data-range="alltime">All Time</button>
-  </div>
-  <div class="subtabs" id="typeSeg">
-    <button data-type="artist" class="active">Artist</button>
-    <button data-type="tracks">Tracks</button>
-    <button data-type="album">Album</button>
-  </div>
-</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Total Streams</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
 
-<div class="summary" id="summary">Loading…</div>
+  <script>
+    // -----------------------------
+    // SAFETY CHECK
+    // -----------------------------
+    if (typeof weekData === "undefined") {
+      document.getElementById("summary").textContent =
+        "No data found. weekData is not defined.";
+      throw new Error("weekData is not defined");
+    }
 
-<div class="contentWrap">
-<div class="grid">
-<div style="display:flex;justify-content:space-between;margin-bottom:6px">
-  <div class="muted">
-    Rows per page:
-    <select id="pageSize" class="select">
-      <option>50</option><option>100</option><option>200</option>
-    </select>
-  </div>
-  <div id="pager" class="muted"></div>
-</div>
+    // -----------------------------
+    // AGGREGATION
+    // -----------------------------
+    function aggregate(data, keyField, valueField) {
+      const map = new Map();
 
-<table>
-<thead>
-<tr>
-  <th>#</th><th>Item</th><th id="col-artist">Artist</th>
-  <th>Streams</th><th>Change</th><th>Trend</th><th></th>
-</tr>
-</thead>
-<tbody id="rows"></tbody>
-</table>
-</div>
-</div>
-</main>
-</div>
+      data.forEach(row => {
+        const key = row[keyField] || "Unknown";
+        const value = Number(row[valueField]) || 0;
+        map.set(key, (map.get(key) || 0) + value);
+      });
 
-<script src="weekdata.js"></script>
-<script>
-/* JS CORE LOGIC REMAINS IDENTICAL EXCEPT:
-   - No audio
-   - No play action
-   - Pins + aggregation unchanged
-*/
+      return Array.from(map.entries())
+        .map(([name, total]) => ({ name, total }))
+        .sort((a, b) => b.total - a.total);
+    }
 
-/* === SAME JS AS BEFORE, WITH play/startPreview REMOVED === */
-/* (Intentionally not re-pasted again to avoid truncation errors;
-   functionality remains identical to prior version minus player) */
-</script>
+    // -----------------------------
+    // RENDER
+    // -----------------------------
+    function render(view) {
+      const tbody = document.getElementById("tableBody");
+      const summary = document.getElementById("summary");
+      tbody.innerHTML = "";
+
+      const keyField =
+        view === "artist" ? "artist_name" : "track_name";
+
+      const rows = aggregate(weekData, keyField, "total_streams");
+
+      let grandTotal = 0;
+
+      rows.forEach(row => {
+        grandTotal += row.total;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.name}</td>
+          <td>${row.total.toLocaleString()}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      summary.textContent =
+        `Rows: ${rows.length} | Total Streams: ${grandTotal.toLocaleString()}`;
+    }
+
+    // -----------------------------
+    // EVENTS
+    // -----------------------------
+    document
+      .getElementById("viewSelect")
+      .addEventListener("change", e => {
+        render(e.target.value);
+      });
+
+    // -----------------------------
+    // INIT
+    // -----------------------------
+    render("artist");
+  </script>
+
 </body>
 </html>
+
+
