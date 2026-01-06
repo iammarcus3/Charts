@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M&J Internet | Unlimited Data – RAIN & TELKOM</title>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+    body { background: #f5f7fa; color: #222; }
+
+    header {
+      background: linear-gradient(135deg, #0b5ed7, #0dcaf0);
+      color: #fff;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    header h1 { font-size: 2rem; margin-bottom: 10px; }
+    header p { font-size: 1rem; opacity: 0.95; }
+
+    .container { max-width: 1100px; margin: 30px auto; padding: 0 15px; }
+
+    .packages { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+    .provider { font-size: 0.9rem; color: #0b5ed7; margin-bottom: 10px; }
+    .price { font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
+    .desc { font-size: 0.9rem; margin-bottom: 15px; color: #555; }
+
+    .card button {
+      background: #0b5ed7;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .card button:hover { background: #084298; }
+
+    .cart {
+      margin-top: 40px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 20px;
+    }
+
+    .cart h2 { margin-bottom: 15px; }
+
+    .cart ul { list-style: none; margin-bottom: 15px; }
+
+    .cart li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .cart li button {
+      background: transparent;
+      border: none;
+      color: #dc3545;
+      cursor: pointer;
+    }
+
+    .total {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .whatsapp-btn {
+      display: inline-block;
+      background: #25D366;
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    .whatsapp-btn:hover { background: #1ebe5b; }
+
+    footer {
+      text-align: center;
+      margin: 40px 0 20px;
+      font-size: 0.85rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>M&J Internet</h1>
+  <p>Unlimited Data Packages – RAIN & TELKOM</p>
+</header>
+
+<div class="container">
+
+  <section class="packages">
+
+    <!-- RAIN Packages -->
+    <div class="card">
+      <div>
+        <h3>RAIN Unlimited 10Mbps</h3>
+        <div class="provider">RAIN</div>
+        <div class="price">R499 / month</div>
+        <div class="desc">Unlimited data, ideal for home browsing and streaming.</div>
+      </div>
+      <button onclick="addToCart('RAIN', 'Unlimited 10Mbps', 499)">Add to Cart</button>
+    </div>
+
+    <div class="card">
+      <div>
+        <h3>RAIN Unlimited 20Mbps</h3>
+        <div class="provider">RAIN</div>
+        <div class="price">R699 / month</div>
+        <div class="desc">Faster speeds for work-from-home and HD streaming.</div>
+      </div>
+      <button onclick="addToCart('RAIN', 'Unlimited 20Mbps', 699)">Add to Cart</button>
+    </div>
+
+    <!-- TELKOM Packages -->
+    <div class="card">
+      <div>
+        <h3>TELKOM LTE Unlimited</h3>
+        <div class="provider">TELKOM</div>
+        <div class="price">R599 / month</div>
+        <div class="desc">Reliable LTE unlimited data with wide coverage.</div>
+      </div>
+      <button onclick="addToCart('TELKOM', 'LTE Unlimited', 599)">Add to Cart</button>
+    </div>
+
+    <div class="card">
+      <div>
+        <h3>TELKOM 5G Unlimited</h3>
+        <div class="provider">TELKOM</div>
+        <div class="price">R899 / month</div>
+        <div class="desc">Ultra-fast 5G unlimited data where coverage is available.</div>
+      </div>
+      <button onclick="addToCart('TELKOM', '5G Unlimited', 899)">Add to Cart</button>
+    </div>
+
+  </section>
+
+  <!-- Cart -->
+  <section class="cart">
+    <h2>Your Cart</h2>
+    <ul id="cartItems"></ul>
+    <div class="total">Total: R<span id="total">0</span> / month</div>
+    <a id="whatsappLink" class="whatsapp-btn" href="#" target="_blank">Checkout via WhatsApp</a>
+  </section>
+
+</div>
+
+<footer>
+  © 2026 M&J Internet. All rights reserved.
+</footer>
+
+<script>
+  const cart = [];
+
+  function addToCart(provider, name, price) {
+    cart.push({ provider, name, price });
+    renderCart();
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    renderCart();
+  }
+
+  function renderCart() {
+    const cartItems = document.getElementById('cartItems');
+    const totalEl = document.getElementById('total');
+    const whatsappLink = document.getElementById('whatsappLink');
+
+    cartItems.innerHTML = '';
+    let total = 0;
+    let message = 'Hello M&J Internet,%0A%0AI would like to order the following unlimited data package(s):%0A';
+
+    cart.forEach((item, index) => {
+      total += item.price;
+      message += `- ${item.provider} ${item.name} (R${item.price}/month)%0A`;
+
+      const li = document.createElement('li');
+      li.innerHTML = `${item.provider} ${item.name} - R${item.price} <button onclick="removeFromCart(${index})">Remove</button>`;
+      cartItems.appendChild(li);
+    });
+
+    totalEl.textContent = total;
+    message += `%0AEstimated Total: R${total} per month%0A%0APlease assist with the next steps.`;
+
+    // REPLACE WITH YOUR BUSINESS WHATSAPP NUMBER (FORMAT: 27XXXXXXXXX)
+    whatsappLink.href = `https://wa.me/27XXXXXXXXX?text=${message}`;
+  }
+</script>
+
+</body>
+</html>
