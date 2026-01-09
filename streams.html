@@ -3,119 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stream Stats</title>
+<title>Charts — Clean & Minimal</title>
 <style>
 :root {
   --bg:#f9f9f9;
-  --panel:#fff;
+  --panel:#ffffff;
   --text:#111;
-  --muted:#555;
+  --muted:#666;
   --accent:#007aff;
+  --row:#fff;
   --hover:#f0f0f0;
   --border:#ddd;
-  --gold:#d4af37;
 }
-body {
-  margin:0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
-a {text-decoration:none; color:inherit;}
-a:hover {text-decoration:underline;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);}
+a{text-decoration:none;color:inherit;}
+a:hover{text-decoration:underline;}
 
-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:16px;
-  background:var(--panel);
-  border-bottom:1px solid var(--border);
-}
-.tabs {
-  display:flex;
-  gap:12px;
-}
-.tabs button {
-  padding:8px 16px;
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  font-weight:500;
-  border-bottom:2px solid transparent;
-}
-.tabs button.active {
-  border-bottom:2px solid var(--accent);
-  color:var(--accent);
-}
-.tabs button:hover {color:var(--accent);}
-
-.container {
-  padding:16px;
-}
-.summary {
-  margin-bottom:12px;
-  color:var(--muted);
-  font-size:0.95rem;
-}
-.table-wrap {
-  overflow-x:auto;
-}
-table {
-  width:100%;
-  border-collapse:separate;
-  border-spacing:0 8px;
-}
-thead th {
-  text-align:left;
-  padding:10px;
-  font-weight:600;
-  font-size:0.9rem;
-  border-bottom:1px solid var(--border);
-}
-tbody tr {
-  background:var(--panel);
-  border-radius:6px;
-}
-tbody tr:hover {
-  background:var(--hover);
-}
-td {
-  padding:10px;
-  vertical-align:middle;
-}
-.rank {font-weight:600; color:var(--gold);}
-.item {display:flex; align-items:center; gap:10px;}
-.avatar {
-  width:32px; height:32px;
-  border-radius:6px;
-  background:#eee;
-  display:flex; align-items:center; justify-content:center;
-  font-weight:600; color:var(--accent);
-}
-.title {font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.subtitle {color:var(--muted); font-size:0.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.change.up {color:green; font-weight:600;}
-.change.down {color:red; font-weight:600;}
+.container{max-width:1200px;margin:20px auto;padding:0 20px;}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.tabs{display:flex;gap:10px;margin-bottom:20px;}
+.tabs button{background:transparent;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:500;color:var(--muted);}
+.tabs button.active{background:var(--accent);color:#fff;}
+.table-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead{background:#f2f2f2;}
+thead th{padding:12px;text-align:left;font-weight:600;border-bottom:1px solid var(--border);}
+tbody tr{background:var(--row);}
+tbody tr:hover{background:var(--hover);}
+td{padding:12px;border-bottom:1px solid var(--border);}
+td:first-child{text-align:center;width:40px;}
+td:last-child{text-align:right;}
+.summary{margin-bottom:10px;color:var(--muted);}
+select{padding:6px 10px;border-radius:6px;border:1px solid var(--border);}
 </style>
 </head>
 <body>
 
-<header>
+<div class="container">
+  <div class="header">
+    <h1>Charts</h1>
+    <div>
+      <label>Rows per page: 
+        <select id="pageSize">
+          <option>50</option>
+          <option>100</option>
+          <option>200</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <!-- Range Tabs -->
   <div class="tabs" id="rangeTabs">
     <button data-range="7days" class="active">7 Days</button>
     <button data-range="30days">30 Days</button>
     <button data-range="alltime">All Time</button>
   </div>
+
+  <!-- Type Tabs -->
   <div class="tabs" id="typeTabs">
     <button data-type="artist" class="active">Artists</button>
     <button data-type="tracks">Tracks</button>
     <button data-type="album">Albums</button>
   </div>
-</header>
 
-<div class="container">
   <div class="summary" id="summary">Loading…</div>
+
   <div class="table-wrap">
     <table>
       <thead>
@@ -134,27 +88,30 @@ td {
   </div>
 </div>
 
-<!-- Load your weekdata.js last so data appears -->
+<!-- Globals needed by weekdata.js -->
+<script>
+window.currentRange = '7days';
+window.currentType = 'artist';
+</script>
+
+<!-- Load weekdata.js -->
 <script src="weekdata.js"></script>
 
+<!-- Tabs functionality -->
 <script>
-// Simple tab handling
-document.querySelectorAll('#rangeTabs button').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelector('#rangeTabs .active').classList.remove('active');
-    btn.classList.add('active');
-    window.currentRange = btn.dataset.range;
-    if(window.updateTable) updateTable(); // call your existing weekdata function
+function setActiveTab(containerId, type='range') {
+  document.querySelectorAll(`#${containerId} button`).forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelector(`#${containerId} .active`).classList.remove('active');
+      btn.classList.add('active');
+      if(type==='range') window.currentRange = btn.dataset.range;
+      else window.currentType = btn.dataset.type;
+      if(window.updateTable) updateTable();
+    });
   });
-});
-document.querySelectorAll('#typeTabs button').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelector('#typeTabs .active').classList.remove('active');
-    btn.classList.add('active');
-    window.currentType = btn.dataset.type;
-    if(window.updateTable) updateTable();
-  });
-});
+}
+setActiveTab('rangeTabs','range');
+setActiveTab('typeTabs','type');
 </script>
 
 </body>
