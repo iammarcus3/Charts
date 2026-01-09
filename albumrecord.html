@@ -451,27 +451,31 @@ function generateTabs(albums) {
     allTab.addEventListener("click", () => switchTab(allTab, allContent));
 
     // YEAR TABS
-    Object.keys(years).sort().forEach(year => {
-        const tab = document.createElement("div");
-        tab.classList.add("tab");
-        tab.innerText = year;
-        tabContainer.appendChild(tab);
+Object.keys(years)
+  .map(Number)        // convert keys to numbers
+  .sort((a, b) => a - b) // numeric ascending sort
+  .forEach(year => {
+      const tab = document.createElement("div");
+      tab.classList.add("tab");
+      tab.innerText = year;
+      tabContainer.appendChild(tab);
 
-        const content = document.createElement("div");
-        content.classList.add("tab-content");
+      const content = document.createElement("div");
+      content.classList.add("tab-content");
 
-        const sorted = Object.values(years[year])
-            .sort((a, b) => (b.yearlyRawSales[year] || 0) - (a.yearlyRawSales[year] || 0))
-            .slice(0, 30);
+      const sorted = Object.values(years[year])
+          .sort((a, b) => (b.yearlyRawSales[year] || 0) - (a.yearlyRawSales[year] || 0))
+          .slice(0, 30);
 
-        const map = {};
-        sorted.forEach(a => map[a.key] = a);
+      const map = {};
+      sorted.forEach(a => map[a.key] = a);
 
-        content.innerHTML = generateTable(map, year);
-        contentContainer.appendChild(content);
+      content.innerHTML = generateTable(map, year);
+      contentContainer.appendChild(content);
 
-        tab.addEventListener("click", () => switchTab(tab, content));
-    });
+      tab.addEventListener("click", () => switchTab(tab, content));
+});
+
 }
 
 function switchTab(tab, content) {
