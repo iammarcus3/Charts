@@ -3,203 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StreamBoard — Minimal UI</title>
+<title>Charts — Minimal UI</title>
 <style>
 :root{
   --bg:#f9f9f9;
   --panel:#ffffff;
-  --panel-alt:#f2f2f2;
-  --text:#111;
-  --muted:#666;
-  --accent:#007aff;
-  --red:#ff3b30;
-  --green:#34c759;
+  --text:#1a1a1a;
+  --muted:#666666;
+  --accent:#0071e3;
   --row:#ffffff;
-  --hover:#f2f2f2;
-  --outline:#e0e0e0;
-  --gold:#ffcc00;
+  --hover:#f1f1f1;
+  --outline:#ddd;
+  --gold:#ffb400;
 }
-*{box-sizing:border-box;}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
-a{text-decoration:none;color:inherit;}
-a:hover{text-decoration:underline;transition:0.2s;}
-
-.app{display:grid;grid-template-columns:200px 1fr;grid-template-rows:auto 60px;grid-template-areas:"side main" "player player";height:100%;}
-aside{grid-area:side;background:var(--panel);display:flex;flex-direction:column;border-right:1px solid var(--outline);}
-.logo{padding:18px;font-weight:800;font-size:1.4rem;text-align:center;color:var(--accent);}
-.nav{padding:10px;}
-.nav a{display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:8px;border-radius:8px;background:transparent;color:var(--text);transition:0.2s;}
-.nav a.active,.nav a:hover{background:var(--panel-alt);}
-.lib{margin-top:auto;padding:12px;border-top:1px solid var(--outline);}
-.pins{max-height:30vh;overflow:auto;}
-.pin{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;background:var(--row);margin-bottom:6px;font-size:0.9rem;transition:0.2s;}
-.pin:hover{background:var(--hover);}
-.iconbtn{background:transparent;border:1px solid var(--outline);border-radius:8px;color:var(--text);padding:5px 10px;cursor:pointer;transition:0.2s;}
-.iconbtn:hover{background:var(--panel-alt);}
-
-main{grid-area:main;display:flex;flex-direction:column;height:100%;overflow:hidden;}
-header{padding:12px 14px;border-bottom:1px solid var(--outline);background:var(--panel);display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;}
-.searchbar{display:flex;align-items:center;gap:10px;background:var(--panel-alt);border:1px solid var(--outline);border-radius:14px;padding:6px 12px;}
-.searchbar input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:1rem;}
-.toolbar{display:flex;gap:8px;align-items:center;}
-.btn{background:var(--row);border:1px solid var(--outline);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:0.95rem;transition:0.2s;}
-.btn:hover{background:var(--panel-alt);}
-.tog{display:flex;align-items:center;gap:6px;background:var(--row);border:1px solid var(--outline);padding:6px 10px;border-radius:8px;font-size:0.95rem;}
-.tog input{accent-color:var(--accent);}
-.select{background:var(--row);border:1px solid var(--outline);color:var(--text);border-radius:8px;padding:6px 10px;font-size:0.95rem;}
-
-.tabs{display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--outline);background:var(--panel);}
-.seg{display:flex;gap:0;}
-.seg button{background:transparent;border:none;color:var(--text);padding:8px 16px;font-weight:500;cursor:pointer;position:relative;}
-.seg button.active{color:var(--accent);}
-.seg button.active::after{
-  content:"";position:absolute;bottom:0;left:0;width:100%;height:3px;background:var(--accent);border-radius:2px;}
-.seg button:hover:not(.active){background:var(--panel-alt);}
-
-.subtabs{display:flex;gap:6px;margin-left:auto;}
-.subtabs button{background:var(--panel-alt);border:none;color:var(--text);padding:6px 12px;border-radius:8px;cursor:pointer;transition:0.2s;}
-.subtabs button.active{background:var(--accent);color:#fff;}
-.subtabs button:hover:not(.active){background:#e6e6e6;}
-
-.contentWrap{flex:1;overflow:auto;background:var(--bg);}
-.summary{padding:12px 14px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--outline);}
-.grid{padding:12px 14px;}
-table{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:0.95rem;}
-thead th{position:sticky;top:0;background:var(--panel);padding:10px;border-bottom:1px solid var(--outline);font-weight:600;font-size:0.9rem;text-align:left;}
-tbody tr{background:var(--row);border-radius:8px;transition:0.2s;}
+*{box-sizing:border-box;margin:0;padding:0;font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;}
+body{background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;}
+header{background:var(--panel);border-bottom:1px solid var(--outline);padding:16px;display:flex;align-items:center;justify-content:space-between;}
+header h1{font-weight:600;font-size:1.2rem;}
+.tabs{display:flex;gap:12px;}
+.tabs button{padding:8px 16px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;cursor:pointer;}
+.tabs button.active{border-color:var(--accent);color:var(--text);}
+.contentWrap{flex:1;overflow:auto;padding:16px;}
+table{width:100%;border-collapse:separate;border-spacing:0 8px;}
+thead th{text-align:left;padding:8px;font-weight:600;border-bottom:1px solid var(--outline);}
+tbody tr{background:var(--row);border-radius:6px;transition:background 0.2s;}
 tbody tr:hover{background:var(--hover);}
-td{padding:10px;border-top:1px solid #eee;border-bottom:1px solid #eee;}
-td:first-child{border-radius:8px 0 0 8px;width:40px;text-align:center;}
-td:last-child{border-radius:0 8px 8px 0;text-align:right;}
+td{padding:10px;}
 .rank{font-weight:700;color:var(--gold);}
-.item{display:flex;gap:12px;align-items:center;min-width:200px;}
-.avatar{width:36px;height:36px;border-radius:6px;background:#e6e6e6;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);}
-.meta{min-width:0;}
-.title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;}
-.subtitle{color:var(--muted);font-size:0.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.streams b{font-variant-numeric:tabular-nums;}
-.change.up{color:var(--green);font-weight:700;}
-.change.down{color:var(--red);font-weight:700;}
-.spark{width:80px;height:24px;}
-.act{display:flex;gap:6px;justify-content:flex-end;}
-.muted{color:var(--muted);}
-
-.player{grid-area:player;background:var(--panel);border-top:1px solid var(--outline);display:flex;align-items:center;justify-content:space-between;padding:10px 14px;gap:12px;font-size:0.95rem;}
-.now{display:flex;align-items:center;gap:10px;min-width:0;}
-.progress{flex:1;display:flex;align-items:center;gap:10px;}
-.range{flex:1;height:6px;background:var(--panel-alt);border-radius:999px;overflow:hidden;}
-.range>i{display:block;height:100%;background:var(--accent);width:0%;transition:width 0.2s;}
-.controls button{background:var(--panel-alt);border:none;border-radius:999px;color:var(--text);padding:6px 10px;cursor:pointer;transition:0.2s;}
-.controls button:hover{background:#e6e6e6;}
-
-@media(max-width:920px){
-  .app{grid-template-columns:0 1fr;}
-  aside{display:none;}
-  .subtabs{display:none;}
-  .item .subtitle{display:none;}
-}
+.title{font-weight:600;}
+.subtitle{color:var(--muted);font-size:0.85rem;}
+.actions{text-align:right;}
+select{padding:6px 8px;border:1px solid var(--outline);border-radius:6px;background:#fff;color:var(--text);}
 </style>
 </head>
 <body>
-<div class="app">
-  <!-- Sidebar -->
-  <aside>
-    <div class="logo">Stream<span style="color:var(--accent)">Board</span></div>
-    <nav class="nav">
-      <a class="active" href="#">🏠 Home</a>
-      <a href="#" id="goTopArtists">👤 Top Artists</a>
-      <a href="#" id="goTopTracks">🎵 Top Tracks</a>
-      <a href="#" id="goTopAlbums">💿 Top Albums</a>
-    </nav>
-    <div class="lib">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <b>Your Library</b>
-        <button id="clearPins" class="iconbtn" title="Clear pins">🗑</button>
-      </div>
-      <div class="pins" id="pins"></div>
-    </div>
-  </aside>
 
-  <!-- Main -->
-  <main>
-    <header>
-      <div class="searchbar">
-        🔎 <input id="q" placeholder="Search artists, tracks, albums…" autocomplete="off"/>
-      </div>
-      <div class="toolbar">
-        <label class="tog"><input type="checkbox" id="includeFeatures" checked> Features</label>
-        <label class="tog"><input type="checkbox" id="exactUnits"> Exact</label>
-        <select id="sortBy" class="select">
-          <option value="streams">Streams</option>
-          <option value="name">Name A–Z</option>
-          <option value="change">Change</option>
-        </select>
-        <button class="btn" id="exportCsv">Export CSV</button>
-        <button class="btn" id="copyLink">Copy Link</button>
-      </div>
-    </header>
-
-    <div class="tabs">
-      <div class="seg" id="rangeSeg">
-        <button data-range="7days" class="active">7 Days</button>
-        <button data-range="30days">30 Days</button>
-        <button data-range="alltime">All Time</button>
-      </div>
-      <div class="subtabs" id="typeSeg">
-        <button data-type="artist" class="active">Artist</button>
-        <button data-type="tracks">Tracks</button>
-        <button data-type="album">Album</button>
-      </div>
-    </div>
-
-    <div class="summary" id="summary">Loading…</div>
-
-    <div class="contentWrap">
-      <div class="grid">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <div class="muted">Rows per page: <select id="pageSize" class="select"><option>50</option><option>100</option><option>200</option></select></div>
-          <div id="pager" class="muted"></div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Item</th>
-              <th id="col-artist">Artist</th>
-              <th>Streams</th>
-              <th>Change</th>
-              <th>Trend</th>
-              <th style="text-align:right">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="rows"></tbody>
-        </table>
-      </div>
-    </div>
-  </main>
-
-  <!-- Player -->
-  <div class="player">
-    <div class="now" id="nowPlaying">
-      <div class="avatar" style="width:32px;height:32px">♪</div>
-      <div style="min-width:0">
-        <div class="title" id="npTitle">Nothing playing</div>
-        <div class="subtitle muted" id="npSub">Select a track to preview</div>
-      </div>
-    </div>
-    <div class="progress">
-      <span class="muted" id="npTime">0:00</span>
-      <div class="range"><i id="npProg"></i></div>
-      <span class="muted" id="npDur">0:15</span>
-    </div>
-    <div class="controls">
-      <button id="npPlay">▶</button>
-      <button id="npStop">⏹</button>
-    </div>
-    <audio id="audio" preload="none"></audio>
-  </div>
-</div>
+<!-- Weekdata loads first -->
 <script src="weekdata.js"></script>
+
+<header>
+  <h1>Charts</h1>
+  <div class="tabs" id="tabs">
+    <button data-range="7days" class="active">7 Days</button>
+    <button data-range="30days">30 Days</button>
+    <button data-range="alltime">All Time</button>
+  </div>
+</header>
+
+<div class="contentWrap">
+  <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+    <div>
+      <label for="sortBy">Sort by:</label>
+      <select id="sortBy">
+        <option value="streams">Streams</option>
+        <option value="name">Name A–Z</option>
+        <option value="change">Change</option>
+      </select>
+    </div>
+    <div class="muted">Rows per page:
+      <select id="pageSize"><option>50</option><option>100</option><option>200</option></select>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Item</th>
+        <th>Artist</th>
+        <th>Streams</th>
+        <th>Change</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div id="summary" style="margin-top:12px;color:var(--muted);"></div>
+  <div id="pager" style="margin-top:8px;color:var(--muted);"></div>
+</div>
+
 </body>
 </html>
 
