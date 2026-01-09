@@ -293,6 +293,18 @@
        --------------------------
        NOTE: kept your original logic intact; appended new derived stats.
     */
+
+    function firstToReach(map, threshold){
+  let first = null;
+  for (const [key, value] of map.entries()){
+    if (value >= threshold){
+      if (!first || value < first.value){
+        first = { key, value };
+      }
+    }
+  }
+  return first;
+}
     function computeAll(raw){
       const ranked = buildWeeklyRanks(raw);
       const weeks = [...ranked.keys()].sort((a,b)=>a-b);
@@ -338,6 +350,17 @@
       let highestRadio  = {key:null, value:-Infinity, week:null};
       let highestSales  = {key:null, value:-Infinity, week:null};
       let highestStreamsOutsideTop10 = {key:null, value:-Infinity, week:null, rank:null};
+      
+            // === STREAMING MILESTONE CALCULATIONS ===
+const artist500M = firstToReach(streamsByArtist, 500_000_000);
+const artist1B   = firstToReach(streamsByArtist, 1_000_000_000);
+
+const album10M  = firstToReach(albumStreamsCume, 10_000_000);
+const album500M = firstToReach(albumStreamsCume, 500_000_000);
+const album1B   = firstToReach(albumStreamsCume, 1_000_000_000);
+
+const song500M = firstToReach(streamsBySong, 500_000_000);
+const song1B   = firstToReach(streamsBySong, 1_000_000_000);
 
       const artistPair12Count = new Map();
 
@@ -707,6 +730,9 @@
         { label:'Longest gap between #1 weeks', holder:disp(longestGapBetweenNo1s.key), value:fmtInt(longestGapBetweenNo1s.gapWeeks)+' weeks', weeks:(longestGapBetweenNo1s.from?`W${longestGapBetweenNo1s.from}→W${longestGapBetweenNo1s.to}`:'—')},
         { label:'Fastest to Top 10 (excluding debut)', holder:disp(fastestToTop10.key), value:Number.isFinite(fastestToTop10.weeks)?`${fastestToTop10.weeks} weeks`:'—', weeks:fastestToTop10.start?`W${fastestToTop10.start}→W${fastestToTop10.hit}`:'—'},
         { label:'Slowest climb to Top 10', holder:disp(slowestToTop10.key), value:Number.isFinite(slowestToTop10.weeks)&&slowestToTop10.weeks>=0?`${slowestToTop10.weeks} weeks`:'—', weeks:slowestToTop10.start?`W${slowestToTop10.start}→W${slowestToTop10.hit}`:'—'},
+        { label:'First song to reach 500M streams', holder:disp(song500M?.key), value:abbr(song500M?.value) },
+{ label:'First song to reach 1B streams', holder:disp(song1B?.key), value:abbr(song1B?.value) },
+
       ];
 
       const formatRows_any = [
@@ -730,6 +756,10 @@
         { label:'Most simultaneous Top-10 songs (single week)', album:albumSimulTop10.album||'—', value:fmtInt(albumSimulTop10.count), week:albumSimulTop10.week?`W${albumSimulTop10.week}`:'—' },
         { label:'Highest single-week streams (album)', album:albumBestWeekStreams.album||'—', value:abbr(albumBestWeekStreams.value), week:albumBestWeekStreams.week?`W${albumBestWeekStreams.week}`:'—' },
         { label:'Most cumulative streams (album)', album:albumBestCumeStreams.album||'—', value:abbr(albumBestCumeStreams.value), week:'—' },
+        { label:'First album to reach 10M streams', album:album10M?.key||'—', value:abbr(album10M?.value), week:'—' },
+{ label:'First album to reach 500M streams', album:album500M?.key||'—', value:abbr(album500M?.value), week:'—' },
+{ label:'First album to reach 1B streams', album:album1B?.key||'—', value:abbr(album1B?.value), week:'—' },
+
       ];
 
       const artistRows = [
@@ -746,7 +776,11 @@
         { label:'Highest single-week streams by an artist', artist:bestArtistWeekStreams.artist||'—', value:abbr(bestArtistWeekStreams.value), span:bestArtistWeekStreams.week?`W${bestArtistWeekStreams.week}`:'—' },
         { label:'Highest single-week points by an artist', artist:bestArtistWeekPoints.artist||'—', value:abbr(bestArtistWeekPoints.value), span:bestArtistWeekPoints.week?`W${bestArtistWeekPoints.week}`:'—' },
         { label:'Most debuts in a single week (by artist)', artist:mostDebutsWeek.count?maxEntriesOneWeek.artist:'—', value:fmtInt(mostDebutsWeek.count), span:mostDebutsWeek.week?`W${mostDebutsWeek.week}`:'—' },
+            { label:'First artist to reach 500M streams', artist:artist500M?.key||'—', value:abbr(artist500M?.value), span:'All-time' },
+{ label:'First artist to reach 1B streams', artist:artist1B?.key||'—', value:abbr(artist1B?.value), span:'All-time' },
+
       ];
+  
 
       const weekRows = [
         { label:'Most debuts in a week', holder:'—', value:fmtInt(mostDebutsWeek.count), week:mostDebutsWeek.week?`W${mostDebutsWeek.week}`:'—' },
