@@ -53,13 +53,14 @@
     </div>
   </header>
 
-  <!-- Tabs -->
+  <!-- Range Tabs -->
   <div class="tabs" id="rangeTabs">
-    <button data-range="1" class="active">Week 1</button>
-    <button data-range="2">Week 2</button>
-    <button data-range="3">Week 3</button>
+    <button data-range="7days" class="active">7 Days</button>
+    <button data-range="30days">30 Days</button>
+    <button data-range="alltime">All Time</button>
   </div>
 
+  <!-- Type Tabs -->
   <div class="tabs" id="typeTabs">
     <button data-type="artist" class="active">Artist</button>
     <button data-type="tracks">Tracks</button>
@@ -85,7 +86,7 @@
   </div>
 </div>
 
-<!-- WeekData first -->
+<!-- Load weekdata.js first -->
 <script src="weekdata.js"></script>
 
 <script>
@@ -98,7 +99,7 @@
       return;
     }
 
-    const range = window.currentRange || '1';
+    const range = window.currentRange || '7days';
     const type = window.currentType || 'artist';
 
     const data = weekData[range] || [];
@@ -120,10 +121,12 @@
       rows.appendChild(tr);
     });
 
-    summary.textContent = `Showing ${data.length} entries for Week ${range} (${type})`;
+    summary.textContent = `Showing ${data.length} entries — ${type.charAt(0).toUpperCase() + type.slice(1)} | ${range.replace(/([a-z])([A-Z])/g,'$1 $2')}`;
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    window.currentRange = '7days';
+    window.currentType = 'artist';
     renderWeekData();
 
     document.querySelectorAll('#rangeTabs button').forEach(btn => {
