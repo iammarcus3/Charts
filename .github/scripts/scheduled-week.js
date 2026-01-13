@@ -37,26 +37,26 @@ const MAX_ENTRIES = 200;
 // --- Factor tables (EXACT from your Python) ---
 const STREAMS_FACTORS = [
   [1, 1, 58.50], [2, 2, 46.78], [3, 5, 30.90], [6, 8, 25.90], [9, 13, 28.90],
-  [14, 18, 27.85], [19, 25, 30.90], [26, 30, 45.70], [31, 50, 40.95],
-  [51, 70, 50.90], [71, 85, 46.50], [86, 200, 70.00],
+  [14, 18, 27.85], [19, 25, 38.90], [26, 30, 48.70], [31, 50, 50.95],
+  [51, 70, 60.90], [71, 85, 65.50], [86, 200, 90.00],
 ];
 const RADIO_FACTORS = [
   [1, 1, 186.90], [2, 2, 450.10], [3, 5, 620.20], [6, 9, 1130.30],
-  [9, 15, 1940.40], [16, 20, 900.50], [21, 25, 800.60], [26, 30, 750.70],
+  [9, 15, 1940.40], [16, 20, 1000.50], [21, 25, 800.60], [26, 30, 750.70],
   [31, 50, 500.80], [51, 70, 450.90], [71, 85, 200.10], [86, 200, 100.11],
 ];
 function getMultiplierForRank(rank) {
-  if (rank === 1) return 40.45;
-  else if (rank <= 5) return 37.89;
-  else if (rank <= 10) return 35.16;
-  else if (rank <= 20) return 32.99;
-  else if (rank <= 40) return 30.98;
-  else if (rank <= 50) return 28.10;
-  else if (rank <= 60) return 25.78;
-  else if (rank <= 70) return 23.06;
-  else if (rank <= 80) return 22.99;
-  else if (rank <= 100) return 21.99;
-  else return 17.9;
+  if (rank === 1) return 45.45;
+  else if (rank <= 5) return 39.89;
+  else if (rank <= 10) return 37.16;
+  else if (rank <= 20) return 35.99;
+  else if (rank <= 40) return 32.98;
+  else if (rank <= 50) return 30.10;
+  else if (rank <= 60) return 28.78;
+  else if (rank <= 70) return 26.06;
+  else if (rank <= 80) return 23.99;
+  else if (rank <= 100) return 22.99;
+  else return 20.9;
 }
 function getFactor(factors, weeks) {
   for (const [s, e, f] of factors) if (s <= weeks && weeks <= e) return f;
