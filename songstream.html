@@ -409,7 +409,7 @@
                 </table>
               </div>
               <div class="notice" id="noDataNotice" style="display:none;margin-top:10px;">
-                I couldn’t find this song in <code>weekdata.js</code>.  
+                I couldn’t find this song in <code>weekdata.js</code>.<br/>
                 Tip: make sure the URL has <b>?song=...</b> and (optionally) <b>&artist=...</b>.
               </div>
             </div>
@@ -453,7 +453,6 @@
       return d;
     }
     function fmtDate(d){
-      // e.g. 23 Feb 2018
       const opts = { day:"2-digit", month:"short", year:"numeric", timeZone:"UTC" };
       return d.toLocaleDateString(undefined, opts);
     }
@@ -478,7 +477,6 @@
     }
 
     function getRawWeekData(){
-      // Your file uses const weekData = {...}
       try { if (typeof weekData !== "undefined") return weekData; } catch(_){}
       if (window.weekData) return window.weekData;
       return null;
@@ -499,7 +497,6 @@
       return weeks;
     }
 
-    // Build per-week song streams (some weeks might have multiple entries; we sum them)
     function buildSongSeries(weeks, songTitle, artistName){
       const wantSong = norm(songTitle);
       const wantArtist = norm(artistName);
@@ -518,13 +515,8 @@
           if (wantArtist && a !== wantArtist) continue;
 
           const s = getStreams(it);
-          if (s > 0){
-            weekSum += s;
-            any = true;
-          } else {
-            // still count appearance if streams are 0? We'll treat as appearance.
-            any = true;
-          }
+          weekSum += s;
+          any = true;
         }
 
         if (any){
@@ -532,12 +524,10 @@
         }
       }
 
-      // sort in time order
       series.sort((x,y)=>x.week-y.week);
       return series;
     }
 
-    // Compute song all-time totals for ranking (title + artist key)
     function computeAllTimeSongRanking(weeks){
       const map = new Map(); // key: title||artist -> {title, artist, total}
       for (const w of weeks){
@@ -545,57 +535,45 @@
           const title = (it?.title ?? "").toString().trim();
           const artist = (it?.artist ?? "").toString().trim();
           if (!title) continue;
+
           const s = getStreams(it);
           if (s <= 0) continue;
 
           const key = `${norm(title)}||${norm(artist)}`;
           const rec = map.get(key) || { title, artist, total: 0 };
           rec.total += s;
-          // keep nicer casing if later instances differ
-          if (!rec.title) rec.title = title;
-          if (!rec.artist) rec.artist = artist;
           map.set(key, rec);
         }
       }
 
-      const arr = Array.from(map.values()).sort((a,b)=>b.total - a.total);
-      return arr;
+      return Array.from(map.values()).sort((a,b)=>b.total - a.total);
     }
 
-    // Find first week where cumulative >= threshold
     function milestone(seriesWithCum, threshold){
       for (const row of seriesWithCum){
-        if (row.cum >= threshold){
-          return row;
-        }
+        if (row.cum >= threshold) return row;
       }
       return null;
     }
 
-    // Last 6 months window anchored to last available week in dataset
     function computeLast6MonthsStreams(series){
       if (!series.length) return { sum: 0, start: null, end: null };
 
       const lastWeek = series[series.length - 1].week;
-      const endDate = addDaysUTC(weekStartDate(lastWeek), 6); // end Thu
+      const endDate = addDaysUTC(weekStartDate(lastWeek), 6);
       const startDate = new Date(endDate);
-      // ~6 months: 183 days back (good approximation and consistent)
-      startDate.setUTCDate(startDate.getUTCDate() - 183);
+      startDate.setUTCDate(startDate.getUTCDate() - 183); // ~6 months
 
       let sum = 0;
       for (const row of series){
         const ws = weekStartDate(row.week);
         const we = addDaysUTC(ws, 6);
-        // include weeks whose range overlaps [startDate, endDate]
-        if (we >= startDate && ws <= endDate){
-          sum += row.streams;
-        }
+        if (we >= startDate && ws <= endDate) sum += row.streams;
       }
 
       return { sum, start: startDate, end: endDate };
     }
 
-    // ---------------- UI + Main ----------------
     function getQuery(){
       const p = new URLSearchParams(location.search);
       return {
@@ -625,21 +603,17 @@
       const songTitle = (song || "").trim();
       const artistName = (artist || "").trim();
 
-      // Fill inputs
       $("songInput").value = songTitle;
       $("artistInput").value = artistName;
 
-      // Header names
       $("songName").textContent = songTitle || "Song";
       $("artistName").textContent = artistName || "Artist (any)";
 
-      // Dataset range text (based on max week key)
       const minWeek = weeks.length ? weeks[0].week : 0;
       const maxWeek = weeks.length ? weeks[weeks.length - 1].week : 0;
       const range = weeks.length ? `${fmtRange(minWeek)} → ${fmtRange(maxWeek)}` : "—";
       $("rangeText").textContent = `Dataset range: ${range}`;
 
-      // Prepare artist/album links (use first matching weekly entry later if found)
       $("artistLink").href = artistName
         ? `artiststream.html?artist=${encodeURIComponent(artistName)}`
         : `artiststream.html`;
@@ -654,7 +628,6 @@
         return;
       }
 
-      // Build per-week series for this song
       const series = buildSongSeries(weeks, songTitle, artistName);
 
       $("metaText").textContent = `Loaded ${weeks.length} weeks • Song matches in ${series.length} week(s).`;
@@ -666,26 +639,22 @@
         $("noDataNotice").style.display = "none";
       }
 
-      // Build cumulative & weekly table rows
+      // cumulative
       let cum = 0;
-      let peak = { streams: -1, week: null, cum: 0 };
+      let peak = { streams: -1, week: null };
       const withCum = series.map(r => {
         cum += r.streams;
-        const row = { ...r, cum };
-        if (r.streams > peak.streams){
-          peak = { streams: r.streams, week: r.week, cum };
-        }
-        return row;
+        if (r.streams > peak.streams) peak = { streams: r.streams, week: r.week };
+        return { ...r, cum };
       });
 
-      // Overview KPIs
       $("allTimeStreams").textContent = fmtInt(withCum[withCum.length - 1].cum);
       $("weeksAppeared").textContent = `Appears in ${withCum.length.toLocaleString()} week(s)`;
 
       $("peakWeekStreams").textContent = fmtInt(peak.streams);
       $("peakWeekDate").textContent = peak.week ? `Week ${peak.week} • ${fmtRange(peak.week)}` : "—";
 
-      // Milestones
+      // Milestones (FIXED: use your existing HTML IDs)
       function fillMilestone(threshold, dateEl, cumEl, noteEl){
         const hit = milestone(withCum, threshold);
         if (!hit){
@@ -699,9 +668,9 @@
         noteEl.textContent = `First reached during week ${hit.week}.`;
       }
 
-      fillMilestone(100000000, $("ms100mDate"), $("ms100mCum"), $("ms100mNote"));
-      fillMilestone(500000000, $("ms500mDate"), $("ms500mCum"), $("ms500mNote"));
-      fillMilestone(1000000000, $("ms1bDate"), $("ms1bCum"), $("ms1bNote"));
+      fillMilestone(100000000, $("ms100kDate"), $("ms100kCum"), $("ms100kNote"));   // 100M
+      fillMilestone(500000000, $("ms500kDate"), $("ms500kCum"), $("ms500kNote"));   // 500M
+      fillMilestone(1000000000, $("ms1bDate"), $("ms1bCum"), $("ms1bNote"));        // 1B
 
       // Last 6 months
       const last6 = computeLast6MonthsStreams(series);
@@ -724,8 +693,8 @@
         weekRows.appendChild(tr);
       }
 
-      // Streams per year (based on week start date year)
-      const byYear = new Map(); // year -> sum
+      // Yearly totals
+      const byYear = new Map();
       for (const r of series){
         const y = weekStartDate(r.week).getUTCFullYear();
         byYear.set(y, (byYear.get(y) || 0) + r.streams);
@@ -750,36 +719,29 @@
         ? `Highest year: ${bestYear} with ${fmtInt(bestYearVal)} streams (based on week start dates).`
         : "—";
 
-      // All-time rank and Top 100 status
-      // We rank all songs by total streams over the full dataset (title+artist key).
+      // All-time rank
       const ranking = computeAllTimeSongRanking(weeks);
 
-      // match key: title + artist (artist optional means: pick best matching artist if not provided)
       let rankInfo = null;
-
       if (artistName){
         const key = `${norm(songTitle)}||${norm(artistName)}`;
         for (let i=0;i<ranking.length;i++){
           const rec = ranking[i];
           if (`${norm(rec.title)}||${norm(rec.artist)}` === key){
-            rankInfo = { rank: i+1, total: rec.total, rec };
+            rankInfo = { rank: i+1, rec };
             break;
           }
         }
       } else {
-        // If artist not provided, pick the best (highest total) among same title
         let best = null, bestIdx = -1;
         for (let i=0;i<ranking.length;i++){
           const rec = ranking[i];
           if (norm(rec.title) === norm(songTitle)){
-            best = rec;
-            bestIdx = i;
-            break; // ranking is sorted desc, first match is best
+            best = rec; bestIdx = i; break;
           }
         }
         if (best){
-          rankInfo = { rank: bestIdx+1, total: best.total, rec: best };
-          // Also update artist display to actual best artist (nice UX)
+          rankInfo = { rank: bestIdx+1, rec: best };
           $("artistName").textContent = best.artist || "Artist";
           $("artistLink").href = best.artist ? `artiststream.html?artist=${encodeURIComponent(best.artist)}` : "artiststream.html";
         }
@@ -787,25 +749,22 @@
 
       if (rankInfo){
         $("allTimeRank").textContent = `#${rankInfo.rank.toLocaleString()}`;
-        const inTop100 = rankInfo.rank <= 100;
-        $("top100Status").textContent = inTop100
-          ? `✅ In Top 100 All-Time (Rank ${rankInfo.rank})`
-          : `Not in Top 100 All-Time (Rank ${rankInfo.rank.toLocaleString()})`;
+        $("top100Status").textContent =
+          rankInfo.rank <= 100
+            ? `✅ In Top 100 All-Time (Rank ${rankInfo.rank})`
+            : `Not in Top 100 All-Time (Rank ${rankInfo.rank.toLocaleString()})`;
       } else {
-        // fallback: we still have series totals, but ranking didn't match (e.g. inconsistent artist spelling)
         $("allTimeRank").textContent = "—";
         $("top100Status").textContent = "Couldn’t match this song/artist for global ranking.";
       }
     }
 
-    // Controls
     $("goBtn").addEventListener("click", ()=>{
       const s = $("songInput").value.trim();
       const a = $("artistInput").value.trim();
       setQuery(s, a);
     });
 
-    // Boot
     render();
   </script>
 </body>
