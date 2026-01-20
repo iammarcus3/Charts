@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Album Streams • Deep Analytics</title>
 
 <style>
@@ -13,6 +13,7 @@
   --border:rgba(255,255,255,.12);
   --text:#eef3ff;
   --muted:rgba(238,243,255,.65);
+  --muted2:rgba(238,243,255,.55);
   --accent:#4aa3ff;
   --accent2:#22d3ee;
   --good:#7CFFB2;
@@ -28,13 +29,15 @@ body{
   background:
     radial-gradient(1100px 700px at 15% 5%, rgba(74,163,255,.22), transparent 60%),
     radial-gradient(900px 600px at 88% 10%, rgba(34,211,238,.16), transparent 55%),
+    radial-gradient(700px 500px at 30% 95%, rgba(124,255,178,.10), transparent 60%),
     var(--bg);
+  min-height:100vh;
 }
-header{text-align:center;padding:26px 14px}
-header h1{margin:0;font-size:1.55rem}
+header{text-align:center;padding:26px 14px 10px}
+header h1{margin:0;font-size:1.55rem;letter-spacing:.3px}
 header p{margin:6px 0 0;color:var(--muted)}
 
-.wrap{max-width:1100px;margin:auto;padding:14px 14px 46px}
+.wrap{max-width:1120px;margin:auto;padding:14px 14px 46px}
 .panel{
   border:1px solid var(--border);
   border-radius:var(--r);
@@ -57,14 +60,38 @@ header p{margin:6px 0 0;color:var(--muted)}
   border:1px solid var(--border);
   background:rgba(255,255,255,.04);
   font-size:.92rem;
+  white-space:nowrap;
 }
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.input{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:999px;
+  outline:none;
+  min-width:240px;
+}
+.input::placeholder{color:rgba(238,243,255,.55)}
+.btn{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:.92rem;
+}
+.btn:hover{border-color:rgba(255,255,255,.18)}
+.meta{color:var(--muted);font-size:.9rem}
+
 .grid{
   display:grid;
   grid-template-columns:1.1fr .9fr;
   gap:12px;
   padding:14px;
 }
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:980px){.grid{grid-template-columns:1fr}}
 
 .card{
   border:1px solid var(--border);
@@ -72,12 +99,17 @@ header p{margin:6px 0 0;color:var(--muted)}
   background:var(--card);
   overflow:hidden;
 }
-.card h2{
-  margin:0;
+.card .head{
   padding:12px;
-  font-size:1.05rem;
   border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:10px;
+  flex-wrap:wrap;
 }
+.card .head h2{margin:0;font-size:1.05rem}
+.card .head span{color:var(--muted2);font-size:.86rem}
 .card .body{padding:12px}
 
 .kpis{
@@ -85,6 +117,7 @@ header p{margin:6px 0 0;color:var(--muted)}
   grid-template-columns:repeat(2,1fr);
   gap:10px;
 }
+@media(max-width:560px){.kpis{grid-template-columns:1fr}}
 .kpi{
   background:var(--card2);
   border:1px solid var(--border);
@@ -93,207 +126,651 @@ header p{margin:6px 0 0;color:var(--muted)}
 }
 .kpi .label{color:var(--muted);font-size:.86rem}
 .kpi .value{font-size:1.25rem;font-weight:800;margin-top:4px}
-.kpi .sub{color:var(--muted);font-size:.82rem;margin-top:4px}
+.kpi .sub{color:var(--muted2);font-size:.82rem;margin-top:4px;line-height:1.35}
 
-.ms{
+.milestones{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
   margin-top:10px;
+}
+.ms{
   padding:12px;
   border:1px solid var(--border);
   border-radius:14px;
   background:var(--card2);
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.ms .left{min-width:220px}
+.ms .right{text-align:right;min-width:240px}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.04);
+  font-size:.84rem;
+  color:var(--muted);
+}
+.dot{
+  width:10px;height:10px;border-radius:999px;
+  background:var(--accent2);
+  box-shadow:0 0 0 4px rgba(34,211,238,.16);
 }
 .ms strong{font-size:1.02rem}
+.ms .big{font-weight:900;font-size:1.02rem}
+.ms .small{color:var(--muted2);font-size:.84rem;margin-top:4px;line-height:1.35}
 
 .tablewrap{
   max-height:70vh;
   overflow:auto;
   border:1px solid var(--border);
   border-radius:14px;
+  background:rgba(0,0,0,.14);
 }
-table{width:100%;border-collapse:collapse}
+table{width:100%;border-collapse:collapse;min-width:520px}
 th,td{
   padding:10px;
   border-bottom:1px solid rgba(255,255,255,.08);
   font-size:.9rem;
+  font-variant-numeric: tabular-nums;
 }
-th{position:sticky;top:0;background:#10182c;color:var(--muted)}
-
-.badge{
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:.8rem;
-  border:1px solid var(--border);
+th{
+  position:sticky;
+  top:0;
+  background:rgba(16,24,44,.96);
+  color:var(--muted);
+  text-align:left;
+  z-index:1;
 }
-.good{color:var(--good)}
-.warn{color:var(--warn)}
+.notice{
+  padding:12px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.03);
+  border-radius:14px;
+  color:var(--muted);
+  line-height:1.45;
+}
+a.link{
+  color:var(--text);
+  text-decoration:none;
+  border-bottom:1px dashed rgba(74,163,255,.6);
+}
+a.link:hover{border-bottom-color:rgba(34,211,238,.8)}
+.smallnote{color:var(--muted2);font-size:.85rem;margin-top:8px;line-height:1.35}
 </style>
 </head>
 
 <body>
 <header>
   <h1>Album Streams</h1>
-  <p>Lifetime performance • milestones • momentum</p>
+  <p>Milestones • all-time rank • yearly totals • momentum</p>
 </header>
 
 <div class="wrap">
-<div class="panel">
-  <div class="top">
-    <div class="pill"><b id="albumName">Album</b> • <span id="artistName">Artist</span></div>
-    <div class="pill">Week 1 = 23 Feb 2018 (Fri–Thu)</div>
-  </div>
+  <div class="panel">
+    <div class="top">
+      <div class="row">
+        <span class="pill"><b id="albumName">Album</b> <span style="opacity:.6">•</span> <span id="artistName" style="opacity:.8">Artist</span></span>
+        <span class="pill">Week 1 starts: <b>23 Feb 2018</b> <span style="opacity:.7">(Fri–Thu)</span></span>
+      </div>
 
-  <div class="grid">
-    <!-- LEFT -->
-    <div>
-      <div class="card">
-        <h2>Overview</h2>
-        <div class="body">
-          <div class="kpis">
-            <div class="kpi">
-              <div class="label">All-time album streams</div>
-              <div class="value" id="totalStreams">—</div>
-              <div class="sub" id="weeksOn">—</div>
+      <div class="row">
+        <input id="albumInput" class="input" placeholder="album name…" />
+        <input id="artistInput" class="input" placeholder="artist (optional)…" />
+        <button class="btn" id="goBtn">View</button>
+      </div>
+
+      <div class="meta" id="metaText">Loading weekdata…</div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <div>
+        <div class="card">
+          <div class="head">
+            <h2>Overview</h2>
+            <span id="rangeText">Dataset range: —</span>
+          </div>
+          <div class="body">
+            <div class="kpis">
+              <div class="kpi">
+                <div class="label">All-time album streams</div>
+                <div class="value" id="totalStreams">—</div>
+                <div class="sub" id="weeksOn">—</div>
+              </div>
+              <div class="kpi">
+                <div class="label">All-time album rank</div>
+                <div class="value" id="albumRank">—</div>
+                <div class="sub" id="top100">—</div>
+              </div>
+              <div class="kpi">
+                <div class="label">Streams in last 6 months</div>
+                <div class="value" id="last6">—</div>
+                <div class="sub" id="last6Window">—</div>
+              </div>
+              <div class="kpi">
+                <div class="label">Peak weekly streams</div>
+                <div class="value" id="peakWeek">—</div>
+                <div class="sub" id="peakDate">—</div>
+              </div>
             </div>
-            <div class="kpi">
-              <div class="label">All-time album rank</div>
-              <div class="value" id="albumRank">—</div>
-              <div class="sub" id="top100">—</div>
+
+            <div class="milestones">
+              <div class="ms">
+                <div class="left">
+                  <span class="badge"><span class="dot"></span> Milestone</span><br/>
+                  <strong>100,000,000 streams</strong>
+                  <div class="smallnote" id="m100Note">—</div>
+                </div>
+                <div class="right">
+                  <div class="big" id="m100Date">—</div>
+                  <div class="small" id="m100Cum">—</div>
+                </div>
+              </div>
+
+              <div class="ms">
+                <div class="left">
+                  <span class="badge"><span class="dot"></span> Milestone</span><br/>
+                  <strong>500,000,000 streams</strong>
+                  <div class="smallnote" id="m500Note">—</div>
+                </div>
+                <div class="right">
+                  <div class="big" id="m500Date">—</div>
+                  <div class="small" id="m500Cum">—</div>
+                </div>
+              </div>
+
+              <div class="ms">
+                <div class="left">
+                  <span class="badge"><span class="dot"></span> Milestone</span><br/>
+                  <strong>1,000,000,000 streams</strong>
+                  <div class="smallnote" id="m1bNote">—</div>
+                </div>
+                <div class="right">
+                  <div class="big" id="m1bDate">—</div>
+                  <div class="small" id="m1bCum">—</div>
+                </div>
+              </div>
             </div>
-            <div class="kpi">
-              <div class="label">Last 6 months</div>
-              <div class="value" id="last6">—</div>
-              <div class="sub">Recent momentum</div>
-            </div>
-            <div class="kpi">
-              <div class="label">Peak week</div>
-              <div class="value" id="peakWeek">—</div>
-              <div class="sub" id="peakDate">—</div>
+
+            <div class="smallnote">
+              Dates use your rule: <b>Week 1 = Fri 23 Feb 2018</b>, and each week runs <b>Fri–Thu</b>.
+              Album streams are summed across all weekly entries in the dataset where the album matches.
             </div>
           </div>
+        </div>
 
-          <div class="ms"><strong>100M:</strong> <span id="m100">—</span></div>
-          <div class="ms"><strong>500M:</strong> <span id="m500">—</span></div>
-          <div class="ms"><strong>1B:</strong> <span id="m1b">—</span></div>
+        <div class="card" style="margin-top:12px;">
+          <div class="head">
+            <h2>Surprise insights</h2>
+            <span class="muted2">More than just totals</span>
+          </div>
+          <div class="body">
+            <div class="notice">
+              🚀 <b>Fastest 4-week run:</b> <span id="fastRun">—</span><br/>
+              🕰 <b>Longevity score:</b> <span id="longevity">—</span><br/>
+              📈 <b>Momentum:</b> <span id="momentum">—</span><br/>
+              🧊 <b>Front-loaded or long-tail:</b> <span id="shape">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px;">
+          <div class="head">
+            <h2>Weekly history</h2>
+            <span class="muted2">Only weeks where the album appears</span>
+          </div>
+          <div class="body">
+            <div class="tablewrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:110px;">Week</th>
+                    <th style="width:200px;">Dates</th>
+                    <th style="width:140px;">Streams</th>
+                    <th style="width:160px;">Cumulative</th>
+                  </tr>
+                </thead>
+                <tbody id="weekRows"></tbody>
+              </table>
+            </div>
+            <div class="notice" id="noDataNotice" style="display:none;margin-top:10px;">
+              I couldn’t find this album in <code>weekdata.js</code>.<br/>
+              Tip: use <b>?album=...</b> and optionally <b>&artist=...</b> in the URL.
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="card" style="margin-top:12px">
-        <h2>Surprise insights</h2>
-        <div class="body">
-          <div class="ms">🚀 <b>Fastest growth phase:</b> <span id="growth">—</span></div>
-          <div class="ms">🕰 <b>Longevity score:</b> <span id="longevity">—</span></div>
-          <div class="ms">📈 <b>Momentum:</b> <span id="momentum">—</span></div>
+      <!-- RIGHT -->
+      <div>
+        <div class="card">
+          <div class="head">
+            <h2>Streams per year</h2>
+            <span class="muted2">Sum by week start year</span>
+          </div>
+          <div class="body">
+            <div class="tablewrap">
+              <table>
+                <thead><tr><th style="width:120px;">Year</th><th>Streams</th><th style="width:220px;">Notes</th></tr></thead>
+                <tbody id="yearRows"></tbody>
+              </table>
+            </div>
+            <div class="smallnote" id="yearNote">—</div>
+          </div>
         </div>
+
+        <div class="card" style="margin-top:12px;">
+          <div class="head">
+            <h2>Next pages</h2>
+            <span class="muted2">Use later with same data</span>
+          </div>
+          <div class="body">
+            <div class="notice">
+              • <a class="link" id="artistLink" href="artiststream.html">Open artist page</a><br/>
+              • <a class="link" id="songLink" href="songstream.html">Open song page</a><br/>
+              <div class="smallnote">Links pass query params so your other pages can load the right item later.</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- RIGHT -->
-    <div>
-      <div class="card">
-        <h2>Streams per year</h2>
-        <div class="body">
-          <div class="tablewrap">
-            <table>
-              <thead><tr><th>Year</th><th>Streams</th></tr></thead>
-              <tbody id="yearRows"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
-</div>
 
+<!-- Dataset must define: const weekData = { "1":[...], "2":[...], ... } -->
 <script src="weekdata.js"></script>
+
 <script>
-const WEEK1 = new Date(Date.UTC(2018,1,23));
-const dayMS = 86400000;
+  // ---------------- Date rules ----------------
+  const WEEK1_START = new Date(Date.UTC(2018, 1, 23)); // 2018-02-23 UTC
+  const DAY_MS = 86400000;
 
-const $=id=>document.getElementById(id);
-const q=new URLSearchParams(location.search);
-const album=q.get("album")||"";
-const artist=q.get("artist")||"";
+  function weekStartDate(weekNum){
+    return new Date(WEEK1_START.getTime() + (weekNum - 1) * 7 * DAY_MS);
+  }
+  function addDaysUTC(date, days){
+    return new Date(date.getTime() + days * DAY_MS);
+  }
+  function fmtDate(d){
+    const opts = { day:"2-digit", month:"short", year:"numeric", timeZone:"UTC" };
+    return d.toLocaleDateString(undefined, opts);
+  }
+  function fmtRange(weekNum){
+    const s = weekStartDate(weekNum);
+    const e = addDaysUTC(s, 6);
+    return `${fmtDate(s)} – ${fmtDate(e)}`;
+  }
+  function daysBetweenUTC(a,b){
+    return Math.max(0, Math.round((b.getTime() - a.getTime()) / DAY_MS));
+  }
 
-$("albumName").textContent=album||"Album";
-$("artistName").textContent=artist||"Artist";
+  // ---------------- Helpers (FIXED for non-string values) ----------------
+  const $ = (id)=>document.getElementById(id);
+  function fmtInt(n){
+    if (!Number.isFinite(n)) return "0";
+    return Math.round(n).toLocaleString(undefined);
+  }
+  function normStr(v){
+    if (v === null || v === undefined) return "";
+    if (Array.isArray(v)) return v.map(x => String(x)).join(" ").toLowerCase().trim();
+    return String(v).toLowerCase().trim();
+  }
+  function getStreams(item){
+    const v = Number(item?.streams);
+    return Number.isFinite(v) ? v : 0;
+  }
 
-function ws(week){return new Date(WEEK1.getTime()+(week-1)*7*dayMS)}
-function days(a,b){return Math.round((b-a)/dayMS)}
-function fmt(n){return Math.round(n).toLocaleString()}
+  function getRawWeekData(){
+    try { if (typeof weekData !== "undefined") return weekData; } catch(_){}
+    if (window.weekData) return window.weekData;
+    return null;
+  }
 
-let series=[];
-for(const w in weekData){
-  let sum=0;
-  for(const it of weekData[w]){
-    if(it.album?.toLowerCase()===album.toLowerCase()
-      && (!artist || it.artist?.toLowerCase()===artist.toLowerCase())){
-      sum+=Number(it.streams)||0;
+  function normalizeWeekObject(raw){
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+
+    return Object.keys(raw)
+      .map(k => Number(k))
+      .filter(n => Number.isFinite(n))
+      .sort((a,b)=>a-b)
+      .map(wn => ({
+        week: wn,
+        items: Array.isArray(raw[String(wn)]) ? raw[String(wn)] : []
+      }));
+  }
+
+  // Build per-week album streams (sum all entries for album in that week)
+  function buildAlbumSeries(weeks, albumName, artistName){
+    const wantAlbum = normStr(albumName);
+    const wantArtist = normStr(artistName);
+
+    const series = [];
+    for (const w of weeks){
+      let sum = 0;
+      let any = false;
+
+      for (const it of (w.items || [])){
+        const a = normStr(it?.album);
+        if (!a) continue;
+        if (a !== wantAlbum) continue;
+
+        if (wantArtist && normStr(it?.artist) !== wantArtist) continue;
+
+        sum += getStreams(it);
+        any = true;
+      }
+
+      if (any) series.push({ week: w.week, streams: sum });
+    }
+
+    series.sort((x,y)=>x.week-y.week);
+    return series;
+  }
+
+  // Ranking for all albums (album + artist key)
+  function computeAllTimeAlbumRanking(weeks){
+    const map = new Map(); // key album||artist -> {album, artist, total}
+    for (const w of weeks){
+      for (const it of (w.items || [])){
+        const album = (it?.album ?? "");
+        const artist = (it?.artist ?? "");
+        const s = getStreams(it);
+        if (s <= 0) continue;
+
+        const key = `${normStr(album)}||${normStr(artist)}`;
+        if (!key || key === "||") continue;
+
+        const rec = map.get(key) || { album: String(album), artist: String(artist), total: 0 };
+        rec.total += s;
+        map.set(key, rec);
+      }
+    }
+    return Array.from(map.values()).sort((a,b)=>b.total - a.total);
+  }
+
+  function milestone(seriesWithCum, threshold){
+    for (const row of seriesWithCum){
+      if (row.cum >= threshold) return row;
+    }
+    return null;
+  }
+
+  function computeLast6MonthsStreams(series){
+    if (!series.length) return { sum: 0, start: null, end: null };
+
+    const lastWeek = series[series.length - 1].week;
+    const endDate = addDaysUTC(weekStartDate(lastWeek), 6);
+    const startDate = new Date(endDate.getTime() - 183 * DAY_MS);
+
+    let sum = 0;
+    for (const row of series){
+      const ws = weekStartDate(row.week);
+      const we = addDaysUTC(ws, 6);
+      if (we >= startDate && ws <= endDate) sum += row.streams;
+    }
+    return { sum, start: startDate, end: endDate };
+  }
+
+  // Surprise: best 4-week run
+  function bestRun(series, windowSize){
+    if (series.length < windowSize) return null;
+
+    let best = { sum: -1, startIdx: 0, endIdx: windowSize - 1 };
+    let runSum = 0;
+
+    for (let i=0;i<series.length;i++){
+      runSum += series[i].streams;
+      if (i >= windowSize) runSum -= series[i - windowSize].streams;
+
+      if (i >= windowSize - 1){
+        if (runSum > best.sum){
+          best = { sum: runSum, startIdx: i - (windowSize - 1), endIdx: i };
+        }
+      }
+    }
+    return best;
+  }
+
+  function getQuery(){
+    const p = new URLSearchParams(location.search);
+    return { album: p.get("album") || "", artist: p.get("artist") || "" };
+  }
+  function setQuery(album, artist){
+    const p = new URLSearchParams();
+    if (album) p.set("album", album);
+    if (artist) p.set("artist", artist);
+    location.search = p.toString();
+  }
+
+  function render(){
+    const raw = getRawWeekData();
+    const weeks = normalizeWeekObject(raw);
+
+    if (!weeks){
+      $("metaText").textContent = "weekData not loaded or not in expected object format.";
+      $("noDataNotice").style.display = "block";
+      return;
+    }
+
+    const { album, artist } = getQuery();
+    const albumName = (album || "").trim();
+    const artistName = (artist || "").trim();
+
+    $("albumInput").value = albumName;
+    $("artistInput").value = artistName;
+
+    $("albumName").textContent = albumName || "Album";
+    $("artistName").textContent = artistName || "Artist (any)";
+
+    // dataset range
+    const minWeek = weeks.length ? weeks[0].week : 0;
+    const maxWeek = weeks.length ? weeks[weeks.length - 1].week : 0;
+    $("rangeText").textContent = weeks.length ? `Dataset range: ${fmtRange(minWeek)} → ${fmtRange(maxWeek)}` : "Dataset range: —";
+
+    // links
+    $("artistLink").href = artistName ? `artiststream.html?artist=${encodeURIComponent(artistName)}` : `artiststream.html`;
+    $("songLink").href = `songstream.html`;
+
+    if (!albumName){
+      $("metaText").textContent = `Loaded ${weeks.length} weeks. Add ?album=... in the URL to view an album.`;
+      $("noDataNotice").style.display = "block";
+      $("noDataNotice").innerHTML = `Please add an album in the URL, like: <code>?album=Album Name</code> (and optionally <code>&artist=Artist Name</code>).`;
+      return;
+    }
+
+    // series
+    const series = buildAlbumSeries(weeks, albumName, artistName);
+    $("metaText").textContent = `Loaded ${weeks.length} weeks • Album matches in ${series.length} week(s).`;
+
+    if (!series.length){
+      $("noDataNotice").style.display = "block";
+      return;
+    } else {
+      $("noDataNotice").style.display = "none";
+    }
+
+    // cum + peak
+    let cum = 0;
+    let peak = { streams: -1, week: null };
+    const withCum = series.map(r => {
+      cum += r.streams;
+      if (r.streams > peak.streams) peak = { streams: r.streams, week: r.week };
+      return { ...r, cum };
+    });
+
+    const firstWeek = withCum[0].week;
+    const firstStart = weekStartDate(firstWeek);
+
+    $("totalStreams").textContent = fmtInt(withCum[withCum.length - 1].cum);
+    $("weeksOn").textContent = `Appears in ${withCum.length.toLocaleString()} week(s) • First week: ${fmtRange(firstWeek)}`;
+
+    $("peakWeek").textContent = fmtInt(peak.streams);
+    $("peakDate").textContent = peak.week ? `Week ${peak.week} • ${fmtRange(peak.week)}` : "—";
+
+    // milestones
+    function fillMilestone(threshold, dateEl, cumEl, noteEl){
+      const hit = milestone(withCum, threshold);
+      if (!hit){
+        dateEl.textContent = "Not reached";
+        cumEl.textContent = `Cumulative: ${fmtInt(withCum[withCum.length - 1].cum)}`;
+        noteEl.textContent = `Needs ${fmtInt(threshold)} total streams.`;
+        return;
+      }
+      const hitStart = weekStartDate(hit.week);
+      const days = daysBetweenUTC(firstStart, hitStart);
+
+      dateEl.textContent = fmtRange(hit.week);
+      cumEl.textContent = `Cumulative at/after: ${fmtInt(hit.cum)}`;
+      noteEl.textContent = `First reached in week ${hit.week} • ${days.toLocaleString()} days since first week (${fmtDate(firstStart)}).`;
+    }
+
+    fillMilestone(100000000, $("m100Date"), $("m100Cum"), $("m100Note"));
+    fillMilestone(500000000, $("m500Date"), $("m500Cum"), $("m500Note"));
+    fillMilestone(1000000000, $("m1bDate"), $("m1bCum"), $("m1bNote"));
+
+    // last 6 months
+    const last6 = computeLast6MonthsStreams(series);
+    $("last6").textContent = fmtInt(last6.sum);
+    $("last6Window").textContent = last6.start && last6.end
+      ? `${fmtDate(last6.start)} → ${fmtDate(last6.end)}`
+      : "—";
+
+    // weekly table
+    const weekRows = $("weekRows");
+    weekRows.innerHTML = "";
+    for (const r of withCum){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>Week ${r.week}</td>
+        <td class="muted2">${fmtRange(r.week)}</td>
+        <td>${fmtInt(r.streams)}</td>
+        <td>${fmtInt(r.cum)}</td>
+      `;
+      weekRows.appendChild(tr);
+    }
+
+    // per year
+    const byYear = new Map();
+    for (const r of series){
+      const y = weekStartDate(r.week).getUTCFullYear();
+      byYear.set(y, (byYear.get(y) || 0) + r.streams);
+    }
+    const years = Array.from(byYear.keys()).sort((a,b)=>a-b);
+
+    const yrRows = $("yearRows");
+    yrRows.innerHTML = "";
+    let bestYear = null, bestVal = -1;
+    for (const y of years){
+      const v = byYear.get(y);
+      if (v > bestVal){ bestVal = v; bestYear = y; }
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><b>${y}</b></td>
+        <td>${fmtInt(v)}</td>
+        <td class="muted2">${y === bestYear ? "Highest year" : ""}</td>
+      `;
+      yrRows.appendChild(tr);
+    }
+    $("yearNote").textContent = bestYear
+      ? `Highest year: ${bestYear} with ${fmtInt(bestVal)} streams (based on week start dates).`
+      : "—";
+
+    // ranking
+    const ranking = computeAllTimeAlbumRanking(weeks);
+
+    let rankInfo = null;
+    const wantAlbum = normStr(albumName);
+    const wantArtist = normStr(artistName);
+
+    if (artistName){
+      const key = `${wantAlbum}||${wantArtist}`;
+      for (let i=0;i<ranking.length;i++){
+        const rec = ranking[i];
+        if (`${normStr(rec.album)}||${normStr(rec.artist)}` === key){
+          rankInfo = { rank: i+1, rec };
+          break;
+        }
+      }
+    } else {
+      // if artist not provided, pick best matching album name (highest total)
+      let best = null, bestIdx = -1;
+      for (let i=0;i<ranking.length;i++){
+        const rec = ranking[i];
+        if (normStr(rec.album) === wantAlbum){
+          best = rec; bestIdx = i; break;
+        }
+      }
+      if (best){
+        rankInfo = { rank: bestIdx+1, rec: best };
+        $("artistName").textContent = best.artist || "Artist";
+        $("artistLink").href = best.artist ? `artiststream.html?artist=${encodeURIComponent(best.artist)}` : "artiststream.html";
+      }
+    }
+
+    if (rankInfo){
+      $("albumRank").textContent = `#${rankInfo.rank.toLocaleString()}`;
+      $("top100").textContent =
+        rankInfo.rank <= 100
+          ? `✅ In Top 100 All-Time (Rank ${rankInfo.rank})`
+          : `Not in Top 100 All-Time (Rank ${rankInfo.rank.toLocaleString()})`;
+    } else {
+      $("albumRank").textContent = "—";
+      $("top100").textContent = "Couldn’t match this album/artist for global ranking.";
+    }
+
+    // surprise insights
+    const run = bestRun(series, 4);
+    if (run){
+      const sWeek = series[run.startIdx].week;
+      const eWeek = series[run.endIdx].week;
+      $("fastRun").textContent = `${fmtInt(run.sum)} streams • Weeks ${sWeek}–${eWeek} (${fmtRange(sWeek)} → ${fmtRange(eWeek)})`;
+    } else {
+      $("fastRun").textContent = "Not enough weeks to calculate (need 4+).";
+    }
+
+    const avg = withCum[withCum.length - 1].cum / withCum.length;
+    $("longevity").textContent = `${fmtInt(withCum.length)} weeks × ${fmtInt(avg)} avg/week = ${fmtInt(withCum.length * avg)}`;
+
+    // shape: front-loaded vs long-tail
+    const firstN = Math.min(8, series.length);
+    const early = series.slice(0, firstN).reduce((a,b)=>a+b.streams,0);
+    const total = withCum[withCum.length - 1].cum;
+    const earlyShare = total > 0 ? early / total : 0;
+
+    $("shape").textContent =
+      earlyShare >= 0.45 ? `Front-loaded 🔥 (first ${firstN} weeks = ${(earlyShare*100).toFixed(1)}%)`
+      : earlyShare <= 0.25 ? `Long-tail 🧊 (first ${firstN} weeks = ${(earlyShare*100).toFixed(1)}%)`
+      : `Balanced ➖ (first ${firstN} weeks = ${(earlyShare*100).toFixed(1)}%)`;
+
+    // momentum: compare last 6 months vs expected baseline (avg*~26 weeks)
+    const baseline = avg * 26;
+    if (baseline <= 0){
+      $("momentum").textContent = "—";
+    } else {
+      const ratio = last6.sum / baseline;
+      $("momentum").textContent =
+        ratio >= 1.25 ? `Strong 📈 (${(ratio*100).toFixed(0)}% of baseline)`
+        : ratio <= 0.75 ? `Cooling 📉 (${(ratio*100).toFixed(0)}% of baseline)`
+        : `Stable ➖ (${(ratio*100).toFixed(0)}% of baseline)`;
     }
   }
-  if(sum>0) series.push({week:+w,streams:sum});
-}
-series.sort((a,b)=>a.week-b.week);
 
-let cum=0, peak={v:0,w:0};
-series=series.map(r=>{
-  cum+=r.streams;
-  if(r.streams>peak.v) peak={v:r.streams,w:r.week};
-  return {...r,cum};
-});
+  $("goBtn").addEventListener("click", ()=>{
+    const a = $("albumInput").value.trim();
+    const ar = $("artistInput").value.trim();
+    setQuery(a, ar);
+  });
 
-$("totalStreams").textContent=fmt(cum);
-$("weeksOn").textContent=`${series.length} weeks`;
-
-const start=ws(series[0].week);
-
-function milestone(val){
-  const h=series.find(r=>r.cum>=val);
-  if(!h) return "Not reached";
-  return `${h.week} (${days(start,ws(h.week))} days)`;
-}
-
-$("m100").textContent=milestone(100000000);
-$("m500").textContent=milestone(500000000);
-$("m1b").textContent=milestone(1000000000);
-
-$("peakWeek").textContent=fmt(peak.v);
-$("peakDate").textContent=`Week ${peak.w}`;
-
-let last6=0;
-const end=ws(series.at(-1).week);
-for(const r of series){
-  if(ws(r.week)>=new Date(end-dayMS*183)) last6+=r.streams;
-}
-$("last6").textContent=fmt(last6);
-
-const years={};
-for(const r of series){
-  const y=ws(r.week).getUTCFullYear();
-  years[y]=(years[y]||0)+r.streams;
-}
-for(const y of Object.keys(years)){
-  $("yearRows").innerHTML+=`<tr><td>${y}</td><td>${fmt(years[y])}</td></tr>`;
-}
-
-// Ranking
-const albums=new Map();
-for(const w in weekData){
-  for(const it of weekData[w]){
-    const k=(it.album||"")+"||"+(it.artist||"");
-    albums.set(k,(albums.get(k)||0)+(Number(it.streams)||0));
-  }
-}
-const ranked=[...albums.entries()].sort((a,b)=>b[1]-a[1]);
-const idx=ranked.findIndex(([k])=>k.startsWith(album));
-$("albumRank").textContent=idx>=0?`#${idx+1}`:"—";
-$("top100").textContent=idx>=0&&idx<100?"Top 100 All-Time":"—";
-
-// Surprise metrics
-$("growth").textContent=fmt(Math.max(...series.map(r=>r.streams)));
-$("longevity").textContent=fmt(series.length*(cum/series.length));
-$("momentum").textContent=last6>(cum/series.length*26)?"Strong 📈":"Stable ➖";
+  render();
 </script>
 </body>
 </html>
