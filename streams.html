@@ -25,27 +25,11 @@
                   var(--bg);
       color: var(--text);
     }
-    header {
-      padding: 24px 18px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0 0 6px;
-      font-size: 1.6rem;
-      letter-spacing: 0.3px;
-    }
-    header p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
+    header { padding: 24px 18px; text-align: center; }
+    header h1 { margin: 0 0 6px; font-size: 1.6rem; letter-spacing: 0.3px; }
+    header p { margin: 0; color: var(--muted); font-size: 0.95rem; }
 
-    .wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 14px 40px;
-    }
-
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 14px 40px; }
     .panel {
       background: rgba(18,27,46,0.85);
       border: 1px solid var(--border);
@@ -53,7 +37,6 @@
       box-shadow: var(--shadow);
       overflow: hidden;
     }
-
     .toolbar {
       display: flex;
       gap: 10px;
@@ -63,13 +46,7 @@
       border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
     }
-
-    .tabs, .subtabs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
+    .tabs, .subtabs { display: flex; gap: 8px; flex-wrap: wrap; }
     .tabbtn {
       border: 1px solid var(--border);
       background: rgba(255,255,255,0.04);
@@ -86,22 +63,10 @@
       background: linear-gradient(135deg, rgba(74,163,255,0.25), rgba(34,211,238,0.18));
       border-color: rgba(74,163,255,0.55);
     }
+    .meta { color: var(--muted); font-size: 0.9rem; }
+    .content { padding: 14px; }
 
-    .meta {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .content {
-      padding: 14px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
+    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
     .card {
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -117,25 +82,11 @@
       gap: 10px;
       flex-wrap: wrap;
     }
-    .cardhead h2 {
-      margin: 0;
-      font-size: 1.05rem;
-    }
-    .cardhead span {
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
+    .cardhead h2 { margin: 0; font-size: 1.05rem; }
+    .cardhead span { color: var(--muted); font-size: 0.85rem; }
 
-    .tablewrap {
-      overflow: auto;
-      max-height: 70vh;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 760px;
-    }
+    .tablewrap { overflow: auto; max-height: 70vh; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
     th, td {
       padding: 10px 10px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -151,27 +102,15 @@
       color: var(--muted);
       font-weight: 600;
     }
-
-    .rank {
-      width: 70px;
-      color: var(--muted);
-      font-variant-numeric: tabular-nums;
-    }
-    .streams {
-      width: 180px;
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
+    .rank { width: 70px; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .streams { width: 180px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
     a.itemlink {
       color: var(--text);
       text-decoration: none;
       border-bottom: 1px dashed rgba(74,163,255,0.55);
     }
-    a.itemlink:hover {
-      color: white;
-      border-bottom-color: rgba(34,211,238,0.8);
-    }
+    a.itemlink:hover { color: white; border-bottom-color: rgba(34,211,238,0.8); }
 
     .pill {
       display: inline-block;
@@ -193,12 +132,7 @@
       line-height: 1.4;
     }
 
-    .searchbar {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    .searchbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     input[type="search"] {
       width: min(360px, 100%);
       padding: 10px 12px;
@@ -276,49 +210,15 @@
     </div>
   </div>
 
-  <!-- IMPORTANT: weekdata.js must define: const weekData = [...] -->
+  <!-- IMPORTANT: weekdata.js must define: const weekData = {...} -->
   <script src="weekdata.js"></script>
 
   <script>
-    // ---- Helpers ----
+    // -------------------- Helpers --------------------
     const fmtNumber = (n) => {
       if (!Number.isFinite(n)) return "0";
       return Math.round(n).toLocaleString(undefined);
     };
-
-    // Safe read of weekData
-    function getWeekDataSafe() {
-      // supports: const weekData = [...]
-      if (typeof weekData !== "undefined" && Array.isArray(weekData)) return weekData;
-
-      // fallback: const weekData = { ... } etc (unlikely)
-      return null;
-    }
-
-    // Convert "last N days" into number of weeks to include.
-    // Because the dataset is weekly, we approximate:
-    // 7 days => last 1 week
-    // 30 days => last 4-5 weeks (we'll use 5 to be safer)
-    function rangeToWeeks(range) {
-      if (range === "7") return 1;
-      if (range === "30") return 5;
-      return null; // all time
-    }
-
-    // Extract chart items from each weekly record.
-    // Expected shape (based on your dataset): weekData = [ [ {...}, {...} ], [ {...} ], ... ]
-    // Each item includes at least: title, artist, album, streams
-    function flattenWeeks(weeksSlice) {
-      const out = [];
-      for (const week of weeksSlice) {
-        if (Array.isArray(week)) {
-          for (const item of week) {
-            if (item && typeof item === "object") out.push(item);
-          }
-        }
-      }
-      return out;
-    }
 
     function toKey(s) {
       return (s ?? "").toString().trim();
@@ -329,9 +229,68 @@
       return Number.isFinite(v) ? v : 0;
     }
 
-    // Aggregate
+    // Your file: const weekData = { "1":[...], "2":[...], ... }
+    // This normalizes it into a sorted array of weeks: [ {week: 1, items:[...]}, ... ]
+    function normalizeWeekData(raw) {
+      // Case A: object keyed by week number (YOUR ACTUAL FORMAT)
+      if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+        const weeks = Object.keys(raw)
+          .map(k => Number(k))
+          .filter(n => Number.isFinite(n))
+          .sort((a,b) => a - b)
+          .map(weekNum => ({
+            week: weekNum,
+            items: Array.isArray(raw[String(weekNum)]) ? raw[String(weekNum)] : []
+          }));
+        return weeks;
+      }
+
+      // Case B: array of arrays (not your format, but safe fallback)
+      if (Array.isArray(raw)) {
+        return raw.map((items, idx) => ({ week: idx + 1, items: Array.isArray(items) ? items : [] }));
+      }
+
+      return null;
+    }
+
+    function getRawWeekData() {
+      // Prefer lexical global binding if present:
+      try {
+        if (typeof weekData !== "undefined") return weekData;
+      } catch (_) {}
+
+      // Fallback if someone attaches to window:
+      if (window.weekData) return window.weekData;
+
+      return null;
+    }
+
+    function rangeToWeeksCount(range) {
+      // Weekly data, so:
+      // 7 days => last 1 week
+      // 30 days => last 5 weeks (approx)
+      if (range === "7") return 1;
+      if (range === "30") return 5;
+      return null; // all time
+    }
+
+    function sliceWeeks(weeksArr, range) {
+      const n = rangeToWeeksCount(range);
+      if (!n) return weeksArr;            // all time
+      return weeksArr.slice(-n);          // last n weeks
+    }
+
+    function flattenItems(weeksArr) {
+      const out = [];
+      for (const w of weeksArr) {
+        for (const item of (w.items || [])) {
+          if (item && typeof item === "object") out.push(item);
+        }
+      }
+      return out;
+    }
+
     function aggregateTop(items, mode) {
-      // mode: "artists" | "songs" | "albums"
       const map = new Map();
 
       for (const it of items) {
@@ -342,11 +301,10 @@
           const artist = toKey(it.artist);
           if (!artist) continue;
 
-          const rec = map.get(artist) || { name: artist, streams: 0, extra: new Set() };
+          const rec = map.get(artist) || { name: artist, streams: 0, extraSet: new Set() };
           rec.streams += streams;
 
-          // store example titles as "extra"
-          if (it.title) rec.extra.add(toKey(it.title));
+          if (it.title) rec.extraSet.add(toKey(it.title));
           map.set(artist, rec);
         }
 
@@ -354,13 +312,11 @@
           const title = toKey(it.title);
           if (!title) continue;
 
-          // use title + artist for uniqueness
           const artist = toKey(it.artist);
           const k = artist ? `${title} — ${artist}` : title;
 
           const rec = map.get(k) || { name: title, streams: 0, extra: artist || "" };
           rec.streams += streams;
-          // prefer keeping artist in extra
           if (!rec.extra && artist) rec.extra = artist;
           map.set(k, rec);
         }
@@ -383,7 +339,9 @@
         .map(r => ({
           name: r.name,
           streams: r.streams,
-          extra: r.extra instanceof Set ? Array.from(r.extra).slice(0, 3).join(", ") : (r.extra || "")
+          extra: r.extraSet instanceof Set
+            ? Array.from(r.extraSet).slice(0, 3).join(", ")
+            : (r.extra || "")
         }))
         .sort((a, b) => b.streams - a.streams)
         .slice(0, 100);
@@ -399,14 +357,13 @@
       return "#";
     }
 
-    // ---- UI State ----
-    let currentRange = "7";     // "7" | "30" | "all"
-    let currentType  = "artists"; // "artists" | "songs" | "albums"
+    // -------------------- UI State --------------------
+    let currentRange = "7";        // "7" | "30" | "all"
+    let currentType  = "artists";  // "artists" | "songs" | "albums"
     let searchTerm   = "";
 
     const els = {
       metaText: document.getElementById("metaText"),
-      rangePill: document.getElementById("rangePill"),
       cardTitle: document.getElementById("cardTitle"),
       rows: document.getElementById("rows"),
       noticeBox: document.getElementById("noticeBox"),
@@ -438,12 +395,9 @@
     }
 
     function updateHeaders() {
-      els.rangePill.textContent = rangeLabel(currentRange);
-
       const title = `Top 100 ${typeLabel(currentType)}`;
-      els.cardTitle.innerHTML = `${title} <span class="pill" id="rangePill">${rangeLabel(currentRange)}</span>`;
+      els.cardTitle.innerHTML = `${title} <span class="pill">${rangeLabel(currentRange)}</span>`;
 
-      // Update column labels
       if (currentType === "artists") {
         els.nameCol.textContent = "Artist";
         els.extraCol.textContent = "Popular songs (sample)";
@@ -457,27 +411,22 @@
     }
 
     function render() {
-      const data = getWeekDataSafe();
-      if (!data) {
-        els.metaText.textContent = "weekData not found. Make sure weekdata.js is loaded and defines const weekData = [...]";
+      const raw = getRawWeekData();
+      const weeks = normalizeWeekData(raw);
+
+      if (!weeks) {
+        els.metaText.textContent = "weekData loaded, but format is not supported.";
         els.noticeBox.style.display = "block";
         els.noticeBox.textContent =
-          "I couldn’t find a global array called weekData. Please ensure your file is named weekdata.js and contains: const weekData = [...];";
+          "I can’t read your weekData format. Expected: const weekData = { \"1\": [ ... ], \"2\": [ ... ] ... }";
         return;
       }
 
-      // Choose weeks slice
-      let weeksUsed = data;
-      const weeksN = rangeToWeeks(currentRange);
+      const usedWeeks = sliceWeeks(weeks, currentRange);
+      const flatItems = flattenItems(usedWeeks);
 
-      if (weeksN) {
-        weeksUsed = data.slice(-weeksN);
-      }
+      const top = aggregateTop(flatItems, currentType);
 
-      const flat = flattenWeeks(weeksUsed);
-      const top = aggregateTop(flat, currentType);
-
-      // Search filter (client side)
       const term = (searchTerm || "").trim().toLowerCase();
       const filtered = term
         ? top.filter(r =>
@@ -486,11 +435,12 @@
           )
         : top;
 
-      // meta
-      const weeksCount = Array.isArray(weeksUsed) ? weeksUsed.length : 0;
-      els.metaText.textContent = `Weeks used: ${weeksCount} • Items scanned: ${flat.length} • Showing: ${Math.min(100, filtered.length)}${term ? " (filtered)" : ""}`;
+      const weekMin = usedWeeks.length ? usedWeeks[0].week : 0;
+      const weekMax = usedWeeks.length ? usedWeeks[usedWeeks.length - 1].week : 0;
 
-      // rows
+      els.metaText.textContent =
+        `Weeks used: ${usedWeeks.length} (week ${weekMin} → ${weekMax}) • Items scanned: ${flatItems.length} • Showing: ${Math.min(100, filtered.length)}${term ? " (filtered)" : ""}`;
+
       els.rows.innerHTML = "";
       filtered.forEach((r, idx) => {
         const tr = document.createElement("tr");
@@ -529,7 +479,7 @@
       updateHeaders();
     }
 
-    // ---- Events ----
+    // -------------------- Events --------------------
     els.timeTabs.addEventListener("click", (e) => {
       const btn = e.target.closest(".tabbtn");
       if (!btn) return;
@@ -557,8 +507,7 @@
       render();
     });
 
-    // ---- Boot ----
-    // Default active state
+    // Boot
     setActiveButtons(els.timeTabs, "data-range", currentRange);
     setActiveButtons(els.typeTabs, "data-type", currentType);
     render();
