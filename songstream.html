@@ -15,8 +15,6 @@
       --muted2:rgba(238,243,255,.55);
       --accent:#4aa3ff;
       --accent2:#22d3ee;
-      --good:#7CFFB2;
-      --warn:#FFD37C;
       --shadow: 0 18px 55px rgba(0,0,0,.45);
       --r:18px;
     }
@@ -32,25 +30,11 @@
         var(--bg);
       min-height:100vh;
     }
-    header{
-      padding:26px 16px 10px;
-      text-align:center;
-    }
-    header h1{
-      margin:0 0 6px;
-      font-size:1.55rem;
-      letter-spacing:.3px;
-    }
-    header p{
-      margin:0;
-      color:var(--muted);
-      font-size:.95rem;
-    }
-    .wrap{
-      max-width:1120px;
-      margin:0 auto;
-      padding:14px 14px 46px;
-    }
+    header{ padding:26px 16px 10px; text-align:center; }
+    header h1{ margin:0 0 6px; font-size:1.55rem; letter-spacing:.3px; }
+    header p{ margin:0; color:var(--muted); font-size:.95rem; }
+
+    .wrap{ max-width:1120px; margin:0 auto; padding:14px 14px 46px; }
     .panel{
       border:1px solid var(--border);
       background:rgba(16,24,44,.72);
@@ -59,26 +43,17 @@
       overflow:hidden;
     }
     .topbar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      padding:14px;
-      border-bottom:1px solid var(--border);
+      display:flex; gap:10px; flex-wrap:wrap;
+      align-items:center; justify-content:space-between;
+      padding:14px; border-bottom:1px solid var(--border);
     }
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:999px;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px; border-radius:999px;
       border:1px solid var(--border);
       background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-size:.92rem;
-      user-select:none;
-      white-space:nowrap;
+      color:var(--text); font-size:.92rem;
+      user-select:none; white-space:nowrap;
     }
     .pill b{font-weight:700}
     .btn{
@@ -91,11 +66,7 @@
       font-size:.92rem;
     }
     .btn:hover{border-color:rgba(255,255,255,.18)}
-    .meta{
-      color:var(--muted);
-      font-size:.9rem;
-      max-width:100%;
-    }
+    .meta{ color:var(--muted); font-size:.9rem; max-width:100%; }
 
     .grid{
       display:grid;
@@ -103,9 +74,7 @@
       gap:12px;
       padding:14px;
     }
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-    }
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
 
     .card{
       border:1px solid var(--border);
@@ -116,39 +85,28 @@
     .card .head{
       padding:12px 12px 10px;
       border-bottom:1px solid rgba(255,255,255,.08);
-      display:flex;
-      align-items:baseline;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
+      display:flex; align-items:baseline; justify-content:space-between;
+      gap:10px; flex-wrap:wrap;
     }
-    .card .head h2{
-      margin:0;
-      font-size:1.03rem;
-    }
-    .card .head span{
-      color:var(--muted2);
-      font-size:.86rem;
-    }
-    .card .body{padding:12px}
+    .card .head h2{ margin:0; font-size:1.03rem; }
+    .card .head span{ color:var(--muted2); font-size:.86rem; }
+    .card .body{ padding:12px; }
 
     .kpis{
       display:grid;
       grid-template-columns: repeat(2, 1fr);
       gap:10px;
     }
-    @media (max-width: 560px){
-      .kpis{grid-template-columns:1fr}
-    }
+    @media (max-width: 560px){ .kpis{grid-template-columns:1fr} }
     .kpi{
       border:1px solid rgba(255,255,255,.10);
       background:var(--card2);
       border-radius:14px;
       padding:12px;
     }
-    .kpi .label{color:var(--muted); font-size:.86rem}
-    .kpi .value{font-size:1.2rem; margin-top:4px; font-weight:700}
-    .kpi .sub{color:var(--muted2); font-size:.85rem; margin-top:3px}
+    .kpi .label{ color:var(--muted); font-size:.86rem }
+    .kpi .value{ font-size:1.2rem; margin-top:4px; font-weight:700 }
+    .kpi .sub{ color:var(--muted2); font-size:.85rem; margin-top:3px }
 
     .milestones{
       display:grid;
@@ -193,7 +151,7 @@
     }
     .ms .right{
       text-align:right;
-      min-width:220px;
+      min-width:240px;
     }
     .ms .right .big{
       font-weight:800;
@@ -203,6 +161,7 @@
       color:var(--muted2);
       font-size:.85rem;
       margin-top:3px;
+      line-height:1.35;
     }
 
     .tablewrap{
@@ -248,10 +207,8 @@
       border-bottom:1px dashed rgba(74,163,255,.6);
     }
     a.link:hover{border-bottom-color:rgba(34,211,238,.8)}
-    .smallnote{color:var(--muted2); font-size:.85rem; margin-top:8px; line-height:1.35}
-    .row{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-    }
+    .smallnote{ color:var(--muted2); font-size:.85rem; margin-top:8px; line-height:1.35 }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
     .input{
       border:1px solid var(--border);
       background:rgba(255,255,255,.04);
@@ -434,11 +391,9 @@
     </div>
   </div>
 
-  <!-- Your dataset: must define const weekData = { "1":[...], "2":[...], ... } -->
   <script src="weekdata.js"></script>
 
   <script>
-    // ---------------- Date rules (your requirement) ----------------
     // Week 1 starts on Fri 23 Feb 2018 and runs Fri–Thu.
     const WEEK1_START = new Date(Date.UTC(2018, 1, 23)); // 2018-02-23 UTC
 
@@ -458,11 +413,15 @@
     }
     function fmtRange(weekNum){
       const start = weekStartDate(weekNum);
-      const end = addDaysUTC(start, 6); // Thu
+      const end = addDaysUTC(start, 6);
       return `${fmtDate(start)} – ${fmtDate(end)}`;
     }
+    function daysBetweenUTC(a, b){
+      // whole days between two UTC dates
+      const ms = b.getTime() - a.getTime();
+      return Math.max(0, Math.round(ms / 86400000));
+    }
 
-    // ---------------- Helpers ----------------
     const $ = (id)=>document.getElementById(id);
     function fmtInt(n){
       if (!Number.isFinite(n)) return "0";
@@ -475,17 +434,14 @@
       const v = Number(item?.streams);
       return Number.isFinite(v) ? v : 0;
     }
-
     function getRawWeekData(){
       try { if (typeof weekData !== "undefined") return weekData; } catch(_){}
       if (window.weekData) return window.weekData;
       return null;
     }
-
     function normalizeWeekObject(raw){
       if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
-
-      const weeks = Object.keys(raw)
+      return Object.keys(raw)
         .map(k => Number(k))
         .filter(n => Number.isFinite(n))
         .sort((a,b)=>a-b)
@@ -493,8 +449,6 @@
           week: wn,
           items: Array.isArray(raw[String(wn)]) ? raw[String(wn)] : []
         }));
-
-      return weeks;
     }
 
     function buildSongSeries(weeks, songTitle, artistName){
@@ -514,14 +468,11 @@
           if (t !== wantSong) continue;
           if (wantArtist && a !== wantArtist) continue;
 
-          const s = getStreams(it);
-          weekSum += s;
+          weekSum += getStreams(it);
           any = true;
         }
 
-        if (any){
-          series.push({ week: w.week, streams: weekSum });
-        }
+        if (any) series.push({ week: w.week, streams: weekSum });
       }
 
       series.sort((x,y)=>x.week-y.week);
@@ -529,23 +480,20 @@
     }
 
     function computeAllTimeSongRanking(weeks){
-      const map = new Map(); // key: title||artist -> {title, artist, total}
+      const map = new Map();
       for (const w of weeks){
         for (const it of (w.items || [])){
           const title = (it?.title ?? "").toString().trim();
           const artist = (it?.artist ?? "").toString().trim();
           if (!title) continue;
-
           const s = getStreams(it);
           if (s <= 0) continue;
-
           const key = `${norm(title)}||${norm(artist)}`;
           const rec = map.get(key) || { title, artist, total: 0 };
           rec.total += s;
           map.set(key, rec);
         }
       }
-
       return Array.from(map.values()).sort((a,b)=>b.total - a.total);
     }
 
@@ -558,30 +506,23 @@
 
     function computeLast6MonthsStreams(series){
       if (!series.length) return { sum: 0, start: null, end: null };
-
       const lastWeek = series[series.length - 1].week;
       const endDate = addDaysUTC(weekStartDate(lastWeek), 6);
       const startDate = new Date(endDate);
-      startDate.setUTCDate(startDate.getUTCDate() - 183); // ~6 months
-
+      startDate.setUTCDate(startDate.getUTCDate() - 183);
       let sum = 0;
       for (const row of series){
         const ws = weekStartDate(row.week);
         const we = addDaysUTC(ws, 6);
         if (we >= startDate && ws <= endDate) sum += row.streams;
       }
-
       return { sum, start: startDate, end: endDate };
     }
 
     function getQuery(){
       const p = new URLSearchParams(location.search);
-      return {
-        song: p.get("song") || "",
-        artist: p.get("artist") || ""
-      };
+      return { song: p.get("song") || "", artist: p.get("artist") || "" };
     }
-
     function setQuery(song, artist){
       const p = new URLSearchParams();
       if (song) p.set("song", song);
@@ -611,15 +552,10 @@
 
       const minWeek = weeks.length ? weeks[0].week : 0;
       const maxWeek = weeks.length ? weeks[weeks.length - 1].week : 0;
-      const range = weeks.length ? `${fmtRange(minWeek)} → ${fmtRange(maxWeek)}` : "—";
-      $("rangeText").textContent = `Dataset range: ${range}`;
+      $("rangeText").textContent = weeks.length ? `Dataset range: ${fmtRange(minWeek)} → ${fmtRange(maxWeek)}` : "Dataset range: —";
 
-      $("artistLink").href = artistName
-        ? `artiststream.html?artist=${encodeURIComponent(artistName)}`
-        : `artiststream.html`;
-      $("albumLink").href = songTitle
-        ? `albumstream.html?song=${encodeURIComponent(songTitle)}&artist=${encodeURIComponent(artistName)}`
-        : `albumstream.html`;
+      $("artistLink").href = artistName ? `artiststream.html?artist=${encodeURIComponent(artistName)}` : `artiststream.html`;
+      $("albumLink").href = songTitle ? `albumstream.html?song=${encodeURIComponent(songTitle)}&artist=${encodeURIComponent(artistName)}` : `albumstream.html`;
 
       if (!songTitle){
         $("metaText").textContent = `Loaded ${weeks.length} weeks. Add ?song=... in the URL to view a song.`;
@@ -629,15 +565,13 @@
       }
 
       const series = buildSongSeries(weeks, songTitle, artistName);
-
       $("metaText").textContent = `Loaded ${weeks.length} weeks • Song matches in ${series.length} week(s).`;
 
       if (!series.length){
         $("noDataNotice").style.display = "block";
         return;
-      } else {
-        $("noDataNotice").style.display = "none";
       }
+      $("noDataNotice").style.display = "none";
 
       // cumulative
       let cum = 0;
@@ -648,24 +582,33 @@
         return { ...r, cum };
       });
 
+      // first appearance week (baseline for "days since first week")
+      const firstWeek = withCum[0].week;
+      const firstWeekStart = weekStartDate(firstWeek);
+
       $("allTimeStreams").textContent = fmtInt(withCum[withCum.length - 1].cum);
-      $("weeksAppeared").textContent = `Appears in ${withCum.length.toLocaleString()} week(s)`;
+      $("weeksAppeared").textContent = `Appears in ${withCum.length.toLocaleString()} week(s) • First week: ${fmtRange(firstWeek)}`;
 
       $("peakWeekStreams").textContent = fmtInt(peak.streams);
       $("peakWeekDate").textContent = peak.week ? `Week ${peak.week} • ${fmtRange(peak.week)}` : "—";
 
-      // Milestones (FIXED: use your existing HTML IDs)
+      // Milestones + DAYS SINCE FIRST WEEK
       function fillMilestone(threshold, dateEl, cumEl, noteEl){
         const hit = milestone(withCum, threshold);
+
         if (!hit){
           dateEl.textContent = "Not reached";
           cumEl.textContent = `Cumulative: ${fmtInt(withCum[withCum.length - 1].cum)}`;
           noteEl.textContent = `Needs ${fmtInt(threshold)} total streams.`;
           return;
         }
+
+        const hitStart = weekStartDate(hit.week);
+        const days = daysBetweenUTC(firstWeekStart, hitStart);
+
         dateEl.textContent = fmtRange(hit.week);
         cumEl.textContent = `Cumulative at/after: ${fmtInt(hit.cum)}`;
-        noteEl.textContent = `First reached during week ${hit.week}.`;
+        noteEl.textContent = `First reached in week ${hit.week} • ${days.toLocaleString()} days since first week (${fmtDate(firstWeekStart)}).`;
       }
 
       fillMilestone(100000000, $("ms100kDate"), $("ms100kCum"), $("ms100kNote"));   // 100M
@@ -675,9 +618,7 @@
       // Last 6 months
       const last6 = computeLast6MonthsStreams(series);
       $("last6mStreams").textContent = fmtInt(last6.sum);
-      $("last6mWindow").textContent = last6.start && last6.end
-        ? `${fmtDate(last6.start)} → ${fmtDate(last6.end)}`
-        : "—";
+      $("last6mWindow").textContent = last6.start && last6.end ? `${fmtDate(last6.start)} → ${fmtDate(last6.end)}` : "—";
 
       // Weekly table
       const weekRows = $("weekRows");
