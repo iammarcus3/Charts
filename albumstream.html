@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Album Streams • Deep Analytics</title>
+
+<style>
+:root{
+  --bg:#070b14;
+  --card:rgba(255,255,255,.06);
+  --card2:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.12);
+  --text:#eef3ff;
+  --muted:rgba(238,243,255,.65);
+  --accent:#4aa3ff;
+  --accent2:#22d3ee;
+  --good:#7CFFB2;
+  --warn:#FFD37C;
+  --shadow:0 20px 60px rgba(0,0,0,.5);
+  --r:18px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1100px 700px at 15% 5%, rgba(74,163,255,.22), transparent 60%),
+    radial-gradient(900px 600px at 88% 10%, rgba(34,211,238,.16), transparent 55%),
+    var(--bg);
+}
+header{text-align:center;padding:26px 14px}
+header h1{margin:0;font-size:1.55rem}
+header p{margin:6px 0 0;color:var(--muted)}
+
+.wrap{max-width:1100px;margin:auto;padding:14px 14px 46px}
+.panel{
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  background:rgba(16,24,44,.75);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.top{
+  padding:14px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:space-between;
+  align-items:center;
+}
+.pill{
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.04);
+  font-size:.92rem;
+}
+.grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:12px;
+  padding:14px;
+}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+.card{
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:var(--card);
+  overflow:hidden;
+}
+.card h2{
+  margin:0;
+  padding:12px;
+  font-size:1.05rem;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.card .body{padding:12px}
+
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.kpi{
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+}
+.kpi .label{color:var(--muted);font-size:.86rem}
+.kpi .value{font-size:1.25rem;font-weight:800;margin-top:4px}
+.kpi .sub{color:var(--muted);font-size:.82rem;margin-top:4px}
+
+.ms{
+  margin-top:10px;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--card2);
+}
+.ms strong{font-size:1.02rem}
+
+.tablewrap{
+  max-height:70vh;
+  overflow:auto;
+  border:1px solid var(--border);
+  border-radius:14px;
+}
+table{width:100%;border-collapse:collapse}
+th,td{
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  font-size:.9rem;
+}
+th{position:sticky;top:0;background:#10182c;color:var(--muted)}
+
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:.8rem;
+  border:1px solid var(--border);
+}
+.good{color:var(--good)}
+.warn{color:var(--warn)}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>Album Streams</h1>
+  <p>Lifetime performance • milestones • momentum</p>
+</header>
+
+<div class="wrap">
+<div class="panel">
+  <div class="top">
+    <div class="pill"><b id="albumName">Album</b> • <span id="artistName">Artist</span></div>
+    <div class="pill">Week 1 = 23 Feb 2018 (Fri–Thu)</div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT -->
+    <div>
+      <div class="card">
+        <h2>Overview</h2>
+        <div class="body">
+          <div class="kpis">
+            <div class="kpi">
+              <div class="label">All-time album streams</div>
+              <div class="value" id="totalStreams">—</div>
+              <div class="sub" id="weeksOn">—</div>
+            </div>
+            <div class="kpi">
+              <div class="label">All-time album rank</div>
+              <div class="value" id="albumRank">—</div>
+              <div class="sub" id="top100">—</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Last 6 months</div>
+              <div class="value" id="last6">—</div>
+              <div class="sub">Recent momentum</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Peak week</div>
+              <div class="value" id="peakWeek">—</div>
+              <div class="sub" id="peakDate">—</div>
+            </div>
+          </div>
+
+          <div class="ms"><strong>100M:</strong> <span id="m100">—</span></div>
+          <div class="ms"><strong>500M:</strong> <span id="m500">—</span></div>
+          <div class="ms"><strong>1B:</strong> <span id="m1b">—</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h2>Surprise insights</h2>
+        <div class="body">
+          <div class="ms">🚀 <b>Fastest growth phase:</b> <span id="growth">—</span></div>
+          <div class="ms">🕰 <b>Longevity score:</b> <span id="longevity">—</span></div>
+          <div class="ms">📈 <b>Momentum:</b> <span id="momentum">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+      <div class="card">
+        <h2>Streams per year</h2>
+        <div class="body">
+          <div class="tablewrap">
+            <table>
+              <thead><tr><th>Year</th><th>Streams</th></tr></thead>
+              <tbody id="yearRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="weekdata.js"></script>
+<script>
+const WEEK1 = new Date(Date.UTC(2018,1,23));
+const dayMS = 86400000;
+
+const $=id=>document.getElementById(id);
+const q=new URLSearchParams(location.search);
+const album=q.get("album")||"";
+const artist=q.get("artist")||"";
+
+$("albumName").textContent=album||"Album";
+$("artistName").textContent=artist||"Artist";
+
+function ws(week){return new Date(WEEK1.getTime()+(week-1)*7*dayMS)}
+function days(a,b){return Math.round((b-a)/dayMS)}
+function fmt(n){return Math.round(n).toLocaleString()}
+
+let series=[];
+for(const w in weekData){
+  let sum=0;
+  for(const it of weekData[w]){
+    if(it.album?.toLowerCase()===album.toLowerCase()
+      && (!artist || it.artist?.toLowerCase()===artist.toLowerCase())){
+      sum+=Number(it.streams)||0;
+    }
+  }
+  if(sum>0) series.push({week:+w,streams:sum});
+}
+series.sort((a,b)=>a.week-b.week);
+
+let cum=0, peak={v:0,w:0};
+series=series.map(r=>{
+  cum+=r.streams;
+  if(r.streams>peak.v) peak={v:r.streams,w:r.week};
+  return {...r,cum};
+});
+
+$("totalStreams").textContent=fmt(cum);
+$("weeksOn").textContent=`${series.length} weeks`;
+
+const start=ws(series[0].week);
+
+function milestone(val){
+  const h=series.find(r=>r.cum>=val);
+  if(!h) return "Not reached";
+  return `${h.week} (${days(start,ws(h.week))} days)`;
+}
+
+$("m100").textContent=milestone(100000000);
+$("m500").textContent=milestone(500000000);
+$("m1b").textContent=milestone(1000000000);
+
+$("peakWeek").textContent=fmt(peak.v);
+$("peakDate").textContent=`Week ${peak.w}`;
+
+let last6=0;
+const end=ws(series.at(-1).week);
+for(const r of series){
+  if(ws(r.week)>=new Date(end-dayMS*183)) last6+=r.streams;
+}
+$("last6").textContent=fmt(last6);
+
+const years={};
+for(const r of series){
+  const y=ws(r.week).getUTCFullYear();
+  years[y]=(years[y]||0)+r.streams;
+}
+for(const y of Object.keys(years)){
+  $("yearRows").innerHTML+=`<tr><td>${y}</td><td>${fmt(years[y])}</td></tr>`;
+}
+
+// Ranking
+const albums=new Map();
+for(const w in weekData){
+  for(const it of weekData[w]){
+    const k=(it.album||"")+"||"+(it.artist||"");
+    albums.set(k,(albums.get(k)||0)+(Number(it.streams)||0));
+  }
+}
+const ranked=[...albums.entries()].sort((a,b)=>b[1]-a[1]);
+const idx=ranked.findIndex(([k])=>k.startsWith(album));
+$("albumRank").textContent=idx>=0?`#${idx+1}`:"—";
+$("top100").textContent=idx>=0&&idx<100?"Top 100 All-Time":"—";
+
+// Surprise metrics
+$("growth").textContent=fmt(Math.max(...series.map(r=>r.streams)));
+$("longevity").textContent=fmt(series.length*(cum/series.length));
+$("momentum").textContent=last6>(cum/series.length*26)?"Strong 📈":"Stable ➖";
+</script>
+</body>
+</html>
