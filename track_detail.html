@@ -436,15 +436,13 @@ function buildChartSeries() {
         }
       }
     }
-
-    if (found && bestRank != null) {
-      const dateStr = getChartDateFromWeekNumber(weekNum);
-      labels.push(dateStr);
-      positions.push(bestRank);
-      meta.push({ weekNum, dateStr, rank: bestRank });
+if (found && bestRank != null && bestRank <= 100) {
+  const dateStr = getChartDateFromWeekNumber(weekNum);
+  labels.push(dateStr);
+  positions.push(bestRank);
+  meta.push({ weekNum, dateStr, rank: bestRank });
     }
   }
-
   return { labels, positions, meta };
 }
 
