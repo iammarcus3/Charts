@@ -305,32 +305,7 @@
         }).slice(0,200).filter(r=>{
           const t = (r.title || r.song || '').toString();
           return !/sweep week/i.test(t);
-        }).map(r=>{
-          const tokens = genreTokensFromRow(r);
-          const buckets = tokensToBuckets(tokens);
-          return { ...r, _buckets: buckets };
-        });
-
-        // build bucket rank maps for ALL 5
-        const bucketRanks = {};
-        ['POP','RNB','HIPHOP','ROCK','DANCE'].forEach(bucketName => {
-          const bucketRows = base.filter(r => r._buckets && r._buckets.includes(bucketName));
-          if (!bucketRows.length) return;
-          bucketRows.sort((a,b)=>{
-            const pa = Number(a.points || a.Points || 0);
-            const pb = Number(b.points || b.Points || 0);
-            if (pb !== pa) return pb - pa;
-            const sa = Number(a.sales || a.Sales || 0);
-            const sb = Number(b.sales || b.Sales || 0);
-            if (sb !== sa) return sb - sa;
-            return String(a.title||a.song||'').localeCompare(String(b.title||b.song||''));
-          });
-          bucketRows.forEach((r,idx)=>{
-            const sKey = normalizeTitle(r.title || r.song || '');
-            (bucketRanks[sKey] ||= {});
-            bucketRanks[sKey][bucketName] = idx+1;
-          });
-        });
+        }).map(r => ({ ...r })); // ✅ no genre logic
 
         for (const row of base) {
           if (!trackInvolvesArtist(row)) continue;
@@ -353,7 +328,7 @@
               num1s: 0,
               firstWeek: null,
               firstRank: null,
-              
+
             };
           } else {
             songsMap[canonSongKey].titleDisplay = preferDisplayTitle(songsMap[canonSongKey].titleDisplay, row.title);
@@ -403,10 +378,6 @@
           S.weeksSeen.add(weekNum);
           if (rank < S.peak) S.peak = rank;
           if (rank === 1) S.num1s++;
-
-          const simpleKey = normalizeTitle(row.title || row.song || '');
-          const br = bucketRanks[simpleKey] || {};
-        
 
           const albNorm = normalizeAlbum(row.album);
           if (albNorm && albNorm !== "NAN") {
@@ -471,7 +442,6 @@
         }
 
         const url = `track_detail.html?title=${encodeURIComponent(S.titleDisplay)}&artist=${encodeURIComponent(S.artistDisplay)}`;
-      
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
