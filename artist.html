@@ -55,10 +55,6 @@
           <th>Weeks</th>
           <th>Peak</th>
           <th>POP Peak</th>
-          <th>RNB Peak</th>
-          <th>HIP-HOP Peak</th>
-          <th>ALT Peak</th>
-          <th>DANCE Peak</th>
           <th>#1s</th>
         </tr>
       </thead>
@@ -275,29 +271,6 @@
         return inTitleFeat;
       }
 
-      // 5-genre helpers
-      function genreTokensFromRow(r){
-        const arr = [];
-        if (r.mainGenre) arr.push(r.mainGenre);
-        if (Array.isArray(r.subGenres)) arr.push(...r.subGenres);
-        if (r.genre) arr.push(r.genre);
-        if (Array.isArray(r.genres)) arr.push(...r.genres);
-        if (r.genre5) arr.push(r.genre5);
-        if (r.subgenre5) arr.push(r.subgenre5);
-        return arr.map(x => String(x).trim()).filter(Boolean);
-      }
-      function tokensToBuckets(tokens){
-        const buckets = new Set();
-        const lows = tokens.map(t => t.toLowerCase());
-        if (lows.some(t => t.includes('pop'))) buckets.add('POP');
-        if (lows.some(t => t.includes('r&b') || t.includes('rnb') || t.includes('soul') || t.includes('neo-soul'))) buckets.add('RNB');
-        if (lows.some(t => t.includes('hip') || t.includes('rap') || t.includes('trap'))) buckets.add('HIPHOP');
-        if (lows.some(t => t.includes('rock') || t.includes('alt') || t.includes('indie') || t.includes('punk') || t.includes('emo'))) buckets.add('ROCK');
-        if (lows.some(t => t.includes('dance') || t.includes('edm') || t.includes('electro') || t.includes('house') || t.includes('club'))) buckets.add('DANCE');
-        if (!buckets.size) buckets.add('POP');
-        return Array.from(buckets);
-      }
-
       // ------- LOAD DATA -------
       const raw = await loadWeekData();
       if (!raw || !Object.keys(raw).length) {
@@ -380,11 +353,7 @@
               num1s: 0,
               firstWeek: null,
               firstRank: null,
-              popPeak: INF_RANK,
-              rnbPeak: INF_RANK,
-              hiphopPeak: INF_RANK,
-              rockPeak: INF_RANK,
-              dancePeak: INF_RANK
+              
             };
           } else {
             songsMap[canonSongKey].titleDisplay = preferDisplayTitle(songsMap[canonSongKey].titleDisplay, row.title);
@@ -437,11 +406,7 @@
 
           const simpleKey = normalizeTitle(row.title || row.song || '');
           const br = bucketRanks[simpleKey] || {};
-          if (br.POP && br.POP < S.popPeak) S.popPeak = br.POP;
-          if (br.RNB && br.RNB < S.rnbPeak) S.rnbPeak = br.RNB;
-          if (br.HIPHOP && br.HIPHOP < S.hiphopPeak) S.hiphopPeak = br.HIPHOP;
-          if (br.ROCK && br.ROCK < S.rockPeak) S.rockPeak = br.ROCK;
-          if (br.DANCE && br.DANCE < S.dancePeak) S.dancePeak = br.DANCE;
+        
 
           const albNorm = normalizeAlbum(row.album);
           if (albNorm && albNorm !== "NAN") {
@@ -506,11 +471,7 @@
         }
 
         const url = `track_detail.html?title=${encodeURIComponent(S.titleDisplay)}&artist=${encodeURIComponent(S.artistDisplay)}`;
-        const popPk   = S.popPeak   < INF_RANK ? '#'+S.popPeak   : '—';
-        const rnbPk   = S.rnbPeak   < INF_RANK ? '#'+S.rnbPeak   : '—';
-        const hipPk   = S.hiphopPeak< INF_RANK ? '#'+S.hiphopPeak: '—';
-        const rockPk  = S.rockPeak  < INF_RANK ? '#'+S.rockPeak  : '—';
-        const dancePk = S.dancePeak < INF_RANK ? '#'+S.dancePeak : '—';
+      
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -519,11 +480,6 @@
           <td>${fmt(S.streamsBase)}</td>
           <td>${S.weeks}</td>
           <td>#${S.peak}</td>
-          <td>${popPk}</td>
-          <td>${rnbPk}</td>
-          <td>${hipPk}</td>
-          <td>${rockPk}</td>
-          <td>${dancePk}</td>
           <td>${S.num1s}</td>
         `;
         songsTBody.appendChild(tr);
