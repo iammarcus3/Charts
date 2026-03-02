@@ -281,10 +281,10 @@ function processAlbums(albumMeta, albumTracks, albumWeeks, albumRanksByWeek) {
             }
 
             // DEBUT / "DEBT" SALES:
-            // first week this album has 3+ songs charting on Hot 100
+            // first week this album has 4+ songs charting on Hot 100
             const wStats = weeksMap[weekNum];
             const chartingCount = wStats ? wStats.chartingTracks.size : 0;
-            if (alb.debutWeek === null && chartingCount >= 3) {
+            if (alb.debutWeek === null && chartingCount >= 4) {
                 alb.debutWeek = weekNum;
                 alb.debutDate = getWeekStartDate(weekNum);
                 alb.debutSalesRaw = weekSalesRaw;
