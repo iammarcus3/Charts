@@ -148,11 +148,13 @@
         const entryYear = getWeekYear(weekNum, entries[0]);
 
         for (const entry of entries) {
-          if (!entry.song || !entry.artist) continue;
+          // ✅ FIXED HERE
+          if (!entry.title || !entry.artist) continue;
 
-          const key = normalizeSong(entry.song) + '___' + entry.artist;
+          const key = normalizeSong(entry.title) + '___' + entry.artist;
+
           const songInfo = songMap.get(key) || {
-            song: entry.song,
+            song: entry.title,
             artist: entry.artist,
             salesThisYear: 0,
             totalSales: 0,
