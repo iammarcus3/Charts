@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Top Songs by Year</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d0d0d;
+      color: #eaeaea;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      color: #ffffff;
+    }
+
+    label, select {
+      font-size: 1rem;
+    }
+
+    select {
+      padding: 0.5rem;
+      background-color: #1e1e1e;
+      color: #ffffff;
+      border: 1px solid #444;
+      border-radius: 5px;
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background-color: #161616;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+
+    th {
+      background-color: #222;
+      font-weight: bold;
+      color: #ddd;
+    }
+
+    tr:hover {
+      background-color: #1f1f1f;
+    }
+
+    a {
+      color: #4db8ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .number {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <h1>Top 30 Songs by Sales Per Year</h1>
+  <label for="yearSelect">Select Year:</label>
+  <select id="yearSelect"></select>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Song</th>
+        <th>Artist</th>
+        <th class="number">Sales (That Year)</th>
+        <th class="number">Sales to Date</th>
+        <th class="number">Weeks</th>
+        <th class="number">Peak</th>
+      </tr>
+    </thead>
+    <tbody id="songTable"></tbody>
+  </table>
+
+  <script src="weekdata.js"></script>
+  <script>
+    const yearSelect = document.getElementById('yearSelect');
+    const tableBody = document.getElementById('songTable');
+
+    function normalizeSong(name) {
+      if (typeof name !== 'string') return '';
+      return name
+        .toLowerCase()
+        .replace(/\s*\(.*?\)|\[.*?]|[-–—_]/g, '')
+        .replace(/[^a-z0-9 ]/g, '')
+        .trim();
+    }
+
+    function encodeParam(param) {
+      return encodeURIComponent(param.replace(/\s+/g, '_'));
+    }
+
+    function formatNumber(n) {
+      if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + "B";
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
+      if (n >= 1_000) return (n / 1_000).toFixed(1) + "K";
+      return n.toString();
+    }
+
+    const weekStartDate = new Date(2018, 1, 23);
+    const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+
+    function getWeekYear(weekNum, entry) {
+      if (entry && entry.date) {
+        const d = new Date(entry.date);
+        if (!isNaN(d)) return d.getFullYear();
+      }
+      const date = new Date(weekStartDate.getTime() + (weekNum - 1) * msPerWeek);
+      return date.getFullYear();
+    }
+
+    const weekYears = Object.keys(weekData).map(Number).map(weekNum => {
+      const entry = weekData[weekNum][0];
+      return getWeekYear(weekNum, entry);
+    });
+
+    const uniqueYears = [...new Set(weekYears)].sort((a, b) => b - a);
+
+    uniqueYears.forEach(year => {
+      const option = document.createElement('option');
+      option.value = year;
+      option.textContent = year;
+      yearSelect.appendChild(option);
+    });
+
+    function getTopSongs(year) {
+      const songMap = new Map();
+
+      for (const [weekKey, entries] of Object.entries(weekData)) {
+        const weekNum = parseInt(weekKey);
+        const entryYear = getWeekYear(weekNum, entries[0]);
+
+        for (const entry of entries) {
+          if (!entry.song || !entry.artist) continue;
+
+          const key = normalizeSong(entry.song) + '___' + entry.artist;
+          const songInfo = songMap.get(key) || {
+            song: entry.song,
+            artist: entry.artist,
+            salesThisYear: 0,
+            totalSales: 0,
+            weeks: 0,
+            peak: entry.rank
+          };
+
+          const weekSales = (entry.sales || 0) * 500;
+
+          if (entryYear === parseInt(year)) {
+            songInfo.salesThisYear += weekSales;
+            songInfo.weeks += 1;
+          }
+
+          songInfo.totalSales += weekSales;
+          if (entry.rank < songInfo.peak) songInfo.peak = entry.rank;
+
+          songMap.set(key, songInfo);
+        }
+      }
+
+      return [...songMap.values()]
+        .filter(s => s.salesThisYear > 0)
+        .sort((a, b) => b.salesThisYear - a.salesThisYear)
+        .slice(0, 30);
+    }
+
+    function renderTable(year) {
+      const songs = getTopSongs(year);
+      tableBody.innerHTML = '';
+
+      songs.forEach((song, index) => {
+        const songLink = `song_data.html?song=${encodeParam(song.song)}`;
+        const artistLink = `artist.html?artist=${encodeParam(song.artist)}`;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td><a href="${songLink}" target="_blank">${song.song}</a></td>
+          <td><a href="${artistLink}" target="_blank">${song.artist}</a></td>
+          <td class="number">${formatNumber(song.salesThisYear)}</td>
+          <td class="number">${formatNumber(song.totalSales)}</td>
+          <td class="number">${song.weeks}</td>
+          <td class="number">${song.peak}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    yearSelect.addEventListener('change', e => {
+      renderTable(e.target.value);
+    });
+
+    renderTable(uniqueYears[0]);
+    yearSelect.value = uniqueYears[0];
+  </script>
+</body>
+</html>
