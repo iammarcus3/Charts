@@ -6,43 +6,50 @@
 <title>Artist Streams</title>
 
 <style>
+:root{
+  --bg:#070b14;
+  --card:rgba(255,255,255,.05);
+  --border:rgba(255,255,255,.12);
+  --text:#eef3ff;
+  --muted:rgba(238,243,255,.6);
+}
 body{
   margin:0;
   font-family:Arial;
-  background:#0b1020;
-  color:#fff;
+  background:var(--bg);
+  color:var(--text);
 }
-.wrap{max-width:1200px;margin:auto;padding:20px;}
-input{
-  padding:10px;border-radius:20px;border:none;width:250px;
-}
-button{
-  padding:10px 15px;border-radius:20px;border:none;cursor:pointer;
-}
+.wrap{max-width:1150px;margin:auto;padding:20px;}
 .card{
-  background:rgba(255,255,255,.05);
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
   padding:15px;
-  border-radius:15px;
   margin-top:15px;
 }
+h1,h2,h3{margin:0 0 10px}
 table{
   width:100%;
   border-collapse:collapse;
 }
 td,th{
-  padding:8px;
-  border-bottom:1px solid rgba(255,255,255,.1);
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  font-size:.9rem;
 }
+th{color:var(--muted);text-align:left}
+a{
+  color:#4aa3ff;
+  text-decoration:none;
+}
+a:hover{opacity:.8}
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
-<h1>Artist Analytics</h1>
-
-<input id="artistInput" placeholder="Enter artist name"/>
-<button onclick="loadArtist()">View</button>
+<h1 id="artistTitle">Artist</h1>
 
 <div id="output"></div>
 
@@ -53,26 +60,33 @@ td,th{
 <script>
 const $ = id => document.getElementById(id);
 
-function norm(s){
-  return (s || "").toLowerCase().trim();
+function norm(v){
+  return (v || "").toString().toLowerCase().trim();
 }
 
 function fmt(n){
-  return Math.round(n).toLocaleString();
+  return Math.round(n || 0).toLocaleString();
 }
 
-function loadArtist(){
-  const artist = norm($("artistInput").value);
-  if(!artist) return;
+// GET ARTIST FROM URL
+function getArtist(){
+  const p = new URLSearchParams(location.search);
+  return norm(p.get("artist"));
+}
+
+// MAIN LOAD FUNCTION
+function loadArtist(artist){
 
   const songMap = new Map();
   const albumMap = new Map();
+  const yearMap = new Map();
 
   let totalStreams = 0;
   let peakWeek = 0;
 
   for(const week in weekData){
-    let weekTotal = 0;
+
+    let weeklyTotal = 0;
 
     for(const item of weekData[week]){
 
@@ -81,20 +95,30 @@ function loadArtist(){
       const streams = Number(item.streams) || 0;
 
       totalStreams += streams;
-      weekTotal += streams;
+      weeklyTotal += streams;
 
       // SONGS
-      const songKey = item.title;
-      songMap.set(songKey, (songMap.get(songKey)||0) + streams);
+      const song = item.title || "Unknown";
+      songMap.set(song, (songMap.get(song)||0) + streams);
 
       // ALBUMS
-      const albumKey = item.album;
-      albumMap.set(albumKey, (albumMap.get(albumKey)||0) + streams);
+      const album = item.album || "Unknown";
+      albumMap.set(album, (albumMap.get(album)||0) + streams);
+
+      // YEARS (approx)
+      const year = 2018 + Math.floor((week-1)/52);
+      yearMap.set(year, (yearMap.get(year)||0) + streams);
     }
 
-    if(weekTotal > peakWeek) peakWeek = weekTotal;
+    if(weeklyTotal > peakWeek) peakWeek = weeklyTotal;
   }
 
+  if(totalStreams === 0){
+    $("output").innerHTML = "<div class='card'>No data found for this artist.</div>";
+    return;
+  }
+
+  // SORT
   const songs = [...songMap.entries()]
     .map(([name,streams])=>({name,streams}))
     .sort((a,b)=>b.streams-a.streams);
@@ -103,7 +127,7 @@ function loadArtist(){
     .map(([name,streams])=>({name,streams}))
     .sort((a,b)=>b.streams-a.streams);
 
-  // TOP LISTS
+  // TOP
   const topSongs = songs.slice(0,30);
   const topAlbums = albums.slice(0,10);
 
@@ -111,37 +135,31 @@ function loadArtist(){
   const songs1B = songs.filter(s=>s.streams >= 1e9).length;
   const albums2B = albums.filter(a=>a.streams >= 2e9).length;
 
-  // EXTRA INSIGHTS
+  // BEST YEAR
+  let bestYear=null, bestVal=0;
+  for(const [y,v] of yearMap){
+    if(v>bestVal){bestVal=v;bestYear=y;}
+  }
+
+  // AVERAGE
   const avgSong = songs.length ? totalStreams / songs.length : 0;
 
-  // YEARLY
-  const yearMap = new Map();
-  for(const week in weekData){
-    const year = 2018 + Math.floor((week-1)/52);
-    for(const item of weekData[week]){
-      if(norm(item.artist)!==artist) continue;
-      yearMap.set(year, (yearMap.get(year)||0) + (Number(item.streams)||0));
-    }
-  }
+  // TITLE
+  $("artistTitle").textContent = artist.toUpperCase();
 
-  let bestYear = null, bestYearVal = 0;
-  for(const [y,v] of yearMap){
-    if(v > bestYearVal){bestYear=y;bestYearVal=v;}
-  }
-
-  // OUTPUT
+  // RENDER
   $("output").innerHTML = `
-  
+
   <div class="card">
-    <h2>${artist.toUpperCase()}</h2>
+    <h2>Overview</h2>
     <p><b>Total Streams:</b> ${fmt(totalStreams)}</p>
     <p><b>Total Songs:</b> ${songs.length}</p>
     <p><b>Total Albums:</b> ${albums.length}</p>
-    <p><b>Peak Week Streams:</b> ${fmt(peakWeek)}</p>
+    <p><b>Peak Weekly Streams:</b> ${fmt(peakWeek)}</p>
     <p><b>Average per Song:</b> ${fmt(avgSong)}</p>
     <p><b>Songs over 1B:</b> ${songs1B}</p>
     <p><b>Albums over 2B:</b> ${albums2B}</p>
-    <p><b>Best Year:</b> ${bestYear} (${fmt(bestYearVal)})</p>
+    <p><b>Best Year:</b> ${bestYear} (${fmt(bestVal)})</p>
   </div>
 
   <div class="card">
@@ -151,7 +169,11 @@ function loadArtist(){
       ${topSongs.map((s,i)=>`
         <tr>
           <td>${i+1}</td>
-          <td>${s.name}</td>
+          <td>
+            <a href="songstream.html?song=${encodeURIComponent(s.name)}&artist=${encodeURIComponent(artist)}">
+              ${s.name}
+            </a>
+          </td>
           <td>${fmt(s.streams)}</td>
         </tr>
       `).join("")}
@@ -165,14 +187,33 @@ function loadArtist(){
       ${topAlbums.map((a,i)=>`
         <tr>
           <td>${i+1}</td>
-          <td>${a.name}</td>
+          <td>
+            <a href="albumstream.html?album=${encodeURIComponent(a.name)}&artist=${encodeURIComponent(artist)}">
+              ${a.name}
+            </a>
+          </td>
           <td>${fmt(a.streams)}</td>
         </tr>
       `).join("")}
     </table>
   </div>
+
   `;
 }
+
+// INIT
+function init(){
+  const artist = getArtist();
+
+  if(!artist){
+    $("output").innerHTML = "<div class='card'>No artist selected.</div>";
+    return;
+  }
+
+  loadArtist(artist);
+}
+
+init();
 </script>
 
 </body>
