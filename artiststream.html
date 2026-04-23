@@ -50,7 +50,6 @@ a:hover{opacity:.8}
 <div class="wrap">
 
 <h1 id="artistTitle">Artist</h1>
-
 <div id="output"></div>
 
 </div>
@@ -58,6 +57,7 @@ a:hover{opacity:.8}
 <script src="weekdata.js"></script>
 
 <script>
+// ---------------- HELPERS ----------------
 const $ = id => document.getElementById(id);
 
 function norm(v){
@@ -68,13 +68,80 @@ function fmt(n){
   return Math.round(n || 0).toLocaleString();
 }
 
-// GET ARTIST FROM URL
+// ---------------- CLEAN + SIMILARITY ----------------
+function cleanName(str){
+  return (str || "")
+    .toLowerCase()
+    .replace(/\(.*?\)|\[.*?\]/g, "")
+    .replace(/-.*$/g, "")
+    .replace(/feat\.?.*/g, "")
+    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function levenshtein(a, b){
+  const matrix = [];
+  for(let i=0;i<=b.length;i++){matrix[i]=[i];}
+  for(let j=0;j<=a.length;j++){matrix[0][j]=j;}
+
+  for(let i=1;i<=b.length;i++){
+    for(let j=1;j<=a.length;j++){
+      if(b[i-1] === a[j-1]){
+        matrix[i][j] = matrix[i-1][j-1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i-1][j-1]+1,
+          matrix[i][j-1]+1,
+          matrix[i-1][j]+1
+        );
+      }
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+function similarity(a,b){
+  if(!a || !b) return 0;
+  const longer = a.length > b.length ? a : b;
+  const shorter = a.length > b.length ? b : a;
+  const dist = levenshtein(longer, shorter);
+  return (longer.length - dist) / longer.length;
+}
+
+// GROUP SIMILAR
+function groupSimilar(map){
+  const grouped = new Map();
+
+  for(const [name, streams] of map){
+
+    const clean = cleanName(name);
+    let foundKey = null;
+
+    for(const key of grouped.keys()){
+      if(similarity(clean, key) >= 0.99){
+        foundKey = key;
+        break;
+      }
+    }
+
+    if(foundKey){
+      grouped.set(foundKey, grouped.get(foundKey) + streams);
+    } else {
+      grouped.set(clean, streams);
+    }
+  }
+
+  return grouped;
+}
+
+// ---------------- GET ARTIST ----------------
 function getArtist(){
   const p = new URLSearchParams(location.search);
   return norm(p.get("artist"));
 }
 
-// MAIN LOAD FUNCTION
+// ---------------- MAIN ----------------
 function loadArtist(artist){
 
   const songMap = new Map();
@@ -97,15 +164,12 @@ function loadArtist(artist){
       totalStreams += streams;
       weeklyTotal += streams;
 
-      // SONGS
       const song = item.title || "Unknown";
       songMap.set(song, (songMap.get(song)||0) + streams);
 
-      // ALBUMS
       const album = item.album || "Unknown";
       albumMap.set(album, (albumMap.get(album)||0) + streams);
 
-      // YEARS (approx)
       const year = 2018 + Math.floor((week-1)/52);
       yearMap.set(year, (yearMap.get(year)||0) + streams);
     }
@@ -114,42 +178,38 @@ function loadArtist(artist){
   }
 
   if(totalStreams === 0){
-    $("output").innerHTML = "<div class='card'>No data found for this artist.</div>";
+    $("output").innerHTML = "<div class='card'>No data found.</div>";
     return;
   }
 
-  // SORT
-  const songs = [...songMap.entries()]
+  // 🔥 APPLY GROUPING
+  const groupedSongsMap = groupSimilar(songMap);
+  const groupedAlbumsMap = groupSimilar(albumMap);
+
+  const songs = [...groupedSongsMap.entries()]
     .map(([name,streams])=>({name,streams}))
     .sort((a,b)=>b.streams-a.streams);
 
-  const albums = [...albumMap.entries()]
+  const albums = [...groupedAlbumsMap.entries()]
     .map(([name,streams])=>({name,streams}))
     .sort((a,b)=>b.streams-a.streams);
 
-  // TOP
   const topSongs = songs.slice(0,30);
   const topAlbums = albums.slice(0,10);
 
-  // MILESTONES
   const songs1B = songs.filter(s=>s.streams >= 1e9).length;
   const albums2B = albums.filter(a=>a.streams >= 2e9).length;
 
-  // BEST YEAR
   let bestYear=null, bestVal=0;
   for(const [y,v] of yearMap){
     if(v>bestVal){bestVal=v;bestYear=y;}
   }
 
-  // AVERAGE
   const avgSong = songs.length ? totalStreams / songs.length : 0;
 
-  // TITLE
   $("artistTitle").textContent = artist.toUpperCase();
 
-  // RENDER
   $("output").innerHTML = `
-
   <div class="card">
     <h2>Overview</h2>
     <p><b>Total Streams:</b> ${fmt(totalStreams)}</p>
@@ -163,7 +223,7 @@ function loadArtist(artist){
   </div>
 
   <div class="card">
-    <h3>Top 30 Songs</h3>
+    <h3>Top 30 Songs (Grouped)</h3>
     <table>
       <tr><th>#</th><th>Song</th><th>Streams</th></tr>
       ${topSongs.map((s,i)=>`
@@ -181,7 +241,7 @@ function loadArtist(artist){
   </div>
 
   <div class="card">
-    <h3>Top 10 Albums</h3>
+    <h3>Top 10 Albums (Grouped)</h3>
     <table>
       <tr><th>#</th><th>Album</th><th>Streams</th></tr>
       ${topAlbums.map((a,i)=>`
@@ -197,12 +257,11 @@ function loadArtist(artist){
       `).join("")}
     </table>
   </div>
-
   `;
 }
 
 // INIT
-function init(){
+(function(){
   const artist = getArtist();
 
   if(!artist){
@@ -211,9 +270,7 @@ function init(){
   }
 
   loadArtist(artist);
-}
-
-init();
+})();
 </script>
 
 </body>
