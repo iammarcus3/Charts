@@ -68,6 +68,18 @@ function fmt(n){
   return Math.round(n || 0).toLocaleString();
 }
 
+// 🔥 INCLUDE FEATURES
+function isArtistMatch(item, artist){
+  const a = norm(item.artist);
+  const t = norm(item.title);
+
+  return (
+    a === artist ||
+    a.includes(artist) ||
+    t.includes(artist)
+  );
+}
+
 // ---------------- CLEAN + SIMILARITY ----------------
 function cleanName(str){
   return (str || "")
@@ -114,7 +126,6 @@ function groupSimilar(map){
   const grouped = new Map();
 
   for(const [name, streams] of map){
-
     const clean = cleanName(name);
     let foundKey = null;
 
@@ -157,7 +168,8 @@ function loadArtist(artist){
 
     for(const item of weekData[week]){
 
-      if(norm(item.artist) !== artist) continue;
+      // 🔥 UPDATED MATCH (includes features)
+      if(!isArtistMatch(item, artist)) continue;
 
       const streams = Number(item.streams) || 0;
 
@@ -182,7 +194,7 @@ function loadArtist(artist){
     return;
   }
 
-  // 🔥 APPLY GROUPING
+  // 🔥 GROUPING
   const groupedSongsMap = groupSimilar(songMap);
   const groupedAlbumsMap = groupSimilar(albumMap);
 
@@ -200,6 +212,12 @@ function loadArtist(artist){
   const songs1B = songs.filter(s=>s.streams >= 1e9).length;
   const albums2B = albums.filter(a=>a.streams >= 2e9).length;
 
+  // 🔥 HITS
+  const number1Song = songs.length ? songs[0] : null;
+  const number1Count = number1Song ? 1 : 0;
+  const top10Hits = songs.slice(0,10).length;
+
+  // BEST YEAR
   let bestYear=null, bestVal=0;
   for(const [y,v] of yearMap){
     if(v>bestVal){bestVal=v;bestYear=y;}
@@ -219,6 +237,8 @@ function loadArtist(artist){
     <p><b>Average per Song:</b> ${fmt(avgSong)}</p>
     <p><b>Songs over 1B:</b> ${songs1B}</p>
     <p><b>Albums over 2B:</b> ${albums2B}</p>
+    <p><b>#1 Songs:</b> ${number1Count}</p>
+    <p><b>Top 10 Hits:</b> ${top10Hits}</p>
     <p><b>Best Year:</b> ${bestYear} (${fmt(bestVal)})</p>
   </div>
 
@@ -275,4 +295,3 @@ function loadArtist(artist){
 
 </body>
 </html>
-
