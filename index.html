@@ -143,11 +143,31 @@
     .muted{color:var(--muted)}
     .nowrap{white-space:nowrap}
     .spacer{flex:1}
+
+    /* Mobile Helper */
+    @media (max-width: 768px) {
+      .mobile-helper { display: flex !important; }
+    }
+    .mobile-helper {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99;
+      background: rgba(18, 18, 20, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 8px 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      gap: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="shell">
-    <!-- Topbar -->
     <div class="topbar">
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
@@ -166,13 +186,11 @@
       </div>
     </div>
 
-    <!-- Tabs -->
     <div class="tabs" role="tablist" aria-label="Chart type">
       <div class="tab" data-chart="tracks" data-key="1" role="tab" aria-selected="true" tabindex="0"><span>Tracks</span></div>
       <div class="tab" data-chart="albums" data-key="2" role="tab" aria-selected="false" tabindex="0"><span>Albums</span></div>
     </div>
 
-    <!-- Board -->
     <div class="board">
       <div class="board-head">
         <div class="date-range" id="dateRange">—</div>
@@ -199,6 +217,12 @@
 
       <div class="pager" id="pager"></div>
     </div>
+  </div>
+
+  <div class="mobile-helper" aria-hidden="true">
+    <button class="btn ghost" onclick="document.getElementById('prevWeek').click()">⟵</button>
+    <button class="btn primary" onclick="document.getElementById('todayBtn').click()">Latest</button>
+    <button class="btn ghost" onclick="document.getElementById('nextWeek').click()">⟶</button>
   </div>
 
   <script>
