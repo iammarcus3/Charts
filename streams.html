@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top 100 Streaming - Artists, Songs, Albums</title>
+
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #121b2e;
+      --muted: #9fb0d0;
+      --text: #eaf0ff;
+      --accent: #4aa3ff;
+      --accent2: #22d3ee;
+      --border: rgba(255,255,255,0.10);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% 0%, rgba(74,163,255,0.20), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(34,211,238,0.16), transparent 55%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 24px 18px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 1.6rem;
+      letter-spacing: 0.3px;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 14px 40px;
+    }
+
+    .panel {
+      background: rgba(18,27,46,0.85);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .tabs,
+    .subtabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tabbtn {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: transform 0.06s ease,
+                  background 0.2s ease,
+                  border 0.2s ease;
+      user-select: none;
+    }
+
+    .tabbtn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .tabbtn.active {
+      background: linear-gradient(
+        135deg,
+        rgba(74,163,255,0.25),
+        rgba(34,211,238,0.18)
+      );
+      border-color: rgba(74,163,255,0.55);
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .content {
+      padding: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .cardhead {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .cardhead h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .cardhead span {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .tablewrap {
+      overflow: auto;
+      max-height: 70vh;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+      font-size: 0.92rem;
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: rgba(18,27,46,0.98);
+      z-index: 1;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .rank {
+      width: 70px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .streams {
+      width: 180px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    a.itemlink {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(74,163,255,0.55);
+    }
+
+    a.itemlink:hover {
+      color: white;
+      border-bottom-color: rgba(34,211,238,0.8);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-left: 8px;
+      white-space: nowrap;
+    }
+
+    .notice {
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .searchbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    input[type="search"] {
+      width: min(360px, 100%);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.18);
+      color: var(--text);
+      outline: none;
+    }
+
+    input[type="search"]::placeholder {
+      color: rgba(159,176,208,0.7);
+    }
+
+    .smallbtn {
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Top 100 Streaming</h1>
+  <p>
+    Artists • Songs • Albums — Last 7 Days, Last 30 Days, All Time
+  </p>
+</header>
+
+<div class="wrap">
+
+  <div class="panel">
+
+    <div class="toolbar">
+
+      <div class="tabs" id="timeTabs">
+        <button class="tabbtn active" data-range="7">
+          Last 7 days
+        </button>
+
+        <button class="tabbtn" data-range="30">
+          Last 30 days
+        </button>
+
+        <button class="tabbtn" data-range="all">
+          All time
+        </button>
+      </div>
+
+      <div class="searchbar">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search (artist/song/album)..."
+        />
+
+        <button class="smallbtn" id="clearSearchBtn">
+          Clear
+        </button>
+      </div>
+
+      <div class="meta" id="metaText">
+        Loading data…
+      </div>
+
+    </div>
+
+    <div class="content">
+
+      <div
+        class="subtabs"
+        id="typeTabs"
+        style="margin-bottom:12px;"
+      >
+
+        <button class="tabbtn active" data-type="artists">
+          Artists
+        </button>
+
+        <button class="tabbtn" data-type="songs">
+          Songs
+        </button>
+
+        <button class="tabbtn" data-type="albums">
+          Albums
+        </button>
+
+      </div>
+
+      <div class="grid">
+
+        <div class="card">
+
+          <div class="cardhead">
+
+            <h2 id="cardTitle">
+              Top 100 Artists
+              <span class="pill">Last 7 days</span>
+            </h2>
+
+            <span>
+              Ranked by total streams in selected range
+            </span>
+
+          </div>
+
+          <div class="tablewrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th class="rank">Rank</th>
+                  <th id="nameCol">Artist</th>
+                  <th class="streams">Streams</th>
+                  <th id="extraCol">Extra</th>
+                </tr>
+              </thead>
+
+              <tbody id="rows"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+        <div
+          class="notice"
+          id="noticeBox"
+          style="display:none;"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- weekdata.js must define const weekData = {...} -->
+<script src="weekdata.js"></script>
+
+<script>
+
+const fmtNumber = (n) => {
+  if (!Number.isFinite(n)) return "0";
+  return Math.round(n).toLocaleString(undefined);
+};
+
+function toKey(s) {
+  return (s ?? "").toString().trim();
+}
+
+function getStreams(item) {
+  const v = Number(item?.streams);
+  return Number.isFinite(v) ? v : 0;
+}
+
+function normalizeText(str) {
+
+  return (str || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^\w\s]/g, " ")
+    .replace(
+      /\b(deluxe|expanded|remaster(ed)?|edition|version|mono|stereo)\b/g,
+      ""
+    )
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function levenshtein(a, b) {
+
+  const matrix = [];
+
+  for (let i = 0; i <= b.length; i++) {
+    matrix[i] = [i];
+  }
+
+  for (let j = 0; j <= a.length; j++) {
+    matrix[0][j] = j;
+  }
+
+  for (let i = 1; i <= b.length; i++) {
+
+    for (let j = 1; j <= a.length; j++) {
+
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+
+        matrix[i][j] = matrix[i - 1][j - 1];
+
+      } else {
+
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1,
+          matrix[i][j - 1] + 1,
+          matrix[i - 1][j] + 1
+        );
+      }
+    }
+  }
+
+  return matrix[b.length][a.length];
+}
+
+function similarity(a, b) {
+
+  a = normalizeText(a);
+  b = normalizeText(b);
+
+  if (!a || !b) return 0;
+
+  const distance = levenshtein(a, b);
+
+  return 1 - distance / Math.max(a.length, b.length);
+}
+
+function findSimilarKey(map, target, threshold = 0.99) {
+
+  for (const key of map.keys()) {
+
+    if (
+      similarity(
+        normalizeText(key),
+        normalizeText(target)
+      ) >= threshold
+    ) {
+      return key;
+    }
+  }
+
+  return null;
+}
+
+function normalizeArtistName(name) {
+
+  return (name || "")
+    .replace(/\(.*?\)/g, "")
+    .replace(/\[.*?\]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function splitArtists(artist, title = "") {
+
+  const set = new Set();
+
+  const pushArtist = (name) => {
+
+    name = normalizeArtistName(name);
+
+    if (!name || name.length < 2) return;
+
+    set.add(name);
+  };
+
+  const separators =
+    /,|&| x | and |\+|\/| feat\. | ft\. | featuring /gi;
+
+  artist
+    .split(separators)
+    .forEach(pushArtist);
+
+  const featurePatterns = [
+    /feat\.\s*([^)]+)/gi,
+    /ft\.\s*([^)]+)/gi,
+    /featuring\s*([^)]+)/gi,
+    /with\s*([^)]+)/gi
+  ];
+
+  featurePatterns.forEach((pattern) => {
+
+    const matches = [...title.matchAll(pattern)];
+
+    matches.forEach((m) => {
+
+      if (!m[1]) return;
+
+      m[1]
+        .split(separators)
+        .forEach(pushArtist);
+    });
+  });
+
+  return Array.from(set);
+}
+
+function normalizeWeekData(raw) {
+
+  if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+
+    return Object.keys(raw)
+      .map(k => Number(k))
+      .filter(n => Number.isFinite(n))
+      .sort((a,b) => a - b)
+      .map(weekNum => ({
+        week: weekNum,
+        items: Array.isArray(raw[String(weekNum)])
+          ? raw[String(weekNum)]
+          : []
+      }));
+  }
+
+  if (Array.isArray(raw)) {
+
+    return raw.map((items, idx) => ({
+      week: idx + 1,
+      items: Array.isArray(items)
+        ? items
+        : []
+    }));
+  }
+
+  return null;
+}
+
+function getRawWeekData() {
+
+  try {
+    if (typeof weekData !== "undefined") {
+      return weekData;
+    }
+  } catch (_) {}
+
+  if (window.weekData) {
+    return window.weekData;
+  }
+
+  return null;
+}
+
+function rangeToWeeksCount(range) {
+
+  if (range === "7") return 1;
+
+  if (range === "30") return 5;
+
+  return null;
+}
+
+function sliceWeeks(weeksArr, range) {
+
+  const n = rangeToWeeksCount(range);
+
+  if (!n) return weeksArr;
+
+  return weeksArr.slice(-n);
+}
+
+function flattenItems(weeksArr) {
+
+  const out = [];
+
+  for (const w of weeksArr) {
+
+    for (const item of (w.items || [])) {
+
+      if (item && typeof item === "object") {
+        out.push(item);
+      }
+    }
+  }
+
+  return out;
+}
+
+function aggregateTop(items, mode) {
+
+  const map = new Map();
+
+  for (const it of items) {
+
+    const streams = getStreams(it);
+
+    if (streams <= 0) continue;
+
+    // ARTISTS
+    if (mode === "artists") {
+
+      const artists = splitArtists(
+        toKey(it.artist),
+        toKey(it.title)
+      );
+
+      artists.forEach((artist) => {
+
+        const existingKey =
+          findSimilarKey(map, artist);
+
+        const key = existingKey || artist;
+
+        const rec = map.get(key) || {
+          name: artist,
+          streams: 0,
+          extraSet: new Set()
+        };
+
+        rec.streams += streams;
+
+        if (it.title) {
+          rec.extraSet.add(toKey(it.title));
+        }
+
+        map.set(key, rec);
+      });
+    }
+
+    // SONGS
+    if (mode === "songs") {
+
+      const title = toKey(it.title);
+
+      if (!title) continue;
+
+      const existingKey =
+        findSimilarKey(map, title);
+
+      const key = existingKey || title;
+
+      const rec = map.get(key) || {
+        name: title,
+        streams: 0,
+        extra: normalizeArtistName(
+          toKey(it.artist)
+        )
+      };
+
+      rec.streams += streams;
+
+      map.set(key, rec);
+    }
+
+    // ALBUMS
+    if (mode === "albums") {
+
+      const album = toKey(it.album);
+
+      if (!album) continue;
+
+      const existingKey =
+        findSimilarKey(map, album);
+
+      const key = existingKey || album;
+
+      const rec = map.get(key) || {
+        name: album,
+        streams: 0,
+        extra: normalizeArtistName(
+          toKey(it.artist)
+        )
+      };
+
+      rec.streams += streams;
+
+      map.set(key, rec);
+    }
+  }
+
+  return Array.from(map.values())
+    .map(r => ({
+      name: r.name,
+      streams: r.streams,
+      extra:
+        r.extraSet instanceof Set
+          ? Array.from(r.extraSet)
+              .slice(0,3)
+              .join(", ")
+          : (r.extra || "")
+    }))
+    .sort((a,b) => b.streams - a.streams)
+    .slice(0,100);
+}
+
+function buildLink(mode, name, extra) {
+
+  const enc = encodeURIComponent;
+
+  if (mode === "artists") {
+    return `artiststream.html?artist=${enc(name)}`;
+  }
+
+  if (mode === "songs") {
+    return `songstream.html?song=${enc(name)}&artist=${enc(extra || "")}`;
+  }
+
+  if (mode === "albums") {
+    return `albumstream.html?album=${enc(name)}&artist=${enc(extra || "")}`;
+  }
+
+  return "#";
+}
+
+let currentRange = "7";
+let currentType = "artists";
+let searchTerm = "";
+
+const els = {
+  metaText: document.getElementById("metaText"),
+  cardTitle: document.getElementById("cardTitle"),
+  rows: document.getElementById("rows"),
+  noticeBox: document.getElementById("noticeBox"),
+  timeTabs: document.getElementById("timeTabs"),
+  typeTabs: document.getElementById("typeTabs"),
+  searchInput: document.getElementById("searchInput"),
+  clearSearchBtn: document.getElementById("clearSearchBtn"),
+  nameCol: document.getElementById("nameCol"),
+  extraCol: document.getElementById("extraCol"),
+};
+
+function setActiveButtons(container, attrName, value) {
+
+  container
+    .querySelectorAll(".tabbtn")
+    .forEach(btn => {
+
+      btn.classList.toggle(
+        "active",
+        btn.getAttribute(attrName) === value
+      );
+    });
+}
+
+function rangeLabel(r) {
+
+  if (r === "7") return "Last 7 days";
+
+  if (r === "30") return "Last 30 days";
+
+  return "All time";
+}
+
+function typeLabel(t) {
+
+  if (t === "artists") return "Artists";
+
+  if (t === "songs") return "Songs";
+
+  return "Albums";
+}
+
+function updateHeaders() {
+
+  els.cardTitle.innerHTML =
+    `Top 100 ${typeLabel(currentType)}
+    <span class="pill">
+      ${rangeLabel(currentRange)}
+    </span>`;
+
+  if (currentType === "artists") {
+
+    els.nameCol.textContent = "Artist";
+    els.extraCol.textContent =
+      "Popular songs (sample)";
+  }
+
+  else if (currentType === "songs") {
+
+    els.nameCol.textContent = "Song";
+    els.extraCol.textContent = "Artist";
+  }
+
+  else {
+
+    els.nameCol.textContent = "Album";
+    els.extraCol.textContent = "Artist";
+  }
+}
+
+function render() {
+
+  const raw = getRawWeekData();
+
+  const weeks = normalizeWeekData(raw);
+
+  if (!weeks) {
+
+    els.metaText.textContent =
+      "weekData format invalid.";
+
+    return;
+  }
+
+  const usedWeeks =
+    sliceWeeks(weeks, currentRange);
+
+  const flatItems =
+    flattenItems(usedWeeks);
+
+  const top =
+    aggregateTop(flatItems, currentType);
+
+  const term =
+    searchTerm.trim().toLowerCase();
+
+  const filtered = term
+    ? top.filter(r =>
+        (r.name || "")
+          .toLowerCase()
+          .includes(term)
+        ||
+        (r.extra || "")
+          .toLowerCase()
+          .includes(term)
+      )
+    : top;
+
+  const weekMin =
+    usedWeeks.length
+      ? usedWeeks[0].week
+      : 0;
+
+  const weekMax =
+    usedWeeks.length
+      ? usedWeeks[usedWeeks.length - 1].week
+      : 0;
+
+  els.metaText.textContent =
+    `Weeks used: ${usedWeeks.length}
+    (week ${weekMin} → ${weekMax})
+    • Items scanned: ${flatItems.length}
+    • Showing:
+    ${Math.min(100, filtered.length)}`;
+
+  els.rows.innerHTML = "";
+
+  filtered.forEach((r, idx) => {
+
+    const tr = document.createElement("tr");
+
+    const tdRank = document.createElement("td");
+    tdRank.className = "rank";
+    tdRank.textContent = idx + 1;
+
+    const tdName = document.createElement("td");
+
+    const a = document.createElement("a");
+
+    a.className = "itemlink";
+
+    a.href =
+      buildLink(
+        currentType,
+        r.name,
+        r.extra
+      );
+
+    a.textContent = r.name || "(Unknown)";
+
+    tdName.appendChild(a);
+
+    const tdStreams = document.createElement("td");
+    tdStreams.className = "streams";
+    tdStreams.textContent =
+      fmtNumber(r.streams);
+
+    const tdExtra = document.createElement("td");
+    tdExtra.textContent = r.extra || "";
+
+    tr.appendChild(tdRank);
+    tr.appendChild(tdName);
+    tr.appendChild(tdStreams);
+    tr.appendChild(tdExtra);
+
+    els.rows.appendChild(tr);
+  });
+
+  updateHeaders();
+}
+
+els.timeTabs.addEventListener("click", (e) => {
+
+  const btn =
+    e.target.closest(".tabbtn");
+
+  if (!btn) return;
+
+  currentRange =
+    btn.getAttribute("data-range");
+
+  setActiveButtons(
+    els.timeTabs,
+    "data-range",
+    currentRange
+  );
+
+  render();
+});
+
+els.typeTabs.addEventListener("click", (e) => {
+
+  const btn =
+    e.target.closest(".tabbtn");
+
+  if (!btn) return;
+
+  currentType =
+    btn.getAttribute("data-type");
+
+  setActiveButtons(
+    els.typeTabs,
+    "data-type",
+    currentType
+  );
+
+  render();
+});
+
+els.searchInput.addEventListener("input", (e) => {
+
+  searchTerm = e.target.value || "";
+
+  render();
+});
+
+els.clearSearchBtn.addEventListener("click", () => {
+
+  searchTerm = "";
+
+  els.searchInput.value = "";
+
+  render();
+});
+
+setActiveButtons(
+  els.timeTabs,
+  "data-range",
+  currentRange
+);
+
+setActiveButtons(
+  els.typeTabs,
+  "data-type",
+  currentType
+);
+
+render();
+
+</script>
+
+</body>
+</html>
