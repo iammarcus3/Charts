@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top Artists - Top 50</title>
+  <style>
+    :root{
+      --bg:#121212; --panel:#1e1e1e; --tile:#2a2a2a; --line:#333; --text:#f0f0f0;
+      --muted:#aaa; --blue:#66ccff; --gold:#ffd166; --green:#7ee787; --red:#ff7b72;
+    }
+    *{ box-sizing:border-box; }
+    body{ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:var(--bg); color:var(--text); margin:0; padding:2rem; }
+    h1{ text-align:center; font-size:3rem; margin:0 0 .5rem; color:#fff; }
+    .sub{ text-align:center; color:var(--muted); margin:0 auto 1.5rem; max-width:960px; line-height:1.45; }
+    a{ color:var(--blue); text-decoration:none; } a:hover{ text-decoration:underline; }
+
+    .toolbar{ max-width:1120px; margin:0 auto 1.25rem; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1rem; display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:.75rem; align-items:end; box-shadow:0 0 12px rgba(255,255,255,.08); }
+    label{ display:block; color:var(--muted); font-size:.85rem; margin-bottom:.35rem; }
+    select,input{ width:100%; background:#151515; color:var(--text); border:1px solid #444; border-radius:9px; padding:.75rem; font-size:1rem; outline:none; }
+    select:focus,input:focus{ border-color:var(--blue); }
+    button{ background:var(--tile); border:1px solid #444; color:var(--blue); font-size:1rem; padding:.75rem 1rem; border-radius:9px; cursor:pointer; transition:.2s ease; white-space:nowrap; }
+    button:hover{ background:var(--blue); color:var(--bg); }
+
+    .summary{ max-width:1120px; margin:0 auto 1.25rem; display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem; }
+    .card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1rem; box-shadow:0 0 12px rgba(255,255,255,.06); }
+    .card .label{ color:var(--muted); font-size:.85rem; margin-bottom:.35rem; }
+    .card .value{ font-size:1.45rem; font-weight:700; color:#fff; }
+
+    .artist-list{ max-width:1120px; margin:0 auto; }
+    .artist-row{ display:grid; grid-template-columns:70px minmax(180px, 1.25fr) repeat(4, minmax(110px, .75fr)); gap:.75rem; align-items:center; background:var(--tile); border-left:8px solid #555; border-radius:10px; margin:.85rem 0; padding:1rem; box-shadow:0 0 10px rgba(255,255,255,.04); }
+    .artist-row.top1{ border-color:var(--gold); }
+    .artist-row.top10{ border-color:var(--blue); }
+    .rank{ font-size:1.45rem; font-weight:800; color:#fff; text-align:center; }
+    .artist-name{ font-size:1.25rem; font-weight:700; }
+    .artist-sub{ color:var(--muted); font-size:.9rem; margin-top:.25rem; }
+    .metric{ text-align:right; }
+    .metric .m-label{ color:var(--muted); font-size:.75rem; text-transform:uppercase; letter-spacing:.03em; }
+    .metric .m-value{ color:#fff; font-weight:700; margin-top:.25rem; }
+    .badge{ display:inline-block; border:1px solid #444; background:#1b1b1b; border-radius:999px; padding:.15rem .5rem; font-size:.75rem; color:#bbb; margin:.15rem .2rem .15rem 0; }
+    .badge.lead{ color:var(--green); border-color:#285f3a; }
+    .badge.feature{ color:var(--gold); border-color:#6b5600; }
+    .empty,.debug{ max-width:1120px; margin:1rem auto; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:1rem; color:var(--muted); }
+    .debug strong{ color:#fff; }
+    .small-note{ max-width:1120px; margin:1rem auto 0; color:var(--muted); font-size:.9rem; text-align:center; line-height:1.4; }
+
+    @media(max-width:920px){
+      body{ padding:1rem; } h1{ font-size:2.2rem; }
+      .toolbar{ grid-template-columns:1fr; }
+      .summary{ grid-template-columns:repeat(2, 1fr); }
+      .artist-row{ grid-template-columns:50px 1fr; gap:.75rem; }
+      .metric{ text-align:left; background:#202020; border-radius:8px; padding:.65rem; }
+      .artist-row .metric{ grid-column:auto; }
+    }
+    @media(max-width:520px){ .summary{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <h1>Top Artists</h1>
+  <p class="sub">
+    Top 50 artist leaderboard generated from <strong>weekdata.js</strong>. This version follows the attached certification page logic:
+    it picks the same weekly field order, detects Album/EP vs Single/Track, then converts raw sales using <strong>×1,750 for singles/tracks</strong> and <strong>×500 for albums/EPs</strong>.
+  </p>
+
+  <div class="toolbar">
+    <div>
+      <label for="yearSelect">Year</label>
+      <select id="yearSelect"></select>
+    </div>
+    <div>
+      <label for="creditMode">Credits</label>
+      <select id="creditMode">
+        <option value="all">Lead + Features</option>
+        <option value="lead">Lead only</option>
+        <option value="feature">Features only</option>
+      </select>
+    </div>
+    <div>
+      <label for="searchBox">Search inside Top 50</label>
+      <input id="searchBox" type="search" placeholder="Type artist name..." />
+    </div>
+    <button id="exportBtn">Export CSV</button>
+  </div>
+
+  <div class="summary" id="summary"></div>
+  <div class="debug" id="debugBox"></div>
+  <div class="artist-list" id="artistList"></div>
+  <p class="small-note">
+    Hard limit: the ranked list is cut to exactly 50 before rendering. Search only filters inside those 50. 
+    Sales That Year = weekly raw chart value × the correct multiplier for each entry. Sales To Date = cumulative artist total up to the selected year.
+  </p>
+
+  <script src="weekdata.js"></script>
+  <script>
+    // ───────────────── CONFIG copied from your certification logic ─────────────────
+    const WEEK_ONE_START = new Date(2018, 1, 23); // 23 Feb 2018
+    const UNITS_PER_SALE_TRACK = 1750;
+    const UNITS_PER_SALE_ALBUM = 500;
+    const TOP_LIMIT = 50;
+    const EPS = 0.000001;
+
+    // Field priority exactly like your Weekly Song Certifications page.
+    const WEEKLY_FIELDS = ['sales','units','weeklySales','weekSales','week_units','weekUnits','thisWeekSales','points'];
+    const RANK_FIELDS = ['rank','position','chartPosition','thisWeek','currentRank','pos'];
+
+    // Force type per Title|Artist if your data needs manual corrections.
+    // Values: "album" or "single".
+    const FORCE_TYPE = {
+      // "midnights|taylor swift": "album",
+      // "drivers license|olivia rodrigo": "single",
+    };
+
+    function num(x){ const n = Number(String(x ?? '').replace(/,/g,'')); return Number.isFinite(n) ? n : 0; }
+    function pick(obj, fields){ for (const f of fields) if (obj != null && obj[f] != null && obj[f] !== '') return obj[f]; return undefined; }
+    function cleanName(s){ return String(s || '').replace(/\s+/g,' ').replace(/^[,;&\s]+|[,;&\s]+$/g,'').trim(); }
+    function canonicalize(str){
+      return String(str || '')
+        .toLowerCase()
+        .replace(/\s+/g,' ')
+        .replace(/[’‘']/g,"'")
+        .replace(/&/g,'and')
+        .replace(/\s*\((feat\.|ft\.|featuring|with)[^)]+\)/g,'')
+        .replace(/\s*-\s*(feat\.|ft\.|featuring|with)\s.+$/,'')
+        .trim();
+    }
+    function canonicalName(str){ return cleanName(str).toLowerCase().replace(/[’‘]/g,"'").replace(/&/g,'and'); }
+    function keyFor(title, artist){ return `${canonicalize(title)}|${canonicalize(artist)}`; }
+    function songKey(title, artist){ return `${canonicalize(title)}|${canonicalName(artist)}`; }
+
+    function normalizeFormat(entry){
+      const raw = (entry?.type ?? entry?.format ?? entry?.releaseType ?? '').toString().toLowerCase().trim();
+      if (/\b(lp|long\s*play|album|mixtape|compilation|soundtrack)\b/.test(raw)) return 'album';
+      if (/\b(ep)\b/.test(raw)) return 'ep';
+      if (/\b(single|song|track)\b/.test(raw)) return 'single';
+      return '';
+    }
+
+    function isAlbumEntry(entry){
+      if (entry?.isAlbum === true) return true;
+      if (entry?.isSingle === true) return false;
+      if (entry?.album === true) return true;
+      if (entry?.single === true) return false;
+
+      const k = keyFor(entry?.title, entry?.artist);
+      if (FORCE_TYPE[k] === 'album') return true;
+      if (FORCE_TYPE[k] === 'single') return false;
+
+      const fmt = normalizeFormat(entry);
+      if (fmt === 'album') return true;
+      if (fmt === 'single') return false;
+      if (fmt === 'ep') return true;
+
+      if ('albumUnits' in entry || 'albumSales' in entry) return true;
+
+      const tracks = Array.isArray(entry?.tracks) ? entry.tracks : Array.isArray(entry?.tracklist) ? entry.tracklist : null;
+      if (tracks && tracks.length >= 5) return true;
+      if (tracks && tracks.length >= 2) return true;
+      if (tracks && tracks.length === 1) return false;
+
+      const hasISRC = typeof entry?.isrc === 'string' && entry.isrc.trim();
+      const hasUPC = typeof entry?.upc === 'string' && entry.upc.trim();
+      const discs = Number(entry?.discs || entry?.discCount || 0);
+      const minutes = Number(entry?.lengthMinutes || 0);
+      if (discs >= 2) return true;
+      if (minutes >= 20) return true;
+      if (hasUPC && !hasISRC) return true;
+      if (hasISRC && !hasUPC) return false;
+
+      const title = String(entry?.title || '').toLowerCase();
+      if (/\b(deluxe|expanded|anniversary|special edition)\b/.test(title)) return true;
+
+      return false;
+    }
+
+    function getEntryUnits(entry){
+      const raw = num(pick(entry, WEEKLY_FIELDS));
+      const multiplier = isAlbumEntry(entry) ? UNITS_PER_SALE_ALBUM : UNITS_PER_SALE_TRACK;
+      return raw * multiplier;
+    }
+
+    function getWeekStart(weekNum){ const d = new Date(WEEK_ONE_START); d.setDate(d.getDate() + (Number(weekNum)-1)*7); return d; }
+    function getYearForWeek(weekNum){ return getWeekStart(weekNum).getFullYear(); }
+    function getRank(entry, index){
+      const picked = pick(entry, RANK_FIELDS);
+      const r = picked !== undefined ? Number(picked) : index + 1;
+      return Number.isFinite(r) && r > 0 ? r : index + 1;
+    }
+    function fmt(n){
+      if(n >= 1e9) return (n/1e9).toFixed(2).replace(/\.00$/,'') + 'B';
+      if(n >= 1e6) return (n/1e6).toFixed(2).replace(/\.00$/,'') + 'M';
+      if(n >= 1e3) return (n/1e3).toFixed(1).replace(/\.0$/,'') + 'K';
+      return Math.round(n).toLocaleString();
+    }
+
+    function splitSimpleArtists(text){
+      return String(text || '')
+        .replace(/\s+and\s+/ig, ',')
+        .split(/,|;|\s*&\s*|\s+\+\s+|\s+x\s+/i)
+        .map(cleanName)
+        .filter(Boolean);
+    }
+
+    // Feature extractor supports artist field and title field.
+    function parseCredits(entry){
+      const fullArtist = cleanName(entry?.artist || entry?.artists || '');
+      const title = cleanName(entry?.title || entry?.song || '');
+      let baseArtist = fullArtist;
+      const featureParts = [];
+
+      // Artist field examples: "Ariana Grande feat. Nicki Minaj", "Drake with Future"
+      baseArtist = baseArtist.replace(/\s+(feat\.?|ft\.?|featuring|with)\s+(.+)$/i, (_, __, guests) => {
+        featureParts.push(guests);
+        return '';
+      }).trim();
+
+      // Title field examples: "Song (feat. Guest)", "Song - ft. Guest"
+      const titleFeatureRegex = /(?:\(|\[|\{|\s-|\s)(?:feat\.?|ft\.?|featuring|with)\s+([^\)\]\}\-]+)/ig;
+      let m;
+      while((m = titleFeatureRegex.exec(title)) !== null){ featureParts.push(m[1]); }
+
+      const leads = splitSimpleArtists(baseArtist);
+      const features = featureParts.flatMap(splitSimpleArtists);
+      const map = new Map();
+      leads.forEach(name => { if(!map.has(canonicalName(name))) map.set(canonicalName(name), { name, role:'lead' }); });
+      features.forEach(name => {
+        const key = canonicalName(name);
+        if(!key || map.has(key)) return;
+        map.set(key, { name, role:'feature' });
+      });
+      return Array.from(map.values());
+    }
+
+    function buildArtistStats(){
+      const wk = (typeof weekData === 'object' && weekData) ? weekData : {};
+      const weeks = Object.keys(wk).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
+      const stats = Object.create(null);
+      const years = new Set();
+      const debug = { weeks:weeks.length, entries:0, artistCredits:0, albumEntries:0, singleEntries:0, zeroSalesEntries:0 };
+
+      function ensureArtist(name){
+        const key = canonicalName(name);
+        if(!stats[key]){
+          stats[key] = {
+            name,
+            totalSales:0,
+            yearlySales:Object.create(null),
+            leadSales:0,
+            featureSales:0,
+            yearlyLeadSales:Object.create(null),
+            yearlyFeatureSales:Object.create(null),
+            songs:new Set(),
+            leadSongs:new Set(),
+            featureSongs:new Set(),
+            yearlySongs:Object.create(null),
+            yearlyLeadSongs:Object.create(null),
+            yearlyFeatureSongs:Object.create(null),
+            numberOnes:new Set(),
+            yearlyNumberOnes:Object.create(null),
+            leadNumberOnes:new Set(),
+            featureNumberOnes:new Set(),
+            yearlyLeadNumberOnes:Object.create(null),
+            yearlyFeatureNumberOnes:Object.create(null)
+          };
+        }
+        return stats[key];
+      }
+
+      function addToYearSet(obj, year, songId){
+        if(!obj[year]) obj[year] = new Set();
+        obj[year].add(songId);
+      }
+
+      weeks.forEach(weekNum => {
+        const year = getYearForWeek(weekNum);
+        years.add(year);
+        const entries = Array.isArray(wk[weekNum]) ? wk[weekNum] : [];
+        const seenThisWeek = new Set();
+
+        entries.forEach((entry, idx) => {
+          debug.entries += 1;
+          const title = cleanName(entry?.title || entry?.song || '');
+          if(!title) return;
+
+          const units = getEntryUnits(entry);
+          if(units <= 0) debug.zeroSalesEntries += 1;
+          if(isAlbumEntry(entry)) debug.albumEntries += 1; else debug.singleEntries += 1;
+
+          const rank = getRank(entry, idx);
+          const credits = parseCredits(entry);
+          if(!credits.length) return;
+
+          credits.forEach(c => {
+            const id = songKey(title, c.name);
+            const dedupeKey = `${weekNum}|${id}|${c.role}`;
+            if(seenThisWeek.has(dedupeKey)) return;
+            seenThisWeek.add(dedupeKey);
+            debug.artistCredits += 1;
+
+            const s = ensureArtist(c.name);
+            s.totalSales += units;
+            s.yearlySales[year] = (s.yearlySales[year] || 0) + units;
+            s.songs.add(id);
+            addToYearSet(s.yearlySongs, year, id);
+
+            if(c.role === 'lead'){
+              s.leadSales += units;
+              s.yearlyLeadSales[year] = (s.yearlyLeadSales[year] || 0) + units;
+              s.leadSongs.add(id);
+              addToYearSet(s.yearlyLeadSongs, year, id);
+            } else {
+              s.featureSales += units;
+              s.yearlyFeatureSales[year] = (s.yearlyFeatureSales[year] || 0) + units;
+              s.featureSongs.add(id);
+              addToYearSet(s.yearlyFeatureSongs, year, id);
+            }
+
+            if(rank === 1){
+              s.numberOnes.add(id);
+              addToYearSet(s.yearlyNumberOnes, year, id);
+              if(c.role === 'lead'){
+                s.leadNumberOnes.add(id);
+                addToYearSet(s.yearlyLeadNumberOnes, year, id);
+              } else {
+                s.featureNumberOnes.add(id);
+                addToYearSet(s.yearlyFeatureNumberOnes, year, id);
+              }
+            }
+          });
+        });
+      });
+
+      return { artists:Object.values(stats), years:Array.from(years).sort((a,b)=>b-a), weeks, debug };
+    }
+
+    const data = buildArtistStats();
+    const yearSelect = document.getElementById('yearSelect');
+    const creditMode = document.getElementById('creditMode');
+    const searchBox = document.getElementById('searchBox');
+    const artistList = document.getElementById('artistList');
+    const summary = document.getElementById('summary');
+    const debugBox = document.getElementById('debugBox');
+    let currentRows = [];
+
+    function initYears(){
+      yearSelect.innerHTML = '<option value="all">All Time</option>' + data.years.map(y => `<option value="${y}">${y}</option>`).join('');
+    }
+    function modeSalesTotal(a, mode){ if(mode === 'lead') return a.leadSales; if(mode === 'feature') return a.featureSales; return a.totalSales; }
+    function modeSalesYear(a, year, mode){ if(mode === 'lead') return a.yearlyLeadSales[year] || 0; if(mode === 'feature') return a.yearlyFeatureSales[year] || 0; return a.yearlySales[year] || 0; }
+    function salesToDateFor(a, selectedYear, mode){
+      if(selectedYear === 'all') return modeSalesTotal(a, mode);
+      const y = Number(selectedYear);
+      return data.years.filter(year => year <= y).reduce((sum, year) => sum + modeSalesYear(a, year, mode), 0);
+    }
+    function setSize(obj, year){ return obj[year]?.size || 0; }
+    function topSongsCount(a, year, mode){
+      if(year === 'all'){
+        if(mode === 'lead') return a.leadSongs.size;
+        if(mode === 'feature') return a.featureSongs.size;
+        return a.songs.size;
+      }
+      if(mode === 'lead') return setSize(a.yearlyLeadSongs, year);
+      if(mode === 'feature') return setSize(a.yearlyFeatureSongs, year);
+      return setSize(a.yearlySongs, year);
+    }
+    function numberOnesCount(a, year, mode){
+      if(year === 'all'){
+        if(mode === 'lead') return a.leadNumberOnes.size;
+        if(mode === 'feature') return a.featureNumberOnes.size;
+        return a.numberOnes.size;
+      }
+      if(mode === 'lead') return setSize(a.yearlyLeadNumberOnes, year);
+      if(mode === 'feature') return setSize(a.yearlyFeatureNumberOnes, year);
+      return setSize(a.yearlyNumberOnes, year);
+    }
+
+    function buildRankedRows(){
+      const selectedYear = yearSelect.value;
+      const mode = creditMode.value;
+      return data.artists.map(a => {
+        const salesYear = selectedYear === 'all' ? modeSalesTotal(a, mode) : modeSalesYear(a, selectedYear, mode);
+        return {
+          artist:a,
+          name:a.name,
+          salesYear,
+          salesToDate:salesToDateFor(a, selectedYear, mode),
+          topSongs:topSongsCount(a, selectedYear, mode),
+          numberOnes:numberOnesCount(a, selectedYear, mode),
+          leadCount:selectedYear === 'all' ? a.leadSongs.size : setSize(a.yearlyLeadSongs, selectedYear),
+          featureCount:selectedYear === 'all' ? a.featureSongs.size : setSize(a.yearlyFeatureSongs, selectedYear)
+        };
+      })
+      .filter(r => r.salesYear > 0 || r.topSongs > 0 || r.numberOnes > 0)
+      .sort((a,b) =>
+        b.salesYear - a.salesYear ||
+        b.salesToDate - a.salesToDate ||
+        b.numberOnes - a.numberOnes ||
+        b.topSongs - a.topSongs ||
+        a.name.localeCompare(b.name)
+      )
+      .map((r, idx) => ({ ...r, realRank: idx + 1 }));
+    }
+
+    function getRows(){
+      const q = canonicalName(searchBox.value);
+      const top50 = buildRankedRows().slice(0, TOP_LIMIT);
+      return top50.filter(r => !q || canonicalName(r.name).includes(q));
+    }
+
+    function renderSummary(rows){
+      const totalSales = rows.reduce((s,r)=>s+r.salesYear,0);
+      const totalToDate = rows.reduce((s,r)=>s+r.salesToDate,0);
+      const totalSongs = rows.reduce((s,r)=>s+r.topSongs,0);
+      const totalOnes = rows.reduce((s,r)=>s+r.numberOnes,0);
+      summary.innerHTML = `
+        <div class="card"><div class="label">Artists Shown</div><div class="value">${rows.length.toLocaleString()} / ${TOP_LIMIT}</div></div>
+        <div class="card"><div class="label">Sales That Year</div><div class="value">${fmt(totalSales)}</div></div>
+        <div class="card"><div class="label">Sales To Date</div><div class="value">${fmt(totalToDate)}</div></div>
+        <div class="card"><div class="label">Top Songs / #1 Songs</div><div class="value">${totalSongs.toLocaleString()} / ${totalOnes.toLocaleString()}</div></div>
+      `;
+      debugBox.innerHTML = `
+        <strong>Data check:</strong>
+        ${data.debug.weeks.toLocaleString()} weeks loaded ·
+        ${data.debug.entries.toLocaleString()} entries scanned ·
+        ${data.debug.artistCredits.toLocaleString()} artist credits counted ·
+        ${data.debug.singleEntries.toLocaleString()} single/track entries ×1,750 ·
+        ${data.debug.albumEntries.toLocaleString()} album/EP entries ×500 ·
+        ${data.debug.zeroSalesEntries.toLocaleString()} zero-sales entries.
+      `;
+    }
+
+    function render(){
+      currentRows = getRows();
+      renderSummary(currentRows);
+      if(!currentRows.length){
+        artistList.innerHTML = `<div class="empty">No artists found. Confirm that <strong>weekdata.js</strong> is loaded and includes title, artist and sales fields.</div>`;
+        return;
+      }
+      artistList.innerHTML = currentRows.map((r, i) => {
+        const cls = r.realRank === 1 ? 'top1' : r.realRank <= 10 ? 'top10' : '';
+        const artistLink = `artist.html?name=${encodeURIComponent(r.name)}`;
+        return `
+          <div class="artist-row ${cls}" data-rank="${r.realRank}">
+            <div class="rank">#${r.realRank}</div>
+            <div>
+              <div class="artist-name"><a href="${artistLink}">${r.name}</a></div>
+              <div class="artist-sub">
+                <span class="badge lead">Lead songs: ${r.leadCount}</span>
+                <span class="badge feature">Feature songs: ${r.featureCount}</span>
+              </div>
+            </div>
+            <div class="metric"><div class="m-label">Sales That Year</div><div class="m-value">${fmt(r.salesYear)}</div></div>
+            <div class="metric"><div class="m-label">Sales To Date</div><div class="m-value">${fmt(r.salesToDate)}</div></div>
+            <div class="metric"><div class="m-label">Top Songs</div><div class="m-value">${r.topSongs.toLocaleString()}</div></div>
+            <div class="metric"><div class="m-label">#1 Songs</div><div class="m-value">${r.numberOnes.toLocaleString()}</div></div>
+          </div>`;
+      }).join('');
+
+      // Final hard cap after DOM render.
+      Array.from(artistList.querySelectorAll('.artist-row')).slice(TOP_LIMIT).forEach(row => row.remove());
+    }
+
+    function exportCSV(){
+      const header = ['Rank','Artist','Sales That Year','Sales To Date','Number of Top Songs','Number of #1 Songs','Lead Songs','Feature Songs'];
+      const lines = [header.join(',')].concat(currentRows.slice(0, TOP_LIMIT).map(r => [
+        r.realRank, r.name, Math.round(r.salesYear), Math.round(r.salesToDate), r.topSongs, r.numberOnes, r.leadCount, r.featureCount
+      ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')));
+      const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const yr = yearSelect.value === 'all' ? 'all_time' : yearSelect.value;
+      a.href = url; a.download = `top_artists_${yr}_top50.csv`; a.click(); URL.revokeObjectURL(url);
+    }
+
+    initYears();
+    [yearSelect, creditMode].forEach(el => el.addEventListener('change', render));
+    searchBox.addEventListener('input', render);
+    document.getElementById('exportBtn').addEventListener('click', exportCSV);
+    render();
+  </script>
+</body>
+</html>
