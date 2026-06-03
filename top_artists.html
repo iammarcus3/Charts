@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top Artists</title>
+  <style>
+    :root{
+      --bg:#121212; --panel:#1e1e1e; --tile:#2a2a2a; --line:#333; --text:#f0f0f0;
+      --muted:#aaa; --blue:#66ccff; --gold:#ffd166; --green:#7ee787; --red:#ff7b72;
+    }
+    *{ box-sizing:border-box; }
+    body{ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:var(--bg); color:var(--text); margin:0; padding:2rem; }
+    h1{ text-align:center; font-size:3rem; margin:0 0 .5rem; color:#fff; }
+    .sub{ text-align:center; color:var(--muted); margin:0 auto 1.5rem; max-width:900px; }
+    a{ color:var(--blue); text-decoration:none; } a:hover{ text-decoration:underline; }
+
+    .toolbar{ max-width:1100px; margin:0 auto 1.25rem; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1rem; display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:.75rem; align-items:end; box-shadow:0 0 12px rgba(255,255,255,.08); }
+    label{ display:block; color:var(--muted); font-size:.85rem; margin-bottom:.35rem; }
+    select,input{ width:100%; background:#151515; color:var(--text); border:1px solid #444; border-radius:9px; padding:.75rem; font-size:1rem; outline:none; }
+    select:focus,input:focus{ border-color:var(--blue); }
+    button{ background:var(--tile); border:1px solid #444; color:var(--blue); font-size:1rem; padding:.75rem 1rem; border-radius:9px; cursor:pointer; transition:.2s ease; white-space:nowrap; }
+    button:hover{ background:var(--blue); color:var(--bg); }
+
+    .summary{ max-width:1100px; margin:0 auto 1.25rem; display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem; }
+    .card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1rem; box-shadow:0 0 12px rgba(255,255,255,.06); }
+    .card .label{ color:var(--muted); font-size:.85rem; margin-bottom:.35rem; }
+    .card .value{ font-size:1.6rem; font-weight:700; color:#fff; }
+
+    .artist-list{ max-width:1100px; margin:0 auto; }
+    .artist-row{ display:grid; grid-template-columns:72px minmax(180px, 1.25fr) repeat(4, minmax(110px, .75fr)); gap:.75rem; align-items:center; background:var(--tile); border-left:8px solid #555; border-radius:10px; margin:.85rem 0; padding:1rem; box-shadow:0 0 10px rgba(255,255,255,.04); }
+    .artist-row.top1{ border-color:var(--gold); }
+    .artist-row.top10{ border-color:var(--blue); }
+    .rank{ font-size:1.45rem; font-weight:800; color:#fff; text-align:center; }
+    .artist-name{ font-size:1.25rem; font-weight:700; }
+    .artist-sub{ color:var(--muted); font-size:.9rem; margin-top:.25rem; }
+    .metric{ text-align:right; }
+    .metric .m-label{ color:var(--muted); font-size:.75rem; text-transform:uppercase; letter-spacing:.03em; }
+    .metric .m-value{ color:#fff; font-weight:700; margin-top:.25rem; }
+    .badge{ display:inline-block; border:1px solid #444; background:#1b1b1b; border-radius:999px; padding:.15rem .5rem; font-size:.75rem; color:#bbb; margin:.15rem .2rem .15rem 0; }
+    .badge.lead{ color:var(--green); border-color:#285f3a; }
+    .badge.feature{ color:var(--gold); border-color:#6b5600; }
+    .empty{ max-width:900px; margin:2rem auto; background:var(--panel); border-radius:12px; padding:2rem; text-align:center; color:var(--muted); }
+    .small-note{ max-width:1100px; margin:1rem auto 0; color:var(--muted); font-size:.9rem; text-align:center; }
+
+    @media(max-width:900px){
+      body{ padding:1rem; } h1{ font-size:2.2rem; }
+      .toolbar{ grid-template-columns:1fr; }
+      .summary{ grid-template-columns:repeat(2, 1fr); }
+      .artist-row{ grid-template-columns:50px 1fr; gap:.75rem; }
+      .metric{ text-align:left; background:#202020; border-radius:8px; padding:.65rem; }
+      .artist-row .metric{ grid-column:auto; }
+    }
+    @media(max-width:520px){ .summary{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <h1>Top Artists</h1>
+  <p class="sub">Artist leaderboard generated from <strong>weekdata.js</strong>. Features are included automatically from artist credits and title credits.</p>
+
+  <div class="toolbar">
+    <div>
+      <label for="yearSelect">Year</label>
+      <select id="yearSelect"></select>
+    </div>
+    <div>
+      <label for="creditMode">Credits</label>
+      <select id="creditMode">
+        <option value="all">Lead + Features</option>
+        <option value="lead">Lead only</option>
+        <option value="feature">Features only</option>
+      </select>
+    </div>
+    <div>
+      <label for="searchBox">Search artist</label>
+      <input id="searchBox" type="search" placeholder="Type artist name..." />
+    </div>
+    <button id="exportBtn">Export CSV</button>
+  </div>
+
+  <div class="summary" id="summary"></div>
+  <div class="artist-list" id="artistList"></div>
+  <p class="small-note">Sales That Year = sum of weekly sales in the selected year. Sales To Date = career total up to the end of the selected year. #1 Songs are counted using rank/position fields, or the song's array position when no rank field exists.</p>
+
+  <script src="weekdata.js"></script>
+  <script>
+    // ───────────────── CONFIG ─────────────────
+    const WEEK_ONE_START = new Date(2018, 1, 23); // 23 Feb 2018, Friday
+    const WEEKLY_FIELDS = ['sales','units','weeklySales','weekSales','week_units','weekUnits','thisWeekSales','points'];
+    const RANK_FIELDS = ['rank','position','chartPosition','thisWeek','currentRank','pos'];
+    const FEATURE_REGEX = /(?:\(|\[|\{|\s|-)*(?:feat\.?|ft\.?|featuring|with|x|&)(?:\s+)([^\)\]\}\-]+)/ig;
+
+    function num(x){ const n = Number(String(x ?? '').replace(/,/g,'')); return Number.isFinite(n) ? n : 0; }
+    function pick(obj, fields){ for(const f of fields){ if(obj && obj[f] != null && obj[f] !== '') return obj[f]; } return undefined; }
+    function cleanName(s){ return String(s || '').replace(/\s+/g,' ').replace(/^[,;&\s]+|[,;&\s]+$/g,'').trim(); }
+    function canonical(s){ return cleanName(s).toLowerCase().replace(/[’‘]/g,"'").replace(/&/g,'and'); }
+    function fmt(n){
+      if(n >= 1e9) return (n/1e9).toFixed(2).replace(/\.00$/,'') + 'B';
+      if(n >= 1e6) return (n/1e6).toFixed(2).replace(/\.00$/,'') + 'M';
+      if(n >= 1e3) return (n/1e3).toFixed(1).replace(/\.0$/,'') + 'K';
+      return Math.round(n).toLocaleString();
+    }
+    function getWeekStart(weekNum){ const d = new Date(WEEK_ONE_START); d.setDate(d.getDate() + (Number(weekNum)-1)*7); return d; }
+    function getYearForWeek(weekNum){ return getWeekStart(weekNum).getFullYear(); }
+    function titleKey(title, artist){ return canonical(title) + '|' + canonical(artist); }
+
+    function splitSimpleArtists(text){
+      return String(text || '')
+        .replace(/\s+and\s+/ig, ',')
+        .split(/,|;|\s*&\s*|\s+\+\s+|\s+x\s+/i)
+        .map(cleanName)
+        .filter(Boolean);
+    }
+
+    function parseCredits(entry){
+      const fullArtist = cleanName(entry?.artist || entry?.artists || '');
+      const title = cleanName(entry?.title || entry?.song || '');
+      let baseArtist = fullArtist;
+      const featureParts = [];
+
+      // Features inside artist field: "Artist feat. Guest", "Artist ft Guest", "Artist with Guest"
+      baseArtist = baseArtist.replace(/\s+(feat\.?|ft\.?|featuring|with)\s+(.+)$/i, (_, __, guests) => {
+        featureParts.push(guests);
+        return '';
+      }).trim();
+
+      // Features inside title field: "Song (feat. Guest)"
+      let m;
+      FEATURE_REGEX.lastIndex = 0;
+      while((m = FEATURE_REGEX.exec(title)) !== null){ featureParts.push(m[1]); }
+
+      const leads = splitSimpleArtists(baseArtist);
+      const features = featureParts.flatMap(splitSimpleArtists);
+      const map = new Map();
+
+      leads.forEach(name => { if(!map.has(canonical(name))) map.set(canonical(name), { name, role:'lead' }); });
+      features.forEach(name => {
+        const key = canonical(name);
+        if(!key || map.has(key)) return;
+        map.set(key, { name, role:'feature' });
+      });
+      return Array.from(map.values());
+    }
+
+    function getRank(entry, index){
+      const picked = pick(entry, RANK_FIELDS);
+      const r = picked !== undefined ? Number(picked) : index + 1;
+      return Number.isFinite(r) && r > 0 ? r : index + 1;
+    }
+
+    function buildArtistStats(){
+      const wk = (typeof weekData === 'object' && weekData) ? weekData : {};
+      const weeks = Object.keys(wk).map(Number).sort((a,b)=>a-b);
+      const stats = Object.create(null);
+      const years = new Set();
+
+      function ensureArtist(name){
+        const key = canonical(name);
+        if(!stats[key]){
+          stats[key] = {
+            name, totalSales:0, yearlySales:Object.create(null),
+            songs:new Set(), yearlySongs:Object.create(null),
+            numberOnes:new Set(), yearlyNumberOnes:Object.create(null),
+            leadSongs:new Set(), featureSongs:new Set(),
+            leadSales:0, featureSales:0, yearlyLeadSales:Object.create(null), yearlyFeatureSales:Object.create(null),
+            appearances:0
+          };
+        }
+        return stats[key];
+      }
+
+      weeks.forEach(weekNum => {
+        const year = getYearForWeek(weekNum);
+        years.add(year);
+        const entries = Array.isArray(wk[weekNum]) ? wk[weekNum] : [];
+        const seenSongArtistWeek = new Set();
+
+        entries.forEach((entry, idx) => {
+          const title = cleanName(entry?.title || entry?.song || '');
+          if(!title) return;
+          const sales = num(pick(entry, WEEKLY_FIELDS));
+          const rank = getRank(entry, idx);
+          const credits = parseCredits(entry);
+          if(!credits.length) return;
+
+          credits.forEach(c => {
+            const songId = titleKey(title, c.name);
+            const dedupeKey = weekNum + '|' + songId + '|' + c.role;
+            if(seenSongArtistWeek.has(dedupeKey)) return;
+            seenSongArtistWeek.add(dedupeKey);
+
+            const s = ensureArtist(c.name);
+            s.appearances += 1;
+            s.totalSales += sales;
+            s.yearlySales[year] = (s.yearlySales[year] || 0) + sales;
+            s.songs.add(songId);
+            if(!s.yearlySongs[year]) s.yearlySongs[year] = new Set();
+            s.yearlySongs[year].add(songId);
+
+            if(c.role === 'lead'){
+              s.leadSales += sales;
+              s.yearlyLeadSales[year] = (s.yearlyLeadSales[year] || 0) + sales;
+              s.leadSongs.add(songId);
+            } else {
+              s.featureSales += sales;
+              s.yearlyFeatureSales[year] = (s.yearlyFeatureSales[year] || 0) + sales;
+              s.featureSongs.add(songId);
+            }
+
+            if(rank === 1){
+              s.numberOnes.add(songId);
+              if(!s.yearlyNumberOnes[year]) s.yearlyNumberOnes[year] = new Set();
+              s.yearlyNumberOnes[year].add(songId);
+            }
+          });
+        });
+      });
+
+      return { artists:Object.values(stats), years:Array.from(years).sort((a,b)=>b-a), weeks };
+    }
+
+    const data = buildArtistStats();
+    const yearSelect = document.getElementById('yearSelect');
+    const creditMode = document.getElementById('creditMode');
+    const searchBox = document.getElementById('searchBox');
+    const artistList = document.getElementById('artistList');
+    const summary = document.getElementById('summary');
+    let currentRows = [];
+
+    function initYears(){
+      yearSelect.innerHTML = '<option value="all">All Time</option>' + data.years.map(y => `<option value="${y}">${y}</option>`).join('');
+    }
+
+    function salesToDateFor(artist, selectedYear, mode){
+      if(selectedYear === 'all') return modeSalesTotal(artist, mode);
+      const y = Number(selectedYear);
+      return data.years.filter(year => year <= y).reduce((sum, year) => sum + modeSalesYear(artist, year, mode), 0);
+    }
+    function modeSalesTotal(artist, mode){
+      if(mode === 'lead') return artist.leadSales;
+      if(mode === 'feature') return artist.featureSales;
+      return artist.totalSales;
+    }
+    function modeSalesYear(artist, year, mode){
+      if(mode === 'lead') return artist.yearlyLeadSales[year] || 0;
+      if(mode === 'feature') return artist.yearlyFeatureSales[year] || 0;
+      return artist.yearlySales[year] || 0;
+    }
+    function topSongsCount(artist, year, mode){
+      if(year === 'all'){
+        if(mode === 'lead') return artist.leadSongs.size;
+        if(mode === 'feature') return artist.featureSongs.size;
+        return artist.songs.size;
+      }
+      if(mode === 'all') return (artist.yearlySongs[year]?.size || 0);
+      // For year-specific lead/feature, rebuild from all-time sets intersecting yearly set.
+      const yearly = artist.yearlySongs[year] || new Set();
+      const source = mode === 'lead' ? artist.leadSongs : artist.featureSongs;
+      let count = 0; yearly.forEach(song => { if(source.has(song)) count++; });
+      return count;
+    }
+    function numberOnesCount(artist, year){
+      return year === 'all' ? artist.numberOnes.size : (artist.yearlyNumberOnes[year]?.size || 0);
+    }
+
+    function getRows(){
+      const selectedYear = yearSelect.value;
+      const mode = creditMode.value;
+      const q = canonical(searchBox.value);
+      return data.artists.map(a => {
+        const yearSales = selectedYear === 'all' ? modeSalesTotal(a, mode) : modeSalesYear(a, selectedYear, mode);
+        return {
+          artist:a,
+          name:a.name,
+          salesYear:yearSales,
+          salesToDate:salesToDateFor(a, selectedYear, mode),
+          topSongs:topSongsCount(a, selectedYear, mode),
+          numberOnes:numberOnesCount(a, selectedYear),
+          leadCount:a.leadSongs.size,
+          featureCount:a.featureSongs.size
+        };
+      })
+      .filter(r => r.salesYear > 0 || r.topSongs > 0 || r.numberOnes > 0)
+      .filter(r => !q || canonical(r.name).includes(q))
+      .sort((a,b) => b.salesYear - a.salesYear || b.salesToDate - a.salesToDate || b.numberOnes - a.numberOnes || a.name.localeCompare(b.name));
+    }
+
+    function renderSummary(rows){
+      const totalSales = rows.reduce((s,r)=>s+r.salesYear,0);
+      const totalToDate = rows.reduce((s,r)=>s+r.salesToDate,0);
+      const totalSongs = rows.reduce((s,r)=>s+r.topSongs,0);
+      const totalOnes = rows.reduce((s,r)=>s+r.numberOnes,0);
+      summary.innerHTML = `
+        <div class="card"><div class="label">Artists</div><div class="value">${rows.length.toLocaleString()}</div></div>
+        <div class="card"><div class="label">Sales This Selection</div><div class="value">${fmt(totalSales)}</div></div>
+        <div class="card"><div class="label">Sales To Date</div><div class="value">${fmt(totalToDate)}</div></div>
+        <div class="card"><div class="label">Top Songs / #1 Songs</div><div class="value">${totalSongs.toLocaleString()} / ${totalOnes.toLocaleString()}</div></div>
+      `;
+    }
+
+    function render(){
+      currentRows = getRows();
+      renderSummary(currentRows);
+      if(!currentRows.length){
+        artistList.innerHTML = `<div class="empty">No artists found. Confirm that <strong>weekdata.js</strong> is loaded and includes artist/title/sales fields.</div>`;
+        return;
+      }
+      artistList.innerHTML = currentRows.map((r, i) => {
+        const cls = i === 0 ? 'top1' : i < 10 ? 'top10' : '';
+        const artistLink = `artist.html?name=${encodeURIComponent(r.name)}`;
+        return `
+          <div class="artist-row ${cls}">
+            <div class="rank">#${i+1}</div>
+            <div>
+              <div class="artist-name"><a href="${artistLink}">${r.name}</a></div>
+              <div class="artist-sub">
+                <span class="badge lead">Lead songs: ${r.leadCount}</span>
+                <span class="badge feature">Feature songs: ${r.featureCount}</span>
+              </div>
+            </div>
+            <div class="metric"><div class="m-label">Sales That Year</div><div class="m-value">${fmt(r.salesYear)}</div></div>
+            <div class="metric"><div class="m-label">Sales To Date</div><div class="m-value">${fmt(r.salesToDate)}</div></div>
+            <div class="metric"><div class="m-label">Top Songs</div><div class="m-value">${r.topSongs.toLocaleString()}</div></div>
+            <div class="metric"><div class="m-label">#1 Songs</div><div class="m-value">${r.numberOnes.toLocaleString()}</div></div>
+          </div>`;
+      }).join('');
+    }
+
+    function exportCSV(){
+      const header = ['Rank','Artist','Sales That Year','Sales To Date','Number of Top Songs','Number of #1 Songs','Lead Songs','Feature Songs'];
+      const lines = [header.join(',')].concat(currentRows.map((r,i)=>[
+        i+1, r.name, Math.round(r.salesYear), Math.round(r.salesToDate), r.topSongs, r.numberOnes, r.leadCount, r.featureCount
+      ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')));
+      const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const yr = yearSelect.value === 'all' ? 'all_time' : yearSelect.value;
+      a.href = url; a.download = `top_artists_${yr}.csv`; a.click(); URL.revokeObjectURL(url);
+    }
+
+    initYears();
+    [yearSelect, creditMode].forEach(el => el.addEventListener('change', render));
+    searchBox.addEventListener('input', render);
+    document.getElementById('exportBtn').addEventListener('click', exportCSV);
+    render();
+  </script>
+</body>
+</html>
