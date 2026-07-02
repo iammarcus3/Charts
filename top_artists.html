@@ -40,6 +40,18 @@
     .badge{ display:inline-block; border:1px solid #444; background:#1b1b1b; border-radius:999px; padding:.15rem .5rem; font-size:.75rem; color:#bbb; margin:.15rem .2rem .15rem 0; }
     .badge.lead{ color:var(--green); border-color:#285f3a; }
     .badge.feature{ color:var(--gold); border-color:#6b5600; }
+    .rank-btn{ width:100%; background:transparent; border:0; color:#fff; font-size:1.45rem; font-weight:800; padding:.2rem; cursor:pointer; border-radius:8px; }
+    .rank-btn:hover,.rank-btn:focus{ background:#1b1b1b; color:var(--gold); outline:1px solid #555; }
+    .rank-btn.disabled{ cursor:default; color:#777; }
+    .rank-btn.disabled:hover,.rank-btn.disabled:focus{ background:transparent; color:#777; outline:none; }
+    .artist-item{ margin:.85rem 0; }
+    .artist-item .artist-row{ margin:0; }
+    .ones-panel{ display:none; background:#181818; border:1px solid var(--line); border-top:0; border-radius:0 0 10px 10px; margin:0 .25rem; padding:1rem 1.25rem; box-shadow:0 0 10px rgba(255,255,255,.04); }
+    .artist-item.open .ones-panel{ display:block; }
+    .ones-title{ font-weight:800; color:#fff; margin-bottom:.75rem; }
+    .ones-list{ margin:0; padding-left:1.35rem; color:var(--text); }
+    .ones-list li{ margin:.45rem 0; line-height:1.35; }
+    .ones-date{ color:var(--muted); }
     .empty,.debug{ max-width:1120px; margin:1rem auto; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:1rem; color:var(--muted); }
     .debug strong{ color:#fff; }
     .small-note{ max-width:1120px; margin:1rem auto 0; color:var(--muted); font-size:.9rem; text-align:center; line-height:1.4; }
@@ -51,6 +63,7 @@
       .artist-row{ grid-template-columns:50px 1fr; gap:.75rem; }
       .metric{ text-align:left; background:#202020; border-radius:8px; padding:.65rem; }
       .artist-row .metric{ grid-column:auto; }
+      .ones-panel{ margin:0; }
     }
     @media(max-width:520px){ .summary{ grid-template-columns:1fr; } }
   </style>
@@ -191,6 +204,12 @@
       if(n >= 1e3) return (n/1e3).toFixed(1).replace(/\.0$/,'') + 'K';
       return Math.round(n).toLocaleString();
     }
+    function escapeHTML(value){
+      return String(value ?? '').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    }
+    function formatDate(d){
+      return new Intl.DateTimeFormat('en-GB', { day:'2-digit', month:'short', year:'numeric' }).format(d);
+    }
 
     function splitSimpleArtists(text){
       return String(text || '')
@@ -259,7 +278,8 @@
             leadNumberOnes:new Set(),
             featureNumberOnes:new Set(),
             yearlyLeadNumberOnes:Object.create(null),
-            yearlyFeatureNumberOnes:Object.create(null)
+            yearlyFeatureNumberOnes:Object.create(null),
+            numberOneDetails:new Map()
           };
         }
         return stats[key];
@@ -317,6 +337,16 @@
             if(rank === 1){
               s.numberOnes.add(id);
               addToYearSet(s.yearlyNumberOnes, year, id);
+              const existingOne = s.numberOneDetails.get(id);
+              if(!existingOne || weekNum < existingOne.weekNum){
+                s.numberOneDetails.set(id, {
+                  id,
+                  title,
+                  role:c.role,
+                  weekNum,
+                  date:getWeekStart(weekNum)
+                });
+              }
               if(c.role === 'lead'){
                 s.leadNumberOnes.add(id);
                 addToYearSet(s.yearlyLeadNumberOnes, year, id);
@@ -371,6 +401,31 @@
       if(mode === 'lead') return setSize(a.yearlyLeadNumberOnes, year);
       if(mode === 'feature') return setSize(a.yearlyFeatureNumberOnes, year);
       return setSize(a.yearlyNumberOnes, year);
+    }
+    function numberOneDetails(a, year, mode){
+      const selectedYear = year === 'all' ? null : Number(year);
+      return Array.from(a.numberOneDetails.values())
+        .filter(item => {
+          if(mode !== 'all' && item.role !== mode) return false;
+          if(selectedYear && getYearForWeek(item.weekNum) !== selectedYear) return false;
+          return true;
+        })
+        .sort((x,y) => x.weekNum - y.weekNum || x.title.localeCompare(y.title));
+    }
+    function renderNumberOnePanel(r){
+      const selectedYear = yearSelect.value;
+      const mode = creditMode.value;
+      const ones = numberOneDetails(r.artist, selectedYear, mode);
+      if(!ones.length) return `<div class="ones-panel"><div class="ones-title">${escapeHTML(r.name)} has no #1 songs for this view.</div></div>`;
+      const yearText = selectedYear === 'all' ? 'All Time' : selectedYear;
+      const modeText = mode === 'all' ? 'Lead + Features' : mode === 'lead' ? 'Lead only' : 'Features only';
+      return `
+        <div class="ones-panel" id="ones-panel-${r.realRank}">
+          <div class="ones-title">${escapeHTML(r.name)} — ${ones.length} #1 ${ones.length === 1 ? 'song' : 'songs'} · ${yearText} · ${modeText}</div>
+          <ol class="ones-list">
+            ${ones.map(item => `<li><strong>${escapeHTML(item.title)}</strong> <span class="ones-date">— went #1 on ${formatDate(item.date)}</span></li>`).join('')}
+          </ol>
+        </div>`;
     }
 
     function buildRankedRows(){
@@ -438,25 +493,40 @@
       artistList.innerHTML = currentRows.map((r, i) => {
         const cls = r.realRank === 1 ? 'top1' : r.realRank <= 10 ? 'top10' : '';
         const artistLink = `artist.html?name=${encodeURIComponent(r.name)}`;
+        const safeName = escapeHTML(r.name);
+        const hasOnes = r.numberOnes > 0;
         return `
-          <div class="artist-row ${cls}" data-rank="${r.realRank}">
-            <div class="rank">#${r.realRank}</div>
-            <div>
-              <div class="artist-name"><a href="${artistLink}">${r.name}</a></div>
-              <div class="artist-sub">
-                <span class="badge lead">Lead songs: ${r.leadCount}</span>
-                <span class="badge feature">Feature songs: ${r.featureCount}</span>
+          <div class="artist-item" data-rank="${r.realRank}">
+            <div class="artist-row ${cls}">
+              <div class="rank">
+                <button class="rank-btn ${hasOnes ? '' : 'disabled'}" type="button" ${hasOnes ? `aria-expanded="false" aria-controls="ones-panel-${r.realRank}" title="Show ${safeName}'s #1 songs"` : 'aria-disabled="true" title="No #1 songs in this view"'}>#${r.realRank}</button>
               </div>
+              <div>
+                <div class="artist-name"><a href="${artistLink}">${safeName}</a></div>
+                <div class="artist-sub">
+                  <span class="badge lead">Lead songs: ${r.leadCount}</span>
+                  <span class="badge feature">Feature songs: ${r.featureCount}</span>
+                </div>
+              </div>
+              <div class="metric"><div class="m-label">Sales That Year</div><div class="m-value">${fmt(r.salesYear)}</div></div>
+              <div class="metric"><div class="m-label">Sales To Date</div><div class="m-value">${fmt(r.salesToDate)}</div></div>
+              <div class="metric"><div class="m-label">Top Songs</div><div class="m-value">${r.topSongs.toLocaleString()}</div></div>
+              <div class="metric"><div class="m-label">#1 Songs</div><div class="m-value">${r.numberOnes.toLocaleString()}</div></div>
             </div>
-            <div class="metric"><div class="m-label">Sales That Year</div><div class="m-value">${fmt(r.salesYear)}</div></div>
-            <div class="metric"><div class="m-label">Sales To Date</div><div class="m-value">${fmt(r.salesToDate)}</div></div>
-            <div class="metric"><div class="m-label">Top Songs</div><div class="m-value">${r.topSongs.toLocaleString()}</div></div>
-            <div class="metric"><div class="m-label">#1 Songs</div><div class="m-value">${r.numberOnes.toLocaleString()}</div></div>
+            ${renderNumberOnePanel(r)}
           </div>`;
       }).join('');
 
+      artistList.querySelectorAll('.rank-btn:not(.disabled)').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = btn.closest('.artist-item');
+          const isOpen = item.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(isOpen));
+        });
+      });
+
       // Final hard cap after DOM render.
-      Array.from(artistList.querySelectorAll('.artist-row')).slice(TOP_LIMIT).forEach(row => row.remove());
+      Array.from(artistList.querySelectorAll('.artist-item')).slice(TOP_LIMIT).forEach(row => row.remove());
     }
 
     function exportCSV(){
