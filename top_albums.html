@@ -71,6 +71,7 @@
 </head>
 <body>
   <h1>Top 30 Albums by Sales Per Year</h1>
+
   <label for="yearSelect">Select Year:</label>
   <select id="yearSelect"></select>
 
@@ -90,15 +91,27 @@
   </table>
 
   <script src="weekdata.js"></script>
+
   <script>
     const yearSelect = document.getElementById('yearSelect');
     const tableBody = document.getElementById('albumTable');
 
     function normalizeAlbum(name) {
       if (typeof name !== 'string') return '';
+
       return name
         .toLowerCase()
         .replace(/\s*\(.*?\)|\[.*?]|[-–—_]/g, '')
+        .replace(/[^a-z0-9 ]/g, '')
+        .trim();
+    }
+
+    function normalizeSong(name) {
+      if (typeof name !== 'string') return '';
+
+      return name
+        .toLowerCase()
+        .replace(/\s*\(.*?\)|\[.*?]/g, '')
         .replace(/[^a-z0-9 ]/g, '')
         .trim();
     }
@@ -107,7 +120,7 @@
       return encodeURIComponent(param.replace(/\s+/g, '_'));
     }
 
-    // 🔹 Format numbers with K, M, B
+    // Format numbers with K, M, B
     function formatNumber(n) {
       if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + "B";
       if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
@@ -115,15 +128,20 @@
       return n.toString();
     }
 
-    // ✅ Correct calendar-year resolution (Week 1 = 23 Feb 2018)
-    const weekStartDate = new Date(2018, 1, 23); // month index 1 = Feb
+    // Correct calendar-year resolution
+    // Week 1 = 23 Feb 2018
+    const weekStartDate = new Date(2018, 1, 23);
     const msPerWeek = 7 * 24 * 60 * 60 * 1000;
 
     function getWeekYear(weekNum, entry) {
       if (entry && entry.date) {
         const d = new Date(entry.date);
-        if (!isNaN(d)) return d.getFullYear();
+
+        if (!isNaN(d)) {
+          return d.getFullYear();
+        }
       }
+
       const date = new Date(weekStartDate.getTime() + (weekNum - 1) * msPerWeek);
       return date.getFullYear();
     }
@@ -144,6 +162,7 @@
     });
 
     function getTopAlbums(year) {
+      const selectedYear = parseInt(year);
       const albumMap = new Map();
 
       for (const [weekKey, entries] of Object.entries(weekData)) {
@@ -153,35 +172,49 @@
         for (const entry of entries) {
           if (!entry.album || !entry.artist) continue;
 
-          const key = normalizeAlbum(entry.album) + '___' + entry.artist;
+          const key = normalizeAlbum(entry.album) + '___' + entry.artist.toLowerCase().trim();
+
           const albumInfo = albumMap.get(key) || {
             album: entry.album,
             artist: entry.artist,
             salesThisYear: 0,
             totalSales: 0,
             weeks: 0,
-            peak: entry.rank
+            peak: entry.rank,
+            songsThisYear: new Set()
           };
 
-          // 🔹 Apply multiplier (×500)
+          // Use whichever song/title field exists in your weekdata
+          const songName = entry.song || entry.title || entry.track || entry.name;
+          const normalizedSong = normalizeSong(songName);
+
+          // Apply multiplier ×500
           const weekSales = (entry.sales || 0) * 500;
 
-          // ✅ Only count this year's weeks/sales
-          if (entryYear === parseInt(year)) {
+          // Only count selected year's weeks, sales, and qualifying songs
+          if (entryYear === selectedYear) {
             albumInfo.salesThisYear += weekSales;
             albumInfo.weeks += 1;
+
+            if (normalizedSong) {
+              albumInfo.songsThisYear.add(normalizedSong);
+            }
           }
 
           // Lifetime totals
           albumInfo.totalSales += weekSales;
-          if (entry.rank < albumInfo.peak) albumInfo.peak = entry.rank;
+
+          if (entry.rank < albumInfo.peak) {
+            albumInfo.peak = entry.rank;
+          }
 
           albumMap.set(key, albumInfo);
         }
       }
 
       return [...albumMap.values()]
-        .filter(a => a.salesThisYear > 0)
+        // Minimum 2 different songs from the album must chart in that year
+        .filter(album => album.salesThisYear > 0 && album.songsThisYear.size >= 2)
         .sort((a, b) => b.salesThisYear - a.salesThisYear)
         .slice(0, 30);
     }
@@ -195,6 +228,7 @@
         const artistLink = `artist.html?artist=${encodeParam(album.artist)}`;
 
         const row = document.createElement('tr');
+
         row.innerHTML = `
           <td>${index + 1}</td>
           <td><a href="${albumLink}" target="_blank">${album.album}</a></td>
@@ -204,6 +238,7 @@
           <td class="number">${album.weeks}</td>
           <td class="number">${album.peak}</td>
         `;
+
         tableBody.appendChild(row);
       });
     }
