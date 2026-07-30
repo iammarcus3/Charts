@@ -36,27 +36,27 @@ const MAX_ENTRIES = 200;
 
 // --- Factor tables (EXACT from your Python) ---
 const STREAMS_FACTORS = [
-  [1, 1, 58.50], [2, 2, 46.78], [3, 5, 30.90], [6, 8, 25.90], [9, 13, 28.90],
-  [14, 18, 30.85], [19, 25, 40.90], [26, 30, 58.70], [31, 50, 60.95],
-  [51, 70, 70.90], [71, 85, 85.50], [86, 200, 90.00],
+  [1, 1, 60.50], [2, 2, 50.78], [3, 5, 45.90], [6, 8, 40.90], [9, 13, 30.90],
+  [14, 18, 35.85], [19, 25, 40.90], [26, 30, 58.70], [31, 50, 65.95],
+  [51, 70, 75.90], [71, 85, 90.50], [86, 200, 100.00],
 ];
 const RADIO_FACTORS = [
   [1, 1, 186.90], [2, 2, 450.10], [3, 5, 620.20], [6, 9, 1130.30],
-  [9, 15, 1940.40], [16, 20, 1000.50], [21, 25, 800.60], [26, 30, 750.70],
-  [31, 50, 500.80], [51, 70, 450.90], [71, 85, 200.10], [86, 200, 100.11],
+  [9, 15, 1950.40], [16, 20, 1100.50], [21, 25, 900.60], [26, 30, 850.70],
+  [31, 50, 600.80], [51, 70, 550.90], [71, 85, 300.10], [86, 200, 200.11],
 ];
 function getMultiplierForRank(rank) {
-  if (rank === 1) return 45.45;
-  else if (rank <= 5) return 39.89;
-  else if (rank <= 10) return 37.16;
-  else if (rank <= 20) return 35.99;
-  else if (rank <= 40) return 32.98;
-  else if (rank <= 50) return 30.10;
-  else if (rank <= 60) return 28.78;
-  else if (rank <= 70) return 26.06;
-  else if (rank <= 80) return 23.99;
-  else if (rank <= 100) return 22.99;
-  else return 20.9;
+  if (rank === 1) return 70.45;
+  else if (rank <= 5) return 60.89;
+  else if (rank <= 10) return 55.16;
+  else if (rank <= 20) return 65.99;
+  else if (rank <= 40) return 60.98;
+  else if (rank <= 50) return 55.10;
+  else if (rank <= 60) return 50.78;
+  else if (rank <= 70) return 45.06;
+  else if (rank <= 80) return 40.99;
+  else if (rank <= 100) return 35.99;
+  else return 25.9;
 }
 function getFactor(factors, weeks) {
   for (const [s, e, f] of factors) if (s <= weeks && weeks <= e) return f;
@@ -70,8 +70,8 @@ function calcPoints(sales, streams, radio, maxSales, maxStreams, maxRadio) {
   if (maxStreams === 0) maxStreams = 1;
   if (maxRadio === 0) maxRadio = 1;
   return Math.round(200 * (
-    0.3 * (sales / maxSales) +
-    0.2 * (streams / maxStreams) +
+    0.2.5 * (sales / maxSales) +
+    0.2.5 * (streams / maxStreams) +
     0.5 * (radio / maxRadio)
   ));
 }
