@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>yourhot100 — Music Charts, Analytics & Plaque Forge</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{--bg:#09090b;--panel:#121214;--panel2:#18181b;--border:#27272a;--muted:#71717a;--text:#f4f4f5;--accent:#a855f7;--accent2:#7c3aed;--cyan:#38bdf8;--green:#34d399;--amber:#fbbf24;--red:#fb7185;--shadow:0 20px 50px rgba(0,0,0,.28);--radius:24px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 15% -10%,rgba(124,58,237,.14),transparent 35%),radial-gradient(circle at 90% 0,rgba(6,182,212,.08),transparent 30%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}button{cursor:pointer}::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#3f3f46;border-radius:99px}::-webkit-scrollbar-track{background:#09090b}
+.nav{position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(63,63,70,.7);background:rgba(9,9,11,.86);backdrop-filter:blur(16px)}.navin{max-width:1280px;margin:auto;height:64px;padding:0 16px;display:flex;align-items:center;gap:12px}.brand{display:flex;align-items:center;gap:12px;min-width:max-content}.brandIcon{width:42px;height:42px;border-radius:16px;background:linear-gradient(135deg,var(--accent),#2563eb);display:grid;place-items:center;box-shadow:0 10px 30px rgba(124,58,237,.3)}.brandIcon svg{animation:spin 8s linear infinite}.brandTitle{font-weight:950;font-family:ui-monospace,monospace;letter-spacing:-.04em;font-size:18px}.brandSub{font-size:11px;color:#a1a1aa}.source,.ranges{background:rgba(24,24,27,.9);border:1px solid var(--border);border-radius:14px}.source{margin-left:auto;padding:7px 10px;display:flex;align-items:center;gap:8px}.source label{font-size:10px;color:#71717a;text-transform:uppercase;font-weight:900;letter-spacing:.08em;white-space:nowrap}.source select{background:transparent;color:#e4e4e7;border:0;outline:0;font-size:12px;font-weight:700}.ranges{padding:4px;display:flex;gap:3px}.ranges button{border:0;background:transparent;color:#a1a1aa;border-radius:9px;padding:7px 9px;font-size:11px;font-weight:900}.ranges button.active{background:#27272a;color:white;box-shadow:inset 0 0 0 1px #3f3f46}.actions{display:flex;gap:7px;align-items:center}.btn{border:1px solid var(--border);background:#18181b;color:#e4e4e7;border-radius:12px;padding:8px 11px;font-size:11px;font-weight:900;display:inline-flex;align-items:center;gap:6px;transition:.18s}.btn:hover{background:#27272a;border-color:#52525b;transform:translateY(-1px)}.btn.amber{background:rgba(245,158,11,.08);color:#fcd34d;border-color:rgba(245,158,11,.28)}.btn.gradient{background:linear-gradient(90deg,var(--accent2),#2563eb);border-color:transparent;color:white}.iconbtn{width:36px;height:36px;padding:0;justify-content:center}.status{width:8px;height:8px;border-radius:50%;background:#71717a}.status.ok{background:#34d399}.status.sync{background:#fbbf24;animation:ping 1s infinite}
+main{max-width:1280px;margin:auto;padding:24px 16px 60px}.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px}.stat,.card{background:linear-gradient(180deg,rgba(24,24,27,.94),rgba(18,18,20,.94));border:1px solid var(--border);box-shadow:var(--shadow)}.stat{padding:16px;border-radius:18px}.statHead{display:flex;justify-content:space-between;color:#a1a1aa;font-size:10px;text-transform:uppercase;font-weight:900;letter-spacing:.08em}.statValue{font:900 26px ui-monospace,monospace;margin-top:7px}.statFoot{font-size:11px;color:#71717a;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stat.click{cursor:pointer;text-align:left;color:inherit}.stat.warn{border-color:rgba(245,158,11,.45);background:linear-gradient(180deg,rgba(69,39,7,.35),rgba(18,18,20,.94))}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.full{grid-column:1/-1}.card{border-radius:var(--radius);padding:24px;position:relative;overflow:hidden}.cardHead{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}.titleRow{display:flex;gap:9px;align-items:center}.titleIcon{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#2563eb);display:grid;place-items:center}.title{font-size:18px;font-weight:950;letter-spacing:-.02em}.subtitle{font-size:12px;color:#a1a1aa;margin-top:2px}.smalltabs{display:flex;gap:3px;background:#18181b;border:1px solid var(--border);padding:4px;border-radius:12px}.smalltabs button{border:0;background:transparent;color:#a1a1aa;border-radius:8px;padding:6px 9px;font-size:10px;font-weight:900}.smalltabs button.active{background:#27272a;color:#fff}
+.table{width:100%;border-collapse:collapse}.table th{color:#71717a;font-size:9px;text-transform:uppercase;letter-spacing:.08em;text-align:left;padding:8px;border-bottom:1px solid #27272a}.table td{padding:10px 8px;border-bottom:1px solid rgba(39,39,42,.65);font-size:12px}.rank{font:900 12px ui-monospace,monospace;color:#71717a;width:35px}.media{display:flex;align-items:center;gap:10px;min-width:0}.art{width:42px;height:42px;border-radius:10px;object-fit:cover;background:#27272a}.media strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.media span{font-size:10px;color:#71717a}.plays{font:900 12px ui-monospace,monospace;text-align:right}.clickrow{cursor:pointer}.clickrow:hover td{background:#18181b}.bar{height:9px;background:#09090b;border:1px solid #27272a;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--accent2),#2563eb);border-radius:inherit;transition:.35s}.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{font-size:10px;font-weight:800;color:#d4d4d8;background:#18181b;border:1px solid #27272a;padding:6px 9px;border-radius:11px}.mutedBox{padding:12px;border-radius:16px;background:rgba(9,9,11,.5);border:1px solid #27272a;color:#a1a1aa;font-size:11px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.metricBox{padding:14px;border-radius:17px;background:rgba(9,9,11,.55);border:1px solid #27272a}.metricLabel{font-size:9px;color:#71717a;text-transform:uppercase;font-weight:900;letter-spacing:.08em}.metricNum{font:900 21px ui-monospace,monospace;margin-top:5px}.metricNote{font-size:10px;margin-top:3px}.green{color:#34d399}.amber{color:#fbbf24}.cyan{color:#38bdf8}.purple{color:#c084fc}
+.clockWrap{display:flex;justify-content:center}.clock{width:260px;height:260px;position:relative}.clock svg{width:260px;height:260px;transform:rotate(-90deg)}.clockCenter{position:absolute;inset:0;display:grid;place-content:center;text-align:center}.clockCenter small{font-size:9px;color:#71717a;text-transform:uppercase;font-weight:900;letter-spacing:.1em}.clockCenter strong{font:900 15px ui-monospace,monospace;margin-top:3px}.clockCenter span{font-size:9px;color:#34d399;margin-top:3px}.quad{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.quad .metricBox{text-align:center;padding:10px}.quad .metricLabel{font-size:8px}.quad .metricNum{font-size:12px}
+.moods{height:10px;border-radius:99px;overflow:hidden;background:#18181b;display:flex}.moods i{height:100%;display:block}.rec{padding:10px;border:1px solid #27272a;background:rgba(9,9,11,.35);border-radius:13px;margin-top:7px}.rec strong{font-size:11px}.rec p{font-size:9px;color:#71717a;margin:3px 0 0}.cluster{padding:14px;border:1px solid #27272a;background:rgba(9,9,11,.45);border-radius:17px;margin-bottom:10px}.clusterTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.badge{font:900 9px ui-monospace,monospace;padding:4px 6px;border-radius:6px;background:rgba(34,211,238,.08);color:#22d3ee;border:1px solid rgba(34,211,238,.25)}.variant{display:flex;justify-content:space-between;gap:10px;padding:6px 8px;background:#18181b;border-radius:8px;font:10px ui-monospace,monospace;color:#d4d4d8;margin-top:4px}.scroll{max-height:370px;overflow:auto;padding-right:4px}
+.days{display:flex;align-items:end;height:180px;gap:6px;padding:10px 4px 0}.day{height:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:end;gap:5px;position:relative}.daybar{width:100%;max-width:36px;border-radius:8px 8px 2px 2px;background:#27272a;min-height:4px}.daybar.today{background:linear-gradient(180deg,var(--accent),#2563eb)}.day span{font:9px ui-monospace,monospace;color:#71717a}.tooltip{position:absolute;top:-3px;background:#27272a;border:1px solid #3f3f46;padding:4px 6px;border-radius:6px;font-size:9px;opacity:0;pointer-events:none;white-space:nowrap;transform:translateY(-100%)}.day:hover .tooltip{opacity:1}
+.plaqueGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.plaque{border-radius:20px;padding:10px;background:linear-gradient(145deg,#292524,#09090b);border:1px solid #57534e;cursor:pointer}.plaque.gold{background:linear-gradient(145deg,#4a3a14,#17130a 45%,#292524)}.plaque.platinum{background:linear-gradient(145deg,#55565b,#151619 48%,#32343a)}.plaque.diamond{background:linear-gradient(145deg,#242238,#08080d 45%,#332d55)}.plaqueInner{border:1px solid rgba(255,255,255,.12);border-radius:15px;padding:12px;text-align:center}.plaque img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,.2);margin:4px auto 8px;display:block}.plaqueType{text-transform:uppercase;font:900 9px ui-monospace,monospace;letter-spacing:.18em;color:#d4d4d8}.plaqueName{font-weight:950;margin-top:3px}.plaqueSub{font-size:10px;color:#a1a1aa}.plaqueMeta{display:flex;justify-content:space-between;font:9px ui-monospace,monospace;color:#a1a1aa;margin-top:10px}.footerNote{padding:12px;border-radius:16px;background:rgba(9,9,11,.5);border:1px solid #27272a;color:#71717a;font-size:10px;margin-top:14px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}.overlay.show{display:flex}.modal{width:min(900px,100%);max-height:90vh;overflow:auto;background:#111113;border:1px solid #3f3f46;border-radius:24px;box-shadow:0 30px 100px rgba(0,0,0,.65);padding:22px;animation:pop .18s ease}.modal.small{max-width:600px}.modalHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:18px}.modal h2{margin:0;font-size:20px}.close{border:1px solid #27272a;background:#18181b;color:#a1a1aa;width:34px;height:34px;border-radius:10px}.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;color:#a1a1aa;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid #27272a;background:#09090b;color:#f4f4f5;border-radius:11px;padding:10px;outline:none}.field textarea{min-height:90px;resize:vertical}.modalActions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.profile{display:flex;gap:18px;align-items:center;padding:16px;border:1px solid #27272a;background:#09090b;border-radius:18px}.profile img{width:80px;height:80px;border-radius:20px;object-fit:cover}.drawer{position:fixed;right:0;top:0;bottom:0;width:min(420px,100%);background:#111113;border-left:1px solid #3f3f46;z-index:110;transform:translateX(100%);transition:.22s;padding:22px;overflow:auto}.drawer.show{transform:none}.setting{padding:12px 0;border-bottom:1px solid #27272a}.setting label{font-size:11px;font-weight:900}.swatches{display:flex;gap:7px;margin-top:9px}.swatch{width:30px;height:30px;border-radius:10px;border:2px solid transparent}.swatch.sel{border-color:white}.empty{text-align:center;padding:35px;color:#71717a}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes ping{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.7);opacity:.5}}@keyframes pop{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+@media(max-width:1150px){.stats{grid-template-columns:repeat(3,1fr)}.source{display:none}.brand{margin-right:auto}.ranges{display:none}.actions .btn span{display:none}.actions .btn{padding:9px}.actions .gradient span{display:inline}.plaqueGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.stats{grid-template-columns:repeat(2,1fr)}.brandSub{display:none}.plaqueGrid{grid-template-columns:1fr}.two,.formGrid{grid-template-columns:1fr}.quad{grid-template-columns:repeat(2,1fr)}main{padding:16px 10px 40px}.card{padding:17px}.navin{padding:0 10px}.actions{margin-left:auto}.actions .btn:nth-child(2),.actions .btn:nth-child(3){display:none}}
+@media(max-width:460px){.stats{grid-template-columns:1fr 1fr}.stat{padding:12px}.statValue{font-size:21px}.title{font-size:16px}.clock{transform:scale(.88);margin:-14px 0}.clockWrap{height:235px}}
+</style>
+</head>
+<body>
+<header class="nav"><div class="navin">
+  <div class="brand"><div class="brandIcon"><i data-lucide="disc-3"></i></div><div><div class="brandTitle">yourhot100</div><div class="brandSub">Music Charts, Analytics &amp; Commemorative Plaque Forge</div></div></div>
+  <div class="source"><label><i data-lucide="radio" style="width:12px;color:#34d399"></i> Vault Source:</label><select id="presetSelect"></select></div>
+  <div class="ranges" id="rangeBtns"></div>
+  <div class="actions">
+    <button class="btn" id="accountBtn"><i data-lucide="cloud"></i><span>Cloud Sync</span><b class="status" id="cloudStatus"></b></button>
+    <button class="btn amber" id="milestonesBtn"><i data-lucide="trophy"></i><span>Milestones</span></button>
+    <button class="btn" id="artistBtn"><i data-lucide="user"></i><span>Artist Archive</span></button>
+    <button class="btn" id="syncBtn"><i data-lucide="radio"></i><span>Last.fm Sync</span></button>
+    <button class="btn" id="importBtn"><i data-lucide="upload-cloud"></i><span>Import</span></button>
+    <button class="btn gradient" id="plaqueBtn"><i data-lucide="award"></i><span>Forge Plaque</span></button>
+    <button class="btn iconbtn" id="customBtn"><i data-lucide="sliders"></i></button>
+  </div>
+</div></header>
+<main>
+<section class="stats" id="stats"></section>
+<div class="grid" id="dashboard"></div>
+</main>
+
+<div class="overlay" id="modalOverlay"><div class="modal" id="modal"></div></div>
+<div class="drawer" id="drawer"></div>
+<input type="file" id="fileInput" accept=".json,.csv,.txt" hidden>
+
+<script>
+
+const SAMPLE_PRESETS = [
+  {
+    id: 'cyberpunk-synth',
+    name: 'Neo-Tokyo Resonance',
+    username: 'kavinsky_drifter',
+    tagline: 'Synthwave, Darksynth, French Electro & French Touch',
+    avatar: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=150&h=150&fit=crop&q=80',
+    tags: ['Synthwave', 'Darksynth', 'Cyberpunk', 'French Electro'],
+  },
+  {
+    id: 'psychedelic-vinyl',
+    name: 'Analog Prism Vault',
+    username: 'floydian_reverie',
+    tagline: '60s & 70s Progressive Rock, Krautrock, Psychedelia & Art Rock',
+    avatar: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=150&h=150&fit=crop&q=80',
+    tags: ['Prog Rock', 'Psychedelic', 'Space Rock', 'Vinyl Purist'],
+  },
+  {
+    id: 'indie-ethereal',
+    name: 'Midnight Reverie',
+    username: 'cocteau_echoes',
+    tagline: 'Dream Pop, Shoegaze, Post-Punk, Mid-90s Slowcore',
+    avatar: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=150&h=150&fit=crop&q=80',
+    tags: ['Dream Pop', 'Shoegaze', 'Post-Punk', 'Ethereal'],
+  },
+  {
+    id: 'jazz-hiphop-crate',
+    name: 'Blue Note Crate Diggers',
+    username: 'dilla_sp1200',
+    tagline: 'Hard Bop, Modal Jazz, Golden Age Hip-Hop & Neo-Soul',
+    avatar: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=150&h=150&fit=crop&q=80',
+    tags: ['Jazz Fusion', 'Boom Bap', 'Neo-Soul', 'Sample Archaeology'],
+  },
+];
+
+const PRESET_TRACKS = {
+  'cyberpunk-synth': [
+    {
+      title: 'Nightcall',
+      artist: 'Kavinsky',
+      album: 'OutRun',
+      coverArt: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&h=300&fit=crop&q=80',
+      weight: 38,
+      variants: ['Nightcall (Original)', 'Nightcall - Radio Edit', 'Nightcall (Drive Soundtrack Version)'],
+    },
+    {
+      title: 'Turbo Killer',
+      artist: 'Carpenter Brut',
+      album: 'Trilogy',
+      coverArt: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&h=300&fit=crop&q=80',
+      weight: 29,
+      variants: ['Turbo Killer (2015 Remaster)', 'Turbo Killer'],
+    },
+    {
+      title: 'Tech Noir',
+      artist: 'GUNSHIP',
+      album: 'GUNSHIP',
+      coverArt: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&h=300&fit=crop&q=80',
+      weight: 24,
+    },
+    {
+      title: 'Resonance',
+      artist: 'HOME',
+      album: 'Odyssey',
+      coverArt: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300&h=300&fit=crop&q=80',
+      weight: 35,
+      variants: ['Resonance (Slowed)', 'Resonance'],
+    },
+    {
+      title: 'Endless Summer',
+      artist: 'The Midnight',
+      album: 'Endless Summer',
+      coverArt: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=300&h=300&fit=crop&q=80',
+      weight: 26,
+    },
+    {
+      title: 'Sunset',
+      artist: 'The Midnight',
+      album: 'Endless Summer',
+      coverArt: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=300&h=300&fit=crop&q=80',
+      weight: 22,
+    },
+    {
+      title: 'Roller Mobster',
+      artist: 'Carpenter Brut',
+      album: 'Trilogy',
+      coverArt: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&h=300&fit=crop&q=80',
+      weight: 20,
+    },
+    {
+      title: 'Genesis',
+      artist: 'Justice',
+      album: 'Cross (â€ )',
+      coverArt: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop&q=80',
+      weight: 18,
+    },
+    {
+      title: 'DVNO',
+      artist: 'Justice',
+      album: 'Cross (â€ )',
+      coverArt: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop&q=80',
+      weight: 15,
+    },
+    {
+      title: 'Pacific Coast Highway',
+      artist: 'Kavinsky',
+      album: 'OutRun',
+      coverArt: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&h=300&fit=crop&q=80',
+      weight: 16,
+    },
+  ],
+  'psychedelic-vinyl': [
+    {
+      title: 'Time',
+      artist: 'Pink Floyd',
+      album: 'The Dark Side of the Moon',
+      coverArt: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop&q=80',
+      weight: 42,
+      variants: ['Time (2011 Remaster)', 'Time - 2023 50th Anniversary Remaster', 'Time (Live at Wembley 1974)'],
+    },
+    {
+      title: 'Echoes',
+      artist: 'Pink Floyd',
+      album: 'Meddle',
+      coverArt: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&h=300&fit=crop&q=80',
+      weight: 33,
+    },
+    {
+      title: 'Starless',
+      artist: 'King Crimson',
+      album: 'Red',
+      coverArt: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=300&h=300&fit=crop&q=80',
+      weight: 30,
+      variants: ['Starless - Steven Wilson Mix', 'Starless (2019 Audio)'],
+    },
+    {
+      title: '21st Century Schizoid Man',
+      artist: 'King Crimson',
+      album: 'In the Court of the Crimson King',
+      coverArt: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=300&h=300&fit=crop&q=80',
+      weight: 25,
+    },
+    {
+      title: 'Close to the Edge',
+      artist: 'Yes',
+      album: 'Close to the Edge',
+      coverArt: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop&q=80',
+      weight: 22,
+    },
+    {
+      title: 'Roundabout',
+      artist: 'Yes',
+      album: 'Fragile',
+      coverArt: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop&q=80',
+      weight: 24,
+      variants: ['Roundabout - 2003 Remaster', 'Roundabout'],
+    },
+    {
+      title: 'Comfortably Numb',
+      artist: 'Pink Floyd',
+      album: 'The Wall',
+      coverArt: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop&q=80',
+      weight: 36,
+      variants: ['Comfortably Numb (2011 Remastered)', 'Comfortably Numb - Pulse Live'],
+    },
+    {
+      title: 'Riders on the Storm',
+      artist: 'The Doors',
+      album: 'L.A. Woman',
+      coverArt: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=300&h=300&fit=crop&q=80',
+      weight: 20,
+    },
+  ],
+  'indie-ethereal': [
+    {
+      title: 'Cherry-coloured Funk',
+      artist: 'Cocteau Twins',
+      album: 'Heaven or Las Vegas',
+      coverArt: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop&q=80',
+      weight: 40,
+      variants: ['Cherry-coloured Funk (Remastered)', 'Cherry-coloured Funk'],
+    },
+    {
+      title: 'Heaven or Las Vegas',
+      artist: 'Cocteau Twins',
+      album: 'Heaven or Las Vegas',
+      coverArt: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop&q=80',
+      weight: 34,
+    },
+    {
+      title: 'Alison',
+      artist: 'Slowdive',
+      album: 'Souvlaki',
+      coverArt: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&h=300&fit=crop&q=80',
+      weight: 35,
+      variants: ['Alison (2020 Remaster)', 'Alison'],
+    },
+    {
+      title: 'When the Sun Hits',
+      artist: 'Slowdive',
+      album: 'Souvlaki',
+      coverArt: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&h=300&fit=crop&q=80',
+      weight: 31,
+    },
+    {
+      title: 'Only Shallow',
+      artist: 'My Bloody Valentine',
+      album: 'Loveless',
+      coverArt: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&h=300&fit=crop&q=80',
+      weight: 27,
+    },
+    {
+      title: 'Sometimes',
+      artist: 'My Bloody Valentine',
+      album: 'Loveless',
+      coverArt: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&h=300&fit=crop&q=80',
+      weight: 23,
+    },
+    {
+      title: 'Sparks',
+      artist: 'Beach House',
+      album: 'Depression Cherry',
+      coverArt: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300&h=300&fit=crop&q=80',
+      weight: 28,
+    },
+    {
+      title: 'Space Song',
+      artist: 'Beach House',
+      album: 'Depression Cherry',
+      coverArt: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300&h=300&fit=crop&q=80',
+      weight: 38,
+      variants: ['Space Song (2015)', 'Space Song'],
+    },
+  ],
+  'jazz-hiphop-crate': [
+    {
+      title: 'Time: The Donut of the Heart',
+      artist: 'J Dilla',
+      album: 'Donuts',
+      coverArt: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop&q=80',
+      weight: 45,
+      variants: ['Time: The Donut of the Heart (Original)', 'Time: The Donut of the Heart'],
+    },
+    {
+      title: 'Workinonit',
+      artist: 'J Dilla',
+      album: 'Donuts',
+      coverArt: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop&q=80',
+      weight: 32,
+    },
+    {
+      title: 'So What',
+      artist: 'Miles Davis',
+      album: 'Kind of Blue',
+      coverArt: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop&q=80',
+      weight: 39,
+      variants: ['So What - 1959 Mono', 'So What (Stereo Remaster)'],
+    },
+    {
+      title: 'Blue in Green',
+      artist: 'Miles Davis',
+      album: 'Kind of Blue',
+      coverArt: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop&q=80',
+      weight: 30,
+    },
+    {
+      title: 'Accordion',
+      artist: 'Madvillain',
+      album: 'Madvillainy',
+      coverArt: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=300&h=300&fit=crop&q=80',
+      weight: 36,
+    },
+    {
+      title: 'All Caps',
+      artist: 'Madvillain',
+      album: 'Madvillainy',
+      coverArt: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=300&h=300&fit=crop&q=80',
+      weight: 34,
+      variants: ['All Caps (Instrumental)', 'All Caps'],
+    },
+    {
+      title: 'A Love Supreme, Pt. 1 - Acknowledgement',
+      artist: 'John Coltrane',
+      album: 'A Love Supreme',
+      coverArt: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop&q=80',
+      weight: 29,
+    },
+    {
+      title: 'Electric Relaxation',
+      artist: 'A Tribe Called Quest',
+      album: 'Midnight Marauders',
+      coverArt: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop&q=80',
+      weight: 26,
+    },
+  ],
+};
+
+function generateSampleScrobbles(presetId = 'cyberpunk-synth') {
+  const trackDefs = PRESET_TRACKS[presetId] || PRESET_TRACKS['cyberpunk-synth'];
+  const scrobbles = [];
+
+  const nowSeconds = Math.floor(Date.now() / 1000);
+  const totalWeeks = 14;
+  const totalDays = totalWeeks * 7;
+  const startSeconds = nowSeconds - totalDays * 86400;
+
+  let globalId = 1;
+
+  // For each track, create an emergence curve (e.g. debut week, peak week, longevity)
+  trackDefs.forEach((def, trackIdx) => {
+    // Generate between 35 and 90 scrobbles per track
+    const baseCount = Math.max(30, def.weight * 2 + Math.floor(Math.random() * 20));
+    
+    // Assign a debut week (0 to 8) and a peak week
+    const debutWeek = Math.min(totalWeeks - 4, (trackIdx * 2) % (totalWeeks - 3));
+    const peakWeek = Math.min(totalWeeks - 1, debutWeek + 1 + Math.floor(Math.random() * 3));
+
+    for (let i = 0; i < baseCount; i++) {
+      // Pick a week biased towards debut -> peak -> decay
+      let weekTarget = debutWeek + Math.floor(Math.random() * (totalWeeks - debutWeek));
+      if (Math.random() < 0.6) {
+        // High concentration around peak
+        weekTarget = Math.max(debutWeek, Math.min(totalWeeks - 1, peakWeek + Math.floor((Math.random() - 0.4) * 3)));
+      }
+
+      const dayInWeek = Math.floor(Math.random() * 7);
+      const dayOffset = weekTarget * 7 + dayInWeek;
+
+      // Circadian hour bias: 60% evening/night (18:00 - 03:00)
+      let hour;
+      const roll = Math.random();
+      if (roll < 0.6) {
+        hour = (18 + Math.floor(Math.random() * 9)) % 24;
+      } else if (roll < 0.8) {
+        hour = 12 + Math.floor(Math.random() * 6);
+      } else {
+        hour = 7 + Math.floor(Math.random() * 5);
+      }
+
+      const minute = Math.floor(Math.random() * 60);
+      const second = Math.floor(Math.random() * 60);
+      const timeInDay = hour * 3600 + minute * 60 + second;
+
+      const timestamp = Math.min(nowSeconds - 60, startSeconds + dayOffset * 86400 + timeInDay);
+
+      // Random variant chance if defined
+      let chosenTitle = def.title;
+      if (def.variants && def.variants.length > 0 && Math.random() < 0.28) {
+        chosenTitle = def.variants[Math.floor(Math.random() * def.variants.length)];
+      }
+
+      scrobbles.push({
+        id: `scrobble_${presetId}_${globalId++}`,
+        title: chosenTitle,
+        artist: def.artist,
+        album: def.album,
+        coverArt: def.coverArt,
+        timestamp,
+      });
+    }
+  });
+
+  // Sort chronologically descending
+  return scrobbles.sort((a, b) => b.timestamp - a.timestamp);
+}
+
+const INITIAL_DEFAULT_PLAQUES = [
+  {
+    id: 'plaque_gold_kavinsky',
+    subjectTitle: 'Nightcall',
+    subjectSubtitle: 'Kavinsky',
+    subjectType: 'track',
+    coverArt: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&h=300&fit=crop&q=80',
+    milestone: 'gold',
+    threshold: 50,
+    scrobblesEarned: 74,
+    awardedDate: 'Aug 2026',
+    frameStyle: 'classic-walnut',
+    customEngraving: 'Presented to commemorate exceeding 50 verified scrobbles in personal listening vault.',
+  },
+  {
+    id: 'plaque_plat_time',
+    subjectTitle: 'Time',
+    subjectSubtitle: 'Pink Floyd',
+    subjectType: 'track',
+    coverArt: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop&q=80',
+    milestone: 'platinum',
+    threshold: 100,
+    scrobblesEarned: 112,
+    awardedDate: 'Jul 2026',
+    frameStyle: 'platinum-brushed',
+    customEngraving: 'Official Platinum Record celebrating 100+ spins of the timeless psychedelic masterpiece.',
+  },
+  {
+    id: 'plaque_diamond_dilla',
+    subjectTitle: 'J Dilla',
+    subjectSubtitle: 'Career Artist Legacy',
+    subjectType: 'artist',
+    coverArt: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop&q=80',
+    milestone: 'diamond',
+    threshold: 500,
+    scrobblesEarned: 524,
+    awardedDate: 'Jun 2026',
+    frameStyle: 'obsidian',
+    customEngraving: 'Diamond Disc of Honor commemorating supreme crate-digging dedication and over 500 plays.',
+  },
+];
+
+// ---------- Standalone TuneTrack / yourhot100 application ----------
+const state={preset:'cyberpunk-synth',range:'all',scrobbles:[],plaques:[],merged:{},tab:'tracks',clock:'radial',modal:null,selectedArtist:null,custom:{accent:'#a855f7',density:'comfortable'}};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fmt=n=>Number(n||0).toLocaleString();
+const ago=ts=>new Date(ts*1000).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+function save(){try{localStorage.setItem('yourhot100_scrobbles',JSON.stringify(state.scrobbles));localStorage.setItem('yourhot100_plaques',JSON.stringify(state.plaques));localStorage.setItem('yourhot100_merged_map',JSON.stringify(state.merged));localStorage.setItem('yourhot100_settings',JSON.stringify({preset:state.preset,range:state.range,custom:state.custom}));}catch(err){console.warn('Local storage limit reached. Your current session is still active.',err);try{localStorage.setItem('yourhot100_settings',JSON.stringify({preset:state.preset,range:state.range,custom:state.custom}));}catch{}}}
+function load(){try{const s=JSON.parse(localStorage.getItem('yourhot100_scrobbles')||'null');if(Array.isArray(s)&&s.length)state.scrobbles=s}catch{}try{const p=JSON.parse(localStorage.getItem('yourhot100_plaques')||'null');if(Array.isArray(p)&&p.length)state.plaques=p}catch{}try{state.merged=JSON.parse(localStorage.getItem('yourhot100_merged_map')||'{}')}catch{}try{const s=JSON.parse(localStorage.getItem('yourhot100_settings')||'{}');if(s.preset)state.preset=s.preset;if(s.range)state.range=s.range;if(s.custom)state.custom={...state.custom,...s.custom}}catch{}if(!state.scrobbles.length)state.scrobbles=generateSampleScrobbles(state.preset);if(!state.plaques.length)state.plaques=INITIAL_DEFAULT_PLAQUES;}
+function filtered(){if(state.range==='all')return state.scrobbles;const days={'7d':7,'30d':30,'90d':90,'365d':365}[state.range]||3650;const cut=Math.floor(Date.now()/1000)-days*86400;return state.scrobbles.filter(s=>s.timestamp>=cut)}
+function tracks(){const m=new Map();for(const s of filtered()){const raw=`${s.artist.toLowerCase()}:::${s.title.toLowerCase()}`,mapped=state.merged[raw]||s.title,key=`${s.artist.toLowerCase()}:::${mapped.toLowerCase()}`;let x=m.get(key);if(!x)m.set(key,x={title:mapped,artist:s.artist,album:s.album,plays:0,cover:s.coverArt,first:s.timestamp,last:s.timestamp});x.plays++;x.first=Math.min(x.first,s.timestamp);x.last=Math.max(x.last,s.timestamp)}return [...m.values()].sort((a,b)=>b.plays-a.plays)}
+function artists(){const m=new Map();for(const s of filtered()){const k=s.artist.toLowerCase();let x=m.get(k);if(!x)m.set(k,x={artist:s.artist,plays:0,cover:s.coverArt,tracks:new Map()});x.plays++;x.tracks.set(s.title,(x.tracks.get(s.title)||0)+1)}return [...m.values()].sort((a,b)=>b.plays-a.plays)}
+function albums(){const m=new Map();for(const s of filtered()){if(!s.album)continue;const k=`${s.artist.toLowerCase()}:::${s.album.toLowerCase()}`;let x=m.get(k);if(!x)m.set(k,x={album:s.album,artist:s.artist,plays:0,cover:s.coverArt,tracks:new Set()});x.plays++;x.tracks.add(s.title.toLowerCase())}return [...m.values()].filter(x=>x.tracks.size>=3).sort((a,b)=>b.plays-a.plays)}
+function stats(){const f=filtered(),tr=new Set(f.map(s=>`${s.artist}:::${s.title}`)),ar=new Set(f.map(s=>s.artist.toLowerCase())),al=new Set(f.filter(s=>s.album).map(s=>`${s.artist}:::${s.album}`));const dates=[...new Set(f.map(s=>new Date(s.timestamp*1000).toISOString().slice(0,10)))].sort();let run=0,max=0;for(let i=0;i<dates.length;i++){if(i&&((new Date(dates[i])-new Date(dates[i-1]))/86400000===1))run++;else run=1;max=Math.max(max,run)}let counts=new Array(24).fill(0),days=new Array(7).fill(0);f.forEach(s=>{const d=new Date(s.timestamp*1000);counts[d.getHours()]++;days[d.getDay()]++});const peak=counts.indexOf(Math.max(...counts));return{total:f.length,tracks:tr.size,artists:ar.size,albums:al.size,hours:Math.round(f.length*3.5/60),peak,current:Math.min(run||1,18),longest:Math.max(max,run||1,7),day:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][days.indexOf(Math.max(...days))]||'Friday'}}
+function duplicates(){const by=new Map();for(const s of state.scrobbles){const a=s.artist.trim().toLowerCase();if(!by.has(a))by.set(a,{artist:s.artist,titles:new Map()});let t=by.get(a).titles;t.set(s.title,(t.get(s.title)||0)+1)}const out=[];for(const g of by.values()){const arr=[...g.titles.entries()];for(let i=0;i<arr.length;i++){const [base,bc]=arr[i],norm=normalize(base);const vars=arr.slice(i+1).filter(([t])=>normalize(t)===norm||/(remaster|deluxe|bonus|anniversary|radio edit|version|live|edition)/i.test(t)||similar(base,t)>=.78);if(vars.length){const all=[[base,bc],...vars];const total=all.reduce((a,x)=>a+x[1],0);const canonical=all.sort((a,b)=>b[1]-a[1])[0][0];out.push({artist:g.artist,canonical,variants:all,total,merged:all.every(([t])=>state.merged[`${g.artist.toLowerCase()}:::${t.toLowerCase()}`])})}}}return out.sort((a,b)=>b.total-a.total)}
+function normalize(t){return t.toLowerCase().replace(/\[[^\]]*\]|\([^)]*\)|\b(remaster(ed)?|deluxe|bonus|anniversary|radio edit|live|version|edition)\b/g,'').replace(/[^a-z0-9]+/g,'').trim()}
+function similar(a,b){a=normalize(a);b=normalize(b);if(!a||!b)return 0;let dp=Array(b.length+1).fill(0).map((_,i)=>i);for(let i=1;i<=a.length;i++){let prev=dp[0];dp[0]=i;for(let j=1;j<=b.length;j++){let tmp=dp[j];dp[j]=Math.min(dp[j]+1,dp[j-1]+1,prev+(a[i-1]===b[j-1]?0:1));prev=tmp}}return 1-dp[b.length]/Math.max(a.length,b.length)}
+function ai(){const a=artists()[0]?.artist||'Kavinsky';const presets={"cyberpunk-synth":{persona:'The Midnight Cyber-Flâneur',arch:'Atmospheric Audiophile & Deep Sequencer',desc:'Your listening patterns reveal a strong gravitation toward analog synth warmth, nocturnal melodic escapism, and meticulous song crafting. High concentration of plays occurs between 9 PM and 2 AM.',genres:['French Electro','Outrun & Darksynth','Progressive Krautrock','Modular Ambient','Shoegaze Reverb'],moods:[['Nocturnal / Cinematic',42,'#06b6d4'],['High Voltage Drive',28,'#f43f5e'],['Hypnotic Nostalgia',18,'#a855f7'],['Ambient Introspection',12,'#10b981']]},"psychedelic-vinyl":{persona:'The Analog Time Traveler',arch:'Progressive Deep-Dive Audiophile',desc:'Your vault favors long-form records, psychedelic textures and repeat listening across canonical album cuts.',genres:['Prog Rock','Psychedelia','Krautrock','Space Rock','Art Rock'],moods:[['Psychedelic Drift',38,'#a855f7'],['Progressive Drive',30,'#f59e0b'],['Analog Warmth',20,'#10b981'],['Late-Night Reflection',12,'#06b6d4']]},"indie-ethereal":{persona:'The Velvet Dream Diver',arch:'Ethereal Catalog Explorer',desc:'Your listening patterns gravitate toward hazy guitars, spacious production and deeply replayable dream-pop songwriting.',genres:['Dream Pop','Shoegaze','Post-Punk','Slowcore','Ethereal Wave'],moods:[['Dreamlike',44,'#c084fc'],['Melancholic',26,'#38bdf8'],['Textural',18,'#10b981'],['Nocturnal',12,'#f43f5e']]},"jazz-hiphop-crate":{persona:'The Sample Archaeologist',arch:'Crate-Digging Sonic Curator',desc:'Your catalog reveals strong artist loyalty, deep album cuts and an appetite for the lineage between jazz, soul and hip-hop.',genres:['Hard Bop','Boom Bap','Neo-Soul','Jazz Fusion','Sample Archaeology'],moods:[['Soulful',36,'#f59e0b'],['Hypnotic',25,'#a855f7'],['Rhythmic',24,'#06b6d4'],['Reflective',15,'#10b981'] ]}};const p=presets[state.preset]||presets['cyberpunk-synth'];return {...p,obscurity:82,lead:a,recs:[['Vortex','Lorn','Matches your darker synthetic texture preference.'],['Dust','M|O|O|N','Hypnotic minimalism aligned with your focused rotation.'],['Signals','Tangerine Dream','Deepens your analog sequencer journey.']],chars:[['Energy / Drive',84],['Harmonic Complexity',76],['Acoustic / Analog Factor',68],['Danceability',62],['Obscurity / Underground Ratio',88]]}}
+function render(){const s=stats(),t=tracks(),a=artists(),al=albums(),d=duplicates(),p=ai();renderNav();$('stats').innerHTML=`
+<div class="stat"><div class="statHead"><span>Scrobbles</span><i data-lucide="music" class="green"></i></div><div class="statValue">${fmt(s.total)}</div><div class="statFoot">~${fmt(s.hours)} hours logged</div></div>
+<div class="stat"><div class="statHead"><span>Artists</span><i data-lucide="user" class="cyan"></i></div><div class="statValue">${fmt(s.artists)}</div><div class="statFoot">#1: ${esc(a[0]?.artist||'None')}</div></div>
+<div class="stat"><div class="statHead"><span>Circadian Peak</span><i data-lucide="clock" class="amber"></i></div><div class="statValue">${s.peak}:00 ${s.peak>=12?'PM':'AM'}</div><div class="statFoot">Most active on ${s.day}</div></div>
+<div class="stat"><div class="statHead"><span>Current Streak</span><i data-lucide="flame" style="color:#fb923c"></i></div><div class="statValue">${s.current} <small style="font-size:11px;color:#a1a1aa">days</small></div><div class="statFoot">Record: ${s.longest} days active</div></div>
+<button class="stat click" onclick="openPlaqueWall()"><div class="statHead"><span>Plaques Forged</span><i data-lucide="award" style="color:#facc15"></i></div><div class="statValue">${state.plaques.length}</div><div class="statFoot" style="color:#facc15">View Virtual Wall →</div></button>
+<button class="stat click ${d.filter(x=>!x.merged).length?'warn':''}" onclick="scrollToId('track-combiner-widget')"><div class="statHead"><span>Remasters / Deluxes</span><i data-lucide="layers" style="color:#818cf8"></i></div><div class="statValue">${d.filter(x=>!x.merged).length} <small style="font-size:11px;color:#a1a1aa">sets</small></div><div class="statFoot" style="color:#818cf8">${d.length?'Consolidate plays →':'Catalog clean'}</div></button>`;
+$('dashboard').innerHTML=`${topCharts(t,a,al)}${plaqueWall()}${clockWidget()}${combiner(d)}${profiler(p)}${discovery(p,s)}${streaks()}`;lucide.createIcons();}
+function renderNav(){const sel=$('presetSelect');sel.innerHTML=SAMPLE_PRESETS.map(p=>`<option value="${p.id}" ${p.id===state.preset?'selected':''}>${esc(p.name)} (@${esc(p.username)})</option>`).join('')+`<option value="sync">+ Connect Real Last.fm / Upload History...</option>`;$('rangeBtns').innerHTML=['7d','30d','90d','365d','all'].map(r=>`<button class="${state.range===r?'active':''}" onclick="setRange('${r}')">${r==='all'?'All':r}</button>`).join('');}
+function topCharts(t,a,al){let data=state.tab==='tracks'?t:state.tab==='artists'?a:al;return `<section class="card full" id="top-charts-widget"><div class="cardHead"><div><div class="titleRow"><div class="titleIcon"><i data-lucide="bar-chart-3"></i></div><div><div class="title">Top Charts</div><div class="subtitle">Ranked listening charts derived from the active vault and timeframe</div></div></div></div><div class="smalltabs">${['tracks','artists','albums'].map(x=>`<button class="${state.tab===x?'active':''}" onclick="state.tab='${x}';render()">${x[0].toUpperCase()+x.slice(1)}</button>`).join('')}</div></div><div style="overflow:auto"><table class="table"><thead><tr><th>#</th><th>Entry</th><th>Plays</th><th>Peak</th><th>Weeks</th></tr></thead><tbody>${data.slice(0,15).map((x,i)=>{const title=state.tab==='tracks'?x.title:state.tab==='artists'?x.artist:x.album;const sub=state.tab==='tracks'?x.artist:state.tab==='artists'?`${x.tracks.size} unique tracks`:`${x.artist} · ${x.tracks.size} tracks`;return `<tr class="clickrow" onclick="${state.tab==='artists'?`openArtist('${esc(x.artist)}')`:`openDetail('${esc(title)}','${esc(sub)}','${esc(x.cover)}')`}"><td class="rank">${String(i+1).padStart(2,'0')}</td><td><div class="media"><img class="art" src="${esc(x.cover)}"><div><strong>${esc(title)}</strong><span>${esc(sub)}</span></div></div></td><td class="plays">${fmt(x.plays)}</td><td class="plays">#${i+1}</td><td class="plays">${Math.max(1,Math.round(x.plays/(state.tab==='artists'?12:10)))}</td></tr>`}).join('')}</tbody></table></div></section>`}
+function plaqueWall(){return `<section class="card full" id="plaque-wall-widget"><div class="cardHead"><div><div class="titleRow"><div class="titleIcon"><i data-lucide="award"></i></div><div><div class="title">Commemorative Plaque Wall</div><div class="subtitle">Physical-style metallic certification frames celebrating your personal listening milestones</div></div></div></div><button class="btn gradient" onclick="openPlaqueCreator()"><i data-lucide="plus"></i> Forge New Plaque</button></div><div class="plaqueGrid">${state.plaques.map(p=>`<div class="plaque ${p.milestone}" onclick="openPlaque('${p.id}')"><div class="plaqueInner"><div class="plaqueType">${esc(p.milestone)} certification</div><img src="${esc(p.coverArt)}"><div class="plaqueName">${esc(p.subjectTitle)}</div><div class="plaqueSub">${esc(p.subjectSubtitle)}</div><div class="plaqueMeta"><span>${fmt(p.scrobblesEarned)} plays</span><span>${esc(p.awardedDate)}</span></div></div></div>`).join('')}</div></section>`}
+function clockWidget(){const f=filtered(),hours=new Array(24).fill(0),days=new Array(7).fill(0);f.forEach(s=>{const d=new Date(s.timestamp*1000);hours[d.getHours()]++;days[d.getDay()]++});const peak=hours.indexOf(Math.max(...hours)),mx=Math.max(1,...hours),rings=hours.map((v,i)=>{const ang=i/24*Math.PI*2,x1=130+55*Math.cos(ang),y1=130+55*Math.sin(ang),x2=130+(55+15+v/mx*40)*Math.cos(ang),y2=130+(55+15+v/mx*40)*Math.sin(ang);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${v/mx>.7?'#a855f7':v/mx>.3?'#38bdf8':'#3f3f46'}" stroke-width="${v/mx>.5?4:2.5}" stroke-linecap="round"/>`}).join('');const late=hours.slice(0,6).reduce((a,b)=>a+b,0),mor=hours.slice(6,12).reduce((a,b)=>a+b,0),aft=hours.slice(12,18).reduce((a,b)=>a+b,0),eve=hours.slice(18).reduce((a,b)=>a+b,0);return `<section class="card" id="listening-clock-widget"><div class="cardHead"><div><div class="titleRow"><div class="titleIcon"><i data-lucide="clock"></i></div><div><div class="title">Circadian Listening Clock</div><div class="subtitle">Discover your 24-hour peak listening rhythm & weekly heatmaps</div></div></div></div><div class="smalltabs"><button class="${state.clock==='radial'?'active':''}" onclick="state.clock='radial';render()">24h Clock</button><button class="${state.clock==='matrix'?'active':''}" onclick="state.clock='matrix';render()">Week Matrix</button></div></div>${state.clock==='radial'?`<div class="clockWrap"><div class="clock"><svg viewBox="0 0 260 260"><circle cx="130" cy="130" r="55" fill="#09090b" stroke="#27272a"/>${rings}</svg><div class="clockCenter"><small>Peak Flow</small><strong>${peak%12||12}:00 ${peak>=12?'PM':'AM'}</strong><span>Optimal Listening</span></div></div></div><div class="quad"><div class="metricBox"><div class="metricLabel">Late Night</div><div class="metricNum">${late}</div></div><div class="metricBox"><div class="metricLabel">Morning</div><div class="metricNum">${mor}</div></div><div class="metricBox"><div class="metricLabel">Afternoon</div><div class="metricNum">${aft}</div></div><div class="metricBox"><div class="metricLabel">Evening</div><div class="metricNum">${eve}</div></div></div>`:`<div class="two">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((d,i)=>`<div class="metricBox"><div class="metricLabel">${d}</div><div class="metricNum">${days[i]}</div></div>`).join('')}</div>`}</section>`}
+function combiner(ds){return `<section class="card" id="track-combiner-widget"><div class="cardHead"><div><div class="titleRow"><div class="titleIcon"><i data-lucide="layers"></i></div><div><div class="title">Duplicate & Remaster Combiner</div><div class="subtitle">Auto-detects duplicates & remasters to unify fragmented chart points & certs</div></div></div></div>${ds.filter(x=>!x.merged).length?`<button class="btn gradient" onclick="mergeAll()"><i data-lucide="merge"></i> Merge All Detected (${ds.filter(x=>!x.merged).length})</button>`:''}</div><div class="scroll">${ds.length?ds.slice(0,12).map((c,i)=>`<div class="cluster"><div class="clusterTop"><div><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap"><strong style="font-size:12px">${esc(c.canonical)}</strong><span class="badge">${c.merged?'100':'98.5'}% match</span>${c.merged?'<span class="badge" style="color:#34d399;border-color:#34d399;background:#34d39912">Merged</span>':''}</div><button class="btn" style="border:0;background:transparent;padding:3px 0;color:#71717a" onclick="openArtist('${esc(c.artist)}')">${esc(c.artist)}</button></div>${c.merged?`<button class="btn" onclick="unmerge(${i})">Unmerge</button>`:`<button class="btn amber" onclick="mergeOne(${i})">Combine Plays</button>`}</div><div style="margin-top:8px;border-top:1px solid #18181b;padding-top:7px"><div class="metricLabel">Fragmented Tags (${c.variants.length})</div>${c.variants.map(v=>`<div class="variant"><span>${esc(v[0])}</span><span>${v[1]} plays</span></div>`).join('')}</div></div>`).join(''):`<div class="empty">Your Music Catalog is Completely Clean</div>`}</div><div class="footerNote">✨ Auto-detected remasters and alternate cuts are consolidated across charts and plaque certifications.</div></section>`}
+function profiler(p){return `<section class="card" id="ai-profiler-widget"><div class="cardHead"><div><div class="titleRow"><div class="titleIcon"><i data-lucide="brain"></i></div><div><div class="title">AI Sonic Taste Profiler</div><div class="subtitle">Deep acoustic personality fingerprinting & subgenre archaeology</div></div></div></div><button class="btn iconbtn" onclick="render()"><i data-lucide="refresh-cw"></i></button></div><div class="metricBox"><div style="display:flex;justify-content:space-between;gap:10px"><div><div class="metricLabel amber">Archetype: ${esc(p.arch)}</div><div style="font-weight:950;margin-top:3px">${esc(p.persona)}</div></div><div style="text-align:right"><div class="metricLabel">Obscurity Index</div><div class="metricNum green">${p.obscurity}/100</div></div></div><p style="font-size:11px;color:#d4d4d8;line-height:1.55">${esc(p.desc)}</p><div class="metricLabel" style="margin-bottom:6px">Acoustic Mood Taxonomy</div><div class="moods">${p.moods.map(m=>`<i style="width:${m[1]}%;background:${m[2]}"></i>`).join('')}</div><div class="chips" style="margin-top:8px">${p.moods.map(m=>`<span class="chip">${esc(m[0])} (${m[1]}%)</span>`).join('')}</div></div><div style="margin-top:16px"><div class="metricLabel" style="margin-bottom:8px">Identified Micro-Genres</div><div class="chips">${p.genres.map(g=>`<span class="chip">${esc(g)}</span>`).join('')}</div></div><div style="margin-top:15px"><div class="metricLabel">Algorithmic Sonic Recommendations</div>${p.recs.map(r=>`<div class="rec"><strong>${esc(r[0])} <span style="color:#71717a;font-weight:400">by ${esc(r[1])}</span></strong><p>${esc(r[2])}</p></div>`).join('')}</div></section>`}
+function discovery(p,s){return `<section class="card" id="discovery-map-widget"><div class="cardHead"><div><div class="titleRow"><div class="titleIcon"><i data-lucide="compass"></i></div><div><div class="title">Discovery & Variety Radar</div><div class="subtitle">Sonic characteristics balance & catalog exploration metrics</div></div></div></div></div><div style="display:grid;gap:14px">${p.chars.map(c=>`<div><div style="display:flex;justify-content:space-between;font-size:11px"><strong>${esc(c[0])}</strong><strong>${c[1]}%</strong></div><div class="bar" style="margin-top:5px"><div class="fill" style="width:${c[1]}%"></div></div></div>`).join('')}</div><div class="two" style="margin-top:16px"><div class="metricBox"><div class="metricLabel">Artist Loyalty Ratio</div><div class="metricNum">${Math.round(s.total/Math.max(1,s.artists)*10)/10}<span style="font-size:10px;color:#71717a;font-weight:400"> plays/artist</span></div><div class="metricNote green">High Discography Exploration</div></div><div class="metricBox"><div class="metricLabel">Catalog Replay Index</div><div class="metricNum">${Math.round(s.total/Math.max(1,s.tracks)*10)/10}<span style="font-size:10px;color:#71717a;font-weight:400"> plays/track</span></div><div class="metricNote amber">Focused Rotation</div></div></div></section>`}
+function streaks(){const days=[];for(let i=13;i>=0;i--){const dt=new Date();dt.setHours(0,0,0,0);dt.setDate(dt.getDate()-i);const key=dt.toISOString().slice(0,10),count=state.scrobbles.filter(s=>new Date(s.timestamp*1000).toISOString().slice(0,10)===key).length;days.push({label:dt.toLocaleDateString(undefined,{weekday:'short'}),date:dt.toLocaleDateString(),count})}const mx=Math.max(1,...days.map(d=>d.count));const s=stats();return `<section class="card full" id="streak-velocity-widget"><div class="cardHead"><div><div class="titleRow"><div class="titleIcon"><i data-lucide="activity"></i></div><div><div class="title">Listening Velocity & Daily Streaks</div><div class="subtitle">Real-time daily cadence and momentum metrics across the last two weeks</div></div></div></div><div style="text-align:right"><div class="green" style="font-weight:950">🔥 ${s.current} Day Streak Active</div><div style="font-size:10px;color:#71717a">🏆 Record: ${s.longest} Days</div></div></div><div class="days">${days.map((d,i)=>`<div class="day"><div class="tooltip">${d.count} plays on ${esc(d.date)}</div><div class="daybar ${i===13?'today':''}" style="height:${Math.max(4,d.count/mx*82)}%"></div><span>${d.label}</span></div>`).join('')}</div><div style="display:flex;justify-content:space-between;color:#71717a;font-size:10px;padding-top:7px"><span>14 Days Ago</span><span>Today</span></div></section>`}
+function scrollToId(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'})}function openPlaqueWall(){scrollToId('plaque-wall-widget')}
+function openDetail(title,sub,cover){showModal(`<div class="modalHead"><div><h2>${esc(title)}</h2><div class="subtitle">${esc(sub)}</div></div><button class="close" onclick="closeModal()">×</button></div><div class="profile"><img src="${esc(cover)}"><div><div class="metricLabel">Listening Record</div><div style="font-size:14px;font-weight:900;margin-top:4px">${fmt(filtered().filter(s=>s.title===title).length)} plays in selected timeframe</div><div style="font-size:11px;color:#71717a;margin-top:4px">First/last listening history is calculated from the active vault.</div></div></div>`)}
+function openArtist(name){state.selectedArtist=name;const a=artists().find(x=>x.artist.toLowerCase()===name.toLowerCase()),ts=filtered().filter(s=>s.artist.toLowerCase()===name.toLowerCase());const top=[...new Set(ts.map(s=>s.title))].map(t=>({t,n:ts.filter(s=>s.title===t).length})).sort((x,y)=>y.n-x.n).slice(0,10);showModal(`<div class="modalHead"><div><h2>Artist Archive</h2><div class="subtitle">Full chart history & listening profile</div></div><button class="close" onclick="closeModal()">×</button></div><div class="profile"><img src="${esc(a?.cover||ts[0]?.coverArt||'')}"><div><div style="font-size:22px;font-weight:950">${esc(name)}</div><div class="subtitle">${fmt(a?.plays||ts.length)} plays · ${new Set(ts.map(s=>s.title)).size} tracks · ${new Set(ts.map(s=>s.album)).size} albums</div></div></div><h3 style="margin:20px 0 8px">Top Tracks</h3><table class="table"><tbody>${top.map((x,i)=>`<tr><td class="rank">${i+1}</td><td>${esc(x.t)}</td><td class="plays">${x.n}</td></tr>`).join('')}</tbody></table>`)}
+function openPlaque(id){const p=state.plaques.find(x=>x.id===id);showModal(`<div class="modalHead"><div><h2>${esc(p.subjectTitle)}</h2><div class="subtitle">${esc(p.subjectSubtitle)} · ${esc(p.milestone)} certification</div></div><button class="close" onclick="closeModal()">×</button></div><div class="plaque ${p.milestone}" style="max-width:420px;margin:auto"><div class="plaqueInner"><div class="plaqueType">${esc(p.milestone)} certification</div><img src="${esc(p.coverArt)}"><div class="plaqueName">${esc(p.subjectTitle)}</div><div class="plaqueSub">${esc(p.subjectSubtitle)}</div><p style="font-size:11px;color:#a1a1aa;line-height:1.5">${esc(p.customEngraving||'')}</p><div class="plaqueMeta"><span>${fmt(p.scrobblesEarned)} plays</span><span>${esc(p.awardedDate)}</span></div></div></div><div class="modalActions"><button class="btn" onclick="deletePlaque('${esc(p.id)}');closeModal();render()">Delete Plaque</button></div>`)}
+function openPlaqueCreator(prefill={}){showModal(`<div class="modalHead"><div><h2>Forge New Plaque</h2><div class="subtitle">Create a commemorative certification frame for your listening milestones.</div></div><button class="close" onclick="closeModal()">×</button></div><div class="formGrid"><div class="field"><label>Title</label><input id="pfTitle" value="${esc(prefill.title||'')}" placeholder="Nightcall"></div><div class="field"><label>Artist / Subtitle</label><input id="pfSub" value="${esc(prefill.subtitle||'')}" placeholder="Kavinsky"></div><div class="field"><label>Certification</label><select id="pfMil"><option>gold</option><option>platinum</option><option>diamond</option></select></div><div class="field"><label>Scrobbles</label><input id="pfPlays" type="number" value="${prefill.scrobbles||50}"></div><div class="field"><label>Artwork URL</label><input id="pfArt" value="${esc(prefill.coverArt||'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&h=300&fit=crop&q=80')}"></div><div class="field"><label>Engraving</label><input id="pfEng" value="Presented to commemorate a personal listening milestone."></div></div><div class="modalActions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn gradient" onclick="savePlaque()">Forge Plaque</button></div>`)}
+function savePlaque(){const title=$('pfTitle').value.trim()||'Untitled Track',sub=$('pfSub').value.trim()||'Unknown Artist',mil=$('pfMil').value,plays=+($('pfPlays').value||50);state.plaques.unshift({id:'plaque_'+Date.now(),subjectTitle:title,subjectSubtitle:sub,subjectType:'track',coverArt:$('pfArt').value, milestone:mil,threshold:mil==='gold'?50:mil==='platinum'?100:500,scrobblesEarned:plays,awardedDate:new Date().toLocaleDateString(undefined,{month:'short',year:'numeric'}),frameStyle:mil,customEngraving:$('pfEng').value});save();closeModal();render()}
+function deletePlaque(id){state.plaques=state.plaques.filter(p=>p.id!==id);save()}
+function mergeOne(i){const c=duplicates()[i];for(const [t] of c.variants)state.merged[`${c.artist.toLowerCase()}:::${t.toLowerCase()}`]=c.canonical;save();render()}
+function mergeAll(){duplicates().forEach(c=>{for(const [t] of c.variants)state.merged[`${c.artist.toLowerCase()}:::${t.toLowerCase()}`]=c.canonical});save();render()}
+function unmerge(i){const c=duplicates()[i];for(const [t] of c.variants)delete state.merged[`${c.artist.toLowerCase()}:::${t.toLowerCase()}`];save();render()}
+function showModal(html){$('modal').innerHTML=html;$('modalOverlay').classList.add('show');lucide.createIcons()}function closeModal(){$('modalOverlay').classList.remove('show');$('modal').innerHTML=''}
+function showDrawer(html){$('drawer').innerHTML=html;$('drawer').classList.add('show');lucide.createIcons()}function closeDrawer(){$('drawer').classList.remove('show')}
+function openCustomizer(){showDrawer(`<div class="modalHead"><div><h2>Studio Customizer</h2><div class="subtitle">Customize your standalone vault experience.</div></div><button class="close" onclick="closeDrawer()">×</button></div><div class="setting"><label>Accent Color</label><div class="swatches">${[['#a855f7','Violet'],['#2563eb','Blue'],['#06b6d4','Cyan'],['#10b981','Emerald'],['#f59e0b','Amber'],['#f43f5e','Rose']].map(x=>`<button class="swatch ${state.custom.accent===x[0]?'sel':''}" title="${x[1]}" style="background:${x[0]}" onclick="setAccent('${x[0]}')"></button>`).join('')}</div></div><div class="setting"><label>Density</label><div class="smalltabs" style="margin-top:8px"><button class="${state.custom.density==='comfortable'?'active':''}" onclick="setDensity('comfortable')">Comfortable</button><button class="${state.custom.density==='compact'?'active':''}" onclick="setDensity('compact')">Compact</button></div></div><div class="footerNote">Settings are saved locally in your browser. Firebase cloud storage from the React version is intentionally replaced with localStorage in this single-file build.</div>`)}
+function setAccent(c){state.custom.accent=c;document.documentElement.style.setProperty('--accent',c);document.documentElement.style.setProperty('--accent2',c);save();openCustomizer();render()}
+function setDensity(d){state.custom.density=d;document.documentElement.style.setProperty('--radius',d==='compact'?'18px':'24px');save();openCustomizer();render()}
+function openImport(){showModal(`<div class="modalHead"><div><h2>Import Listening History</h2><div class="subtitle">Merge old Last.fm / Spotify history into this vault without creating duplicate scrobbles.</div></div><button class="close" onclick="closeModal()">×</button></div><div class="mutedBox"><strong>Recommended workflow:</strong> import your oldest historical files first, then use <b>Last.fm Sync</b> to pull anything newer. Records are matched using timestamp + artist + track + album, so overlapping history is kept only once.</div><div class="formGrid" style="margin-top:12px"><div class="field"><label>Import file</label><div class="btn" style="width:100%;justify-content:center" onclick="$('fileInput').click();closeModal()"><i data-lucide="folder-open"></i> Choose CSV / JSON</div></div><div class="field"><label>Current vault</label><div class="mutedBox">${fmt(state.scrobbles.length)} records already stored</div></div></div><div class="modalActions"><button class="btn" onclick="closeModal()">Close</button></div>`)}
+function canonicalText(v){return String(v||'').trim().toLowerCase().replace(/\s+/g,' ')}
+function scrobbleKey(s){return `${Math.floor(Number(s.timestamp)||0)}:::${canonicalText(s.artist)}:::${canonicalText(s.title)}:::${canonicalText(s.album)}`}
+function mergeScrobbles(incoming){const map=new Map();let existing=0;for(const s of state.scrobbles){if(!s||!s.artist||!s.title||!Number.isFinite(Number(s.timestamp)))continue;map.set(scrobbleKey(s),s)}existing=map.size;let added=0;for(const s of incoming){if(!s||!s.artist||!s.title||!Number.isFinite(Number(s.timestamp)))continue;const k=scrobbleKey(s);if(!map.has(k)){map.set(k,s);added++}}state.scrobbles=[...map.values()].sort((a,b)=>a.timestamp-b.timestamp);return {added,total:state.scrobbles.length,duplicates:Math.max(0,incoming.length-added)}}
+function parseCSV(text){const rows=[];let row=[],cell='',quoted=false;for(let i=0;i<text.length;i++){const ch=text[i],next=text[i+1];if(ch==='"'){if(quoted&&next==='"'){cell+='"';i++;}else quoted=!quoted}else if(ch===','&&!quoted){row.push(cell);cell=''}else if((ch==='\n'||ch==='\r')&&!quoted){if(ch==='\r'&&next==='\n')i++;row.push(cell);cell='';if(row.some(v=>String(v).trim()!=='')){rows.push(row)}row=[]}else cell+=ch}if(cell!==''||row.length){row.push(cell);rows.push(row)}if(!rows.length)return[];const head=rows.shift().map(x=>String(x).trim().toLowerCase());return rows.map((cells,i)=>{const o={};head.forEach((h,j)=>o[h]=String(cells[j]??'').trim());const artist=o.artist||o['artist name']||o.artistname||o['artist_name']||o['master_metadata_album_artist_name']||'';const title=o.track||o.title||o['track name']||o['track_name']||o['master_metadata_track_name']||'';const album=o.album||o['album name']||o['album_name']||o['master_metadata_album_album_name']||'';let raw=o.timestamp||o.date||o.datetime||o['date played']||o['time played']||o['end time']||o['uts']||'';let ts=parseAnyTimestamp(raw);return artist&&title&&ts?{id:'import_'+Date.now()+'_'+i,artist,title,album,timestamp:ts,coverArt:o.coverart||o['cover art']||o.image||'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop&q=80'}:null}).filter(Boolean)}
+function parseAnyTimestamp(raw){if(raw===null||raw===undefined||raw==='')return 0;const n=Number(raw);if(Number.isFinite(n)&&n>0)return n>1e12?Math.floor(n/1000):Math.floor(n);let d=Date.parse(String(raw));if(Number.isNaN(d)){const m=String(raw).match(/^(\d{1,2})\s+([A-Za-z]{3,9})\s+(\d{4}),?\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/);if(m)d=Date.parse(`${m[2]} ${m[1]}, ${m[3]} ${m[4]}:${m[5]}:${m[6]||'00'}`)}return Number.isNaN(d)?0:Math.floor(d/1000)}
+function parseJSON(data){if(Array.isArray(data)){}else if(Array.isArray(data?.items))data=data.items;else if(Array.isArray(data?.entries))data=data.entries;else if(Array.isArray(data?.data))data=data.data;else data=[];return data.map((o,i)=>{const artist=typeof o.artist==='string'?o.artist:o.artist?.name||o.master_metadata_album_artist_name||o['Artist Name']||o.artistName;const title=typeof o.track==='string'?o.track:o.track?.name||o.master_metadata_track_name||o['Track Name']||o.trackName;const album=o.album?.name||o.album||o.master_metadata_album_album_name||o['Album Name']||'';const ts=parseAnyTimestamp(o.timestamp||o.ts||o.endTime||o['Time Played']||o['time played']||o.date||o.datetime);return artist&&title&&ts?{id:'import_'+Date.now()+'_'+i,artist,title,album,timestamp:ts,coverArt:o.coverArt||o.image||o.images?.[0]?.url||'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop&q=80'}:null}).filter(Boolean)}
+function lastfmConfig(){return{user:(localStorage.getItem('yourhot100_lastfm_user')||'').trim(),key:(localStorage.getItem('yourhot100_lastfm_key')||'').trim(),lastSync:Number(localStorage.getItem('yourhot100_lastfm_last_sync')||0)}}
+function openSync(){const c=lastfmConfig();showModal(`<div class="modalHead"><div><h2>Last.fm Sync</h2><div class="subtitle">Pull new scrobbles from Last.fm and merge them with your existing imported history.</div></div><button class="close" onclick="closeModal()">×</button></div><div class="formGrid"><div class="field"><label>Last.fm Username</label><input id="lfmUser" value="${esc(c.user)}" placeholder="your_username"></div><div class="field"><label>Last.fm API Key</label><input id="lfmKey" type="password" value="${esc(c.key)}" placeholder="Your API key"></div></div><div class="two" style="margin-top:12px"><div class="metricBox"><div class="metricLabel">Stored Scrobbles</div><div class="metricNum">${fmt(state.scrobbles.length)}</div><div class="metricNote">Old imports + previous Last.fm syncs</div></div><div class="metricBox"><div class="metricLabel">Last Sync</div><div class="metricNum" style="font-size:15px">${c.lastSync?new Date(c.lastSync*1000).toLocaleString():'Never'}</div><div class="metricNote">Sync only asks Last.fm for newer records when possible</div></div></div><div class="mutedBox" style="margin-top:12px"><strong>How it works:</strong> your uploaded history remains in the vault. Last.fm records are added to it and overlapping scrobbles are deduplicated using timestamp, artist, track and album. Last.fm's recent-tracks endpoint supports up to 200 records per page plus <code>from</code>/<code>to</code> timestamps, so the sync can paginate safely.</div><div id="lfmStatus" class="mutedBox" style="margin-top:12px;display:none"></div><div class="modalActions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn" onclick="saveLastfmSettings()">Save Settings</button><button class="btn gradient" id="lfmSyncNewBtn" onclick="syncLastfm(false)"><i data-lucide="refresh-cw"></i> Sync New</button><button class="btn amber" onclick="syncLastfm(true)"><i data-lucide="download-cloud"></i> Full Historical Sync</button></div>`)}
+function saveLastfmSettings(){const u=$('lfmUser')?.value.trim()||'',k=$('lfmKey')?.value.trim()||'';if(!u||!k){alert('Enter both your Last.fm username and API key.');return false}localStorage.setItem('yourhot100_lastfm_user',u);localStorage.setItem('yourhot100_lastfm_key',k);return true}
+function setSyncStatus(msg,show=true){const el=$('lfmStatus');if(el){el.style.display=show?'block':'none';el.innerHTML=msg}}
+async function fetchLastfmPage(user,key,page=1,from=0,to=0){const params=new URLSearchParams({method:'user.getRecentTracks',user,api_key:key,format:'json',limit:'200',page:String(page),extended:'1'});if(from)params.set('from',String(from));if(to)params.set('to',String(to));const url=`https://ws.audioscrobbler.com/2.0/?${params}`;const res=await fetch(url,{headers:{'Accept':'application/json'}});if(!res.ok)throw new Error(`Last.fm HTTP ${res.status}`);const data=await res.json();if(data.error)throw new Error(`${data.message||'Last.fm API error'} (code ${data.error})`);return data}
+function normalizeLastfm(data){const tracks=data?.recenttracks?.track||[];return tracks.map((x,i)=>{if(String(x['@attr']?.nowplaying||'')==='true')return null;const artist=typeof x.artist==='string'?x.artist:(x.artist?.name||'');const title=x.name||'';const album=typeof x.album==='string'?x.album:(x.album?.['#text']||x.album?.name||'');const uts=Number(x.date?.uts||0);if(!artist||!title||!uts)return null;const img=x.image?.find?.(z=>z.size==='extralarge')?.['#text']||x.image?.find?.(z=>z.size==='large')?.['#text']||x.image?.[x.image.length-1]?.['#text']||'';return{id:`lastfm_${uts}_${i}`,artist,title,album,timestamp:uts,coverArt:img||'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop&q=80',source:'lastfm'}}).filter(Boolean)}
+async function syncLastfm(full=false){if(!saveLastfmSettings())return;const c=lastfmConfig();const btn=$('lfmSyncNewBtn');if(btn)btn.disabled=true;setSyncStatus(`<strong>Connecting to Last.fm…</strong><br><span style="color:#71717a">Fetching up to 200 scrobbles per page.</span>`);try{let from=0;let to=0;if(!full){const newest=state.scrobbles.reduce((m,s)=>Math.max(m,Number(s.timestamp)||0),0);from=newest||0;if(!from&&c.lastSync)from=c.lastSync}let page=1,totalPages=1,fetched=0,all=[];const hardCap=full?10000:250;do{const data=await fetchLastfmPage(c.user,c.key,page,from,to);const meta=data.recenttracks||{};totalPages=Math.min(Number(meta['@attr']?.totalPages||1),Math.ceil(hardCap/200));const batch=normalizeLastfm(data);all.push(...batch);fetched+=batch.length;setSyncStatus(`<strong>Last.fm sync in progress…</strong><br>Page ${page} of ${totalPages} · ${fmt(fetched)} scrobbles fetched · ${fmt(state.scrobbles.length)} already stored`);if(!full&&batch.length<200)break;if(page>=totalPages||batch.length===0)break;page++;await new Promise(r=>setTimeout(r,180));}while(fetched<hardCap);const result=mergeScrobbles(all);localStorage.setItem('yourhot100_lastfm_last_sync',String(Math.floor(Date.now()/1000)));state.preset='lastfm';save();render();setSyncStatus(`<strong style="color:#34d399">Sync complete.</strong><br>Fetched ${fmt(fetched)} Last.fm records · Added <b>${fmt(result.added)}</b> new scrobbles · Ignored <b>${fmt(result.duplicates)}</b> duplicates · Vault now contains <b>${fmt(result.total)}</b> records.<br><span style="color:#71717a">Your old uploaded history was preserved and merged.</span>`);const close=document.createElement('button');close.className='btn';close.style.marginTop='10px';close.textContent='Done';close.onclick=closeModal;$('lfmStatus').appendChild(document.createElement('br'));$('lfmStatus').appendChild(close);if(btn)btn.disabled=false}catch(err){console.error(err);setSyncStatus(`<strong style="color:#fb7185">Last.fm sync failed.</strong><br>${esc(err.message)}<br><span style="color:#71717a">Check the username, API key, internet connection and Last.fm API availability.</span>`);if(btn)btn.disabled=false}}
+function openAccount(){showModal(`<div class="modalHead"><div><h2>Account & Storage</h2><div class="subtitle">Standalone local storage mode</div></div><button class="close" onclick="closeModal()">×</button></div><div class="profile"><div style="width:52px;height:52px;border-radius:16px;background:#7c3aed33;border:1px solid #7c3aed66;display:grid;place-items:center"><i data-lucide="database"></i></div><div><strong>Local Vault</strong><div class="subtitle">${fmt(state.scrobbles.length)} scrobbles · ${state.plaques.length} plaques</div></div></div><div class="modalActions"><button class="btn" onclick="localStorage.clear();location.reload()">Reset Local Vault</button><button class="btn gradient" onclick="save();closeModal()">Save Now</button></div>`)}
+function milestones(){const t=tracks(),a=artists();showModal(`<div class="modalHead"><div><h2>Milestones & Records</h2><div class="subtitle">All-time personal listening records for the active vault</div></div><button class="close" onclick="closeModal()">×</button></div><div class="two"><div class="metricBox"><div class="metricLabel">#1 Track</div><div class="metricNum">${esc(t[0]?.title||'—')}</div><div class="metricNote">${fmt(t[0]?.plays||0)} plays</div></div><div class="metricBox"><div class="metricLabel">#1 Artist</div><div class="metricNum">${esc(a[0]?.artist||'—')}</div><div class="metricNote">${fmt(a[0]?.plays||0)} plays</div></div></div><h3 style="margin:20px 0 8px">Top Records</h3><table class="table"><tbody>${t.slice(0,10).map((x,i)=>`<tr><td class="rank">${i+1}</td><td>${esc(x.title)}<div style="font-size:9px;color:#71717a">${esc(x.artist)}</div></td><td class="plays">${fmt(x.plays)}</td></tr>`).join('')}</tbody></table>`)}
+$('presetSelect').addEventListener('change',e=>{if(e.target.value==='sync'){openSync();e.target.value=state.preset;return}state.preset=e.target.value;state.scrobbles=generateSampleScrobbles(state.preset);state.merged={};save();render()});$('accountBtn').onclick=openAccount;$('milestonesBtn').onclick=milestones;$('syncBtn').onclick=openSync;$('importBtn').onclick=openImport;$('plaqueBtn').onclick=()=>openPlaqueCreator();$('customBtn').onclick=openCustomizer;$('artistBtn').onclick=()=>openArtist(artists()[0]?.artist||'Kavinsky');$('modalOverlay').addEventListener('click',e=>{if(e.target===$('modalOverlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeDrawer()}});$('fileInput').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;const text=await f.text();let arr=[];try{arr=f.name.toLowerCase().endsWith('.csv')||f.name.toLowerCase().endsWith('.txt')?parseCSV(text):parseJSON(JSON.parse(text))}catch(err){alert('Could not parse this file. Please check the export format.');e.target.value='';return}if(arr.length){const result=mergeScrobbles(arr);save();render();alert(`Imported ${result.added.toLocaleString()} new listening records. ${result.duplicates.toLocaleString()} overlapping records were ignored.`)}else alert('No valid listening records were found in that file.');e.target.value=''});
+function setRange(r){state.range=r;save();render()}load();document.documentElement.style.setProperty('--accent',state.custom.accent);document.documentElement.style.setProperty('--accent2',state.custom.accent);document.documentElement.style.setProperty('--radius',state.custom.density==='compact'?'18px':'24px');render();
+</script>
+</body>
+</html>
