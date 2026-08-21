@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZeroCharts · Milestones</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { gold: { 400: '#fbbf24', 500: '#eab308', 600: '#ca8a04' } },
+          fontFamily: { display: ['Inter', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #09090b; }
+    .glass { background: rgba(24,24,27,0.7); backdrop-filter: blur(12px); }
+    .gold-gradient { background: linear-gradient(135deg, #fbbf24, #eab308, #ca8a04); }
+    .scroll-thin::-webkit-scrollbar { width: 6px; }
+    .scroll-thin::-webkit-scrollbar-track { background: transparent; }
+    .scroll-thin::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+    .rank-1 { color: #fbbf24; text-shadow: 0 0 10px rgba(234,179,8,0.35); }
+  </style>
+</head>
+<body class="min-h-screen text-zinc-100 antialiased">
+  <nav class="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg gold-gradient flex items-center justify-center shadow-lg shadow-amber-500/20">
+          <svg class="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1s.45-1 1-1h12c.55 0 1 .45 1 1z"/></svg>
+        </div>
+        <div>
+          <h1 class="text-sm font-black tracking-tight text-white">ZeroCharts</h1>
+          <p class="text-[10px] text-zinc-500 -mt-0.5">Milestones · Studio Obsidian</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btn-combiner" class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-amber-500/40 text-amber-400 hover:bg-amber-500/10 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          Combiner
+        </button>
+        <button id="btn-sync" class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Last.fm
+        </button>
+        <button id="btn-github" class="px-3 py-1.5 rounded-lg text-xs font-semibold gold-gradient text-black hover:brightness-110 transition">Load from GitHub</button>
+        <label class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-zinc-700 text-zinc-400 text-black cursor-pointer hover:brightness-110 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          Local JSON
+          <input type="file" id="file-input" accept=".json,application/json" multiple class="hidden" />
+        </label>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="glass rounded-2xl border border-zinc-800/80 p-4">
+        <p class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Scrobbles</p>
+        <p id="stat-scrobbles" class="text-2xl font-black text-white mt-0.5">0</p>
+      </div>
+      <div class="glass rounded-2xl border border-zinc-800/80 p-4">
+        <p class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Chart Weeks</p>
+        <p id="stat-weeks" class="text-2xl font-black text-white mt-0.5">0</p>
+      </div>
+      <div class="glass rounded-2xl border border-zinc-800/80 p-4">
+        <p class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">#1 Tracks</p>
+        <p id="stat-num1" class="text-2xl font-black text-amber-400 mt-0.5">0</p>
+      </div>
+      <div class="glass rounded-2xl border border-zinc-800/80 p-4">
+        <p class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Merged</p>
+        <p id="stat-merged" class="text-2xl font-black text-amber-400 mt-0.5">0</p>
+      </div>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="flex flex-wrap gap-2" id="cat-tabs">
+      <button data-cat="all_1s" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">All #1s</button>
+      <button data-cat="most_num1" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 border border-zinc-800 hover:text-white">Most #1s</button>
+      <button data-cat="weeks_at_1" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 border border-zinc-800 hover:text-white">Most Weeks at #1</button>
+      <button data-cat="weeks_on" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 border border-zinc-800 hover:text-white">Most Weeks on Chart</button>
+      <button data-cat="perfect" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 border border-zinc-800 hover:text-white">Perfect All-Kills</button>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <div class="flex rounded-xl overflow-hidden border border-zinc-800">
+        <button data-type="tracks" class="ms-type-btn px-4 py-2 text-xs font-bold bg-amber-500/20 text-amber-400">Tracks</button>
+        <button data-type="artists" class="ms-type-btn px-4 py-2 text-xs font-bold text-zinc-400">Artists</button>
+        <button data-type="albums" class="ms-type-btn px-4 py-2 text-xs font-bold text-zinc-400">Albums</button>
+      </div>
+      <span class="text-xs text-zinc-500">Week = Fri 00:00 → Thu 23:59 (UTC)</span>
+      <div class="ml-auto text-xs text-zinc-500" id="status-text">Load Zerocharts year JSONs or sync Last.fm</div>
+    </div>
+
+    <div id="milestone-panel" class="glass rounded-3xl border border-zinc-800/80 overflow-hidden">
+      <div class="px-5 py-4 border-b border-zinc-800/80">
+        <h2 id="panel-title" class="text-base font-black text-white">All #1 Tracks</h2>
+        <p id="panel-sub" class="text-xs text-zinc-500 mt-0.5">Every track that topped a weekly chart</p>
+      </div>
+      <div id="milestone-list" class="divide-y divide-zinc-800/60 max-h-[65vh] overflow-y-auto scroll-thin">
+        <div class="p-12 text-center text-zinc-500 text-sm">Load data to compute milestones</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Combiner Modal -->
+  <div id="modal-combiner" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="w-full max-w-3xl max-h-[85vh] glass rounded-3xl border border-zinc-700 shadow-2xl flex flex-col overflow-hidden">
+      <div class="px-6 py-4 border-b border-zinc-800 flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-black text-white">Duplicate & Remaster Combiner</h3>
+          <p class="text-xs text-zinc-400">Clean variants before weekly charts & milestones are calculated</p>
+        </div>
+        <button id="close-combiner" class="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400">✕</button>
+      </div>
+      <div class="px-6 py-3 border-b border-zinc-800 flex items-center gap-3">
+        <button id="run-combiner" class="px-4 py-2 rounded-xl text-xs font-bold gold-gradient text-black">Scan & Detect</button>
+        <button id="apply-all-merges" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600/80 text-white disabled:opacity-40" disabled>Apply All Merges</button>
+        <span id="combiner-status" class="text-xs text-zinc-500 ml-auto"></span>
+      </div>
+      <div id="combiner-list" class="flex-1 overflow-y-auto scroll-thin p-4 space-y-2">
+        <p class="text-center text-zinc-500 text-sm py-8">Click “Scan & Detect”</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Last.fm Sync -->
+  <div id="modal-sync" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="w-full max-w-md glass rounded-3xl border border-zinc-700 shadow-2xl p-6 space-y-5">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-black text-white">Sync from Last.fm</h3>
+        <button id="close-sync" class="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400">✕</button>
+      </div>
+      <div class="space-y-3">
+        <div>
+          <label class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Last.fm Username</label>
+          <input id="lfm-user" type="text" placeholder="iammarcus3" class="mt-1 w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-500" />
+        </div>
+        <div>
+          <label class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">API Key</label>
+          <input id="lfm-key" type="password" placeholder="Your Last.fm API key" class="mt-1 w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-500" />
+        </div>
+        <div>
+          <label class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Pages (200/page)</label>
+          <input id="lfm-pages" type="number" min="1" max="50" value="5" class="mt-1 w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-500" />
+        </div>
+        <div class="flex gap-2">
+          <label class="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer"><input type="radio" name="merge-mode" value="merge" checked class="accent-amber-500" /> Merge</label>
+          <label class="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer"><input type="radio" name="merge-mode" value="replace" class="accent-amber-500" /> Replace</label>
+        </div>
+      </div>
+      <button id="do-sync" class="w-full py-3 rounded-xl font-bold gold-gradient text-black hover:brightness-110">Pull Scrobbles</button>
+      <p id="sync-status" class="text-xs text-center text-zinc-500"></p>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'zerocharts_vault_v1';
+    const MERGED_KEY = 'zerocharts_merged_map_v1';
+
+    let vault = [];
+    let mergedMap = {};
+    let currentCat = 'all_1s';
+    let currentType = 'tracks';
+    let detectedClusters = [];
+    let weeklyCache = null; // { weeks: [...], trackStats, artistStats, albumStats }
+
+    function normalizeStrict(str) {
+      if (!str) return '';
+      return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/\b(remastered|remaster|deluxe edition|bonus track|live at|radio edit|explicit|clean|feat\.?|ft\.?|with)\b.*$/gi, '')
+        .replace(/[^a-z0-9]/g, '');
+    }
+    function normalizeTrackTitle(title) {
+      if (!title) return '';
+      return title
+        .replace(/\s*[\(\[](remaster(ed)?|deluxe|bonus|radio edit|explicit|clean|live|acoustic|instrumental|single version|album version)[^\)\]]*[\)\]]/gi, '')
+        .replace(/\s*-\s*(remaster(ed)?|deluxe|radio edit|explicit).*$/gi, '')
+        .replace(/\s+/g, ' ').trim();
+    }
+    function stringSimilarity(a, b) {
+      if (a === b) return 1;
+      if (!a.length || !b.length) return 0;
+      const m = [];
+      for (let i = 0; i <= b.length; i++) m[i] = [i];
+      for (let j = 0; j <= a.length; j++) m[0][j] = j;
+      for (let i = 1; i <= b.length; i++)
+        for (let j = 1; j <= a.length; j++)
+          m[i][j] = b[i-1] === a[j-1] ? m[i-1][j-1] : Math.min(m[i-1][j-1]+1, m[i][j-1]+1, m[i-1][j]+1);
+      return 1 - m[b.length][a.length] / Math.max(a.length, b.length);
+    }
+
+    function loadVault() {
+      try {
+        const r = localStorage.getItem(STORAGE_KEY); if (r) vault = JSON.parse(r);
+        const m = localStorage.getItem(MERGED_KEY); if (m) mergedMap = JSON.parse(m);
+      } catch(e){}
+    }
+    function saveVault() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(vault));
+        localStorage.setItem(MERGED_KEY, JSON.stringify(mergedMap));
+      } catch(e) {
+        if (e.name === 'QuotaExceededError') { vault = vault.slice(0,80000); localStorage.setItem(STORAGE_KEY, JSON.stringify(vault)); }
+      }
+    }
+    function scrobbleKey(s) { return `${s.timestamp}-${normalizeStrict(s.artist)}-${normalizeStrict(s.title)}`; }
+    function mergeIncoming(incoming, mode='merge') {
+      if (mode === 'replace') { vault = incoming; weeklyCache = null; return incoming.length; }
+      const map = new Map(); vault.forEach(s => map.set(scrobbleKey(s), s));
+      let added = 0;
+      incoming.forEach(s => { const k = scrobbleKey(s); if (!map.has(k)) { map.set(k,s); added++; } });
+      vault = Array.from(map.values()).sort((a,b)=>b.timestamp-a.timestamp);
+      weeklyCache = null;
+      return added;
+    }
+    function getEffectiveTitle(artist, title) {
+      return mergedMap[`${artist.toLowerCase()}:::${title.toLowerCase()}`] || title;
+    }
+
+    // Combiner (identical to other pages)
+    function detectDuplicateClusters(threshold=0.93) {
+      const artistTracks = new Map();
+      for (const s of vault) {
+        const aKey = normalizeStrict(s.artist); if (!aKey) continue;
+        if (!artistTracks.has(aKey)) artistTracks.set(aKey, { artist: s.artist, titles: new Map() });
+        const e = artistTracks.get(aKey);
+        const t = s.title.trim();
+        const c = e.titles.get(t) || { count: 0 }; c.count++; e.titles.set(t, c);
+      }
+      const clusters = [];
+      artistTracks.forEach(entry => {
+        const titles = Array.from(entry.titles.entries()).map(([title,d]) => ({
+          original: title, cleaned: normalizeTrackTitle(title),
+          strict: normalizeStrict(normalizeTrackTitle(title)), count: d.count
+        }));
+        if (titles.length < 2) return;
+        const assigned = new Set();
+        for (let i=0;i<titles.length;i++) {
+          if (assigned.has(titles[i].original)) continue;
+          const group = [titles[i]]; assigned.add(titles[i].original);
+          let reason = 'Exact normalized match';
+          for (let j=i+1;j<titles.length;j++) {
+            if (assigned.has(titles[j].original)) continue;
+            let sim = 0;
+            if (titles[i].strict && titles[i].strict === titles[j].strict) { sim=1; reason='Identical after stripping remaster tags'; }
+            else if (titles[i].cleaned.toLowerCase() === titles[j].cleaned.toLowerCase()) { sim=0.99; reason='Same cleaned title'; }
+            else { sim = stringSimilarity(titles[i].strict, titles[j].strict); if (sim>=threshold) reason=`Fuzzy (${(sim*100).toFixed(1)}%)`; }
+            if (sim >= threshold) { group.push(titles[j]); assigned.add(titles[j].original); }
+          }
+          if (group.length > 1) {
+            group.sort((a,b)=>b.count-a.count);
+            clusters.push({ artist: entry.artist, preferred: group[0].original, variants: group,
+              totalPlays: group.reduce((s,g)=>s+g.count,0), reason });
+          }
+        }
+      });
+      return clusters.sort((a,b)=>b.totalPlays-a.totalPlays);
+    }
+    function applyMerge(c) {
+      c.variants.forEach(v => {
+        if (v.original === c.preferred) return;
+        mergedMap[`${c.artist.toLowerCase()}:::${v.original.toLowerCase()}`] = c.preferred;
+      });
+      saveVault();
+      weeklyCache = null;
+    }
+    function applyAllMerges() {
+      detectedClusters.forEach(applyMerge);
+      detectedClusters = [];
+      renderCombinerList();
+      updateStats();
+      renderMilestones();
+    }
+
+    // ─── Weekly chart engine (Fri–Thu) ───
+    function getWeekStart(ts) {
+      // Friday 00:00 UTC
+      const d = new Date(ts * 1000);
+      const day = d.getUTCDay(); // 0=Sun … 5=Fri
+      const diff = (day + 2) % 7; // days since last Friday
+      const fri = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - diff));
+      return Math.floor(fri.getTime() / 1000);
+    }
+
+    function buildWeeklyCharts() {
+      if (weeklyCache) return weeklyCache;
+
+      const weekMap = new Map(); // weekStart → { tracks: Map, artists: Map, albums: Map }
+
+      for (const s of vault) {
+        const ws = getWeekStart(s.timestamp);
+        if (!weekMap.has(ws)) {
+          weekMap.set(ws, { tracks: new Map(), artists: new Map(), albums: new Map() });
+        }
+        const w = weekMap.get(ws);
+
+        // Track
+        const eff = getEffectiveTitle(s.artist, s.title);
+        const tKey = `${s.artist.toLowerCase()}:::${eff.toLowerCase()}`;
+        const tCur = w.tracks.get(tKey) || { title: eff, artist: s.artist, plays: 0 };
+        tCur.plays++;
+        w.tracks.set(tKey, tCur);
+
+        // Artist
+        const aKey = s.artist.toLowerCase();
+        const aCur = w.artists.get(aKey) || { title: s.artist, plays: 0 };
+        aCur.plays++;
+        w.artists.set(aKey, aCur);
+
+        // Album
+        if (s.album) {
+          const alKey = `${s.artist.toLowerCase()}:::${s.album.toLowerCase()}`;
+          const alCur = w.albums.get(alKey) || { title: s.album, artist: s.artist, plays: 0 };
+          alCur.plays++;
+          w.albums.set(alKey, alCur);
+        }
+      }
+
+      const weeks = Array.from(weekMap.entries())
+        .map(([start, data]) => {
+          const rank = (map) => Array.from(map.values()).sort((a,b)=>b.plays-a.plays);
+          return {
+            start,
+            end: start + 7 * 86400 - 1,
+            label: formatWeekLabel(start),
+            tracks: rank(data.tracks),
+            artists: rank(data.artists),
+            albums: rank(data.albums)
+          };
+        })
+        .sort((a,b) => a.start - b.start);
+
+      // Aggregate career stats
+      const trackStats = new Map();
+      const artistStats = new Map();
+      const albumStats = new Map();
+
+      weeks.forEach((w, wi) => {
+        const process = (list, statsMap, type) => {
+          list.forEach((item, rank) => {
+            const key = type === 'artist' ? item.title.toLowerCase()
+              : `${item.artist.toLowerCase()}:::${item.title.toLowerCase()}`;
+            const cur = statsMap.get(key) || {
+              title: item.title,
+              artist: item.artist || item.title,
+              num1s: 0,
+              weeksAt1: 0,
+              weeksOn: 0,
+              peak: 999,
+              totalPlays: 0
+            };
+            cur.weeksOn++;
+            cur.totalPlays += item.plays;
+            if (rank === 0) { cur.num1s++; cur.weeksAt1++; }
+            if (rank + 1 < cur.peak) cur.peak = rank + 1;
+            statsMap.set(key, cur);
+          });
+        };
+        process(w.tracks, trackStats, 'track');
+        process(w.artists, artistStats, 'artist');
+        process(w.albums, albumStats, 'album');
+      });
+
+      // Perfect All-Kills: same artist has #1 track + #1 album in same week
+      const perfect = [];
+      weeks.forEach(w => {
+        if (!w.tracks[0] || !w.albums[0]) return;
+        if (w.tracks[0].artist.toLowerCase() === w.albums[0].artist.toLowerCase()) {
+          perfect.push({
+            week: w.label,
+            artist: w.tracks[0].artist,
+            track: w.tracks[0].title,
+            album: w.albums[0].title,
+            trackPlays: w.tracks[0].plays,
+            albumPlays: w.albums[0].plays
+          });
+        }
+      });
+
+      weeklyCache = { weeks, trackStats, artistStats, albumStats, perfect };
+      return weeklyCache;
+    }
+
+    function formatWeekLabel(startTs) {
+      const s = new Date(startTs * 1000);
+      const e = new Date((startTs + 6 * 86400) * 1000);
+      const opts = { month: 'short', day: 'numeric' };
+      return `${s.toLocaleDateString('en-US', opts)} – ${e.toLocaleDateString('en-US', opts)} ${e.getUTCFullYear()}`;
+    }
+
+    function renderMilestones() {
+      if (!vault.length) {
+        document.getElementById('milestone-list').innerHTML = `<div class="p-12 text-center text-zinc-500 text-sm">Load data to compute milestones</div>`;
+        return;
+      }
+      const data = buildWeeklyCharts();
+      const statsMap = currentType === 'tracks' ? data.trackStats
+        : currentType === 'artists' ? data.artistStats : data.albumStats;
+
+      let items = [];
+      let title = '', sub = '';
+
+      if (currentCat === 'all_1s') {
+        title = `All #1 ${currentType.charAt(0).toUpperCase()+currentType.slice(1)}`;
+        sub = `Every ${currentType.slice(0,-1)} that topped a weekly chart`;
+        items = Array.from(statsMap.values())
+          .filter(s => s.num1s > 0)
+          .sort((a,b) => b.num1s - a.num1s || b.weeksAt1 - a.weeksAt1)
+          .map(s => ({
+            title: s.title,
+            subtitle: currentType === 'artists' ? `${s.num1s}× #1` : s.artist,
+            primary: `${s.num1s} #1s`,
+            secondary: `${s.weeksAt1} wks at #1 · peak #${s.peak}`
+          }));
+      } else if (currentCat === 'most_num1') {
+        title = `Most #1s — ${currentType}`;
+        sub = 'Ranked by number of distinct weeks spent at #1';
+        items = Array.from(statsMap.values())
+          .filter(s => s.num1s > 0)
+          .sort((a,b) => b.num1s - a.num1s)
+          .slice(0, 100)
+          .map(s => ({
+            title: s.title,
+            subtitle: currentType === 'artists' ? '' : s.artist,
+            primary: `${s.num1s}`,
+            secondary: `#1 weeks`
+          }));
+      } else if (currentCat === 'weeks_at_1') {
+        title = `Most Weeks at #1 — ${currentType}`;
+        sub = 'Longest reigns at the top of the weekly chart';
+        items = Array.from(statsMap.values())
+          .filter(s => s.weeksAt1 > 0)
+          .sort((a,b) => b.weeksAt1 - a.weeksAt1)
+          .slice(0, 100)
+          .map(s => ({
+            title: s.title,
+            subtitle: currentType === 'artists' ? '' : s.artist,
+            primary: `${s.weeksAt1}`,
+            secondary: `weeks at #1`
+          }));
+      } else if (currentCat === 'weeks_on') {
+        title = `Most Weeks on Chart — ${currentType}`;
+        sub = 'Longest chart longevity';
+        items = Array.from(statsMap.values())
+          .sort((a,b) => b.weeksOn - a.weeksOn)
+          .slice(0, 100)
+          .map(s => ({
+            title: s.title,
+            subtitle: currentType === 'artists' ? '' : s.artist,
+            primary: `${s.weeksOn}`,
+            secondary: `weeks · peak #${s.peak}`
+          }));
+      } else if (currentCat === 'perfect') {
+        title = 'Perfect All-Kills';
+        sub = 'Same artist held #1 Track + #1 Album in the same week';
+        items = data.perfect.map(p => ({
+          title: p.artist,
+          subtitle: `${p.track} + ${p.album}`,
+          primary: p.week,
+          secondary: `${p.trackPlays} + ${p.albumPlays} plays`
+        }));
+      }
+
+      document.getElementById('panel-title').textContent = title;
+      document.getElementById('panel-sub').textContent = sub;
+
+      const list = document.getElementById('milestone-list');
+      if (!items.length) {
+        list.innerHTML = `<div class="p-12 text-center text-zinc-500 text-sm">No milestones in this category yet</div>`;
+        return;
+      }
+      list.innerHTML = items.map((item, i) => {
+        const rankClass = i === 0 ? 'rank-1' : i < 3 ? 'text-zinc-300' : 'text-zinc-500';
+        return `
+          <div class="flex items-center gap-4 px-5 py-3 hover:bg-zinc-800/40 transition">
+            <div class="w-8 text-right font-black text-sm ${rankClass}">${i+1}</div>
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-sm text-white truncate">${escapeHtml(item.title)}</p>
+              ${item.subtitle ? `<p class="text-xs text-zinc-400 truncate">${escapeHtml(item.subtitle)}</p>` : ''}
+            </div>
+            <div class="text-right">
+              <p class="font-black text-sm text-amber-400">${escapeHtml(item.primary)}</p>
+              <p class="text-[10px] text-zinc-500">${escapeHtml(item.secondary)}</p>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function updateStats() {
+      document.getElementById('stat-scrobbles').textContent = vault.length.toLocaleString();
+      document.getElementById('stat-merged').textContent = Object.keys(mergedMap).length.toLocaleString();
+      if (vault.length) {
+        const d = buildWeeklyCharts();
+        document.getElementById('stat-weeks').textContent = d.weeks.length.toLocaleString();
+        const num1 = Array.from(d.trackStats.values()).filter(s => s.num1s > 0).length;
+        document.getElementById('stat-num1').textContent = num1.toLocaleString();
+      } else {
+        document.getElementById('stat-weeks').textContent = '0';
+        document.getElementById('stat-num1').textContent = '0';
+      }
+    }
+
+    function renderCombinerList() {
+      const el = document.getElementById('combiner-list');
+      if (!detectedClusters.length) {
+        el.innerHTML = `<p class="text-center text-zinc-500 text-sm py-8">No clusters found</p>`;
+        document.getElementById('apply-all-merges').disabled = true;
+        return;
+      }
+      document.getElementById('apply-all-merges').disabled = false;
+      document.getElementById('combiner-status').textContent = `${detectedClusters.length} clusters`;
+      el.innerHTML = detectedClusters.map((c,idx) => {
+        const vars = c.variants.map(v =>
+          `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-zinc-800 text-[11px] ${v.original===c.preferred?'ring-1 ring-amber-500/60 text-amber-300':'text-zinc-400'}">${escapeHtml(v.original)} <span class="text-zinc-600">(${v.count})</span></span>`
+        ).join(' ');
+        return `<div class="rounded-xl border border-zinc-800 p-3 space-y-2">
+          <div class="flex justify-between gap-3">
+            <div><p class="text-sm font-bold text-white">${escapeHtml(c.artist)}</p><p class="text-[11px] text-zinc-500">${c.reason} · ${c.totalPlays} plays</p></div>
+            <button data-idx="${idx}" class="apply-one px-3 py-1 rounded-lg text-[11px] font-bold bg-amber-500/20 text-amber-400">Merge</button>
+          </div>
+          <div class="flex flex-wrap gap-1.5">${vars}</div>
+        </div>`;
+      }).join('');
+      el.querySelectorAll('.apply-one').forEach(btn => {
+        btn.addEventListener('click', () => {
+          applyMerge(detectedClusters[parseInt(btn.dataset.idx)]);
+          detectedClusters.splice(parseInt(btn.dataset.idx),1);
+          renderCombinerList(); updateStats(); renderMilestones();
+        });
+      });
+    }
+
+    // Data loading
+    function parseZerochartsJson(obj) {
+      if (!obj?.scrobbles) return [];
+      return obj.scrobbles.map((s,i) => ({
+        id: `zc_${obj.year||'x'}_${i}_${s.timestamp}`,
+        title: s.track || s.title || '',
+        artist: s.artist || '',
+        album: s.album || '',
+        timestamp: s.timestamp,
+        coverArt: null
+      })).filter(s => s.title && s.artist && s.timestamp);
+    }
+    
+    const GITHUB_OWNER = 'iammarcus3';
+    const GITHUB_REPO = 'Charts';
+    const GITHUB_BRANCH = 'main';
+    const GITHUB_YEARS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+    function githubRawUrl(year) {
+      return 'https://raw.githubusercontent.com/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/' + GITHUB_BRANCH +
+        '/zerocharts-scrobbles-iammarcus3-' + year + '.json';
+    }
+    async function loadFromGitHub(forceReplace) {
+      var status = document.getElementById('status-text');
+      var btn = document.getElementById('btn-github');
+      if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+      if (status) status.textContent = 'Fetching from GitHub…';
+      if (forceReplace) { vault = []; mergedMap = {}; }
+      var loadedYears = [], errors = [];
+      for (var i = 0; i < GITHUB_YEARS.length; i++) {
+        var year = GITHUB_YEARS[i];
+        if (status) status.textContent = 'GitHub · ' + year + ' (' + (i+1) + '/' + GITHUB_YEARS.length + ')…';
+        try {
+          var res = await fetch(githubRawUrl(year), { cache: 'no-cache' });
+          if (!res.ok) { if (res.status === 404) { errors.push(year + ': missing'); continue; } throw new Error('HTTP ' + res.status); }
+          var obj = await res.json();
+          mergeIncoming(parseZerochartsJson(obj), 'merge');
+          loadedYears.push(year);
+        } catch (e) { errors.push(year + ': ' + (e.message || e)); }
+      }
+      saveVault();
+
+      updateStats(); renderMilestones();
+
+      if (status) status.textContent = 'GitHub · ' + loadedYears.join(', ') + ' · vault ' + vault.length.toLocaleString() + (errors.length ? ' · ' + errors.join('; ') : '');
+      if (btn) { btn.disabled = false; btn.textContent = 'Reload from GitHub'; }
+    }
+
+async function handleFiles(files) {
+      document.getElementById('status-text').textContent = 'Loading…';
+      let added = 0;
+      for (const f of files) {
+        try {
+          const obj = JSON.parse(await f.text());
+          added += mergeIncoming(parseZerochartsJson(obj));
+        } catch(e) { alert(`Failed ${f.name}: ${e.message}`); }
+      }
+      saveVault(); updateStats(); renderMilestones();
+      document.getElementById('status-text').textContent = `+${added.toLocaleString()} · vault ${vault.length.toLocaleString()}`;
+      setTimeout(() => {
+        detectedClusters = detectDuplicateClusters();
+        if (detectedClusters.length) document.getElementById('status-text').textContent += ` · ${detectedClusters.length} merges possible`;
+      }, 80);
+    }
+    async function syncLastfm() {
+      const user = document.getElementById('lfm-user').value.trim().replace(/^@/,'');
+      const key = document.getElementById('lfm-key').value.trim();
+      const pages = Math.min(50, Math.max(1, +document.getElementById('lfm-pages').value||5));
+      const mode = document.querySelector('input[name="merge-mode"]:checked').value;
+      const status = document.getElementById('sync-status');
+      if (!user||!key) { status.textContent='Username + API key required'; status.className='text-xs text-center text-red-400'; return; }
+      status.textContent='Fetching…'; status.className='text-xs text-center text-amber-400';
+      const incoming = [];
+      try {
+        for (let p=1;p<=pages;p++) {
+          status.textContent=`Page ${p}/${pages}…`;
+          const res = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(user)}&api_key=${encodeURIComponent(key)}&format=json&limit=200&page=${p}`);
+          const data = await res.json();
+          if (data.error) throw new Error(data.message||'Last.fm error');
+          const tracks = data.recenttracks?.track||[];
+          if (!tracks.length) break;
+          tracks.forEach(t => {
+            if (t['@attr']?.nowplaying) return;
+            const ts = +t.date?.uts||0; if (!ts) return;
+            incoming.push({
+              id: `lfm_${ts}_${normalizeStrict(t.artist['#text']||t.artist)}_${normalizeStrict(t.name)}`,
+              title: t.name||'', artist: (t.artist['#text']||t.artist||'').toString(),
+              album: (t.album?.['#text']||'').toString(), timestamp: ts, coverArt: t.image?.[2]?.['#text']||null
+            });
+          });
+          if (tracks.length < 200) break;
+        }
+        const added = mergeIncoming(incoming, mode);
+        saveVault(); updateStats(); renderMilestones();
+        status.textContent=`Done · ${added} new`; status.className='text-xs text-center text-emerald-400';
+        setTimeout(()=>{ document.getElementById('modal-sync').classList.add('hidden'); document.getElementById('modal-sync').classList.remove('flex'); },1100);
+      } catch(e) { status.textContent=e.message; status.className='text-xs text-center text-red-400'; }
+    }
+
+    // Events
+    document.getElementById('file-input').addEventListener('change', e => { if (e.target.files?.length) handleFiles([...e.target.files]); });
+    document.body.addEventListener('dragover', e => e.preventDefault());
+    document.body.addEventListener('drop', e => {
+      e.preventDefault();
+      const files = [...e.dataTransfer.files].filter(f=>f.name.endsWith('.json'));
+      if (files.length) handleFiles(files);
+    });
+
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentCat = btn.dataset.cat;
+        document.querySelectorAll('.cat-btn').forEach(b => {
+          b.classList.remove('bg-amber-500/20','text-amber-400','border-amber-500/30');
+          b.classList.add('text-zinc-400','border-zinc-800');
+        });
+        btn.classList.add('bg-amber-500/20','text-amber-400','border-amber-500/30');
+        btn.classList.remove('text-zinc-400','border-zinc-800');
+        renderMilestones();
+      });
+    });
+    document.querySelectorAll('.ms-type-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentType = btn.dataset.type;
+        document.querySelectorAll('.ms-type-btn').forEach(b => {
+          b.classList.remove('bg-amber-500/20','text-amber-400');
+          b.classList.add('text-zinc-400');
+        });
+        btn.classList.add('bg-amber-500/20','text-amber-400');
+        btn.classList.remove('text-zinc-400');
+        renderMilestones();
+      });
+    });
+
+    const openM = id => { const m=document.getElementById(id); m.classList.remove('hidden'); m.classList.add('flex'); };
+    const closeM = id => { const m=document.getElementById(id); m.classList.add('hidden'); m.classList.remove('flex'); };
+    document.getElementById('btn-combiner').addEventListener('click', () => openM('modal-combiner'));
+    document.getElementById('close-combiner').addEventListener('click', () => closeM('modal-combiner'));
+    document.getElementById('btn-sync').addEventListener('click', () => openM('modal-sync'));
+    document.getElementById('close-sync').addEventListener('click', () => closeM('modal-sync'));
+    document.getElementById('run-combiner').addEventListener('click', () => {
+      document.getElementById('combiner-status').textContent='Scanning…';
+      setTimeout(()=>{ detectedClusters=detectDuplicateClusters(); renderCombinerList(); },40);
+    });
+    document.getElementById('apply-all-merges').addEventListener('click', applyAllMerges);
+    document.getElementById('do-sync').addEventListener('click', syncLastfm);
+    if (document.getElementById('btn-github')) document.getElementById('btn-github').addEventListener('click', function() { loadFromGitHub(false); });
+
+    const sk = localStorage.getItem('lfm_api_key'); if (sk) document.getElementById('lfm-key').value=sk;
+    document.getElementById('lfm-key').addEventListener('change', e => localStorage.setItem('lfm_api_key', e.target.value.trim()));
+    const su = localStorage.getItem('lfm_user'); document.getElementById('lfm-user').value = su || 'iammarcus3';
+    document.getElementById('lfm-user').addEventListener('change', e => localStorage.setItem('lfm_user', e.target.value.trim()));
+
+    loadVault(); updateStats(); renderMilestones();
+    if (vault.length) document.getElementById('status-text').textContent = `Vault · ${vault.length.toLocaleString()} scrobbles`;
+  
+    if (!vault.length && typeof loadFromGitHub === 'function') {
+      var st = document.getElementById('status-text');
+      if (st) st.textContent = 'Loading scrobbles from GitHub…';
+      loadFromGitHub(false);
+    }
+  </script>
+</body>
+</html>

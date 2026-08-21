@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZeroCharts · Plaque Wall</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { gold: { 400: '#fbbf24', 500: '#eab308', 600: '#ca8a04' } },
+          fontFamily: { display: ['Inter', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #09090b; }
+    .glass { background: rgba(24,24,27,0.7); backdrop-filter: blur(12px); }
+    .gold-gradient { background: linear-gradient(135deg, #fbbf24, #eab308, #ca8a04); }
+    .scroll-thin::-webkit-scrollbar { width: 6px; }
+    .scroll-thin::-webkit-scrollbar-track { background: transparent; }
+    .scroll-thin::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+
+    /* Plaque frames */
+    .plaque-frame {
+      position: relative;
+      border-radius: 1rem;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .plaque-frame:hover { transform: translateY(-4px); }
+    .plaque-obsidian {
+      background: linear-gradient(145deg, #1c1917, #0c0a09);
+      border: 2px solid #44403c;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .plaque-gold {
+      background: linear-gradient(145deg, #422006, #1c1005);
+      border: 2px solid #ca8a04;
+      box-shadow: 0 10px 40px rgba(202,138,4,0.25), inset 0 1px 0 rgba(251,191,36,0.15);
+    }
+    .plaque-platinum {
+      background: linear-gradient(145deg, #27272a, #18181b);
+      border: 2px solid #a1a1aa;
+      box-shadow: 0 10px 40px rgba(161,161,170,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .plaque-diamond {
+      background: linear-gradient(145deg, #0c4a6e, #082f49);
+      border: 2px solid #38bdf8;
+      box-shadow: 0 10px 40px rgba(56,189,248,0.3), inset 0 1px 0 rgba(125,211,252,0.2);
+    }
+    .plaque-multi {
+      background: linear-gradient(145deg, #3b0764, #1e1b4b);
+      border: 2px solid #a855f7;
+      box-shadow: 0 10px 40px rgba(168,85,247,0.3), inset 0 1px 0 rgba(216,180,254,0.15);
+    }
+    .vinyl-ring {
+      background:
+        radial-gradient(circle at center, transparent 28%, #18181b 29%, #18181b 32%, transparent 33%),
+        repeating-radial-gradient(circle at center, transparent 0, transparent 3px, rgba(255,255,255,0.03) 3px, rgba(255,255,255,0.03) 4px);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-zinc-100 antialiased">
+  <nav class="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg gold-gradient flex items-center justify-center shadow-lg shadow-amber-500/20">
+          <svg class="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div>
+          <h1 class="text-sm font-black tracking-tight text-white">ZeroCharts</h1>
+          <p class="text-[10px] text-zinc-500 -mt-0.5">Plaque Wall · Studio Obsidian</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btn-combiner" class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-amber-500/40 text-amber-400 hover:bg-amber-500/10 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          Combiner
+        </button>
+        <button id="btn-sync" class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Last.fm
+        </button>
+        <button id="btn-github" class="px-3 py-1.5 rounded-lg text-xs font-semibold gold-gradient text-black hover:brightness-110 transition">Load from GitHub</button>
+        <label class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-zinc-700 text-zinc-400 text-black cursor-pointer hover:brightness-110 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          Local JSON
+          <input type="file" id="file-input" accept=".json,application/json" multiple class="hidden" />
+        </label>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <!-- Stats -->
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div class="glass rounded-2xl border border-zinc-800/80 p-4">
+        <p class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Scrobbles</p>
+        <p id="stat-scrobbles" class="text-2xl font-black text-white mt-0.5">0</p>
+      </div>
+      <div class="glass rounded-2xl border border-zinc-800/80 p-4">
+        <p class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Gold+</p>
+        <p id="stat-gold" class="text-2xl font-black text-amber-400 mt-0.5">0</p>
+      </div>
+      <div class="glass rounded-2xl border border-zinc-800/80 p-4">
+        <p class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Platinum+</p>
+        <p id="stat-plat" class="text-2xl font-black text-zinc-300 mt-0.5">0</p>
+      </div>
+      <div class="glass rounded-2xl border border-zinc-800/80 p-4">
+        <p class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Diamond</p>
+        <p id="stat-diam" class="text-2xl font-black text-sky-400 mt-0.5">0</p>
+      </div>
+      <div class="glass rounded-2xl border border-zinc-800/80 p-4">
+        <p class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Merged</p>
+        <p id="stat-merged" class="text-2xl font-black text-amber-400 mt-0.5">0</p>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="flex flex-wrap items-center gap-3">
+      <div class="flex rounded-xl overflow-hidden border border-zinc-800">
+        <button data-type="tracks" class="plaque-type-btn px-4 py-2 text-xs font-bold bg-amber-500/20 text-amber-400">Tracks</button>
+        <button data-type="albums" class="plaque-type-btn px-4 py-2 text-xs font-bold text-zinc-400 hover:text-white">Albums</button>
+        <button data-type="artists" class="plaque-type-btn px-4 py-2 text-xs font-bold text-zinc-400 hover:text-white">Artists</button>
+      </div>
+      <select id="tier-filter" class="bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-300 focus:outline-none focus:ring-1 focus:ring-amber-500">
+        <option value="all">All Tiers</option>
+        <option value="gold">Gold+</option>
+        <option value="platinum">Platinum+</option>
+        <option value="diamond">Diamond</option>
+      </select>
+      <div class="flex items-center gap-2 text-xs text-zinc-500">
+        <span>Units = plays × weight</span>
+        <span class="text-zinc-600">|</span>
+        <span>Track weight <input id="track-weight" type="number" value="50000" class="w-20 bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs" /></span>
+        <span>Album weight <input id="album-weight" type="number" value="5000" class="w-16 bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs" /></span>
+      </div>
+      <div class="ml-auto text-xs text-zinc-500" id="status-text">Load Zerocharts JSONs or sync Last.fm</div>
+    </div>
+
+    <!-- Plaque Wall -->
+    <div>
+      <div class="flex items-center gap-2 mb-4">
+        <div class="p-2 rounded-xl gold-gradient text-black">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div>
+          <h2 class="text-lg font-black text-white">Commemorative Plaque Wall</h2>
+          <p class="text-xs text-zinc-400">Physical-style metallic certification frames from your listening history</p>
+        </div>
+      </div>
+      <div id="plaque-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div class="col-span-full p-16 text-center text-zinc-500 text-sm">
+          No plaques yet — load scrobble data to generate certifications
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Combiner Modal (same as charts) -->
+  <div id="modal-combiner" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="w-full max-w-3xl max-h-[85vh] glass rounded-3xl border border-zinc-700 shadow-2xl flex flex-col overflow-hidden">
+      <div class="px-6 py-4 border-b border-zinc-800 flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-black text-white">Duplicate & Remaster Combiner</h3>
+          <p class="text-xs text-zinc-400">Groups remasters, deluxe editions & near-identical titles before awarding plaques</p>
+        </div>
+        <button id="close-combiner" class="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400">✕</button>
+      </div>
+      <div class="px-6 py-3 border-b border-zinc-800 flex items-center gap-3">
+        <button id="run-combiner" class="px-4 py-2 rounded-xl text-xs font-bold gold-gradient text-black">Scan & Detect</button>
+        <button id="apply-all-merges" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600/80 text-white disabled:opacity-40" disabled>Apply All Merges</button>
+        <span id="combiner-status" class="text-xs text-zinc-500 ml-auto"></span>
+      </div>
+      <div id="combiner-list" class="flex-1 overflow-y-auto scroll-thin p-4 space-y-2">
+        <p class="text-center text-zinc-500 text-sm py-8">Click “Scan & Detect”</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Last.fm Sync Modal -->
+  <div id="modal-sync" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="w-full max-w-md glass rounded-3xl border border-zinc-700 shadow-2xl p-6 space-y-5">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-black text-white">Sync from Last.fm</h3>
+        <button id="close-sync" class="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400">✕</button>
+      </div>
+      <div class="space-y-3">
+        <div>
+          <label class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Last.fm Username</label>
+          <input id="lfm-user" type="text" placeholder="iammarcus3" class="mt-1 w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-500" />
+        </div>
+        <div>
+          <label class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">API Key</label>
+          <input id="lfm-key" type="password" placeholder="Your Last.fm API key" class="mt-1 w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-500" />
+        </div>
+        <div>
+          <label class="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Pages (200/page)</label>
+          <input id="lfm-pages" type="number" min="1" max="50" value="5" class="mt-1 w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-500" />
+        </div>
+        <div class="flex gap-2">
+          <label class="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer"><input type="radio" name="merge-mode" value="merge" checked class="accent-amber-500" /> Merge</label>
+          <label class="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer"><input type="radio" name="merge-mode" value="replace" class="accent-amber-500" /> Replace</label>
+        </div>
+      </div>
+      <button id="do-sync" class="w-full py-3 rounded-xl font-bold gold-gradient text-black hover:brightness-110">Pull Scrobbles</button>
+      <p id="sync-status" class="text-xs text-center text-zinc-500"></p>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'zerocharts_vault_v1';
+    const MERGED_KEY = 'zerocharts_merged_map_v1';
+
+    let vault = [];
+    let mergedMap = {};
+    let currentType = 'tracks';
+    let detectedClusters = [];
+
+    // Thresholds (mirroring TuneTrack defaults)
+    const GOLD = 500000;
+    const PLAT = 1000000;
+    const DIAM = 10000000;
+
+    function normalizeStrict(str) {
+      if (!str) return '';
+      return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/\b(remastered|remaster|deluxe edition|bonus track|live at|radio edit|explicit|clean|feat\.?|ft\.?|with)\b.*$/gi, '')
+        .replace(/[^a-z0-9]/g, '');
+    }
+    function normalizeTrackTitle(title) {
+      if (!title) return '';
+      return title
+        .replace(/\s*[\(\[](remaster(ed)?|deluxe|bonus|radio edit|explicit|clean|live|acoustic|instrumental|single version|album version)[^\)\]]*[\)\]]/gi, '')
+        .replace(/\s*-\s*(remaster(ed)?|deluxe|radio edit|explicit).*$/gi, '')
+        .replace(/\s+/g, ' ').trim();
+    }
+    function stringSimilarity(a, b) {
+      if (a === b) return 1;
+      if (!a.length || !b.length) return 0;
+      const m = [];
+      for (let i = 0; i <= b.length; i++) m[i] = [i];
+      for (let j = 0; j <= a.length; j++) m[0][j] = j;
+      for (let i = 1; i <= b.length; i++)
+        for (let j = 1; j <= a.length; j++)
+          m[i][j] = b[i-1] === a[j-1] ? m[i-1][j-1] : Math.min(m[i-1][j-1]+1, m[i][j-1]+1, m[i-1][j]+1);
+      return 1 - m[b.length][a.length] / Math.max(a.length, b.length);
+    }
+
+    function loadVault() {
+      try {
+        const r = localStorage.getItem(STORAGE_KEY); if (r) vault = JSON.parse(r);
+        const m = localStorage.getItem(MERGED_KEY); if (m) mergedMap = JSON.parse(m);
+      } catch(e){}
+    }
+    function saveVault() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(vault));
+        localStorage.setItem(MERGED_KEY, JSON.stringify(mergedMap));
+      } catch(e) {
+        if (e.name === 'QuotaExceededError') { vault = vault.slice(0, 80000); localStorage.setItem(STORAGE_KEY, JSON.stringify(vault)); }
+      }
+    }
+    function scrobbleKey(s) { return `${s.timestamp}-${normalizeStrict(s.artist)}-${normalizeStrict(s.title)}`; }
+    function mergeIncoming(incoming, mode='merge') {
+      if (mode === 'replace') { vault = incoming; return incoming.length; }
+      const map = new Map(); vault.forEach(s => map.set(scrobbleKey(s), s));
+      let added = 0;
+      incoming.forEach(s => { const k = scrobbleKey(s); if (!map.has(k)) { map.set(k, s); added++; } });
+      vault = Array.from(map.values()).sort((a,b) => b.timestamp - a.timestamp);
+      return added;
+    }
+    function getEffectiveTitle(artist, title) {
+      return mergedMap[`${artist.toLowerCase()}:::${title.toLowerCase()}`] || title;
+    }
+
+    // Combiner
+    function detectDuplicateClusters(threshold=0.93) {
+      const artistTracks = new Map();
+      for (const s of vault) {
+        const aKey = normalizeStrict(s.artist); if (!aKey) continue;
+        if (!artistTracks.has(aKey)) artistTracks.set(aKey, { artist: s.artist, titles: new Map() });
+        const e = artistTracks.get(aKey);
+        const t = s.title.trim();
+        const c = e.titles.get(t) || { count: 0 }; c.count++; e.titles.set(t, c);
+      }
+      const clusters = [];
+      artistTracks.forEach(entry => {
+        const titles = Array.from(entry.titles.entries()).map(([title,d]) => ({
+          original: title, cleaned: normalizeTrackTitle(title),
+          strict: normalizeStrict(normalizeTrackTitle(title)), count: d.count
+        }));
+        if (titles.length < 2) return;
+        const assigned = new Set();
+        for (let i=0;i<titles.length;i++) {
+          if (assigned.has(titles[i].original)) continue;
+          const group = [titles[i]]; assigned.add(titles[i].original);
+          let reason = 'Exact normalized match';
+          for (let j=i+1;j<titles.length;j++) {
+            if (assigned.has(titles[j].original)) continue;
+            let sim = 0;
+            if (titles[i].strict && titles[i].strict === titles[j].strict) { sim=1; reason='Identical after stripping remaster tags'; }
+            else if (titles[i].cleaned.toLowerCase() === titles[j].cleaned.toLowerCase()) { sim=0.99; reason='Same cleaned title'; }
+            else { sim = stringSimilarity(titles[i].strict, titles[j].strict); if (sim>=threshold) reason=`Fuzzy (${(sim*100).toFixed(1)}%)`; }
+            if (sim >= threshold) { group.push(titles[j]); assigned.add(titles[j].original); }
+          }
+          if (group.length > 1) {
+            group.sort((a,b)=>b.count-a.count);
+            clusters.push({ artist: entry.artist, preferred: group[0].original, variants: group,
+              totalPlays: group.reduce((s,g)=>s+g.count,0), reason });
+          }
+        }
+      });
+      return clusters.sort((a,b)=>b.totalPlays-a.totalPlays);
+    }
+    function applyMerge(c) {
+      c.variants.forEach(v => {
+        if (v.original === c.preferred) return;
+        mergedMap[`${c.artist.toLowerCase()}:::${v.original.toLowerCase()}`] = c.preferred;
+      });
+      saveVault();
+    }
+    function applyAllMerges() {
+      detectedClusters.forEach(applyMerge);
+      detectedClusters = [];
+      renderCombinerList();
+      updateStats();
+      renderPlaques();
+    }
+
+    // Certification
+    function getCert(units) {
+      if (units >= DIAM) {
+        const multi = Math.floor(units / DIAM);
+        return { label: multi > 1 ? `${multi}× Diamond` : 'Diamond', tier: 'diamond' };
+      }
+      if (units >= PLAT) {
+        const multi = Math.floor(units / PLAT);
+        return { label: multi > 1 ? `${multi}× Platinum` : 'Platinum', tier: multi > 1 ? 'multi' : 'platinum' };
+      }
+      if (units >= GOLD) return { label: 'Gold', tier: 'gold' };
+      return { label: '—', tier: null };
+    }
+
+    function computePlaques() {
+      const trackW = parseInt(document.getElementById('track-weight').value, 10) || 50000;
+      const albumW = parseInt(document.getElementById('album-weight').value, 10) || 5000;
+      const map = new Map();
+
+      for (const s of vault) {
+        let key, title, subtitle, weight;
+        if (currentType === 'tracks') {
+          const eff = getEffectiveTitle(s.artist, s.title);
+          key = `t:${s.artist.toLowerCase()}:::${eff.toLowerCase()}`;
+          title = eff; subtitle = s.artist; weight = trackW;
+        } else if (currentType === 'albums') {
+          if (!s.album) continue;
+          key = `a:${s.artist.toLowerCase()}:::${s.album.toLowerCase()}`;
+          title = s.album; subtitle = s.artist; weight = albumW;
+        } else {
+          key = `r:${s.artist.toLowerCase()}`;
+          title = s.artist; subtitle = 'Artist'; weight = trackW;
+        }
+        const cur = map.get(key) || { title, subtitle, plays: 0, units: 0 };
+        cur.plays++;
+        cur.units = cur.plays * weight;
+        map.set(key, cur);
+      }
+
+      const tierFilter = document.getElementById('tier-filter').value;
+      let items = Array.from(map.values()).map(item => {
+        const cert = getCert(item.units);
+        return { ...item, ...cert };
+      }).filter(i => i.tier);
+
+      if (tierFilter === 'gold') items = items.filter(i => ['gold','platinum','multi','diamond'].includes(i.tier));
+      if (tierFilter === 'platinum') items = items.filter(i => ['platinum','multi','diamond'].includes(i.tier));
+      if (tierFilter === 'diamond') items = items.filter(i => i.tier === 'diamond');
+
+      return items.sort((a,b) => b.units - a.units);
+    }
+
+    function frameClass(tier) {
+      if (tier === 'diamond') return 'plaque-diamond';
+      if (tier === 'multi') return 'plaque-multi';
+      if (tier === 'platinum') return 'plaque-platinum';
+      if (tier === 'gold') return 'plaque-gold';
+      return 'plaque-obsidian';
+    }
+
+    function renderPlaques() {
+      const items = computePlaques();
+      const grid = document.getElementById('plaque-grid');
+      if (!items.length) {
+        grid.innerHTML = `<div class="col-span-full p-16 text-center text-zinc-500 text-sm">No certifications at this tier yet</div>`;
+        return;
+      }
+      grid.innerHTML = items.map(p => `
+        <div class="plaque-frame ${frameClass(p.tier)} p-4">
+          <div class="flex gap-3">
+            <div class="w-16 h-16 rounded-full vinyl-ring flex-shrink-0 border border-zinc-600/50 overflow-hidden bg-zinc-900 flex items-center justify-center">
+              <div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-600"></div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[10px] uppercase tracking-widest font-bold ${p.tier==='diamond'?'text-sky-300':p.tier==='multi'?'text-purple-300':p.tier==='platinum'?'text-zinc-300':'text-amber-400'}">${p.label}</p>
+              <p class="font-black text-sm text-white truncate mt-0.5">${escapeHtml(p.title)}</p>
+              <p class="text-xs text-zinc-400 truncate">${escapeHtml(p.subtitle)}</p>
+              <div class="mt-2 flex items-baseline gap-2">
+                <span class="text-lg font-black text-white">${p.plays.toLocaleString()}</span>
+                <span class="text-[10px] text-zinc-500">plays</span>
+                <span class="text-[10px] text-zinc-600">·</span>
+                <span class="text-[10px] text-zinc-500">${(p.units/1000).toFixed(0)}k units</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function updateStats() {
+      document.getElementById('stat-scrobbles').textContent = vault.length.toLocaleString();
+      document.getElementById('stat-merged').textContent = Object.keys(mergedMap).length.toLocaleString();
+      // Quick cert counts for tracks
+      const trackW = parseInt(document.getElementById('track-weight').value,10)||50000;
+      const counts = { gold:0, plat:0, diam:0 };
+      const map = new Map();
+      vault.forEach(s => {
+        const eff = getEffectiveTitle(s.artist, s.title);
+        const k = `${s.artist}:::${eff}`;
+        map.set(k, (map.get(k)||0)+1);
+      });
+      map.forEach(plays => {
+        const u = plays * trackW;
+        if (u >= DIAM) counts.diam++;
+        else if (u >= PLAT) counts.plat++;
+        else if (u >= GOLD) counts.gold++;
+      });
+      document.getElementById('stat-gold').textContent = (counts.gold + counts.plat + counts.diam).toLocaleString();
+      document.getElementById('stat-plat').textContent = (counts.plat + counts.diam).toLocaleString();
+      document.getElementById('stat-diam').textContent = counts.diam.toLocaleString();
+    }
+
+    function renderCombinerList() {
+      const el = document.getElementById('combiner-list');
+      if (!detectedClusters.length) {
+        el.innerHTML = `<p class="text-center text-zinc-500 text-sm py-8">No clusters found</p>`;
+        document.getElementById('apply-all-merges').disabled = true;
+        return;
+      }
+      document.getElementById('apply-all-merges').disabled = false;
+      document.getElementById('combiner-status').textContent = `${detectedClusters.length} clusters`;
+      el.innerHTML = detectedClusters.map((c,idx) => {
+        const vars = c.variants.map(v =>
+          `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-zinc-800 text-[11px] ${v.original===c.preferred?'ring-1 ring-amber-500/60 text-amber-300':'text-zinc-400'}">${escapeHtml(v.original)} <span class="text-zinc-600">(${v.count})</span></span>`
+        ).join(' ');
+        return `<div class="rounded-xl border border-zinc-800 p-3 space-y-2">
+          <div class="flex justify-between gap-3">
+            <div><p class="text-sm font-bold text-white">${escapeHtml(c.artist)}</p><p class="text-[11px] text-zinc-500">${c.reason} · ${c.totalPlays} plays</p></div>
+            <button data-idx="${idx}" class="apply-one px-3 py-1 rounded-lg text-[11px] font-bold bg-amber-500/20 text-amber-400">Merge</button>
+          </div>
+          <div class="flex flex-wrap gap-1.5">${vars}</div>
+        </div>`;
+      }).join('');
+      el.querySelectorAll('.apply-one').forEach(btn => {
+        btn.addEventListener('click', () => {
+          applyMerge(detectedClusters[parseInt(btn.dataset.idx)]);
+          detectedClusters.splice(parseInt(btn.dataset.idx),1);
+          renderCombinerList(); updateStats(); renderPlaques();
+        });
+      });
+    }
+
+    // Data loading (shared)
+    function parseZerochartsJson(obj) {
+      if (!obj?.scrobbles) return [];
+      return obj.scrobbles.map((s,i) => ({
+        id: `zc_${obj.year||'x'}_${i}_${s.timestamp}`,
+        title: s.track || s.title || '',
+        artist: s.artist || '',
+        album: s.album || '',
+        timestamp: s.timestamp,
+        coverArt: null
+      })).filter(s => s.title && s.artist && s.timestamp);
+    }
+    
+    const GITHUB_OWNER = 'iammarcus3';
+    const GITHUB_REPO = 'Charts';
+    const GITHUB_BRANCH = 'main';
+    const GITHUB_YEARS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+    function githubRawUrl(year) {
+      return 'https://raw.githubusercontent.com/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/' + GITHUB_BRANCH +
+        '/zerocharts-scrobbles-iammarcus3-' + year + '.json';
+    }
+    async function loadFromGitHub(forceReplace) {
+      var status = document.getElementById('status-text');
+      var btn = document.getElementById('btn-github');
+      if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+      if (status) status.textContent = 'Fetching from GitHub…';
+      if (forceReplace) { vault = []; mergedMap = {}; }
+      var loadedYears = [], errors = [];
+      for (var i = 0; i < GITHUB_YEARS.length; i++) {
+        var year = GITHUB_YEARS[i];
+        if (status) status.textContent = 'GitHub · ' + year + ' (' + (i+1) + '/' + GITHUB_YEARS.length + ')…';
+        try {
+          var res = await fetch(githubRawUrl(year), { cache: 'no-cache' });
+          if (!res.ok) { if (res.status === 404) { errors.push(year + ': missing'); continue; } throw new Error('HTTP ' + res.status); }
+          var obj = await res.json();
+          mergeIncoming(parseZerochartsJson(obj), 'merge');
+          loadedYears.push(year);
+        } catch (e) { errors.push(year + ': ' + (e.message || e)); }
+      }
+      saveVault();
+
+      updateStats(); renderPlaques();
+
+      if (status) status.textContent = 'GitHub · ' + loadedYears.join(', ') + ' · vault ' + vault.length.toLocaleString() + (errors.length ? ' · ' + errors.join('; ') : '');
+      if (btn) { btn.disabled = false; btn.textContent = 'Reload from GitHub'; }
+    }
+
+async function handleFiles(files) {
+      document.getElementById('status-text').textContent = 'Loading…';
+      let added = 0;
+      for (const f of files) {
+        try {
+          const obj = JSON.parse(await f.text());
+          added += mergeIncoming(parseZerochartsJson(obj));
+        } catch(e) { alert(`Failed ${f.name}: ${e.message}`); }
+      }
+      saveVault(); updateStats(); renderPlaques();
+      document.getElementById('status-text').textContent = `+${added.toLocaleString()} · vault ${vault.length.toLocaleString()}`;
+      setTimeout(() => { detectedClusters = detectDuplicateClusters(); if (detectedClusters.length) document.getElementById('status-text').textContent += ` · ${detectedClusters.length} merges possible`; }, 80);
+    }
+    async function syncLastfm() {
+      const user = document.getElementById('lfm-user').value.trim().replace(/^@/,'');
+      const key = document.getElementById('lfm-key').value.trim();
+      const pages = Math.min(50, Math.max(1, +document.getElementById('lfm-pages').value||5));
+      const mode = document.querySelector('input[name="merge-mode"]:checked').value;
+      const status = document.getElementById('sync-status');
+      if (!user||!key) { status.textContent='Username + API key required'; status.className='text-xs text-center text-red-400'; return; }
+      status.textContent='Fetching…'; status.className='text-xs text-center text-amber-400';
+      const incoming = [];
+      try {
+        for (let p=1;p<=pages;p++) {
+          status.textContent=`Page ${p}/${pages}…`;
+          const res = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(user)}&api_key=${encodeURIComponent(key)}&format=json&limit=200&page=${p}`);
+          const data = await res.json();
+          if (data.error) throw new Error(data.message||'Last.fm error');
+          const tracks = data.recenttracks?.track||[];
+          if (!tracks.length) break;
+          tracks.forEach(t => {
+            if (t['@attr']?.nowplaying) return;
+            const ts = +t.date?.uts||0; if (!ts) return;
+            incoming.push({
+              id: `lfm_${ts}_${normalizeStrict(t.artist['#text']||t.artist)}_${normalizeStrict(t.name)}`,
+              title: t.name||'', artist: (t.artist['#text']||t.artist||'').toString(),
+              album: (t.album?.['#text']||'').toString(), timestamp: ts, coverArt: t.image?.[2]?.['#text']||null
+            });
+          });
+          if (tracks.length < 200) break;
+        }
+        const added = mergeIncoming(incoming, mode);
+        saveVault(); updateStats(); renderPlaques();
+        status.textContent=`Done · ${added} new`; status.className='text-xs text-center text-emerald-400';
+        setTimeout(()=>{ document.getElementById('modal-sync').classList.add('hidden'); document.getElementById('modal-sync').classList.remove('flex'); },1100);
+      } catch(e) { status.textContent=e.message; status.className='text-xs text-center text-red-400'; }
+    }
+
+    // Events
+    document.getElementById('file-input').addEventListener('change', e => { if (e.target.files?.length) handleFiles([...e.target.files]); });
+    document.body.addEventListener('dragover', e => e.preventDefault());
+    document.body.addEventListener('drop', e => {
+      e.preventDefault();
+      const files = [...e.dataTransfer.files].filter(f=>f.name.endsWith('.json'));
+      if (files.length) handleFiles(files);
+    });
+    document.querySelectorAll('.plaque-type-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentType = btn.dataset.type;
+        document.querySelectorAll('.plaque-type-btn').forEach(b => { b.classList.remove('bg-amber-500/20','text-amber-400'); b.classList.add('text-zinc-400'); });
+        btn.classList.add('bg-amber-500/20','text-amber-400'); btn.classList.remove('text-zinc-400');
+        renderPlaques();
+      });
+    });
+    document.getElementById('tier-filter').addEventListener('change', renderPlaques);
+    document.getElementById('track-weight').addEventListener('change', () => { updateStats(); renderPlaques(); });
+    document.getElementById('album-weight').addEventListener('change', () => { updateStats(); renderPlaques(); });
+
+    const openM = id => { const m=document.getElementById(id); m.classList.remove('hidden'); m.classList.add('flex'); };
+    const closeM = id => { const m=document.getElementById(id); m.classList.add('hidden'); m.classList.remove('flex'); };
+    document.getElementById('btn-combiner').addEventListener('click', () => openM('modal-combiner'));
+    document.getElementById('close-combiner').addEventListener('click', () => closeM('modal-combiner'));
+    document.getElementById('btn-sync').addEventListener('click', () => openM('modal-sync'));
+    document.getElementById('close-sync').addEventListener('click', () => closeM('modal-sync'));
+    document.getElementById('run-combiner').addEventListener('click', () => {
+      document.getElementById('combiner-status').textContent='Scanning…';
+      setTimeout(()=>{ detectedClusters=detectDuplicateClusters(); renderCombinerList(); },40);
+    });
+    document.getElementById('apply-all-merges').addEventListener('click', applyAllMerges);
+    document.getElementById('do-sync').addEventListener('click', syncLastfm);
+    if (document.getElementById('btn-github')) document.getElementById('btn-github').addEventListener('click', function() { loadFromGitHub(false); });
+
+    const sk = localStorage.getItem('lfm_api_key'); if (sk) document.getElementById('lfm-key').value=sk;
+    document.getElementById('lfm-key').addEventListener('change', e => localStorage.setItem('lfm_api_key', e.target.value.trim()));
+    const su = localStorage.getItem('lfm_user'); document.getElementById('lfm-user').value = su || 'iammarcus3';
+    document.getElementById('lfm-user').addEventListener('change', e => localStorage.setItem('lfm_user', e.target.value.trim()));
+
+    loadVault(); updateStats(); renderPlaques();
+    if (vault.length) document.getElementById('status-text').textContent = `Vault · ${vault.length.toLocaleString()} scrobbles`;
+  
+    if (!vault.length && typeof loadFromGitHub === 'function') {
+      var st = document.getElementById('status-text');
+      if (st) st.textContent = 'Loading scrobbles from GitHub…';
+      loadFromGitHub(false);
+    }
+  </script>
+</body>
+</html>
