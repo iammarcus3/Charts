@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-black text-zinc-100 antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YourHot100 | The Official Chart</title>
+    
+    <!-- PWA Manifest Injection -->
+    <script>
+        const setupPWA = () => {
+            const manifest = {
+                name: "YourHot100 Charts",
+                short_name: "Hot100",
+                display: "standalone",
+                background_color: "#000000",
+                theme_color: "#000000",
+                icons: [{ src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='black'/%3E%3Ctext y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='40' fill='white'%3E100%3C/text%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml" }]
+            };
+            const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+            const link = document.createElement('link');
+            link.rel = 'manifest';
+            link.href = URL.createObjectURL(blob);
+            document.head.appendChild(link);
+        };
+        setupPWA();
+    </script>
+
+    <!-- Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons: Phosphor -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { zinc: { 900: '#18181b', 950: '#09090b' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .loading-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row">
+
+    <!-- Navigation Sidebar -->
+    <nav class="w-full md:w-64 bg-zinc-950 border-b md:border-b-0 md:border-r border-zinc-900 flex flex-col p-6 shrink-0 md:h-screen md:sticky top-0 z-50">
+        <div class="mb-10">
+            <h1 class="text-3xl font-black tracking-tighter text-white">YourHot<span class="text-zinc-500">100</span></h1>
+            <p class="text-xs text-zinc-500 uppercase tracking-widest mt-1">Official Charts</p>
+        </div>
+
+        <div class="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-4 md:pb-0">
+            <button onclick="app.navigate('dashboard')" id="nav-dashboard" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors shrink-0 text-left">
+                <i class="ph ph-squares-four text-xl"></i> Dashboard
+            </button>
+            <button onclick="app.navigate('songs')" id="nav-songs" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors shrink-0 text-left">
+                <i class="ph ph-music-notes text-xl"></i> Hot 100 Songs
+            </button>
+            <button onclick="app.navigate('albums')" id="nav-albums" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors shrink-0 text-left">
+                <i class="ph ph-vinyl-record text-xl"></i> Top 100 Albums
+            </button>
+        </div>
+        
+        <div class="mt-auto hidden md:block pt-8 border-t border-zinc-900">
+            <p class="text-xs text-zinc-600 font-bold uppercase tracking-widest mb-2">Vault Status</p>
+            <div class="flex items-center gap-2 text-sm text-green-500 font-semibold">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                Live Synced
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-4 md:p-10 max-w-7xl mx-auto w-full overflow-x-hidden flex flex-col">
+        
+        <!-- Global Chart Navigation -->
+        <div class="flex flex-col sm:flex-row justify-between items-center bg-zinc-900/80 border border-zinc-800 rounded-lg p-4 mb-8 backdrop-blur-sm z-40 sticky top-4">
+            <button onclick="app.changeWeek(-1)" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-sm font-semibold transition flex items-center gap-2">
+                <i class="ph-bold ph-arrow-left"></i> Prev Week
+            </button>
+            
+            <div class="text-center my-3 sm:my-0">
+                <h3 id="week-display-label" class="text-lg font-black text-white m-0">Current Week</h3>
+                <p id="week-date-label" class="text-xs text-zinc-400 font-medium tracking-wide">Oct 16 - Oct 22, 2026</p>
+            </div>
+            
+            <button id="btn-next-week" onclick="app.changeWeek(1)" class="px-4 py-2 bg-zinc-800 text-zinc-500 rounded text-sm font-semibold transition flex items-center gap-2 cursor-not-allowed" disabled>
+                Next Week <i class="ph-bold ph-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- Loader -->
+        <div id="loading-state" class="hidden flex-col items-center justify-center flex-1 text-zinc-500 py-20">
+            <i class="ph ph-spinner-gap animate-spin text-4xl mb-4"></i>
+            <p class="font-medium uppercase tracking-widest text-sm">Compiling Vault Data...</p>
+        </div>
+        
+        <!-- Content Container -->
+        <div id="content-container" class="fade-in pb-20"></div>
+    </main>
+
+    <script>
+        // --- Configuration & Constants ---
+        const LASTFM_API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822";
+        
+        // Caching to prevent spamming Last.fm API during view switches
+        const artworkCache = new Map();
+
+        // Exact Formulas Requested
+        const FORMULAS = {
+            songUnits: (plays, points) => (plays * 500) + (points * 500),
+            albumUnits: (plays, points) => (plays * 5000) + (points * 500)
+        };
+
+        // Realistic seed lists for Mock generation
+        const mockArtists = ["The Weeknd", "Taylor Swift", "Kendrick Lamar", "Dua Lipa", "Drake", "SZA", "Bad Bunny", "Billie Eilish", "Post Malone", "Ariana Grande", "Beyoncé", "Harry Styles"];
+        const mockSongTitles = ["Midnight", "Echoes", "Vibrations", "Shattered", "Gold", "Runaway", "Silence", "Euphoria", "Cruel", "Summer", "Blinding", "Levitating"];
+        const mockAlbumTitles = ["After Hours", "Midnights", "DAMN.", "Future Nostalgia", "Scorpion", "SOS", "Un Verano", "Happier Than Ever", "Hollywood's Bleeding", "Positions"];
+
+        /**
+         * Core Application Architect
+         */
+        const app = {
+            state: {
+                currentView: 'dashboard',
+                weekOffset: 0, // 0 = current, -1 = last week, etc.
+                data: { songs: [], albums: [] }
+            },
+            
+            async init() {
+                this.navigate('dashboard'); // setup UI state
+                await this.loadDataForCurrentWeek();
+            },
+
+            async loadDataForCurrentWeek() {
+                this.showLoading(true);
+                
+                try {
+                    // Attempt to fetch real GitHub Pages data
+                    // If running locally or in this environment, this will throw an error and fallback
+                    const [songsRes, albumsRes] = await Promise.all([
+                        fetch(`/vault/charts/week_${this.state.weekOffset}_songs.json`),
+                        fetch(`/vault/charts/week_${this.state.weekOffset}_albums.json`)
+                    ]);
+                    
+                    if (!songsRes.ok || !albumsRes.ok) throw new Error("Local files missing, using generated mock.");
+                    
+                    this.state.data.songs = await songsRes.json();
+                    this.state.data.albums = await albumsRes.json();
+                } catch (e) {
+                    console.log(e.message);
+                    // Generate realistic mock data applying exact formulas
+                    this.state.data.songs = this.generateMockData('songs', this.state.weekOffset);
+                    this.state.data.albums = this.generateMockData('albums', this.state.weekOffset);
+                }
+
+                this.updateWeekUI();
+                this.renderCurrentView();
+                this.showLoading(false);
+            },
+
+            async changeWeek(direction) {
+                if (direction > 0 && this.state.weekOffset >= 0) return; // Can't go into future
+                
+                this.state.weekOffset += direction;
+                await this.loadDataForCurrentWeek();
+            },
+
+            updateWeekUI() {
+                const nextBtn = document.getElementById('btn-next-week');
+                const label = document.getElementById('week-display-label');
+                const dateLabel = document.getElementById('week-date-label');
+                
+                if (this.state.weekOffset === 0) {
+                    nextBtn.disabled = true;
+                    nextBtn.classList.add('text-zinc-500', 'cursor-not-allowed');
+                    nextBtn.classList.remove('text-white', 'hover:bg-zinc-700');
+                    label.textContent = "Current Week";
+                    dateLabel.textContent = "Oct 16 - Oct 22, 2026";
+                } else {
+                    nextBtn.disabled = false;
+                    nextBtn.classList.remove('text-zinc-500', 'cursor-not-allowed');
+                    nextBtn.classList.add('text-white', 'hover:bg-zinc-700');
+                    label.textContent = `Historic Week`;
+                    dateLabel.textContent = `${Math.abs(this.state.weekOffset)} Weeks Ago`;
+                }
+            },
+
+            showLoading(show) {
+                document.getElementById('loading-state').style.display = show ? 'flex' : 'none';
+                document.getElementById('content-container').style.display = show ? 'none' : 'block';
+            },
+
+            navigate(view) {
+                this.state.currentView = view;
+                
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('bg-zinc-900', 'text-white', 'font-semibold');
+                    btn.classList.add('text-zinc-400');
+                });
+                
+                const activeBtn = document.getElementById(`nav-${view}`);
+                if (activeBtn) {
+                    activeBtn.classList.remove('text-zinc-400');
+                    activeBtn.classList.add('bg-zinc-900', 'text-white', 'font-semibold');
+                }
+                
+                if (this.state.data.songs.length > 0) {
+                    this.renderCurrentView();
+                }
+            },
+
+            renderCurrentView() {
+                const container = document.getElementById('content-container');
+                container.innerHTML = '';
+                
+                if (this.state.currentView === 'dashboard') container.innerHTML = this.views.dashboard();
+                if (this.state.currentView === 'songs') container.innerHTML = this.views.chartView('songs');
+                if (this.state.currentView === 'albums') container.innerHTML = this.views.chartView('albums');
+                
+                // Re-trigger animation
+                container.classList.remove('fade-in');
+                void container.offsetWidth;
+                container.classList.add('fade-in');
+
+                // Trigger async Last.fm artwork fetching for rendered images
+                this.loadVisibleArtworks();
+            },
+
+            /**
+             * Data Generation & Formatting Tools
+             */
+            generateMockData(type, offsetSeed) {
+                const items = [];
+                // Simple deterministic randomizer based on rank and week offset so data shifts realistically
+                const pseudoRandom = (seed) => {
+                    let x = Math.sin(seed + offsetSeed * 100) * 10000;
+                    return x - Math.floor(x);
+                };
+
+                for(let i = 1; i <= 100; i++) {
+                    const rBase = pseudoRandom(i);
+                    const isNew = rBase > 0.85;
+                    const rank = i;
+                    
+                    // Simulate chart movement
+                    let previous_rank = isNew ? null : rank + Math.floor(pseudoRandom(i + 1) * 20) - 10;
+                    if (previous_rank !== null) previous_rank = Math.max(1, Math.min(100, previous_rank));
+
+                    // Base metrics
+                    const plays = Math.floor(Math.max(10, 1500 - (rank * 14)) * (rBase * 0.5 + 0.5));
+                    const points = rank === 1 ? 100 : rank === 2 ? 98 : Math.max(1, 100 - rank + Math.floor(rBase * 3));
+                    
+                    // Apply exact official formulas
+                    const units_sold = type === 'songs' 
+                        ? FORMULAS.songUnits(plays, points)
+                        : FORMULAS.albumUnits(plays, points);
+
+                    const artist = mockArtists[Math.floor(pseudoRandom(i + 2) * mockArtists.length)];
+                    const title = (type === 'songs' ? mockSongTitles : mockAlbumTitles)[Math.floor(pseudoRandom(i + 3) * (type === 'songs' ? mockSongTitles.length : mockAlbumTitles.length))];
+                    
+                    items.push({
+                        id: `item-${type}-${rank}`,
+                        rank,
+                        previous_rank,
+                        title,
+                        artist,
+                        album: type === 'albums' ? title : null, // for Last.fm searching
+                        plays,
+                        points,
+                        units_sold,
+                        peak: isNew ? rank : Math.min(rank, previous_rank || rank, Math.floor(pseudoRandom(i + 4) * rank) + 1),
+                        weeks_on_chart: isNew ? 1 : Math.floor(pseudoRandom(i + 5) * 50) + Math.abs(offsetSeed) + 1,
+                        is_new: isNew,
+                        track_count: type === 'albums' ? Math.floor(pseudoRandom(i+6) * 12) + 3 : null
+                    });
+                }
+                // Sort by units sold to ensure formula logic aligns with rank
+                items.sort((a, b) => b.units_sold - a.units_sold);
+                // Re-assign literal ranks based on actual sorted units
+                items.forEach((item, index) => item.rank = index + 1);
+                
+                return items;
+            },
+
+            formatNumber: (num) => num.toLocaleString('en-US'),
+            
+            getMovementUI: (current, prev, isNew) => {
+                if (isNew) return `<div class="flex items-center justify-center lg:justify-start gap-1 text-blue-400 font-bold text-[10px] sm:text-xs"><i class="ph-fill ph-star"></i> NEW</div>`;
+                if (!prev) return `<div class="flex items-center justify-center lg:justify-start gap-1 text-zinc-500 font-bold text-[10px] sm:text-xs"><i class="ph-bold ph-minus"></i> RE</div>`;
+                if (current < prev) return `<div class="flex items-center justify-center lg:justify-start gap-1 text-green-500 font-bold text-[10px] sm:text-xs"><i class="ph-bold ph-arrow-up"></i> ${prev - current}</div>`;
+                if (current > prev) return `<div class="flex items-center justify-center lg:justify-start gap-1 text-red-500 font-bold text-[10px] sm:text-xs"><i class="ph-bold ph-arrow-down"></i> ${current - prev}</div>`;
+                return `<div class="flex items-center justify-center lg:justify-start gap-1 text-zinc-600 font-bold text-[10px] sm:text-xs"><i class="ph-bold ph-minus"></i> 0</div>`;
+            },
+
+            /**
+             * Last.fm Asynchronous Fetcher
+             */
+            async loadVisibleArtworks() {
+                const images = document.querySelectorAll('.dynamic-artwork');
+                for (let img of images) {
+                    const artist = img.dataset.artist;
+                    const album = img.dataset.album;
+                    
+                    this.fetchLastFmImage(artist, album).then(url => {
+                        if (url) {
+                            img.src = url;
+                            img.classList.remove('loading-pulse');
+                        }
+                    });
+                }
+            },
+
+            async fetchLastFmImage(artist, album) {
+                const cacheKey = `${artist}|${album || 'null'}`;
+                if (artworkCache.has(cacheKey)) return artworkCache.get(cacheKey);
+
+                try {
+                    const method = album && album !== "null" ? "album.getinfo" : "artist.getinfo";
+                    let url = `https://ws.audioscrobbler.com/2.0/?method=${method}&api_key=${LASTFM_API_KEY}&artist=${encodeURIComponent(artist)}&format=json`;
+                    if (album && album !== "null") url += `&album=${encodeURIComponent(album)}`;
+
+                    const res = await fetch(url);
+                    if (!res.ok) return null;
+                    const data = await res.json();
+                    
+                    let imgUrl = null;
+                    if (method === "album.getinfo" && data.album && data.album.image) {
+                        imgUrl = data.album.image.find(img => img.size === 'extralarge')?.['#text'];
+                    } else if (method === "artist.getinfo" && data.artist && data.artist.image) {
+                        imgUrl = data.artist.image.find(img => img.size === 'extralarge')?.['#text'];
+                    }
+
+                    if (imgUrl) {
+                        artworkCache.set(cacheKey, imgUrl);
+                        return imgUrl;
+                    }
+                } catch (e) {
+                    console.error("Artwork fetch failed", e);
+                }
+                return null;
+            },
+
+            /**
+             * View Renderers
+             */
+            views: {
+                dashboard: () => {
+                    const topSong = app.state.data.songs[0];
+                    const topAlbum = app.state.data.albums[0];
+                    
+                    // Simple placeholder generation
+                    const phSong = `https://placehold.co/400x400/18181b/ffffff?text=1`;
+                    const phAlbum = `https://placehold.co/400x400/18181b/ffffff?text=1`;
+
+                    return `
+                        <!-- Highlights -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+                            <div class="bg-zinc-900 border border-zinc-800 p-6 flex flex-col sm:flex-row items-center sm:items-start gap-6 relative overflow-hidden rounded-lg shadow-2xl">
+                                <img src="${phSong}" data-artist="${topSong.artist}" data-album="null" class="dynamic-artwork loading-pulse w-40 h-40 object-cover shadow-2xl z-10 bg-black rounded" alt="Cover">
+                                <div class="z-10 text-center sm:text-left w-full">
+                                    <p class="text-xs uppercase tracking-widest text-zinc-400 font-bold mb-1"><i class="ph-fill ph-crown text-yellow-500"></i> #1 Song</p>
+                                    <h3 class="text-3xl sm:text-4xl font-black tracking-tight text-white mb-1 line-clamp-2">${topSong.title}</h3>
+                                    <p class="text-lg text-zinc-300 font-medium">${topSong.artist}</p>
+                                    <div class="mt-4 bg-black/50 p-3 rounded border border-zinc-800 inline-block w-full sm:w-auto">
+                                        <p class="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-1">Calculated Units</p>
+                                        <p class="text-xl font-black text-white">${app.formatNumber(topSong.units_sold)}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-zinc-900 border border-zinc-800 p-6 flex flex-col sm:flex-row items-center sm:items-start gap-6 relative overflow-hidden rounded-lg shadow-2xl">
+                                <img src="${phAlbum}" data-artist="${topAlbum.artist}" data-album="${topAlbum.album}" class="dynamic-artwork loading-pulse w-40 h-40 object-cover shadow-2xl z-10 bg-black rounded" alt="Cover">
+                                <div class="z-10 text-center sm:text-left w-full">
+                                    <p class="text-xs uppercase tracking-widest text-zinc-400 font-bold mb-1"><i class="ph-fill ph-vinyl-record text-zinc-300"></i> #1 Album</p>
+                                    <h3 class="text-3xl sm:text-4xl font-black tracking-tight text-white mb-1 line-clamp-2">${topAlbum.title}</h3>
+                                    <p class="text-lg text-zinc-300 font-medium">${topAlbum.artist}</p>
+                                    <div class="mt-4 bg-black/50 p-3 rounded border border-zinc-800 inline-block w-full sm:w-auto">
+                                        <p class="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-1">Calculated Units</p>
+                                        <p class="text-xl font-black text-white">${app.formatNumber(topAlbum.units_sold)}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top 5 Preview -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-zinc-300 border-b border-zinc-800 pb-2">Hot 100 Preview</h3>
+                            <div class="flex flex-col bg-zinc-900/50 rounded-lg border border-zinc-800 overflow-hidden">
+                                ${app.state.data.songs.slice(0, 5).map(song => `
+                                    <div class="flex items-center gap-4 py-3 px-4 border-b border-zinc-800/50 last:border-0 hover:bg-zinc-800 transition">
+                                        <div class="w-8 text-center font-black text-2xl text-zinc-300">${song.rank}</div>
+                                        <img src="https://placehold.co/100x100/18181b/ffffff?text=${song.rank}" data-artist="${song.artist}" data-album="null" class="dynamic-artwork w-12 h-12 object-cover bg-black rounded-sm shadow">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="font-bold text-white leading-tight truncate">${song.title}</div>
+                                            <div class="text-sm text-zinc-400 truncate">${song.artist}</div>
+                                        </div>
+                                        <div class="text-right hidden sm:block">
+                                            <div class="text-sm font-bold text-white">${app.formatNumber(song.units_sold)}</div>
+                                            <div class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Units</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                },
+
+                chartView: (type) => {
+                    const data = app.state.data[type];
+                    const unitLabel = type === 'songs' ? 'Track Units' : 'Album Units';
+
+                    let html = `
+                        <!-- Chart Table Header (Desktop) -->
+                        <div class="hidden lg:grid grid-cols-12 gap-4 px-4 py-3 border-b border-zinc-800 text-xs font-bold uppercase tracking-widest text-zinc-500 sticky top-[72px] bg-black/95 backdrop-blur z-20">
+                            <div class="col-span-1 text-center">Rank</div>
+                            <div class="col-span-4">Information</div>
+                            <div class="col-span-2 text-right">Metrics</div>
+                            <div class="col-span-2 text-right text-zinc-300">${unitLabel}</div>
+                            <div class="col-span-3 text-right">Chart History</div>
+                        </div>
+                    `;
+
+                    // Rows
+                    data.forEach(item => {
+                        const albumAttr = type === 'albums' ? `data-album="${item.album}"` : `data-album="null"`;
+                        const placeholder = `https://placehold.co/200x200/18181b/ffffff?text=${item.rank}`;
+
+                        html += `
+                            <div class="group grid grid-cols-1 lg:grid-cols-12 gap-4 items-center px-4 py-4 border-b border-zinc-900 hover:bg-zinc-900/40 transition-colors">
+                                
+                                <!-- Rank & Movement -->
+                                <div class="col-span-1 flex flex-row lg:flex-col items-center justify-between lg:justify-center gap-1 sm:gap-2">
+                                    <span class="text-3xl font-black tracking-tighter text-white w-10 text-center">${item.rank}</span>
+                                    ${app.getMovementUI(item.rank, item.previous_rank, item.is_new)}
+                                </div>
+                                
+                                <!-- Artwork & Details -->
+                                <div class="col-span-4 flex items-center gap-4 mt-2 lg:mt-0">
+                                    <img src="${placeholder}" data-artist="${item.artist}" ${albumAttr} class="dynamic-artwork loading-pulse w-16 h-16 object-cover rounded-sm shadow-md bg-zinc-800 shrink-0" alt="Cover">
+                                    <div class="min-w-0">
+                                        <h4 class="text-lg font-bold text-white leading-tight truncate" title="${item.title}">${item.title}</h4>
+                                        <p class="text-sm text-zinc-400 font-medium truncate" title="${item.artist}">${item.artist}</p>
+                                        ${item.track_count ? `<p class="text-[11px] text-zinc-500 mt-1 uppercase font-bold tracking-wider"><i class="ph-fill ph-list-numbers"></i> ${item.track_count} Eligible Tracks</p>` : ''}
+                                    </div>
+                                </div>
+
+                                <!-- Plays & Points -->
+                                <div class="hidden md:block lg:col-span-2 text-right">
+                                    <div class="text-sm font-semibold text-zinc-300">${app.formatNumber(item.plays)} <span class="text-xs text-zinc-600 font-normal">Plays</span></div>
+                                    <div class="text-sm font-semibold text-zinc-300">${item.points} <span class="text-xs text-zinc-600 font-normal">Pts</span></div>
+                                </div>
+
+                                <!-- Final Units -->
+                                <div class="col-span-2 text-left lg:text-right mt-1 lg:mt-0 flex lg:block items-baseline gap-2">
+                                    <span class="lg:hidden text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Units:</span>
+                                    <span class="text-xl font-black text-white">${app.formatNumber(item.units_sold)}</span>
+                                </div>
+
+                                <!-- Peak / Weeks History -->
+                                <div class="col-span-3 flex items-center justify-start lg:justify-end gap-6 text-sm mt-1 lg:mt-0 border-t border-zinc-800/50 lg:border-0 pt-3 lg:pt-0">
+                                    <div class="text-center">
+                                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-0.5">Peak</p>
+                                        <p class="font-bold text-zinc-300">${item.peak}</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-0.5">Wks On</p>
+                                        <p class="font-bold text-zinc-300">${item.weeks_on_chart}</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        `;
+                    });
+
+                    return html;
+                }
+            }
+        };
+
+        // Boot
+        window.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
