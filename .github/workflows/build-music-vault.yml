@@ -1,1 +1,49 @@
+name: Build Music Vault
 
+on:
+  push:
+    paths:
+      - 'raw/**'
+      - 'scripts/**'
+  workflow_dispatch: # Allows manual rebuilds
+
+concurrency:
+  group: build-music-vault
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Music Vault Pipeline
+        run: python scripts/build_vault.py
+
+      - name: Validate Vault Integrity
+        run: python scripts/validate_vault.py
+
+      - name: Commit Generated Vault
+        if: success()
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add vault/ reports/
+          # Prevent failing if there are no changes
+          git diff --quiet && git diff --staged --quiet || git commit -m "chore: update canonical music vault"
+          git push
