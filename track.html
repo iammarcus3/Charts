@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#09090f">
   <title>Track Profile — YourHot100</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
-    /* CORE STYLES FROM YOUR DESIGN SYSTEM */
     :root {
       color-scheme: dark;
       --bg: #09090f;
@@ -37,47 +37,23 @@
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
     
-    .shell {
-      width: min(1400px, 100%);
-      margin: 0 auto;
-      padding: 26px clamp(14px, 3vw, 42px) 60px;
-    }
+    .shell { width: min(1400px, 100%); margin: 0 auto; padding: 26px clamp(14px, 3vw, 42px) 60px; }
 
     /* TRACK HERO SECTION */
     .track-hero {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      padding: clamp(24px, 4vw, 48px);
-      border: 1px solid var(--border);
-      border-radius: 24px;
+      display: flex; flex-direction: column; gap: 24px; padding: clamp(24px, 4vw, 48px);
+      border: 1px solid var(--border); border-radius: 24px;
       background: linear-gradient(120deg, rgb(114 85 184 / 15%), transparent 55%), var(--panel);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
+      box-shadow: var(--shadow); position: relative; overflow: hidden;
     }
-    @media (min-width: 768px) {
-      .track-hero { flex-direction: row; align-items: center; }
-    }
+    @media (min-width: 768px) { .track-hero { flex-direction: row; align-items: center; } }
     
     .artwork-container {
-      width: 200px;
-      height: 200px;
-      flex-shrink: 0;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
-      background: var(--panel-2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 200px; height: 200px; flex-shrink: 0; border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--border); box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
+      background: var(--panel-2); display: flex; align-items: center; justify-content: center;
     }
-    .artwork-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .artwork-container img { width: 100%; height: 100%; object-fit: cover; }
     .fallback-art { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 20px;}
 
     .track-identity { flex-grow: 1; z-index: 2; }
@@ -103,9 +79,6 @@
 
     /* TABLES (History & Sales Breakdown) */
     .panel { border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); overflow: hidden; margin-bottom: 24px;}
-    .table-toolbar { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; flex-wrap: wrap; background: rgb(255 255 255 / 2%);}
-    .table-toolbar select, .table-toolbar input { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: .85rem;}
-    
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: .9rem; }
     thead th { padding: 14px 16px; background: var(--panel-2); color: var(--muted); font-size: .75rem; font-weight: 700; letter-spacing: .05em; border-bottom: 1px solid var(--border); white-space: nowrap;}
@@ -120,26 +93,32 @@
     .t-new { color: var(--accent); }
 
     /* UTILITIES */
-    .empty-state { padding: 40px; text-align: center; color: var(--muted); font-style: italic; }
+    .empty-state { padding: 60px; text-align: center; color: var(--muted); font-size: 1.1rem;}
+    #loading-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); }
+    .spinner { font-size: 3rem; animation: spin 1s linear infinite; margin-bottom: 20px;}
+    @keyframes spin { 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
-  <div class="shell">
-    
-    <!-- 3. & 4. TRACK ARTWORK, METADATA & HEADLINE STATS -->
+  
+  <div id="loading-overlay">
+    <i class="ph ph-spinner-gap spinner"></i>
+    <p style="font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;">Compiling Career Vault...</p>
+  </div>
+
+  <div class="shell" id="app-shell" style="display: none;">
+    <a href="index.html" style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px; color: var(--muted); font-weight: 600; font-size: .9rem;">
+      <i class="ph-bold ph-arrow-left"></i> Back to Chart
+    </a>
+
+    <!-- TRACK ARTWORK, METADATA & HEADLINE STATS -->
     <header class="track-hero" id="hero-section">
-      <div class="artwork-container" id="artwork-container">
-        <!-- Injected via JS -->
-      </div>
-      
+      <div class="artwork-container" id="artwork-container"></div>
       <div class="track-identity">
         <div class="eyebrow" id="album-link"></div>
         <h1 class="track-title" id="title">Loading...</h1>
         <p class="track-artists" id="artists"></p>
-        
-        <div class="hero-meta" id="headline-meta">
-          <!-- Populated by JS (e.g. 6-month movement) -->
-        </div>
+        <div class="hero-meta" id="headline-meta"></div>
       </div>
     </header>
 
@@ -167,29 +146,15 @@
       </div>
     </div>
 
-    <!-- 5. CAREER MILESTONES -->
+    <!-- CAREER MILESTONES -->
     <h2 class="section-title">Career Milestones</h2>
-    <div class="stats-grid" id="milestones-grid">
-      <!-- Generated dynamically based on valid data -->
-    </div>
+    <div class="stats-grid" id="milestones-grid"></div>
 
-    <!-- 6. COMPLETE WEEKLY CHART HISTORY -->
+    <!-- COMPLETE WEEKLY CHART HISTORY -->
     <h2 class="section-title">Official Chart History</h2>
     <div class="panel">
-      <div class="table-toolbar">
-        <select id="history-year-filter">
-          <option value="all">All Available History</option>
-          <!-- Years injected here -->
-        </select>
-        <select id="history-sort">
-          <option value="date-desc">Newest First</option>
-          <option value="date-asc">Oldest First</option>
-          <option value="rank-asc">Highest Peak First</option>
-          <option value="units-desc">Highest Units First</option>
-        </select>
-      </div>
       <div class="table-wrap">
-        <table id="history-table">
+        <table>
           <thead>
             <tr>
               <th>WEEK COMMENCING</th>
@@ -199,14 +164,12 @@
               <th>STATUS</th>
             </tr>
           </thead>
-          <tbody id="history-tbody">
-            <!-- Rows injected via JS -->
-          </tbody>
+          <tbody id="history-tbody"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- 7. SALES PERFORMANCE BREAKDOWN -->
+    <!-- SALES PERFORMANCE BREAKDOWN -->
     <h2 class="section-title">Sales Performance Breakdown</h2>
     <div class="stats-grid">
       <div class="stat-card">
@@ -239,218 +202,280 @@
               <th>% OF CAREER TOTAL</th>
             </tr>
           </thead>
-          <tbody id="annual-sales-tbody">
-             <!-- Rows injected via JS -->
-          </tbody>
+          <tbody id="annual-sales-tbody"></tbody>
         </table>
       </div>
     </div>
-
   </div>
 
   <script>
-    /**
-     * YOURHOT100 - TRACK PROFILE CONTROLLER
-     * Note: "Plays" and "Points" are strictly prohibited from this UI.
-     */
+    // --- CORE CONFIGURATION (Mirrors your dashboard) ---
+    const LASTFM_API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822";
+    const FORMULAS = { songUnits: (plays, points) => (plays * 50000) + (points * 500) };
+    const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
-    // 1. DATA INTEGRATION HOOK
-    // Replace this mock data with your actual fetch logic accessing your vault JSONs.
-    async function fetchVaultData(canonicalTrackId) {
-      // MOCK DATA corresponding to the rules requested
-      return {
-        id: canonicalTrackId,
-        title: "Blinding Lights",
-        album: { id: "a1", title: "After Hours" },
-        artists: [
-          { id: "art1", name: "The Weeknd", role: "lead" }
-        ],
-        stats: {
-          currentPosition: 12,
-          peakPosition: 1,
-          peakDate: "2020-04-04",
-          weeksCharted: 90,
-          careerUnits: 12504000,
-          debutUnits: 85000,
-          highestUnits: 150000,
-          highestUnitsDate: "2020-04-11",
-          debutDate: "2019-12-14",
-          debutPosition: 11,
-          weeksAtNo1: 4,
-          top10Weeks: 57,
-          top40Weeks: 86
-        },
-        sixMonthMovement: {
-          available: true,
-          status: "Up", // "Up", "Down", "Unchanged", "New", "Re-entry"
-          difference: 5 
-        },
-        chartHistory: [
-          // Mock historical snapshot
-          { date: "2024-10-18", rank: 12, prevRank: 17, units: 32000, isReEntry: false },
-          { date: "2024-10-11", rank: 17, prevRank: 22, units: 28000, isReEntry: false },
-          { date: "2019-12-14", rank: 11, prevRank: null, units: 85000, isReEntry: false }
-        ],
-        annualSales: [
-          { year: 2024, weeks: 42, units: 1200000 },
-          { year: 2020, weeks: 52, units: 8500000 }
-        ]
-      };
+    const state = {
+      raw: { tracks: null, albums: null, artists: null, history: null },
+      snapshots: { songs: {}, dates: {} },
+      minOffset: 0
+    };
+
+    // --- UTILITIES ---
+    function escapeHTML(str) { return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+    function formatNumber(num) { return new Intl.NumberFormat('en-US').format(num || 0); }
+    function getArtistName(idRef) {
+      if (!idRef) return 'Unknown Artist';
+      const id = Array.isArray(idRef) ? idRef[0] : idRef;
+      const obj = state.raw.artists.get(String(id));
+      return (obj && (obj.name || obj.title)) ? (obj.name || obj.title) : 'Unknown Artist';
     }
-
-    // 2. LAST.FM ARTWORK CACHING HOOK
-    async function fetchArtwork(trackTitle, artistName) {
-      // IMPLEMENTATION NOTE: Check your local cache first.
-      // Do NOT expose Last.fm API keys here; fetch via a backend proxy if possible.
-      // Return a URL string or null for graceful fallback.
-      return "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.jpg"; // Mock
+    function timestampSeconds(val) {
+      let v = (val && typeof val === 'object') ? (val.uts ?? val.timestamp ?? val.played_at ?? val.date ?? val['#text']) : val;
+      if (typeof v === 'number') return v > 1e12 ? Math.floor(v/1000) : Math.floor(v);
+      if (typeof v === 'string') {
+        const n = Number(v); if (Number.isFinite(n)) return n > 1e12 ? Math.floor(n/1000) : Math.floor(n);
+        const p = Date.parse(v); if (Number.isFinite(p)) return Math.floor(p/1000);
+      }
+      return null;
     }
-
-    // 3. UI RENDERING
-    function formatNumber(num) {
-      return new Intl.NumberFormat('en-US').format(num);
+    function getWeekStartMs(ts) {
+      const d = new Date(ts * 1000);
+      d.setUTCHours(0,0,0,0);
+      d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 2) % 7));
+      return d.getTime();
     }
-
+    function pointsForRank(rank) {
+      if (rank === 1) return 100; if (rank === 2) return 98;
+      return Math.max(1, Math.round(98 - ((rank - 2) * 97 / 98)));
+    }
     function formatMovement(current, previous, isReEntry) {
-      if (!previous) return { class: 't-new trend', text: isReEntry ? 'RE-ENTRY' : 'NEW' };
+      if (!previous && isReEntry) return { class: 't-new trend', text: 'RE-ENTRY' };
+      if (!previous) return { class: 't-new trend', text: 'NEW' };
       if (current < previous) return { class: 't-up trend', text: `▲ +${previous - current}` };
       if (current > previous) return { class: 't-down trend', text: `▼ -${current - previous}` };
       return { class: 't-same trend', text: '＝ 0' };
     }
 
-    async function initTrackProfile(trackId) {
-      try {
-        const data = await fetchVaultData(trackId);
-        if (!data) throw new Error("Track not found in vault.");
+    // --- DATA ENGINE (Same as Dashboard) ---
+    async function loadVault() {
+      const paths = ['vault/tracks.json', 'vault/albums.json', 'vault/artists.json', 'vault/listening_history.jsonl'];
+      const responses = await Promise.all(paths.map(p => fetch(p)));
+      if (responses.some(r => !r.ok)) throw new Error("Vault files missing.");
 
-        // Render Identity & Artwork
-        document.getElementById('title').textContent = data.title;
+      const parseMap = d => {
+        if (Array.isArray(d)) return new Map(d.filter(i => i?.id).map(i => [String(i.id), i]));
+        if (d && typeof d === 'object') return new Map(Object.entries(d).map(([id, i]) => [String(id), i]));
+        return new Map();
+      };
+
+      state.raw.tracks = parseMap(await responses[0].json());
+      state.raw.albums = parseMap(await responses[1].json());
+      state.raw.artists = parseMap(await responses[2].json());
+
+      const historyText = await responses[3].text();
+      state.raw.history = historyText.trim().split(/\r?\n/).filter(Boolean).map(l => JSON.parse(l))
+        .filter(e => e && e.track_id)
+        .map(e => ({ ...e, timestamp: timestampSeconds(e.timestamp) }))
+        .filter(e => e.timestamp !== null)
+        .sort((a, b) => a.timestamp - b.timestamp);
+
+      if (state.raw.history.length === 0) throw new Error("History empty.");
+      buildSnapshots();
+    }
+
+    function buildSnapshots() {
+      const history = state.raw.history;
+      const latestTs = history[history.length - 1].timestamp;
+      const latestStart = getWeekStartMs(latestTs);
+      
+      const weeklyEvents = new Map();
+      let minOffset = 0;
+
+      history.forEach(ev => {
+        const offset = Math.floor((getWeekStartMs(ev.timestamp) - latestStart) / WEEK_MS);
+        if (offset > 0) return;
+        minOffset = Math.min(minOffset, offset);
+        if (!weeklyEvents.has(offset)) weeklyEvents.set(offset, []);
+        weeklyEvents.get(offset).push(ev);
+      });
+      state.minOffset = minOffset;
+
+      const historyTracker = {};
+      for (let offset = minOffset; offset <= 0; offset++) {
+        const events = weeklyEvents.get(offset) || [];
+        const startMs = latestStart + (offset * WEEK_MS);
+        state.snapshots.dates[offset] = { start: startMs, end: startMs + WEEK_MS - 1 };
+
+        const trackPlays = new Map();
+        events.forEach(ev => trackPlays.set(String(ev.track_id), (trackPlays.get(String(ev.track_id)) || 0) + 1));
+
+        let entries = [];
+        trackPlays.forEach((plays, id) => {
+          const track = state.raw.tracks.get(id);
+          if (track) entries.push({ id, plays, title: track.title, artistId: track.primary_artist_id || track.artist_id });
+        });
+
+        entries.sort((a, b) => b.plays - a.plays || a.title.localeCompare(b.title));
+        entries = entries.slice(0, 100).map((e, i) => {
+          const points = pointsForRank(i + 1);
+          return { ...e, points, units_sold: FORMULAS.songUnits(e.plays, points) };
+        });
+
+        entries.sort((a, b) => b.units_sold - a.units_sold || b.plays - a.plays || a.title.localeCompare(b.title));
         
-        // Artists linking
-        const artistsHtml = data.artists.map(a => 
-          `<a href="/artist/${a.id}">${a.name}</a>`
-        ).join(', ');
-        document.getElementById('artists').innerHTML = artistsHtml;
-
-        // Album linking
-        if (data.album) {
-          document.getElementById('album-link').innerHTML = `<a href="/album/${data.album.id}">${data.album.title}</a>`;
-        }
-
-        // Fetch & Render Artwork
-        const artUrl = await fetchArtwork(data.title, data.artists[0].name);
-        const artContainer = document.getElementById('artwork-container');
-        if (artUrl) {
-          artContainer.innerHTML = `<img src="${artUrl}" alt="Artwork for ${data.title}" />`;
-        } else {
-          artContainer.innerHTML = `<div class="fallback-art">No Artwork<br>Available</div>`;
-        }
-
-        // Render 6-month Meta Pill
-        if (data.sixMonthMovement.available) {
-          const m = data.sixMonthMovement;
-          let pillHtml = '';
-          if (m.status === 'Up') pillHtml = `<span class="pill trend-up">▲ Up ${m.difference} over 6 months</span>`;
-          else if (m.status === 'Down') pillHtml = `<span class="pill trend-down">▼ Down ${m.difference} over 6 months</span>`;
-          else if (m.status === 'New') pillHtml = `<span class="pill trend-new">★ New Entry in last 6 months</span>`;
+        state.snapshots.songs[offset] = entries.map((e, i) => {
+          const rank = i + 1;
+          const trk = historyTracker[e.id] || { peak: 101, weeks: 0, lastSeen: null, lastRank: null };
+          const isNew = trk.weeks === 0;
+          const isRe = !isNew && trk.lastSeen !== offset - 1;
+          const prev = (!isNew && !isRe) ? trk.lastRank : null;
           
-          document.getElementById('headline-meta').innerHTML = pillHtml;
-        }
+          historyTracker[e.id] = { peak: Math.min(trk.peak, rank), weeks: trk.weeks + 1, lastSeen: offset, lastRank: rank };
+          return { ...e, rank, previous_rank: prev, is_new: isNew, is_reentry: isRe };
+        });
+      }
+    }
 
-        // Render Headline Stats
-        document.getElementById('stat-current').textContent = data.stats.currentPosition ? `#${data.stats.currentPosition}` : '-';
-        document.getElementById('stat-peak').textContent = `#${data.stats.peakPosition}`;
-        document.getElementById('stat-peak-sub').textContent = `Achieved ${data.stats.peakDate}`;
-        document.getElementById('stat-weeks').textContent = formatNumber(data.stats.weeksCharted);
-        document.getElementById('stat-units').textContent = formatNumber(data.stats.careerUnits);
+    // --- UI POPULATION LOGIC ---
+    async function init() {
+      const trackId = new URLSearchParams(window.location.search).get('id');
+      if (!trackId) return showError("No track ID specified in URL (?id=...).");
 
-        // Render Milestones Grid
-        const milestones = [
-          { label: "Debut Date", val: data.stats.debutDate },
-          { label: "Debut Position", val: `#${data.stats.debutPosition}` },
-          { label: "Weeks at No. 1", val: data.stats.weeksAtNo1 > 0 ? data.stats.weeksAtNo1 : null },
-          { label: "Top 10 Weeks", val: data.stats.top10Weeks > 0 ? data.stats.top10Weeks : null },
-          { label: "Top 40 Weeks", val: data.stats.top40Weeks > 0 ? data.stats.top40Weeks : null }
-        ];
-
-        const mGrid = document.getElementById('milestones-grid');
-        mGrid.innerHTML = milestones.filter(m => m.val !== null).map(m => `
-          <div class="stat-card">
-            <div class="stat-label">${m.label}</div>
-            <div class="stat-value" style="font-size: 1.6rem;">${m.val}</div>
-          </div>
-        `).join('');
-
-        // Render Sales Breakdown
-        document.getElementById('sales-debut').textContent = formatNumber(data.stats.debutUnits);
-        document.getElementById('sales-best').textContent = formatNumber(data.stats.highestUnits);
-        document.getElementById('sales-best-date').textContent = `Week of ${data.stats.highestUnitsDate}`;
-        
-        const avgUnits = Math.round(data.stats.careerUnits / data.stats.weeksCharted);
-        document.getElementById('sales-avg').textContent = formatNumber(avgUnits);
-
-        const bestYear = [...data.annualSales].sort((a,b) => b.units - a.units)[0];
-        document.getElementById('sales-best-year').textContent = bestYear ? bestYear.year : '-';
-
-        // Render Annual Table
-        const annualTbody = document.getElementById('annual-sales-tbody');
-        annualTbody.innerHTML = data.annualSales.map(yearData => {
-          const pct = ((yearData.units / data.stats.careerUnits) * 100).toFixed(1);
-          return `
-            <tr>
-              <td><strong>${yearData.year}</strong></td>
-              <td>${yearData.weeks} weeks</td>
-              <td>${formatNumber(yearData.units)}</td>
-              <td>${pct}%</td>
-            </tr>
-          `;
-        }).join('');
-
-        // Render History Table
-        renderHistoryTable(data.chartHistory);
-
+      try {
+        await loadVault();
+        renderTrack(trackId);
+        document.getElementById('loading-overlay').style.display = 'none';
+        document.getElementById('app-shell').style.display = 'block';
       } catch (err) {
-        console.error("Error loading track profile:", err);
-        document.querySelector('.shell').innerHTML = `
-          <div class="empty-state">
-            <h2>Track Data Unavailable</h2>
-            <p>We could not find the requested canonical track in the vault.</p>
-          </div>
-        `;
+        showError(err.message);
       }
     }
 
-    function renderHistoryTable(historyArray) {
-      const tbody = document.getElementById('history-tbody');
-      if (!historyArray || historyArray.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No chart history available.</td></tr>`;
-        return;
+    function renderTrack(trackId) {
+      const track = state.raw.tracks.get(trackId);
+      if (!track) return showError("Track not found in the vault.");
+
+      const artistId = track.primary_artist_id || track.artist_id;
+      const artistName = getArtistName(artistId);
+      
+      document.getElementById('title').textContent = track.title || 'Unknown Track';
+      document.getElementById('artists').innerHTML = `<a href="artist.html?id=${artistId}">${escapeHTML(artistName)}</a>`;
+
+      const albumIds = Array.isArray(track.album_ids) ? track.album_ids : (track.album_id ? [track.album_id] : []);
+      let albumName = null;
+      if (albumIds.length > 0) {
+        const alb = state.raw.albums.get(String(albumIds[0]));
+        if (alb) {
+          albumName = alb.title;
+          document.getElementById('album-link').innerHTML = `<a href="album.html?id=${albumIds[0]}">${escapeHTML(alb.title)}</a>`;
+        }
       }
 
-      tbody.innerHTML = historyArray.map(week => {
-        const move = formatMovement(week.rank, week.prevRank, week.isReEntry);
-        let status = '';
-        if (week.rank === 1) status = '👑 No. 1';
-        else if (week.rank <= 10) status = '⭐ Top 10';
+      fetchLastFmImage(artistName, albumName, track.title).then(url => {
+        const c = document.getElementById('artwork-container');
+        c.innerHTML = url ? `<img src="${url}" alt="Artwork">` : `<div class="fallback-art">No Artwork</div>`;
+      });
+
+      let currentRank = '-', peakRank = 101, peakDate = null, careerUnits = 0, highestUnits = 0;
+      let highestUnitsDate = null, weeksAtNo1 = 0, top10Weeks = 0, top40Weeks = 0, debutDate = null;
+      const historyRows = [];
+      const annualSales = new Map();
+      const currentOffset = 0; // Latest week
+
+      // Read history newest to oldest
+      for (let offset = 0; offset >= state.minOffset; offset--) {
+        const weekSongs = state.snapshots.songs[offset];
+        if (!weekSongs) continue;
+        const entry = weekSongs.find(s => s.id === trackId);
         
-        return `
-          <tr>
-            <td>${week.date}</td>
-            <td class="rank-cell">#${week.rank}</td>
-            <td class="${move.class}">${move.text}</td>
-            <td>${formatNumber(week.units)}</td>
-            <td style="color: var(--muted);">${status}</td>
-          </tr>
-        `;
-      }).join('');
+        if (entry) {
+          const dateObj = new Date(state.snapshots.dates[offset].start);
+          const dateStr = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+          const year = dateObj.getFullYear();
+
+          if (offset === 0) currentRank = entry.rank;
+          careerUnits += entry.units_sold;
+          debutDate = dateStr; // Overwrites until we reach the oldest
+
+          if (entry.units_sold > highestUnits) { highestUnits = entry.units_sold; highestUnitsDate = dateStr; }
+          if (entry.rank < peakRank) { peakRank = entry.rank; peakDate = dateStr; }
+          if (entry.rank === 1) weeksAtNo1++;
+          if (entry.rank <= 10) top10Weeks++;
+          if (entry.rank <= 40) top40Weeks++;
+
+          const yData = annualSales.get(year) || { units: 0, weeks: 0 };
+          annualSales.set(year, { units: yData.units + entry.units_sold, weeks: yData.weeks + 1 });
+
+          const move = formatMovement(entry.rank, entry.previous_rank, entry.is_reentry);
+          historyRows.push(`
+            <tr>
+              <td>${dateStr}</td>
+              <td class="rank-cell">#${entry.rank}</td>
+              <td class="${move.class}">${move.text}</td>
+              <td>${formatNumber(entry.units_sold)}</td>
+              <td style="color: var(--muted);">${entry.rank === 1 ? '👑 No. 1' : (entry.rank <= 10 ? '⭐ Top 10' : '')}</td>
+            </tr>
+          `);
+        }
+      }
+
+      document.getElementById('stat-current').textContent = currentRank !== '-' ? `#${currentRank}` : '-';
+      document.getElementById('stat-peak').textContent = peakRank !== 101 ? `#${peakRank}` : '-';
+      document.getElementById('stat-peak-sub').textContent = peakDate ? `Week of ${peakDate}` : 'N/A';
+      document.getElementById('stat-weeks').textContent = formatNumber(historyRows.length);
+      document.getElementById('stat-units').textContent = formatNumber(careerUnits);
+
+      document.getElementById('sales-best').textContent = formatNumber(highestUnits);
+      document.getElementById('sales-best-date').textContent = highestUnitsDate ? `Week of ${highestUnitsDate}` : '';
+      document.getElementById('sales-avg').textContent = historyRows.length > 0 ? formatNumber(Math.round(careerUnits / historyRows.length)) : '0';
+      document.getElementById('history-tbody').innerHTML = historyRows.length > 0 ? historyRows.join('') : '<tr><td colspan="5">No chart history.</td></tr>';
+
+      // Annual Table
+      let bestYear = '-', bestYUnits = 0;
+      const aTbody = document.getElementById('annual-sales-tbody');
+      const aRows = [];
+      annualSales.forEach((data, yr) => {
+        if (data.units > bestYUnits) { bestYUnits = data.units; bestYear = yr; }
+        const pct = careerUnits > 0 ? ((data.units / careerUnits) * 100).toFixed(1) : 0;
+        aRows.push(`<tr><td><strong>${yr}</strong></td><td>${data.weeks} weeks</td><td>${formatNumber(data.units)}</td><td>${pct}%</td></tr>`);
+      });
+      aTbody.innerHTML = aRows.reverse().join('');
+      document.getElementById('sales-best-year').textContent = bestYear;
+
+      // Milestones
+      const mGrid = document.getElementById('milestones-grid');
+      const milestones = [
+        { label: "Debut Date", val: debutDate },
+        { label: "Weeks at No. 1", val: weeksAtNo1 > 0 ? weeksAtNo1 : null },
+        { label: "Top 10 Weeks", val: top10Weeks > 0 ? top10Weeks : null },
+        { label: "Top 40 Weeks", val: top40Weeks > 0 ? top40Weeks : null }
+      ];
+      mGrid.innerHTML = milestones.filter(m => m.val !== null).map(m => `
+        <div class="stat-card">
+          <div class="stat-label">${m.label}</div>
+          <div class="stat-value" style="font-size: 1.6rem;">${m.val}</div>
+        </div>
+      `).join('');
     }
 
-    // Initialize with a dummy ID. Wire this up to your URL router!
-    document.addEventListener("DOMContentLoaded", () => {
-      // Example: const urlParams = new URLSearchParams(window.location.search);
-      // const trackId = urlParams.get('id');
-      initTrackProfile('canonical_track_123'); 
-    });
+    async function fetchLastFmImage(artist, album, track) {
+      try {
+        const cl = v => String(v || '').replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
+        const params = new URLSearchParams({ api_key: LASTFM_API_KEY, format: 'json', artist: cl(artist), track: cl(track) });
+        const res = await fetch(`https://ws.audioscrobbler.com/2.0/?method=track.getInfo&${params}`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        const imgs = data?.track?.album?.image;
+        if (!Array.isArray(imgs)) return null;
+        return imgs.find(i => i.size === 'extralarge' && i['#text'])?.['#text'] || null;
+      } catch { return null; }
+    }
+
+    function showError(msg) {
+      document.body.innerHTML = `<div class="empty-state"><h2>Error</h2><p>${escapeHTML(msg)}</p></div>`;
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
