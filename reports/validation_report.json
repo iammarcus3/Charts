@@ -6,10 +6,12 @@
   "invalid_event_count": 0,
   "duplicate_events_removed": 1,
   "fuzzy_candidates_for_review": 396,
+  "album_families_consolidated": 503,
   "notes": [
-    "Exact normalized identities are canonicalized automatically.",
-    "Fuzzy matches are review-only and are not automatically merged.",
-    "Track album_ids may reference eligible or ineligible releases.",
-    "Album eligibility requires at least three distinct canonical tracks."
+    "Known trailing Deluxe/Deluxe Edition/Deluxe Version/Expanded Edition/Bonus Tracks labels are consolidated into a parent album family.",
+    "Original release titles and edition labels are preserved in album source_titles and edition_labels and reports/album_family_merges.json.",
+    "Distinct canonical track IDs are unioned across editions, preserving unique deluxe bonus tracks without double-counting repeated tracks.",
+    "Live, remix, remaster, acoustic, anniversary and other unrecognized edition labels are not automatically stripped.",
+    "Fuzzy track title candidates are review-only; they are not automatically merged."
   ]
 }

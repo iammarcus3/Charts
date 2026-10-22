@@ -1048,30 +1048,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "0e4bba953a2ca28aa5be3d51",
-    "title": "19",
-    "primary_artist_id": "5444cdd6a2cff34b63dd073b",
-    "track_count": 2,
-    "track_ids": [
-      "626983fee61774b91a61e935",
-      "6846d27ef92dcc349ddaba64"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "39d1fcbb8be2c083f2750476",
-    "title": "19 & Dangerous (Deluxe)",
-    "primary_artist_id": "4b0b7f4014376aaa9f84cc5d",
-    "track_count": 2,
-    "track_ids": [
-      "0e2b8e174fc4817d419c1fbe",
-      "eb66e4ab3c120edf1adb7be0"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "897298c2da704df539202be9",
-    "title": "19 & Dangerous (Deluxe)",
+    "id": "5ccf4492e48110af60afa81b",
+    "title": "19 & Dangerous",
     "primary_artist_id": "23c8e168d76f6c8df34a2f35",
     "track_count": 1,
     "track_ids": [
@@ -1080,13 +1058,13 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "cf382581445de42877820718",
-    "title": "19 (Deluxe Edition)",
-    "primary_artist_id": "5444cdd6a2cff34b63dd073b",
+    "id": "a461737c7e0d5fae0da3f366",
+    "title": "19 & Dangerous",
+    "primary_artist_id": "4b0b7f4014376aaa9f84cc5d",
     "track_count": 2,
     "track_ids": [
-      "626983fee61774b91a61e935",
-      "e8d44d597d55a52d7e844f04"
+      "0e2b8e174fc4817d419c1fbe",
+      "eb66e4ab3c120edf1adb7be0"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -1107,16 +1085,6 @@
     "track_count": 1,
     "track_ids": [
       "d3ae9ab63bbaf12e62429cd7"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "b123919e10ddd5edf5f338ce",
-    "title": "1989 (Deluxe Edition)",
-    "primary_artist_id": "da87aaeffa775bcf3a66b3f2",
-    "track_count": 1,
-    "track_ids": [
-      "41aabb354e15ba23ba125bb4"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -1341,8 +1309,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "78c3258d65a3bbedc4a703d6",
-    "title": "21... Ways To Grow (Expanded Edition)",
+    "id": "d953bdaebda3e0ff524cf56b",
+    "title": "21... Ways To Grow",
     "primary_artist_id": "506f846cf5b89af53b764a9b",
     "track_count": 1,
     "track_ids": [
@@ -1654,8 +1622,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "238e82c5ab54108fa6795fad",
-    "title": "360 Degrees of Billy Paul (Expanded Edition)",
+    "id": "595fe45048b526323b1ca84d",
+    "title": "360 Degrees of Billy Paul",
     "primary_artist_id": "31c479aea7661f76cfdfd789",
     "track_count": 1,
     "track_ids": [
@@ -2056,8 +2024,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "92cf4b849b9a55b98b81b3fe",
-    "title": "7/27 (Deluxe)",
+    "id": "1f3ed73ce80a3fb21e93db5d",
+    "title": "7/27",
     "primary_artist_id": "718eed0547904eed6aa616d2",
     "track_count": 1,
     "track_ids": [
@@ -2338,8 +2306,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "3ef60ff3513899fd1691ebd9",
-    "title": "? (Deluxe)",
+    "id": "c7ffe183a912f90d9d603ae9",
+    "title": "?",
     "primary_artist_id": "45d3d98637eaf45fab3fa30d",
     "track_count": 1,
     "track_ids": [
@@ -2647,16 +2615,6 @@
     "track_count": 1,
     "track_ids": [
       "f6343b9d59ad6200b9205a4b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "d7f1eb54828161de782bdeda",
-    "title": "A N N I V E R S A R Y (Deluxe)",
-    "primary_artist_id": "e23860970a15ccd8f27a6183",
-    "track_count": 1,
-    "track_ids": [
-      "e762de08728411bb8d28847b"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -3158,34 +3116,12 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "458a5299cc1bfdcc9863dc6b",
-    "title": "Affection",
-    "primary_artist_id": "973b0de5511f0ab40c2fc610",
-    "track_count": 2,
-    "track_ids": [
-      "0580d16c112dcd959e10e50e",
-      "16f4c5bfe7e5c7248187d99b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "cf0558d986f3c00a2999f67d",
     "title": "Affection",
     "primary_artist_id": "4314bb10f498635cd6cdaffe",
     "track_count": 1,
     "track_ids": [
       "2181b441e672d00e3e3991de"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "4f7864df5b1e91356ff24a22",
-    "title": "Affection (Deluxe)",
-    "primary_artist_id": "973b0de5511f0ab40c2fc610",
-    "track_count": 2,
-    "track_ids": [
-      "0580d16c112dcd959e10e50e",
-      "88c117a60d6e68a14ee2c6f1"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -3291,8 +3227,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "112fb84337327aaece375412",
-    "title": "After Hours (Deluxe)",
+    "id": "c00c69233b5cabb8ab94d971",
+    "title": "After Hours",
     "primary_artist_id": "b60a21db929f6f88f320b9b9",
     "track_count": 1,
     "track_ids": [
@@ -4343,17 +4279,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "718a5cc2bc4aa0dcb1c4dd07",
-    "title": "Alone At Prom (Deluxe)",
-    "primary_artist_id": "f0928997314766a496aa4969",
-    "track_count": 2,
-    "track_ids": [
-      "cb4ce71634bd55138bf0eef1",
-      "f0be9dc1ca12c8f26425fe05"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "50d131215c48de2cbb97d627",
     "title": "Alone, Pt. II",
     "primary_artist_id": "03e7c44a8c6583f6ec89bff6",
@@ -5087,8 +5012,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "73015eb2fc3f6ad6be80c10c",
-    "title": "Angel Dust (Deluxe Edition)",
+    "id": "c63b9f7eacec1b4435cf6d70",
+    "title": "Angel Dust",
     "primary_artist_id": "39cbae14f03082cdc896a4d0",
     "track_count": 1,
     "track_ids": [
@@ -5167,8 +5092,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "2b785a4dc8f75e96d36f313a",
-    "title": "Animal (Expanded Edition)",
+    "id": "c1f5bcc7f1a8e7d401717d74",
+    "title": "Animal",
     "primary_artist_id": "917ec66510dc3724e12c6a65",
     "track_count": 2,
     "track_ids": [
@@ -5205,16 +5130,6 @@
     "track_ids": [
       "5b5c25cdb1c4bce7b37d2c59",
       "792a285716324706edfa3b05"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "9bf3eda61d342df74cbdc04d",
-    "title": "Another Round (Deluxe Version)",
-    "primary_artist_id": "56c95f2009a7ce76e2806f8e",
-    "track_count": 1,
-    "track_ids": [
-      "5b5c25cdb1c4bce7b37d2c59"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -5344,16 +5259,6 @@
   {
     "id": "f39076173dd20c008722baf6",
     "title": "Anytime",
-    "primary_artist_id": "fec0a0915975683ba4c91f4f",
-    "track_count": 1,
-    "track_ids": [
-      "9bd00743a7096cc1edab31d7"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "5c7400a9176d748389cad8f9",
-    "title": "Anytime (Deluxe Edition)",
     "primary_artist_id": "fec0a0915975683ba4c91f4f",
     "track_count": 1,
     "track_ids": [
@@ -5839,16 +5744,6 @@
     "track_count": 1,
     "track_ids": [
       "9ce53afa9629915c47bde632"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "8a4e37cb39aa74367ff4aded",
-    "title": "Ashanti (Deluxe Edition)",
-    "primary_artist_id": "f93a5ba9e136d198220948cb",
-    "track_count": 1,
-    "track_ids": [
-      "118728d62e30e9e7856a1394"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -6665,16 +6560,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "a79f193c2a246db5fb9a61f1",
-    "title": "Back Of My Lac' (Deluxe)",
-    "primary_artist_id": "b833f67a9b51f3ff967945dd",
-    "track_count": 1,
-    "track_ids": [
-      "00e047787270403025e959b4"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "491128b7e8cb480fa937458d",
     "title": "Back of My Mind (Apple Music Edition)",
     "primary_artist_id": "ae07815994bac411a1a3444e",
@@ -6759,16 +6644,6 @@
   {
     "id": "4b92f6749cdf2d9e76f4c78c",
     "title": "Back To Love",
-    "primary_artist_id": "e11c7737b4df465e0eb4144a",
-    "track_count": 1,
-    "track_ids": [
-      "e9be9f3c4249f3b55ffd3c6a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "39165ceb4c44c9c8dc608c24",
-    "title": "Back To Love (Deluxe Version)",
     "primary_artist_id": "e11c7737b4df465e0eb4144a",
     "track_count": 1,
     "track_ids": [
@@ -7133,16 +7008,6 @@
   {
     "id": "18c44ca37d2a41486fb84583",
     "title": "BADLANDS",
-    "primary_artist_id": "f33bb59fd0d696e91a14f09a",
-    "track_count": 1,
-    "track_ids": [
-      "e727df34d5152440db378790"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "d6e7ce802008fe03cbe4992b",
-    "title": "BADLANDS (Deluxe Edition)",
     "primary_artist_id": "f33bb59fd0d696e91a14f09a",
     "track_count": 2,
     "track_ids": [
@@ -8809,16 +8674,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "3f82efc8ae98b64c4f54af84",
-    "title": "BIANCA (Deluxe)",
-    "primary_artist_id": "7bc68edd31a9707d5e188176",
-    "track_count": 1,
-    "track_ids": [
-      "c28b68e12457bac940bff831"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "8bb0a5023bb2633e46a48c65",
     "title": "Biblical - Single",
     "primary_artist_id": "d353366fe38b1ce16a9ade09",
@@ -9029,8 +8884,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "125df22b70fe6fd0561f8b09",
-    "title": "Billy Ocean (Expanded Edition)",
+    "id": "1372b17ae1479449f8483779",
+    "title": "Billy Ocean",
     "primary_artist_id": "5b997391fedad31456ebe6fb",
     "track_count": 1,
     "track_ids": [
@@ -9272,16 +9127,6 @@
   {
     "id": "95a93489b9d3824fb082374f",
     "title": "Black Diamond",
-    "primary_artist_id": "3c4bd8720bfc2712d698f173",
-    "track_count": 1,
-    "track_ids": [
-      "0ce92249cbcc52c904813b62"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "e580779f05e0db933b559dc0",
-    "title": "Black Diamond (Deluxe Edition)",
     "primary_artist_id": "3c4bd8720bfc2712d698f173",
     "track_count": 1,
     "track_ids": [
@@ -10255,17 +10100,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "62787207804bb407c201d952",
-    "title": "Born Sinner",
-    "primary_artist_id": "395ca333c6932bb5e747dd0c",
-    "track_count": 2,
-    "track_ids": [
-      "2965fc963a2d91134d3a80a8",
-      "7e2e1a4cf1ced20d074c1114"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "781adf51bfe0cdbac28cfcad",
     "title": "Born This Way (International Special Edition Version)",
     "primary_artist_id": "ff3390bc9de6cf982d3f8c31",
@@ -10376,8 +10210,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "8d6a48777a13c38728202c08",
-    "title": "Boy Alone (Deluxe Edition)",
+    "id": "2cf7b0bdedcd60c50c6ffcc7",
+    "title": "Boy Alone",
     "primary_artist_id": "5e9181af327ac30930a0ece4",
     "track_count": 1,
     "track_ids": [
@@ -10850,16 +10684,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "688257fc68b168cedce48b25",
-    "title": "Brown Sugar (Deluxe Edition)",
-    "primary_artist_id": "1b45e6376f1ef52d285d14b2",
-    "track_count": 1,
-    "track_ids": [
-      "aac93e59d92c6cf567a991df"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "372a5499d0bfb31f20999cfa",
     "title": "Brownstone: Super Hits",
     "primary_artist_id": "0bb5ff8a92890edcc29de1e8",
@@ -11121,8 +10945,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "9cb087cfd8e6eb44dab0db45",
-    "title": "Butterfly: 25th Anniversary Expanded Edition",
+    "id": "08562231e25650c58b710d01",
+    "title": "Butterfly: 25th Anniversary",
     "primary_artist_id": "b04d9536b9327bf27853133a",
     "track_count": 1,
     "track_ids": [
@@ -11346,8 +11170,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b3adfc5e1bb7e86835ff0338",
-    "title": "Calling All Lovers (Deluxe)",
+    "id": "8bfc5b2cd197ccac0ce33d23",
+    "title": "Calling All Lovers",
     "primary_artist_id": "a3fc778e132285275ff0080b",
     "track_count": 1,
     "track_ids": [
@@ -11537,16 +11361,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "5acb1282950965af9d996e3c",
-    "title": "Can't Slow Down (Deluxe Edition)",
-    "primary_artist_id": "336095288d2f489cb8c86c8d",
-    "track_count": 1,
-    "track_ids": [
-      "b1c34ebc153e63fffb4ccbcf"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "7756fb11974fb7ab3575bc66",
     "title": "can't stand it",
     "primary_artist_id": "6dd94c95111b24df74b54258",
@@ -11577,8 +11391,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "50dc3dc774a1303eb5544880",
-    "title": "Can't Take Me Home (Expanded Edition)",
+    "id": "33083e3d17d9d9fdd595bc93",
+    "title": "Can't Take Me Home",
     "primary_artist_id": "706ce2641873e8896adee461",
     "track_count": 1,
     "track_ids": [
@@ -11628,8 +11442,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "fbec45047cd9eaf0ec10637f",
-    "title": "Cannibal (Expanded Edition)",
+    "id": "6266debfa1507041984d2bf9",
+    "title": "Cannibal",
     "primary_artist_id": "917ec66510dc3724e12c6a65",
     "track_count": 1,
     "track_ids": [
@@ -11670,16 +11484,6 @@
   {
     "id": "23dbe41941efc2716e2811ba",
     "title": "Caracal",
-    "primary_artist_id": "c546a004b6a6e379ad8ca1a5",
-    "track_count": 1,
-    "track_ids": [
-      "ae60951b5cf1d8ccd9e2a0ef"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "4b276f767bc173ffb17ba4d1",
-    "title": "Caracal (Deluxe)",
     "primary_artist_id": "c546a004b6a6e379ad8ca1a5",
     "track_count": 2,
     "track_ids": [
@@ -12162,22 +11966,22 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "0d4021f4fef26d01a9fe8ad2",
+    "title": "Changes",
+    "primary_artist_id": "9e37b52c0154ad26b723f889",
+    "track_count": 1,
+    "track_ids": [
+      "3108c3e8ca73b6bedf7edf75"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "f412c6c93cb9ce70217ed0bd",
     "title": "Changes",
     "primary_artist_id": "caad2ee0b5db30528ad2d41b",
     "track_count": 1,
     "track_ids": [
       "e64bae28c0cb3645e9fdf349"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "87e9596df92a608fb8bffba9",
-    "title": "Changes (Expanded Edition)",
-    "primary_artist_id": "9e37b52c0154ad26b723f889",
-    "track_count": 1,
-    "track_ids": [
-      "3108c3e8ca73b6bedf7edf75"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -12235,22 +12039,22 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "22b1d1909dc184597954eab8",
+    "title": "Chapters",
+    "primary_artist_id": "c08cfce6dc293f1d37fed629",
+    "track_count": 1,
+    "track_ids": [
+      "f7f20b70f979d8d9a22b55b2"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "8271b629a45e6f4c6ad19b6a",
     "title": "Chapters",
     "primary_artist_id": "d3480e0e248f4766e9202278",
     "track_count": 1,
     "track_ids": [
       "354fed7e8cd52e957cf64691"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "5ef1aad8b5befb1db1a831ea",
-    "title": "Chapters (Deluxe)",
-    "primary_artist_id": "c08cfce6dc293f1d37fed629",
-    "track_count": 1,
-    "track_ids": [
-      "f7f20b70f979d8d9a22b55b2"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -12395,8 +12199,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "6d900df1c4840e776085f0e6",
-    "title": "Cheryl Lynn (Expanded Edition)",
+    "id": "24e08b33aeba39c470f19cbb",
+    "title": "Cheryl Lynn",
     "primary_artist_id": "b0dfde21c9451d10d95a3994",
     "track_count": 1,
     "track_ids": [
@@ -12441,16 +12245,6 @@
     "track_count": 1,
     "track_ids": [
       "cda40a8cbfded74e24edfc79"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "ba964bb472e964975ad7cb86",
-    "title": "Chilombo (Deluxe)",
-    "primary_artist_id": "012b5273e9393c59985b7942",
-    "track_count": 1,
-    "track_ids": [
-      "27c8eea7efe59e9d9c3b14f7"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -12505,17 +12299,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "30fa3193a6826182ceb562ad",
-    "title": "Chris Brown",
-    "primary_artist_id": "61d4861e9764f699ba10fdbe",
-    "track_count": 2,
-    "track_ids": [
-      "034efb6faadea8824383f22d",
-      "638435fa7e12946aedd314a6"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "b7a3507ff484647fa630d847",
     "title": "Chris Isaak",
     "primary_artist_id": "d7e8113cfef99f1e41f99864",
@@ -12526,8 +12309,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "60a35d5a94f759ddb7a74ec7",
-    "title": "Christina Aguilera (Expanded Edition)",
+    "id": "9745f9af63c5ef946b1d6d56",
+    "title": "Christina Aguilera",
     "primary_artist_id": "c41373f074ed1ff11b5a6f77",
     "track_count": 2,
     "track_ids": [
@@ -12900,8 +12683,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "43441073dba357afc705358e",
-    "title": "Cleopatra (Deluxe Version)",
+    "id": "90750db0af332ce8441a9377",
+    "title": "Cleopatra",
     "primary_artist_id": "e72425f45ba372c6a79d0f15",
     "track_count": 1,
     "track_ids": [
@@ -13180,8 +12963,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "d77b0f98c6e173234a86110f",
-    "title": "Colonel Abrams (Expanded Edition)",
+    "id": "6923af7bf60c458f829ab6ce",
+    "title": "Colonel Abrams",
     "primary_artist_id": "5c4df264a64480c6b58838e3",
     "track_count": 1,
     "track_ids": [
@@ -13535,32 +13318,22 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "72847c5adeb7e89a77922342",
+    "id": "7f85701614bac4dac773b61a",
     "title": "Confessions",
-    "primary_artist_id": "bf2e51e0ef29f405495dd012",
-    "track_count": 1,
-    "track_ids": [
-      "cc804cb74cfa3d3660cda64b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "837dcd60aceb62a342c5398c",
-    "title": "Confessions (Expanded Edition)",
-    "primary_artist_id": "234afc14afeb54f93d69f3ea",
-    "track_count": 1,
-    "track_ids": [
-      "9c5fe8cab13b78bcc0448031"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "e2037859fb43de61b82de1ee",
-    "title": "Confessions (Expanded Edition)",
     "primary_artist_id": "5036be87b2566e368e97013a",
     "track_count": 1,
     "track_ids": [
       "6ecaabb51e19cd578337e67c"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "8db81a8e620bc1df221c57c5",
+    "title": "Confessions",
+    "primary_artist_id": "234afc14afeb54f93d69f3ea",
+    "track_count": 1,
+    "track_ids": [
+      "9c5fe8cab13b78bcc0448031"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -13655,8 +13428,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "22fad70ab44b8f4ca005a28b",
-    "title": "Confessions Of The Mind (Expanded Edition)",
+    "id": "902a2b50c5d279ce06791af9",
+    "title": "Confessions Of The Mind",
     "primary_artist_id": "305b32f961434a731a644144",
     "track_count": 1,
     "track_ids": [
@@ -13773,17 +13546,6 @@
     "track_count": 1,
     "track_ids": [
       "c3634518455b6d1721bf640f"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "a95fef201b471dd3b46de2d9",
-    "title": "Cooleyhighharmony",
-    "primary_artist_id": "a81a5972cae14f371939064b",
-    "track_count": 2,
-    "track_ids": [
-      "6cd07b1bee805105e043bf17",
-      "80cbbae37b510aaef36a76b9"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -14632,8 +14394,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c7392a91e78328070c5bfba9",
-    "title": "Curtain Call: The Hits (Deluxe Version)",
+    "id": "97e63e78637e9125bcddd041",
+    "title": "Curtain Call: The Hits",
     "primary_artist_id": "d00a007f6d04b030be975e87",
     "track_count": 1,
     "track_ids": [
@@ -14973,18 +14735,7 @@
   },
   {
     "id": "ace59fefd2cf951fba1b409a",
-    "title": "Dancing on the Ceiling",
-    "primary_artist_id": "336095288d2f489cb8c86c8d",
-    "track_count": 2,
-    "track_ids": [
-      "c2cd1bc9955b828f7ab8d3e1",
-      "e5565cbe5ffdbcd8b0af88bb"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "2c2bb0450f838867e969bb64",
-    "title": "Dancing On The Ceiling (Expanded Edition)",
+    "title": "Dancing On The Ceiling",
     "primary_artist_id": "336095288d2f489cb8c86c8d",
     "track_count": 2,
     "track_ids": [
@@ -15034,8 +14785,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "85c7f606a2d0b4b921936c5e",
-    "title": "Dancing With the Devil…The Art of Starting Over (Expanded Edition)",
+    "id": "1188174d4e75eb66f7e1af89",
+    "title": "Dancing With the Devil…The Art of Starting Over",
     "primary_artist_id": "2e36a78d9cf98425b6dc7577",
     "track_count": 1,
     "track_ids": [
@@ -15050,16 +14801,6 @@
     "track_count": 1,
     "track_ids": [
       "c9ce7f34355b0ed1aee22d78"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "18394c2ed9592d4ba5f7da28",
-    "title": "Dangerous Woman (Deluxe)",
-    "primary_artist_id": "231b55a52f11bd52bb830931",
-    "track_count": 1,
-    "track_ids": [
-      "c2022cd4d60fc2389e4fb52f"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -15286,8 +15027,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c79ab1ae878147c82fc84718",
-    "title": "Days Are Gone (Deluxe Edition)",
+    "id": "e3a5e8d139fe59739fd2b58a",
+    "title": "Days Are Gone",
     "primary_artist_id": "62fc26947c2da6400cab4ac4",
     "track_count": 1,
     "track_ids": [
@@ -15506,8 +15247,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "ab384a24ac4b72939b24fb00",
-    "title": "Delirium (Deluxe)",
+    "id": "6cd70b2c44f297c3e00b818d",
+    "title": "Delirium",
     "primary_artist_id": "faaa52758446dd2afee2950e",
     "track_count": 1,
     "track_ids": [
@@ -15710,6 +15451,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "74eea7daac9cbf9cc639c947",
+    "title": "Diana & Marvin",
+    "primary_artist_id": "9bf88011d283efea080cec53",
+    "track_count": 1,
+    "track_ids": [
+      "127945af28774d567b1e0522"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "c86f64c2e752d43efe6e5cb2",
     "title": "Diana & Marvin",
     "primary_artist_id": "3d0a34e0587ca556e245cb32",
@@ -15720,48 +15471,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "0ea086cc65743d33cd6a424e",
-    "title": "Diana & Marvin (Deluxe Edition)",
-    "primary_artist_id": "9bf88011d283efea080cec53",
-    "track_count": 1,
-    "track_ids": [
-      "127945af28774d567b1e0522"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "53ed309ea18aaff076091288",
-    "title": "Diana & Marvin (Expanded Edition)",
-    "primary_artist_id": "3d0a34e0587ca556e245cb32",
-    "track_count": 1,
-    "track_ids": [
-      "b118880f011060c3540166a2"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "938e4024522c37cd04501fd9",
-    "title": "Diana & Marvin (Expanded Edition)",
-    "primary_artist_id": "9bf88011d283efea080cec53",
-    "track_count": 1,
-    "track_ids": [
-      "127945af28774d567b1e0522"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "ed0d4f0ae236e23583a53270",
-    "title": "Diana (Deluxe Edition)",
-    "primary_artist_id": "3d0a34e0587ca556e245cb32",
-    "track_count": 1,
-    "track_ids": [
-      "64b73d1120af0199c60c4e0a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "317b35c880b1f5288c08a11c",
-    "title": "Diana Ross (Expanded Edition)",
+    "id": "5a6aaa41bc63c40e0969cfc1",
+    "title": "Diana Ross",
     "primary_artist_id": "3d0a34e0587ca556e245cb32",
     "track_count": 1,
     "track_ids": [
@@ -16084,16 +15795,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b264647727687b577c3222eb",
-    "title": "Discipline (Deluxe Edition)",
-    "primary_artist_id": "625e64bb0ef497b3435a7ebd",
-    "track_count": 1,
-    "track_ids": [
-      "2d39c37020bac8bad2edcfc1"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "f214c8f6c08ab332fa542e6e",
     "title": "Disco Kid (Studio 54) [Club Remixes]",
     "primary_artist_id": "4d282acc2b2edbcfff273dd8",
@@ -16206,8 +15907,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c6e2fed2ec00d7beae0a5e08",
-    "title": "Division (Deluxe)",
+    "id": "b979d81e407a78274cd60f35",
+    "title": "Division",
     "primary_artist_id": "89b7b31bea9967c914cab4bd",
     "track_count": 1,
     "track_ids": [
@@ -16720,8 +16421,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "305a9df6cc9489253dd53878",
-    "title": "Don't Look Any Further (Expanded Edition)",
+    "id": "3c842f172610aaaf2b2b635a",
+    "title": "Don't Look Any Further",
     "primary_artist_id": "8ef622b1a613e88353f3f9c7",
     "track_count": 2,
     "track_ids": [
@@ -16813,8 +16514,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "9ffe8a2df3d0da8931ab1542",
-    "title": "Don't Take It Personal (Expanded Edition)",
+    "id": "78a9d74eaa3fd4759719ebcd",
+    "title": "Don't Take It Personal",
     "primary_artist_id": "154f83041818c1161894d46f",
     "track_count": 1,
     "track_ids": [
@@ -17055,8 +16756,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "d9141bda1c4a2cc33fd771a2",
-    "title": "Dreams and Nightmares (Deluxe Edition)",
+    "id": "f7233ba334502829dfd8902a",
+    "title": "Dreams and Nightmares",
     "primary_artist_id": "281f4cd2d17e8c184bd4193d",
     "track_count": 1,
     "track_ids": [
@@ -17207,16 +16908,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "6d77a709f945d35d93e39995",
-    "title": "Dru Hill (Deluxe Edition)",
-    "primary_artist_id": "d601ddbbd05efa083c0ee092",
-    "track_count": 1,
-    "track_ids": [
-      "78229a7e60449d742cab9b4f"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "cbb4a819b1d85d11f2add565",
     "title": "Drugs n' Lullabies",
     "primary_artist_id": "17bf45e4e0fe05e047999af1",
@@ -17238,12 +16929,22 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "d5600ffe9084644f654ab340",
-    "title": "DS2 - Deluxe",
+    "id": "564b4cacc30237f110823719",
+    "title": "DS2",
     "primary_artist_id": "160cea01243babea5fd153ce",
     "track_count": 1,
     "track_ids": [
       "4d596102b9c366b8661a0061"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "f94c9348e20385f75a7a879a",
+    "title": "Dua Lipa",
+    "primary_artist_id": "1641add014b2c9a2fe7cab2a",
+    "track_count": 1,
+    "track_ids": [
+      "5dce8c696a557b862d497c00"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -17254,16 +16955,6 @@
     "track_count": 1,
     "track_ids": [
       "a10f50a8c919180934bf9f6a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "779e1711d7e206cbe2f8b8da",
-    "title": "Dua Lipa (Deluxe)",
-    "primary_artist_id": "1641add014b2c9a2fe7cab2a",
-    "track_count": 1,
-    "track_ids": [
-      "5dce8c696a557b862d497c00"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -18048,16 +17739,6 @@
     "id": "152352c69ed9abe78be71176",
     "title": "Epiphany",
     "primary_artist_id": "93e3b08f7476d15a783c9029",
-    "track_count": 1,
-    "track_ids": [
-      "59636a8a48c75a9230042d41"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "a994fb02ba69b26697192cb2",
-    "title": "Epiphany (Expanded Edition)",
-    "primary_artist_id": "93e3b08f7476d15a783c9029",
     "track_count": 2,
     "track_ids": [
       "59636a8a48c75a9230042d41",
@@ -18680,27 +18361,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "639111c45046cb4df28ad275",
-    "title": "Exodus",
-    "primary_artist_id": "6e543315ee57f318e1e3b7fa",
-    "track_count": 2,
-    "track_ids": [
-      "c891efbb3cfd942fead8d6c8",
-      "cc752e840680d6d07b9d2d88"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "4e07547e6f994da3f220e57d",
-    "title": "Exodus (Deluxe Edition)",
-    "primary_artist_id": "6e543315ee57f318e1e3b7fa",
-    "track_count": 1,
-    "track_ids": [
-      "211d9beace35d266def5ecde"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "4e44bd654f1f33d6a1d7b101",
     "title": "Exposed",
     "primary_artist_id": "54f5649ee106f070952f541e",
@@ -18881,28 +18541,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "34b617314ad64f115788425a",
+    "id": "f1063f3be172cade8a16335d",
     "title": "F.A.M.E.",
-    "primary_artist_id": "61d4861e9764f699ba10fdbe",
-    "track_count": 1,
-    "track_ids": [
-      "e83e4a53aad7cd6525ecae54"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "5ef08ce419af7bf59f5e6d4c",
-    "title": "F.A.M.E. (Deluxe Version)",
-    "primary_artist_id": "61d4861e9764f699ba10fdbe",
-    "track_count": 1,
-    "track_ids": [
-      "a8fe8db84142771eb24adf6b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "f5bf228e8610a0cd636f749b",
-    "title": "F.A.M.E. (Expanded Edition)",
     "primary_artist_id": "e84c892f3cddfd7d5a337a23",
     "track_count": 1,
     "track_ids": [
@@ -19183,8 +18823,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "aa24438c6fffb5eccc15a6bb",
-    "title": "Fan of A Fan The Album (Expanded Edition)",
+    "id": "6e7f215d452d49400c340227",
+    "title": "Fan of A Fan The Album",
     "primary_artist_id": "61d4861e9764f699ba10fdbe",
     "track_count": 1,
     "track_ids": [
@@ -19416,16 +19056,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "89b4d5d23d65b28c8dcc05a7",
-    "title": "Fear Of Flying (Expanded Edition)",
-    "primary_artist_id": "7bce3bfee0283bf64306adcb",
-    "track_count": 1,
-    "track_ids": [
-      "d5c32bfa0501c16d69f9faad"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "25d492761b7bc41659c97f3d",
     "title": "Fearful - Single",
     "primary_artist_id": "3ef447c4f3e39b2e3391838c",
@@ -19599,8 +19229,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "9a442a10194c36a48f5fda6a",
-    "title": "Feline (Deluxe)",
+    "id": "e244d33fc07f7cb0ee7b2024",
+    "title": "Feline",
     "primary_artist_id": "8844f343cf83d63dab44708d",
     "track_count": 1,
     "track_ids": [
@@ -19645,28 +19275,6 @@
     "track_count": 1,
     "track_ids": [
       "d1f30a39a255e1d7fd3c072d"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "b44b6af2fb4c636f2549bcfe",
-    "title": "Fetty Wap (Deluxe Edition)",
-    "primary_artist_id": "4b8f49958dcc5ebce49a8b67",
-    "track_count": 2,
-    "track_ids": [
-      "77cf699774a548827dc98076",
-      "af515ccc9b3074dc6b6c8676"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "3c20bafc8fc0a8d9a7787c72",
-    "title": "Fetty Wap (Deluxe)",
-    "primary_artist_id": "4b8f49958dcc5ebce49a8b67",
-    "track_count": 2,
-    "track_ids": [
-      "af515ccc9b3074dc6b6c8676",
-      "f4031905bbb8f46ae6b95529"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -20206,8 +19814,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "752a412da24f197762fc6919",
-    "title": "flora + fana (deluxe)",
+    "id": "774a26dd5bd13cd13bf93fb6",
+    "title": "flora + fana",
     "primary_artist_id": "91208214f1ad7f3d3cab540b",
     "track_count": 1,
     "track_ids": [
@@ -20552,8 +20160,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c689510ea41259dd67e48335",
-    "title": "For Your Entertainment (Deluxe Version)",
+    "id": "44be71322e9e0667e34a4a03",
+    "title": "For Your Entertainment",
     "primary_artist_id": "d6e8a6e774bfb56d12df279f",
     "track_count": 1,
     "track_ids": [
@@ -20582,22 +20190,22 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "af93d8b749cbbc604e3dedc2",
-    "title": "Forest Green (Deluxe)",
-    "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
-    "track_count": 1,
-    "track_ids": [
-      "833ed380fd6fb4524f8b0954"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "e90cc320d5e1ddbccb95ed3a",
-    "title": "Forest Green (Deluxe)",
+    "id": "1f193206221ff89f1e22de65",
+    "title": "Forest Green",
     "primary_artist_id": "ebe016675a9ad389cc9f08e0",
     "track_count": 1,
     "track_ids": [
       "be5c83abd3ff824208aea918"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "3fb7d1a0fc1cf4e89bd9a29e",
+    "title": "Forest Green",
+    "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
+    "track_count": 1,
+    "track_ids": [
+      "833ed380fd6fb4524f8b0954"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -20759,16 +20367,6 @@
     "track_count": 1,
     "track_ids": [
       "d8ff88977d3e31f330689d1f"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "bc6ef6a5afea61b68dc476f4",
-    "title": "Fortune",
-    "primary_artist_id": "61d4861e9764f699ba10fdbe",
-    "track_count": 1,
-    "track_ids": [
-      "0bd95b07087ff4191fb4de08"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -21099,16 +20697,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "71d80af36e39d4886d33df24",
-    "title": "Friends (Deluxe Edition)",
-    "primary_artist_id": "51907d14a0a6a20b0dacf262",
-    "track_count": 1,
-    "track_ids": [
-      "f8e20c2971f3783444a3d720"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "d8526f1019e4695e06afa737",
     "title": "Friends Again - Single",
     "primary_artist_id": "3cae88297d38dacd6304a3c9",
@@ -21301,8 +20889,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "110a544a69ef31651d636531",
-    "title": "Full Speed (Expanded Edition)",
+    "id": "147398c0f688777464fb6ac0",
+    "title": "Full Speed",
     "primary_artist_id": "d52a74921f4de38749c9b350",
     "track_count": 1,
     "track_ids": [
@@ -21451,29 +21039,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "60d0b385a8358bcf47fa7098",
-    "title": "FutureSex / LoveSounds (Deluxe Version)",
-    "primary_artist_id": "dc1381331fff8e9d6e358464",
-    "track_count": 1,
-    "track_ids": [
-      "166e4229aa79d3cd3bc88494"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "0de8c966833813972985bcc3",
-    "title": "FutureSex/LoveSounds Deluxe Edition",
-    "primary_artist_id": "dc1381331fff8e9d6e358464",
-    "track_count": 2,
-    "track_ids": [
-      "166e4229aa79d3cd3bc88494",
-      "298443bd4e508c9ee8cf777b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "ed3c1741f504bdbff325e53f",
-    "title": "FutureSex/LoveSounds Deluxe Edition",
+    "id": "d8bc49214e241550c92964c8",
+    "title": "FutureSex/LoveSounds",
     "primary_artist_id": "4f2ca68b6a12c192a7bb10c7",
     "track_count": 1,
     "track_ids": [
@@ -21574,26 +21141,6 @@
   {
     "id": "ce9454b01f96822c541a9f1b",
     "title": "Gangsta's Paradise",
-    "primary_artist_id": "6256fc6c2bc7d922a71edf29",
-    "track_count": 1,
-    "track_ids": [
-      "69199a061851b1531505e1f9"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "44c356ff4508bdf2f4615afa",
-    "title": "Gangsta's Paradise (Deluxe Edition)",
-    "primary_artist_id": "2ceee795c291ab0262c80286",
-    "track_count": 1,
-    "track_ids": [
-      "b299ba87b72673d89d9b0d46"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "51c2b377732cdd1fac843a7a",
-    "title": "Gangsta's Paradise (Deluxe Edition)",
     "primary_artist_id": "6256fc6c2bc7d922a71edf29",
     "track_count": 1,
     "track_ids": [
@@ -21827,19 +21374,10 @@
     "id": "0191fb4db1c008171bd7aba0",
     "title": "Get Loose",
     "primary_artist_id": "1204742a45473e9c01eb60de",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "250fa0740ea1001c73fc40c9",
       "2763b2415251fdaf4aa14b1d"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "51717c9b8fad6505cc57395a",
-    "title": "Get Loose (Expanded Edition)",
-    "primary_artist_id": "1204742a45473e9c01eb60de",
-    "track_count": 1,
-    "track_ids": [
-      "250fa0740ea1001c73fc40c9"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -22481,6 +22019,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "644843657fca2a9138173067",
+    "title": "GLORIOUS",
+    "primary_artist_id": "b48aef6c84758e411dd20490",
+    "track_count": 1,
+    "track_ids": [
+      "ce903929058c3d6b337e688c"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "907f8e6fe23d936a43c58e29",
     "title": "GLORIOUS",
     "primary_artist_id": "eee0d46177ac57db3db1d5af",
@@ -22501,18 +22049,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b6025d3433f8a346b331ad00",
-    "title": "GLORIOUS (BONUS TRACK EDITION)",
-    "primary_artist_id": "b48aef6c84758e411dd20490",
-    "track_count": 1,
-    "track_ids": [
-      "ce903929058c3d6b337e688c"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "7657fffb48b537262902d719",
-    "title": "Glory Days (Deluxe)",
+    "id": "0954b207ee60354cd7561f04",
+    "title": "Glory Days",
     "primary_artist_id": "2562bab55b946817189fd9cb",
     "track_count": 1,
     "track_ids": [
@@ -22814,8 +22352,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "bfd7413f14e7ff3b318d1192",
-    "title": "Goddess (Deluxe)",
+    "id": "c3696d3c8528ea5b06973ecd",
+    "title": "Goddess",
     "primary_artist_id": "201fe30fa8199e9c09491c50",
     "track_count": 1,
     "track_ids": [
@@ -23299,17 +22837,6 @@
     "track_count": 1,
     "track_ids": [
       "feeb73b11363fef2c90e8181"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "92ee91b374d0d4794b89a03f",
-    "title": "Graffiti",
-    "primary_artist_id": "61d4861e9764f699ba10fdbe",
-    "track_count": 2,
-    "track_ids": [
-      "4a31798f0695a19ef0e63225",
-      "e7e9b47467d64d34bb3d5f8a"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -23833,19 +23360,10 @@
     "id": "685ed0077e5eaf0009be8eac",
     "title": "Growing Pains",
     "primary_artist_id": "4e2f259cc216856d65e57210",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "789691081ff9284b84242113",
       "cb45e4bedd39487ab5e3724e"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "3b57b135c8b651b12aafec3a",
-    "title": "Growing Pains (Deluxe)",
-    "primary_artist_id": "4e2f259cc216856d65e57210",
-    "track_count": 1,
-    "track_ids": [
-      "789691081ff9284b84242113"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -24174,8 +23692,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c559106b7d2e88ec5b075ff8",
-    "title": "Hall Of Fame (Deluxe)",
+    "id": "dbc9063b5f6595cc5adfa14c",
+    "title": "Hall Of Fame",
     "primary_artist_id": "dbaf9c207f037091da516dba",
     "track_count": 1,
     "track_ids": [
@@ -24394,17 +23912,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "f765c97dc59da6a2f5fe5799",
-    "title": "Hard Candy",
-    "primary_artist_id": "f6e0a45440a790e7ff61ad04",
-    "track_count": 2,
-    "track_ids": [
-      "6a5049eddfa169cacd4c9b28",
-      "98414ab6d2c86c43e799575e"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "de62622664711c6b6587cbc7",
     "title": "Hard Candy (Deluxe Digital)",
     "primary_artist_id": "f6e0a45440a790e7ff61ad04",
@@ -24412,17 +23919,6 @@
     "track_ids": [
       "1d21ce38eb36826ee99eee90",
       "98414ab6d2c86c43e799575e"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "12b9f317d354f731d39e9220",
-    "title": "Hard Candy (Deluxe Version)",
-    "primary_artist_id": "f6e0a45440a790e7ff61ad04",
-    "track_count": 2,
-    "track_ids": [
-      "1d21ce38eb36826ee99eee90",
-      "6a5049eddfa169cacd4c9b28"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -24865,16 +24361,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "969bb17a01ae3e53e73e0823",
-    "title": "Heart Break (Expanded Edition)",
-    "primary_artist_id": "3fd8c890ee7864427880fc16",
-    "track_count": 1,
-    "track_ids": [
-      "7805c5105214f6eefafefe89"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "75a7a483ca0f2eb8059d5edb",
     "title": "Heart Of A Woman",
     "primary_artist_id": "b1d37ab641c4d521a43a9d3b",
@@ -24926,18 +24412,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "3d600217990b37687a6a9a89",
-    "title": "Heart. Passion. Pursuit. (Deluxe Edition)",
-    "primary_artist_id": "2633163571d98aa2f6a16411",
-    "track_count": 1,
-    "track_ids": [
-      "f362e9f61ab20a555e53821b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "5fad7b434862b8733bfbad5f",
-    "title": "Heart. Passion. Pursuit. (Deluxe)",
+    "id": "415cda44c6b690dd240b0905",
+    "title": "Heart. Passion. Pursuit.",
     "primary_artist_id": "2633163571d98aa2f6a16411",
     "track_count": 1,
     "track_ids": [
@@ -25198,8 +24674,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "015c336ee48d6e73b5257589",
-    "title": "Hello, I Must Be Going! (Deluxe Edition)",
+    "id": "fcf9ff0e38de0f11b87477ec",
+    "title": "Hello, I Must Be Going!",
     "primary_artist_id": "0b3d49a14ae4f9e4d411a669",
     "track_count": 2,
     "track_ids": [
@@ -25320,8 +24796,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "10972b6a091d60076061c38d",
-    "title": "Here I Am (Deluxe Version)",
+    "id": "4d52bbfbebe1b58b0a21dd7f",
+    "title": "Here I Am",
     "primary_artist_id": "a4f6d8036c5fe49b5eacffb6",
     "track_count": 1,
     "track_ids": [
@@ -26297,8 +25773,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "ee90a0bebcc56f3a3b4895c0",
-    "title": "Hoodstar (Deluxe Edition)",
+    "id": "e2d64124b919180523ecbe0e",
+    "title": "Hoodstar",
     "primary_artist_id": "e6d7f317d5c75a01a38d4a4f",
     "track_count": 1,
     "track_ids": [
@@ -26323,16 +25799,6 @@
     "track_count": 1,
     "track_ids": [
       "053693660ac1ef30b1391056"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "f1b70dbc5a8818e9af168ae0",
-    "title": "Hopeless Fountain Kingdom",
-    "primary_artist_id": "f33bb59fd0d696e91a14f09a",
-    "track_count": 1,
-    "track_ids": [
-      "763921b211531a8f65ddbe63"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -26519,8 +25985,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "6a217697db666570551976a3",
-    "title": "Hotel Cabana (Deluxe Version)",
+    "id": "e7fbae2de91f999ac7add6f1",
+    "title": "Hotel Cabana",
     "primary_artist_id": "eb6c1d681c5675683593fb7d",
     "track_count": 1,
     "track_ids": [
@@ -26850,8 +26316,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "9e3323742b8ae36f07c0b5e9",
-    "title": "Human (Deluxe)",
+    "id": "1a4ad18b2dea13286050d85b",
+    "title": "Human",
     "primary_artist_id": "0b1e893cc3f2afb48b3d12e5",
     "track_count": 1,
     "track_ids": [
@@ -27153,16 +26619,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c8f94383983374bc81e0308a",
-    "title": "i am > i was (Deluxe)",
-    "primary_artist_id": "7ce0dd76beb95ffd2103f82b",
-    "track_count": 1,
-    "track_ids": [
-      "f6af45b74fef9013fd1f086b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "17ebcaba8a965da2e57dbb0d",
     "title": "I Am Music",
     "primary_artist_id": "696d8e25e3bc5c03b5992f1f",
@@ -27214,8 +26670,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "9c7339c79a287df6aa6edde9",
-    "title": "I Am...Sasha Fierce The Bonus Tracks",
+    "id": "e86ba5dd4d78e2cf9be5f77c",
+    "title": "I Am...Sasha Fierce The",
     "primary_artist_id": "d4b4d6c3df118803e75af84b",
     "track_count": 1,
     "track_ids": [
@@ -27244,8 +26700,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "bafde8df6947cd727b0560af",
-    "title": "I Changed A Lot (Deluxe)",
+    "id": "5bf8caefbcacc666a4e8b47a",
+    "title": "I Changed A Lot",
     "primary_artist_id": "84103aab7d8a4105d9a40936",
     "track_count": 1,
     "track_ids": [
@@ -27811,16 +27267,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "23e3e70868ed781aa5af3661",
-    "title": "I Told You (Deluxe Edition)",
-    "primary_artist_id": "f0928997314766a496aa4969",
-    "track_count": 1,
-    "track_ids": [
-      "ada40e5a41d8ea37ff9f162e"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "22cf092ade57d264ec798c7b",
     "title": "I Took a Pill in Ibiza (Seeb Remix)",
     "primary_artist_id": "72b78b5f72c3ba1a0bba5521",
@@ -27918,16 +27364,6 @@
     "track_count": 1,
     "track_ids": [
       "82761b3b27ffe4ce20862637"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "c2a01333f7464f6e40784983",
-    "title": "I Want You (Deluxe Edition)",
-    "primary_artist_id": "3d9c76a29977519674245f05",
-    "track_count": 1,
-    "track_ids": [
-      "d0f1cbe4208df3062b6ac5d0"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -28102,8 +27538,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "405dddcda417a8eb8f8b24c4",
-    "title": "I'm In Love (Expanded Edition)",
+    "id": "98d3c2655dff06e55a5eb5e6",
+    "title": "I'm In Love",
     "primary_artist_id": "1204742a45473e9c01eb60de",
     "track_count": 1,
     "track_ids": [
@@ -28749,19 +28185,10 @@
     "id": "18b174b4b6c299d381161b00",
     "title": "Illuminate",
     "primary_artist_id": "1b0a02d1c6c6fa1868ff6058",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "8e714ddb6e9edeaca554b7b2",
       "b3f3386dc7b7c475bfe746ec"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "70c818d9cbfd6b43f5965648",
-    "title": "Illuminate (Deluxe)",
-    "primary_artist_id": "1b0a02d1c6c6fa1868ff6058",
-    "track_count": 1,
-    "track_ids": [
-      "8e714ddb6e9edeaca554b7b2"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -28826,8 +28253,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "e6f50ef4557d8d6320505c40",
-    "title": "Imagination (Expanded Edition)",
+    "id": "cd49a19bdc791a586b2a87da",
+    "title": "Imagination",
     "primary_artist_id": "65bca39cc9ae96dac339817b",
     "track_count": 1,
     "track_ids": [
@@ -29106,26 +28533,6 @@
     "track_count": 1,
     "track_ids": [
       "f37194a537e59ec5e761d5ed"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "418be98ffd7ab25d0be4d04e",
-    "title": "In the Lonely Hour (Deluxe Edition)",
-    "primary_artist_id": "0d8a31f23243d0f29bebec70",
-    "track_count": 1,
-    "track_ids": [
-      "208ae63f1f7e26d7321984db"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "db5defc37c732382f0be65c0",
-    "title": "In the Lonely Hour (Deluxe)",
-    "primary_artist_id": "0d8a31f23243d0f29bebec70",
-    "track_count": 1,
-    "track_ids": [
-      "5b226f61508b188d4ee1d46d"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -30044,22 +29451,22 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "11fe49287d9eaeef0fa5aecb",
+    "title": "It's About Time",
+    "primary_artist_id": "9628d54bbf210cf7a00d0782",
+    "track_count": 1,
+    "track_ids": [
+      "cb34eab1a83a0f5775bcb406"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "f0dd390e337bd8e96038c9bc",
     "title": "It's About Time",
     "primary_artist_id": "7954c9605d68f2987fbf3645",
     "track_count": 1,
     "track_ids": [
       "55cf2fedb63534c40a45036a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "21b8b1bae201a3157aed43c0",
-    "title": "It's About Time (Expanded Edition)",
-    "primary_artist_id": "9628d54bbf210cf7a00d0782",
-    "track_count": 1,
-    "track_ids": [
-      "cb34eab1a83a0f5775bcb406"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -30580,26 +29987,6 @@
     "id": "0d46af2e7f5e8820b3868854",
     "title": "Jackie",
     "primary_artist_id": "a04f4adaab09fe309bf2e85d",
-    "track_count": 1,
-    "track_ids": [
-      "87aa2a397e6929b36d48bda3"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "9f4cec6797912d91e43e043b",
-    "title": "Jackie (Deluxe Edition)",
-    "primary_artist_id": "a04f4adaab09fe309bf2e85d",
-    "track_count": 1,
-    "track_ids": [
-      "87aa2a397e6929b36d48bda3"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "d1920058ea1f342a9f68df7a",
-    "title": "Jackie (Deluxe)",
-    "primary_artist_id": "a04f4adaab09fe309bf2e85d",
     "track_count": 2,
     "track_ids": [
       "3bbc8b1397c3b5d2c0fcfe1b",
@@ -30746,17 +30133,6 @@
     "track_count": 1,
     "track_ids": [
       "83938d5448d13c5812de1437"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "b7672eca9ff12e630d1af557",
-    "title": "Janet. (Deluxe Edition)",
-    "primary_artist_id": "625e64bb0ef497b3435a7ebd",
-    "track_count": 2,
-    "track_ids": [
-      "84482553dd172a035c1c0d49",
-      "ccd9f02fef147702da99a0ed"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -30932,16 +30308,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "73e625cbaf76506ee7c15423",
-    "title": "Jennifer Hudson (Deluxe Edition)",
-    "primary_artist_id": "34635a5334645d3e67b92cb7",
-    "track_count": 1,
-    "track_ids": [
-      "61119dc0b69ded74922c601a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "638147895f97b72a3c0497a4",
     "title": "Jennifer Paige",
     "primary_artist_id": "3f07f2bacd276a650739cc36",
@@ -30982,22 +30348,22 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "dd66bdddff27797d1bf03a75",
-    "title": "Jermaine Jackson (Expanded Edition)",
-    "primary_artist_id": "154f83041818c1161894d46f",
-    "track_count": 1,
-    "track_ids": [
-      "a9dc7015331f84c28ab9e0fd"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "faaf91d9634f46703bffc4eb",
-    "title": "Jermaine Jackson (Expanded Edition)",
+    "id": "87a70040d8f5236e2b1a1e7e",
+    "title": "Jermaine Jackson",
     "primary_artist_id": "e1e14c6c1c6d4046817c1c10",
     "track_count": 1,
     "track_ids": [
       "823ad1f1055f37623633ad8a"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "c965d9f18b364337d853d714",
+    "title": "Jermaine Jackson",
+    "primary_artist_id": "154f83041818c1161894d46f",
+    "track_count": 1,
+    "track_ids": [
+      "a9dc7015331f84c28ab9e0fd"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -31164,16 +30530,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "1945b854c04b67d35b70f5d2",
-    "title": "Johnny Gill (Expanded Edition)",
-    "primary_artist_id": "84c0488097157169a94638ed",
-    "track_count": 1,
-    "track_ids": [
-      "68b9a033b22fd5bfc0e1f0d1"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "9aa67722cba3921e050ab9c9",
     "title": "JoJo",
     "primary_artist_id": "b2dc02549b9f4d2b4f776c14",
@@ -31232,27 +30588,6 @@
     "track_count": 1,
     "track_ids": [
       "f123f91dd08af143d3c5a5f5"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "d8f9365411c44044fc50d5e7",
-    "title": "Jordin Sparks",
-    "primary_artist_id": "aecfa038b47e884263a2360f",
-    "track_count": 2,
-    "track_ids": [
-      "350dd0ae924c597d00141009",
-      "fd3cc5c78c4b19fabbdbf30e"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "48220a2d21350000f17976f8",
-    "title": "Jordin Sparks (Deluxe Version)",
-    "primary_artist_id": "aecfa038b47e884263a2360f",
-    "track_count": 1,
-    "track_ids": [
-      "4eedd8d568788ba871654e5f"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -31700,16 +31035,6 @@
     "track_count": 1,
     "track_ids": [
       "f715767c93bce5ae9a19a54b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "b8415079877e803a5c622c1c",
-    "title": "Kaleidoscope Dream",
-    "primary_artist_id": "441eecdd2bd60095fa5272ce",
-    "track_count": 1,
-    "track_ids": [
-      "614109ee0beeace7b0aa209f"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -32269,16 +31594,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "a7e77a7302fa157cbe869b10",
-    "title": "King Zamar (Deluxe)",
-    "primary_artist_id": "5cf459bbd2a2709bf999a060",
-    "track_count": 1,
-    "track_ids": [
-      "61277a9d957e4f9d0118404c"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "3f9c7a1921b91a0aaf33ca4d",
     "title": "KING ZAMAR || ZAMUSIC.ORG",
     "primary_artist_id": "5cf459bbd2a2709bf999a060",
@@ -32312,16 +31627,6 @@
   {
     "id": "c6a4adb69f578926cb596432",
     "title": "Kiss Land",
-    "primary_artist_id": "6636149ae45ff58db3c6c997",
-    "track_count": 1,
-    "track_ids": [
-      "ff787c13f1200bedaa7007fc"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "2a687864145b96d1cd336b72",
-    "title": "Kiss Land (Deluxe)",
     "primary_artist_id": "6636149ae45ff58db3c6c997",
     "track_count": 1,
     "track_ids": [
@@ -32935,8 +32240,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "1bd93a3b449d7ef104b76f0e",
-    "title": "Last Year Was Complicated (Deluxe Edition)",
+    "id": "daf9b97def613b147b20f9f1",
+    "title": "Last Year Was Complicated",
     "primary_artist_id": "8e0cd22586412a2a5e9eb7bc",
     "track_count": 1,
     "track_ids": [
@@ -33223,17 +32528,6 @@
     "track_count": 1,
     "track_ids": [
       "d65bcefef9c7c2b93381e888"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "7cff07186b10a89b303ea500",
-    "title": "Legacy: The Greatest Hits Collection (Deluxe Edition)",
-    "primary_artist_id": "a81a5972cae14f371939064b",
-    "track_count": 2,
-    "track_ids": [
-      "323e5fb6fabba95279ad139d",
-      "6209924e0fbd1ca7e5a9a294"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -33534,19 +32828,10 @@
     "id": "6a3a019ab659bf04f8335280",
     "title": "Let the Music Play",
     "primary_artist_id": "9347ff34accb19c649779333",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "4a009164b216f4caf6970557",
       "eee909859bae4bc91050d86a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "86ad965468830d5355895384",
-    "title": "Let The Music Play (Expanded Edition)",
-    "primary_artist_id": "9347ff34accb19c649779333",
-    "track_count": 1,
-    "track_ids": [
-      "4a009164b216f4caf6970557"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -33575,16 +32860,6 @@
     "id": "cc21ca38a7792470bba8e850",
     "title": "Let's Get It On",
     "primary_artist_id": "3d9c76a29977519674245f05",
-    "track_count": 1,
-    "track_ids": [
-      "807acb17196e010a034063f6"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "0f80e07774e891559ad1fcb8",
-    "title": "Let's Get It On (Deluxe Edition)",
-    "primary_artist_id": "3d9c76a29977519674245f05",
     "track_count": 2,
     "track_ids": [
       "807acb17196e010a034063f6",
@@ -33603,8 +32878,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "1e2feb9c53669c88e6b1f3e1",
-    "title": "Let's Hear It For The Boy (Expanded Edition)",
+    "id": "7bf13206c5ce15f6b4828a3c",
+    "title": "Let's Hear It For The Boy",
     "primary_artist_id": "c306da322690e8fb2561f6d1",
     "track_count": 2,
     "track_ids": [
@@ -33822,16 +33097,6 @@
     "track_count": 2,
     "track_ids": [
       "91ad23164271f7738d988844",
-      "f84679131c7e772c8649143b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "99b3a2b7c469eb60b9a8031f",
-    "title": "Libra Scale (Deluxe Edition)",
-    "primary_artist_id": "429dcfdf0c5d99efb700b934",
-    "track_count": 1,
-    "track_ids": [
       "f84679131c7e772c8649143b"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -34151,8 +33416,9 @@
     "id": "ba6104b6a9dc269ad1524470",
     "title": "Like..?",
     "primary_artist_id": "972d562b481ce2fbf4aa88a8",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "62076611e202fe246652527e",
       "ca21f6b6d243ce2c0d4994f7"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -34164,16 +33430,6 @@
     "track_count": 1,
     "track_ids": [
       "806994204cd1f31217e6a39d"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "261ddf49d21ad46502acb630",
-    "title": "Like..? (Deluxe)",
-    "primary_artist_id": "972d562b481ce2fbf4aa88a8",
-    "track_count": 1,
-    "track_ids": [
-      "62076611e202fe246652527e"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -34211,25 +33467,16 @@
     "id": "386a4d60ad5395426aa18be1",
     "title": "Lisa Stansfield",
     "primary_artist_id": "973b0de5511f0ab40c2fc610",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "c88e7481a46a1a2ec6cd0679",
       "fc5e29c560c95085f70b9947"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "d23ff1139fc4375a567310be",
-    "title": "Lisa Stansfield (Deluxe)",
-    "primary_artist_id": "973b0de5511f0ab40c2fc610",
-    "track_count": 1,
-    "track_ids": [
-      "c88e7481a46a1a2ec6cd0679"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "89564aabd9d4f2661f0c6f9e",
-    "title": "Listen (Deluxe)",
+    "id": "6b823a2ca8e7e4934b46b44b",
+    "title": "Listen",
     "primary_artist_id": "2c6ca32aadc8f78693cc3788",
     "track_count": 1,
     "track_ids": [
@@ -34331,26 +33578,6 @@
   {
     "id": "21a9c420f6e0390def30fe20",
     "title": "Live In New Orleans",
-    "primary_artist_id": "e7494f6357c6b61041d00da1",
-    "track_count": 1,
-    "track_ids": [
-      "9c91406fdd39a3a6e851c81e"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "0221b495f05ef5477302fd57",
-    "title": "Live In New Orleans (Expanded Edition)",
-    "primary_artist_id": "ca905a2fcde69cdc3937fec9",
-    "track_count": 1,
-    "track_ids": [
-      "3482de47f86718d18a528863"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "13a1ee8c050a01faae117c69",
-    "title": "Live In New Orleans (Expanded Edition)",
     "primary_artist_id": "e7494f6357c6b61041d00da1",
     "track_count": 1,
     "track_ids": [
@@ -34529,8 +33756,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "9a216fcc23d3b579ce665de4",
-    "title": "Long Live the Angels (Deluxe)",
+    "id": "de34f1bc4d53ed09aa82b28b",
+    "title": "Long Live the Angels",
     "primary_artist_id": "0a1663e4e307089c30b7ec1c",
     "track_count": 1,
     "track_ids": [
@@ -34590,8 +33817,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "f377b3a5e88371e93479ee64",
-    "title": "LONG.LIVE.A$AP (Deluxe Version)",
+    "id": "48bfb1dc0062fccbb5e45d6d",
+    "title": "LONG.LIVE.A$AP",
     "primary_artist_id": "9c0f7056fa79fc5fb1d05482",
     "track_count": 2,
     "track_ids": [
@@ -34621,18 +33848,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "0fe3b8fec1edf3ffe861dfda",
-    "title": "Looking 4 Myself (Deluxe Edition)",
-    "primary_artist_id": "bf2e51e0ef29f405495dd012",
-    "track_count": 1,
-    "track_ids": [
-      "780a43792dc94b3445b5ab4e"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "12bc1a2feb4413f9405b4028",
-    "title": "Looking 4 Myself (Expanded Edition)",
+    "id": "75981aba9af59b250dace178",
+    "title": "Looking 4 Myself",
     "primary_artist_id": "bf2e51e0ef29f405495dd012",
     "track_count": 2,
     "track_ids": [
@@ -34668,16 +33885,6 @@
     "track_count": 1,
     "track_ids": [
       "94309e0f7088dadf047d89e1"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "f2df0f58b81b1a76e00b1542",
-    "title": "Loose (Deluxe Version)",
-    "primary_artist_id": "1b1f3c660e2d19bb82c4895b",
-    "track_count": 1,
-    "track_ids": [
-      "6dbf99b71472f85981908a35"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -34944,6 +34151,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "266efa6d23a45a78b180a094",
+    "title": "Love",
+    "primary_artist_id": "f4696761aa2be809f68634b5",
+    "track_count": 1,
+    "track_ids": [
+      "851a95eaf3879d1fcd787514"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "5f56e5384480b97b2a72906d",
     "title": "Love",
     "primary_artist_id": "07136725fdc635421588ab5f",
@@ -34970,26 +34187,6 @@
     "track_count": 1,
     "track_ids": [
       "28d26c7f5e2188f16b0bbe37"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "61bf9f40266ad5bf01dd6082",
-    "title": "Love & Life - Deluxe",
-    "primary_artist_id": "4e2f259cc216856d65e57210",
-    "track_count": 1,
-    "track_ids": [
-      "28d26c7f5e2188f16b0bbe37"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "8af7c0741691cfb486684874",
-    "title": "Love & War (Deluxe Edition)",
-    "primary_artist_id": "a3fc778e132285275ff0080b",
-    "track_count": 1,
-    "track_ids": [
-      "c6906854b586e8a5e8f57908"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -35094,16 +34291,6 @@
     "track_count": 1,
     "track_ids": [
       "55e447190b94c9d8560786fa"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "17b2a8293463c09a298ff500",
-    "title": "Love Deluxe",
-    "primary_artist_id": "f4696761aa2be809f68634b5",
-    "track_count": 1,
-    "track_ids": [
-      "851a95eaf3879d1fcd787514"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -35285,16 +34472,6 @@
     "track_count": 1,
     "track_ids": [
       "f7a1cb470026b022118ddb4c"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "0d328a7cb0a68bf9199e4038",
-    "title": "Love Letterz (Deluxe)",
-    "primary_artist_id": "ab64e58f89c38bbd90b03849",
-    "track_count": 1,
-    "track_ids": [
-      "7f3f8750c2ff2daa8ff61520"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -35634,19 +34811,10 @@
     "id": "53b27750332c31f38b4dc032",
     "title": "Love Vs Money",
     "primary_artist_id": "4088839021fe3b5642f6d0ab",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "7fc8a39902b0eb72f4071d06",
       "924a35aae9278b9c2c90dd59"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "d9f4a5bec34a9d8bca8c359b",
-    "title": "Love Vs. Money (Deluxe)",
-    "primary_artist_id": "4088839021fe3b5642f6d0ab",
-    "track_count": 1,
-    "track_ids": [
-      "7fc8a39902b0eb72f4071d06"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -36178,8 +35346,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "13521886f119000b6a7f97c2",
-    "title": "Luv Is Rage 2 (Deluxe)",
+    "id": "da6c3cc51fd842458041fe59",
+    "title": "Luv Is Rage 2",
     "primary_artist_id": "742a6b74f331213ac36436a9",
     "track_count": 1,
     "track_ids": [
@@ -36298,8 +35466,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "343d75a36f1a5f25500b0054",
-    "title": "Madame X (Deluxe)",
+    "id": "81c49b82f9dba1167637e3b3",
+    "title": "Madame X",
     "primary_artist_id": "f6e0a45440a790e7ff61ad04",
     "track_count": 1,
     "track_ids": [
@@ -36408,30 +35576,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "8719b573af2dda2fc0ab28c0",
-    "title": "Made in Lagos",
-    "primary_artist_id": "a2e171f0496934b4ffc92547",
-    "track_count": 2,
-    "track_ids": [
-      "961bf89fd13f2488f3d1a206",
-      "c79054da1df74cc8b2ce957c"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "5e11cd71896c77a5e9533df1",
-    "title": "Made in Lagos: Deluxe Edition",
-    "primary_artist_id": "a2e171f0496934b4ffc92547",
-    "track_count": 2,
-    "track_ids": [
-      "c79054da1df74cc8b2ce957c",
-      "f45abf739c3ba0c324350008"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "ea90707b84c25873474afdfe",
-    "title": "Made in the A.M. (Deluxe Edition)",
+    "id": "561b142458e403d7182fdaf5",
+    "title": "Made in the A.M.",
     "primary_artist_id": "a91dd7012bebec57d7446bc6",
     "track_count": 2,
     "track_ids": [
@@ -36467,17 +35613,6 @@
     "track_count": 1,
     "track_ids": [
       "f2e00acab27b8588bdaa4b64"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "19f25a37741cd250315b6269",
-    "title": "Madonna (Bonus Tracks)",
-    "primary_artist_id": "f6e0a45440a790e7ff61ad04",
-    "track_count": 2,
-    "track_ids": [
-      "40bbd6d3ae276670b17c142b",
-      "ab5fbb8b10b5509f8c2bfd51"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -36783,16 +35918,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "336bdce7b14d6c40c1ffb8d2",
-    "title": "Making Mirrors (Deluxe Edition)",
-    "primary_artist_id": "1e84c26fa1a5a8fb501835c7",
-    "track_count": 1,
-    "track_ids": [
-      "3718073b975eb433a383ab9a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "e72c13087daadd32924c803b",
     "title": "Makukhanye",
     "primary_artist_id": "93c112e9b33d42a851ea9533",
@@ -36894,8 +36019,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "14fbb573574e00c33c758936",
-    "title": "Mama Said Knock You Out (Deluxe Edition)",
+    "id": "49e959e3adb671a99de11aaf",
+    "title": "Mama Said Knock You Out",
     "primary_artist_id": "82d4e47cc84b934a593c2dd7",
     "track_count": 1,
     "track_ids": [
@@ -37107,8 +36232,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b7ac32bc71b365cd15709173",
-    "title": "Martika (Expanded Edition)",
+    "id": "ea028c9f3c48969866310801",
+    "title": "Martika",
     "primary_artist_id": "6f21e7683576ad9f9df25037",
     "track_count": 1,
     "track_ids": [
@@ -37167,8 +36292,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "8cd5c1d8544094653be65179",
-    "title": "Matches (Deluxe)",
+    "id": "1b7bbfd6706e6012e6d3f286",
+    "title": "Matches",
     "primary_artist_id": "57613d733b9019cf8c83822b",
     "track_count": 1,
     "track_ids": [
@@ -37314,17 +36439,6 @@
     "track_count": 1,
     "track_ids": [
       "b3341dd510aa02d507ed664e"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "caa008768b11a10adc9ed073",
-    "title": "Me. I Am Mariah…The Elusive Chanteuse (Deluxe)",
-    "primary_artist_id": "2fc8ae64f34795cde74ada7e",
-    "track_count": 2,
-    "track_ids": [
-      "0456ba91c8d586006cae428d",
-      "324d96c55404f5900f1235e1"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -37976,8 +37090,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "1f3e30a4d79ef09434789bfd",
-    "title": "Mind of Mine (Deluxe Edition)",
+    "id": "817c1b4f32986cad941078eb",
+    "title": "Mind of Mine",
     "primary_artist_id": "18a7c11e235562d61a240a0b",
     "track_count": 1,
     "track_ids": [
@@ -38057,8 +37171,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "a1d360686901855393268482",
-    "title": "Mirage (Deluxe)",
+    "id": "05954b6d7c8ff46c602a19f8",
+    "title": "Mirage",
     "primary_artist_id": "313b15d0842811dc67e595d0",
     "track_count": 1,
     "track_ids": [
@@ -38944,27 +38058,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c3269d33db3258d06928cd9b",
-    "title": "Ms. Kelly",
-    "primary_artist_id": "a4f6d8036c5fe49b5eacffb6",
-    "track_count": 2,
-    "track_ids": [
-      "81f65a7126acf53f9eb0ba4b",
-      "edf6f737fa8dba8bc62a34ad"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "8198002997166a0b18c9d819",
-    "title": "Ms. Kelly: Deluxe Edition",
-    "primary_artist_id": "a4f6d8036c5fe49b5eacffb6",
-    "track_count": 1,
-    "track_ids": [
-      "98a46eed587cbfee68dd113b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "bf0c378fc6ce30c773df1645",
     "title": "Ms. Patti Labelle",
     "primary_artist_id": "074f50ba0edcb7444f494523",
@@ -39387,27 +38480,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c4f8db52dcc919b9c4949184",
-    "title": "My Life II...The Journey Continues (Act 1)",
-    "primary_artist_id": "4e2f259cc216856d65e57210",
-    "track_count": 2,
-    "track_ids": [
-      "43daddaf1f18c0ca10b69f95",
-      "a029806dac9e77fa2f131f22"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "4c585903af0f8daf01d9f083",
-    "title": "My Life II...The Journey Continues (Act 1) (Deluxe)",
-    "primary_artist_id": "4e2f259cc216856d65e57210",
-    "track_count": 1,
-    "track_ids": [
-      "9b3e7fd87299c7d159bc68ad"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "7ece35846e14808dd59e9919",
     "title": "MY LOSS",
     "primary_artist_id": "9382ae19e52e6bd5239a7057",
@@ -39489,33 +38561,13 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "983a9b8030b6456e35f75331",
-    "title": "My Own Lane (Expanded Edition)",
+    "id": "a2c00181b2be66f92af00e28",
+    "title": "My Own Lane",
     "primary_artist_id": "d52a74921f4de38749c9b350",
     "track_count": 2,
     "track_ids": [
       "b58035a338b4e2c942f616e5",
       "ef8776c49b5540517be4e88d"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "e22470e9d9acc532075628eb",
-    "title": "My Own Way (Deluxe Edition)",
-    "primary_artist_id": "f21c165c318600b9dd5a4212",
-    "track_count": 1,
-    "track_ids": [
-      "0af55af71d69fe4d32a6afad"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "5eddd3acf6a0c6903bf9e25e",
-    "title": "My Own Way (Deluxe)",
-    "primary_artist_id": "f21c165c318600b9dd5a4212",
-    "track_count": 1,
-    "track_ids": [
-      "0af55af71d69fe4d32a6afad"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -40377,8 +39429,9 @@
     "id": "d2d700c09de0c2378a8bb8ca",
     "title": "Ngiyazifela Ngawe",
     "primary_artist_id": "95edf3b1d4c4b8c6dbe2c15f",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "a13233f1ff2384488db27cec",
       "c5014098a4f6334bc0e361b2"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -40390,16 +39443,6 @@
     "track_count": 1,
     "track_ids": [
       "9c41716ca63b4d2b7839facd"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "9a52b4064a119c779677a114",
-    "title": "Ngiyazifela Ngawe (Deluxe)",
-    "primary_artist_id": "95edf3b1d4c4b8c6dbe2c15f",
-    "track_count": 1,
-    "track_ids": [
-      "a13233f1ff2384488db27cec"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -40504,22 +39547,22 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "116db9951e6ef3435d2d87a6",
-    "title": "Night Call (Deluxe)",
-    "primary_artist_id": "3bdbf40c4693e05f0629bee9",
-    "track_count": 1,
-    "track_ids": [
-      "aa6d2dd44064c5b5b13c51c9"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "7e4c2e611b64cc0b15db7442",
-    "title": "Night Call (Deluxe)",
+    "id": "a244f1b1824a0ba28c7fe1dd",
+    "title": "Night Call",
     "primary_artist_id": "bd354ea20ee65855ce4c784b",
     "track_count": 1,
     "track_ids": [
       "9c62a0bfcfeaf4c9b8581fd7"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "d29633cc8fa41e1ed2beced5",
+    "title": "Night Call",
+    "primary_artist_id": "3bdbf40c4693e05f0629bee9",
+    "track_count": 1,
+    "track_ids": [
+      "aa6d2dd44064c5b5b13c51c9"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -40656,33 +39699,11 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b573274be406f84eabe70c4f",
-    "title": "Nine Track Mind",
-    "primary_artist_id": "3453b78ce0a00894d0d7f597",
-    "track_count": 2,
-    "track_ids": [
-      "a066b86977aa2a9fb1071233",
-      "d425bcb115dc8fd8237a4a62"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "b3f970bb348224aee3e1e32d",
     "title": "Nine Track Mind (Special Edition)",
     "primary_artist_id": "3453b78ce0a00894d0d7f597",
     "track_count": 1,
     "track_ids": [
-      "a066b86977aa2a9fb1071233"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "36ee83b697e55bf8709737f2",
-    "title": "Nine Track Mind Deluxe",
-    "primary_artist_id": "3453b78ce0a00894d0d7f597",
-    "track_count": 2,
-    "track_ids": [
-      "69042030760ca127c1699f17",
       "a066b86977aa2a9fb1071233"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -40810,16 +39831,6 @@
   {
     "id": "013f307d95d6dba356b675db",
     "title": "No Boys Allowed",
-    "primary_artist_id": "b233e7520ef7767a7569a9c4",
-    "track_count": 1,
-    "track_ids": [
-      "10e024d404b7054823e7d82d"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "1af87a2b11658ea2f752cdc5",
-    "title": "No Boys Allowed (Deluxe Version)",
     "primary_artist_id": "b233e7520ef7767a7569a9c4",
     "track_count": 1,
     "track_ids": [
@@ -40970,8 +39981,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "ef648a8ea52e5059c3ed887e",
-    "title": "No Longer in the Suburbs (Deluxe)",
+    "id": "403c73663b773e6c5f63e9e2",
+    "title": "No Longer in the Suburbs",
     "primary_artist_id": "a78c3b3cd875a925807adb89",
     "track_count": 1,
     "track_ids": [
@@ -41031,8 +40042,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "e332954c16c1ad00a1fa6215",
-    "title": "No Love Lost (Deluxe)",
+    "id": "6145953ec97ed2044f44dfa8",
+    "title": "No Love Lost",
     "primary_artist_id": "068b8976de2b1bd2d6981fb9",
     "track_count": 1,
     "track_ids": [
@@ -41044,18 +40055,9 @@
     "id": "0dd1e0c48e9a6d1bcaf4856c",
     "title": "No Mercy",
     "primary_artist_id": "5db7817ddf9adc541f4e877a",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
-      "2c252688d4665d3c0b0cbff3"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "85d1525a0c2200eefb0a84a4",
-    "title": "No Mercy (Deluxe Version)",
-    "primary_artist_id": "5db7817ddf9adc541f4e877a",
-    "track_count": 1,
-    "track_ids": [
+      "2c252688d4665d3c0b0cbff3",
       "c313d5f5c8416896d85e9510"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -41353,26 +40355,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "5b92889f8c2492496ac0410a",
-    "title": "Nobody Else (Deluxe)",
-    "primary_artist_id": "f41cc75dda04b2d75140b216",
-    "track_count": 1,
-    "track_ids": [
-      "be027bbf9c0a12462d3ecfd1"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "b1fa976512b625368f4221df",
-    "title": "Nobody Else (Expanded Edition)",
-    "primary_artist_id": "f41cc75dda04b2d75140b216",
-    "track_count": 1,
-    "track_ids": [
-      "be027bbf9c0a12462d3ecfd1"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "18bb0fb82dadc6cbd54dbdcc",
     "title": "Nobody Is Listening",
     "primary_artist_id": "18a7c11e235562d61a240a0b",
@@ -41491,16 +40473,6 @@
     "track_ids": [
       "27bcf3300ff70f27bef7b252",
       "9f9b48301274db91161b0d6d"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "acdfcac5337a0b46a9e6aa93",
-    "title": "Not All Heroes Wear Capes",
-    "primary_artist_id": "8b7e4d5fcb42ebbeed7b2222",
-    "track_count": 1,
-    "track_ids": [
-      "f14ecf45889a5788be63c237"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -41655,8 +40627,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "f3ef8b8883cac4dcec86cc43",
-    "title": "Nothing But Thieves (Deluxe)",
+    "id": "f74934270bb44f9937127fba",
+    "title": "Nothing But Thieves",
     "primary_artist_id": "31b299b7e72416d4ec85602d",
     "track_count": 1,
     "track_ids": [
@@ -41701,17 +40673,6 @@
     "track_count": 1,
     "track_ids": [
       "3fe3071e53599ef857dba692"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "5c221c1b15c905fed6372c23",
-    "title": "Nothing Was the Same",
-    "primary_artist_id": "92b4cfdb6782e6fec393332f",
-    "track_count": 2,
-    "track_ids": [
-      "9d1dbac836b651013f50dbf1",
-      "cd462c9a5a00067e833b5e6b"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -42101,16 +41062,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "1af93845070ff184360b5bb8",
-    "title": "O.N.I.F.C. (Deluxe)",
-    "primary_artist_id": "81325c7f6cfd2a358664772f",
-    "track_count": 1,
-    "track_ids": [
-      "9a259d96cedeaecfe95cf5b3"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "2e7ee50c906f77e92aed57d5",
     "title": "Obrigado",
     "primary_artist_id": "c4b39f4436ba8bceea133130",
@@ -42291,8 +41242,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "31e9c4d5bcb4f628ea407dd0",
-    "title": "OFA: Deluxe Edition",
+    "id": "b415a8688a5c2b831706e2df",
+    "title": "OFA",
     "primary_artist_id": "72903b4b689dd229ae421f09",
     "track_count": 1,
     "track_ids": [
@@ -42565,8 +41516,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "a75bc039dda950419fe40e9a",
-    "title": "On My Radio (Deluxe Version)",
+    "id": "a9cff58611a66557cf415c11",
+    "title": "On My Radio",
     "primary_artist_id": "7e8505040d0a50cea8cc9fc5",
     "track_count": 1,
     "track_ids": [
@@ -42656,8 +41607,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "fc2e50a9bee888d703898a79",
-    "title": "ONCE UPON A MOON (DELUXE EDITION)",
+    "id": "a890f3a6fef59b0562687f40",
+    "title": "ONCE UPON A MOON",
     "primary_artist_id": "3186415517eb54458f5c1758",
     "track_count": 1,
     "track_ids": [
@@ -42966,8 +41917,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "0733d36a3bbe2bfd4b1c9d80",
-    "title": "Only Human (Deluxe)",
+    "id": "495d0101b9f1d57b0958f1ce",
+    "title": "Only Human",
     "primary_artist_id": "d353366fe38b1ce16a9ade09",
     "track_count": 1,
     "track_ids": [
@@ -43179,8 +42130,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c87e10fd1e1b6c0177aec331",
-    "title": "Original Soundtrack from Season 1 of Empire (Deluxe)",
+    "id": "2befe086bb20b785e731c1f1",
+    "title": "Original Soundtrack from Season 1 of Empire",
     "primary_artist_id": "0b4d9fa6eb5cfd979e169022",
     "track_count": 1,
     "track_ids": [
@@ -43210,8 +42161,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "080f5acff1e0b7d2073a686d",
-    "title": "ORQUÍDEAS PARTE 2 (Deluxe)",
+    "id": "6e07ff9bd808b5d32f932971",
+    "title": "ORQUÍDEAS PARTE 2",
     "primary_artist_id": "688a9880891f6dcf6f8fd9d6",
     "track_count": 2,
     "track_ids": [
@@ -43516,8 +42467,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "f20fb2595957a545766781d1",
-    "title": "Oxymoron (Deluxe Edition)",
+    "id": "55ac432332310e4968180961",
+    "title": "Oxymoron",
     "primary_artist_id": "3d8854b05b32e4be1d1f88ee",
     "track_count": 1,
     "track_ids": [
@@ -43597,8 +42548,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "3314af0fc2fed5abf75750c9",
-    "title": "PAINLESS (Deluxe Edition)",
+    "id": "3e267b586b043136e9b772ba",
+    "title": "PAINLESS",
     "primary_artist_id": "ffaea68d99a1bc3906486fa3",
     "track_count": 1,
     "track_ids": [
@@ -43687,6 +42638,17 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "254cbe19395c8b76bf186e1a",
+    "title": "Palo Santo",
+    "primary_artist_id": "2c26b906e5187b1db00c1fc8",
+    "track_count": 2,
+    "track_ids": [
+      "be23f8e7d9397376ab899ed5",
+      "ddd5d06c9275c28a5a4fd66d"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "3ab2ebc7187c36b750228b95",
     "title": "Palo Santo",
     "primary_artist_id": "c581b7010f0f01860bae359d",
@@ -43697,13 +42659,12 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "4478f390b952e60e212a83de",
+    "id": "40df01683cf26d4f9b9c4e85",
     "title": "Palo Santo",
-    "primary_artist_id": "9003e7356b510659e34636ca",
-    "track_count": 2,
+    "primary_artist_id": "145f65f7d2d58f449e966b2e",
+    "track_count": 1,
     "track_ids": [
-      "1c0c93c7c855ea1c7b74c18f",
-      "ce6d5858614364eaabe165c6"
+      "f55ca71284cab3e8c6c421ed"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -43718,8 +42679,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "170c4a38eef398f0e5d9ceed",
-    "title": "Palo Santo (Deluxe)",
+    "id": "90a6a0962b7610d06ba13022",
+    "title": "Palo Santo",
     "primary_artist_id": "8575742b140ece99beab4873",
     "track_count": 1,
     "track_ids": [
@@ -43728,33 +42689,12 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "3c59463f47582b0cb94b534e",
-    "title": "Palo Santo (Deluxe)",
+    "id": "c352c5daa869c118da164556",
+    "title": "Palo Santo",
     "primary_artist_id": "4e26be8bae9e37a6bcbd1d9f",
     "track_count": 1,
     "track_ids": [
       "ad3ff2d26f5fbb08e4ea75d7"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "62f38f72d6db489378b41743",
-    "title": "Palo Santo (Deluxe)",
-    "primary_artist_id": "145f65f7d2d58f449e966b2e",
-    "track_count": 1,
-    "track_ids": [
-      "f55ca71284cab3e8c6c421ed"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "f8896443740c2e372aeb711a",
-    "title": "Palo Santo (Deluxe)",
-    "primary_artist_id": "2c26b906e5187b1db00c1fc8",
-    "track_count": 2,
-    "track_ids": [
-      "be23f8e7d9397376ab899ed5",
-      "ddd5d06c9275c28a5a4fd66d"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -44079,17 +43019,6 @@
     "track_count": 1,
     "track_ids": [
       "3e69c7a4f74d351b0ebaa220"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "588b6ef2b665c38b0e270211",
-    "title": "Passion Pain And Pleasure",
-    "primary_artist_id": "7ada71f8c91a8098250f1602",
-    "track_count": 2,
-    "track_ids": [
-      "28468eeeedbbd2bb09625778",
-      "683562e268ac2f938a5a70f5"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -44670,26 +43599,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "ec7442e15d1899b25a30ed36",
-    "title": "Pink Friday (Deluxe)",
-    "primary_artist_id": "c9754d01cd182b725ddf9667",
-    "track_count": 1,
-    "track_ids": [
-      "91cab68a88cb7f1c3616cec9"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "91c40557de697a9ca211e200",
-    "title": "Pink Friday (Roman Reloaded) [Deluxe Edition]",
-    "primary_artist_id": "c9754d01cd182b725ddf9667",
-    "track_count": 1,
-    "track_ids": [
-      "935b8b3b6c186bce155f3e97"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "081312d177f65a91cfd5a263",
     "title": "Pink Friday 2",
     "primary_artist_id": "5ae8c9f0b3e15ba25c0b880f",
@@ -44895,18 +43804,9 @@
     "id": "ea6968b064584ea4c96c19c3",
     "title": "Planet Her",
     "primary_artist_id": "ae20f8f19d9c6c830fb9cc48",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
-      "22da8dd14d7570cbeee0c06a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "15b84a0424ac9bc90d6065da",
-    "title": "Planet Her (Deluxe)",
-    "primary_artist_id": "ae20f8f19d9c6c830fb9cc48",
-    "track_count": 1,
-    "track_ids": [
+      "22da8dd14d7570cbeee0c06a",
       "72d4fa87672a828d92c2c52c"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -44972,8 +43872,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "6a2b7740d0e7408c42e0b21e",
-    "title": "Platinum Fire (Deluxe)",
+    "id": "4d44a03ebd6742a11af5c7a3",
+    "title": "Platinum Fire",
     "primary_artist_id": "f2daafae24ebddb880f43407",
     "track_count": 1,
     "track_ids": [
@@ -45460,19 +44360,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "02066df844d068077c76fdbc",
-    "title": "Positions (Deluxe)",
-    "primary_artist_id": "231b55a52f11bd52bb830931",
-    "track_count": 2,
-    "track_ids": [
-      "a29843277396c91149fe3ff9",
-      "f6138d01edbc89adea3804d6"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "2a8c90932aa1a34d327c49e7",
-    "title": "Positions (Deluxe)",
+    "id": "b8d37aa6ffb98d6de3c8af1b",
+    "title": "Positions",
     "primary_artist_id": "b7a528d4ec05736344463462",
     "track_count": 1,
     "track_ids": [
@@ -45821,8 +44710,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b4734fc3873025047dd55af9",
-    "title": "Private Eyes (Expanded Edition)",
+    "id": "bebeee7e0be0704fcd3c6681",
+    "title": "Private Eyes",
     "primary_artist_id": "4dbc91451fddbd600f36365c",
     "track_count": 1,
     "track_ids": [
@@ -45831,8 +44720,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b7f6ee98a3aec797e4521d7b",
-    "title": "Private Eyes (Expanded Edition)",
+    "id": "ed6c3344e1292039479d7bce",
+    "title": "Private Eyes",
     "primary_artist_id": "3e66acb11eeb4823733cc07b",
     "track_count": 1,
     "track_ids": [
@@ -46245,17 +45134,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "6c43a285f19455f22d218401",
-    "title": "Purpose",
-    "primary_artist_id": "337ac77528a88535ff29513a",
-    "track_count": 2,
-    "track_ids": [
-      "31223cd861037a2ae82b4ac8",
-      "9736203fb281816f340b68d7"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "97462a43014f45bab1f470a2",
     "title": "Purrr!",
     "primary_artist_id": "3babf8dee8ffba9e2d9d9c67",
@@ -46468,17 +45346,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "a96cdd3d6e67bc81ca5f4070",
-    "title": "Queen (Deluxe)",
-    "primary_artist_id": "c9754d01cd182b725ddf9667",
-    "track_count": 2,
-    "track_ids": [
-      "814f16187bc3275379cce2a8",
-      "c3c82061df3474f5c6cd9e26"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "1b24d22a5808a07ea6552511",
     "title": "Queen (Target Deluxe Edition)",
     "primary_artist_id": "c9754d01cd182b725ddf9667",
@@ -46682,8 +45549,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "630a284173d2dd5c25b64bf2",
-    "title": "R.E.D. (Deluxe Edition)",
+    "id": "5d1bd633d9c6915541b77b94",
+    "title": "R.E.D.",
     "primary_artist_id": "429dcfdf0c5d99efb700b934",
     "track_count": 1,
     "track_ids": [
@@ -46804,8 +45671,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "f0d6e7b92d33376b25a0feea",
-    "title": "Raised Under Grey Skies (Deluxe)",
+    "id": "b7c501b1c97a47c3517958e3",
+    "title": "Raised Under Grey Skies",
     "primary_artist_id": "e18f10bae1cefd92e1e4059a",
     "track_count": 1,
     "track_ids": [
@@ -46826,16 +45693,6 @@
   {
     "id": "f1f20d582afce1ef9278a135",
     "title": "Rappa Ternt Sanga",
-    "primary_artist_id": "93e3b08f7476d15a783c9029",
-    "track_count": 1,
-    "track_ids": [
-      "0436878b9fb5ab765b477caa"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "2f5f6cb5202f3572c4c1aaba",
-    "title": "Rappa Ternt Sanga (Expanded Edition)",
     "primary_artist_id": "93e3b08f7476d15a783c9029",
     "track_count": 1,
     "track_ids": [
@@ -47005,16 +45862,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "70032c30b6d0b28748f5f57b",
-    "title": "Reach Out (Deluxe Edition)",
-    "primary_artist_id": "486c93b7af20d5a8f5c2027c",
-    "track_count": 1,
-    "track_ids": [
-      "e96cd38077c98bc308ecdf1f"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "f9f52adea230e9149ce71679",
     "title": "Reachin' Back",
     "primary_artist_id": "1b03a94db4551b719d92b8e1",
@@ -47043,27 +45890,6 @@
     "track_ids": [
       "02c2682dea142239137ca535",
       "8934f37d734e87bca831e5e4"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "260d94116373fdf3843da840",
-    "title": "Ready (Deluxe Version)",
-    "primary_artist_id": "7ada71f8c91a8098250f1602",
-    "track_count": 2,
-    "track_ids": [
-      "7bfed1905afc381530ec62cd",
-      "814be6e4624e1d0605f8f379"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "d91d9148a569fb6798c21cad",
-    "title": "Ready (Deluxe)",
-    "primary_artist_id": "7ada71f8c91a8098250f1602",
-    "track_count": 1,
-    "track_ids": [
-      "814be6e4624e1d0605f8f379"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -47304,16 +46130,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "4db4af5b4522ec8ad543a586",
-    "title": "Red",
-    "primary_artist_id": "da87aaeffa775bcf3a66b3f2",
-    "track_count": 1,
-    "track_ids": [
-      "e74d47034c01d165bcd91e5f"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "d57a25cbbd88a6745abae413",
     "title": "Red (Big Machine Radio Release Special)",
     "primary_artist_id": "da87aaeffa775bcf3a66b3f2",
@@ -47434,8 +46250,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "13f2d1e63c1bbb326efae4c3",
-    "title": "Reflection (Deluxe)",
+    "id": "3c990af1675df06b5b133ce9",
+    "title": "Reflection",
     "primary_artist_id": "718eed0547904eed6aa616d2",
     "track_count": 1,
     "track_ids": [
@@ -47454,8 +46270,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "fc7efb91cf576834856e3c74",
-    "title": "Reflections - A Retrospective (Deluxe)",
+    "id": "18864c107d132fa81e5e5d12",
+    "title": "Reflections - A Retrospective",
     "primary_artist_id": "4e2f259cc216856d65e57210",
     "track_count": 2,
     "track_ids": [
@@ -47471,16 +46287,6 @@
     "track_count": 1,
     "track_ids": [
       "2aa7b8b7623d8c5c1f1022ae"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "18864c107d132fa81e5e5d12",
-    "title": "Reflections-A Retrospective",
-    "primary_artist_id": "4e2f259cc216856d65e57210",
-    "track_count": 1,
-    "track_ids": [
-      "9b9ca0ee5ac39c100c28e386"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -47920,8 +46726,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "1e72a11768519dcd6d26aff7",
-    "title": "Revival (Deluxe)",
+    "id": "c068b3a09522a2114807c72c",
+    "title": "Revival",
     "primary_artist_id": "632ba4f473d4be732e8ae9a7",
     "track_count": 2,
     "track_ids": [
@@ -47931,8 +46737,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "9c165c8ad837c98c5596aea9",
-    "title": "Revolver (Expanded Edition)",
+    "id": "121931d87e0b4186f414eec2",
+    "title": "Revolver",
     "primary_artist_id": "93e3b08f7476d15a783c9029",
     "track_count": 1,
     "track_ids": [
@@ -48002,8 +46808,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "7ae45fb32d96f8bc42455171",
-    "title": "Rich Gang (Deluxe Version)",
+    "id": "b7115bf97d623fd4dbf2f8f1",
+    "title": "Rich Gang",
     "primary_artist_id": "ee438951198593d88c818081",
     "track_count": 1,
     "track_ids": [
@@ -48186,18 +46992,9 @@
     "id": "c50b8c58e1b8e3f6c8f175fa",
     "title": "Rise of an Empire",
     "primary_artist_id": "d775f4903ccf26a03098e114",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
-      "3884c92e5f51ac55e1cc0df6"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "9f0129655b999f50c5ee0c9e",
-    "title": "Rise of an Empire (Deluxe Edition)",
-    "primary_artist_id": "d775f4903ccf26a03098e114",
-    "track_count": 1,
-    "track_ids": [
+      "3884c92e5f51ac55e1cc0df6",
       "447bce680afdec8c1d4e16ce"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -48576,8 +47373,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "85ff328635173a6c9bb03e7b",
-    "title": "Royalty (Deluxe Version)",
+    "id": "41eb43be2f6be477b7ebfac2",
+    "title": "Royalty",
     "primary_artist_id": "26a421597db5abeda5bdea2e",
     "track_count": 1,
     "track_ids": [
@@ -49288,8 +48085,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "3da0cf6adb08f4742ba44c9f",
-    "title": "SAWAYAMA (Deluxe Edition)",
+    "id": "b32feaf04244f7d3eb30fe2c",
+    "title": "SAWAYAMA",
     "primary_artist_id": "a7446736d5edcc7baac2e9f5",
     "track_count": 1,
     "track_ids": [
@@ -49582,16 +48379,6 @@
   {
     "id": "cbed517dc9d9992579445c0d",
     "title": "Second Chance (Bonus Version)",
-    "primary_artist_id": "58b900c04f72e1f798e68531",
-    "track_count": 1,
-    "track_ids": [
-      "7ee7838b603616289d8d80c7"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "b980a5b8a663f2e9c3718748",
-    "title": "Second Chance (Deluxe)",
     "primary_artist_id": "58b900c04f72e1f798e68531",
     "track_count": 1,
     "track_ids": [
@@ -49943,8 +48730,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "ca8148890da0742b7009f9c2",
-    "title": "Settle (Deluxe)",
+    "id": "9c75e64b5f8cabc6e95f7e39",
+    "title": "Settle",
     "primary_artist_id": "c546a004b6a6e379ad8ca1a5",
     "track_count": 1,
     "track_ids": [
@@ -50074,8 +48861,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "e89361b7728f01a7db42994b",
-    "title": "Shake You Down (Expanded Edition)",
+    "id": "bea40869f59779f72feaaa44",
+    "title": "Shake You Down",
     "primary_artist_id": "673cc1b7c5686d6fc923b855",
     "track_count": 2,
     "track_ids": [
@@ -50176,8 +48963,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "e6c98852f870a2140fe2bff5",
-    "title": "Shayne Ward (Expanded Edition)",
+    "id": "788174766a2d3e3daad282af",
+    "title": "Shayne Ward",
     "primary_artist_id": "9abb5f77643d0821f93d2dad",
     "track_count": 1,
     "track_ids": [
@@ -50439,16 +49226,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "536282b8e53c56e00677b0f3",
-    "title": "Shoot for the Stars Aim for the Moon (Deluxe)",
-    "primary_artist_id": "63972df44cb2e0105c615ce5",
-    "track_count": 1,
-    "track_ids": [
-      "361b94ea46d4fbbf36cd27c8"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "2d349564934607ed71cd481c",
     "title": "Short Dick Man",
     "primary_artist_id": "1d4a0c1668a44fca6549d5b5",
@@ -50631,8 +49408,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "e34c16497c18825530e81fdd",
-    "title": "Side Effects Of You (Deluxe Version)",
+    "id": "1c26c9e0dbedcf966e3d0a01",
+    "title": "Side Effects Of You",
     "primary_artist_id": "21de83a68c646e3389396681",
     "track_count": 1,
     "track_ids": [
@@ -50841,6 +49618,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "3206f6e5bb1c7b94e4c1fe0d",
+    "title": "Sin Miedo (del Amor y Otros Demonios) ∞",
+    "primary_artist_id": "e49f2268caf791d122b94824",
+    "track_count": 1,
+    "track_ids": [
+      "5e4588188687af5bf612f425"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "85f2ba8307ffdcc4e88f532a",
     "title": "Sin Miedo (del Amor y Otros Demonios) ∞",
     "primary_artist_id": "688a9880891f6dcf6f8fd9d6",
@@ -50848,16 +49635,6 @@
     "track_ids": [
       "2d926022e81d31987a2bbebb",
       "fc274b476ea687ba65b73279"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "c19bbc4311745b5afdf54268",
-    "title": "Sin Miedo (del Amor y Otros Demonios) ∞ (Deluxe Version)",
-    "primary_artist_id": "e49f2268caf791d122b94824",
-    "track_count": 1,
-    "track_ids": [
-      "5e4588188687af5bf612f425"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -51015,18 +49792,9 @@
     "id": "b27890b5fcb9b252164825ef",
     "title": "Sirens",
     "primary_artist_id": "b85b9bd19545cf5eefdcc1b9",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
-      "75154664715217e3b3fe69e6"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "858e57904c55728aeac610b2",
-    "title": "Sirens (Deluxe Version)",
-    "primary_artist_id": "b85b9bd19545cf5eefdcc1b9",
-    "track_count": 1,
-    "track_ids": [
+      "75154664715217e3b3fe69e6",
       "e835c2165ec1818903b0153b"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -51163,8 +49931,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "865772d40acea4fa394121b0",
-    "title": "Skin Is Just A Colour Deluxe",
+    "id": "1661ff4fd5a22fc251a648d2",
+    "title": "Skin Is Just A Colour",
     "primary_artist_id": "c9540e420106b72c7dabd634",
     "track_count": 1,
     "track_ids": [
@@ -51776,8 +50544,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "7cbd49ac8239ea07f6d7fc94",
-    "title": "So Excited! (Expanded Edition)",
+    "id": "4e18532177a86d5af3aafef4",
+    "title": "So Excited!",
     "primary_artist_id": "236e6b91ee12c5ee923867fb",
     "track_count": 1,
     "track_ids": [
@@ -52605,16 +51373,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "8dd2e88a9a922bf0e8cecc87",
-    "title": "Songs In A Minor (Deluxe Edition)",
-    "primary_artist_id": "5036be87b2566e368e97013a",
-    "track_count": 1,
-    "track_ids": [
-      "fc6d065d9caa7ef9417bd41f"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "3660ecb3cb6863b3377cd278",
     "title": "Songs To Make Up To",
     "primary_artist_id": "1ca10b571f0a2dcb153745be",
@@ -52764,16 +51522,6 @@
     "track_count": 1,
     "track_ids": [
       "6db43f6d15d617864d4fc328"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "9bc2b714317e1ba07c78c539",
-    "title": "Souled Out (Deluxe Edition)",
-    "primary_artist_id": "012b5273e9393c59985b7942",
-    "track_count": 1,
-    "track_ids": [
-      "5595c43ec2d02b54cd079593"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -52990,8 +51738,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "e951ab06291922d3d5545b15",
-    "title": "Speak For Yourself (Deluxe Version)",
+    "id": "38335e26c7b40638962f41fe",
+    "title": "Speak For Yourself",
     "primary_artist_id": "2f44b677f9d81c8c6530a261",
     "track_count": 1,
     "track_ids": [
@@ -53900,8 +52648,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b9d8d347093870c4c39154c7",
-    "title": "Street Called Desire (Expanded Edition)",
+    "id": "ec580303955dc185c1784526",
+    "title": "Street Called Desire",
     "primary_artist_id": "7ffc41cc5003ad75ca735416",
     "track_count": 1,
     "track_ids": [
@@ -53913,19 +52661,10 @@
     "id": "b1ca9d7e8a3a6f9093bfedf5",
     "title": "Street Dreams",
     "primary_artist_id": "8e45d8070bade46acc77adad",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "246448562b8b15d1b090d40a",
       "a439c12e4355c8fe020f55a5"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "a6956c3368c5f1826c7832c6",
-    "title": "Street Dreams (Bonus Track)",
-    "primary_artist_id": "8e45d8070bade46acc77adad",
-    "track_count": 1,
-    "track_ids": [
-      "246448562b8b15d1b090d40a"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -54186,16 +52925,6 @@
   {
     "id": "03c553a045941dade592b992",
     "title": "Suddenly",
-    "primary_artist_id": "5b997391fedad31456ebe6fb",
-    "track_count": 1,
-    "track_ids": [
-      "c00a84154db19baded537fed"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "8af4c9514b2ece8dfa1cc3cd",
-    "title": "Suddenly (Expanded Edition)",
     "primary_artist_id": "5b997391fedad31456ebe6fb",
     "track_count": 2,
     "track_ids": [
@@ -54789,8 +53518,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "095c14cb598174f07cca9caa",
-    "title": "Surface (Expanded Edition)",
+    "id": "104d80434ec88e33e3762828",
+    "title": "Surface",
     "primary_artist_id": "8a6bffd2d54aedee472dbe3e",
     "track_count": 1,
     "track_ids": [
@@ -55012,8 +53741,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "61eaa89233d3171e34438e05",
-    "title": "Sweet Dreams (Are Made of This) [Deluxe Edition]",
+    "id": "1083401626daff019ecbf6ce",
+    "title": "Sweet Dreams (Are Made of This)",
     "primary_artist_id": "29106168142688cb02a56590",
     "track_count": 1,
     "track_ids": [
@@ -55152,8 +53881,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "1d8fd28fbde3f51d2f7d8e24",
-    "title": "SweetSexySavage (Deluxe)",
+    "id": "7ecf364c30fd792bd1e2b63c",
+    "title": "SweetSexySavage",
     "primary_artist_id": "25d2059f3dee9640688e18e8",
     "track_count": 2,
     "track_ids": [
@@ -55320,17 +54049,6 @@
     "track_count": 1,
     "track_ids": [
       "afb708ac007fdef9feee5f4b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "4ae60b2287ba97b0c3fee213",
-    "title": "Take Care",
-    "primary_artist_id": "92b4cfdb6782e6fec393332f",
-    "track_count": 2,
-    "track_ids": [
-      "87a88f59bc35cda2746a8163",
-      "882e61aab3e2d71acbe91225"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -55506,8 +54224,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "7bec380cd4a3c6c31a267269",
-    "title": "Talk That Talk (Deluxe)",
+    "id": "c7a88e680e25a881b5af0367",
+    "title": "Talk That Talk",
     "primary_artist_id": "66a0e02eeb96587782982077",
     "track_count": 1,
     "track_ids": [
@@ -55739,8 +54457,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "780316e32a53ae0fdf1951a6",
-    "title": "Teddy (Expanded Edition)",
+    "id": "b29268a85fe44ea50eaa7b7e",
+    "title": "Teddy",
     "primary_artist_id": "06b6c696d5a7dfe56cab1481",
     "track_count": 1,
     "track_ids": [
@@ -55755,16 +54473,6 @@
     "track_count": 1,
     "track_ids": [
       "57938208c043b14973a03807"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "a0dcb5a8e234b9418f801f64",
-    "title": "Teenage Dream (Deluxe Edition)",
-    "primary_artist_id": "23ab477622dd5fd5817b92a0",
-    "track_count": 1,
-    "track_ids": [
-      "e3c5b5781524fa7069958073"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -56255,8 +54963,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "efa2960723a025a471200fac",
-    "title": "The 20/20 Experience - 2 of 2 (Deluxe)",
+    "id": "619628a459a30a20483e3310",
+    "title": "The 20/20 Experience - 2 of 2",
     "primary_artist_id": "dc1381331fff8e9d6e358464",
     "track_count": 1,
     "track_ids": [
@@ -56406,8 +55114,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "9d17344893ce6d84f3e3e4cd",
-    "title": "The ArchAndroid (Deluxe)",
+    "id": "2365e3da7e88013ed95983f9",
+    "title": "The ArchAndroid",
     "primary_artist_id": "e13336c2a6f37d3cf2f58c4d",
     "track_count": 1,
     "track_ids": [
@@ -56437,8 +55145,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "30d00d6360687bd980d14988",
-    "title": "The Art of Hustle (Deluxe)",
+    "id": "a43bdf169168f382c125505a",
+    "title": "The Art of Hustle",
     "primary_artist_id": "6e39264763fdaf56ee280496",
     "track_count": 1,
     "track_ids": [
@@ -57168,8 +55876,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "e129a5887c02cb5e5031f7f3",
-    "title": "The Buffet (Deluxe Version)",
+    "id": "74737610a2ba1e42c869a9a2",
+    "title": "The Buffet",
     "primary_artist_id": "130ac7ed557c1d0a6c7d163b",
     "track_count": 1,
     "track_ids": [
@@ -57615,26 +56323,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "fde088202185780f03c3026a",
-    "title": "The Dutchess Deluxe",
-    "primary_artist_id": "19ac81a664b257b1756c3619",
-    "track_count": 1,
-    "track_ids": [
-      "112f8d397c378c75eedb2477"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "8c9d76ea9fb165bdc56b5b28",
-    "title": "The Dutchess Deluxe (Deluxe Edition)",
-    "primary_artist_id": "19ac81a664b257b1756c3619",
-    "track_count": 1,
-    "track_ids": [
-      "112f8d397c378c75eedb2477"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "53b02a16b1e67e22defc710a",
     "title": "The Dynasty: Roc La Familia",
     "primary_artist_id": "c136cf9756f83c34e6bb7d8b",
@@ -57645,18 +56333,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c49ae2d346af15d2db46f837",
-    "title": "The E.N.D. (The Energy Never Dies) [Deluxe Version]",
-    "primary_artist_id": "12decdb4f6448629dd0625be",
-    "track_count": 1,
-    "track_ids": [
-      "bff550b241038575382b5447"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "35e666c03ec4b315d0551fd7",
-    "title": "The E.N.D. (The Energy Never Dies) [Deluxe]",
+    "id": "f781d9b0886118493dc43859",
+    "title": "The E.N.D. (The Energy Never Dies)",
     "primary_artist_id": "12decdb4f6448629dd0625be",
     "track_count": 2,
     "track_ids": [
@@ -57859,17 +56537,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "dfbafbfe7578317a93ffb761",
-    "title": "The Evolution (Bonus Track Edition)",
-    "primary_artist_id": "a04f4adaab09fe309bf2e85d",
-    "track_count": 2,
-    "track_ids": [
-      "bf75dd96441a878a3cce5532",
-      "d82dd2ce00f91f61175d0298"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "8548b158563be70dc1f13520",
     "title": "The Evolution of Robin Thicke",
     "primary_artist_id": "a5c65cf4da438b4161d473dc",
@@ -57916,16 +56583,6 @@
     "track_count": 1,
     "track_ids": [
       "2319029bc635a93e93918226"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "3d0b2dca57b99e989a80a20f",
-    "title": "The Fame Monster",
-    "primary_artist_id": "ff3390bc9de6cf982d3f8c31",
-    "track_count": 1,
-    "track_ids": [
-      "7b46591597bd2285f1b5dfe6"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -57993,16 +56650,6 @@
   {
     "id": "e2671a73b92e7f2469b74c31",
     "title": "The Final Countdown",
-    "primary_artist_id": "d0c47f2d7d28a01e67f19b93",
-    "track_count": 1,
-    "track_ids": [
-      "7548343ba872ef1275bef091"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "255cbe9f7522e70baa3d0c0e",
-    "title": "The Final Countdown (Expanded Edition)",
     "primary_artist_id": "d0c47f2d7d28a01e67f19b93",
     "track_count": 1,
     "track_ids": [
@@ -58295,19 +56942,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "63e85607e92567dbd792bb51",
+    "id": "c06760a4c5d000e3f88bb822",
     "title": "The Highlights",
-    "primary_artist_id": "f2ecd660a31b873f0547540a",
-    "track_count": 2,
-    "track_ids": [
-      "4f2a183514a9105025fb8639",
-      "d2dfbd72623e8425a081fb01"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "9dc252a8a2b209834535fbfd",
-    "title": "The Highlights (Deluxe)",
     "primary_artist_id": "beed12f846a9207533f6691a",
     "track_count": 1,
     "track_ids": [
@@ -58316,8 +56952,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "e17d842e0e1f976e5de0251f",
-    "title": "The Highlights (Deluxe)",
+    "id": "f1dc48306b9a0f51d1e2b9b2",
+    "title": "The Highlights",
     "primary_artist_id": "6336f18933114450908dfe24",
     "track_count": 1,
     "track_ids": [
@@ -58346,8 +56982,18 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "200aa4ce324e07282f64a1ca",
-    "title": "The Hits Collection, Vol. 1 (Deluxe Edition)",
+    "id": "2b59ed964f209453b0d2af10",
+    "title": "The Hits Collection, Vol. 1",
+    "primary_artist_id": "d4b4d6c3df118803e75af84b",
+    "track_count": 1,
+    "track_ids": [
+      "1f58b3dc137fea7d61188ae9"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "5a31f744e1c140bc1de61059",
+    "title": "The Hits Collection, Vol. 1",
     "primary_artist_id": "b8ff14ab302af33a5aa6a22a",
     "track_count": 1,
     "track_ids": [
@@ -58356,22 +57002,12 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "340469052e05d053504d6939",
-    "title": "The Hits Collection, Vol. 1 (Deluxe Edition)",
+    "id": "5e48861313ef4a2c0552090e",
+    "title": "The Hits Collection, Vol. 1",
     "primary_artist_id": "e15ff57473d7a958f5e86a4f",
     "track_count": 1,
     "track_ids": [
       "dbf7d78038bbaef8dd70a958"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "96e814382167d15ac437c779",
-    "title": "The Hits Collection, Vol. 1 (Deluxe Edition)",
-    "primary_artist_id": "d4b4d6c3df118803e75af84b",
-    "track_count": 1,
-    "track_ids": [
-      "1f58b3dc137fea7d61188ae9"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -58417,8 +57053,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "305103ca5d43375b36941aa8",
-    "title": "The Hunger Games: Catching Fire (Original Motion Picture Soundtrack) [Deluxe Edition]",
+    "id": "fefb635b8401a22354fbbce4",
+    "title": "The Hunger Games: Catching Fire (Original Motion Picture Soundtrack)",
     "primary_artist_id": "1c01c0712bd433b93d94bb35",
     "track_count": 1,
     "track_ids": [
@@ -58771,8 +57407,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c98b46b7080bc9602f254cf0",
-    "title": "The Lady Killer (Deluxe)",
+    "id": "c862cddd9eb58847566077d1",
+    "title": "The Lady Killer",
     "primary_artist_id": "3152271641ecaaf373769a87",
     "track_count": 2,
     "track_ids": [
@@ -59045,22 +57681,22 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "e9d05af521a6682dccdefd83",
+    "title": "The Lion King: The Gift",
+    "primary_artist_id": "527a676eee2a29d74d3f8520",
+    "track_count": 1,
+    "track_ids": [
+      "9d7b31f62b13581c50a31ac2"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "faa260d285f58331228b0d48",
     "title": "The Lion King: The Gift",
     "primary_artist_id": "82c5b62a4dec81d7e71f2b97",
     "track_count": 1,
     "track_ids": [
       "c77c73e80533f27f1b38627e"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "bba4aecdbeee0fd20bd9c596",
-    "title": "The Lion King: The Gift (Deluxe Edition)",
-    "primary_artist_id": "527a676eee2a29d74d3f8520",
-    "track_count": 1,
-    "track_ids": [
-      "9d7b31f62b13581c50a31ac2"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -59206,8 +57842,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "0c4b197d44d924923cc3dcbd",
-    "title": "The Marshall Mathers LP2 (Deluxe)",
+    "id": "e8e848324bcdb6916029ada4",
+    "title": "The Marshall Mathers LP2",
     "primary_artist_id": "d00a007f6d04b030be975e87",
     "track_count": 1,
     "track_ids": [
@@ -59243,27 +57879,6 @@
     "track_count": 1,
     "track_ids": [
       "ba0d089730b336056faa38e2"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "7c373314ff4adaf1bedfdc54",
-    "title": "The Melodic Blue",
-    "primary_artist_id": "10dcf1005e957b392ab9bd20",
-    "track_count": 2,
-    "track_ids": [
-      "2984d7b060928f5f92572321",
-      "f336195dec47e52011f407ee"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "705e2a3c799cccb6fe2d892c",
-    "title": "The Melodic Blue (Deluxe)",
-    "primary_artist_id": "10dcf1005e957b392ab9bd20",
-    "track_count": 1,
-    "track_ids": [
-      "af95366f2c3e905185810a7f"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -59903,19 +58518,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "80ae59cc63c5843834d81258",
+    "id": "0ec25d7d564f93feff8fdc26",
     "title": "The Score",
-    "primary_artist_id": "5ca1609345cf8d02a4c1831d",
-    "track_count": 2,
-    "track_ids": [
-      "c2fe4d9b1082ebb6b1e74521",
-      "c438768807ba175c93b3abb0"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "30f45e5cb60b161cf031acc0",
-    "title": "The Score (Expanded Edition)",
     "primary_artist_id": "0aa3b8a970d2c0c74577e8fa",
     "track_count": 1,
     "track_ids": [
@@ -60017,16 +58621,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "3ee121342af1f1945f540d28",
-    "title": "The Singles",
-    "primary_artist_id": "0b3d49a14ae4f9e4d411a669",
-    "track_count": 1,
-    "track_ids": [
-      "f4345eeac45cb1797d5813d6"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "ede185252e056e2d6292b2f0",
     "title": "The Singles",
     "primary_artist_id": "fe4dee80746c635e626607e9",
@@ -60037,29 +58631,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "3ac558fa287f709e001e5bf0",
-    "title": "The Singles (Deluxe Edition)",
-    "primary_artist_id": "0b3d49a14ae4f9e4d411a669",
-    "track_count": 2,
-    "track_ids": [
-      "85cc4f67884edc0ab77e0375",
-      "de93adaa5eecb0e7d1fdfd2b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "50baa1e10451be707857d6fe",
     "title": "The Singles: Echoes from the Edge of Heaven",
-    "primary_artist_id": "e116c47ca942a591cf3a2498",
-    "track_count": 1,
-    "track_ids": [
-      "8858117cea2f400cbfc74909"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "aa20b110ae8cedd5391ae90e",
-    "title": "The Singles: Echoes from the Edge of Heaven (Expanded)",
     "primary_artist_id": "e116c47ca942a591cf3a2498",
     "track_count": 1,
     "track_ids": [
@@ -60292,8 +58865,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "131873ee1887b0a6ce6dd6cd",
-    "title": "The Truth (Deluxe Edition)",
+    "id": "3375fb05cd88ca7edab0c7a7",
+    "title": "The Truth",
     "primary_artist_id": "a2b1488c48dde2dd7941707c",
     "track_count": 2,
     "track_ids": [
@@ -60633,16 +59206,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b309f4a790bc524de9ea752b",
-    "title": "The Very Very Best of Crowded House (Deluxe Version)",
-    "primary_artist_id": "2eb53debbbeb599f73137dbf",
-    "track_count": 1,
-    "track_ids": [
-      "f2860005220c20df979a1ef5"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "faaf555fb51940a3c00e8ee8",
     "title": "The Wall",
     "primary_artist_id": "2f6dcb5bab6c1a791c05f4b6",
@@ -60803,8 +59366,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "6ac741a93e95cfebf039c2b4",
-    "title": "The Works (Deluxe Edition)",
+    "id": "98bb9bedb00061a3fdae7b73",
+    "title": "The Works",
     "primary_artist_id": "49bccd253d649dce0a88784f",
     "track_count": 1,
     "track_ids": [
@@ -61107,8 +59670,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "6d9e9d7d5042918e3fa0567b",
-    "title": "This One’s for You Too (Deluxe Edition)",
+    "id": "485fe8ca866e8aafd4864eed",
+    "title": "This One’s for You Too",
     "primary_artist_id": "47bc6e116cd5786f0964312d",
     "track_count": 1,
     "track_ids": [
@@ -61198,8 +59761,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "67427f9c706dfe69c9ffb015",
-    "title": "Three Ringz (Thr33 Ringz) [Expanded Edition]",
+    "id": "976e1ebb1726c7c2c5bc9594",
+    "title": "Three Ringz (Thr33 Ringz)",
     "primary_artist_id": "93e3b08f7476d15a783c9029",
     "track_count": 1,
     "track_ids": [
@@ -61238,8 +59801,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b150929ec76f3c47e46d6268",
-    "title": "Thriller 25 Super Deluxe Edition",
+    "id": "db11c7a9a3cfb15563da08fa",
+    "title": "Thriller 25 Super",
     "primary_artist_id": "0f82792eefe3cbf090481849",
     "track_count": 1,
     "track_ids": [
@@ -61358,8 +59921,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "9fca31acb9f8d3fe1f313909",
-    "title": "Tical (Deluxe Edition)",
+    "id": "3a8a151498c1de9ae4f703e8",
+    "title": "Tical",
     "primary_artist_id": "c6ad08f16a8311f5e8f8dbb9",
     "track_count": 1,
     "track_ids": [
@@ -61791,37 +60354,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "d34b8fc09c26749bbbdf5ca2",
-    "title": "Title",
-    "primary_artist_id": "db0a9d1e46d6122b39c85131",
-    "track_count": 1,
-    "track_ids": [
-      "636ed6b00026ffe76ce5c551"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "bfbcc9fda41a2704883da8a6",
-    "title": "Title (Deluxe Edition)",
-    "primary_artist_id": "db0a9d1e46d6122b39c85131",
-    "track_count": 2,
-    "track_ids": [
-      "195cd29dfd8356d7541d22d6",
-      "e72a95332d59a91bad5f8d3a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "5123c72894bcc954f2f76383",
-    "title": "Title (Deluxe)",
-    "primary_artist_id": "db0a9d1e46d6122b39c85131",
-    "track_count": 1,
-    "track_ids": [
-      "e72a95332d59a91bad5f8d3a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "c8d7a082a20922a02534a4a1",
     "title": "TMW",
     "primary_artist_id": "24c7eff3ee5356009c8efc2f",
@@ -62094,8 +60626,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "b3e13f90ed029db982cb5317",
-    "title": "Too Hot To Handle (Expanded Edition)",
+    "id": "8b56b29a461c726660b3e7a3",
+    "title": "Too Hot To Handle",
     "primary_artist_id": "2f8edc62865ef00f3439dfc2",
     "track_count": 1,
     "track_ids": [
@@ -62285,8 +60817,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "c8719ee7951fdb019d9625db",
-    "title": "Tougher Than Leather (Expanded Edition)",
+    "id": "9621ea9242d63a40767222ce",
+    "title": "Tougher Than Leather",
     "primary_artist_id": "6f0123f43ef89c959fab128e",
     "track_count": 1,
     "track_ids": [
@@ -62590,16 +61122,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "95e62027356cedafa1594dac",
-    "title": "Trigga",
-    "primary_artist_id": "7ada71f8c91a8098250f1602",
-    "track_count": 1,
-    "track_ids": [
-      "c9485c76d09aaa221fe2e6f9"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "40fb7cd843e2a94588029098",
     "title": "Triggered (Remix)",
     "primary_artist_id": "012b5273e9393c59985b7942",
@@ -62737,17 +61259,6 @@
     "track_count": 1,
     "track_ids": [
       "23d52c60a59e7dca356763a4"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "9bc607231664752395c57e7e",
-    "title": "Trouble",
-    "primary_artist_id": "de3e79403e887c6f75ebc7fa",
-    "track_count": 2,
-    "track_ids": [
-      "c1981736d297542aa7bedb02",
-      "e367ec1642949ba69c708124"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -63234,8 +61745,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "31b0cb1623829facefbcf620",
-    "title": "Two Eleven (Deluxe Version)",
+    "id": "b7344da1d008d5ec0756c75c",
+    "title": "Two Eleven",
     "primary_artist_id": "a40410fb3a4705c23a02b3fb",
     "track_count": 1,
     "track_ids": [
@@ -63576,8 +62087,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "fb0bb84ba771c974c078b3ca",
-    "title": "Ultraviolence (Deluxe)",
+    "id": "3662010314f28fec37641953",
+    "title": "Ultraviolence",
     "primary_artist_id": "80f4535d376231c9725d488b",
     "track_count": 2,
     "track_ids": [
@@ -63742,8 +62253,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "f50873cf35fadbb5599c1f30",
-    "title": "Unapologetic (Deluxe)",
+    "id": "f4c9f7f1258bbfc3e3acaa93",
+    "title": "Unapologetic",
     "primary_artist_id": "e883ff796a578e8f24837280",
     "track_count": 1,
     "track_ids": [
@@ -63834,8 +62345,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "9c2b81f9393c21af99c26844",
-    "title": "Under the Mistletoe (Deluxe Edition)",
+    "id": "61c3ff3613bb91e2dc649b53",
+    "title": "Under the Mistletoe",
     "primary_artist_id": "337ac77528a88535ff29513a",
     "track_count": 1,
     "track_ids": [
@@ -63896,8 +62407,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "4d0ada919797462b3f6487cc",
-    "title": "Unfinished Business (Deluxe)",
+    "id": "39ac6f7222d423d5673ef448",
+    "title": "Unfinished Business",
     "primary_artist_id": "57e4e7d21a48d233a6b6c305",
     "track_count": 1,
     "track_ids": [
@@ -76831,8 +75342,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "40058bf03cd8305cbd2ba54f",
-    "title": "Vagabond Heart (Expanded Edition)",
+    "id": "bb4f2aef1bc4288f6173f56e",
+    "title": "Vagabond Heart",
     "primary_artist_id": "1a7fa63f7360af012e429f51",
     "track_count": 1,
     "track_ids": [
@@ -77092,8 +75603,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "2a28010678c2026583726577",
-    "title": "Violator (Deluxe)",
+    "id": "8112c66a6558b1cb2aea2570",
+    "title": "Violator",
     "primary_artist_id": "f58e0ddfc5a6884a63f4e7d0",
     "track_count": 1,
     "track_ids": [
@@ -78048,8 +76559,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "ab6fa0f43cad910eb03a186d",
-    "title": "Warm On a Cold Night (Deluxe)",
+    "id": "c7b38906af5fd8160181c529",
+    "title": "Warm On a Cold Night",
     "primary_artist_id": "672a089761a9c8e9b1927d1c",
     "track_count": 1,
     "track_ids": [
@@ -78219,8 +76730,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "78ec26f00bca9cdcc49c3b68",
-    "title": "Watch the Throne (Deluxe)",
+    "id": "65b77a8c26c453657e1eaeba",
+    "title": "Watch the Throne",
     "primary_artist_id": "c136cf9756f83c34e6bb7d8b",
     "track_count": 1,
     "track_ids": [
@@ -78229,8 +76740,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "e5c094b078570051a972f594",
-    "title": "Watch the Throne (Deluxe)",
+    "id": "d5a2df8a4cfa2f459c06c54f",
+    "title": "Watch the Throne",
     "primary_artist_id": "823f3d392dc09911501a9de6",
     "track_count": 1,
     "track_ids": [
@@ -78460,8 +76971,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "bf12d17cda3aea271c9fc033",
-    "title": "We Go A Long Way Back (Bonus Track Version)",
+    "id": "fab2471094e9dbd14afffd26",
+    "title": "We Go A Long Way Back",
     "primary_artist_id": "02740929e9809506fbb2211d",
     "track_count": 1,
     "track_ids": [
@@ -78470,8 +76981,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "00c340184267c9c180f630f2",
-    "title": "We Go A Long Way Back (Expanded Edition)",
+    "id": "bf12d17cda3aea271c9fc033",
+    "title": "We Go A Long Way Back (Bonus Track Version)",
     "primary_artist_id": "02740929e9809506fbb2211d",
     "track_count": 1,
     "track_ids": [
@@ -78792,16 +77303,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "ddcd0f13196f325599555c86",
-    "title": "What I Didn't Tell You",
-    "primary_artist_id": "86f30a06308ed63c97807e42",
-    "track_count": 1,
-    "track_ids": [
-      "9e3d8ff0c0e760b87fd4a041"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "540bd25cfa507690705cba0e",
     "title": "What I do best",
     "primary_artist_id": "8ae2872da491a6c625706f55",
@@ -78823,18 +77324,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "0fdcc435931a6328c02d5963",
-    "title": "What is Love? (Deluxe Edition)",
-    "primary_artist_id": "a83d04ace011d1b8f20f1654",
-    "track_count": 1,
-    "track_ids": [
-      "45c99cca549b8f83844801cf"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "89aa004c87a4ece8b2b25a2a",
-    "title": "What Is Love? (Deluxe)",
+    "id": "79e516412b2106b6ec3b1786",
+    "title": "What is Love?",
     "primary_artist_id": "a83d04ace011d1b8f20f1654",
     "track_count": 1,
     "track_ids": [
@@ -79689,8 +78180,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "1ad9ce8450e8d75ef07e90dc",
-    "title": "Why Do We Shake In The Cold? (Deluxe Album)",
+    "id": "cca51b356d371769e8f96aba",
+    "title": "Why Do We Shake In The Cold?",
     "primary_artist_id": "a3dcfd3243ee8bccfab067f4",
     "track_count": 1,
     "track_ids": [
@@ -79810,8 +78301,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "a965a9c3f34a07c1c2469739",
-    "title": "Wild Alee (Deluxe Edition)",
+    "id": "fc017bf545c60b6c284ed0bf",
+    "title": "Wild Alee",
     "primary_artist_id": "0f09645384c3970211e4e043",
     "track_count": 2,
     "track_ids": [
@@ -79896,18 +78387,9 @@
     "id": "3ab598ff1e71cc2bae087df7",
     "title": "Wildheart",
     "primary_artist_id": "441eecdd2bd60095fa5272ce",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
-      "0a4692b507d0cc36f524dd74"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "78d2b081573a4233918d1571",
-    "title": "Wildheart (Deluxe Version)",
-    "primary_artist_id": "441eecdd2bd60095fa5272ce",
-    "track_count": 1,
-    "track_ids": [
+      "0a4692b507d0cc36f524dd74",
       "b07346e141d5b8391e10b5f9"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -80225,8 +78707,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "f2a69fd7ddb23177f5e6c908",
-    "title": "Witness (Deluxe)",
+    "id": "921f41bb37a87052ca0303ea",
+    "title": "Witness",
     "primary_artist_id": "23ab477622dd5fd5817b92a0",
     "track_count": 2,
     "track_ids": [
@@ -80337,8 +78819,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "30cf69fbefae86db75e08b2b",
-    "title": "Women in Music Pt. III (Expanded Edition)",
+    "id": "e921bb44e03e02373b2b6394",
+    "title": "Women in Music Pt. III",
     "primary_artist_id": "62fc26947c2da6400cab4ac4",
     "track_count": 1,
     "track_ids": [
@@ -80639,27 +79121,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "faeb35a2f194a501734d9250",
-    "title": "WUNNA",
-    "primary_artist_id": "8294fa0b854aab01cec29da9",
-    "track_count": 2,
-    "track_ids": [
-      "316ddc454334458df4b14dc4",
-      "d31d2430f2038ae73b954d9a"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "4e78ef2f0cfb13cd2cfa27db",
-    "title": "WUNNA (Deluxe)",
-    "primary_artist_id": "8294fa0b854aab01cec29da9",
-    "track_count": 1,
-    "track_ids": [
-      "68d627d6e49305074cd6805b"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "4a50c5d67cefc91c6ba41829",
     "title": "WWE: Sexy Boy (Shawn Michaels)",
     "primary_artist_id": "3c51b4f272f5bad53154254c",
@@ -80790,18 +79251,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "7b7193a5b3ee5cb013eb4481",
-    "title": "X (Deluxe Version)",
-    "primary_artist_id": "61d4861e9764f699ba10fdbe",
-    "track_count": 1,
-    "track_ids": [
-      "4171c1fd6437523fdd332c43"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "1c4244943345a9d78a466367",
-    "title": "X (Expanded Edition)",
+    "id": "2b6ccd68207038fc942db3b1",
+    "title": "X",
     "primary_artist_id": "734dfb753defe8906c66745c",
     "track_count": 1,
     "track_ids": [
@@ -80810,8 +79261,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "ae55835010b6e3b002cd5c79",
-    "title": "X (Expanded Edition)",
+    "id": "e3463a2c17677d3c84c202bb",
+    "title": "X",
     "primary_artist_id": "b605bda490c95cdab2669468",
     "track_count": 1,
     "track_ids": [
@@ -80973,26 +79424,6 @@
   {
     "id": "cdeb2fbb2b25e7b8023c29e6",
     "title": "Year of the Gentleman",
-    "primary_artist_id": "429dcfdf0c5d99efb700b934",
-    "track_count": 1,
-    "track_ids": [
-      "55d69d0dc8eaaa8056ff2879"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "a7447b5231a6c3b1adb1738b",
-    "title": "Year of the Gentleman (Bonus Track Edition)",
-    "primary_artist_id": "429dcfdf0c5d99efb700b934",
-    "track_count": 1,
-    "track_ids": [
-      "55d69d0dc8eaaa8056ff2879"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "444600d64ab4a5dfe377114c",
-    "title": "Year of the Gentleman (Deluxe Edition)",
     "primary_artist_id": "429dcfdf0c5d99efb700b934",
     "track_count": 1,
     "track_ids": [
@@ -81896,8 +80327,8 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "e6c15c942bb6e5adfd77a645",
-    "title": "÷ (Deluxe)",
+    "id": "2d1fad3050c76745498c49c1",
+    "title": "÷",
     "primary_artist_id": "1d70648f3345705d32218dc3",
     "track_count": 1,
     "track_ids": [
