@@ -602,6 +602,39 @@
                 dashboard: () => {
                     const topSong = app.state.data.songs[0] || {};
                     const topAlbum = app.state.data.albums[0] || {};
+                    const songs = app.state.data.songs || [];
+                    const albums = app.state.data.albums || [];
+
+                    // --- NEW DATA ANALYSIS LOGIC ---
+                    const newSongs = songs.filter(s => s.is_new);
+                    const reEntries = songs.filter(s => s.is_reentry);
+                    const newAlbums = albums.filter(a => a.is_new);
+                    
+                    let highestClimber = null;
+                    let biggestDropper = null;
+                    let maxClimb = 0;
+                    let maxDrop = 0;
+                    let nonMovers = 0;
+                    let mostWeeks = songs[0] || {};
+
+                    songs.forEach(s => {
+                        if (s.previous_rank) {
+                            const diff = s.previous_rank - s.rank;
+                            if (diff > maxClimb) { maxClimb = diff; highestClimber = s; }
+                            if (diff < maxDrop) { maxDrop = diff; biggestDropper = s; }
+                            if (diff === 0) nonMovers++;
+                        }
+                        if ((s.weeks_on_chart || 0) > (mostWeeks.weeks_on_chart || 0)) {
+                            mostWeeks = s;
+                        }
+                    });
+
+                    // Top 10 breakdown
+                    const top10 = songs.slice(0, 10);
+                    const top10New = top10.filter(s => s.is_new).length;
+                    const top10Up = top10.filter(s => s.previous_rank && s.rank < s.previous_rank).length;
+                    const top10Down = top10.filter(s => s.previous_rank && s.rank > s.previous_rank).length;
+                    // --- END ANALYSIS LOGIC ---
                     
                     return `
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
@@ -628,6 +661,57 @@
                                         <p class="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-1">Calculated Units</p>
                                         <p class="text-xl font-black text-white">${app.formatNumber(topAlbum.units_sold)}</p>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NEW INSIGHTS DASHBOARD -->
+                        <div class="mb-12">
+                            <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-zinc-300 border-b border-zinc-800 pb-2">Week Insights</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg">
+                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">New Songs</p>
+                                    <p class="text-2xl font-black text-white">${newSongs.length}</p>
+                                    <p class="text-xs text-zinc-400 mt-1 truncate">${newSongs.length > 0 ? 'Top: ' + app.escapeHTML(newSongs[0].title) : 'No new debuts'}</p>
+                                </div>
+                                <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg">
+                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Album Debuts</p>
+                                    <p class="text-2xl font-black text-white">${newAlbums.length}</p>
+                                    <p class="text-xs text-zinc-400 mt-1 truncate">${newAlbums.length > 0 ? 'Top: ' + app.escapeHTML(newAlbums[0].title) : 'No new debuts'}</p>
+                                </div>
+                                <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg">
+                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Highest Climber</p>
+                                    <p class="text-2xl font-black text-green-500">${maxClimb > 0 ? '+' + maxClimb : '-'}</p>
+                                    <p class="text-xs text-zinc-400 mt-1 truncate">${highestClimber ? app.escapeHTML(highestClimber.title) : 'N/A'}</p>
+                                </div>
+                                <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg">
+                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Biggest Dropper</p>
+                                    <p class="text-2xl font-black text-red-500">${maxDrop < 0 ? maxDrop : '-'}</p>
+                                    <p class="text-xs text-zinc-400 mt-1 truncate">${biggestDropper ? app.escapeHTML(biggestDropper.title) : 'N/A'}</p>
+                                </div>
+                                <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg">
+                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Most Stable</p>
+                                    <p class="text-2xl font-black text-zinc-300">${nonMovers}</p>
+                                    <p class="text-xs text-zinc-400 mt-1">Non-moving songs</p>
+                                </div>
+                                <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg">
+                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Re-entries</p>
+                                    <p class="text-2xl font-black text-yellow-500">${reEntries.length}</p>
+                                    <p class="text-xs text-zinc-400 mt-1 truncate">Back on the chart</p>
+                                </div>
+                                <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg col-span-2 md:col-span-1">
+                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Most Weeks</p>
+                                    <p class="text-2xl font-black text-white">${mostWeeks.weeks_on_chart || 0} <span class="text-sm font-normal text-zinc-500">Wks</span></p>
+                                    <p class="text-xs text-zinc-400 mt-1 truncate">${mostWeeks.title ? app.escapeHTML(mostWeeks.title) : 'N/A'}</p>
+                                </div>
+                                <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg col-span-2 md:col-span-1">
+                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Top 10 Activity</p>
+                                    <div class="flex gap-3 mt-1 items-center">
+                                        <div class="text-sm" title="Up"><span class="text-green-500 font-black">▲</span> ${top10Up}</div>
+                                        <div class="text-sm" title="Down"><span class="text-red-500 font-black">▼</span> ${top10Down}</div>
+                                        <div class="text-sm" title="New"><span class="text-blue-400 font-black">★</span> ${top10New}</div>
+                                    </div>
+                                    <p class="text-xs text-zinc-400 mt-1 truncate">Movers in Top 10</p>
                                 </div>
                             </div>
                         </div>
