@@ -42,31 +42,32 @@ def title_match_key(text: Any) -> str:
     return normalize_text(text)
 
 
-# Only remove known trailing edition labels that indicate an expanded version of
-# the same studio album. Recording-type labels (Live, Remix, Acoustic, etc.) stay.
-_DELUXE_SUFFIX_RE = re.compile(
-    r"^(?P<base>.+?)\s*(?:"
-    r"(?:\(|\[)\s*(?:deluxe(?:\s+(?:edition|version|album))?|expanded(?:\s+edition)?|bonus\s+tracks?(?:\s+edition)?)\s*(?:\)|\])"
-    r"|(?:[-:–—]|\s+)\s*(?:deluxe(?:\s+(?:edition|version|album))?|expanded(?:\s+edition)?|bonus\s+tracks?(?:\s+edition)?)"
-    r")\s*$",
+# Album-family rule: bracketed/parenthesized edition text is not a separate album.
+# Remove every non-nested (...) or [...] segment, not only known Deluxe suffixes.
+_BRACKETED_TEXT_RE = re.compile(r"\([^()]*\)|\[[^\[\]]*\]")
+_ALBUM_SEPARATOR_RE = re.compile(r"\s*[-:–—|]+\s*$")
+_PLAIN_EDITION_SUFFIX_RE = re.compile(
+    r"\s*(?:[-:–—]\s*)?(?:deluxe(?:\s+(?:edition|version|album))?|expanded(?:\s+edition)?|bonus\s+tracks?(?:\s+edition)?)\s*$",
     re.IGNORECASE,
 )
 
 def canonical_album_title(title: Any) -> str:
-    """Return a parent-album title for known deluxe/expanded-edition suffixes.
+    """Remove bracketed/parenthesized album annotations to map editions to a parent.
 
-    Intentionally conservative: it does not remove Live, Remixed, Anniversary,
-    Acoustic, Instrumental, or other recording/edition labels.
+    The original source title is retained separately by the importer for auditability.
+    If removing annotations would leave no usable title, preserve the source title.
     """
-    value = display_text(title, "Unknown Album")
+    original = display_text(title, "Unknown Album")
+    value = original
     previous = None
     while value != previous:
         previous = value
-        match = _DELUXE_SUFFIX_RE.match(value)
-        if match:
-            value = match.group("base").strip()
-        else:
-            break
-    return value or "Unknown Album"
+        value = _BRACKETED_TEXT_RE.sub(" ", value)
+    value = _SPACE_RE.sub(" ", value).strip()
+    value = _PLAIN_EDITION_SUFFIX_RE.sub("", value).strip()
+    value = _ALBUM_SEPARATOR_RE.sub("", value).strip()
+    value = _SPACE_RE.sub(" ", value).strip()
+    return value or original
+
 
 
