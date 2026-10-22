@@ -680,7 +680,7 @@
                                 </div>
                                 
                                 <div class="col-span-4 flex items-center gap-4">
-                                    <img src="https://placehold.co/200x200/18181b/ffffff?text=${item.rank}" data-artist="${app.escapeHTML(item.artist)}" ${albumAttr} class="dynamic-artwork loading-pulse w-16 h-16 object-cover rounded-sm bg-zinc-800 shrink-0">
+                                    <img src="https://placehold.co/200x200/18181b/ffffff?text=${item.rank}" data-artist="${app.escapeHTML(item.artist || '')}" data-track="${type === 'songs' ? app.escapeHTML(item.title || '') : ''}" ${albumAttr} class="dynamic-artwork loading-pulse w-16 h-16 object-cover rounded-sm bg-zinc-800 shrink-0">
                                     <div class="min-w-0">
                                         <h4 class="text-lg font-bold text-white truncate">${app.pageLink(type === 'songs' ? 'track' : 'album', item.id, (item.title || '').toUpperCase())}</h4>
                                         <p class="text-sm text-zinc-400 font-medium truncate">${app.pageLink('artist', item.artist_id, (item.artist || '').toUpperCase())}</p>
