@@ -1,1367 +1,13 @@
 [
   {
     "entity_type": "track",
-    "artist_id": "2ebc98157ce0648bf623334b",
-    "track_a_id": "309f2f15af5b8bf7672bf48d",
-    "track_a_title": "Ain’t No Fun (If the Homies Can’t Have None) [feat. Nate Dogg, Warren G & Kurupt]",
-    "track_b_id": "30c6344d1a550b839b468332",
-    "track_b_title": "Ain't No Fun (If the Homies Cant Have None) (feat. Nate Dogg, Warren G & Kurupt)",
-    "similarity": 0.9935,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "21719f1774bec22ede4e0c06",
-    "track_a_id": "7ed78cb6bb9e2ba33d87e82f",
-    "track_a_title": "Mthande (feat. Riky Rick, Sha Sha, DJ Maphorisa & Kabza De Small)",
-    "track_b_id": "345c83d36afbd1f8d6116fce",
-    "track_b_title": "Mthande (feat. Riky Rick, Shasha, DJ Maphorisa & Kabza De Small)",
-    "similarity": 0.9919,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "1732bfeda5a02335133b6033",
-    "track_a_id": "092c41adbf5e5e833ffbbec3",
-    "track_a_title": "Malobola (feat. Cassper Nyovest, Snow Deep & DJ Skelez) [Live]",
-    "track_b_id": "22deb665b7ffc280f5e6589a",
-    "track_b_title": "Malobola (feat. Cassper Nyovest, SnowDeep & DJ Skelez) [Live]",
-    "similarity": 0.9913,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "7cde028a0c74a0cd9f58fb85",
-    "track_a_id": "c13d7e1d623ab17fff9d68b4",
-    "track_a_title": "Sowet Groove (feat. Sipho Magudulela & Jay Sax)",
-    "track_b_id": "c6a14bc6b6038f5f23d76698",
-    "track_b_title": "Soweto Groove (feat. Sipho Magudulela & Jay Sax)",
-    "similarity": 0.9892,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "fbb2851e48813e922b9330d5",
-    "track_a_id": "b8a206f96254b894e3342949",
-    "track_a_title": "Run Tha Streetz (feat. Storm, Mutah & Michel'le)",
-    "track_b_id": "352f9863f8a603c68eb63be1",
-    "track_b_title": "Run Tha Streetz (feat. Storm, Mutah & Michelle)",
-    "similarity": 0.989,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "6e54737eea2abdd85e7cb310",
-    "track_a_id": "dc299fb056fd0dd27155de27",
-    "track_a_title": "Found You (feat. O.T. Genasis & City Girls)",
-    "track_b_id": "db31553839665dbd9520daaf",
-    "track_b_title": "Found You (feat. OT Genasis & City Girls)",
-    "similarity": 0.9877,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "a074ecf39351fa8eb788210d",
-    "track_a_id": "8f821b2b3f51e487f5555b51",
-    "track_a_title": "Funk 55 (feat. Ceeka RSA & Chley)",
-    "track_b_id": "3c4645ee43f756743cf7c349",
-    "track_b_title": "Funk55 (feat. Ceeka RSA & Chley)",
-    "similarity": 0.9841,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "912fee6a4549c4fa3eab59dd",
-    "track_a_id": "77553d46ab0d9692fbcb5a59",
-    "track_a_title": "Ingane Yabantu (feat. Rusell Zuma)",
-    "track_b_id": "b4d6e6eb7e9ef229af2b8219",
-    "track_b_title": "Ingane Yabantu (feat. Russell Zuma)",
-    "similarity": 0.9841,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d6de0bdbd4184c054e0b8f61",
-    "track_a_id": "9a5574411d3e6e6c3e5ea16c",
-    "track_a_title": "Sana Luma (That's The Way Love Is)",
-    "track_b_id": "db6d941bb44669ffb13f92e9",
-    "track_b_title": "Sana Luma (Thats The Way Love Is)",
-    "similarity": 0.9841,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "a4d3840dbd04c502297000c3",
-    "track_a_id": "62278be90fdc80af66552fff",
-    "track_a_title": "Never Leave You - Uh Ooh, Uh Oooh!",
-    "track_b_id": "98a31a50983b42ae55872b92",
-    "track_b_title": "Never Leave You (Uh Oooh, Uh Oooh)",
-    "similarity": 0.9836,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "b75c6cf7320bd4137539374f",
-    "track_a_id": "af95b1adcd6f8275e7a5b914",
-    "track_a_title": "Only You [Bad Boy Remix] (Feat. The Notorious B.I.G. & Ma$e)",
-    "track_b_id": "c8fa3241dea2e35aee8e1daf",
-    "track_b_title": "Only You (Bad Boy Remix) [Feat. The Notorious B.I.G. & Mase]",
-    "similarity": 0.9821,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "e70f953ebe4826b405e4e8a7",
-    "track_a_id": "e7645b53e0db96a3f804ef98",
-    "track_a_title": "Weekend Thing (Feat. B-12)",
-    "track_b_id": "efbcc1f25e55987117ab4f75",
-    "track_b_title": "Weekend Thing (Feat. B12)",
-    "similarity": 0.9778,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "1f796635a7afb9aebfc259ea",
-    "track_a_id": "9129d8eb3deb5cc1f1969be3",
-    "track_a_title": "Who Is Loving My Baby",
-    "track_b_id": "cd8fe53cccde264f47d425d2",
-    "track_b_title": "Who's Loving My Baby",
-    "similarity": 0.9756,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "52a2c160a0104e1b0a9a53d1",
-    "track_a_id": "3d1fade5f47a16aedbd6970b",
-    "track_a_title": "You're Makin' Me High",
-    "track_b_id": "9461bb7976f4682dac126a17",
-    "track_b_title": "You're Making Me High",
-    "similarity": 0.9756,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "015dcbdd9434cdd4fadea827",
-    "track_a_id": "fdc2a5d4f0ba87aead69859e",
-    "track_a_title": "4 Ever (feat. Fabolous)",
-    "track_b_id": "1063f35fbb411503bb4a1e9f",
-    "track_b_title": "4Ever (feat. Fabolous)",
-    "similarity": 0.9744,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "30951750303aa2e513d99f16",
-    "track_a_id": "f2250f2bd2475804309b2e64",
-    "track_a_title": "ID1 (from NYE 2023: Uncle Waffles) [Mixed]",
-    "track_b_id": "0d75667ec5ed8dd55ce9c93d",
-    "track_b_title": "ID2 (from NYE 2023: Uncle Waffles) [Mixed]",
-    "similarity": 0.973,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "cbea42a0b5f6a4e98734c393",
-    "track_a_id": "4afe82df5468976ac585d158",
-    "track_a_title": "Istraight Le Ndaba",
-    "track_b_id": "ca7e58f5f1ce72c033c88478",
-    "track_b_title": "Istraight Lendaba",
-    "similarity": 0.9714,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "cf3e92f42e66850d79a81298",
-    "track_a_id": "703770c6d8eb6e04e29da115",
-    "track_a_title": "That's What I Like",
-    "track_b_id": "a34e94c0ba67966dff86ff9b",
-    "track_b_title": "Thats What I Like",
-    "similarity": 0.9714,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "0b3d49a14ae4f9e4d411a669",
-    "track_a_id": "226abf8813d30c1e906bdd08",
-    "track_a_title": "You Can't Hurry Love - 2016 Remaster",
-    "track_b_id": "f4345eeac45cb1797d5813d6",
-    "track_b_title": "You Can't Hurry Love (2016 Remastered)",
-    "similarity": 0.9714,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "fbb2851e48813e922b9330d5",
-    "track_a_id": "4b6bb74a79ad95cedd55a187",
-    "track_a_title": "How Do U Want It (feat. K-Ci & JoJo)",
-    "track_b_id": "3fdd2fb5c64007f706e065a4",
-    "track_b_title": "How do U Want It (feat. KC & Jojo)",
-    "similarity": 0.9706,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "fbb2851e48813e922b9330d5",
-    "track_a_id": "4b6bb74a79ad95cedd55a187",
-    "track_a_title": "How Do U Want It (feat. K-Ci & JoJo)",
-    "track_b_id": "34696a227cb18f17a0632ee5",
-    "track_b_title": "How Do U Want It (Ft. K-Ci & JoJo)",
-    "similarity": 0.9706,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f2ecd660a31b873f0547540a",
-    "track_a_id": "3e1292680f96500bfcae9268",
-    "track_a_title": "I Don't Need Love",
-    "track_b_id": "4034c0b03a052557b16b0ce3",
-    "track_b_title": "I Dont Need Love",
-    "similarity": 0.9697,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "fbb2851e48813e922b9330d5",
-    "track_a_id": "35a417982d4031470329b6f5",
-    "track_a_title": "I Ain't Mad at Cha (feat. Danny Boy)",
-    "track_b_id": "d1b66d50e09de5438fc67fcc",
-    "track_b_title": "I Ain't Mad at Cha (ft. Danny Boy)",
-    "similarity": 0.9688,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "281f4cd2d17e8c184bd4193d",
-    "track_a_id": "e3d53160ef3aa9a09e6b3fb3",
-    "track_a_title": "Cold Hearted II",
-    "track_b_id": "5be00ecfcac9998325f54f63",
-    "track_b_title": "Cold Hearted III",
-    "similarity": 0.9677,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "5c3981ebb21cd3eb1f53fbae",
-    "track_a_id": "b5bd0511fc19bceaa6108839",
-    "track_a_title": "Change the World (Dr. Duda Mix)",
-    "track_b_id": "1e019c5725019252117a309a",
-    "track_b_title": "Change the World - Dr Duda Remix",
-    "similarity": 0.9655,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "9863d2548efc3c447b0cfd75",
-    "track_a_id": "f0366d39014bceaa7b9cda9a",
-    "track_a_title": "U Know What's Up (feat. Left Eye)",
-    "track_b_id": "b879e7a8a3a56d530b94cfa6",
-    "track_b_title": "U Know What's Up ft Left eye",
-    "similarity": 0.9655,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "fb187e599dd455a260e4bc83",
-    "track_a_id": "f44c1edb3e6b837996b1b042",
-    "track_a_title": "dodger blue (feat. Wallie the Sensei, Siete7x & Roddy Ricch)",
-    "track_b_id": "4e59aed2411a11729cadcc74",
-    "track_b_title": "dodger blue (feat. wallie the sensei, siete7x, roddy ricch)",
-    "similarity": 0.9643,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "a7ce36bfad6681a236842511",
-    "track_a_id": "5f9ee991f6b3dc184c6493fe",
-    "track_a_title": "Always on Time (feat. Ashanti)",
-    "track_b_id": "6485556802ce5eaa8c6c33c8",
-    "track_b_title": "Always On Time ft. Ashanti",
-    "similarity": 0.9615,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "90e75e3455d96bfa804d208b",
-    "track_a_id": "e342e9bc668ed048c30b9cdb",
-    "track_a_title": "I Need a Girl (Pt. 2) [feat. Loon, Ginuwine & Mario Winans]",
-    "track_b_id": "eab3ef3047a03cbddc385da5",
-    "track_b_title": "I Need a Girl (Pt. 2) [feat. Loon, Ginuwine, Mario Winans]",
-    "similarity": 0.9615,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "dfe5088f11daffb54ad56ae9",
-    "track_a_id": "154e50b96279036422f88cd3",
-    "track_a_title": "I Need a Girl, Pt. 2 [feat. Loon, Ginuwine & Mario Winans]",
-    "track_b_id": "2d2c49bf9a7e12ceadbf2646",
-    "track_b_title": "I Need a Girl (Pt. 2) [feat. Loon, Ginuwine, Mario Winans]",
-    "similarity": 0.9615,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "a40410fb3a4705c23a02b3fb",
-    "track_a_id": "ac1e51d964c5662cc42c45f2",
-    "track_a_title": "Top of the World (feat. Ma$e)",
-    "track_b_id": "b877fbc9f6dfd86a3c8cef28",
-    "track_b_title": "Top of the World (feat. Mase)",
-    "similarity": 0.9615,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "ff3390bc9de6cf982d3f8c31",
-    "track_a_id": "4ea7b91b863d0fd3db57c7d4",
-    "track_a_title": "Chromatica I",
-    "track_b_id": "06f2afddb963d7efbdb504f1",
-    "track_b_title": "Chromatica II",
-    "similarity": 0.96,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "92b4cfdb6782e6fec393332f",
-    "track_a_id": "2160a9b2370b49c98053bdab",
-    "track_a_title": "Marvin's Room",
-    "track_b_id": "9ef976f5f0ab373ebd04ba43",
-    "track_b_title": "Marvins Room",
-    "similarity": 0.96,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d338b01e1ba04c32e08a7ad7",
-    "track_a_id": "89d75263a9d0b372e5019c08",
-    "track_a_title": "Soul Provide",
-    "track_b_id": "ee79622b412dbf961a965be3",
-    "track_b_title": "Soul Provider",
-    "similarity": 0.96,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "536021bcaeea64c649b97dd7",
-    "track_a_id": "44b3cab21ef0d2d25bd234cd",
-    "track_a_title": "Popular (From The Idol, Vol. 1 (Music from the HBO Original Series))",
-    "track_b_id": "bfbf587477d2aac01803954b",
-    "track_b_title": "Popular (The Idol Vol. 1 (Music from the HBO Original Series))",
-    "similarity": 0.958,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d8fb086d8c434a6d24d51108",
-    "track_a_id": "19a84e91d1eceb42ce2a1403",
-    "track_a_title": "On the Floor (feat. Verd & Chuckie)",
-    "track_b_id": "96f3bbec26700e1a65585f57",
-    "track_b_title": "On the Floor (feat. Verd & Chuckie031)",
-    "similarity": 0.9577,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "b75c6cf7320bd4137539374f",
-    "track_a_id": "c8fa3241dea2e35aee8e1daf",
-    "track_a_title": "Only You (Bad Boy Remix) [Feat. The Notorious B.I.G. & Mase]",
-    "track_b_id": "2f20f6c9564ec4e639da5c62",
-    "track_b_title": "Only You (Bad Boy Remix) [Featuring the Notorious B.I.G. & Mase]",
-    "similarity": 0.9573,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "55dff6000cac58d014a134c8",
-    "track_a_id": "8ca519d962ee3093bc5e3604",
-    "track_a_title": "Big Poppa - 2005 Remaster",
-    "track_b_id": "dd5ace37a4dd656eb57986d7",
-    "track_b_title": "Big Poppa (2007 Remaster)",
-    "similarity": 0.9565,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "55dff6000cac58d014a134c8",
-    "track_a_id": "6fb9c04cf78f0a56b6d00aa5",
-    "track_a_title": "Hypnotize (2005 Remaster)",
-    "track_b_id": "772ef99ede50c51885a33f78",
-    "track_b_title": "Hypnotize - 2007 Remaster",
-    "similarity": 0.9565,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "41aafeb64e422b485da6e746",
-    "track_a_id": "b94e89b1fe5e0efa83daa445",
-    "track_a_title": "Big Bank (feat. 2 Chainz, Big Sean & Nicki Minaj)",
-    "track_b_id": "06ae84b6b1d69a003d13abb6",
-    "track_b_title": "Big Bank (feat. 2 Chainz, Big Sean, Nicki Minaj)",
-    "similarity": 0.9556,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "9628d54bbf210cf7a00d0782",
-    "track_a_id": "cb34eab1a83a0f5775bcb406",
-    "track_a_title": "Dip It Low (Remix) (feat. Fabolous)",
-    "track_b_id": "6e4ed208cb7787051ebdd304",
-    "track_b_title": "Dip It Low (Remix Feat. Fabolous (US ))",
-    "similarity": 0.9524,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "c9754d01cd182b725ddf9667",
-    "track_a_id": "99e9daa67b07f6b86df370a5",
-    "track_a_title": "Sex in the Lounge (feat. Lil Wayne & Bobby V)",
-    "track_b_id": "306abf5dedede52297145c6d",
-    "track_b_title": "Sex In the Lounge (feat. Lil Wayne, Bobby V.)",
-    "similarity": 0.9524,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "55dff6000cac58d014a134c8",
-    "track_a_id": "125047c3d404fa5df0b0a569",
-    "track_a_title": "Warning - 2005 Remaster",
-    "track_b_id": "1f7f07e17f721280c370729f",
-    "track_b_title": "Warning - 2007 Remaster",
-    "similarity": 0.9524,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "441242eb54091d5bbe3cd479",
-    "track_a_id": "da220017edb0f97fe7371607",
-    "track_a_title": "(Who?) Keeps Changing Your Mind? (Daniel Bovie & Roy Rox Remix)",
-    "track_b_id": "72e013ec570565608c3b69d6",
-    "track_b_title": "(Who?) Keeps Changing Your Mind [Daniel Bovie & Roy Rox Remix] (Album)",
-    "similarity": 0.9516,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d4b4d6c3df118803e75af84b",
-    "track_a_id": "68efae0d1815a4ec1595a463",
-    "track_a_title": "Dangerously In Love",
-    "track_b_id": "cfeb7c6f959ffd52cf7d4061",
-    "track_b_title": "Dangerously in Love 2",
-    "similarity": 0.95,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "7cde028a0c74a0cd9f58fb85",
-    "track_a_id": "634d06cf5f690aa28d6f0c8c",
-    "track_a_title": "Izono (feat. Mawhoo & Babalwa M & Chley)",
-    "track_b_id": "04102d99702f2924807b0d69",
-    "track_b_title": "Izono (feat. MaWhoo, Babalwa M & Chley)",
-    "similarity": 0.9487,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "fb187e599dd455a260e4bc83",
-    "track_a_id": "44e4f66d20d7227589f3acb0",
-    "track_a_title": "gnx (feat. Hitta J3, YoungThreat & Peysoh)",
-    "track_b_id": "0eb546448535477546806704",
-    "track_b_title": "gnx (feat. hitta j3, youngthreat, peysoh)",
-    "similarity": 0.9474,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "91e02e62701e8aa525effbfd",
-    "track_a_id": "1c8d7ad62af03e4fea446495",
-    "track_a_title": "Kum Na Kum",
-    "track_b_id": "803f5abf25d21eae9248531a",
-    "track_b_title": "Kum Nakum",
-    "similarity": 0.9474,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d4b4d6c3df118803e75af84b",
-    "track_a_id": "770505e7d67921025583f96c",
-    "track_a_title": "Upgrade U (feat. Jay-Z)",
-    "track_b_id": "45de95c95547e1b735aceff6",
-    "track_b_title": "Upgrade U ft. Jay-Z",
-    "similarity": 0.9474,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "c9754d01cd182b725ddf9667",
-    "track_a_id": "3151db6194f9daf4464b18b2",
-    "track_a_title": "Champion (feat. Nas, Drake & Young Jeezy)",
-    "track_b_id": "503cb4cf6eea3ebb195a0ab6",
-    "track_b_title": "Champion (feat. Nas, Drake, Young Jeezy)",
-    "similarity": 0.9459,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "b75c6cf7320bd4137539374f",
-    "track_a_id": "e1f3e34363af74bb1d01feec",
-    "track_a_title": "Only You (Feat. The Notorious B.I.G. & Mase) [Bad Boy Remix]",
-    "track_b_id": "1af7b2e670d0bbb064733f84",
-    "track_b_title": "Only You (feat. The Notorious B.I.G., Ma$e) - Bad Boy Remix",
-    "similarity": 0.9444,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "a2f25fe6e99bb2228b2f241f",
-    "track_a_id": "d97d50f87f19c0c9fdfef73c",
-    "track_a_title": "That's the Way Love Is (Underground Mix) [Edited Version]",
-    "track_b_id": "e8b477159ea78179cda6d689",
-    "track_b_title": "That's The Way Love Is [Underground Mix-Extended Version",
-    "similarity": 0.9444,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d96f6c7ec2925c471e462715",
-    "track_a_id": "0f0f3c2e555c261887cfadda",
-    "track_a_title": "Wavy Live Mix pt. 2",
-    "track_b_id": "e1a097ea57dafed46dcda00c",
-    "track_b_title": "Wavy Live Mix pt. 4",
-    "similarity": 0.9444,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d96f6c7ec2925c471e462715",
-    "track_a_id": "0f0f3c2e555c261887cfadda",
-    "track_a_title": "Wavy Live Mix pt. 2",
-    "track_b_id": "65c84e83255f98f1d11a53cc",
-    "track_b_title": "Wavy Live Mix pt. 5",
-    "similarity": 0.9444,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d96f6c7ec2925c471e462715",
-    "track_a_id": "0f0f3c2e555c261887cfadda",
-    "track_a_title": "Wavy Live Mix pt. 2",
-    "track_b_id": "2ebf9716662575d905e1d294",
-    "track_b_title": "Wavy Live Mix pt. 6",
-    "similarity": 0.9444,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d96f6c7ec2925c471e462715",
-    "track_a_id": "e1a097ea57dafed46dcda00c",
-    "track_a_title": "Wavy Live Mix pt. 4",
-    "track_b_id": "65c84e83255f98f1d11a53cc",
-    "track_b_title": "Wavy Live Mix pt. 5",
-    "similarity": 0.9444,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d96f6c7ec2925c471e462715",
-    "track_a_id": "e1a097ea57dafed46dcda00c",
-    "track_a_title": "Wavy Live Mix pt. 4",
-    "track_b_id": "2ebf9716662575d905e1d294",
-    "track_b_title": "Wavy Live Mix pt. 6",
-    "similarity": 0.9444,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d96f6c7ec2925c471e462715",
-    "track_a_id": "65c84e83255f98f1d11a53cc",
-    "track_a_title": "Wavy Live Mix pt. 5",
-    "track_b_id": "2ebf9716662575d905e1d294",
-    "track_b_title": "Wavy Live Mix pt. 6",
-    "similarity": 0.9444,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "2b9a64d141d7a8f0667a0147",
-    "track_a_id": "0e60ce2bcb337723948194b7",
-    "track_a_title": "FEFE (feat. Nicki Minaj & Murda Beatz)",
-    "track_b_id": "e35a84f67901ba370970a5ac",
-    "track_b_title": "FEFE (feat. Nicki Minaj, Murda Beatz)",
-    "similarity": 0.9429,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "924d00fa1e5d478a6eec3793",
-    "track_a_id": "3647cf095c318a428cd00f22",
-    "track_a_title": "Flava In Ya Ear Remix (feat. Notorious B.I.G., L.L. Cool J, Busta Rhymes, Rampage)",
-    "track_b_id": "908df20eaa75d4ce416c3da0",
-    "track_b_title": "Flava In Ya Ear Remix (feat. The Notorious B.I.G., LL Cool J, Busta Rhymes & Rampage)",
-    "similarity": 0.9419,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "1a450a4e6b6c93c52afe120b",
-    "track_a_id": "571052516a5cab9d470e79a8",
-    "track_a_title": "03 Caught Up In The Rapture",
-    "track_b_id": "d3ae9ab63bbaf12e62429cd7",
-    "track_b_title": "Caught Up in the Rapture",
-    "similarity": 0.9412,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "31810042fec68f6640669116",
-    "track_a_id": "69b27aaea643fb7aeefdb122",
-    "track_a_title": "Booty Man",
-    "track_b_id": "eb2c0e718f7f6fd3dcb63f57",
-    "track_b_title": "Bootyman",
-    "similarity": 0.9412,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f6e0a45440a790e7ff61ad04",
-    "track_a_id": "d0e112f0309f8dd342b9403f",
-    "track_a_title": "Borderline (7\" Remix)",
-    "track_b_id": "2b1821f9b4bcb7f906b436d4",
-    "track_b_title": "Borderline (Remix)",
-    "similarity": 0.9412,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "fbb2851e48813e922b9330d5",
-    "track_a_id": "0ffde1561cbc102ac25aaa6c",
-    "track_a_title": "How Do U Want It",
-    "track_b_id": "c30d99e15eda024c958ed234",
-    "track_b_title": "How Do You Want It",
-    "similarity": 0.9412,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "625e64bb0ef497b3435a7ebd",
-    "track_a_id": "a7a58a76b4bb0fadf7126902",
-    "track_a_title": "Where Are You Noe",
-    "track_b_id": "ccd9f02fef147702da99a0ed",
-    "track_b_title": "Where Are You Now",
-    "similarity": 0.9412,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "b75c6cf7320bd4137539374f",
-    "track_a_id": "af95b1adcd6f8275e7a5b914",
-    "track_a_title": "Only You [Bad Boy Remix] (Feat. The Notorious B.I.G. & Ma$e)",
-    "track_b_id": "2f20f6c9564ec4e639da5c62",
-    "track_b_title": "Only You (Bad Boy Remix) [Featuring the Notorious B.I.G. & Mase]",
-    "similarity": 0.9402,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "fbb2851e48813e922b9330d5",
-    "track_a_id": "3fdd2fb5c64007f706e065a4",
-    "track_a_title": "How do U Want It (feat. KC & Jojo)",
-    "track_b_id": "34696a227cb18f17a0632ee5",
-    "track_b_title": "How Do U Want It (Ft. K-Ci & JoJo)",
-    "similarity": 0.9394,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "e7b7170ef1bf53b8214e2f0f",
-    "track_a_id": "05bbda43c07f3eedf5951478",
-    "track_a_title": "Blue Moon 2.0 (feat. Baby S.O.N & Babalwa M)",
-    "track_b_id": "45a28bef64ee5756d12190af",
-    "track_b_title": "Blue Moon 2.0 (feat. S.O.N & Babalwa M)",
-    "similarity": 0.9383,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "c9754d01cd182b725ddf9667",
-    "track_a_id": "84d941c97ab999960366b753",
-    "track_a_title": "Pills and Potions",
-    "track_b_id": "485c04da01cd856131f542bc",
-    "track_b_title": "Pills n Potions",
-    "similarity": 0.9375,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "e1e14c6c1c6d4046817c1c10",
-    "track_a_id": "cee1a4f54b38dc56268b46b7",
-    "track_a_title": "Take Good Care of My Heart (feat. Jermaine Jackson)",
-    "track_b_id": "b65be313fbe96c96e7cfb965",
-    "track_b_title": "Take Good Care of My Heart (with Jermaine Jackson)",
-    "similarity": 0.9375,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f2ecd660a31b873f0547540a",
-    "track_a_id": "e3a706656d8cce9b205cd42c",
-    "track_a_title": "The Birds Part 1",
-    "track_b_id": "b4aedd292fa3665d9fe9e612",
-    "track_b_title": "The Birds Part 2",
-    "similarity": 0.9375,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "55c3b140139f3ad75003b2fd",
-    "track_a_id": "dd545e053bfde9560ddaf02e",
-    "track_a_title": "03-O Suna Mang (Ke Le Teng)",
-    "track_b_id": "4f71a893eb101fd4d44e9153",
-    "track_b_title": "O Suna Mang (Ke Le Teng)",
-    "similarity": 0.9362,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "1732bfeda5a02335133b6033",
-    "track_a_id": "458dea24f016617c4ac8d2ae",
-    "track_a_title": "Phoyisa (feat. Cassper Nyovest & Qwesta Kufet) [Live]",
-    "track_b_id": "ed29c54355d59dd0b38bf1e1",
-    "track_b_title": "Phoyisa (feat. Cassper Nyovest & QwestaKufet)",
-    "similarity": 0.9362,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "e1e14c6c1c6d4046817c1c10",
-    "track_a_id": "8cc84cc708575938b8608bea",
-    "track_a_title": "Whatchulookinat (A.K.A. Backing Vox Up)",
-    "track_b_id": "f6a88b543c9e687604a21e17",
-    "track_b_title": "Whatchulookinat (Main (A.K.A. Backing Vox Up))",
-    "similarity": 0.9351,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "271ce9bd451f3c5aa56801c3",
-    "track_a_id": "004241f96fe6010502590567",
-    "track_a_title": "396 Hz Dreaming",
-    "track_b_id": "4db27e4c32c09424f73843d5",
-    "track_b_title": "639 Hz - Dreaming",
-    "similarity": 0.9333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "eec125b80002a94dba39ed09",
-    "track_a_id": "4c5b5477a684511bf0d21874",
-    "track_a_title": "If 2morrow never comes",
-    "track_b_id": "f123f91dd08af143d3c5a5f5",
-    "track_b_title": "If Tomorrow Never Comes",
-    "similarity": 0.9333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "4088839021fe3b5642f6d0ab",
-    "track_a_id": "7fc8a39902b0eb72f4071d06",
-    "track_a_title": "Rockin' That Sh**",
-    "track_b_id": "924a35aae9278b9c2c90dd59",
-    "track_b_title": "Rockin' That Shit",
-    "similarity": 0.9333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "625e64bb0ef497b3435a7ebd",
-    "track_a_id": "7eb15aa5c9e17d13b6170f9a",
-    "track_a_title": "Slo Love",
-    "track_b_id": "12567afa4679bee573e02cab",
-    "track_b_title": "SloLove",
-    "similarity": 0.9333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f2ecd660a31b873f0547540a",
-    "track_a_id": "e3a706656d8cce9b205cd42c",
-    "track_a_title": "The Birds Part 1",
-    "track_b_id": "d60131e0f87c8037cfb85b17",
-    "track_b_title": "The Birds, Pt. 1",
-    "similarity": 0.9333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f2ecd660a31b873f0547540a",
-    "track_a_id": "b4aedd292fa3665d9fe9e612",
-    "track_a_title": "The Birds Part 2",
-    "track_b_id": "5adeb1d27005fa58fe45283f",
-    "track_b_title": "The Birds, Pt. 2",
-    "similarity": 0.9333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "783d995b85d8ed0747477a4b",
-    "track_a_id": "622c59102399865442137083",
-    "track_a_title": "The Right Kinda Lover",
-    "track_b_id": "9cab10d3b08fc6179a617378",
-    "track_b_title": "The Right Kinda of Lover",
-    "similarity": 0.9333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "fbb2851e48813e922b9330d5",
-    "track_a_id": "c5ea3cb9ff8d170b43c6e2f8",
-    "track_a_title": "Thug Passion (feat. Jewell, Outlawz & The Storm)",
-    "track_b_id": "a21d490bc2ad7c027f33c14d",
-    "track_b_title": "Thug Passion (ft. Jewell, Outlawz, The Storm)",
-    "similarity": 0.9302,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f2ecd660a31b873f0547540a",
-    "track_a_id": "d60131e0f87c8037cfb85b17",
-    "track_a_title": "The Birds, Pt. 1",
-    "track_b_id": "5adeb1d27005fa58fe45283f",
-    "track_b_title": "The Birds, Pt. 2",
-    "similarity": 0.9286,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "21719f1774bec22ede4e0c06",
-    "track_a_id": "b7d4f11bc28f7f7171de46f2",
-    "track_a_title": "Sengizwile (feat. Aymos & Young Stunna)",
-    "track_b_id": "d9ddd4817428abff24d782bd",
-    "track_b_title": "Sengizwile (feat. Aymos & Young Stunna) [Mixed]",
-    "similarity": 0.9268,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "61d4861e9764f699ba10fdbe",
-    "track_a_id": "e940949ccda8a2e892693c93",
-    "track_a_title": "Forever",
-    "track_b_id": "88b0fa1b45aec4aade2b3ccd",
-    "track_b_title": "FORVER",
-    "similarity": 0.9231,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "3a7a66ff49c33d128f4dbb6c",
-    "track_a_id": "da7f6a4aafd27f3e0fc542ac",
-    "track_a_title": "I Like You (A Happier Song) [feat. Doja Cat]",
-    "track_b_id": "100dd220cacf1c0729b778d7",
-    "track_b_title": "I Like You (A Happier Song) (with Doja Cat)",
-    "similarity": 0.9231,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "3babf8dee8ffba9e2d9d9c67",
-    "track_a_id": "fa07d9bb13788553391f40a3",
-    "track_a_title": "Street",
-    "track_b_id": "c8b0d79cb02bfcd845c85ca5",
-    "track_b_title": "Streets",
-    "similarity": 0.9231,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d507a2c1aa7e688248dc41f1",
-    "track_a_id": "1f1e71da4ec0dcb1d48105ee",
-    "track_a_title": "These Days (feat. Jess Glynne, Macklemore & Dan Caplen)",
-    "track_b_id": "d60cdcac782c8114bde895b5",
-    "track_b_title": "These Days (feat. Jess Glynne, Macklemore & Dan Caplen) [Acoustic]",
-    "similarity": 0.9217,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "71a23f673b3e21b97e58a68b",
-    "track_a_id": "a34bf2d1c3a13f929e0369de",
-    "track_a_title": "Lotto (feat. Mlindo The Vocalist, DJ Maphorisa & Kabza De Small)",
-    "track_b_id": "4dd9f743e5f83867b25b309b",
-    "track_b_title": "Lotto (feat. Mlindo The Vocalist, DJ Maphorisa & Kabza De Small) | Fakaza.com",
-    "similarity": 0.9185,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "3b680d31f65f0dce7f65ed21",
-    "track_a_id": "a6bc1d946e51e99646d8d344",
-    "track_a_title": "Free - The Layabouts Vocal Mix",
-    "track_b_id": "429173688e389532c6313f0c",
-    "track_b_title": "Free (The Layabouts Vocal Mix Edit)",
-    "similarity": 0.918,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "625e64bb0ef497b3435a7ebd",
-    "track_a_id": "bae3180ee06ae48ef8b102d2",
-    "track_a_title": "Velvet Rope (feat. Vanessa-Mae)",
-    "track_b_id": "972aa70a507e29b42b446bab",
-    "track_b_title": "Velvet Rope (Featuring Vanessa Mae)",
-    "similarity": 0.918,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "160b28fbcb18cf650db5f12a",
-    "track_a_id": "0686120a5c476bde7288d398",
-    "track_a_title": "The Closer I Get to You (Feat. Beyoncé)",
-    "track_b_id": "72308f8069070c56b486aa1a",
-    "track_b_title": "The Closer I Get to You (with Beyoncé)",
-    "similarity": 0.9167,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "0f82792eefe3cbf090481849",
-    "track_a_id": "d85019fdeab0d58df18fbe0d",
-    "track_a_title": "The Girl Is Mine (feat. Paul McCartney)",
-    "track_b_id": "e752c2776aba948a4f0b800d",
-    "track_b_title": "The Girl Is Mine (with Paul McCartney)",
-    "similarity": 0.9167,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "2fc8ae64f34795cde74ada7e",
-    "track_a_id": "0fb31c822ba3340d34eb0aff",
-    "track_a_title": "Don't Forget About Us (Radio",
-    "track_b_id": "141a60b0fd712474f112afb1",
-    "track_b_title": "Don't Forget About Us (Radio Edit)",
-    "similarity": 0.9153,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "2aad910689433872264901c8",
-    "track_a_id": "ef6d0c9af0e8b6d55e580593",
-    "track_a_title": "If It's Lovin' That You Want",
-    "track_b_id": "150cbe52e08d17c943e5419e",
-    "track_b_title": "If It's Lovin That You Want, Pt. 2",
-    "similarity": 0.9153,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "cfdad3e83c6b3f93174b304c",
-    "track_a_id": "ebc1a4dd143d5f9444025587",
-    "track_a_title": "HOW I LOOK (feat. Megan Thee Stallion)",
-    "track_b_id": "e777508db233c457c5783668",
-    "track_b_title": "HOW I LOOK (with Megan Thee Stallion)",
-    "similarity": 0.9143,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "55dff6000cac58d014a134c8",
-    "track_a_id": "6fb9c04cf78f0a56b6d00aa5",
-    "track_a_title": "Hypnotize (2005 Remaster)",
-    "track_b_id": "d6ce13503038434498df0cee",
-    "track_b_title": "Hypnotize - 2014 Remaster",
-    "similarity": 0.913,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "55dff6000cac58d014a134c8",
-    "track_a_id": "772ef99ede50c51885a33f78",
-    "track_a_title": "Hypnotize - 2007 Remaster",
-    "track_b_id": "d6ce13503038434498df0cee",
-    "track_b_title": "Hypnotize - 2014 Remaster",
-    "similarity": 0.913,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "e4d707f05fbda2e7adb5011a",
-    "track_a_id": "d818d793696085466b804a2d",
-    "track_a_title": "Independent Women Part I",
-    "track_b_id": "8014f8b6bfcc6061124ac2dc",
-    "track_b_title": "Independent Women, Pt. 1",
-    "similarity": 0.913,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f391a44473ddde9fd52dc8d5",
-    "track_a_id": "82d45bb565707c7aed72f077",
-    "track_a_title": "Gotta Get You Home Tonight",
-    "track_b_id": "f577f9a3dc883d182280d262",
-    "track_b_title": "Gotta Get You Home Tonight 1984",
-    "similarity": 0.9123,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "130ac7ed557c1d0a6c7d163b",
-    "track_a_id": "c519553a529e834058708378",
-    "track_a_title": "The World's Greatest (Radio",
-    "track_b_id": "3ce8311ea2442be4dff86a61",
-    "track_b_title": "The World's Greatest (Radio Edit)",
-    "similarity": 0.9123,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "a40410fb3a4705c23a02b3fb",
-    "track_a_id": "b877fbc9f6dfd86a3c8cef28",
-    "track_a_title": "Top of the World (feat. Mase)",
-    "track_b_id": "6f37fcf5f2a799917c678995",
-    "track_b_title": "Top of the World (Featuring Mase)",
-    "similarity": 0.9123,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "d62d8461364625e462df0305",
-    "track_a_id": "d1a4c5c5470f28b09856b366",
-    "track_a_title": "Make It Last Forever (with Jacci McGhee) - Extended Version; 2007 Remaster",
-    "track_b_id": "83e2fa13f1235c0d63900fbf",
-    "track_b_title": "Make It Last Forever (with Jacci McGhee) - Single Version; 2007 Remaster",
-    "similarity": 0.9118,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "dc1381331fff8e9d6e358464",
-    "track_a_id": "fd7da81675cab08913d045fa",
-    "track_a_title": "Until the End of Time (feat. Beyonce)",
-    "track_b_id": "166e4229aa79d3cd3bc88494",
-    "track_b_title": "Until the End of Time (with Beyoncé)",
-    "similarity": 0.9118,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "55dff6000cac58d014a134c8",
-    "track_a_id": "21ec4e876d95b8543a0061a2",
-    "track_a_title": "One More Chance / Stay with Me - 2005 Remaster",
-    "track_b_id": "c37d1594d3084007a369180c",
-    "track_b_title": "One More Chance / Stay with Me (Remix) [2007 Remaster]",
-    "similarity": 0.9111,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f2ecd660a31b873f0547540a",
-    "track_a_id": "8d39a4ddd6c81d9188f28bd9",
-    "track_a_title": "How Do I Make You Love Me?",
-    "track_b_id": "6c0e1c741252179ff76fbfec",
-    "track_b_title": "How Do I Make You Love Me? - Live",
-    "similarity": 0.9091,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "c9754d01cd182b725ddf9667",
-    "track_a_id": "8f0ef55d686062bf26cb20d7",
-    "track_a_title": "Night Is Still Young",
-    "track_b_id": "8f564babd781e4be2d459a23",
-    "track_b_title": "The Night Is Still Young",
-    "similarity": 0.9091,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "71a23f673b3e21b97e58a68b",
-    "track_a_id": "958131232926b0c5687044af",
-    "track_a_title": "Akulaleki (feat. Shasha, DJ Maphorisa & Kabza De Small)",
-    "track_b_id": "e424a191b1b804512b377b88",
-    "track_b_title": "Akulaleki (feat. Shasha, DJ Maphorisa & Kabza De Small) | Fakaza.com",
-    "similarity": 0.906,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "9ea84a1a4e163cdc15c716e7",
-    "track_a_id": "a0238a5045a02d0873c9558c",
-    "track_a_title": "Please Don't Make Me Cry",
-    "track_b_id": "15c3af6cfc2db1d0f7aafc32",
-    "track_b_title": "UB40 - Please Don't Make Me Cry",
-    "similarity": 0.9057,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "71a23f673b3e21b97e58a68b",
-    "track_a_id": "f1ca6b24d947e97b8cea5591",
-    "track_a_title": "AmaDM (feat. DJ Maphorisa, Kabza De Small & MFR Souls)",
-    "track_b_id": "869f266bf62137a11df461d6",
-    "track_b_title": "AmaDM (feat. DJ Maphorisa, Kabza De Small & Mfr Souls) | Fakaza.com",
-    "similarity": 0.9043,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "130ac7ed557c1d0a6c7d163b",
-    "track_a_id": "8b10205943a77cc1ecefe42b",
-    "track_a_title": "Home Alone (feat. Keith Murray)",
-    "track_b_id": "6cc5f2722f1805991d3d7922",
-    "track_b_title": "Home Alone (feat. Keith Murray) [Remix]",
-    "similarity": 0.9032,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f6e0a45440a790e7ff61ad04",
-    "track_a_id": "be61ee97e6e02436694f58c6",
-    "track_a_title": "Love Don't Live Here Anymore",
-    "track_b_id": "f81d60264d8e5cd204d71ab1",
-    "track_b_title": "Love Don't Live Here Anymore (Remix)",
-    "similarity": 0.9032,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "7ada71f8c91a8098250f1602",
-    "track_a_id": "53aa564a3f340a2bb7503d91",
-    "track_a_title": "Pain (Interlude)",
-    "track_b_id": "36d600f14533e91e69a083ff",
-    "track_b_title": "Passion (Interlude)",
-    "similarity": 0.9032,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "160b28fbcb18cf650db5f12a",
-    "track_a_id": "8a39f36c6badf08084e5e07a",
-    "track_a_title": "The Closer I Get To You (Duet With Beyoncé Knowles)",
-    "track_b_id": "e3a3147a18d91eae477669f4",
-    "track_b_title": "The Closer I Get to You (feat. Beyoncé Knowles)",
-    "similarity": 0.9032,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "cf3e92f42e66850d79a81298",
-    "track_a_id": "f85dccd23238de450a0324cb",
-    "track_a_title": "Liquor Store Blues (feat. Damian \"Jr. Gong\" Marley)",
-    "track_b_id": "bf183ec1525194234dd97c60",
-    "track_b_title": "Liquor Store Blues (feat. Damian Marley)",
-    "similarity": 0.9024,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "e3180e310b54bb07866b78f3",
-    "track_a_id": "4d952c03a0cf82144264e740",
-    "track_a_title": "The Power of Love (Radio",
-    "track_b_id": "8873200b5974eadbdbd76646",
-    "track_b_title": "The Power of Love - Radio Edit",
-    "similarity": 0.902,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "cbfdc9908a34852bcfe40905",
-    "track_a_id": "d7fa8c1d627a7a0b18fa5851",
-    "track_a_title": "Singers Outsinging Other Singers",
-    "track_b_id": "f4a6327aafa69a11deb248ee",
-    "track_b_title": "Singers Outsinging Other Singers PART 2",
-    "similarity": 0.9014,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "8b7e4d5fcb42ebbeed7b2222",
-    "track_a_id": "f14ecf45889a5788be63c237",
-    "track_a_title": "10 Freaky Girls (feat. 21 Savage)",
-    "track_b_id": "8b89db58c8dec3aec6aecb6d",
-    "track_b_title": "10 Freaky Girls (with 21 Savage)",
-    "similarity": 0.9,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "231b55a52f11bd52bb830931",
-    "track_a_id": "cda04ea37adf1d8481d1262e",
-    "track_a_title": "34+35 (Remix) [feat. Doja Cat & Megan Thee Stallion]",
-    "track_b_id": "a29843277396c91149fe3ff9",
-    "track_b_title": "34+35 Remix (feat. Doja Cat, Megan Thee Stallion) - Remix",
-    "similarity": 0.9,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "6e54737eea2abdd85e7cb310",
-    "track_a_id": "d6107ff925a4817a220a76ea",
-    "track_a_title": "Crush On You (feat. Lil' Cease)",
-    "track_b_id": "f3336b51b4289ef129a3f0dc",
-    "track_b_title": "Crush On You (feat. Lil' Cease) - Remix",
-    "similarity": 0.9,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "92b4cfdb6782e6fec393332f",
-    "track_a_id": "c18370296f0b8db3e0611176",
-    "track_a_title": "Girls Want Girls (feat. Lil Baby)",
-    "track_b_id": "9292e8ff353328f8f1719377",
-    "track_b_title": "Girls Want Girls (with Lil Baby)",
-    "similarity": 0.9,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "160b28fbcb18cf650db5f12a",
-    "track_a_id": "0686120a5c476bde7288d398",
-    "track_a_title": "The Closer I Get to You (Feat. Beyoncé)",
-    "track_b_id": "e3a3147a18d91eae477669f4",
-    "track_b_title": "The Closer I Get to You (feat. Beyoncé Knowles)",
-    "similarity": 0.9,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "fb187e599dd455a260e4bc83",
-    "track_a_id": "41f0b2dbb7099aeed931ddd4",
-    "track_a_title": "XXX. (FEAT. U2.)",
-    "track_b_id": "8be1c23e6e262dbf0b653a41",
-    "track_b_title": "XXX. (Ft. U2)",
-    "similarity": 0.9,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
     "artist_id": "5ca1609345cf8d02a4c1831d",
     "track_a_id": "183c7a468dc06b90166e58bf",
     "track_a_title": "Fugees - Killing Me Softly With His Song",
     "track_b_id": "c438768807ba175c93b3abb0",
     "track_b_title": "Killing Me Softly with His Song",
     "similarity": 0.8986,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1371,8 +17,7 @@
     "track_b_id": "0bf8a67307ff337fc5771b4a",
     "track_b_title": "Like A Virgin (Edit Version)",
     "similarity": 0.898,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1382,8 +27,7 @@
     "track_b_id": "379ec5c1ed14e1ec457b6b38",
     "track_b_title": "Material Girl (Edit Version)",
     "similarity": 0.898,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1393,8 +37,7 @@
     "track_b_id": "dfa8d5bdfc616e8fe08f3668",
     "track_b_title": "30 For 30 (with Kendrick Lamar)",
     "similarity": 0.8966,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1404,8 +47,7 @@
     "track_b_id": "02bb684b39d470b6b8496e29",
     "track_b_title": "Warm Water - Snakehips Remix",
     "similarity": 0.8966,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1415,8 +57,7 @@
     "track_b_id": "f2b82fa6ce17473e816bdc62",
     "track_b_title": "Outta My Head (with John Mayer)",
     "similarity": 0.8966,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1426,8 +67,7 @@
     "track_b_id": "ddeffa5c4cf009fa5a94464a",
     "track_b_title": "Same Ole Love (365 Days a Year)",
     "similarity": 0.8966,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1437,8 +77,7 @@
     "track_b_id": "8f1ad75fa334550f0a0c0272",
     "track_b_title": "You Can't Hide (Your Love From Me) - Original 12\" Mix",
     "similarity": 0.8966,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1448,8 +87,7 @@
     "track_b_id": "d97d50f87f19c0c9fdfef73c",
     "track_b_title": "That's the Way Love Is (Underground Mix) [Edited Version]",
     "similarity": 0.8958,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1459,8 +97,7 @@
     "track_b_id": "d993cf69eba64d4c07e4ba01",
     "track_b_title": "Fool Me (feat. Nanette, S.O.N & Jay Sax)",
     "similarity": 0.8941,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1470,8 +107,7 @@
     "track_b_id": "a2ace32884ae4a9ee22dc6c1",
     "track_b_title": "Vula Mlomo (feat. Sir Trill & Nobantu Vilakazi) [Radio Edit]",
     "similarity": 0.8932,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1481,8 +117,7 @@
     "track_b_id": "9938237c6be5b2d7cebc6882",
     "track_b_title": "Shea Butter Baby (with J. Cole)",
     "similarity": 0.8929,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1492,8 +127,17 @@
     "track_b_id": "1571d8606ea19cfb89caa0cf",
     "track_b_title": "Miss You",
     "similarity": 0.8889,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
+  },
+  {
+    "entity_type": "track",
+    "artist_id": "a8efe9e39da7f29babb2682a",
+    "track_a_id": "c9d5da7bcf01afce547daac5",
+    "track_a_title": "isEy",
+    "track_b_id": "0df3f8c4763f6d49b5b67839",
+    "track_b_title": "liSey",
+    "similarity": 0.8889,
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1503,8 +147,7 @@
     "track_b_id": "734c6571b0fee7232ffe0086",
     "track_b_title": "Keep My Spirit Alive Pt 2",
     "similarity": 0.8889,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1514,8 +157,7 @@
     "track_b_id": "195bdcac1eb1242c7b95e07d",
     "track_b_title": "MORNING DEW (DONK MIX)",
     "similarity": 0.8889,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1525,8 +167,7 @@
     "track_b_id": "534da32753c87dad06ac22e8",
     "track_b_title": "No Love (Feat. Nicki Minaj) [Remix]",
     "similarity": 0.8889,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1536,8 +177,7 @@
     "track_b_id": "df9fb1338aed0fcfbf635485",
     "track_b_title": "Not Tonight - Remix Instrumental",
     "similarity": 0.8889,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1547,8 +187,7 @@
     "track_b_id": "a02246632bc3769254f0808a",
     "track_b_title": "Step in the Name of Love - Remix",
     "similarity": 0.8889,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1558,8 +197,7 @@
     "track_b_id": "c59194a1d28a0edc6eff4631",
     "track_b_title": "The Way Life Goes (Remix) [feat. Nicki Minaj & Oh Wonder]",
     "similarity": 0.8889,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1569,8 +207,7 @@
     "track_b_id": "53a65f58e2f17184d01ba650",
     "track_b_title": "Timeless (with Playboi Carti)",
     "similarity": 0.8889,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1580,8 +217,7 @@
     "track_b_id": "e6421d205d6f8d48d56399b5",
     "track_b_title": "We Might Even Be Falling in Love (Interlude)",
     "similarity": 0.8861,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1591,8 +227,7 @@
     "track_b_id": "a2e96a40b3bcfecf12cb4e45",
     "track_b_title": "U Know What's Up (Without Left Eye)",
     "similarity": 0.8852,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1602,8 +237,7 @@
     "track_b_id": "4ee8817b8cfa9d3e217878bf",
     "track_b_title": "Double Fantasy (with Future)",
     "similarity": 0.8846,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1613,8 +247,7 @@
     "track_b_id": "2e98330278f7c5d64808a2b4",
     "track_b_title": "Girls Just Want to Have Fun",
     "similarity": 0.8846,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1624,8 +257,7 @@
     "track_b_id": "748e73b1df7d2817656c68bd",
     "track_b_title": "Body and Soul (Radio Edit)",
     "similarity": 0.8837,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1635,8 +267,7 @@
     "track_b_id": "bdc61d760947cfdd5171500d",
     "track_b_title": "Broken-hearted Girl (Live)",
     "similarity": 0.8837,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1646,8 +277,7 @@
     "track_b_id": "c8cdfc8a60919e9313248053",
     "track_b_title": "Leave The Door Open - Live",
     "similarity": 0.8837,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1657,8 +287,7 @@
     "track_b_id": "5b2da363d6fec0b09eff4f32",
     "track_b_title": "Too Little Too Late (2018)",
     "similarity": 0.8837,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1668,8 +297,7 @@
     "track_b_id": "8a71c1a3ec182b4f8f2336f6",
     "track_b_title": "We Belong Together (Remix) [feat. Jadakiss & Styles P.]",
     "similarity": 0.8824,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1679,8 +307,7 @@
     "track_b_id": "6aae9ced2af0f335d0229482",
     "track_b_title": "American Pie",
     "similarity": 0.88,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1690,8 +317,7 @@
     "track_b_id": "c650a5e083b468563eaa5b66",
     "track_b_title": "Midas Touch (12\")",
     "similarity": 0.88,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1701,8 +327,7 @@
     "track_b_id": "a14c8725ba4d5107847c0941",
     "track_b_title": "see through it",
     "similarity": 0.88,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1712,8 +337,7 @@
     "track_b_id": "832f9fe1047361c30a4d6b95",
     "track_b_title": "Iyamemeza (Radio Edit) [feat. Drip Gogo & The Lowkeys]",
     "similarity": 0.8791,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1723,8 +347,7 @@
     "track_b_id": "a72f0af4d631c5c874d658e9",
     "track_b_title": "I Specialize In Love - 7 Inch Version",
     "similarity": 0.8788,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1734,8 +357,7 @@
     "track_b_id": "5b6938036da3e035777181fd",
     "track_b_title": "Can't Feel My Face - Live",
     "similarity": 0.878,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1745,8 +367,7 @@
     "track_b_id": "9134458adeb3089352fdf0c3",
     "track_b_title": "Do You Think of Me (1993)",
     "similarity": 0.878,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1756,8 +377,7 @@
     "track_b_id": "7b268c3ed0c664e3ae3a6715",
     "track_b_title": "I'm Gonna Miss You",
     "similarity": 0.878,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1767,8 +387,7 @@
     "track_b_id": "0801e65993537b1f3cce011e",
     "track_b_title": "Maria Maria (feat. The Product G&B) [Radio Mix]",
     "similarity": 0.878,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1778,8 +397,7 @@
     "track_b_id": "9734990c47b270880d80fc08",
     "track_b_title": "Maria Maria (Radio Mix) [feat. The Product G&B]",
     "similarity": 0.878,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1789,8 +407,7 @@
     "track_b_id": "58fa5b5245ede38e494f6e53",
     "track_b_title": "One Love / People Get Ready - Medley",
     "similarity": 0.8772,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1800,8 +417,7 @@
     "track_b_id": "9efb2a2dc96607cc8c13614c",
     "track_b_title": "Open Your Heart (Video Version)",
     "similarity": 0.8772,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1811,19 +427,7 @@
     "track_b_id": "2f32172c494724d2e6ccb972",
     "track_b_title": "Son of a Gun (I Betcha Think This Song Is About You) [P. Diddy Remix]",
     "similarity": 0.8772,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "a40410fb3a4705c23a02b3fb",
-    "track_a_id": "ac1e51d964c5662cc42c45f2",
-    "track_a_title": "Top of the World (feat. Ma$e)",
-    "track_b_id": "6f37fcf5f2a799917c678995",
-    "track_b_title": "Top of the World (Featuring Mase)",
-    "similarity": 0.8772,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1833,8 +437,7 @@
     "track_b_id": "20cc15931228a14b7f6d571b",
     "track_b_title": "Got 'Til It's Gone (Feat. Q-Tip & Joni Mitchell) [Def Club Mix]",
     "similarity": 0.8762,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1844,8 +447,7 @@
     "track_b_id": "0fb31c822ba3340d34eb0aff",
     "track_b_title": "Don't Forget About Us (Radio",
     "similarity": 0.875,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1855,8 +457,7 @@
     "track_b_id": "3aea995c3a747c89448192ad",
     "track_b_title": "Unfoolish",
     "similarity": 0.875,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1866,8 +467,7 @@
     "track_b_id": "2fbb36750f81006a63ab0cd1",
     "track_b_title": "If I Could Turn Back the Hands of Time (Radio Edit)",
     "similarity": 0.8736,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1877,8 +477,7 @@
     "track_b_id": "4fafa47ae239577b15bfd0ba",
     "track_b_title": "Uptown Girl (Radio Edit)",
     "similarity": 0.8718,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1888,8 +487,7 @@
     "track_b_id": "2f97d69bd575c19bf3739c66",
     "track_b_title": "I Wanna Sex You Up (Single Version)",
     "similarity": 0.871,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1899,8 +497,7 @@
     "track_b_id": "61f5b1dfb79bacbd7c992026",
     "track_b_title": "Crew (feat. Brent Faiyaz & Shy Glizzy) - Lido Remix",
     "similarity": 0.8706,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1910,8 +507,7 @@
     "track_b_id": "759248cbe26cae97af7c1fb5",
     "track_b_title": "MUTT (Remix)",
     "similarity": 0.8696,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1921,8 +517,7 @@
     "track_b_id": "4fa2241c183b3318ecf85942",
     "track_b_title": "Party (Homecoming Live)",
     "similarity": 0.8696,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1932,30 +527,7 @@
     "track_b_id": "b1c65595e0686dad742622f3",
     "track_b_title": "Reminder (Remix) [feat. A$AP Rocky & Young Thug]",
     "similarity": 0.8667,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f2ecd660a31b873f0547540a",
-    "track_a_id": "e3a706656d8cce9b205cd42c",
-    "track_a_title": "The Birds Part 1",
-    "track_b_id": "5adeb1d27005fa58fe45283f",
-    "track_b_title": "The Birds, Pt. 2",
-    "similarity": 0.8667,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "f2ecd660a31b873f0547540a",
-    "track_a_id": "b4aedd292fa3665d9fe9e612",
-    "track_a_title": "The Birds Part 2",
-    "track_b_id": "d60131e0f87c8037cfb85b17",
-    "track_b_title": "The Birds, Pt. 1",
-    "similarity": 0.8667,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1965,8 +537,7 @@
     "track_b_id": "4137571b6ff0e4f8f324b51f",
     "track_b_title": "Anything at All - Deep Matter & Damon Hess Radio Edit",
     "similarity": 0.8654,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1976,8 +547,7 @@
     "track_b_id": "eb36841e133b381488fc8bc2",
     "track_b_title": "Mo Money Mo Problems (feat. Puff Daddy & Mase) - 2014 Remaster",
     "similarity": 0.8649,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1987,8 +557,7 @@
     "track_b_id": "2b7b14ac5185336e58b72b00",
     "track_b_title": "Beautiful People (feat. Benny Benassi) [Radio Edit]",
     "similarity": 0.8642,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -1998,8 +567,7 @@
     "track_b_id": "260017b6892af49ed4d7989f",
     "track_b_title": "Against All Odds (Take A Look at Me Now) - Mariah Only",
     "similarity": 0.8636,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2009,8 +577,7 @@
     "track_b_id": "eb8ca5a68ffb9872fd92d1f9",
     "track_b_title": "Let's Go Dancin' (Ooh La, La, La) - Single Version",
     "similarity": 0.8636,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2020,8 +587,7 @@
     "track_b_id": "d200d181ea80c9f84b4f3067",
     "track_b_title": "Squid Game (AMAPIANO REMIX)",
     "similarity": 0.8636,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2031,8 +597,7 @@
     "track_b_id": "21641c913026cf60c355b3a5",
     "track_b_title": "Drunk in Love (Homecoming Live)",
     "similarity": 0.8621,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2042,8 +607,7 @@
     "track_b_id": "f49e1061cab9e64e55ad625e",
     "track_b_title": "Business & Personal (second half)",
     "similarity": 0.8615,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2053,8 +617,7 @@
     "track_b_id": "1da70c8f6e4c2bab7b2870f3",
     "track_b_title": "Body and Soul (Radio Edit Version)",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2064,8 +627,7 @@
     "track_b_id": "2ab6e302b1e13c395fe494d0",
     "track_b_title": "Countdown (Homecoming Live)",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2075,8 +637,7 @@
     "track_b_id": "0095595cd3375ddf57ec07f8",
     "track_b_title": "Can You Hear Me - 1991",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2086,8 +647,7 @@
     "track_b_id": "5b1b7827ebb0cb0fada99116",
     "track_b_title": "Can't Believe (feat. Carl Thomas & Shyne)",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2097,8 +657,7 @@
     "track_b_id": "5aa448a51cc2e259c63f5afa",
     "track_b_title": "Fresh - Single Version",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2108,8 +667,7 @@
     "track_b_id": "4f2a183514a9105025fb8639",
     "track_b_title": "Pray For Me",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2119,8 +677,7 @@
     "track_b_id": "1618340447785e58ca387c37",
     "track_b_title": "I Care (Homecoming Live)",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2130,8 +687,7 @@
     "track_b_id": "fa3608d3913cd0bc96016dce",
     "track_b_title": "Into the Groove (Edit)",
     "similarity": 0.8571,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2141,8 +697,7 @@
     "track_b_id": "55e2896eaf490ff36de0c443",
     "track_b_title": "My Shit",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2152,8 +707,7 @@
     "track_b_id": "5e8b2ace77d5e51fca6cfa71",
     "track_b_title": "Sorry (Homecoming Live)",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2163,30 +717,7 @@
     "track_b_id": "a2a0dffd3badc225261ef53a",
     "track_b_title": "Pure Surprise (UPZ House Mix) [feat. DKP]",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "a2f25fe6e99bb2228b2f241f",
-    "track_a_id": "79efc27de2feb8ab082fc2f9",
-    "track_a_title": "That's The Way Love Is - Underground Mix; Edit",
-    "track_b_id": "e8b477159ea78179cda6d689",
-    "track_b_title": "That's The Way Love Is [Underground Mix-Extended Version",
-    "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "9863d2548efc3c447b0cfd75",
-    "track_a_id": "f0366d39014bceaa7b9cda9a",
-    "track_a_title": "U Know What's Up (feat. Left Eye)",
-    "track_b_id": "a2e96a40b3bcfecf12cb4e45",
-    "track_b_title": "U Know What's Up (Without Left Eye)",
-    "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2196,8 +727,7 @@
     "track_b_id": "d8b5ae51ff5adf755f4af7f6",
     "track_b_title": "Vuli Ndlela",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2207,8 +737,7 @@
     "track_b_id": "a49629dd49e11c0dd4af3800",
     "track_b_title": "WE STILL DON'T TRUST YOU",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2218,8 +747,7 @@
     "track_b_id": "e6a7512b5f028d303c92f3a2",
     "track_b_title": "We Still Don't Trust You",
     "similarity": 0.8571,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2229,8 +757,7 @@
     "track_b_id": "c0b667daf12abfb5764d2bdb",
     "track_b_title": "Son of a Gun (I Betcha Think This Song Is About You) [feat. Carly Simon]",
     "similarity": 0.8547,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2240,19 +767,7 @@
     "track_b_id": "f9347741dabd723ff38f3ac4",
     "track_b_title": "Love Come Down - Single Version",
     "similarity": 0.8519,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "55dff6000cac58d014a134c8",
-    "track_a_id": "1aa03a8abec9eb3c6e81c76c",
-    "track_a_title": "One More Chance / Stay with Me - Radio Edit; 2014 Remaster",
-    "track_b_id": "c37d1594d3084007a369180c",
-    "track_b_title": "One More Chance / Stay with Me (Remix) [2007 Remaster]",
-    "similarity": 0.8515,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2262,8 +777,7 @@
     "track_b_id": "52f73a095b0f56ad425ca8ab",
     "track_b_title": "Love Sex Magic (feat. Justin Timberlake) [Main Version]",
     "similarity": 0.8506,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2273,8 +787,7 @@
     "track_b_id": "eae9873f9264273c3169b28f",
     "track_b_title": "The Art of Loving (Intro)",
     "similarity": 0.85,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2284,8 +797,7 @@
     "track_b_id": "4d952c03a0cf82144264e740",
     "track_b_title": "The Power of Love (Radio",
     "similarity": 0.85,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2295,8 +807,7 @@
     "track_b_id": "9703dbe5c7cff8393de80792",
     "track_b_title": "Killing Me Softly with His Song (Radio Edit)",
     "similarity": 0.8493,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2306,8 +817,7 @@
     "track_b_id": "146557980b38fbc7db53ef1e",
     "track_b_title": "Ray of Light (Sasha Ultra Violet Mix Edit)",
     "similarity": 0.8493,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2317,8 +827,7 @@
     "track_b_id": "50515e68634482e114349092",
     "track_b_title": "What If a Woman",
     "similarity": 0.8485,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2328,8 +837,7 @@
     "track_b_id": "4e18297cedd73a4378d660ee",
     "track_b_title": "Believe For It - Live",
     "similarity": 0.8485,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2339,8 +847,7 @@
     "track_b_id": "399edf8d9c1d9f3c5141e2cb",
     "track_b_title": "Take My Breath - Live",
     "similarity": 0.8485,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2350,19 +857,7 @@
     "track_b_id": "853ef39f7b6ecc238780905a",
     "track_b_title": "Follow Me (Confessions Special Edition Version)",
     "similarity": 0.8471,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "160b28fbcb18cf650db5f12a",
-    "track_a_id": "8a39f36c6badf08084e5e07a",
-    "track_a_title": "The Closer I Get To You (Duet With Beyoncé Knowles)",
-    "track_b_id": "72308f8069070c56b486aa1a",
-    "track_b_title": "The Closer I Get to You (with Beyoncé)",
-    "similarity": 0.8471,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2372,8 +867,7 @@
     "track_b_id": "ca4722dc7b1e0cc76d41f3d2",
     "track_b_title": "In My Business (Feat. Missy \"Misdemeanor\" Elliott)",
     "similarity": 0.8462,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2383,8 +877,7 @@
     "track_b_id": "3c77d46dc9152eb603b9675b",
     "track_b_title": "Make Them Pay",
     "similarity": 0.8462,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2394,8 +887,7 @@
     "track_b_id": "5d9075c43a082565b2576ac5",
     "track_b_title": "Standing on the Sun Remix (feat. Mr. Vegas)",
     "similarity": 0.8462,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2405,8 +897,7 @@
     "track_b_id": "d08e4b879a452c6d4f876044",
     "track_b_title": "The Air That I Breathe (Reprise)",
     "similarity": 0.8462,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2416,8 +907,7 @@
     "track_b_id": "899c0bbe5c465d738be2c6c7",
     "track_b_title": "It Won't Stop (feat. Chris Brown) - EP Version",
     "similarity": 0.8451,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2427,19 +917,7 @@
     "track_b_id": "89fa796f534164c0583033c4",
     "track_b_title": "It Won't Stop (feat. Chris Brown)",
     "similarity": 0.8451,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "9863d2548efc3c447b0cfd75",
-    "track_a_id": "f0366d39014bceaa7b9cda9a",
-    "track_a_title": "U Know What's Up (feat. Left Eye)",
-    "track_b_id": "cf8a9c03e45106e412a17b03",
-    "track_b_title": "U Know What's Up (Feat. Lisa \"Left Eye\" Lopes)",
-    "similarity": 0.8451,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2449,8 +927,7 @@
     "track_b_id": "f352f0139060fa5b68fddd28",
     "track_b_title": "Heartbreak Hotel (Official HD Video) (feat. Faith Evans & Kelly Price)",
     "similarity": 0.8448,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2460,8 +937,7 @@
     "track_b_id": "5fa8e28e27de14fe5801921a",
     "track_b_title": "Against All Odds (Take a Look at Me Now) [feat. WestLife]",
     "similarity": 0.8444,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2471,8 +947,7 @@
     "track_b_id": "09071aef8173672ae3d1822d",
     "track_b_title": "You (feat. Travis Scott)",
     "similarity": 0.8444,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2482,8 +957,7 @@
     "track_b_id": "0479a51c882bda442224cf7c",
     "track_b_title": "Frontin' (feat. JAY Z) [Radio Mix/Club Mix]",
     "similarity": 0.8438,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2493,8 +967,7 @@
     "track_b_id": "0e0397cd34fc196abec26dcd",
     "track_b_title": "Hate That I Love You (Feat. Rihanna)",
     "similarity": 0.8438,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2504,8 +977,7 @@
     "track_b_id": "58d2b2ec08b288745de9c9c5",
     "track_b_title": "Dancing With A Stranger (with Normani) (Bonus Track)",
     "similarity": 0.8434,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2515,8 +987,7 @@
     "track_b_id": "b69e067da3664aa280a51d18",
     "track_b_title": "Touched the Sky (feat. Mia Tuttavilla)",
     "similarity": 0.8434,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2526,8 +997,7 @@
     "track_b_id": "3ec14ee565cf40c55e47fa8e",
     "track_b_title": "Encore / Curtains Up",
     "similarity": 0.8421,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2537,8 +1007,7 @@
     "track_b_id": "dd3059a1f28fd879e4bfc57e",
     "track_b_title": "Fountains (with Tems)",
     "similarity": 0.8421,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2548,8 +1017,7 @@
     "track_b_id": "6cd812c883b897aad7f9d7fe",
     "track_b_title": "Head & Heart (feat. MNEK) - Acoustic",
     "similarity": 0.8421,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2559,8 +1027,7 @@
     "track_b_id": "4569d0340f224513065e432c",
     "track_b_title": "So Into You",
     "similarity": 0.8421,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2570,8 +1037,7 @@
     "track_b_id": "c3e5e10f8fcb8984adfc3211",
     "track_b_title": "No No (feat. Que DJ, Skillz, DopeShady & ZVRI)",
     "similarity": 0.8421,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2581,8 +1047,7 @@
     "track_b_id": "0e381fcd6e8b582a53287d80",
     "track_b_title": "One More Chance / Stay With Me (Remix)",
     "similarity": 0.8421,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2592,8 +1057,7 @@
     "track_b_id": "1aa03a8abec9eb3c6e81c76c",
     "track_b_title": "One More Chance / Stay with Me - Radio Edit; 2014 Remaster",
     "similarity": 0.8421,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2603,8 +1067,7 @@
     "track_b_id": "67c5b5236807a29914a1d260",
     "track_b_title": "Only You (feat. The Notorious B.I.G.) - Radio Mix",
     "similarity": 0.8421,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2614,8 +1077,7 @@
     "track_b_id": "87a88f59bc35cda2746a8163",
     "track_b_title": "The Motto",
     "similarity": 0.8421,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2625,8 +1087,7 @@
     "track_b_id": "47bcb604f240636245723f67",
     "track_b_title": "Without You",
     "similarity": 0.8421,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2636,8 +1097,7 @@
     "track_b_id": "d39bbde0c78e35010578df3f",
     "track_b_title": "Woman has meltdown over ‘not real’ passenger on American Airlines flight #shorts",
     "similarity": 0.8421,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2647,8 +1107,7 @@
     "track_b_id": "0dfa71775316572665c5fcad",
     "track_b_title": "Same Ole Love (365 Days a Year) - 45 Version",
     "similarity": 0.8406,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2658,8 +1117,7 @@
     "track_b_id": "3b563f50aea8d05e839d8681",
     "track_b_title": "Partition (Homecoming Live)",
     "similarity": 0.84,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2669,8 +1127,7 @@
     "track_b_id": "c9a5df0965e95a88c830d2f5",
     "track_b_title": "Mercedes ft. Madanon & Mampintsha | Fakaza.com",
     "similarity": 0.8395,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2680,8 +1137,7 @@
     "track_b_id": "eb090692b8dd5d966f5edad7",
     "track_b_title": "Baby It's You - 2018",
     "similarity": 0.8387,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2691,8 +1147,7 @@
     "track_b_id": "f78db8ee21ae62c713bdff83",
     "track_b_title": "Check on It (feat. Slim Thug)",
     "similarity": 0.8387,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2702,8 +1157,7 @@
     "track_b_id": "b43996b112a1764cf2d65462",
     "track_b_title": "Could I Have This Kiss Forever (with Enrique Iglesias) [Metro Mix]",
     "similarity": 0.8387,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2713,8 +1167,7 @@
     "track_b_id": "bf9573d6fde7d0e57123469f",
     "track_b_title": "Crazy for You (Edit)",
     "similarity": 0.8387,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2724,8 +1177,7 @@
     "track_b_id": "fd69d5ef8028712c8c619f49",
     "track_b_title": "Freakum Dress (Live)",
     "similarity": 0.8387,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2735,8 +1187,7 @@
     "track_b_id": "5bad7047396c7cd96eeb0ab2",
     "track_b_title": "Skin Tight (feat. Steve Lacy)",
     "similarity": 0.8387,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2746,8 +1197,7 @@
     "track_b_id": "6c16ad2bcd48fd1146d0830a",
     "track_b_title": "Slipping Away (1996)",
     "similarity": 0.8387,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2757,8 +1207,7 @@
     "track_b_id": "4fa2241c183b3318ecf85942",
     "track_b_title": "Party (Homecoming Live)",
     "similarity": 0.8372,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2768,8 +1217,7 @@
     "track_b_id": "0c8a19405c9b29731d275005",
     "track_b_title": "Yoncé (Homecoming Live)",
     "similarity": 0.8372,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2779,8 +1227,7 @@
     "track_b_id": "fcb2c4027948e3d6a5b95c76",
     "track_b_title": "Wrist (feat. Solo Lucci)",
     "similarity": 0.8372,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2790,8 +1237,7 @@
     "track_b_id": "35553675875fcbc662370af5",
     "track_b_title": "Dancing with a Stranger (Acoustic)",
     "similarity": 0.8364,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2801,8 +1247,7 @@
     "track_b_id": "d590eddb746440cbb136b3d5",
     "track_b_title": "Never Find Someone Like You",
     "similarity": 0.8364,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2812,8 +1257,7 @@
     "track_b_id": "ca7f903bc9360d0b83140d80",
     "track_b_title": "LiYoshona (Main Mix) [feat. Njelic, MalumNator & De Mthuda]",
     "similarity": 0.8364,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2823,8 +1267,7 @@
     "track_b_id": "5ea2d49bf39725610a3c7f79",
     "track_b_title": "Bamba la (Radio Mix) [feat. Leehleza & Stokie]",
     "similarity": 0.8354,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2834,8 +1277,7 @@
     "track_b_id": "8fbf8ddb52241af7cb608310",
     "track_b_title": "Can U Handle It? (Confessions Special Edition Version)",
     "similarity": 0.8352,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2845,8 +1287,7 @@
     "track_b_id": "70ccd895e87c83b1b1cb3fe5",
     "track_b_title": "we can't be friends (wait for your love) – string version",
     "similarity": 0.8352,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2856,8 +1297,7 @@
     "track_b_id": "44ed102ff192b4b74fd8d669",
     "track_b_title": "(When You Gonna) Give It Up to Me [Radio Version] [feat. Keyshia Cole]",
     "similarity": 0.8333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2867,8 +1307,7 @@
     "track_b_id": "e8470d9e40bc4b40e6a5d08c",
     "track_b_title": "The Best of Me",
     "similarity": 0.8333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2878,8 +1317,7 @@
     "track_b_id": "e553335c05d147fe21ac6260",
     "track_b_title": "Drunk in Love (feat. JAY Z)",
     "similarity": 0.8333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2889,8 +1327,7 @@
     "track_b_id": "87daa6335ecd49756e380e40",
     "track_b_title": "Flight Risqué",
     "similarity": 0.8333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2900,8 +1337,7 @@
     "track_b_id": "8f6a27c3008ad85c5bab0ef6",
     "track_b_title": "Into The Groove (Edit Version)",
     "similarity": 0.8333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2911,8 +1347,7 @@
     "track_b_id": "70dc3d193e08368188057369",
     "track_b_title": "On Somebody",
     "similarity": 0.8333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2922,8 +1357,7 @@
     "track_b_id": "4bd30ceea773cfea7f5828cd",
     "track_b_title": "Swimming Places (Beatz)",
     "similarity": 0.8333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2933,8 +1367,7 @@
     "track_b_id": "1b4f3bf989b36b68ebdb75d6",
     "track_b_title": "You Don't Know What to Do (feat. Wale)",
     "similarity": 0.8333,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2944,8 +1377,7 @@
     "track_b_id": "aed0db7776cca087d03d2e67",
     "track_b_title": "Simple Things (Confessions Special Edition Version)",
     "similarity": 0.8315,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2955,8 +1387,7 @@
     "track_b_id": "72ef6b6845440fa62726bbe8",
     "track_b_title": "Pure Surprise (UPZ House Mix) - Radio Edit",
     "similarity": 0.8308,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2966,8 +1397,7 @@
     "track_b_id": "83fa903752bed68a97382345",
     "track_b_title": "Against All Odds (Take a Look at Me Now) (Official HD Video)",
     "similarity": 0.8302,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2977,8 +1407,7 @@
     "track_b_id": "2ad8b184b8b6ccd3dfadfb24",
     "track_b_title": "intro (end of the world) (extended)",
     "similarity": 0.8302,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -2988,19 +1417,7 @@
     "track_b_id": "4fa2241c183b3318ecf85942",
     "track_b_title": "Party (Homecoming Live)",
     "similarity": 0.8293,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "55dff6000cac58d014a134c8",
-    "track_a_id": "0e381fcd6e8b582a53287d80",
-    "track_a_title": "One More Chance / Stay With Me (Remix)",
-    "track_b_id": "c37d1594d3084007a369180c",
-    "track_b_title": "One More Chance / Stay with Me (Remix) [2007 Remaster]",
-    "similarity": 0.8293,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3010,8 +1427,7 @@
     "track_b_id": "06ea32f956ee154befc4ff06",
     "track_b_title": "Tuesday, June 8th, 2021",
     "similarity": 0.8293,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3021,19 +1437,7 @@
     "track_b_id": "47f7a37344aef9301566690f",
     "track_b_title": "Whatever (Radio Version)",
     "similarity": 0.8293,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "55dff6000cac58d014a134c8",
-    "track_a_id": "c37d1594d3084007a369180c",
-    "track_a_title": "One More Chance / Stay with Me (Remix) [2007 Remaster]",
-    "track_b_id": "88ca25b17a3513141a3410c2",
-    "track_b_title": "One More Chance / Stay with Me (Remix) [2007 Remaster] (Remix; 2007 Remaster)",
-    "similarity": 0.8276,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3043,8 +1447,7 @@
     "track_b_id": "0b494e975a89ce823e839d4f",
     "track_b_title": "UB40 - Red Red Wine",
     "similarity": 0.8276,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3054,8 +1457,7 @@
     "track_b_id": "919b64f88d17e4f7d9958abc",
     "track_b_title": "Welcome (Homecoming Live)",
     "similarity": 0.8261,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3065,8 +1467,7 @@
     "track_b_id": "e5d22d1e074242e0e89d7dac",
     "track_b_title": "Last Time I Saw You (Sped Up)",
     "similarity": 0.8261,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3076,8 +1477,7 @@
     "track_b_id": "c69cdcf0f1de741add961ef1",
     "track_b_title": "Strip (feat. Kevin McCall)",
     "similarity": 0.8261,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3087,8 +1487,7 @@
     "track_b_id": "aa0774e35647b048cc9745b6",
     "track_b_title": "Anything at All - Original Radio Edit",
     "similarity": 0.8254,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3098,8 +1497,7 @@
     "track_b_id": "4525c8463632d5ef84a3b21e",
     "track_b_title": "Double Fantasy (feat. Future) [Radio Edit]",
     "similarity": 0.8254,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3109,8 +1507,7 @@
     "track_b_id": "1fb41f320bbb0260ff32fb6b",
     "track_b_title": "Every Time I Close My Eyes (Radio Edit)",
     "similarity": 0.8254,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3120,8 +1517,7 @@
     "track_b_id": "67695310c33041b6a194ad10",
     "track_b_title": "You Put a Move on My Heart (feat. Tamia)",
     "similarity": 0.8254,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3131,19 +1527,7 @@
     "track_b_id": "a6d430c512d33207a80aab2a",
     "track_b_title": "Here's to Love (feat. Roberta Flack) [2017 Remaster]",
     "similarity": 0.825,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "160b28fbcb18cf650db5f12a",
-    "track_a_id": "e3a3147a18d91eae477669f4",
-    "track_a_title": "The Closer I Get to You (feat. Beyoncé Knowles)",
-    "track_b_id": "72308f8069070c56b486aa1a",
-    "track_b_title": "The Closer I Get to You (with Beyoncé)",
-    "similarity": 0.825,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3153,8 +1537,7 @@
     "track_b_id": "69c5ff6bbc7a3f1626baa272",
     "track_b_title": "Watch Sodium Day Online Free on fmovies.to",
     "similarity": 0.825,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3164,8 +1547,7 @@
     "track_b_id": "260017b6892af49ed4d7989f",
     "track_b_title": "Against All Odds (Take A Look at Me Now) - Mariah Only",
     "similarity": 0.8235,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3175,8 +1557,7 @@
     "track_b_id": "d4df9408fb826f061ac45acb",
     "track_b_title": "I Wanna Be",
     "similarity": 0.8235,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3186,8 +1567,7 @@
     "track_b_id": "33cd90e896be0e7d4a2a07cc",
     "track_b_title": "I Will Survive - Remix",
     "similarity": 0.8235,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3197,8 +1577,7 @@
     "track_b_id": "3c30b18f3c4639d3e23fa044",
     "track_b_title": "Just Kickin' It (Remix)",
     "similarity": 0.8235,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3208,8 +1587,7 @@
     "track_b_id": "d5b672f2a48df16774a6c115",
     "track_b_title": "la Isla Bonita (remix)",
     "similarity": 0.8235,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3219,8 +1597,7 @@
     "track_b_id": "dc48a457b22e481b1255acd8",
     "track_b_title": "Somebody That I Used to Know (feat. Kimbra)",
     "similarity": 0.8235,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3230,8 +1607,7 @@
     "track_b_id": "831626be60749a4969605986",
     "track_b_title": "eMcimbini (feat. Aymos, Samthing Soweto, Myztro & Mas Musiq) [Live]",
     "similarity": 0.8226,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3241,8 +1617,7 @@
     "track_b_id": "18fda29a56200804b9d70370",
     "track_b_title": "Heartbreaker (feat. JAY-Z) [Album Version (Featuring Jay-Z)]",
     "similarity": 0.8222,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3252,8 +1627,7 @@
     "track_b_id": "1a6172e07553f92aa7551663",
     "track_b_title": "We Don't Have To Take Our Clothes Off - Remastered 2015",
     "similarity": 0.8222,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3263,8 +1637,7 @@
     "track_b_id": "7ef8563063d9d9567518f288",
     "track_b_title": "If I Never See Your Face Again (feat. Rihanna)",
     "similarity": 0.8219,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3274,8 +1647,7 @@
     "track_b_id": "4e59aed2411a11729cadcc74",
     "track_b_title": "dodger blue (feat. wallie the sensei, siete7x, roddy ricch)",
     "similarity": 0.8214,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3285,8 +1657,7 @@
     "track_b_id": "1c96e94a540f7d9856410aae",
     "track_b_title": "Open Arms (feat. Travis Scott)",
     "similarity": 0.8214,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3296,8 +1667,7 @@
     "track_b_id": "58f5fdb6bf5577b399bd2607",
     "track_b_title": "All I Have (feat. LL Cool J) - Radio Edit",
     "similarity": 0.8197,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3307,8 +1677,7 @@
     "track_b_id": "93cc6e7eee1cc61cad89820e",
     "track_b_title": "Notorious B.I.G. (Featuring Lil' Kim & Puff Daddy)",
     "similarity": 0.819,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3318,8 +1687,7 @@
     "track_b_id": "a0c67206825d3dbdec155071",
     "track_b_title": "Crazy For You (Edit Version)",
     "similarity": 0.8182,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3329,8 +1697,7 @@
     "track_b_id": "f7275c9ef3dcb052cbd79993",
     "track_b_title": "Nurture (Acoustic Version)",
     "similarity": 0.8182,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3340,8 +1707,7 @@
     "track_b_id": "0c8a19405c9b29731d275005",
     "track_b_title": "Yoncé (Homecoming Live)",
     "similarity": 0.8182,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3351,8 +1717,7 @@
     "track_b_id": "0b11711b8ba386c48509883e",
     "track_b_title": "Make It Last Forêver (feat. Jacci McGhee) [Extended Version]",
     "similarity": 0.8172,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3362,8 +1727,7 @@
     "track_b_id": "d1da6d597ccad5ac2113192a",
     "track_b_title": "INSIDE (FEAT. TRAVIS SCOTT)",
     "similarity": 0.8163,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3373,8 +1737,7 @@
     "track_b_id": "f47912d1871368ef75aa9a53",
     "track_b_title": "It Feels So Good (Sonique vs. Ramiro) [Damon Hess Deep House Mix]",
     "similarity": 0.816,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3384,19 +1747,7 @@
     "track_b_id": "014bea70b039c63dac85309b",
     "track_b_title": "(There You Go) Tellin' Me No Again - 2007 Remaster",
     "similarity": 0.8158,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "a4d3840dbd04c502297000c3",
-    "track_a_id": "98a31a50983b42ae55872b92",
-    "track_a_title": "Never Leave You (Uh Oooh, Uh Oooh)",
-    "track_b_id": "db766e1c29dd896097ebdde4",
-    "track_b_title": "Never Leave You (Uh Oooh, Uh Oooh) - Uh Oooh Remix",
-    "similarity": 0.8158,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3406,8 +1757,7 @@
     "track_b_id": "b471b560bc8b06dbae8ee41b",
     "track_b_title": "Alone Again - Live",
     "similarity": 0.8148,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3417,8 +1767,7 @@
     "track_b_id": "1d2eb4536790449f476693ac",
     "track_b_title": "Love On Top (Homecoming Live)",
     "similarity": 0.8148,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3428,8 +1777,7 @@
     "track_b_id": "5fc9daa1f2f5d38abf899f7d",
     "track_b_title": "Interlude - Sad",
     "similarity": 0.8148,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3439,8 +1787,7 @@
     "track_b_id": "cdcd9fc44adfa7f40a2ead88",
     "track_b_title": "Business & Personal (Intro)",
     "similarity": 0.8136,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3450,8 +1797,7 @@
     "track_b_id": "bbc848aa2d9f69d3a3fe4659",
     "track_b_title": "Holy (feat. Chance the Rapper)",
     "similarity": 0.8136,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3461,8 +1807,7 @@
     "track_b_id": "90cf6464f4deca7660072923",
     "track_b_title": "Body and Soul (Radio",
     "similarity": 0.8125,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3472,8 +1817,7 @@
     "track_b_id": "c5d01b2a6ffc56256f60c756",
     "track_b_title": "Right Thru Me (Dirty)",
     "similarity": 0.8125,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3483,8 +1827,7 @@
     "track_b_id": "77f2bf394ba03d8cc6381d7b",
     "track_b_title": "Set Adrift on Memory Bliss (Re-Recorded)",
     "similarity": 0.8125,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3494,8 +1837,7 @@
     "track_b_id": "c56b462c31d7b8ecbb4bccb3",
     "track_b_title": "This Woman's Work - Remastered 2021",
     "similarity": 0.8125,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3505,8 +1847,7 @@
     "track_b_id": "3189663af9ec469636180330",
     "track_b_title": "Got 'Til It's Gone (Feat. Q-Tip & Joni Mitchell) [Ummah Jay Dee's Revenge Mix]",
     "similarity": 0.812,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3516,8 +1857,7 @@
     "track_b_id": "b83c618d980096e2441ecf40",
     "track_b_title": "Notorious Thugs (Featuring Bone Thugs N Harmony)",
     "similarity": 0.8119,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3527,8 +1867,7 @@
     "track_b_id": "8f3b332be2affe0fbd73eb2e",
     "track_b_title": "Akanamali ft. Samthing Soweto | Fakaza.com",
     "similarity": 0.8116,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3538,8 +1877,7 @@
     "track_b_id": "b879e7a8a3a56d530b94cfa6",
     "track_b_title": "U Know What's Up ft Left eye",
     "similarity": 0.8116,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3549,8 +1887,7 @@
     "track_b_id": "b7f1e06810073acfd15fcb04",
     "track_b_title": "End Of The Road Medley",
     "similarity": 0.8108,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3560,8 +1897,7 @@
     "track_b_id": "f16a9c83cda3d1aecfa6a1df",
     "track_b_title": "It's All Coming Back To Me Now (Radio Version)",
     "similarity": 0.8108,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3571,19 +1907,7 @@
     "track_b_id": "72ef6b6845440fa62726bbe8",
     "track_b_title": "Pure Surprise (UPZ House Mix) - Radio Edit",
     "similarity": 0.8108,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "2aad910689433872264901c8",
-    "track_a_id": "150cbe52e08d17c943e5419e",
-    "track_a_title": "If It's Lovin That You Want, Pt. 2",
-    "track_b_id": "13625984eb25b72933140a82",
-    "track_b_title": "If It's Lovin That You Want, Pt. 2 (feat. Cory Gunz)",
-    "similarity": 0.8101,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3593,8 +1917,7 @@
     "track_b_id": "690dc79c3521260917427930",
     "track_b_title": "What Goes Around...Comes Around (Radio Edit)",
     "similarity": 0.8101,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3604,8 +1927,7 @@
     "track_b_id": "1618340447785e58ca387c37",
     "track_b_title": "I Care (Homecoming Live)",
     "similarity": 0.8095,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3615,8 +1937,7 @@
     "track_b_id": "76da63fed737dca616c7a232",
     "track_b_title": "Used (feat. Don Toliver)",
     "similarity": 0.8095,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3626,8 +1947,7 @@
     "track_b_id": "f9271386b2d4eb693cc71d4c",
     "track_b_title": "Papa Don't Preach",
     "similarity": 0.8095,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3637,8 +1957,7 @@
     "track_b_id": "0c8a19405c9b29731d275005",
     "track_b_title": "Yoncé (Homecoming Live)",
     "similarity": 0.8095,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3648,8 +1967,7 @@
     "track_b_id": "0c8a19405c9b29731d275005",
     "track_b_title": "Yoncé (Homecoming Live)",
     "similarity": 0.8095,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3659,8 +1977,7 @@
     "track_b_id": "83fa903752bed68a97382345",
     "track_b_title": "Against All Odds (Take a Look at Me Now) (Official HD Video)",
     "similarity": 0.8085,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3670,8 +1987,7 @@
     "track_b_id": "b57063465b4bfa38c9024981",
     "track_b_title": "Top Off (Homecoming Live)",
     "similarity": 0.8085,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3681,8 +1997,7 @@
     "track_b_id": "a061290f361bcfa8d7503cc1",
     "track_b_title": "PHILLY (with Travis Scott)",
     "similarity": 0.8085,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3692,8 +2007,7 @@
     "track_b_id": "aed0db7776cca087d03d2e67",
     "track_b_title": "Simple Things (Confessions Special Edition Version)",
     "similarity": 0.8085,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3703,8 +2017,7 @@
     "track_b_id": "1618340447785e58ca387c37",
     "track_b_title": "I Care (Homecoming Live)",
     "similarity": 0.8085,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3714,8 +2027,7 @@
     "track_b_id": "ab756984b50e9eccb633efc6",
     "track_b_title": "Kitty Kat (Homecoming Live)",
     "similarity": 0.8085,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3725,8 +2037,7 @@
     "track_b_id": "a439c12e4355c8fe020f55a5",
     "track_b_title": "Into You (feat. Tamia) - Main Mix",
     "similarity": 0.8085,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3736,19 +2047,7 @@
     "track_b_id": "f1607ab174cec0250b887f89",
     "track_b_title": "Make It Last Forever (with Jacci McGhee) (feat. Jacci McGhee)",
     "similarity": 0.8085,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "b75c6cf7320bd4137539374f",
-    "track_a_id": "e1f3e34363af74bb1d01feec",
-    "track_a_title": "Only You (Feat. The Notorious B.I.G. & Mase) [Bad Boy Remix]",
-    "track_b_id": "67c5b5236807a29914a1d260",
-    "track_b_title": "Only You (feat. The Notorious B.I.G.) - Radio Mix",
-    "similarity": 0.8081,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3758,8 +2057,7 @@
     "track_b_id": "d61d1e25b93188de7dc11440",
     "track_b_title": "I Don't Fuck With You (feat. E-40)",
     "similarity": 0.8077,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3769,8 +2067,7 @@
     "track_b_id": "698bb5f7de9dc71f25d1351f",
     "track_b_title": "Umshove (Radio Mix) [feat. Leehleza]",
     "similarity": 0.8077,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3780,8 +2077,7 @@
     "track_b_id": "861e969d8468f6fad67b86dd",
     "track_b_title": "I Been On (Homecoming Live Bonus Track)",
     "similarity": 0.8065,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3791,8 +2087,7 @@
     "track_b_id": "654f3e4dfc96629a14f8b5de",
     "track_b_title": "In Your Eyes (Remix) [feat. Kenny G]",
     "similarity": 0.8065,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3802,8 +2097,7 @@
     "track_b_id": "2131d849f30227a2077284c5",
     "track_b_title": "Girls Need Love (Remix) (feat. Drake)",
     "similarity": 0.806,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3813,8 +2107,7 @@
     "track_b_id": "0ba79a12b4043ce4636e9ad0",
     "track_b_title": "Drive (feat. Delilah Montagu) [Radio Edit]",
     "similarity": 0.8056,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3824,8 +2117,7 @@
     "track_b_id": "0bb0ab7ac2a556152823d73d",
     "track_b_title": "What's Love Got to Do with It (2015 Remaster)",
     "similarity": 0.8056,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3835,8 +2127,7 @@
     "track_b_id": "f9609252d5ca302389487b86",
     "track_b_title": "林戈說：哥哥，偶可以揹你😆🤣💦#Djeeco#ゴリラ#迪亞哥#金剛猩猩#taipeizoo #gorilla #台北市立動物園20240902#3",
     "similarity": 0.8056,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3846,8 +2137,7 @@
     "track_b_id": "9b66a79372eadcd7c523121a",
     "track_b_title": "At Your Best (You Are Love) - Stepper's Ball Remix",
     "similarity": 0.8043,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3857,8 +2147,7 @@
     "track_b_id": "743919b565fa9425c7846d86",
     "track_b_title": "Zaka (feat. Aymos, DJ Maphorisa & Kabza De Small)",
     "similarity": 0.8041,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3868,8 +2157,7 @@
     "track_b_id": "ae575f56550929c02d9c32c3",
     "track_b_title": "On & On",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3879,8 +2167,7 @@
     "track_b_id": "016b1845644dbfcf52486ec3",
     "track_b_title": "Diva (Homecoming Live)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3890,8 +2177,7 @@
     "track_b_id": "9e00bba50bfef7609b785fe7",
     "track_b_title": "All I Feel Is Rain (feat. JID)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3901,8 +2187,7 @@
     "track_b_id": "4fa2241c183b3318ecf85942",
     "track_b_title": "Party (Homecoming Live)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3912,8 +2197,7 @@
     "track_b_id": "5e8b2ace77d5e51fca6cfa71",
     "track_b_title": "Sorry (Homecoming Live)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3923,8 +2207,7 @@
     "track_b_id": "0c8a19405c9b29731d275005",
     "track_b_title": "Yoncé (Homecoming Live)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3934,8 +2217,7 @@
     "track_b_id": "b00a22d6aa49b5cdda6b0b21",
     "track_b_title": "Back to Sleep",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3945,8 +2227,7 @@
     "track_b_id": "9b64f9abd8f194a507367cee",
     "track_b_title": "Practice What You Preach",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3956,8 +2237,7 @@
     "track_b_id": "30188101a33fc7036fbd4fa5",
     "track_b_title": "Best Friends (Remix)",
     "similarity": 0.8,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3967,8 +2247,7 @@
     "track_b_id": "fb825709b7c8ae78d3d5f0bb",
     "track_b_title": "Best I Ever Had remix",
     "similarity": 0.8,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3978,8 +2257,7 @@
     "track_b_id": "0c8a19405c9b29731d275005",
     "track_b_title": "Yoncé (Homecoming Live)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -3989,8 +2267,7 @@
     "track_b_id": "aed0db7776cca087d03d2e67",
     "track_b_title": "Simple Things (Confessions Special Edition Version)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4000,8 +2277,7 @@
     "track_b_id": "1a3482cbacd7095f316463b4",
     "track_b_title": "Special/Can't Be Stopped",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4011,8 +2287,7 @@
     "track_b_id": "88f472c64899dd67f6014206",
     "track_b_title": "Exhale (Shoop Shoop) [from \"Waiting to Exhale\" - Original Soundtrack]",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4022,8 +2297,7 @@
     "track_b_id": "aa8d3a1750bf50eb3dd81523",
     "track_b_title": "Why Does It Hurt So Bad (from \"Waiting to Exhale\" - Original Soundtrack)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4033,8 +2307,7 @@
     "track_b_id": "effa3dfa7440c85aa84cc449",
     "track_b_title": "Formation (Homecoming Live)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4044,8 +2317,7 @@
     "track_b_id": "ab756984b50e9eccb633efc6",
     "track_b_title": "Kitty Kat (Homecoming Live)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4055,8 +2327,7 @@
     "track_b_id": "d2c189d9fcca843d3eefcb8c",
     "track_b_title": "Every Time I Close My Eyes (With Kenny G)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4066,8 +2337,7 @@
     "track_b_id": "7d123ca58d622e264360942b",
     "track_b_title": "Fly By II",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4077,8 +2347,7 @@
     "track_b_id": "1618340447785e58ca387c37",
     "track_b_title": "I Care (Homecoming Live)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4088,8 +2357,7 @@
     "track_b_id": "0c149dd13a92c969e8ddb270",
     "track_b_title": "Gangsta's Paradise (feat. L.V.)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4099,8 +2367,7 @@
     "track_b_id": "dae3628a65b1b1a269e13f25",
     "track_b_title": "Giving You The Best That I Got (Single Version)",
     "similarity": 0.8,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4110,8 +2377,7 @@
     "track_b_id": "653a6aecc9d5c4ee67612bb8",
     "track_b_title": "Hey Daddy (Daddy's Home) (feat. Plies)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4121,8 +2387,7 @@
     "track_b_id": "919b64f88d17e4f7d9958abc",
     "track_b_title": "Welcome (Homecoming Live)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4132,8 +2397,7 @@
     "track_b_id": "3d3610520804b179fc6dd761",
     "track_b_title": "I Wish You Well",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4143,8 +2407,7 @@
     "track_b_id": "09071aef8173672ae3d1822d",
     "track_b_title": "You (feat. Travis Scott)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4154,8 +2417,7 @@
     "track_b_id": "5fc9daa1f2f5d38abf899f7d",
     "track_b_title": "Interlude - Sad",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4165,8 +2427,7 @@
     "track_b_id": "9f92a6d4ed3c01fde837db17",
     "track_b_title": "Jesus Lord Pt 2",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4176,8 +2437,7 @@
     "track_b_id": "68012c03a69bdcb7388ac85a",
     "track_b_title": "Kuwe (feat. C'zwe & Baby S.O.N & Makhanj)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4187,8 +2447,7 @@
     "track_b_id": "825c28536916f86a724ad77a",
     "track_b_title": "Love Will Never Do (Without You) [Single Version]",
     "similarity": 0.8,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4198,8 +2457,7 @@
     "track_b_id": "0c8d5c809198f2d4e43a8056",
     "track_b_title": "MY ROSE",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4209,8 +2467,7 @@
     "track_b_id": "db766e1c29dd896097ebdde4",
     "track_b_title": "Never Leave You (Uh Oooh, Uh Oooh) - Uh Oooh Remix",
     "similarity": 0.8,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4220,8 +2477,7 @@
     "track_b_id": "c2a08649ece89d704d81a9a0",
     "track_b_title": "PUSH 2 START - REMIX",
     "similarity": 0.8,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4231,8 +2487,7 @@
     "track_b_id": "b04601a5f640f0219b82ee5c",
     "track_b_title": "Right Here Waiting (feat. 112)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4242,8 +2497,7 @@
     "track_b_id": "2d355aa89cd83fbb104c2ea9",
     "track_b_title": "Starboy (feat. Daft Punk) - Kygo Remix",
     "similarity": 0.8,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4253,8 +2507,7 @@
     "track_b_id": "afb708ac007fdef9feee5f4b",
     "track_b_title": "Take A Bow (Main)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4264,8 +2517,7 @@
     "track_b_id": "ef6343ffc28121e978e25fb9",
     "track_b_title": "Take Me Back To LA",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4275,8 +2527,7 @@
     "track_b_id": "ffccf44e423dba99fdada4b8",
     "track_b_title": "Take My Breath (Single Version)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4286,8 +2537,7 @@
     "track_b_id": "dbfe3865b0a39cae9cbbbf88",
     "track_b_title": "Tell Me How You Feel (Radio Mix)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4297,8 +2547,7 @@
     "track_b_id": "239a6e32348be114abe071b5",
     "track_b_title": "That's How You Like It (feat. Jay-Z)",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4308,19 +2557,7 @@
     "track_b_id": "3753bb8c5f87e02499c0a850",
     "track_b_title": "The Boy Is Wild",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
-  },
-  {
-    "entity_type": "track",
-    "artist_id": "160b28fbcb18cf650db5f12a",
-    "track_a_id": "8a39f36c6badf08084e5e07a",
-    "track_a_title": "The Closer I Get To You (Duet With Beyoncé Knowles)",
-    "track_b_id": "0686120a5c476bde7288d398",
-    "track_b_title": "The Closer I Get to You (Feat. Beyoncé)",
-    "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4330,8 +2567,7 @@
     "track_b_id": "541b1fc47be54482d8d8249d",
     "track_b_title": "The Moon and The Sky - Live 2011",
     "similarity": 0.8,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4341,8 +2577,7 @@
     "track_b_id": "a141433d3bb8f1a9f6a30330",
     "track_b_title": "The Sweetest Taboo",
     "similarity": 0.8,
-    "version_wording_differs": false,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   },
   {
     "entity_type": "track",
@@ -4352,7 +2587,6 @@
     "track_b_id": "f86480c62b6219a3754298b6",
     "track_b_title": "Wish I Didn't Miss You (Radio Edit)",
     "similarity": 0.8,
-    "version_wording_differs": true,
-    "action": "review_only_not_merged"
+    "action": "review_only_below_auto_merge_threshold"
   }
 ]

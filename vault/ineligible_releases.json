@@ -892,7 +892,7 @@
     "primary_artist_id": "f6e0a45440a790e7ff61ad04",
     "track_count": 1,
     "track_ids": [
-      "d0e112f0309f8dd342b9403f"
+      "2b1821f9b4bcb7f906b436d4"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -1688,7 +1688,7 @@
     "primary_artist_id": "015dcbdd9434cdd4fadea827",
     "track_count": 1,
     "track_ids": [
-      "fdc2a5d4f0ba87aead69859e"
+      "1063f35fbb411503bb4a1e9f"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -4597,6 +4597,17 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "021fc701fa19fa7ef4e930c8",
+    "title": "Amukelani",
+    "primary_artist_id": "e7b7170ef1bf53b8214e2f0f",
+    "track_count": 2,
+    "track_ids": [
+      "45a28bef64ee5756d12190af",
+      "4f339317ab920e3d5aba8a48"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "050415f8e334e547704c3a4b",
     "title": "Amukelani",
     "primary_artist_id": "548b528688cc6f6dd2bfaa69",
@@ -5082,7 +5093,7 @@
     "primary_artist_id": "b75c6cf7320bd4137539374f",
     "track_count": 1,
     "track_ids": [
-      "e1f3e34363af74bb1d01feec"
+      "1af7b2e670d0bbb064733f84"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -5092,7 +5103,7 @@
     "primary_artist_id": "b75c6cf7320bd4137539374f",
     "track_count": 1,
     "track_ids": [
-      "e1f3e34363af74bb1d01feec"
+      "1af7b2e670d0bbb064733f84"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -6614,6 +6625,28 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "84589700508de402b0fe15c3",
+    "title": "Bad Boy's 10th Anniversary- The Hits",
+    "primary_artist_id": "90e75e3455d96bfa804d208b",
+    "track_count": 2,
+    "track_ids": [
+      "91f12e7075aaf5fc9943ff54",
+      "eab3ef3047a03cbddc385da5"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "d190b17bf0539b371f691c39",
+    "title": "Bad Boy's 10th Anniversary- The Hits",
+    "primary_artist_id": "dfe5088f11daffb54ad56ae9",
+    "track_count": 2,
+    "track_ids": [
+      "051e3d12d0137bf21ab165d6",
+      "2d2c49bf9a7e12ceadbf2646"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "702603593343745f4368889e",
     "title": "Bad Boy's 10th Anniversary... The Hits",
     "primary_artist_id": "b75c6cf7320bd4137539374f",
@@ -6627,10 +6660,9 @@
     "id": "85d64726d1db736ffd4bf167",
     "title": "Bad Boy's 10th Anniversary... The Hits",
     "primary_artist_id": "924d00fa1e5d478a6eec3793",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "3647cf095c318a428cd00f22",
-      "908df20eaa75d4ce416c3da0"
+      "3647cf095c318a428cd00f22"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -11582,7 +11614,7 @@
     "primary_artist_id": "5c3981ebb21cd3eb1f53fbae",
     "track_count": 1,
     "track_ids": [
-      "1e019c5725019252117a309a"
+      "b5bd0511fc19bceaa6108839"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -14409,10 +14441,9 @@
     "id": "7df45a24fbbbc4edbaab61e1",
     "title": "Dangerously In Love",
     "primary_artist_id": "160b28fbcb18cf650db5f12a",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "72308f8069070c56b486aa1a",
-      "e3a3147a18d91eae477669f4"
+      "72308f8069070c56b486aa1a"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -16494,8 +16525,8 @@
     "primary_artist_id": "2b9a64d141d7a8f0667a0147",
     "track_count": 2,
     "track_ids": [
-      "0e60ce2bcb337723948194b7",
-      "a790d47e452b9690fa9bec48"
+      "a790d47e452b9690fa9bec48",
+      "e35a84f67901ba370970a5ac"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -19615,7 +19646,7 @@
     "primary_artist_id": "61d4861e9764f699ba10fdbe",
     "track_count": 1,
     "track_ids": [
-      "e940949ccda8a2e892693c93"
+      "88b0fa1b45aec4aade2b3ccd"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -19777,6 +19808,17 @@
     "track_count": 1,
     "track_ids": [
       "5979a2c877014f7123c72f9d"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "a0fbc081a68ec7e0517f3a8a",
+    "title": "Foundation",
+    "primary_artist_id": "a2f25fe6e99bb2228b2f241f",
+    "track_count": 2,
+    "track_ids": [
+      "79efc27de2feb8ab082fc2f9",
+      "d97d50f87f19c0c9fdfef73c"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -20317,7 +20359,7 @@
     "primary_artist_id": "a074ecf39351fa8eb788210d",
     "track_count": 1,
     "track_ids": [
-      "8f821b2b3f51e487f5555b51"
+      "3c4645ee43f756743cf7c349"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -20595,10 +20637,9 @@
     "id": "3de41d23dca21669dfe22c2d",
     "title": "Gems",
     "primary_artist_id": "783d995b85d8ed0747477a4b",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "622c59102399865442137083",
-      "9cab10d3b08fc6179a617378"
+      "622c59102399865442137083"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -25422,7 +25463,7 @@
     "primary_artist_id": "cfdad3e83c6b3f93174b304c",
     "track_count": 1,
     "track_ids": [
-      "e777508db233c457c5783668"
+      "ebc1a4dd143d5f9444025587"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -27176,7 +27217,7 @@
     "primary_artist_id": "eec125b80002a94dba39ed09",
     "track_count": 1,
     "track_ids": [
-      "f123f91dd08af143d3c5a5f5"
+      "4c5b5477a684511bf0d21874"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -27870,10 +27911,9 @@
     "id": "3f5ee51db937a320d85d9d9d",
     "title": "Ingane Yabantu - Single",
     "primary_artist_id": "912fee6a4549c4fa3eab59dd",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "77553d46ab0d9692fbcb5a59",
-      "b4d6e6eb7e9ef229af2b8219"
+      "77553d46ab0d9692fbcb5a59"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -29596,7 +29636,7 @@
     "primary_artist_id": "eec125b80002a94dba39ed09",
     "track_count": 1,
     "track_ids": [
-      "f123f91dd08af143d3c5a5f5"
+      "4c5b5477a684511bf0d21874"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -30364,9 +30404,8 @@
     "id": "1991f597fd9d503b2dd01c0d",
     "title": "Khokhovula",
     "primary_artist_id": "d6de0bdbd4184c054e0b8f61",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "9a5574411d3e6e6c3e5ea16c",
       "db6d941bb44669ffb13f92e9"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -33683,10 +33722,9 @@
     "id": "53b27750332c31f38b4dc032",
     "title": "Love Vs Money",
     "primary_artist_id": "4088839021fe3b5642f6d0ab",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "7fc8a39902b0eb72f4071d06",
-      "924a35aae9278b9c2c90dd59"
+      "7fc8a39902b0eb72f4071d06"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -37056,7 +37094,7 @@
     "primary_artist_id": "55dff6000cac58d014a134c8",
     "track_count": 1,
     "track_ids": [
-      "c37d1594d3084007a369180c"
+      "21ec4e876d95b8543a0061a2"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -37860,7 +37898,7 @@
     "primary_artist_id": "a4d3840dbd04c502297000c3",
     "track_count": 1,
     "track_ids": [
-      "98a31a50983b42ae55872b92"
+      "62278be90fdc80af66552fff"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -37952,6 +37990,17 @@
     "track_ids": [
       "d12fff0125d42a23b37e328b",
       "ea5cd19358f7293a0783b7f2"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "a8ed5ef921586068e4f68bdf",
+    "title": "Never Too Much: Greatest Hits",
+    "primary_artist_id": "160b28fbcb18cf650db5f12a",
+    "track_count": 2,
+    "track_ids": [
+      "3d568176ebc18b5eefaf1bf4",
+      "72308f8069070c56b486aa1a"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -38361,10 +38410,9 @@
     "id": "71695c72fc2fee0a70d127ea",
     "title": "Night of Eden",
     "primary_artist_id": "271ce9bd451f3c5aa56801c3",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "004241f96fe6010502590567",
-      "4db27e4c32c09424f73843d5"
+      "004241f96fe6010502590567"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -39653,9 +39701,8 @@
     "id": "640242ce20e948f79a9aec4d",
     "title": "NYE 2023",
     "primary_artist_id": "30951750303aa2e513d99f16",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "0d75667ec5ed8dd55ce9c93d",
       "f2250f2bd2475804309b2e64"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -39666,7 +39713,7 @@
     "primary_artist_id": "21719f1774bec22ede4e0c06",
     "track_count": 1,
     "track_ids": [
-      "d9ddd4817428abff24d782bd"
+      "b7d4f11bc28f7f7171de46f2"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -42878,9 +42925,8 @@
     "id": "3448002856fcc9c92e812408",
     "title": "Popular - Single",
     "primary_artist_id": "536021bcaeea64c649b97dd7",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "44b3cab21ef0d2d25bd234cd",
       "bfbf587477d2aac01803954b"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -43807,7 +43853,7 @@
     "primary_artist_id": "2b9a64d141d7a8f0667a0147",
     "track_count": 1,
     "track_ids": [
-      "0e60ce2bcb337723948194b7"
+      "e35a84f67901ba370970a5ac"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -49664,7 +49710,7 @@
     "primary_artist_id": "d338b01e1ba04c32e08a7ad7",
     "track_count": 1,
     "track_ids": [
-      "ee79622b412dbf961a965be3"
+      "89d75263a9d0b372e5019c08"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -49715,7 +49761,7 @@
     "primary_artist_id": "3b680d31f65f0dce7f65ed21",
     "track_count": 1,
     "track_ids": [
-      "429173688e389532c6313f0c"
+      "a6bc1d946e51e99646d8d344"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -50423,6 +50469,17 @@
     "track_count": 1,
     "track_ids": [
       "d3248991101c6495cb351e78"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "dac0f7b2f2874493623fe26d",
+    "title": "STAY DANGEROUS",
+    "primary_artist_id": "41aafeb64e422b485da6e746",
+    "track_count": 2,
+    "track_ids": [
+      "06ae84b6b1d69a003d13abb6",
+      "2ab635e72d78197c1de1c6c9"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -57981,7 +58038,7 @@
     "primary_artist_id": "9863d2548efc3c447b0cfd75",
     "track_count": 1,
     "track_ids": [
-      "f0366d39014bceaa7b9cda9a"
+      "b879e7a8a3a56d530b94cfa6"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -58203,7 +58260,7 @@
     "primary_artist_id": "1f796635a7afb9aebfc259ea",
     "track_count": 1,
     "track_ids": [
-      "9129d8eb3deb5cc1f1969be3"
+      "cd8fe53cccde264f47d425d2"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -58971,7 +59028,7 @@
     "primary_artist_id": "fbb2851e48813e922b9330d5",
     "track_count": 1,
     "track_ids": [
-      "c30d99e15eda024c958ed234"
+      "0ffde1561cbc102ac25aaa6c"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -59499,6 +59556,17 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "6ac32c81d662ba8a23a6f97c",
+    "title": "Twelve Carat Toothache",
+    "primary_artist_id": "3a7a66ff49c33d128f4dbb6c",
+    "track_count": 2,
+    "track_ids": [
+      "3b9a3f4c240b63a583a0b72f",
+      "da7f6a4aafd27f3e0fc542ac"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "d4c716219f9ddb39023d39ac",
     "title": "Twelve Carat Toothache",
     "primary_artist_id": "3babf8dee8ffba9e2d9d9c67",
@@ -59916,7 +59984,7 @@
     "primary_artist_id": "52a2c160a0104e1b0a9a53d1",
     "track_count": 1,
     "track_ids": [
-      "9461bb7976f4682dac126a17"
+      "3d1fade5f47a16aedbd6970b"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -60817,10 +60885,9 @@
     "id": "090373cd39974fe75e79a434",
     "title": "Unknown Album",
     "primary_artist_id": "d507a2c1aa7e688248dc41f1",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "1f1e71da4ec0dcb1d48105ee",
-      "d60cdcac782c8114bde895b5"
+      "1f1e71da4ec0dcb1d48105ee"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -61715,8 +61782,8 @@
     "primary_artist_id": "f391a44473ddde9fd52dc8d5",
     "track_count": 2,
     "track_ids": [
-      "864ffaab89b76f92148bfd7f",
-      "f577f9a3dc883d182280d262"
+      "82d45bb565707c7aed72f077",
+      "864ffaab89b76f92148bfd7f"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -65782,9 +65849,8 @@
     "id": "6f4be4ab08d1cbace4a3eba0",
     "title": "Unknown Album",
     "primary_artist_id": "9628d54bbf210cf7a00d0782",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "6e4ed208cb7787051ebdd304",
       "cb34eab1a83a0f5775bcb406"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -66275,7 +66341,7 @@
     "primary_artist_id": "441242eb54091d5bbe3cd479",
     "track_count": 1,
     "track_ids": [
-      "72e013ec570565608c3b69d6"
+      "da220017edb0f97fe7371607"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -66681,6 +66747,16 @@
     "track_ids": [
       "0f34a3ea60f02d0d17c52b8c",
       "c03844c8bcbcd6db97274ff4"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "840d0b226185d3fa056b06f8",
+    "title": "Unknown Album",
+    "primary_artist_id": "d96f6c7ec2925c471e462715",
+    "track_count": 1,
+    "track_ids": [
+      "0f0f3c2e555c261887cfadda"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -70347,7 +70423,7 @@
     "primary_artist_id": "91e02e62701e8aa525effbfd",
     "track_count": 2,
     "track_ids": [
-      "1c8d7ad62af03e4fea446495",
+      "803f5abf25d21eae9248531a",
       "a32b0f8cad1f3c53b0001c0b"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -71176,10 +71252,9 @@
     "id": "e345e94e8f84c8716dde8011",
     "title": "Unknown Album",
     "primary_artist_id": "cbfdc9908a34852bcfe40905",
-    "track_count": 2,
+    "track_count": 1,
     "track_ids": [
-      "d7fa8c1d627a7a0b18fa5851",
-      "f4a6327aafa69a11deb248ee"
+      "d7fa8c1d627a7a0b18fa5851"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
