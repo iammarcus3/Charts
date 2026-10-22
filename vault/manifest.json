@@ -3,10 +3,10 @@
     "MIN_ALBUM_TRACKS": 3
   },
   "record_counts": {
-    "artists": 4305,
-    "eligible_albums": 957,
-    "ineligible_releases": 8345,
-    "tracks": 14646,
+    "artists": 4384,
+    "eligible_albums": 962,
+    "ineligible_releases": 8297,
+    "tracks": 14727,
     "listening_events": 230030
   },
   "build_status": "success"
