@@ -1,5 +1,4 @@
-
-"""Import ZeroCharts scrobbles into normalized records."""
+"""Import ZeroCharts scrobbles into normalized, deterministic records."""
 from __future__ import annotations
 
 import json
@@ -7,36 +6,26 @@ from pathlib import Path
 from typing import Any
 
 from normalize_metadata import (
-    display_text,
-    generate_deterministic_id,
-    normalize_text,
+    canonical_album_title, display_text, generate_deterministic_id, normalize_text,
 )
 
 
-def _first_nonempty(
-    item: dict[str, Any],
-    keys: tuple[str, ...],
-    fallback: str,
-) -> str:
+def _first_nonempty(item: dict[str, Any], keys: tuple[str, ...], fallback: str) -> str:
     for key in keys:
         value = item.get(key)
-
         if value is not None and str(value).strip():
             return display_text(value, fallback)
-
     return fallback
 
 
 def ingest_zerocharts_file(filepath: str | Path):
-    """
-    Import one ZeroCharts file.
+    """Return artists, albums, tracks, events dictionaries/lists.
 
-    Tracks are identified by normalized primary artist and title.
-    A track may belong to multiple albums. The album_id field is
-    retained for backward compatibility; album_ids stores all links.
+    Canonical track identity is normalized primary artist + title. Album membership
+    is many-to-many via track['album_ids']; track['album_id'] remains as a backwards-
+    compatible first-album field for existing consumers.
     """
     filepath = Path(filepath)
-
     with filepath.open("r", encoding="utf-8") as handle:
         data = json.load(handle)
 
@@ -45,14 +34,9 @@ def ingest_zerocharts_file(filepath: str | Path):
     elif isinstance(data, dict):
         scrobbles = data.get("scrobbles", [])
     else:
-        raise ValueError(
-            f"Unsupported JSON structure in {filepath}"
-        )
-
+        raise ValueError(f"Unsupported JSON structure in {filepath}: expected object or list")
     if not isinstance(scrobbles, list):
-        raise ValueError(
-            f"'scrobbles' must be a list in {filepath}"
-        )
+        raise ValueError(f"'scrobbles' must be a list in {filepath}")
 
     artists: dict[str, dict[str, Any]] = {}
     albums: dict[str, dict[str, Any]] = {}
@@ -62,111 +46,71 @@ def ingest_zerocharts_file(filepath: str | Path):
     for index, item in enumerate(scrobbles):
         if not isinstance(item, dict):
             continue
+        raw_artist = _first_nonempty(item, ("artist", "artist_name", "album_artist"), "Unknown Artist")
+        raw_album = _first_nonempty(item, ("album", "album_title", "release"), "Unknown Album")
+        raw_track = _first_nonempty(item, ("track", "track_name", "title"), "Unknown Track")
+        timestamp = item.get("timestamp", item.get("played_at", item.get("date")))
 
-        raw_artist = _first_nonempty(
-            item,
-            ("artist", "artist_name", "album_artist"),
-            "Unknown Artist",
-        )
-        raw_album = _first_nonempty(
-            item,
-            ("album", "album_title", "release"),
-            "Unknown Album",
-        )
-        raw_track = _first_nonempty(
-            item,
-            ("track", "track_name", "title"),
-            "Unknown Track",
-        )
-
-        timestamp = item.get(
-            "timestamp",
-            item.get("played_at", item.get("date")),
-        )
-
-        # Artist
-        artist_id = generate_deterministic_id(
-            "artist", raw_artist
-        )
-
+        artist_id = generate_deterministic_id("artist", raw_artist)
+        artist_key = normalize_text(raw_artist)
         if artist_id not in artists:
             artists[artist_id] = {
                 "id": artist_id,
                 "name": raw_artist,
-                "normalized_name": normalize_text(raw_artist),
+                "normalized_name": artist_key,
                 "aliases": [],
             }
+        elif raw_artist != artists[artist_id]["name"] and raw_artist not in artists[artist_id]["aliases"]:
+            artists[artist_id]["aliases"].append(raw_artist)
 
-        artist = artists[artist_id]
-
-        if (
-            raw_artist != artist["name"]
-            and raw_artist not in artist["aliases"]
-        ):
-            artist["aliases"].append(raw_artist)
-
-        # Album / release
-        album_id = generate_deterministic_id(
-            "album", raw_artist, raw_album
-        )
-
+        # Canonicalize known deluxe/expanded variants to the parent album family.
+        # Preserve original release names for auditability and bonus-track recovery.
+        canonical_album = canonical_album_title(raw_album)
+        album_id = generate_deterministic_id("album", raw_artist, canonical_album)
         if album_id not in albums:
             albums[album_id] = {
                 "id": album_id,
-                "title": raw_album,
-                "normalized_title": normalize_text(raw_album),
+                "title": canonical_album,
+                "normalized_title": normalize_text(canonical_album),
                 "primary_artist_id": artist_id,
                 "track_ids": [],
+                "source_titles": [],
+                "edition_labels": [],
+                "canonicalization_rule": "deluxe_expanded_family",
             }
+        album = albums[album_id]
+        if raw_album not in album["source_titles"]:
+            album["source_titles"].append(raw_album)
+        if raw_album != canonical_album and raw_album not in album["edition_labels"]:
+            album["edition_labels"].append(raw_album)
 
-        # Track
-        track_id = generate_deterministic_id(
-            "track", raw_artist, raw_track
-        )
-
+        track_id = generate_deterministic_id("track", raw_artist, raw_track)
         if track_id not in tracks:
             tracks[track_id] = {
                 "id": track_id,
                 "title": raw_track,
                 "normalized_title": normalize_text(raw_track),
                 "primary_artist_id": artist_id,
-                "album_id": album_id,
+                "album_id": album_id,  # backward compatibility
                 "album_ids": [],
-                "aliases": [],
             }
+        else:
+            track = tracks[track_id]
+            if raw_track != track["title"] and raw_track not in track.setdefault("aliases", []):
+                track["aliases"].append(raw_track)
 
         track = tracks[track_id]
-
-        if (
-            raw_track != track["title"]
-            and raw_track not in track["aliases"]
-        ):
-            track["aliases"].append(raw_track)
-
-        # Keep track-to-album relationships in both directions.
         if album_id not in track["album_ids"]:
             track["album_ids"].append(album_id)
-
         if track_id not in albums[album_id]["track_ids"]:
             albums[album_id]["track_ids"].append(track_id)
 
-        # Listening event
-        # Missing timestamps get unique IDs so they aren't
-        # accidentally collapsed into a single event.
+        # Keep events with missing timestamps, but give them a source/index identity so
+        # they cannot accidentally collapse into one another.
         if timestamp is None or not str(timestamp).strip():
-            event_id = generate_deterministic_id(
-                "event_missing_timestamp",
-                track_id,
-                filepath.name,
-                index,
-            )
+            event_id = generate_deterministic_id("event_missing_timestamp", track_id, filepath.name, index)
         else:
-            event_id = generate_deterministic_id(
-                "event",
-                track_id,
-                str(timestamp).strip(),
-            )
-
+            event_id = generate_deterministic_id("event", track_id, str(timestamp).strip())
         events.append({
             "event_id": event_id,
             "timestamp": timestamp,
@@ -175,3 +119,4 @@ def ingest_zerocharts_file(filepath: str | Path):
         })
 
     return artists, albums, tracks, events
+
