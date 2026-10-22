@@ -6,7 +6,7 @@
   "invalid_event_count": 0,
   "duplicate_events_removed": 1,
   "fuzzy_candidates_for_review": 396,
-  "album_families_consolidated": 503,
+  "album_families_consolidated": 1581,
   "notes": [
     "Known trailing Deluxe/Deluxe Edition/Deluxe Version/Expanded Edition/Bonus Tracks labels are consolidated into a parent album family.",
     "Original release titles and edition labels are preserved in album source_titles and edition_labels and reports/album_family_merges.json.",

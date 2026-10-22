@@ -18,9 +18,12 @@
       "d1463c34144f300f383934ba"
     ],
     "source_titles": [
-      "Evolution"
+      "Evolution",
+      "Evolution (EU)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Evolution (EU)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -263,6 +266,7 @@
       "259eb2a366488819c8d0923e",
       "2d94d4c6c529271706db7fc0",
       "54dd0e4af80ed02c771767eb",
+      "6c16ad2bcd48fd1146d0830a",
       "6d3ad7b2176463a922b9f366",
       "97215b362dd034a04d409d9d",
       "9f1354f4f19b362bca3d509d",
@@ -274,9 +278,12 @@
       "f0598dbbf39c19e7bb4aab78"
     ],
     "source_titles": [
-      "Daydream"
+      "Daydream",
+      "Daydream (30th Anniversary Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Daydream (30th Anniversary Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -291,26 +298,6 @@
     ],
     "source_titles": [
       "I Am the King of Amapiano: Sweet & Dust"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "029fa70bc31699bc3afa2df7",
-    "title": "Scorpion Kings (Live)",
-    "normalized_title": "scorpion kings live",
-    "primary_artist_id": "2c30c975ab864593a18cbe65",
-    "track_ids": [
-      "29b3b6809d8c5131d06e759f",
-      "29cea7a3ad27706f9ef7dce0",
-      "2e64f2ad4eac72c594142b71",
-      "4a8a4ada3b94e859b807a829",
-      "8b4b02edb67ab5fee3ac9803",
-      "95f3f07d3f0db79eb61e73cc"
-    ],
-    "source_titles": [
-      "Scorpion Kings (Live)",
-      "Scorpion Kings Live"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -348,6 +335,8 @@
     "normalized_title": "indigo",
     "primary_artist_id": "61d4861e9764f699ba10fdbe",
     "track_ids": [
+      "0d2d30ecc62102bceff9f751",
+      "1427520362442dc204028c1f",
       "256feaa8b7ac69fca8f8bfc1",
       "3584cb7765cb56197e85375f",
       "3c916d0abb8c5b22493d8464",
@@ -358,20 +347,25 @@
       "9ab9de7ad613c7922e9e0529",
       "9ad34f99c9dd688f4403bc0c",
       "9b5c682f7aae444526a11747",
+      "a333007ca9eaafc447672305",
       "b3d7a5be48570c0864063b3c",
       "b88d0372189c828da7aed341",
       "c4a07f5c9bee0fd500b53d7a",
       "c750abb45e9447191b84f2c6",
       "d03ad85b23842ca75a100bac",
       "d984b927ba89b7b8932534d7",
+      "e2987f78925b424cd695c650",
       "e2f6605b83b2174d517e456f",
       "e73de912b8a6111ac82ed948",
       "f61b3996e57d6d4429520844"
     ],
     "source_titles": [
-      "Indigo"
+      "Indigo",
+      "Indigo (Extended)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Indigo (Extended)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -442,11 +436,15 @@
       "e79b06e62fdd417c8d7dcc65"
     ],
     "source_titles": [
+      "Loud (Japan Version)",
       "Loud",
-      "Loud (Deluxe)"
+      "Loud (Deluxe)",
+      "Loud (Explicit Version)"
     ],
     "edition_labels": [
-      "Loud (Deluxe)"
+      "Loud (Japan Version)",
+      "Loud (Deluxe)",
+      "Loud (Explicit Version)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -612,13 +610,19 @@
       "c0461fab9673bc454bc6e8f0",
       "c5c65a63e6315bd7dc6b4ee7",
       "ebbcaae126f019a6e8b51ef1",
+      "f0541c518bdc9b52adf5ba73",
       "f8896d275eb8fe3c4a46a8e4",
       "f9d8bdf4dd73d8be6a828fad"
     ],
     "source_titles": [
-      "The Thrill of It All"
+      "The Thrill of It All",
+      "The Thrill of It All (Special Edition)",
+      "The Thrill of It All (Special Video Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "The Thrill of It All (Special Edition)",
+      "The Thrill of It All (Special Video Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -909,9 +913,12 @@
       "fc1f1050599c9e1e4dddb899"
     ],
     "source_titles": [
+      "Whitney Houston (The Deluxe Anniversary Edition)",
       "Whitney Houston"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Whitney Houston (The Deluxe Anniversary Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -930,6 +937,25 @@
       "Touch My Blood"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "07f8490d94a76b0db19fe23f",
+    "title": "Guz Hits",
+    "normalized_title": "guz hits",
+    "primary_artist_id": "b24326f4639952fb4929843a",
+    "track_ids": [
+      "1bebd58ea2de94f400e8289c",
+      "b61ec527291ac8d9365f97d6",
+      "de5e0d9f3167425f4ff2148c"
+    ],
+    "source_titles": [
+      "Guz Hits (Guz Hits)",
+      "Guz Hits"
+    ],
+    "edition_labels": [
+      "Guz Hits (Guz Hits)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -1015,23 +1041,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "09002a0b83af8805ba492ef6",
-    "title": "Thank Me Later (Int'l Version)",
-    "normalized_title": "thank me later int l version",
-    "primary_artist_id": "92b4cfdb6782e6fec393332f",
-    "track_ids": [
-      "0041fc2eddc6472901ef80c3",
-      "6f5898587e94d47e61e48d02",
-      "7e6da9a993780de3b0effbe5",
-      "f50d6ca052fef28669f93eb1"
-    ],
-    "source_titles": [
-      "Thank Me Later (Int'l Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "094ddddfbd6de1ce1886e428",
     "title": "More Life",
     "normalized_title": "more life",
@@ -1096,9 +1105,11 @@
     "track_ids": [
       "0bd83928437eeb7677f45e7a",
       "1407787005f67ab660faa1b0",
+      "28fff5b78607102415ddab3d",
       "3f6ce46772a597ef96cfd0fb",
       "47520f8dbad3b621284c0e38",
       "5053d32450b5d736b9aa290d",
+      "544e6f233e661d3fb31085b0",
       "691171dff489ee768b9232c5",
       "71e03f81e7c663d920aff785",
       "ad8f061f67fecf8eac8a2832",
@@ -1106,9 +1117,12 @@
       "fdd72faeb3f4ed9a76241e6f"
     ],
     "source_titles": [
-      "ICON"
+      "ICON",
+      "Icon (Director's Cut)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Icon (Director's Cut)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -1181,23 +1195,6 @@
     "source_titles": [
       "Funk Wav Bounces Vol. 1",
       "Funk Wav Bounces Vol.1"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "0a316f6347fda6bcb935deb5",
-    "title": "Life After Death (2014 Remastered Edition)",
-    "normalized_title": "life after death 2014 remastered edition",
-    "primary_artist_id": "55dff6000cac58d014a134c8",
-    "track_ids": [
-      "5792734a286f2f26cf0cc1b6",
-      "afa1a86cb7bfe36f96923dfe",
-      "d6ce13503038434498df0cee",
-      "eb36841e133b381488fc8bc2"
-    ],
-    "source_titles": [
-      "Life After Death (2014 Remastered Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -1384,22 +1381,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "0bbc571468575c0075ceaa52",
-    "title": "Our Version of Events (Special Edition)",
-    "normalized_title": "our version of events special edition",
-    "primary_artist_id": "0a1663e4e307089c30b7ec1c",
-    "track_ids": [
-      "6906828bfa5f1a07796da1d5",
-      "76aff9ebb2c65692d844456a",
-      "7a46386617fe5573785f03b4"
-    ],
-    "source_titles": [
-      "Our Version of Events (Special Edition)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "0bd7f6503a54d3d786a9d75d",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -1508,22 +1489,6 @@
     ],
     "source_titles": [
       "Heavy Rain and Thunder for Sleeping"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "0ed5c36bd08cb51a8937e23e",
-    "title": "Stars (Collector's Edition)",
-    "normalized_title": "stars collector s edition",
-    "primary_artist_id": "127ab85f55f07faad9b9b138",
-    "track_ids": [
-      "4929701ee8888e467ca94dfe",
-      "d929d47dbcc66c5d9d0e3086",
-      "ec0e62d716f867b78859b729"
-    ],
-    "source_titles": [
-      "Stars (Collector's Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -1794,39 +1759,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "12489d15abeb1cdf212970e9",
-    "title": "Picture Book (Expanded Version)",
-    "normalized_title": "picture book expanded version",
-    "primary_artist_id": "127ab85f55f07faad9b9b138",
-    "track_ids": [
-      "849a228463d9271580956e3e",
-      "94fe63e812e817ea3ba16961",
-      "d2d6f7626ca35a04d2b30e75",
-      "d6c1d90ff1ab6074ea989bc7"
-    ],
-    "source_titles": [
-      "Picture Book (Expanded Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "1295e89e641088b8c564e677",
-    "title": "NEVER ENOUGH (Bonus Version)",
-    "normalized_title": "never enough bonus version",
-    "primary_artist_id": "2b39f9db0a8ce6a1203ef2e7",
-    "track_ids": [
-      "7eebd5f2ad2859b23554fe8a",
-      "83d4f7ebd5b68aa4ac443416",
-      "a89416cae9f64dca20b69aee"
-    ],
-    "source_titles": [
-      "NEVER ENOUGH (Bonus Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "12ec0747839ed578330e1868",
     "title": "WWP - EP",
     "normalized_title": "wwp ep",
@@ -1843,6 +1775,25 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "138446e094c0264ad82e022d",
+    "title": "Ace Of Spades",
+    "normalized_title": "ace of spades",
+    "primary_artist_id": "de8d833f5b2b029eeff4041a",
+    "track_ids": [
+      "1b5987fc54ad1f9a0d5e94d8",
+      "c2cc64b5a7dae3702ee6a2ed",
+      "c4e66341e5639a480c97808b"
+    ],
+    "source_titles": [
+      "Ace Of Spades (Reshuffle)",
+      "Ace Of Spades"
+    ],
+    "edition_labels": [
+      "Ace Of Spades (Reshuffle)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "13f9b5172ea62b3220130ea9",
     "title": "Su Casa",
     "normalized_title": "su casa",
@@ -1856,6 +1807,30 @@
       "Su Casa"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "140009dc59d5f7d463228a06",
+    "title": "Faith",
+    "normalized_title": "faith",
+    "primary_artist_id": "39a692e5ae8b3d6a8341e20d",
+    "track_ids": [
+      "03aa31940317784d019d6d46",
+      "3a20fd1c4b2118e1eec4332a",
+      "41ecc5e1b4c01790dbf7472b",
+      "4666b62bd64509248f401527"
+    ],
+    "source_titles": [
+      "Faith (2010 Remastered)",
+      "Faith (Remastered)",
+      "Faith (Remastered Bonus Track Version)",
+      "Faith"
+    ],
+    "edition_labels": [
+      "Faith (2010 Remastered)",
+      "Faith (Remastered)",
+      "Faith (Remastered Bonus Track Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -2175,20 +2150,36 @@
     "track_ids": [
       "0439e9b2877065faa83d23b8",
       "05482c1c37d13fa10f0b7c1f",
+      "0ef159679e478982d836c71d",
+      "1bb5bed57d4dddecfc0241df",
       "2b42d2a495602351d9acacef",
       "3316736e3496063b726927d7",
+      "348ffbcf338c1c9702e3684a",
       "4305d625f26c6f2bb835f6c6",
+      "495430d9b664cbdaf65021e3",
+      "4e6c7c266cdbc58b90ce8e55",
+      "4f81b74508203add1b6b36fa",
+      "52e03193d2becac21e4244e2",
+      "5441b66bb4bc1d68be141b87",
       "576f11e532fc50e19f65e065",
+      "5c1a183bd2619f99f06f07f6",
       "5d9075c43a082565b2576ac5",
       "7ceefc369563ad945015d85d",
+      "93be3536b34d1ddcb89f95e4",
       "99cf447f7bad88871d2c433a",
+      "ae7362e2e2b8612a312434c4",
+      "b91f3f0dbf06c6655b6f0973",
       "e553335c05d147fe21ac6260"
     ],
     "source_titles": [
+      "BEYONCÉ (Platinum Edition)",
+      "BEYONCÉ [Platinum Edition]",
       "BEYONCÉ (Deluxe)",
       "Beyoncé"
     ],
     "edition_labels": [
+      "BEYONCÉ (Platinum Edition)",
+      "BEYONCÉ [Platinum Edition]",
       "BEYONCÉ (Deluxe)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -2219,26 +2210,44 @@
     "primary_artist_id": "cf415de795b49e10e5f97436",
     "track_ids": [
       "12c1d0a92f9747a1197fef17",
+      "160de0bac0daab19a6b290a3",
       "1733cd838e76994ae49ae947",
       "1af87c042fd222a1a36f906a",
       "213da4a0fe6097d0c50a9ea1",
+      "321dc340709e1d777f2ff3dc",
+      "3edc8f3dc96b136d214b14ec",
       "459b6c773175d3daff7cae9b",
+      "46636914e01384a1b5a6450c",
+      "505137335dcfad3c195285ef",
       "54ff995c3ca902ec12c97ba7",
       "6e46ab0bc8ac254bce6fbd06",
+      "76fe06aa31c2408f490d5562",
       "9172ab3b9de3c3dfddd7a0c8",
       "9a77a67da0b09b018202e7b8",
       "9c386f9ea0e49c303b8772f3",
       "ca30035bcf938ff46fc75b83",
       "cd77b7851c7d329a8c2d113d",
       "d65d953bbf2124e4012a47b3",
+      "d90d4d27378d6702eb529058",
       "dfcdcfbc5ff3f2ce3e8b086f",
       "e6fc7140295841b64ce0dc42",
       "f383fc92b7c53261b9064881"
     ],
     "source_titles": [
-      "Ivory"
+      "Ivory",
+      "Ivory (Marfil) [Apple Music Up Next Film Edition]",
+      "Ivory (Marfil)",
+      "Ivory (Apple Music Edition)",
+      "Ivory (Marfil) [Apple Music Edition]",
+      "Ivory (Apple Music Up Next Film Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Ivory (Marfil) [Apple Music Up Next Film Edition]",
+      "Ivory (Marfil)",
+      "Ivory (Apple Music Edition)",
+      "Ivory (Marfil) [Apple Music Edition]",
+      "Ivory (Apple Music Up Next Film Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -2345,9 +2354,12 @@
       "f36b5a83587cc9084e65a285"
     ],
     "source_titles": [
-      "More"
+      "More",
+      "More (Internet Album w/Bonus Track)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "More (Internet Album w/Bonus Track)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -2560,25 +2572,12 @@
       "fdf434e35c8a5b6fe8555480"
     ],
     "source_titles": [
-      "Hot Pink"
+      "Hot Pink",
+      "Hot Pink (Video Deluxe)"
     ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "1888e7b29a6c5559afe188ea",
-    "title": "Purple Rain (Deluxe Expanded Edition)",
-    "normalized_title": "purple rain deluxe expanded edition",
-    "primary_artist_id": "2d0b0730b6758fcae12f55bc",
-    "track_ids": [
-      "14e3a2a073daa221ce6309dc",
-      "3e1db062df2c7f4eba374cfd",
-      "ac124e57282d21b54d7ed30f"
+    "edition_labels": [
+      "Hot Pink (Video Deluxe)"
     ],
-    "source_titles": [
-      "Purple Rain (Deluxe Expanded Edition)"
-    ],
-    "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -2700,6 +2699,7 @@
       "0546aa92bc7b1a004a77d9c2",
       "0ea515be67676093dde34e4b",
       "19d2849018654c70117e74e3",
+      "1d65c6a19c06f576744c3532",
       "1e56cd633a956be233536fe0",
       "2bd305342c26c3d48c6c482f",
       "2cbcd4a0aebb1e8fd2a866c7",
@@ -2707,11 +2707,13 @@
       "5d0c9b014bb2daec7861c5fb",
       "65d2b2e5f9c7352bbb58a3e7",
       "77d48f651be275ca0aed728c",
+      "7e79025d8a71456bb96d5208",
       "84f1ee30ca4a260913d6c450",
       "8cdbdda695df5bdfef006e22",
       "9450d397e38a13fc0891254c",
       "953a580071573e4c6861605e",
       "9b86d9563ba7e619d1182ad0",
+      "a09821c2a8831a1507b1e597",
       "aa26d28a94a25fd79bd0a986",
       "ac9be94acce646547fb7fffb",
       "b0cbd7f265c555c0fae21c92",
@@ -2720,14 +2722,21 @@
       "ca817f0ba9b299aea9234780",
       "d0df310b10011527e70a97a2",
       "db2815aad08abab99b45a22d",
+      "dfbc4e44752aac5c25cfd668",
+      "e056d1986f280e67087cfc38",
+      "e665165e8488f5235d681cfb",
       "e68c73198834798d9e157c03",
       "ecbf852436400e11b9414b5a",
-      "f6da1dff63761e77c455a1ed"
+      "f6da1dff63761e77c455a1ed",
+      "ff14b6a44962c3cc20e95744"
     ],
     "source_titles": [
-      "Brown"
+      "Brown",
+      "BROWN (The Chocolate Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "BROWN (The Chocolate Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -2847,6 +2856,25 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "1b399feaee77ac01a9f77ed8",
+    "title": "Pure Heroine",
+    "normalized_title": "pure heroine",
+    "primary_artist_id": "b3d9ae1604a1c5dd2fd8dd1f",
+    "track_ids": [
+      "60b1ecc6bcf916437054e4dd",
+      "7a121948e8d66e59b318625e",
+      "b63c0c27767d7bdcc73eee88"
+    ],
+    "source_titles": [
+      "Pure Heroine",
+      "Pure Heroine (Extended)"
+    ],
+    "edition_labels": [
+      "Pure Heroine (Extended)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "1b443582d36cf78f57d7a577",
     "title": "VULTURES 1",
     "normalized_title": "vultures 1",
@@ -2897,27 +2925,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "1b7edcdd99a488fd18ec6dd4",
-    "title": "Ivory (Apple Music Edition)",
-    "normalized_title": "ivory apple music edition",
-    "primary_artist_id": "cf415de795b49e10e5f97436",
-    "track_ids": [
-      "1733cd838e76994ae49ae947",
-      "54ff995c3ca902ec12c97ba7",
-      "6e46ab0bc8ac254bce6fbd06",
-      "76fe06aa31c2408f490d5562",
-      "ca30035bcf938ff46fc75b83",
-      "d65d953bbf2124e4012a47b3",
-      "dfcdcfbc5ff3f2ce3e8b086f",
-      "f383fc92b7c53261b9064881"
-    ],
-    "source_titles": [
-      "Ivory (Apple Music Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -2992,6 +2999,26 @@
     "edition_labels": [
       "Fetty Wap (Deluxe)",
       "Fetty Wap (Deluxe Edition)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "1bdd4b7f32cc18c32365efe5",
+    "title": "Alter Ego",
+    "normalized_title": "alter ego",
+    "primary_artist_id": "3ef2346bad9cfd4f31edb94e",
+    "track_ids": [
+      "5ff9a321ad47be2c3838d22e",
+      "602ea15c3b9e781ebfe52c55",
+      "c135dcba9b624e0469d0ebc2"
+    ],
+    "source_titles": [
+      "Alter Ego (Swamp Mix)",
+      "Alter Ego (with JT)"
+    ],
+    "edition_labels": [
+      "Alter Ego (Swamp Mix)",
+      "Alter Ego (with JT)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -3176,22 +3203,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "1da3dbe8663f9c20d619db9c",
-    "title": "Private Dancer (2015 Remaster)",
-    "normalized_title": "private dancer 2015 remaster",
-    "primary_artist_id": "a0bbfa5623e690c7bba57ffe",
-    "track_ids": [
-      "046ab09c35d06397dad91b15",
-      "0bb0ab7ac2a556152823d73d",
-      "3510eb3d1eff25399cf266c1"
-    ],
-    "source_titles": [
-      "Private Dancer (2015 Remaster)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "1deca795679325da52da4d26",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -3230,6 +3241,7 @@
     "normalized_title": "dangerous woman",
     "primary_artist_id": "231b55a52f11bd52bb830931",
     "track_ids": [
+      "480b60a774f4d660a1223434",
       "4aea7506eb3e1a879d4bfc6f",
       "61dbe907add1694899698e90",
       "c2022cd4d60fc2389e4fb52f",
@@ -3240,9 +3252,11 @@
     ],
     "source_titles": [
       "Dangerous Woman",
+      "Dangerous Woman (Tenth Anniversary Edition)",
       "Dangerous Woman (Deluxe)"
     ],
     "edition_labels": [
+      "Dangerous Woman (Tenth Anniversary Edition)",
       "Dangerous Woman (Deluxe)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -3818,10 +3832,12 @@
     ],
     "source_titles": [
       "Celebration (Deluxe Version)",
-      "Celebration"
+      "Celebration",
+      "Celebration (Deluxe Video Edition)"
     ],
     "edition_labels": [
-      "Celebration (Deluxe Version)"
+      "Celebration (Deluxe Version)",
+      "Celebration (Deluxe Video Edition)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -3875,29 +3891,78 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "2614a3ca5af29b7da36299f0",
+    "title": "Dutty Rock",
+    "normalized_title": "dutty rock",
+    "primary_artist_id": "3353e1bb22d865e9fb6cd5bd",
+    "track_ids": [
+      "90f9b1bc879f71be6407b5e9",
+      "c6ee4441a1bd0dfb587e154e",
+      "f5e74481526f47d5a07f6155"
+    ],
+    "source_titles": [
+      "Dutty Rock (20th Anniversary)"
+    ],
+    "edition_labels": [
+      "Dutty Rock (20th Anniversary)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "263a027f8c5ef47fa7a0e7c0",
     "title": "eternal sunshine",
     "normalized_title": "eternal sunshine",
     "primary_artist_id": "231b55a52f11bd52bb830931",
     "track_ids": [
       "08dd4bfa1944f8b5589232ae",
+      "0d8601dd8776bb09aff7e42b",
       "182c544d9925c8e9549fba4d",
       "27dc3b92afd25a48d547cbe4",
       "294e3cc9c4e81bb9a9ca0485",
       "33d39a318f2bd014bab3ec38",
+      "3660d7fef06bec8baa1c53e6",
+      "3753bb8c5f87e02499c0a850",
       "3fb8450de033df6cd0919867",
       "403aa1e65bfadf926d20fb00",
       "525928c949b0869669a9c9e9",
       "5c25b504077f1712364c8d60",
       "7c911031649767a96bdb801b",
+      "7ccfb7f832b2f21e154b91ef",
+      "a2078fb923178db0b8d37255",
       "db4e4081192bc6386ebd1c61",
+      "e2558718c175b3d9a82c4771",
       "e3a9c6ca78077f5240d8ab74",
-      "f81f6de03234764036fcdadc"
+      "f81f6de03234764036fcdadc",
+      "fb9ac2f14723155a27dd495b"
     ],
     "source_titles": [
+      "eternal sunshine (slightly deluxe)",
       "eternal sunshine"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "eternal sunshine (slightly deluxe)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "264ce0b626da7d7a03efa209",
+    "title": "Ready to Die",
+    "normalized_title": "ready to die",
+    "primary_artist_id": "55dff6000cac58d014a134c8",
+    "track_ids": [
+      "125047c3d404fa5df0b0a569",
+      "46836666c5138ecc3bad015b",
+      "8ca519d962ee3093bc5e3604",
+      "bcda385744b31467d1b1d515"
+    ],
+    "source_titles": [
+      "Ready to Die (The Remaster; 2015 Remaster)",
+      "Ready To Die (The Remaster)"
+    ],
+    "edition_labels": [
+      "Ready to Die (The Remaster; 2015 Remaster)",
+      "Ready To Die (The Remaster)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -3921,24 +3986,6 @@
     ],
     "source_titles": [
       "Fine Line"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "265c6b3645fe946989605b51",
-    "title": "About Time (Extended Vinyl Reissue)",
-    "normalized_title": "about time extended vinyl reissue",
-    "primary_artist_id": "aed1213418ce7dacba4d6746",
-    "track_ids": [
-      "11d208a2dfdf0f1680c2fd91",
-      "3a4b3a56ce3fb7466c6b6f60",
-      "3e6ece45138142290566af5d",
-      "5482934c3209e5d4d64f85ce",
-      "f4f1e67bd8c72bd4f6c09352"
-    ],
-    "source_titles": [
-      "About Time (Extended Vinyl Reissue)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -4042,28 +4089,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "27245c9d473f3610b4f11d43",
-    "title": "Indigo (Extended)",
-    "normalized_title": "indigo extended",
-    "primary_artist_id": "61d4861e9764f699ba10fdbe",
-    "track_ids": [
-      "0d2d30ecc62102bceff9f751",
-      "1427520362442dc204028c1f",
-      "256feaa8b7ac69fca8f8bfc1",
-      "9b5c682f7aae444526a11747",
-      "a333007ca9eaafc447672305",
-      "b3d7a5be48570c0864063b3c",
-      "c4a07f5c9bee0fd500b53d7a",
-      "e2987f78925b424cd695c650",
-      "e2f6605b83b2174d517e456f"
-    ],
-    "source_titles": [
-      "Indigo (Extended)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "27763ae7ac2e3075a987e463",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -4119,9 +4144,12 @@
       "fec1aeb9f98446f1c9f76bdf"
     ],
     "source_titles": [
-      "Divinely Uninspired to a Hellish Extent"
+      "Divinely Uninspired to a Hellish Extent",
+      "Divinely Uninspired to a Hellish Extent (Extended Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Divinely Uninspired to a Hellish Extent (Extended Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -4476,21 +4504,21 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "2bd54696b0f6c7e8a4a1b506",
-    "title": "PARTYNEXTDOOR 4 (P4)",
-    "normalized_title": "partynextdoor 4 p4",
-    "primary_artist_id": "082f688724f5becc6b31bb6c",
+    "id": "2bae0a4ba4aeeb9ca6a36936",
+    "title": "Our Version of Events",
+    "normalized_title": "our version of events",
+    "primary_artist_id": "0a1663e4e307089c30b7ec1c",
     "track_ids": [
-      "160707eec32e7d66e10f88c4",
-      "19a5e2bad652ab0840bc0203",
-      "7872182fdd8359880af54709",
-      "bac5534b9b4f198263d1b142",
-      "d9e530d362980e5a3b90c7d4"
+      "6906828bfa5f1a07796da1d5",
+      "76aff9ebb2c65692d844456a",
+      "7a46386617fe5573785f03b4"
     ],
     "source_titles": [
-      "PARTYNEXTDOOR 4 (P4)"
+      "Our Version of Events (Special Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Our Version of Events (Special Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -4521,6 +4549,7 @@
       "a39c0f99f7cac94465028677",
       "ac70ab6556e17c9d38142755",
       "b4aedd292fa3665d9fe9e612",
+      "bc8b76ccc176472aa744db0f",
       "cb429369418b106c2c8e6ee1",
       "d17fc581f9371f0d83fbfc5b",
       "db3715fdd5291873ac418525",
@@ -4533,9 +4562,12 @@
       "f5bbd1fe72e88e34c6b94eb6"
     ],
     "source_titles": [
-      "Trilogy"
+      "Trilogy",
+      "Trilogy (Original Version)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Trilogy (Original Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -4585,12 +4617,16 @@
       "9d6df6be16959f74ff38323e",
       "9ed12cc722f5a80976bcb259",
       "b1dbba8893f7fde547553419",
+      "c6480882e4be076ddf48bf11",
       "cca3b056283c87794e42dcd9"
     ],
     "source_titles": [
-      "4275"
+      "4275",
+      "4275 (Bonus Version)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "4275 (Bonus Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -4862,24 +4898,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "306cfab4d34ed60adf025921",
-    "title": "Survivor (International Edition)",
-    "normalized_title": "survivor international edition",
-    "primary_artist_id": "e4d707f05fbda2e7adb5011a",
-    "track_ids": [
-      "18be1a9776fd1fbf0902e185",
-      "4fe6e048a0f4765715c6daad",
-      "5c88e26d7539a76b55594d0f",
-      "6fc9cd02f2586860892132f1",
-      "ecd769da4a233f903be0c2b2"
-    ],
-    "source_titles": [
-      "Survivor (International Edition)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "30c49ef5f2aebe1cc61f0122",
     "title": "Ladies & Gentlemen: The Best of George Michael",
     "normalized_title": "ladies and gentlemen the best of george michael",
@@ -4894,22 +4912,6 @@
     "source_titles": [
       "Ladies & Gentlemen: The Best of George Michael",
       "Ladies And Gentlemen... The Best Of George Michael"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "30edcc9793b9da1047b1138b",
-    "title": "More (Internet Album w/Bonus Track)",
-    "normalized_title": "more internet album w bonus track",
-    "primary_artist_id": "bbb22d1e1776392cf36fda4e",
-    "track_ids": [
-      "240703aa386336cfb1a8d5b7",
-      "5c20d8623199edc24dc29049",
-      "b7bdaf607a28d28b9a9d6323"
-    ],
-    "source_titles": [
-      "More (Internet Album w/Bonus Track)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -5144,9 +5146,12 @@
       "edd57d0ee0c3358aeb65cb4a"
     ],
     "source_titles": [
-      "Club Classics Vol. One"
+      "Club Classics Vol. One",
+      "Club Classics, Vol. One (10th anniversary edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Club Classics, Vol. One (10th anniversary edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -5566,6 +5571,24 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "374faae303e9c99cfd7f059f",
+    "title": "In Your Eyes",
+    "normalized_title": "in your eyes",
+    "primary_artist_id": "f2ecd660a31b873f0547540a",
+    "track_ids": [
+      "0b44f3b9fe0b6e0ff8772543",
+      "ec6ad7d164d27271245f4259",
+      "fc52dbadd4f1ff51ebc088fc"
+    ],
+    "source_titles": [
+      "In Your Eyes (Remix)"
+    ],
+    "edition_labels": [
+      "In Your Eyes (Remix)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "375ff8e2cfbce84e009c5c19",
     "title": "Ray of Light",
     "normalized_title": "ray of light",
@@ -5686,11 +5709,17 @@
     ],
     "source_titles": [
       "In the Lonely Hour",
+      "In The Lonely Hour (10th Anniversary Edition / Deluxe)",
+      "In the Lonely Hour (Drowning Shadows Edition)",
       "In the Lonely Hour (Deluxe Edition)",
+      "In the Lonely Hour (Japanese Edition)",
       "In the Lonely Hour (Deluxe)"
     ],
     "edition_labels": [
+      "In The Lonely Hour (10th Anniversary Edition / Deluxe)",
+      "In the Lonely Hour (Drowning Shadows Edition)",
       "In the Lonely Hour (Deluxe Edition)",
+      "In the Lonely Hour (Japanese Edition)",
       "In the Lonely Hour (Deluxe)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -5707,23 +5736,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "3a8aeecd258eccaa31820126",
-    "title": "Pink Friday 2 (Gag City PLUTO Edition)",
-    "normalized_title": "pink friday 2 gag city pluto edition",
-    "primary_artist_id": "c9754d01cd182b725ddf9667",
-    "track_ids": [
-      "4b531930396fb2d8e460bf16",
-      "69ecf26d2697b19b601b602f",
-      "82e27f3b055533cb333a7804",
-      "931b7b85435c50f16d3915eb"
-    ],
-    "source_titles": [
-      "Pink Friday 2 (Gag City PLUTO Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -5811,14 +5823,18 @@
     "normalized_title": "shock value",
     "primary_artist_id": "e073a05900705baae3399af9",
     "track_ids": [
+      "1df711186931859bd4be834f",
       "6e011d947b8e921df0bd143e",
       "b27e53f74c523e47dc82776f",
       "cb580a76a0c1ca7bf7ba1937"
     ],
     "source_titles": [
-      "Shock Value"
+      "Shock Value",
+      "Shock Value Deluxe Version (International Version)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Shock Value Deluxe Version (International Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -5834,31 +5850,6 @@
     ],
     "source_titles": [
       "Joy"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "3b65ab2e989828f276784600",
-    "title": "Blue (Expanded Version)",
-    "normalized_title": "blue expanded version",
-    "primary_artist_id": "127ab85f55f07faad9b9b138",
-    "track_ids": [
-      "0b94c92bb9a752faff1cb256",
-      "13a69456e9cb65816b8d4403",
-      "17aacf2ad9e9f478ee1e5eae",
-      "25e2d569e38f78f96f1ea2ff",
-      "3d2aafec8a109d3ca2a47465",
-      "60ca49ccd7a7503892abe635",
-      "6b92cacef649917fa3f094b5",
-      "899cffe1ab876df6a93b95a6",
-      "aa31d8ccad061111ae9bba5d",
-      "b36c9c9c65dad4b7077bf7cf",
-      "d0454e4a50a9eef792d0e62f",
-      "d08e4b879a452c6d4f876044"
-    ],
-    "source_titles": [
-      "Blue (Expanded Version)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -5930,22 +5921,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "3c8e2b3ec6639c0560abe8ae",
-    "title": "True Blue (Reissue)",
-    "normalized_title": "true blue reissue",
-    "primary_artist_id": "f6e0a45440a790e7ff61ad04",
-    "track_ids": [
-      "9ed99549278f01a1f728c366",
-      "d81bc78f66154a56429e0662",
-      "f9271386b2d4eb693cc71d4c"
-    ],
-    "source_titles": [
-      "True Blue (Reissue)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "3c9b669dca031abac7f623c1",
     "title": "Who Is Jill Scott: Words and Sounds, Vol. 1",
     "normalized_title": "who is jill scott words and sounds vol 1",
@@ -5958,10 +5933,13 @@
     "source_titles": [
       "Who Is Jill Scott: Words and Sounds, Vol. 1",
       "Who Is Jill Scott? - Words and Sounds, Vol. 1",
+      "Who Is Jill Scott?: Words and Sounds, Vol. 1 (2020 Remastered)",
       "Who Is Jill Scott? Words and Sounds, Vol. 1",
       "Who Is Jill Scott?: Words and Sounds, Vol. 1"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Who Is Jill Scott?: Words and Sounds, Vol. 1 (2020 Remastered)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -6020,10 +5998,12 @@
       "facb73f3ef9b48f3d5472e75"
     ],
     "source_titles": [
+      "The Fame Monster (International Deluxe)",
       "The Fame Monster (Deluxe Edition)",
       "The Fame Monster"
     ],
     "edition_labels": [
+      "The Fame Monster (International Deluxe)",
       "The Fame Monster (Deluxe Edition)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -6182,6 +6162,62 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "3f5e5edc5042de1d82f796b7",
+    "title": "Finally Enough Love: 50 Number Ones",
+    "normalized_title": "finally enough love 50 number ones",
+    "primary_artist_id": "f6e0a45440a790e7ff61ad04",
+    "track_ids": [
+      "00874e9b7b24bad1a3236823",
+      "084645ae98b79005eb81f6cf",
+      "0c32ab87be7b10c090dbabee",
+      "1156a230aea2e9306ece0947",
+      "12d4a3f224f25a8a987ee092",
+      "146557980b38fbc7db53ef1e",
+      "174009755fef70019e1c0525",
+      "2e6dd9e356e00a899b048144",
+      "3cad90657d502fbfd2642841",
+      "4906dd9dcf741c62b8215fe0",
+      "49fed03777d1e275dc2cba2a",
+      "54f0a49b2d39ea01136b1c3c",
+      "623196863537dcf3756e41f9",
+      "654ec3c00540d592e5d04a36",
+      "77c25225940ce32190824c71",
+      "7d38bb4b455de0ac011896ed",
+      "7e8a76ae1d4a0c82fcd51f33",
+      "824fd5cbf246a09e8cf9b73b",
+      "862bfaa42209d143194020e6",
+      "86bbd3b465afb305f50881ca",
+      "8802e4aa8eca61ed4c0d5800",
+      "9efb2a2dc96607cc8c13614c",
+      "a2f0ae05fa7a5a0133f1ddbb",
+      "a62c1ecddc1aa448bdb362b6",
+      "a870e75a025ca8abe5dadc50",
+      "aa9afdd8784c1e883bdf90a5",
+      "afba37f9b2a96af25b9e9a29",
+      "b6c982c1e96280e1ac3004aa",
+      "ba1bec1e2646d5359ba091c6",
+      "ba632b642636b833d16c4f34",
+      "be1bac79464d2d4f11f0b5f5",
+      "c23dca158fd83f21d9ac69ec",
+      "c56c0fd3f8896f460c7133a2",
+      "cd7917d48fc2fabc82d173d8",
+      "cd849bc713e59d12196b72a3",
+      "e56a4719f1391159d53b6b26",
+      "eb3fb8b616ec23d1d529180d",
+      "f3517c5637eb1bf31af74e35",
+      "f71dc57286238918223be307",
+      "f84ecf2575ece3a5dbdde5ad",
+      "fac3ee389e6594ac73523d6c"
+    ],
+    "source_titles": [
+      "Finally Enough Love: 50 Number Ones (2022 Remasters)"
+    ],
+    "edition_labels": [
+      "Finally Enough Love: 50 Number Ones (2022 Remasters)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "3f79db05a7350066f762d6cf",
     "title": "Something to Remember",
     "normalized_title": "something to remember",
@@ -6205,6 +6241,25 @@
       "Something to Remember"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "3f953df326713ffcbaaf8d5d",
+    "title": "Gold-Diggers Sound",
+    "normalized_title": "gold diggers sound",
+    "primary_artist_id": "23c5e3b4a192db45392adcd0",
+    "track_ids": [
+      "13364286f15301c7a7be106c",
+      "70af5d43b4e85999cd5dc522",
+      "b4db373594cf29d1b9f81ca5"
+    ],
+    "source_titles": [
+      "Gold-Diggers Sound",
+      "Gold-Diggers Sound (Apple Music Edition)"
+    ],
+    "edition_labels": [
+      "Gold-Diggers Sound (Apple Music Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -6283,9 +6338,12 @@
       "d9df2027308dcc4c9dc7aaa9"
     ],
     "source_titles": [
+      "thank u, next (Bonus Videos)",
       "thank u, next"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "thank u, next (Bonus Videos)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -6305,31 +6363,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "41fcfc71c0b129afa67ab3cc",
-    "title": "Pink Friday (Complete Edition)",
-    "normalized_title": "pink friday complete edition",
-    "primary_artist_id": "c9754d01cd182b725ddf9667",
-    "track_ids": [
-      "02f03d312bbff76043e4ad6f",
-      "06782f243972e90470ab7154",
-      "0ca9789a8b5af0040ac1f70f",
-      "2125340f56e5c11a9c3468c4",
-      "351f89ff6751d9adb94656ff",
-      "3e8824e63a7933d38fc63416",
-      "422938abf61476676f244e26",
-      "5829256560a5a291e996f447",
-      "7c4e53061e9f54d3badc2f12",
-      "91cab68a88cb7f1c3616cec9",
-      "96df82353eced307e240a4ef",
-      "c8382f93fbc67404fcad9a0f"
-    ],
-    "source_titles": [
-      "Pink Friday (Complete Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -6581,9 +6614,12 @@
       "e3b0eee6cfb9de52a5436442"
     ],
     "source_titles": [
+      "Merry Christmas (Deluxe Anniversary Edition)",
       "Merry Christmas"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Merry Christmas (Deluxe Anniversary Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -6610,18 +6646,15 @@
     "normalized_title": "scorpion kings live",
     "primary_artist_id": "1732bfeda5a02335133b6033",
     "track_ids": [
-      "092c41adbf5e5e833ffbbec3",
       "458dea24f016617c4ac8d2ae",
       "5cef9312c2b88e91312859dd",
       "6d1ef935c21de118ccedc641",
       "720a030abcf9297b1100b4cf",
-      "763a9bd292043bf4da9e1881",
       "87f045f1b7d506a74b273eab",
       "ec86dd9f8858a7ca81fd5da8"
     ],
     "source_titles": [
-      "Scorpion Kings Live",
-      "Scorpion Kings (Live)"
+      "Scorpion Kings Live"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -6912,9 +6945,12 @@
       "f31e9dad5d8a57263bc33d05"
     ],
     "source_titles": [
-      "PARTYMOBILE"
+      "PARTYMOBILE",
+      "PARTYMOBILE (Chopped Not Slopped)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "PARTYMOBILE (Chopped Not Slopped)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -7052,27 +7088,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "48ff8a0149f43f585a3b7eb9",
-    "title": "eternal sunshine (slightly deluxe)",
-    "normalized_title": "eternal sunshine slightly deluxe",
-    "primary_artist_id": "231b55a52f11bd52bb830931",
-    "track_ids": [
-      "0d8601dd8776bb09aff7e42b",
-      "3660d7fef06bec8baa1c53e6",
-      "3753bb8c5f87e02499c0a850",
-      "7ccfb7f832b2f21e154b91ef",
-      "a2078fb923178db0b8d37255",
-      "e2558718c175b3d9a82c4771",
-      "f81f6de03234764036fcdadc",
-      "fb9ac2f14723155a27dd495b"
-    ],
-    "source_titles": [
-      "eternal sunshine (slightly deluxe)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "4975a6381df0aa4c4ca53226",
     "title": "The Best of Gerald Levert",
     "normalized_title": "the best of gerald levert",
@@ -7122,22 +7137,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "499394f71478366d87153709",
-    "title": "Why Not More? (MORE!)",
-    "normalized_title": "why not more more",
-    "primary_artist_id": "86f30a06308ed63c97807e42",
-    "track_ids": [
-      "800f9405e17f6f73af67c7e2",
-      "a12a474d5851cbc4592095d2",
-      "c6b5af4b120e91847b2a6f24"
-    ],
-    "source_titles": [
-      "Why Not More? (MORE!)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "49b9d6b2c17f14b21ff186b9",
     "title": "Destiny Fulfilled",
     "normalized_title": "destiny fulfilled",
@@ -7151,23 +7150,6 @@
     ],
     "source_titles": [
       "Destiny Fulfilled"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "49c5484e9b5eba111a548e1e",
-    "title": "Kehlani (Uncut Edition)",
-    "normalized_title": "kehlani uncut edition",
-    "primary_artist_id": "25d2059f3dee9640688e18e8",
-    "track_ids": [
-      "85f3659173a4fc6e0618809b",
-      "a4ce0fa6a9a17a5dc91eaa5c",
-      "b8e7cd993d9a1e8cecf275fc",
-      "bb91f5e62d19fc752e48e757"
-    ],
-    "source_titles": [
-      "Kehlani (Uncut Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -7325,22 +7307,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "4b862bafa750bb453a00e1a7",
-    "title": "FREE 6LACK (Bonus Track Version)",
-    "normalized_title": "free 6lack bonus track version",
-    "primary_artist_id": "7a164aa7813c6a78fd57e5fb",
-    "track_ids": [
-      "44b9a2521f4f684ed33882ff",
-      "8e165f099f20ee06231475f7",
-      "bb9681786dba231af1ab507d"
-    ],
-    "source_titles": [
-      "FREE 6LACK (Bonus Track Version)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -7533,12 +7499,16 @@
     "track_ids": [
       "53a65f58e2f17184d01ba650",
       "799b4d6e0d80b495a795932d",
+      "7f09a65023ed7f1382a4a008",
       "b0c8d02958d0bf648ad03d65"
     ],
     "source_titles": [
+      "Timeless (Remix)",
       "Timeless"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Timeless (Remix)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -7644,15 +7614,44 @@
     "primary_artist_id": "da87aaeffa775bcf3a66b3f2",
     "track_ids": [
       "1304be045f2d9458d350ee25",
+      "7c6ea9cb51c8a237eff5c487",
       "a70b8c554f36d6683889c896",
-      "e74d47034c01d165bcd91e5f"
+      "e74d47034c01d165bcd91e5f",
+      "edfde6f9b709dd9ff799fe48"
     ],
     "source_titles": [
+      "Red (Taylor’s Version) [+ A Message From Taylor]",
+      "Red (Taylor's Version)",
+      "Red (Big Machine Radio Release Special)",
       "Red (Deluxe Version)",
       "Red"
     ],
     "edition_labels": [
+      "Red (Taylor’s Version) [+ A Message From Taylor]",
+      "Red (Taylor's Version)",
+      "Red (Big Machine Radio Release Special)",
       "Red (Deluxe Version)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "4de052fff977a639f02b90dc",
+    "title": "Cassie",
+    "normalized_title": "cassie",
+    "primary_artist_id": "0dc58199e145f7da62d79c62",
+    "track_ids": [
+      "073892cb46333ff2fa8d9a94",
+      "91a70c6f9469a30735f15151",
+      "93288775edcf2a00625ae881",
+      "a428d3e5b50a6ea7803e6374",
+      "dc035cbc0ad9ba05ed57cd31"
+    ],
+    "source_titles": [
+      "Cassie",
+      "Cassie (U.S. Version)"
+    ],
+    "edition_labels": [
+      "Cassie (U.S. Version)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -7731,9 +7730,12 @@
       "b55bcde61ae6cec5d5416286"
     ],
     "source_titles": [
+      "PCD (Bonus Track Version)",
       "PCD"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "PCD (Bonus Track Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -7783,21 +7785,23 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "4ef1e84c2cdd1392cab58916",
-    "title": "Ivory (Apple Music Up Next Film Edition)",
-    "normalized_title": "ivory apple music up next film edition",
-    "primary_artist_id": "cf415de795b49e10e5f97436",
+    "id": "4efa270eece07382b2fb8230",
+    "title": "Picture Book",
+    "normalized_title": "picture book",
+    "primary_artist_id": "127ab85f55f07faad9b9b138",
     "track_ids": [
-      "160de0bac0daab19a6b290a3",
-      "459b6c773175d3daff7cae9b",
-      "9c386f9ea0e49c303b8772f3",
-      "e6fc7140295841b64ce0dc42",
-      "f383fc92b7c53261b9064881"
+      "849a228463d9271580956e3e",
+      "94fe63e812e817ea3ba16961",
+      "d2d6f7626ca35a04d2b30e75",
+      "d6c1d90ff1ab6074ea989bc7"
     ],
     "source_titles": [
-      "Ivory (Apple Music Up Next Film Edition)"
+      "Picture Book (Expanded Version)",
+      "Picture Book"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Picture Book (Expanded Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -7952,6 +7956,25 @@
       "$ome $exy $ongs 4 U"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "50d077e33912214af60ec145",
+    "title": "Waiting to Exhale",
+    "normalized_title": "waiting to exhale",
+    "primary_artist_id": "e1e14c6c1c6d4046817c1c10",
+    "track_ids": [
+      "56b93017b37d22f3d0ed26ec",
+      "839a70107389e5f45d3aecca",
+      "b604c54a7ea56cf48ae322e0"
+    ],
+    "source_titles": [
+      "Waiting to Exhale (Original Soundtrack Album)",
+      "Waiting to Exhale"
+    ],
+    "edition_labels": [
+      "Waiting to Exhale (Original Soundtrack Album)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -8211,8 +8234,10 @@
       "377e66ef090eb923cacb6110",
       "4b531930396fb2d8e460bf16",
       "4baf4d186532934dc07a4da3",
+      "69ecf26d2697b19b601b602f",
       "6e9eda438aef2ca1937d19f5",
       "82d1863d9950fb67f187b710",
+      "82e27f3b055533cb333a7804",
       "88eaf1c84f271a2981732c08",
       "8e4c69cedb6750131bdd6c4f",
       "8ecd8bcf90b666ec858c5b0e",
@@ -8233,9 +8258,12 @@
       "f94eaf989bbabde2902b4500"
     ],
     "source_titles": [
-      "Pink Friday 2"
+      "Pink Friday 2",
+      "Pink Friday 2 (Gag City PLUTO Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Pink Friday 2 (Gag City PLUTO Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -8338,15 +8366,24 @@
     "normalized_title": "life after death",
     "primary_artist_id": "55dff6000cac58d014a134c8",
     "track_ids": [
+      "0882dd08ca8588f9b06d8fb4",
       "1949fe4a9ee5b406ad0c9c00",
       "3caa5a8878ef6360998d82a3",
+      "5792734a286f2f26cf0cc1b6",
+      "afa1a86cb7bfe36f96923dfe",
       "b61e365726b315026b725f9f",
-      "d6ce13503038434498df0cee"
+      "d6ce13503038434498df0cee",
+      "eb36841e133b381488fc8bc2"
     ],
     "source_titles": [
-      "Life After Death"
+      "Life After Death",
+      "Life After Death (2014 Remastered Edition)",
+      "Life After Death (Remastered Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Life After Death (2014 Remastered Edition)",
+      "Life After Death (Remastered Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -8523,6 +8560,7 @@
       "3592c62c580b724d6fe48948",
       "4c370ed1fb5a5944fdfbbb55",
       "6b583aa8fdc2e7b3b5791acb",
+      "78c442f984facd6ff5ee7695",
       "91f7418c7fb57f02e72555d2",
       "9ed99549278f01a1f728c366",
       "b02232defe2202b504b158ca",
@@ -8532,10 +8570,14 @@
     ],
     "source_titles": [
       "True Blue",
-      "True Blue (Bonus Tracks)"
+      "True Blue (35th Anniversary Edition)",
+      "True Blue (Bonus Tracks)",
+      "True Blue (Reissue)"
     ],
     "edition_labels": [
-      "True Blue (Bonus Tracks)"
+      "True Blue (35th Anniversary Edition)",
+      "True Blue (Bonus Tracks)",
+      "True Blue (Reissue)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -8596,9 +8638,12 @@
       "ef6343ffc28121e978e25fb9"
     ],
     "source_titles": [
-      "Hurry Up Tomorrow"
+      "Hurry Up Tomorrow",
+      "Hurry Up Tomorrow (Video Album)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Hurry Up Tomorrow (Video Album)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -8637,25 +8682,6 @@
     "edition_labels": [
       "Y2K! : I’m Just A Girl (Deluxe)"
     ],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "586c40b1e9cc0e2d02f4892b",
-    "title": "The Thrill of It All (Special Edition)",
-    "normalized_title": "the thrill of it all special edition",
-    "primary_artist_id": "0d8a31f23243d0f29bebec70",
-    "track_ids": [
-      "3c81886705fc1fd8af03f16e",
-      "6d4417370880fa1d22c1b93a",
-      "a96be43b7ff27470e346a264",
-      "c5c65a63e6315bd7dc6b4ee7",
-      "f0541c518bdc9b52adf5ba73",
-      "f9d8bdf4dd73d8be6a828fad"
-    ],
-    "source_titles": [
-      "The Thrill of It All (Special Edition)"
-    ],
-    "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -9051,9 +9077,12 @@
       "fae2d5d6f544bd6fcd0aeed8"
     ],
     "source_titles": [
+      "Music (Bonus Track Version)",
       "Music"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Music (Bonus Track Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -9439,13 +9468,17 @@
     "primary_artist_id": "615057f02e97717631d5b6c2",
     "track_ids": [
       "4e18297cedd73a4378d660ee",
+      "665c1a51e35512bf37f2632b",
       "f7ad562c68389e533c966910",
       "fa8cf151fb934dc325579da1"
     ],
     "source_titles": [
+      "Believe For It (feat. Lauren Daigle)",
       "Believe For It"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Believe For It (feat. Lauren Daigle)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -9558,9 +9591,12 @@
       "e6c8de61a16c5045541ee052"
     ],
     "source_titles": [
-      "Dawn FM"
+      "Dawn FM",
+      "Dawn FM (Alternate World)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Dawn FM (Alternate World)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -9609,22 +9645,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "61ac11ec55f1f49fc049efa3",
-    "title": "4275 (Bonus Version)",
-    "normalized_title": "4275 bonus version",
-    "primary_artist_id": "ea189dfcce00fc2f688604c0",
-    "track_ids": [
-      "2a3816893b6c43e31ca40c10",
-      "76ca57893dad58b30f516c5a",
-      "c6480882e4be076ddf48bf11"
-    ],
-    "source_titles": [
-      "4275 (Bonus Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "61b6242e1c031f2cf75cb970",
     "title": "Maxwell's Urban Hang Suite",
     "normalized_title": "maxwell s urban hang suite",
@@ -9661,28 +9681,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "623c0d964985423de272668b",
-    "title": "Secrets (Remix Package)",
-    "normalized_title": "secrets remix package",
-    "primary_artist_id": "52a2c160a0104e1b0a9a53d1",
-    "track_ids": [
-      "0958ce999d80e4d52b0f8e0b",
-      "17596e5f79c786ad6ecacebd",
-      "3d1fade5f47a16aedbd6970b",
-      "538fbb97909d3bd5ebaf142d",
-      "571d1bdf7ae8e9a4fd88a8d0",
-      "79a20b9d2c21137a4bf21271",
-      "84c9de177d666fa9504a1d90",
-      "e15292506b75a84538d8e7c3",
-      "e9f8283f3afcf3be2d47150b"
-    ],
-    "source_titles": [
-      "Secrets (Remix Package)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "62787207804bb407c201d952",
     "title": "Born Sinner",
     "normalized_title": "born sinner",
@@ -9704,6 +9702,25 @@
     ],
     "edition_labels": [
       "Born Sinner (Deluxe Version)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "629a7e26f649fa2bffc3503c",
+    "title": "All I Have",
+    "normalized_title": "all i have",
+    "primary_artist_id": "4ce1d714e124aaef797cb5b5",
+    "track_ids": [
+      "48bb49228435890f7a625421",
+      "58f5fdb6bf5577b399bd2607",
+      "fe138f3b11d99b910841d578"
+    ],
+    "source_titles": [
+      "All I Have (featuring LL Cool J)",
+      "All I Have"
+    ],
+    "edition_labels": [
+      "All I Have (featuring LL Cool J)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -9941,17 +9958,20 @@
     "primary_artist_id": "5036be87b2566e368e97013a",
     "track_ids": [
       "2b1dab8baa42f7a92856a8b0",
+      "7ff2e6ae9c827c860fb65545",
       "b726632773d5c134bcab2e73",
       "bf0f346f45e70e8f2695866c",
       "fc6d065d9caa7ef9417bd41f"
     ],
     "source_titles": [
       "Songs In A Minor (Deluxe Edition)",
-      "Songs In A Minor (Expanded Edition)"
+      "Songs In A Minor (Expanded Edition)",
+      "Songs In A Minor (20th Anniversary Edition)"
     ],
     "edition_labels": [
       "Songs In A Minor (Deluxe Edition)",
-      "Songs In A Minor (Expanded Edition)"
+      "Songs In A Minor (Expanded Edition)",
+      "Songs In A Minor (20th Anniversary Edition)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -9993,9 +10013,12 @@
       "f4f1e67bd8c72bd4f6c09352"
     ],
     "source_titles": [
-      "About Time"
+      "About Time",
+      "About Time (Extended Vinyl Reissue)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "About Time (Extended Vinyl Reissue)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -10067,96 +10090,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "6689871d8860bea34583ebf3",
-    "title": "Dawn FM (Alternate World)",
-    "normalized_title": "dawn fm alternate world",
-    "primary_artist_id": "f2ecd660a31b873f0547540a",
-    "track_ids": [
-      "02ac8c668bd8cc7709587880",
-      "0da554098f2995cd32696f71",
-      "42a413ca4f692ff446d79ed6",
-      "8a06172e5694cab10ff5f931",
-      "bb2004b3b480dce0c152d00e",
-      "c620434dccee542fd1b67910"
-    ],
-    "source_titles": [
-      "Dawn FM (Alternate World)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "676c98dd48aa7ecc1eeeab45",
-    "title": "Finally Enough Love: 50 Number Ones (2022 Remasters)",
-    "normalized_title": "finally enough love 50 number ones 2022 remasters",
-    "primary_artist_id": "f6e0a45440a790e7ff61ad04",
-    "track_ids": [
-      "00874e9b7b24bad1a3236823",
-      "084645ae98b79005eb81f6cf",
-      "0c32ab87be7b10c090dbabee",
-      "1156a230aea2e9306ece0947",
-      "12d4a3f224f25a8a987ee092",
-      "146557980b38fbc7db53ef1e",
-      "174009755fef70019e1c0525",
-      "2e6dd9e356e00a899b048144",
-      "3cad90657d502fbfd2642841",
-      "4906dd9dcf741c62b8215fe0",
-      "49fed03777d1e275dc2cba2a",
-      "54f0a49b2d39ea01136b1c3c",
-      "623196863537dcf3756e41f9",
-      "654ec3c00540d592e5d04a36",
-      "77c25225940ce32190824c71",
-      "7d38bb4b455de0ac011896ed",
-      "7e8a76ae1d4a0c82fcd51f33",
-      "824fd5cbf246a09e8cf9b73b",
-      "862bfaa42209d143194020e6",
-      "86bbd3b465afb305f50881ca",
-      "8802e4aa8eca61ed4c0d5800",
-      "9efb2a2dc96607cc8c13614c",
-      "a2f0ae05fa7a5a0133f1ddbb",
-      "a62c1ecddc1aa448bdb362b6",
-      "a870e75a025ca8abe5dadc50",
-      "aa9afdd8784c1e883bdf90a5",
-      "afba37f9b2a96af25b9e9a29",
-      "b6c982c1e96280e1ac3004aa",
-      "ba1bec1e2646d5359ba091c6",
-      "ba632b642636b833d16c4f34",
-      "be1bac79464d2d4f11f0b5f5",
-      "c23dca158fd83f21d9ac69ec",
-      "c56c0fd3f8896f460c7133a2",
-      "cd7917d48fc2fabc82d173d8",
-      "cd849bc713e59d12196b72a3",
-      "e56a4719f1391159d53b6b26",
-      "eb3fb8b616ec23d1d529180d",
-      "f3517c5637eb1bf31af74e35",
-      "f71dc57286238918223be307",
-      "f84ecf2575ece3a5dbdde5ad",
-      "fac3ee389e6594ac73523d6c"
-    ],
-    "source_titles": [
-      "Finally Enough Love: 50 Number Ones (2022 Remasters)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "67cd95c7a426a416446a0cd9",
-    "title": "Loud (Japan Version)",
-    "normalized_title": "loud japan version",
-    "primary_artist_id": "2aad910689433872264901c8",
-    "track_ids": [
-      "0c5cb84e1fe0bcf0eba2ea68",
-      "9e48acb2a078a5f647067e4a",
-      "ab0531816a2dbb487cc98530",
-      "da58b8122de2e73afdde41d2"
-    ],
-    "source_titles": [
-      "Loud (Japan Version)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -10502,13 +10435,20 @@
     "primary_artist_id": "25d2059f3dee9640688e18e8",
     "track_ids": [
       "098a6f426fb760c716e4dfa4",
+      "85f3659173a4fc6e0618809b",
       "94a16ce0fc5852da928c8e17",
+      "a4ce0fa6a9a17a5dc91eaa5c",
+      "b8e7cd993d9a1e8cecf275fc",
+      "bb91f5e62d19fc752e48e757",
       "fb81046c14e26c886bfc5ab3"
     ],
     "source_titles": [
-      "Kehlani"
+      "Kehlani",
+      "Kehlani (Uncut Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Kehlani (Uncut Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -10720,6 +10660,7 @@
       "2f73c114b3be368c31ecd4c3",
       "330fe73159f45fb33fd65484",
       "43d7fc8ffb09e9c8db1cd13f",
+      "43ef2edfcf3a327987379c72",
       "476c33085a23bc75106a597c",
       "499014b60dcbf05f2e5fea29",
       "4bb89c3be50502d3dcc2bf64",
@@ -10736,9 +10677,12 @@
       "fc164d2f882e258d6cccc401"
     ],
     "source_titles": [
-      "Finally Over It"
+      "Finally Over It",
+      "Finally Over It (The Afterparty)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Finally Over It (The Afterparty)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -10875,19 +10819,44 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "71c5c6a7e2db81cc1dfd9f7a",
-    "title": "The Pinkprint (Tenth Anniversary Edition)",
-    "normalized_title": "the pinkprint tenth anniversary edition",
-    "primary_artist_id": "c9754d01cd182b725ddf9667",
+    "id": "710f300a28ba949b3f49c3f6",
+    "title": "My Life II...The Journey Continues",
+    "normalized_title": "my life ii the journey continues",
+    "primary_artist_id": "4e2f259cc216856d65e57210",
     "track_ids": [
-      "ca9b5bab4b4277fb81589d36",
-      "cb5e0805f5c5f8d7bef26e12",
-      "fcfd35ade5c6a386dc545d9d"
+      "43daddaf1f18c0ca10b69f95",
+      "9b3e7fd87299c7d159bc68ad",
+      "a029806dac9e77fa2f131f22"
     ],
     "source_titles": [
-      "The Pinkprint (Tenth Anniversary Edition)"
+      "My Life II...The Journey Continues (Act 1) (Deluxe)",
+      "My Life II...The Journey Continues (Act 1) [Deluxe]",
+      "My Life II...The Journey Continues (Act 1)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "My Life II...The Journey Continues (Act 1) (Deluxe)",
+      "My Life II...The Journey Continues (Act 1) [Deluxe]",
+      "My Life II...The Journey Continues (Act 1)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "721e2ed04feb6f9d10ff8650",
+    "title": "Folded",
+    "normalized_title": "folded",
+    "primary_artist_id": "25d2059f3dee9640688e18e8",
+    "track_ids": [
+      "70fa329fe95ba59ebfaaf7d8",
+      "94a16ce0fc5852da928c8e17",
+      "e0ab603bc93f05fb65dd65d4"
+    ],
+    "source_titles": [
+      "Folded",
+      "Folded (Remix)"
+    ],
+    "edition_labels": [
+      "Folded (Remix)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -11027,55 +10996,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "73f075a3fc8474380efa3f2d",
-    "title": "Cassie (U.S. Version)",
-    "normalized_title": "cassie u s version",
-    "primary_artist_id": "0dc58199e145f7da62d79c62",
-    "track_ids": [
-      "073892cb46333ff2fa8d9a94",
-      "91a70c6f9469a30735f15151",
-      "93288775edcf2a00625ae881",
-      "a428d3e5b50a6ea7803e6374",
-      "dc035cbc0ad9ba05ed57cd31"
-    ],
-    "source_titles": [
-      "Cassie (U.S. Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "741e99ccc200e6d15679b1ef",
-    "title": "CRYSALIS (CODA)",
-    "normalized_title": "crysalis coda",
-    "primary_artist_id": "150bd356fdd48f75b9fa93e9",
-    "track_ids": [
-      "1c4243f001befee22e8c9490",
-      "1c5c74d9f1e0e0d11f9936f3",
-      "26af421fe1832cc4bb05fc64",
-      "3b7da6a08f9e6fdddcc65878",
-      "3c877a03c5f310b6655e7474",
-      "54d1876767152eb7cadf0fef",
-      "55b4b2213b4c6d5482d0ec70",
-      "5d71b6c9ef507310f4c314f5",
-      "8249e5c84bb1635aca0e68fb",
-      "87daa6335ecd49756e380e40",
-      "88703e89e1384b63bfaf96c9",
-      "a58ffb080c01cd1cc5c956d2",
-      "ba7c1f6e53121937d66bc1e3",
-      "c09ea9d075fcd69b4707aa73",
-      "c33fd880d4dc84380d334ac1",
-      "cc56263201dea688f251564a",
-      "e422bca55030fc5f709c6176",
-      "f44d4cdbbc52ea2b704d654c"
-    ],
-    "source_titles": [
-      "CRYSALIS (CODA)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "74495cc606624855dcd5f96b",
     "title": "Don't Be Dumb",
     "normalized_title": "don t be dumb",
@@ -11101,24 +11021,6 @@
     ],
     "source_titles": [
       "Don't Be Dumb"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "7455d9100c84e07e32ce7dbc",
-    "title": "Memoirs of an Imperfect Angel (International Version)",
-    "normalized_title": "memoirs of an imperfect angel international version",
-    "primary_artist_id": "2fc8ae64f34795cde74ada7e",
-    "track_ids": [
-      "09d833b17ecec968cb63699d",
-      "324d96c55404f5900f1235e1",
-      "6803affbb8842560382c3a79",
-      "7bf08748a5c6d6cd2aeb6472",
-      "9eeeefc649cecc0abc713d02"
-    ],
-    "source_titles": [
-      "Memoirs of an Imperfect Angel (International Version)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -11291,12 +11193,16 @@
       "6fc9cd02f2586860892132f1",
       "939abee43c1ebed51c72fa07",
       "a984001a297f2c471ecf819e",
-      "d818d793696085466b804a2d"
+      "d818d793696085466b804a2d",
+      "ecd769da4a233f903be0c2b2"
     ],
     "source_titles": [
-      "Survivor"
+      "Survivor",
+      "Survivor (International Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Survivor (International Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -11503,6 +11409,25 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "77762740e82c2af1fd0e4158",
+    "title": "FROM FLORIDA'S FINEST DELU/XXX",
+    "normalized_title": "from florida s finest delu xxx",
+    "primary_artist_id": "1a2003e5dd18395615abc2ef",
+    "track_ids": [
+      "04f33753b412f10de027297b",
+      "1d5ed72a8ecaad8793309b25",
+      "1ff60bcad66dbaae299e30f6",
+      "5393a1d3e3b1b7072bf3f5a0"
+    ],
+    "source_titles": [
+      "FROM FLORIDA'S FINEST DELU/XXX [FOR MY DELUSIONAL EX]"
+    ],
+    "edition_labels": [
+      "FROM FLORIDA'S FINEST DELU/XXX [FOR MY DELUSIONAL EX]"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "7792bdbc4932023c88431607",
     "title": "NEVER ENOUGH",
     "normalized_title": "never enough",
@@ -11512,6 +11437,7 @@
       "2a51cc9d7a807d40ba3572aa",
       "43542d45f1c8ab3f78382db0",
       "6759f0d347b9dcd415ba2daf",
+      "7eebd5f2ad2859b23554fe8a",
       "8148af0e998a642f48c03261",
       "83d4f7ebd5b68aa4ac443416",
       "8d6accf639a8134c61393a17",
@@ -11524,9 +11450,12 @@
       "e0dc678cdc61ae73845621e6"
     ],
     "source_titles": [
-      "NEVER ENOUGH"
+      "NEVER ENOUGH",
+      "NEVER ENOUGH (Bonus Version)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "NEVER ENOUGH (Bonus Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -11586,6 +11515,7 @@
     "normalized_title": "blue",
     "primary_artist_id": "127ab85f55f07faad9b9b138",
     "track_ids": [
+      "0b94c92bb9a752faff1cb256",
       "13a69456e9cb65816b8d4403",
       "17aacf2ad9e9f478ee1e5eae",
       "25e2d569e38f78f96f1ea2ff",
@@ -11601,9 +11531,11 @@
     ],
     "source_titles": [
       "Blue",
+      "Blue (Expanded Version)",
       "Blue (Expanded Edition)"
     ],
     "edition_labels": [
+      "Blue (Expanded Version)",
       "Blue (Expanded Edition)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -12228,31 +12160,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "80988c3462acbb798f3e7d21",
-    "title": "Trilogy (Original Version)",
-    "normalized_title": "trilogy original version",
-    "primary_artist_id": "f2ecd660a31b873f0547540a",
-    "track_ids": [
-      "24ae61fabe4569d88d58463d",
-      "3627595e8569895b43bc871e",
-      "38d6948ad7e81faeb9eefcc5",
-      "472eb878d87103cfdf315305",
-      "754564d50137dbecdf700edb",
-      "8874a04c7f2ccf983a811fe1",
-      "98a6c6b7f20cc6a59b347463",
-      "a39c0f99f7cac94465028677",
-      "bc8b76ccc176472aa744db0f",
-      "ddac8dd4301169e6e86f3aef",
-      "e9b0f6521662edfdc36e3685",
-      "ea7872c7d0200d61b5cc9d63"
-    ],
-    "source_titles": [
-      "Trilogy (Original Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "80ae59cc63c5843834d81258",
     "title": "The Score",
     "normalized_title": "the score",
@@ -12277,6 +12184,7 @@
     "normalized_title": "ungodly hour",
     "primary_artist_id": "3798a412a8b21d75311ca93c",
     "track_ids": [
+      "22792ea51528d36d64f91274",
       "297c1389d2e66d490ec9f89d",
       "37395ce147b510273f62bf17",
       "4c0010fb0072b35ad7b596a6",
@@ -12287,9 +12195,12 @@
       "e6a6d141d8597215870cd9e2"
     ],
     "source_titles": [
-      "Ungodly Hour"
+      "Ungodly Hour",
+      "Ungodly Hour (Chrome Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Ungodly Hour (Chrome Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -12311,9 +12222,9 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "8158266f753abb6f67a0e90c",
-    "title": "Scenic Drive (The Tape)",
-    "normalized_title": "scenic drive the tape",
+    "id": "817d8dd8133f1c376fa12121",
+    "title": "Scenic Drive",
+    "normalized_title": "scenic drive",
     "primary_artist_id": "b859c3d8ee072d7e4e32b10d",
     "track_ids": [
       "03cbf8e7c61aaf91969761c3",
@@ -12335,7 +12246,9 @@
     "source_titles": [
       "Scenic Drive (The Tape)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Scenic Drive (The Tape)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -12399,6 +12312,7 @@
       "300362f6f9de9f851a2fc380",
       "35221c71282dc8a0841fdd34",
       "4760ee996c4f2099e1524e12",
+      "58d4c560c063c1004f92297b",
       "70b59ede980f4259e6453ec3",
       "7f978f2d19451de041679000",
       "881e9317e6218aaf53e64c94",
@@ -12407,9 +12321,12 @@
       "f7fe9f564d7eafba5f15c352"
     ],
     "source_titles": [
-      "Shea Butter Baby"
+      "Shea Butter Baby",
+      "Shea Butter Baby (Remix EP)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Shea Butter Baby (Remix EP)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -12468,22 +12385,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "8251e7ade5565f2a9180acd5",
-    "title": "I've Tried Everything But Therapy (Part 2)",
-    "normalized_title": "i ve tried everything but therapy part 2",
-    "primary_artist_id": "70d68cc8366fe38778846211",
-    "track_ids": [
-      "17c986a85d4ff2f11b848e13",
-      "492f797bafb946958cada19a",
-      "69ff7c5c7573dfb344c3a1a9"
-    ],
-    "source_titles": [
-      "I've Tried Everything But Therapy (Part 2)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "82630c7bade8496fe48c4c0d",
     "title": "Lost & Found",
     "normalized_title": "lost and found",
@@ -12517,9 +12418,12 @@
       "f846e571ec48e8fe149c590a"
     ],
     "source_titles": [
-      "The Story Goes..."
+      "The Story Goes...",
+      "The Story Goes .... (UK Version - new version dmd)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "The Story Goes .... (UK Version - new version dmd)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -12696,9 +12600,12 @@
       "d27708636968bfb2ef0d62ac"
     ],
     "source_titles": [
-      "My Life"
+      "My Life",
+      "My Life (Bonus Track Version)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "My Life (Bonus Track Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -12855,26 +12762,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "86133821b07be9e372dee426",
-    "title": "House of Balloons (Original)",
-    "normalized_title": "house of balloons original",
-    "primary_artist_id": "f2ecd660a31b873f0547540a",
-    "track_ids": [
-      "1155f6d0736e67e06be5632f",
-      "38d6948ad7e81faeb9eefcc5",
-      "5834c463907661b4e0a07170",
-      "a2f0847c8dd46cce5fbd0d10",
-      "db3715fdd5291873ac418525",
-      "e9b0f6521662edfdc36e3685",
-      "ea7872c7d0200d61b5cc9d63"
-    ],
-    "source_titles": [
-      "House of Balloons (Original)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "862391e6ebd1470c54c356e5",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -12898,20 +12785,28 @@
     "primary_artist_id": "33acd5889a8911e920fb7257",
     "track_ids": [
       "012a639a2e9a01f21792240f",
+      "1066c5e095eb7af6c593e4b2",
       "18b6f914c0c0513fd13c1422",
+      "23b91195d9cdcb6023e04b89",
       "31bbd702dd78c799f2b05e73",
       "501d58ff808927469521d8ec",
       "534a3daebdf5703722f3ccd4",
       "667c0b6a2a0ec632c6824fa8",
       "6c38f7960004bf30154f03c5",
+      "759248cbe26cae97af7c1fb5",
       "964f18b6f2856eeaaab41692",
       "b7db2ba5aa0259e36e15eb1b",
       "cedd6bf783f3106580f2b41e"
     ],
     "source_titles": [
-      "MUTT"
+      "MUTT",
+      "Mutt (Remix)",
+      "MUTT (CB REMIX)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Mutt (Remix)",
+      "MUTT (CB REMIX)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -13095,10 +12990,12 @@
     ],
     "source_titles": [
       "Loose",
-      "Loose (Deluxe Version)"
+      "Loose (Deluxe Version)",
+      "Loose (International Version)"
     ],
     "edition_labels": [
-      "Loose (Deluxe Version)"
+      "Loose (Deluxe Version)",
+      "Loose (International Version)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -13147,25 +13044,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "88c08f61d6791354ba3da602",
-    "title": "AM I THE DRAMA? (Beat Edition)",
-    "normalized_title": "am i the drama beat edition",
-    "primary_artist_id": "dcae62d84e1cf925a05af41f",
-    "track_ids": [
-      "05110d5a135f60c7c28aab20",
-      "13b92fc19178343518687e8c",
-      "18281b4ae26b76ac82ba9261",
-      "9475bb8a8e50759b7e5a36f1",
-      "b71648f391333dd8e94f0894",
-      "c96bf9c909a46ebf29f22d05"
-    ],
-    "source_titles": [
-      "AM I THE DRAMA? (Beat Edition)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "892efa1efad9412de80dbce1",
     "title": "R.",
     "normalized_title": "r",
@@ -13193,12 +13071,16 @@
       "2282c7ef23b7af12989742f1",
       "3ec4866c9f2aaff5f95ac4ba",
       "4decce1f368ed8e3b36f4d3e",
+      "586de0216595d77f1e5e30ac",
       "f7288e5a8a04f61119926a32"
     ],
     "source_titles": [
-      "Straight from the Heart"
+      "Straight from the Heart",
+      "Straight from the Heart (Remastered)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Straight from the Heart (Remastered)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -13422,24 +13304,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "8b328abf823db9efbd50ed57",
-    "title": "Ivory (Marfil)",
-    "normalized_title": "ivory marfil",
-    "primary_artist_id": "cf415de795b49e10e5f97436",
-    "track_ids": [
-      "1af87c042fd222a1a36f906a",
-      "321dc340709e1d777f2ff3dc",
-      "9172ab3b9de3c3dfddd7a0c8",
-      "cd77b7851c7d329a8c2d113d",
-      "d90d4d27378d6702eb529058"
-    ],
-    "source_titles": [
-      "Ivory (Marfil)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "8c2aabea5ad2a1e1758383fd",
     "title": "Odyssey",
     "normalized_title": "odyssey",
@@ -13594,27 +13458,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "8d8f6b6c5e94cba2e4d8fd71",
-    "title": "Just Like You (International Deluxe Version)",
-    "normalized_title": "just like you international deluxe version",
-    "primary_artist_id": "ce680ea5ed10e6dbb919354a",
-    "track_ids": [
-      "5f818edf48f6cb1306ad6cee",
-      "6b8495d815b772725d658754",
-      "71db867f6b5a58dcfb2760db",
-      "74e057deb09621c5927d5b18",
-      "7982760f8d06949011e57eea",
-      "8ca6e4bd9d8bf8788880c3d2",
-      "91d9ff5b12eb73e0677ee1fe",
-      "9a29d847d9dd399f8df83604"
-    ],
-    "source_titles": [
-      "Just Like You (International Deluxe Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "8daf430fb31eec03eb4116c1",
     "title": "MONTERO",
     "normalized_title": "montero",
@@ -13655,6 +13498,7 @@
     "track_ids": [
       "027451cef7356c053acfe738",
       "2b82c8984df65db20f99a2ac",
+      "3d1ffebc899830b44bb673e7",
       "612c1d12b6f2ff9b884dedc1",
       "731659ed4e85dfc467ce8b21",
       "89ad099eb526eb1f8c065185",
@@ -13664,32 +13508,12 @@
       "d09ee500947220211d968f6f"
     ],
     "source_titles": [
-      "Future Nostalgia"
+      "Future Nostalgia",
+      "Future Nostalgia (The Moonlight Edition)"
     ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "8ea9ed9a411044853ee0bbde",
-    "title": "eternal sunshine deluxe: brighter days ahead (a cappella version)",
-    "normalized_title": "eternal sunshine deluxe brighter days ahead a cappella version",
-    "primary_artist_id": "231b55a52f11bd52bb830931",
-    "track_ids": [
-      "08dd4bfa1944f8b5589232ae",
-      "182c544d9925c8e9549fba4d",
-      "2772b3f245b6d2b8c3fdef63",
-      "2ad8b184b8b6ccd3dfadfb24",
-      "330bc83b442fef08f1fbaa1b",
-      "37986bdcac710bad7eae2051",
-      "ad42c83367a327fdc10cddaa",
-      "d51912b7ff2f0110dc17abe4",
-      "db4e4081192bc6386ebd1c61",
-      "e3a9c6ca78077f5240d8ab74"
+    "edition_labels": [
+      "Future Nostalgia (The Moonlight Edition)"
     ],
-    "source_titles": [
-      "eternal sunshine deluxe: brighter days ahead (a cappella version)"
-    ],
-    "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -13746,6 +13570,24 @@
       "Unknown Album"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "8f4c516319452328dc886c07",
+    "title": "Private Dancer",
+    "normalized_title": "private dancer",
+    "primary_artist_id": "a0bbfa5623e690c7bba57ffe",
+    "track_ids": [
+      "046ab09c35d06397dad91b15",
+      "0bb0ab7ac2a556152823d73d",
+      "3510eb3d1eff25399cf266c1"
+    ],
+    "source_titles": [
+      "Private Dancer (2015 Remaster)"
+    ],
+    "edition_labels": [
+      "Private Dancer (2015 Remaster)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -13850,8 +13692,7 @@
       "eaead0917a5e64c609074bb2"
     ],
     "source_titles": [
-      "The Bodyguard - Original Soundtrack Album",
-      "The Bodyguard (Original Soundtrack Album)"
+      "The Bodyguard - Original Soundtrack Album"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -13872,6 +13713,26 @@
       "Morayo"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "90eaf3756fe9f1225fe242df",
+    "title": "Take My Breath - Single",
+    "normalized_title": "take my breath single",
+    "primary_artist_id": "f2ecd660a31b873f0547540a",
+    "track_ids": [
+      "150ea4421b4d32b4afb7d172",
+      "517d74d6f78258c136eeb843",
+      "c7b8b088fb102b48c7c6a256"
+    ],
+    "source_titles": [
+      "Take My Breath (Single Package) - Single",
+      "Take My Breath (Single Package)-Single"
+    ],
+    "edition_labels": [
+      "Take My Breath (Single Package) - Single",
+      "Take My Breath (Single Package)-Single"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -13960,27 +13821,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "9218fac41617c147e96ca5e7",
-    "title": "BROWN (The Chocolate Edition)",
-    "normalized_title": "brown the chocolate edition",
-    "primary_artist_id": "61d4861e9764f699ba10fdbe",
-    "track_ids": [
-      "1d65c6a19c06f576744c3532",
-      "7e79025d8a71456bb96d5208",
-      "a09821c2a8831a1507b1e597",
-      "dfbc4e44752aac5c25cfd668",
-      "e056d1986f280e67087cfc38",
-      "e665165e8488f5235d681cfb",
-      "ecbf852436400e11b9414b5a",
-      "ff14b6a44962c3cc20e95744"
-    ],
-    "source_titles": [
-      "BROWN (The Chocolate Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -14157,26 +13997,35 @@
     "normalized_title": "pink friday",
     "primary_artist_id": "c9754d01cd182b725ddf9667",
     "track_ids": [
+      "02f03d312bbff76043e4ad6f",
       "06782f243972e90470ab7154",
       "0ca9789a8b5af0040ac1f70f",
+      "2125340f56e5c11a9c3468c4",
       "351f89ff6751d9adb94656ff",
       "385939d8329be3943cd38f39",
       "3e8824e63a7933d38fc63416",
+      "422938abf61476676f244e26",
       "52d62431000f003ec92f6b89",
       "5829256560a5a291e996f447",
       "7c4e53061e9f54d3badc2f12",
       "8c5164d953a5a8f65de5bfb0",
       "91cab68a88cb7f1c3616cec9",
+      "935b8b3b6c186bce155f3e97",
+      "96df82353eced307e240a4ef",
       "c8382f93fbc67404fcad9a0f",
       "edd97ccd2dabbfe917d3d136"
     ],
     "source_titles": [
       "Pink Friday (Deluxe Edition)",
       "Pink Friday",
+      "Pink Friday (Complete Edition)",
+      "Pink Friday (Roman Reloaded) [Deluxe Edition]",
       "Pink Friday (Deluxe)"
     ],
     "edition_labels": [
       "Pink Friday (Deluxe Edition)",
+      "Pink Friday (Complete Edition)",
+      "Pink Friday (Roman Reloaded) [Deluxe Edition]",
       "Pink Friday (Deluxe)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -14250,53 +14099,24 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "957289905444d178cfd2a54f",
-    "title": "Heartbreak on a Full Moon (Deluxe Edition): Cuffing Season - 12 Days of Christmas",
-    "normalized_title": "heartbreak on a full moon deluxe edition cuffing season 12 days of christmas",
-    "primary_artist_id": "61d4861e9764f699ba10fdbe",
+    "id": "956c8cffdc1dee1f7c5dfebb",
+    "title": "Celebration: The Best Of Kool & The Gang",
+    "normalized_title": "celebration the best of kool and the gang",
+    "primary_artist_id": "ccc95626314e38f9dc53caa8",
     "track_ids": [
-      "103cb163a66b19ee8248e6b8",
-      "115541a62d261b03a8aa9eba",
-      "12cef614c3639ffd23dd9389",
-      "19769a164c03e3e99806caed",
-      "227a7d3dd7d17b637e5631c8",
-      "30fd344c0a6268db5e23b766",
-      "3529348f235dba489df8f097",
-      "3b81acf6f419ff66a56faff7",
-      "45ba5369131e61660ca8d700",
-      "4d0070390d528960425016e9",
-      "500c65580fbb92de4f536c87",
-      "530059ac5973434a53115a99",
-      "5407e26b02870c40ccfe1d92",
-      "6144c6c7f9270f845334bc86",
-      "61e671200bdae86aa75078ba",
-      "6cdbe9e3468534bb909592cc",
-      "78a6ff4d3e4bc45e6b23daf5",
-      "7c48ed657faacaf382ba8b16",
-      "81fbe8a6f509e0ea7ad81433",
-      "8918e34fd86d2e7b96a9d80b",
-      "a45947db67c1c8d3b818a986",
-      "aa64719a1d349a6d1ff553f8",
-      "ae0418321848e1b37accdefe",
-      "b8b6f543ec93f7d2de5124ce",
-      "bab461771b89e0ab2e2e917e",
-      "bc7a6a9adb06c9b9a94008c0",
-      "bd79c6a660792e2526c4c89c",
-      "bfb67c77a4e4d3466d49591e",
-      "c2b29cb9e16ae73ec7aab973",
-      "c9c4e7dc4c643f6f4c0c25f5",
-      "d30e6db390f5ae1af0fc06d4",
-      "daed6f63e912d874d2726e08",
-      "dd7c1a008afb9212bb0eb815",
-      "e35e2959d4c91f5006ca31dd",
-      "ee21234a57d95e9ede83baaa",
-      "f9403f2bb518928c44435cef"
+      "1f87a4d1a60994ba308e4770",
+      "357cbc7886c0370f9050739c",
+      "51ae4810d4ed865e26f17f51",
+      "82ebfdd542133e94ede2018a",
+      "cbde0cc91a2f6682410df400"
     ],
     "source_titles": [
-      "Heartbreak on a Full Moon (Deluxe Edition): Cuffing Season - 12 Days of Christmas",
-      "Heartbreak On A Full Moon Deluxe Edition: Cuffing Season - 12 Days Of Christmas"
+      "Celebration: The Best Of Kool & The Gang (1979-1987)",
+      "Celebration: The Best Of Kool & The Gang"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Celebration: The Best Of Kool & The Gang (1979-1987)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -14307,23 +14127,33 @@
     "track_ids": [
       "0407dbed69807a30d0089a09",
       "19bf86a5e8351ef2078bea44",
+      "1ba99999189005a024372b55",
+      "4f095e8acf2403b2a0f14c5c",
       "511d474f983bee7b6332dbe4",
       "575e01d0253aecadbd6d44be",
+      "6e08a3279c1313f657ce2b21",
+      "98c2e91a21eaf79b7909a6da",
       "abd37b6a605210767cb2395d",
       "b0b6df6a1419e74fb93416f5",
+      "b725cae6344f319e066532ff",
       "c6ee911580e61a7959eeb5f2",
       "d6659ad5e79d5b8ddef8eb87",
       "d915082bbbece41c4395515d",
+      "df69e1235f7134cd3198c147",
       "e56f33eea8a8475e65e15bf0",
       "e91552a8d41874bddaab2715"
     ],
     "source_titles": [
       "I AM...SASHA FIERCE",
+      "I Am...Sasha Fierce (Platinum Edition)",
+      "I Am... Sasha Fierce (Platinum Edition)",
       "I Am...Sasha Fierce (Deluxe Version)",
       "I Am... Sasha Fierce",
       "I Am... Sasha Fierce (Deluxe Version)"
     ],
     "edition_labels": [
+      "I Am...Sasha Fierce (Platinum Edition)",
+      "I Am... Sasha Fierce (Platinum Edition)",
       "I Am...Sasha Fierce (Deluxe Version)",
       "I Am... Sasha Fierce (Deluxe Version)"
     ],
@@ -14343,6 +14173,27 @@
       "A Book Of Flying"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "95d1fb43f9427c04e4df5bdd",
+    "title": "Thank Me Later",
+    "normalized_title": "thank me later",
+    "primary_artist_id": "92b4cfdb6782e6fec393332f",
+    "track_ids": [
+      "0041fc2eddc6472901ef80c3",
+      "6f5898587e94d47e61e48d02",
+      "7e6da9a993780de3b0effbe5",
+      "f50d6ca052fef28669f93eb1",
+      "fb4f0709aa8555f25f74c0bd"
+    ],
+    "source_titles": [
+      "Thank Me Later",
+      "Thank Me Later (Int'l Version)"
+    ],
+    "edition_labels": [
+      "Thank Me Later (Int'l Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -14389,6 +14240,8 @@
       "a502fc22fc7cb8d2c49e097b",
       "b6743f5163c81171cd14d467",
       "beb85dbb532ad983f8592873",
+      "ca9b5bab4b4277fb81589d36",
+      "cb5e0805f5c5f8d7bef26e12",
       "cc0b757063397ed7f6a619f4",
       "de36bb5f5a11833fc38e2026",
       "e8c9be83771c12d2a93b0bf4",
@@ -14397,16 +14250,23 @@
       "f3b6e98af6969c7e2a03a1db",
       "f42e871357c1929e496ebe64",
       "fa336772ccbf4544eba43b89",
+      "fcfd35ade5c6a386dc545d9d",
       "fdebbed48851000dee58fbcb",
       "fe7066966436c3ade099e5f2"
     ],
     "source_titles": [
       "The Pinkprint",
+      "The Pinkprint (Tenth Anniversary Edition)",
       "The Pinkprint (Deluxe Edition)",
+      "The Pinkprint (International Deluxe Explicit)",
+      "The Pinkprint (Bonus Video)",
       "The Pinkprint (Deluxe)"
     ],
     "edition_labels": [
+      "The Pinkprint (Tenth Anniversary Edition)",
       "The Pinkprint (Deluxe Edition)",
+      "The Pinkprint (International Deluxe Explicit)",
+      "The Pinkprint (Bonus Video)",
       "The Pinkprint (Deluxe)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -14451,6 +14311,34 @@
       "The Idol"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "973cce981360404d6e3af1a5",
+    "title": "The Shave Experiment",
+    "normalized_title": "the shave experiment",
+    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
+    "track_ids": [
+      "0532cf6eb2476d92e17ef379",
+      "254f090438eefe13f6352dc1",
+      "342ba5fe0791ed398e35a967",
+      "34f7c13eeae50b7e7d6cec45",
+      "46df91a0cb27a225920ab072",
+      "60cf4f751d0ef9665488ea62",
+      "778f9e1bb531a0dac88b6ae6",
+      "9a61d8668b5b167f73dfde7f",
+      "9c2aa7fd2d068faec8ba2cae",
+      "b0d5eba873bae6af9a901eca",
+      "d6dc0ffb4322e8c5a76661e7",
+      "fefa38017da86f6fa41d52e1"
+    ],
+    "source_titles": [
+      "The Shave Experiment (Director's Cut)",
+      "The Shave Experiment"
+    ],
+    "edition_labels": [
+      "The Shave Experiment (Director's Cut)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -14538,24 +14426,6 @@
     ],
     "source_titles": [
       "100 GIGS"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "992d586e4bf89a809fd81d8d",
-    "title": "Celebration: The Best Of Kool & The Gang (1979-1987)",
-    "normalized_title": "celebration the best of kool and the gang 1979 1987",
-    "primary_artist_id": "ccc95626314e38f9dc53caa8",
-    "track_ids": [
-      "1f87a4d1a60994ba308e4770",
-      "357cbc7886c0370f9050739c",
-      "51ae4810d4ed865e26f17f51",
-      "82ebfdd542133e94ede2018a",
-      "cbde0cc91a2f6682410df400"
-    ],
-    "source_titles": [
-      "Celebration: The Best Of Kool & The Gang (1979-1987)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -14660,6 +14530,24 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "9a11e64eccf92f90fc01976c",
+    "title": "FREE 6LACK",
+    "normalized_title": "free 6lack",
+    "primary_artist_id": "7a164aa7813c6a78fd57e5fb",
+    "track_ids": [
+      "44b9a2521f4f684ed33882ff",
+      "8e165f099f20ee06231475f7",
+      "bb9681786dba231af1ab507d"
+    ],
+    "source_titles": [
+      "FREE 6LACK (Bonus Track Version)"
+    ],
+    "edition_labels": [
+      "FREE 6LACK (Bonus Track Version)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "9a362094a4ed4483a2aebad9",
     "title": "Championships",
     "normalized_title": "championships",
@@ -14749,42 +14637,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "9b2a2cd0354db0768f31bbe7",
-    "title": "Ivory (Marfil) [Apple Music Up Next Film Edition]",
-    "normalized_title": "ivory marfil apple music up next film edition",
-    "primary_artist_id": "cf415de795b49e10e5f97436",
-    "track_ids": [
-      "12c1d0a92f9747a1197fef17",
-      "160de0bac0daab19a6b290a3",
-      "1733cd838e76994ae49ae947",
-      "1af87c042fd222a1a36f906a",
-      "213da4a0fe6097d0c50a9ea1",
-      "321dc340709e1d777f2ff3dc",
-      "3edc8f3dc96b136d214b14ec",
-      "459b6c773175d3daff7cae9b",
-      "46636914e01384a1b5a6450c",
-      "505137335dcfad3c195285ef",
-      "54ff995c3ca902ec12c97ba7",
-      "6e46ab0bc8ac254bce6fbd06",
-      "76fe06aa31c2408f490d5562",
-      "9172ab3b9de3c3dfddd7a0c8",
-      "9a77a67da0b09b018202e7b8",
-      "9c386f9ea0e49c303b8772f3",
-      "ca30035bcf938ff46fc75b83",
-      "cd77b7851c7d329a8c2d113d",
-      "d65d953bbf2124e4012a47b3",
-      "d90d4d27378d6702eb529058",
-      "dfcdcfbc5ff3f2ce3e8b086f",
-      "e6fc7140295841b64ce0dc42",
-      "f383fc92b7c53261b9064881"
-    ],
-    "source_titles": [
-      "Ivory (Marfil) [Apple Music Up Next Film Edition]"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "9baef76066de4f52dee60438",
     "title": "24K Magic",
     "normalized_title": "24k magic",
@@ -14815,6 +14667,7 @@
     "normalized_title": "trouble",
     "primary_artist_id": "de3e79403e887c6f75ebc7fa",
     "track_ids": [
+      "6ca7584370e9f675c5fdb4d7",
       "c1981736d297542aa7bedb02",
       "d1b961dcb6a850b6999be200",
       "e367ec1642949ba69c708124"
@@ -14822,11 +14675,13 @@
     "source_titles": [
       "Trouble (Deluxe Edition)",
       "Trouble Deluxe Edition",
-      "Trouble"
+      "Trouble",
+      "Trouble (Deluxe Edition) [International Version]"
     ],
     "edition_labels": [
       "Trouble (Deluxe Edition)",
-      "Trouble Deluxe Edition"
+      "Trouble Deluxe Edition",
+      "Trouble (Deluxe Edition) [International Version]"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -14846,24 +14701,6 @@
     ],
     "source_titles": [
       "Good to Be Back"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "9bfdc50f51502d7b9926e977",
-    "title": "Future Nostalgia (The Moonlight Edition)",
-    "normalized_title": "future nostalgia the moonlight edition",
-    "primary_artist_id": "1641add014b2c9a2fe7cab2a",
-    "track_ids": [
-      "3d1ffebc899830b44bb673e7",
-      "99e72bf46a4fe0c60afd022e",
-      "b333e4ec4e9ae2df4407b3ef",
-      "bb443554dd33092a65373b36",
-      "d09ee500947220211d968f6f"
-    ],
-    "source_titles": [
-      "Future Nostalgia (The Moonlight Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -14925,6 +14762,44 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "9ca9cccc04ff2e6f4ca6566e",
+    "title": "Saturday Night Fever",
+    "normalized_title": "saturday night fever",
+    "primary_artist_id": "ab398f8ed42bcad4057f6c08",
+    "track_ids": [
+      "6885c11a76eda1f23610c396",
+      "b5cad70ac6f6c61d0b5df3b6",
+      "f930dd0c9f1bbcd1c57b2c9d"
+    ],
+    "source_titles": [
+      "Saturday Night Fever (The Original Movie Soundtrack Deluxe Edition)"
+    ],
+    "edition_labels": [
+      "Saturday Night Fever (The Original Movie Soundtrack Deluxe Edition)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "9cc3c0aec732bf5603e52bcf",
+    "title": "Sailing Soul",
+    "normalized_title": "sailing soul",
+    "primary_artist_id": "012b5273e9393c59985b7942",
+    "track_ids": [
+      "2a544a84900ce663d0a8bab5",
+      "6da14e8bf50ebfda2a0e1627",
+      "ba1a10391dcbec87216ff2a9"
+    ],
+    "source_titles": [
+      "Sailing Soul(s)",
+      "Sailing Soul(s) [2021 Bonus Tracks Edition]"
+    ],
+    "edition_labels": [
+      "Sailing Soul(s)",
+      "Sailing Soul(s) [2021 Bonus Tracks Edition]"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "9d7b932e04f8c8c13fd16a66",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -14939,6 +14814,46 @@
       "Unknown Album"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "9d8d188dfd05eb3767a85911",
+    "title": "Supernatural",
+    "normalized_title": "supernatural",
+    "primary_artist_id": "1e83cc98eea43fd871363bd6",
+    "track_ids": [
+      "0801e65993537b1f3cce011e",
+      "6a032ae23d0c795686b8dd51",
+      "9734990c47b270880d80fc08"
+    ],
+    "source_titles": [
+      "Supernatural (Legacy Edition)",
+      "Supernatural (Remastered)",
+      "Supernatural"
+    ],
+    "edition_labels": [
+      "Supernatural (Legacy Edition)",
+      "Supernatural (Remastered)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "9de4e4bb175db7e9e5ea354b",
+    "title": "LVRS PARADISE",
+    "normalized_title": "lvrs paradise",
+    "primary_artist_id": "17bf45e4e0fe05e047999af1",
+    "track_ids": [
+      "48c8b5f25bdf7c3741758d37",
+      "6e1cc5f546f1710ebafcfafa",
+      "801f0a3759b607103cf2de1c",
+      "e677fcffe7475f5354afafc3"
+    ],
+    "source_titles": [
+      "LVRS PARADISE (SIDE A)"
+    ],
+    "edition_labels": [
+      "LVRS PARADISE (SIDE A)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -15157,22 +15072,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "a03774592228edad52e12ea6",
-    "title": "Thursday (Original)",
-    "normalized_title": "thursday original",
-    "primary_artist_id": "f2ecd660a31b873f0547540a",
-    "track_ids": [
-      "24ae61fabe4569d88d58463d",
-      "d17fc581f9371f0d83fbfc5b",
-      "e3a706656d8cce9b205cd42c"
-    ],
-    "source_titles": [
-      "Thursday (Original)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "a05206f456c700649f2cec0a",
     "title": "Isimo",
     "normalized_title": "isimo",
@@ -15191,38 +15090,6 @@
     "source_titles": [
       "Isimo",
       "iSimo"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "a05f9dc2f1664976ac02632b",
-    "title": "In Your Eyes (Remix)",
-    "normalized_title": "in your eyes remix",
-    "primary_artist_id": "f2ecd660a31b873f0547540a",
-    "track_ids": [
-      "0b44f3b9fe0b6e0ff8772543",
-      "ec6ad7d164d27271245f4259",
-      "fc52dbadd4f1ff51ebc088fc"
-    ],
-    "source_titles": [
-      "In Your Eyes (Remix)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "a06c85c2f5f282dc1fc47eff",
-    "title": "The Thrill of It All (Special Video Edition)",
-    "normalized_title": "the thrill of it all special video edition",
-    "primary_artist_id": "0d8a31f23243d0f29bebec70",
-    "track_ids": [
-      "3c81886705fc1fd8af03f16e",
-      "6d4417370880fa1d22c1b93a",
-      "f9d8bdf4dd73d8be6a828fad"
-    ],
-    "source_titles": [
-      "The Thrill of It All (Special Video Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -15367,6 +15234,27 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "a20c862e277670fa1d44977b",
+    "title": "I've Tried Everything But Therapy",
+    "normalized_title": "i ve tried everything but therapy",
+    "primary_artist_id": "70d68cc8366fe38778846211",
+    "track_ids": [
+      "17c986a85d4ff2f11b848e13",
+      "492f797bafb946958cada19a",
+      "69ff7c5c7573dfb344c3a1a9",
+      "a2cceebacd0ce71eef31c2ea"
+    ],
+    "source_titles": [
+      "I've Tried Everything But Therapy (Part 2)",
+      "I've Tried Everything But Therapy (Part 1)"
+    ],
+    "edition_labels": [
+      "I've Tried Everything But Therapy (Part 2)",
+      "I've Tried Everything But Therapy (Part 1)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "a23af079ebbfd1c9601fa7c8",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -15378,22 +15266,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "a2bcf308b7ebb7920a641f65",
-    "title": "Waiting to Exhale (Original Soundtrack Album)",
-    "normalized_title": "waiting to exhale original soundtrack album",
-    "primary_artist_id": "e1e14c6c1c6d4046817c1c10",
-    "track_ids": [
-      "56b93017b37d22f3d0ed26ec",
-      "839a70107389e5f45d3aecca",
-      "b604c54a7ea56cf48ae322e0"
-    ],
-    "source_titles": [
-      "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -15452,24 +15324,48 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "a4d424156384a99c7a0fbc55",
-    "title": "All Eyez On Me (Remastered)",
-    "normalized_title": "all eyez on me remastered",
-    "primary_artist_id": "fbb2851e48813e922b9330d5",
+    "id": "a48d2992677b86e73754d380",
+    "title": "What's The 411?",
+    "normalized_title": "what s the 411",
+    "primary_artist_id": "4e2f259cc216856d65e57210",
     "track_ids": [
-      "04ec3150fc259e77e6bdffc0",
-      "0ffde1561cbc102ac25aaa6c",
-      "3fdd2fb5c64007f706e065a4",
-      "7a0cc3ff7420394d45328df3",
-      "994b93cd4ef5f179dfd245c8",
-      "bad17643eaf7ead36a527412",
-      "d1b29ee961b643d56e7f85df",
-      "e9ba2d1a3f0d2502880d50c6"
+      "351233d06610e7ae9f2b1656",
+      "3987dccea0c612995af04590",
+      "9b9ca0ee5ac39c100c28e386"
     ],
     "source_titles": [
-      "All Eyez On Me (Remastered)"
+      "What's The 411?",
+      "What's the 411? (remix)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "What's the 411? (remix)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "a516c24266a4afceec50e1c8",
+    "title": "Squid Game - Single",
+    "normalized_title": "squid game single",
+    "primary_artist_id": "54c8c42fed300c893d719a14",
+    "track_ids": [
+      "16f6764ccee823f70f773e9b",
+      "69d15a1d37b4805ff40c4d0e",
+      "d200d181ea80c9f84b4f3067"
+    ],
+    "source_titles": [
+      "Squid Game (Amapiano - Longer Version) - Single",
+      "Squid Game (Amapiano) - Single",
+      "Squid Game (Amapiano ) [Amapiano] - Single",
+      "Squid Game (Amapiano ) [Amapiano]-Single",
+      "Squid Game (Amapiano Remix) - Single"
+    ],
+    "edition_labels": [
+      "Squid Game (Amapiano - Longer Version) - Single",
+      "Squid Game (Amapiano) - Single",
+      "Squid Game (Amapiano ) [Amapiano] - Single",
+      "Squid Game (Amapiano ) [Amapiano]-Single",
+      "Squid Game (Amapiano Remix) - Single"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -15490,7 +15386,7 @@
   },
   {
     "id": "a60b94e131b4366adef03ce8",
-    "title": "Memoirs of an Imperfect Angel",
+    "title": "Memoirs of an imperfect Angel",
     "normalized_title": "memoirs of an imperfect angel",
     "primary_artist_id": "2fc8ae64f34795cde74ada7e",
     "track_ids": [
@@ -15513,9 +15409,16 @@
       "f953845bd70c0f5da3aff71c"
     ],
     "source_titles": [
-      "Memoirs of an Imperfect Angel"
+      "Memoirs of an imperfect Angel (iTunes Version)",
+      "Memoirs of an Imperfect Angel",
+      "Memoirs of an Imperfect Angel (International Version)",
+      "Memoirs of an Imperfect Angel (Special Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Memoirs of an imperfect Angel (iTunes Version)",
+      "Memoirs of an Imperfect Angel (International Version)",
+      "Memoirs of an Imperfect Angel (Special Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -15552,7 +15455,9 @@
       "141a60b0fd712474f112afb1",
       "189156882fcb127f1156fef3",
       "30be5b6d44b752b7042688db",
+      "36db48c802494d5795a92fc6",
       "3b690c3571a81e2aae9c66cb",
+      "43351309a1b6b4a55034aebb",
       "4eadfe7bd1e89e1db6bdb2ec",
       "50a7f82b0b89215f47852bfc",
       "51d1cfe8316ac747552dbcf5",
@@ -15566,12 +15471,18 @@
       "9ef7d289b72311bf99334a23",
       "b2adfe424d2a1ef4a9a3ce25",
       "b6d6994c4c877fb13432caef",
-      "cc3c614b119fbb7e21f7af17"
+      "cc3c614b119fbb7e21f7af17",
+      "ef2ba34ac47d169ddf9e3eb2"
     ],
     "source_titles": [
-      "The Emancipation of Mimi"
+      "The Emancipation of Mimi",
+      "The Emancipation of Mimi (Ultra Platinum Edition)",
+      "The Emancipation of Mimi (International Jewel)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "The Emancipation of Mimi (Ultra Platinum Edition)",
+      "The Emancipation of Mimi (International Jewel)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -15614,28 +15525,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "a7517fa5ec96724f7484c4fb",
-    "title": "Pink Friday: Roman Reloaded The Re-Up (Explicit Version)",
-    "normalized_title": "pink friday roman reloaded the re up explicit version",
-    "primary_artist_id": "c9754d01cd182b725ddf9667",
-    "track_ids": [
-      "2b1e23ddd8deee2e64c92b8f",
-      "341a117f263eaa918f714509",
-      "41d6cc87d420ce8c49b67364",
-      "9272273039c6354dfa8cf321",
-      "9faa1c8aa4872f45a05ca938",
-      "a01eb9e6b3c3c6718fb06989",
-      "aab5e98fb1a8aff766af2a2d",
-      "e5fe0fb7af2c7432fbcf3cd4",
-      "f741e76181db0074b072f0d1"
-    ],
-    "source_titles": [
-      "Pink Friday: Roman Reloaded The Re-Up (Explicit Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "a8ed5ef921586068e4f68bdf",
     "title": "Never Too Much: Greatest Hits",
     "normalized_title": "never too much greatest hits",
@@ -15660,15 +15549,19 @@
       "44d10f89473fe5ef9262e068",
       "6cd07b1bee805105e043bf17",
       "80cbbae37b510aaef36a76b9",
-      "bca8bfc013ee5284a862a183"
+      "923741d59a200b47292439fe",
+      "bca8bfc013ee5284a862a183",
+      "ea756078255d407600c1d694"
     ],
     "source_titles": [
       "Cooleyhighharmony (Expanded Edition)",
+      "Cooleyhighharmony (Bonus Tracks Version)",
       "Cooleyhighharmony",
       "Cooleyhighharmony - Expanded Edition"
     ],
     "edition_labels": [
       "Cooleyhighharmony (Expanded Edition)",
+      "Cooleyhighharmony (Bonus Tracks Version)",
       "Cooleyhighharmony - Expanded Edition"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -15770,9 +15663,12 @@
       "f8092352bef536306be7223e"
     ],
     "source_titles": [
+      "3 (EP)",
       "3"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "3 (EP)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -16028,23 +15924,6 @@
     ],
     "source_titles": [
       "blue water road"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "acd5d4bbbbfe54da7ed0efcc",
-    "title": "The Idol Episode 4 (Music from the HBO Original Series)",
-    "normalized_title": "the idol episode 4 music from the hbo original series",
-    "primary_artist_id": "f2ecd660a31b873f0547540a",
-    "track_ids": [
-      "09770536c8374c2cb41e578b",
-      "42eeaeb6da7bd3a85ff4e7ef",
-      "9558b3998d339379b08c7226"
-    ],
-    "source_titles": [
-      "The Idol Episode 4 (Music from the HBO Original Series)",
-      "The Idol Episode 4 - Music from the HBO Original Series"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -16358,25 +16237,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "b054e2fb90d621bd24b7dcbc",
-    "title": "Cooleyhighharmony (Bonus Tracks Version)",
-    "normalized_title": "cooleyhighharmony bonus tracks version",
-    "primary_artist_id": "a81a5972cae14f371939064b",
-    "track_ids": [
-      "44d10f89473fe5ef9262e068",
-      "6cd07b1bee805105e043bf17",
-      "80cbbae37b510aaef36a76b9",
-      "923741d59a200b47292439fe",
-      "bca8bfc013ee5284a862a183",
-      "ea756078255d407600c1d694"
-    ],
-    "source_titles": [
-      "Cooleyhighharmony (Bonus Tracks Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "b060367194c0d368c8bf3e60",
     "title": "good kid, m.A.A.d city",
     "normalized_title": "good kid m a a d city",
@@ -16443,20 +16303,17 @@
       "5fe8a5a9cf517903022ef14d",
       "608f5a8b7c1ce038d56b1088",
       "7cd002eda78733e0fd0a2bbc",
-      "935b8b3b6c186bce155f3e97",
       "9faa1c8aa4872f45a05ca938",
       "a06999d2f782a93777a99ee3",
       "b343788339571afe141ef482"
     ],
     "source_titles": [
       "Pink Friday ... Roman Reloaded (Deluxe)",
-      "Pink Friday ... Roman Reloaded - Deluxe",
-      "Pink Friday (Roman Reloaded) [Deluxe Edition]"
+      "Pink Friday ... Roman Reloaded - Deluxe"
     ],
     "edition_labels": [
       "Pink Friday ... Roman Reloaded (Deluxe)",
-      "Pink Friday ... Roman Reloaded - Deluxe",
-      "Pink Friday (Roman Reloaded) [Deluxe Edition]"
+      "Pink Friday ... Roman Reloaded - Deluxe"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -16629,6 +16486,25 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "b21115194f91b4dd159848ec",
+    "title": "Iyamemeza",
+    "normalized_title": "iyamemeza",
+    "primary_artist_id": "bb5b17e13831e140c3731880",
+    "track_ids": [
+      "832f9fe1047361c30a4d6b95",
+      "b8efd2c2c8560e8d44d9a8fa",
+      "f5f93e43b4d16d7a07b66f00"
+    ],
+    "source_titles": [
+      "Iyamemeza",
+      "Iyamemeza (feat. Drip Gogo & The Lowkeys)"
+    ],
+    "edition_labels": [
+      "Iyamemeza (feat. Drip Gogo & The Lowkeys)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "b21c9b4d5542da53bef639a3",
     "title": "Plan A",
     "normalized_title": "plan a",
@@ -16646,22 +16522,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "b2aae702f37e337e10b7a03e",
-    "title": "3 (EP) - Single",
-    "normalized_title": "3 ep single",
-    "primary_artist_id": "e0d341324a866ff61caca449",
-    "track_ids": [
-      "159ce3c862fef3249b616480",
-      "92f27df7983277dccac00a9f",
-      "f8092352bef536306be7223e"
-    ],
-    "source_titles": [
-      "3 (EP) - Single"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "b2b545e84e78da7a100789f4",
     "title": "Allure",
     "normalized_title": "allure",
@@ -16673,23 +16533,6 @@
     ],
     "source_titles": [
       "Allure"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "b2cb5558666109aed00bcf2b",
-    "title": "Take My Breath (Single Package) - Single",
-    "normalized_title": "take my breath single package single",
-    "primary_artist_id": "f2ecd660a31b873f0547540a",
-    "track_ids": [
-      "150ea4421b4d32b4afb7d172",
-      "517d74d6f78258c136eeb843",
-      "c7b8b088fb102b48c7c6a256"
-    ],
-    "source_titles": [
-      "Take My Breath (Single Package) - Single",
-      "Take My Breath (Single Package)-Single"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -16770,22 +16613,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "b2f42884a503eb6cae6ce86b",
-    "title": "Saturday Night Fever (The Original Movie Soundtrack Deluxe Edition)",
-    "normalized_title": "saturday night fever the original movie soundtrack deluxe edition",
-    "primary_artist_id": "ab398f8ed42bcad4057f6c08",
-    "track_ids": [
-      "6885c11a76eda1f23610c396",
-      "b5cad70ac6f6c61d0b5df3b6",
-      "f930dd0c9f1bbcd1c57b2c9d"
-    ],
-    "source_titles": [
-      "Saturday Night Fever (The Original Movie Soundtrack Deluxe Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -16980,47 +16807,32 @@
       "d425bcb115dc8fd8237a4a62"
     ],
     "source_titles": [
+      "Nine Track Mind (Special Edition)",
       "Nine Track Mind",
       "Nine Track Mind Deluxe"
     ],
     "edition_labels": [
+      "Nine Track Mind (Special Edition)",
       "Nine Track Mind Deluxe"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "b5f28f4d87c40b44bee8526c",
-    "title": "BEYONCÉ (Platinum Edition)",
-    "normalized_title": "beyonce platinum edition",
-    "primary_artist_id": "d4b4d6c3df118803e75af84b",
+    "id": "b5bab03959c85d45c0f1a28e",
+    "title": "3 - Single",
+    "normalized_title": "3 single",
+    "primary_artist_id": "e0d341324a866ff61caca449",
     "track_ids": [
-      "05482c1c37d13fa10f0b7c1f",
-      "0ef159679e478982d836c71d",
-      "1bb5bed57d4dddecfc0241df",
-      "2b42d2a495602351d9acacef",
-      "3316736e3496063b726927d7",
-      "348ffbcf338c1c9702e3684a",
-      "4305d625f26c6f2bb835f6c6",
-      "495430d9b664cbdaf65021e3",
-      "4e6c7c266cdbc58b90ce8e55",
-      "4f81b74508203add1b6b36fa",
-      "52e03193d2becac21e4244e2",
-      "5441b66bb4bc1d68be141b87",
-      "576f11e532fc50e19f65e065",
-      "5c1a183bd2619f99f06f07f6",
-      "5d9075c43a082565b2576ac5",
-      "7ceefc369563ad945015d85d",
-      "93be3536b34d1ddcb89f95e4",
-      "99cf447f7bad88871d2c433a",
-      "ae7362e2e2b8612a312434c4",
-      "b91f3f0dbf06c6655b6f0973",
-      "e553335c05d147fe21ac6260"
+      "159ce3c862fef3249b616480",
+      "92f27df7983277dccac00a9f",
+      "f8092352bef536306be7223e"
     ],
     "source_titles": [
-      "BEYONCÉ (Platinum Edition)",
-      "BEYONCÉ [Platinum Edition]"
+      "3 (EP) - Single"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "3 (EP) - Single"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -17041,7 +16853,7 @@
   },
   {
     "id": "b61972ebd865b2f23baf2372",
-    "title": "Crysalis",
+    "title": "CRYSALIS",
     "normalized_title": "crysalis",
     "primary_artist_id": "150bd356fdd48f75b9fa93e9",
     "track_ids": [
@@ -17053,7 +16865,11 @@
       "54d1876767152eb7cadf0fef",
       "55b4b2213b4c6d5482d0ec70",
       "5d71b6c9ef507310f4c314f5",
+      "8249e5c84bb1635aca0e68fb",
+      "87daa6335ecd49756e380e40",
+      "88703e89e1384b63bfaf96c9",
       "a58ffb080c01cd1cc5c956d2",
+      "ba7c1f6e53121937d66bc1e3",
       "c09ea9d075fcd69b4707aa73",
       "c33fd880d4dc84380d334ac1",
       "cc56263201dea688f251564a",
@@ -17061,9 +16877,14 @@
       "f44d4cdbbc52ea2b704d654c"
     ],
     "source_titles": [
-      "Crysalis"
+      "CRYSALIS (CODA)",
+      "Crysalis",
+      "CRYSALIS [Clean]"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "CRYSALIS (CODA)",
+      "CRYSALIS [Clean]"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -17118,26 +16939,12 @@
       "e5482e3c519c18b44c81666f"
     ],
     "source_titles": [
+      "Disturbing Tha Peace Presents Bobby Valentino (UK Version)",
       "Disturbing Tha Peace Presents Bobby Valentino"
     ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "b7aaf52d9f3b3dbfdad91122",
-    "title": "Bad (25th Anniversary)",
-    "normalized_title": "bad 25th anniversary",
-    "primary_artist_id": "0f82792eefe3cbf090481849",
-    "track_ids": [
-      "0b76a2a70cc848f3c2070956",
-      "83dbe9627038a9de40a5aef8",
-      "b40bc16eff48f8c7e59e49b5"
+    "edition_labels": [
+      "Disturbing Tha Peace Presents Bobby Valentino (UK Version)"
     ],
-    "source_titles": [
-      "Bad (25th Anniversary)",
-      "Bad 25th Anniversary"
-    ],
-    "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -17297,20 +17104,21 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "b92a6733928318d248e54e88",
-    "title": "FROM FLORIDA'S FINEST DELU/XXX [FOR MY DELUSIONAL EX]",
-    "normalized_title": "from florida s finest delu xxx for my delusional ex",
-    "primary_artist_id": "1a2003e5dd18395615abc2ef",
+    "id": "b90294c008821b5c0920cb69",
+    "title": "Thursday",
+    "normalized_title": "thursday",
+    "primary_artist_id": "f2ecd660a31b873f0547540a",
     "track_ids": [
-      "04f33753b412f10de027297b",
-      "1d5ed72a8ecaad8793309b25",
-      "1ff60bcad66dbaae299e30f6",
-      "5393a1d3e3b1b7072bf3f5a0"
+      "24ae61fabe4569d88d58463d",
+      "d17fc581f9371f0d83fbfc5b",
+      "e3a706656d8cce9b205cd42c"
     ],
     "source_titles": [
-      "FROM FLORIDA'S FINEST DELU/XXX [FOR MY DELUSIONAL EX]"
+      "Thursday (Original)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Thursday (Original)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -17641,9 +17449,12 @@
       "efa5906aeb050ebac3385ebf"
     ],
     "source_titles": [
-      "PHOLKS"
+      "PHOLKS",
+      "PHOLKS [Clean]"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "PHOLKS [Clean]"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -17670,23 +17481,21 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "bc8b16774e2704938665c4d9",
-    "title": "Hurry Up Tomorrow (Video Album)",
-    "normalized_title": "hurry up tomorrow video album",
-    "primary_artist_id": "f2ecd660a31b873f0547540a",
+    "id": "be166c14f80ff639cdadbdf3",
+    "title": "CRYSALIS",
+    "normalized_title": "crysalis",
+    "primary_artist_id": "390bdc04d68a3b2d689c1cf9",
     "track_ids": [
-      "075bcf70d48e335112d7dfc3",
-      "316da396f139ccd30a7a73fb",
-      "97008e16b3c7565133be896b",
-      "d342cf7d20fdfd90f3b5c85f",
-      "d472efe70d899913105c5e1b",
-      "ea7fdbd7eb33ae367fca1e59",
-      "ef6343ffc28121e978e25fb9"
+      "316604629ee89b9de7da9c88",
+      "66e142b280755c0814c7d27d",
+      "e0e525ff44768bd3b687cb0b"
     ],
     "source_titles": [
-      "Hurry Up Tomorrow (Video Album)"
+      "CRYSALIS (CODA)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "CRYSALIS (CODA)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -17714,40 +17523,44 @@
     "primary_artist_id": "c9754d01cd182b725ddf9667",
     "track_ids": [
       "0ce797a55a6a75e578d8bab8",
+      "1ec3a6c46ef730aed6c933ff",
       "24ce0ea744f23e58e57f153a",
+      "2778068afe853f86ea593233",
+      "2b1e23ddd8deee2e64c92b8f",
       "2e084205e4c1dfd95f8b8f3c",
+      "3151db6194f9daf4464b18b2",
+      "341a117f263eaa918f714509",
+      "40da06837d1b93e7f67ad6ac",
       "41d6cc87d420ce8c49b67364",
       "434b12fc333280faf7c2dbdc",
       "4550e4963f86cd3ed99fe2a5",
+      "5fe8a5a9cf517903022ef14d",
+      "608f5a8b7c1ce038d56b1088",
+      "66b183de5513ad757774085c",
+      "6a939110a89191723743e305",
       "7cc58d5bbc03cb0387ced3bf",
       "7cd002eda78733e0fd0a2bbc",
       "8f9ee92efd9a75bcbcd7ca2a",
       "9272273039c6354dfa8cf321",
+      "935b8b3b6c186bce155f3e97",
+      "99e9daa67b07f6b86df370a5",
+      "9faa1c8aa4872f45a05ca938",
+      "a01eb9e6b3c3c6718fb06989",
       "aab5e98fb1a8aff766af2a2d",
       "b343788339571afe141ef482",
+      "e5fe0fb7af2c7432fbcf3cd4",
+      "e9e1fb523ecb7211efb131c4",
       "f741e76181db0074b072f0d1"
     ],
     "source_titles": [
-      "Pink Friday: Roman Reloaded the Re-Up"
+      "Pink Friday: Roman Reloaded the Re-Up",
+      "Pink Friday: Roman Reloaded the Re-Up (Booklet Version)",
+      "Pink Friday: Roman Reloaded The Re-Up (Explicit Version)"
     ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "bed9990536bb292698a13195",
-    "title": "The Pinkprint (International Deluxe Explicit)",
-    "normalized_title": "the pinkprint international deluxe explicit",
-    "primary_artist_id": "c9754d01cd182b725ddf9667",
-    "track_ids": [
-      "485c04da01cd856131f542bc",
-      "8f564babd781e4be2d459a23",
-      "e8c9be83771c12d2a93b0bf4"
+    "edition_labels": [
+      "Pink Friday: Roman Reloaded the Re-Up (Booklet Version)",
+      "Pink Friday: Roman Reloaded The Re-Up (Explicit Version)"
     ],
-    "source_titles": [
-      "The Pinkprint (International Deluxe Explicit)",
-      "The Pinkprint - International Deluxe Explicit"
-    ],
-    "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -17811,22 +17624,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "bfb7a9bb2165cf9af398af6f",
-    "title": "Alligator Bites Never Heal (Extended)",
-    "normalized_title": "alligator bites never heal extended",
-    "primary_artist_id": "3ef2346bad9cfd4f31edb94e",
-    "track_ids": [
-      "11c3faab4f7a54d6f09cb8f7",
-      "9265a1199cfcc3b17d3ec552",
-      "de31bb26aaaf1f691803aade"
-    ],
-    "source_titles": [
-      "Alligator Bites Never Heal (Extended)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -17964,22 +17761,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "c1c59379fd61145e7488aab2",
-    "title": "Dutty Rock (20th Anniversary)",
-    "normalized_title": "dutty rock 20th anniversary",
-    "primary_artist_id": "3353e1bb22d865e9fb6cd5bd",
-    "track_ids": [
-      "90f9b1bc879f71be6407b5e9",
-      "c6ee4441a1bd0dfb587e154e",
-      "f5e74481526f47d5a07f6155"
-    ],
-    "source_titles": [
-      "Dutty Rock (20th Anniversary)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "c1e6ca53381f586013af0106",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -18036,6 +17817,27 @@
       "Unknown Album"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "c273622a7ddf48ea717d379d",
+    "title": "Purple Rain",
+    "normalized_title": "purple rain",
+    "primary_artist_id": "2d0b0730b6758fcae12f55bc",
+    "track_ids": [
+      "14e3a2a073daa221ce6309dc",
+      "3e1db062df2c7f4eba374cfd",
+      "ac124e57282d21b54d7ed30f"
+    ],
+    "source_titles": [
+      "Purple Rain",
+      "Purple Rain (Deluxe Expanded Edition) [2015 Paisley Park Remaster]",
+      "Purple Rain (Deluxe Expanded Edition)"
+    ],
+    "edition_labels": [
+      "Purple Rain (Deluxe Expanded Edition) [2015 Paisley Park Remaster]",
+      "Purple Rain (Deluxe Expanded Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -18167,27 +17969,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "c4f8db52dcc919b9c4949184",
-    "title": "My Life II...The Journey Continues (Act 1)",
-    "normalized_title": "my life ii the journey continues act 1",
-    "primary_artist_id": "4e2f259cc216856d65e57210",
-    "track_ids": [
-      "43daddaf1f18c0ca10b69f95",
-      "9b3e7fd87299c7d159bc68ad",
-      "a029806dac9e77fa2f131f22"
-    ],
-    "source_titles": [
-      "My Life II...The Journey Continues (Act 1) (Deluxe)",
-      "My Life II...The Journey Continues (Act 1) [Deluxe]",
-      "My Life II...The Journey Continues (Act 1)"
-    ],
-    "edition_labels": [
-      "My Life II...The Journey Continues (Act 1) (Deluxe)",
-      "My Life II...The Journey Continues (Act 1) [Deluxe]"
-    ],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "c5046333bb7237ccaa5544c4",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -18216,6 +17997,28 @@
       "Unknown Album"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "c506cf8e272edd04ebcef0f8",
+    "title": "Hunting High and Low",
+    "normalized_title": "hunting high and low",
+    "primary_artist_id": "88a7a8427c2914245ed39bd7",
+    "track_ids": [
+      "1254cae94c17371c700b71e7",
+      "995f195ae846bfed5c7dbf24",
+      "ce7867e1a2c33bc8f089d3ae",
+      "dfc6158c6710f90a9239b6d9"
+    ],
+    "source_titles": [
+      "Hunting High and Low",
+      "Hunting High and Low (30th Anniversary Super Deluxe)",
+      "Hunting High & Low (Remastered)"
+    ],
+    "edition_labels": [
+      "Hunting High and Low (30th Anniversary Super Deluxe)",
+      "Hunting High & Low (Remastered)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -18361,6 +18164,7 @@
       "283e3da5f9cd48d5ac0db5d7",
       "29fb5b7d8060c72a6aa75d51",
       "31ef80139649978d0aec52c4",
+      "35a8992f83c0d4d4580e4dd7",
       "6c3481178e7886616eceb9ab",
       "7f95958a2f1dfdf211e1d3ec",
       "89d287a541d4f37bb2f48730",
@@ -18380,9 +18184,12 @@
       "fe400cf69de2e2ddefd5d190"
     ],
     "source_titles": [
-      "Beam Me Up Scotty"
+      "Beam Me Up Scotty",
+      "Beam Me Up Scotty (Remastered)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Beam Me Up Scotty (Remastered)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -18539,6 +18346,28 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "c8071fcf098702cbfab6731d",
+    "title": "House of Balloons",
+    "normalized_title": "house of balloons",
+    "primary_artist_id": "f2ecd660a31b873f0547540a",
+    "track_ids": [
+      "1155f6d0736e67e06be5632f",
+      "38d6948ad7e81faeb9eefcc5",
+      "5834c463907661b4e0a07170",
+      "a2f0847c8dd46cce5fbd0d10",
+      "db3715fdd5291873ac418525",
+      "e9b0f6521662edfdc36e3685",
+      "ea7872c7d0200d61b5cc9d63"
+    ],
+    "source_titles": [
+      "House of Balloons (Original)"
+    ],
+    "edition_labels": [
+      "House of Balloons (Original)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "c83525f3e0acc5a5e59a75e1",
     "title": "Why Not More?",
     "normalized_title": "why not more",
@@ -18549,14 +18378,21 @@
       "6be3f2299f76dddd51902890",
       "74d9b86d347b14c4cc602094",
       "800f9405e17f6f73af67c7e2",
+      "85999901439ffa2d7b756c3f",
       "891c9bd8abf035cee4224496",
       "a12a474d5851cbc4592095d2",
-      "b2af94212aa8d7eb18995790"
+      "b2af94212aa8d7eb18995790",
+      "c6b5af4b120e91847b2a6f24"
     ],
     "source_titles": [
-      "Why Not More?"
+      "Why Not More?",
+      "Why Not More? (MORE!)",
+      "Why Not More? (Extended)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Why Not More? (MORE!)",
+      "Why Not More? (Extended)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -18664,10 +18500,14 @@
     ],
     "source_titles": [
       "Queen",
-      "Queen (Deluxe)"
+      "Queen (Deluxe)",
+      "Queen (Target Deluxe Edition)",
+      "Queen (Bonus Version)"
     ],
     "edition_labels": [
-      "Queen (Deluxe)"
+      "Queen (Deluxe)",
+      "Queen (Target Deluxe Edition)",
+      "Queen (Bonus Version)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -18971,6 +18811,57 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "ce7acda595f19d473b8e7cff",
+    "title": "Heartbreak on a Full Moon : Cuffing Season - 12 Days of Christmas",
+    "normalized_title": "heartbreak on a full moon cuffing season 12 days of christmas",
+    "primary_artist_id": "61d4861e9764f699ba10fdbe",
+    "track_ids": [
+      "103cb163a66b19ee8248e6b8",
+      "115541a62d261b03a8aa9eba",
+      "12cef614c3639ffd23dd9389",
+      "19769a164c03e3e99806caed",
+      "227a7d3dd7d17b637e5631c8",
+      "30fd344c0a6268db5e23b766",
+      "3529348f235dba489df8f097",
+      "3b81acf6f419ff66a56faff7",
+      "45ba5369131e61660ca8d700",
+      "4d0070390d528960425016e9",
+      "500c65580fbb92de4f536c87",
+      "530059ac5973434a53115a99",
+      "5407e26b02870c40ccfe1d92",
+      "6144c6c7f9270f845334bc86",
+      "61e671200bdae86aa75078ba",
+      "6cdbe9e3468534bb909592cc",
+      "78a6ff4d3e4bc45e6b23daf5",
+      "7c48ed657faacaf382ba8b16",
+      "81fbe8a6f509e0ea7ad81433",
+      "8918e34fd86d2e7b96a9d80b",
+      "a45947db67c1c8d3b818a986",
+      "aa64719a1d349a6d1ff553f8",
+      "ae0418321848e1b37accdefe",
+      "b8b6f543ec93f7d2de5124ce",
+      "bab461771b89e0ab2e2e917e",
+      "bc7a6a9adb06c9b9a94008c0",
+      "bd79c6a660792e2526c4c89c",
+      "bfb67c77a4e4d3466d49591e",
+      "c2b29cb9e16ae73ec7aab973",
+      "c9c4e7dc4c643f6f4c0c25f5",
+      "d30e6db390f5ae1af0fc06d4",
+      "daed6f63e912d874d2726e08",
+      "dd7c1a008afb9212bb0eb815",
+      "e35e2959d4c91f5006ca31dd",
+      "ee21234a57d95e9ede83baaa",
+      "f9403f2bb518928c44435cef"
+    ],
+    "source_titles": [
+      "Heartbreak on a Full Moon (Deluxe Edition): Cuffing Season - 12 Days of Christmas"
+    ],
+    "edition_labels": [
+      "Heartbreak on a Full Moon (Deluxe Edition): Cuffing Season - 12 Days of Christmas"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "ce9fc8d385919db68eb5043c",
     "title": "My Heart",
     "normalized_title": "my heart",
@@ -19201,6 +19092,27 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "d0491aaed9ea0554662be6dd",
+    "title": "Scorpion Kings",
+    "normalized_title": "scorpion kings",
+    "primary_artist_id": "2c30c975ab864593a18cbe65",
+    "track_ids": [
+      "29b3b6809d8c5131d06e759f",
+      "29cea7a3ad27706f9ef7dce0",
+      "2e64f2ad4eac72c594142b71",
+      "4a8a4ada3b94e859b807a829",
+      "8b4b02edb67ab5fee3ac9803",
+      "95f3f07d3f0db79eb61e73cc"
+    ],
+    "source_titles": [
+      "Scorpion Kings (Live)"
+    ],
+    "edition_labels": [
+      "Scorpion Kings (Live)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "d082cc5951750d8cc83a3508",
     "title": "Obsidian",
     "normalized_title": "obsidian",
@@ -19235,31 +19147,20 @@
   },
   {
     "id": "d24f7725a475a3fbd93f6546",
-    "title": "I Am...Sasha Fierce (Platinum Edition)",
+    "title": "I AM...SASHA FIERCE - Platinum Edition",
     "normalized_title": "i am sasha fierce platinum edition",
     "primary_artist_id": "d4b4d6c3df118803e75af84b",
     "track_ids": [
-      "19bf86a5e8351ef2078bea44",
-      "1ba99999189005a024372b55",
-      "4f095e8acf2403b2a0f14c5c",
       "511d474f983bee7b6332dbe4",
       "575e01d0253aecadbd6d44be",
       "6e08a3279c1313f657ce2b21",
       "7aae763111436fc6f395c4cb",
-      "98c2e91a21eaf79b7909a6da",
-      "abd37b6a605210767cb2395d",
       "b0b6df6a1419e74fb93416f5",
-      "b725cae6344f319e066532ff",
-      "c6ee911580e61a7959eeb5f2",
       "d6659ad5e79d5b8ddef8eb87",
-      "d915082bbbece41c4395515d",
-      "df69e1235f7134cd3198c147",
       "e56f33eea8a8475e65e15bf0",
       "e91552a8d41874bddaab2715"
     ],
     "source_titles": [
-      "I Am...Sasha Fierce (Platinum Edition)",
-      "I Am... Sasha Fierce (Platinum Edition)",
       "I AM...SASHA FIERCE - Platinum Edition"
     ],
     "edition_labels": [],
@@ -19719,31 +19620,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "d6f37286dbdc34098a04d077",
-    "title": "The Shave Experiment (Director's Cut)",
-    "normalized_title": "the shave experiment director s cut",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
-    "track_ids": [
-      "0532cf6eb2476d92e17ef379",
-      "254f090438eefe13f6352dc1",
-      "342ba5fe0791ed398e35a967",
-      "34f7c13eeae50b7e7d6cec45",
-      "46df91a0cb27a225920ab072",
-      "60cf4f751d0ef9665488ea62",
-      "778f9e1bb531a0dac88b6ae6",
-      "9a61d8668b5b167f73dfde7f",
-      "9c2aa7fd2d068faec8ba2cae",
-      "b0d5eba873bae6af9a901eca",
-      "d6dc0ffb4322e8c5a76661e7",
-      "fefa38017da86f6fa41d52e1"
-    ],
-    "source_titles": [
-      "The Shave Experiment (Director's Cut)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "d74e2d57fdbde18258a42a4b",
     "title": "Lungu Boy",
     "normalized_title": "lungu boy",
@@ -19844,9 +19720,12 @@
       "fdfaeebe1984c13d659efba8"
     ],
     "source_titles": [
-      "channel ORANGE"
+      "channel ORANGE",
+      "channel ORANGE (Explicit Version)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "channel ORANGE (Explicit Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -19878,9 +19757,12 @@
     ],
     "source_titles": [
       "Love. Angel. Music. Baby.",
+      "Love Angel Music Baby (Deluxe International Version)",
       "Love Angel Music Baby"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Love Angel Music Baby (Deluxe International Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -20032,7 +19914,9 @@
       "13b92fc19178343518687e8c",
       "18281b4ae26b76ac82ba9261",
       "2eb7ed812e96420dc6b0854d",
+      "379d906a7277dd52e4868dcf",
       "5897301cb1124ba3bd2512c8",
+      "5f3bbb1d1b5406b8a3448808",
       "780fdaab4e7d564d672afad0",
       "91395c08bd1be8dcd6bf8a33",
       "9475bb8a8e50759b7e5a36f1",
@@ -20043,7 +19927,9 @@
       "b71648f391333dd8e94f0894",
       "c260fcd796bb924f7b14073c",
       "c96bf9c909a46ebf29f22d05",
+      "d12476b248a9dfbf37632faa",
       "d169d30d516baa022ffdd01e",
+      "d7852fc8277c7e02618a8fc5",
       "db421841ef705261ede1fdb7",
       "f63c3a93e157319904a1f405",
       "fbee2f6bcce53a78ce5e3b9a",
@@ -20051,9 +19937,14 @@
       "fcaf7fc79defc030fc76765c"
     ],
     "source_titles": [
-      "AM I THE DRAMA?"
+      "AM I THE DRAMA?",
+      "AM I THE DRAMA? (Beat Edition)",
+      "AM I THE DRAMA? (Ultimate Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "AM I THE DRAMA? (Beat Edition)",
+      "AM I THE DRAMA? (Ultimate Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -20239,25 +20130,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "dab4fca27fad5df07aa74c49",
-    "title": "Bad (Remastered)",
-    "normalized_title": "bad remastered",
-    "primary_artist_id": "0f82792eefe3cbf090481849",
-    "track_ids": [
-      "13c6ec3e1509e2be8ff028e6",
-      "3415c4dae8d9ffa102e980c8",
-      "4db14991cacb2bfacb37855f",
-      "72539b431fdffb8ddbe23906",
-      "76dc89adb4e8e266a79a64fa",
-      "83dbe9627038a9de40a5aef8"
-    ],
-    "source_titles": [
-      "Bad (Remastered)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "dac0f7b2f2874493623fe26d",
     "title": "STAY DANGEROUS",
     "normalized_title": "stay dangerous",
@@ -20345,11 +20217,13 @@
       "Unapologetic (Deluxe Version)",
       "Unapologetic",
       "Unapologetic (Deluxe)",
+      "Unapologetic (Edited Version)",
       "Unapologetic - Deluxe"
     ],
     "edition_labels": [
       "Unapologetic (Deluxe Version)",
       "Unapologetic (Deluxe)",
+      "Unapologetic (Edited Version)",
       "Unapologetic - Deluxe"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -20448,6 +20322,28 @@
       "Older"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "dbdbaccb398a8fbb95eb775d",
+    "title": "Say So",
+    "normalized_title": "say so",
+    "primary_artist_id": "3babf8dee8ffba9e2d9d9c67",
+    "track_ids": [
+      "a32719d3409aada11f58b196",
+      "c5938a53a374232395370933",
+      "fdf434e35c8a5b6fe8555480"
+    ],
+    "source_titles": [
+      "Say So (Snakehips Remix)",
+      "Say So (feat. Nicki Minaj)",
+      "Say So (feat. Nicki Minaj) [Original Version]"
+    ],
+    "edition_labels": [
+      "Say So (Snakehips Remix)",
+      "Say So (feat. Nicki Minaj)",
+      "Say So (feat. Nicki Minaj) [Original Version]"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -20580,20 +20476,33 @@
     "track_ids": [
       "08fac0bde657f5e0e00ac48b",
       "0b76a2a70cc848f3c2070956",
+      "13c6ec3e1509e2be8ff028e6",
       "26727d860282083f10eff219",
+      "3415c4dae8d9ffa102e980c8",
       "44c777c637bf811479b6da60",
+      "4db14991cacb2bfacb37855f",
       "5f9f3a48425ad56a4bb0eb15",
       "60e93a492a78ac2a7a2eac42",
+      "72539b431fdffb8ddbe23906",
+      "76dc89adb4e8e266a79a64fa",
       "80055ae94aa90d543f3314db",
+      "83dbe9627038a9de40a5aef8",
       "b40bc16eff48f8c7e59e49b5",
       "b5a7e11c952be3b6d025a991",
       "c37ce5bf15d33c8125a6c453",
       "cb17eb817682b82c90062f79"
     ],
     "source_titles": [
-      "Bad"
+      "Bad (25th Anniversary)",
+      "Bad",
+      "Bad (Remastered)",
+      "Bad (25th Anniversary Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Bad (25th Anniversary)",
+      "Bad (Remastered)",
+      "Bad (25th Anniversary Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -20692,15 +20601,19 @@
     "track_ids": [
       "0675f7ce351344f475376fe7",
       "26c274e50cdadfdc569ce51c",
+      "407d26fa9377d251910dac25",
       "7da733685372d7d2550cf3dc",
       "9fad789942a55040b1622c8d",
       "e66b18f2b2f1c6060fb76b22",
       "f7d78d1d834d183597a8ca15"
     ],
     "source_titles": [
-      "EVERYTHING IS LOVE"
+      "EVERYTHING IS LOVE",
+      "EVERYTHING IS LOVE (Clean)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "EVERYTHING IS LOVE (Clean)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -20721,24 +20634,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "dfa85c25a0e750bf66b95f69",
-    "title": "Whitney Houston (The Deluxe Anniversary Edition)",
-    "normalized_title": "whitney houston the deluxe anniversary edition",
-    "primary_artist_id": "e1e14c6c1c6d4046817c1c10",
-    "track_ids": [
-      "3905414fe557582ebb7a92ba",
-      "581c7d46ff41de32b07859d9",
-      "6d5e8627bd4625e01e304c22",
-      "c581b8b74e9312c66d7196ed",
-      "fad7c7ebdaba80391b53520f"
-    ],
-    "source_titles": [
-      "Whitney Houston (The Deluxe Anniversary Edition)"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -20779,24 +20674,6 @@
     "edition_labels": [
       "Can't Slow Down (Deluxe Edition)"
     ],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "e0a6b9963a903cb77875bd5f",
-    "title": "The Emancipation of Mimi (Ultra Platinum Edition)",
-    "normalized_title": "the emancipation of mimi ultra platinum edition",
-    "primary_artist_id": "2fc8ae64f34795cde74ada7e",
-    "track_ids": [
-      "141a60b0fd712474f112afb1",
-      "36db48c802494d5795a92fc6",
-      "43351309a1b6b4a55034aebb",
-      "51d1cfe8316ac747552dbcf5",
-      "ef2ba34ac47d169ddf9e3eb2"
-    ],
-    "source_titles": [
-      "The Emancipation of Mimi (Ultra Platinum Edition)"
-    ],
-    "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -20924,23 +20801,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "e2762323121777806a14df87",
-    "title": "LVRS PARADISE (SIDE A)",
-    "normalized_title": "lvrs paradise side a",
-    "primary_artist_id": "17bf45e4e0fe05e047999af1",
-    "track_ids": [
-      "48c8b5f25bdf7c3741758d37",
-      "6e1cc5f546f1710ebafcfafa",
-      "801f0a3759b607103cf2de1c",
-      "e677fcffe7475f5354afafc3"
-    ],
-    "source_titles": [
-      "LVRS PARADISE (SIDE A)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "e27c8d19c263a5605aa7c854",
     "title": "4 Da Ho's",
     "normalized_title": "4 da ho s",
@@ -21018,6 +20878,7 @@
     "primary_artist_id": "52a2c160a0104e1b0a9a53d1",
     "track_ids": [
       "04a9280bdbcef8689523e6c8",
+      "0958ce999d80e4d52b0f8e0b",
       "17596e5f79c786ad6ecacebd",
       "175a404d6b2b0b20f2f742c0",
       "18c58f16139b59cb9c84555a",
@@ -21035,9 +20896,12 @@
       "e9f8283f3afcf3be2d47150b"
     ],
     "source_titles": [
+      "Secrets (Remix Package)",
       "Secrets"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Secrets (Remix Package)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -21053,6 +20917,7 @@
       "84dd08e7265f54c91d9d5231",
       "8b5e126ed6a4856651317243",
       "8d30ee2372a522243adfeaa1",
+      "9265a1199cfcc3b17d3ec552",
       "9488c78caeea9ceb88790572",
       "97d98195ea87e8d76806c6ec",
       "a1a9fb7ceadccfc8e57ee101",
@@ -21067,26 +20932,32 @@
       "fccb79bb3e4eb9e63c548e20"
     ],
     "source_titles": [
-      "Alligator Bites Never Heal"
+      "Alligator Bites Never Heal",
+      "Alligator Bites Never Heal (Extended)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Alligator Bites Never Heal (Extended)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "e49ca38600f5ff9c89eb2495",
-    "title": "Broken By Desire To Be Heavenly Sent (Apple Music Edition)",
-    "normalized_title": "broken by desire to be heavenly sent apple music edition",
-    "primary_artist_id": "864af36bd6092826fa2ed768",
+    "id": "e4a3452070212acc53c6a52c",
+    "title": "No Pressure",
+    "normalized_title": "no pressure",
+    "primary_artist_id": "74e5e168f02537b94583e877",
     "track_ids": [
-      "28020c78e5c3c9657917da55",
-      "a41731b4d3060d46c64338ce",
-      "f120aac6db81567d3e6edf87",
-      "f954a108a87ae5ced400199c"
+      "1b15735197a0f049cf89554d",
+      "861c82f04beb545667136ac4",
+      "9bbba0b1f808bf3488bf51bd"
     ],
     "source_titles": [
-      "Broken By Desire To Be Heavenly Sent (Apple Music Edition)"
+      "No Pressure (Pt. 2)",
+      "No Pressure (Pt. 1)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "No Pressure (Pt. 2)",
+      "No Pressure (Pt. 1)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -21150,17 +21021,22 @@
     "normalized_title": "scorpion kings",
     "primary_artist_id": "1732bfeda5a02335133b6033",
     "track_ids": [
+      "092c41adbf5e5e833ffbbec3",
       "17aa96954309355479b6e88f",
       "62d42618ca4c66a92798c533",
+      "763a9bd292043bf4da9e1881",
       "7e9190f4b77fcdcd65eb8186",
       "8b24e9095b6537690a7683de",
       "eb0439418ea9d5ded5f0ca81",
       "f4bd3299b51f20432bcbdba4"
     ],
     "source_titles": [
-      "Scorpion Kings"
+      "Scorpion Kings",
+      "Scorpion Kings (Live)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Scorpion Kings (Live)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -21323,9 +21199,12 @@
       "fedbd8e53a0aa68c4c17677f"
     ],
     "source_titles": [
-      "Octane"
+      "Octane",
+      "Octane [Clean]"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Octane [Clean]"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -21493,6 +21372,25 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "e75d8a6b610dc8c9ef8ab384",
+    "title": "Broken By Desire To Be Heavenly Sent",
+    "normalized_title": "broken by desire to be heavenly sent",
+    "primary_artist_id": "864af36bd6092826fa2ed768",
+    "track_ids": [
+      "28020c78e5c3c9657917da55",
+      "a41731b4d3060d46c64338ce",
+      "f120aac6db81567d3e6edf87",
+      "f954a108a87ae5ced400199c"
+    ],
+    "source_titles": [
+      "Broken By Desire To Be Heavenly Sent (Apple Music Edition)"
+    ],
+    "edition_labels": [
+      "Broken By Desire To Be Heavenly Sent (Apple Music Edition)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "e7b52966969a2a7551046298",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -21603,6 +21501,24 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "e8b595b810333e5ab8cacb9d",
+    "title": "The Idol Episode 4",
+    "normalized_title": "the idol episode 4",
+    "primary_artist_id": "f2ecd660a31b873f0547540a",
+    "track_ids": [
+      "09770536c8374c2cb41e578b",
+      "42eeaeb6da7bd3a85ff4e7ef",
+      "9558b3998d339379b08c7226"
+    ],
+    "source_titles": [
+      "The Idol Episode 4 (Music from the HBO Original Series)"
+    ],
+    "edition_labels": [
+      "The Idol Episode 4 (Music from the HBO Original Series)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "e934c9153f759f66bb47a3a8",
     "title": "Stars",
     "normalized_title": "stars",
@@ -21616,12 +21532,16 @@
       "6e377293db410137a6f94fb5",
       "791d8079a6260df253f75206",
       "cbdf4fa0f17a827c14de3381",
-      "d929d47dbcc66c5d9d0e3086"
+      "d929d47dbcc66c5d9d0e3086",
+      "ec0e62d716f867b78859b729"
     ],
     "source_titles": [
+      "Stars (Collector's Edition)",
       "Stars"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Stars (Collector's Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -21860,23 +21780,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "ec9664610292bf446625f023",
-    "title": "AM I THE DRAMA? (Ultimate Edition)",
-    "normalized_title": "am i the drama ultimate edition",
-    "primary_artist_id": "dcae62d84e1cf925a05af41f",
-    "track_ids": [
-      "379d906a7277dd52e4868dcf",
-      "5f3bbb1d1b5406b8a3448808",
-      "d12476b248a9dfbf37632faa",
-      "d7852fc8277c7e02618a8fc5"
-    ],
-    "source_titles": [
-      "AM I THE DRAMA? (Ultimate Edition)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "ecbe3f558e4db57cc8f978df",
     "title": "GOT",
     "normalized_title": "got",
@@ -22056,6 +21959,7 @@
     "normalized_title": "hopeless fountain kingdom",
     "primary_artist_id": "f33bb59fd0d696e91a14f09a",
     "track_ids": [
+      "197b8f8134da4de698003e19",
       "26ac8243c0e6040fdccef4f4",
       "343f02096f8dd4836a3dac16",
       "763921b211531a8f65ddbe63",
@@ -22063,10 +21967,12 @@
     ],
     "source_titles": [
       "hopeless fountain kingdom (Deluxe)",
+      "hopeless fountain kingdom (Deluxe Plus)",
       "Hopeless Fountain Kingdom"
     ],
     "edition_labels": [
-      "hopeless fountain kingdom (Deluxe)"
+      "hopeless fountain kingdom (Deluxe)",
+      "hopeless fountain kingdom (Deluxe Plus)"
     ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
@@ -22132,6 +22038,25 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "f242db2d6a251b72c675d586",
+    "title": "The Best of Keith Sweat: Make You Sweat",
+    "normalized_title": "the best of keith sweat make you sweat",
+    "primary_artist_id": "3d4404baecb851729d2662f2",
+    "track_ids": [
+      "0b11711b8ba386c48509883e",
+      "745b226a65bb114dd226bc54",
+      "ae7d3630863cf4c267bbe13d"
+    ],
+    "source_titles": [
+      "The Best of Keith Sweat: Make You Sweat (Remastered)",
+      "The Best of Keith Sweat: Make You Sweat"
+    ],
+    "edition_labels": [
+      "The Best of Keith Sweat: Make You Sweat (Remastered)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "f26a983b07a2e014d7450bc7",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -22186,25 +22111,38 @@
     "normalized_title": "all eyez on me",
     "primary_artist_id": "fbb2851e48813e922b9330d5",
     "track_ids": [
+      "04ec3150fc259e77e6bdffc0",
       "0f9e261fea1a6efefdb2ef22",
+      "0ffde1561cbc102ac25aaa6c",
       "34696a227cb18f17a0632ee5",
       "352f9863f8a603c68eb63be1",
       "35a417982d4031470329b6f5",
+      "3fdd2fb5c64007f706e065a4",
       "47be70f22a46598a5742a9c5",
       "5199115a35ebbe6243b577b8",
       "74fd74ae7337a38d24049a56",
+      "7a0cc3ff7420394d45328df3",
       "8aac2e1d3accb37d13fc29a6",
+      "994b93cd4ef5f179dfd245c8",
       "a21d490bc2ad7c027f33c14d",
       "b8a206f96254b894e3342949",
+      "bad17643eaf7ead36a527412",
       "d172819f6ea504ebcff44236",
+      "d1b29ee961b643d56e7f85df",
       "d1b66d50e09de5438fc67fcc",
       "dd4835f246817de78c1933dd",
+      "e9ba2d1a3f0d2502880d50c6",
       "eb3ac85dd7cf93efcfce3a77"
     ],
     "source_titles": [
-      "All Eyez on Me"
+      "All Eyez on Me",
+      "All Eyez On Me (Remastered)",
+      "All Eyez On Me (Book 1)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "All Eyez On Me (Remastered)",
+      "All Eyez On Me (Book 1)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -22326,6 +22264,26 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "f48a19b4c0209b531dfa8ad0",
+    "title": "UMSHISO",
+    "normalized_title": "umshiso",
+    "primary_artist_id": "8e497eb3a215ff54fb9cea87",
+    "track_ids": [
+      "671cba5debb40b14ddc1fd1b",
+      "6f2307342cb2275d230cad22",
+      "a34fff2705434d65ff5fdde1",
+      "ca7f903bc9360d0b83140d80"
+    ],
+    "source_titles": [
+      "UMSHISO (Main Mix)",
+      "Umshiso"
+    ],
+    "edition_labels": [
+      "UMSHISO (Main Mix)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "f4ae852e6d3d4f992ecf5f30",
     "title": "Over It",
     "normalized_title": "over it",
@@ -22443,9 +22401,12 @@
       "fdd03f53227736a1addb4ee2"
     ],
     "source_titles": [
-      "Back Of My Mind"
+      "Back Of My Mind",
+      "Back of My Mind (Apple Music Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Back of My Mind (Apple Music Edition)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -22605,6 +22566,26 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "f6d1e0b6ec2a95ace139b3e5",
+    "title": "PARTYNEXTDOOR 4",
+    "normalized_title": "partynextdoor 4",
+    "primary_artist_id": "082f688724f5becc6b31bb6c",
+    "track_ids": [
+      "160707eec32e7d66e10f88c4",
+      "19a5e2bad652ab0840bc0203",
+      "7872182fdd8359880af54709",
+      "bac5534b9b4f198263d1b142",
+      "d9e530d362980e5a3b90c7d4"
+    ],
+    "source_titles": [
+      "PARTYNEXTDOOR 4 (P4)"
+    ],
+    "edition_labels": [
+      "PARTYNEXTDOOR 4 (P4)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "f6df6207c70754cc9efe884e",
     "title": "Girl You Know It's True - The Best Of Milli Vanilli",
     "normalized_title": "girl you know it s true the best of milli vanilli",
@@ -22684,28 +22665,14 @@
       "98414ab6d2c86c43e799575e"
     ],
     "source_titles": [
+      "Hard Candy (Deluxe Digital)",
       "Hard Candy",
       "Hard Candy (Deluxe Version)"
     ],
     "edition_labels": [
+      "Hard Candy (Deluxe Digital)",
       "Hard Candy (Deluxe Version)"
     ],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "f79920e8e79b0d80e32af918",
-    "title": "CRYSALIS (CODA)",
-    "normalized_title": "crysalis coda",
-    "primary_artist_id": "390bdc04d68a3b2d689c1cf9",
-    "track_ids": [
-      "316604629ee89b9de7da9c88",
-      "66e142b280755c0814c7d27d",
-      "e0e525ff44768bd3b687cb0b"
-    ],
-    "source_titles": [
-      "CRYSALIS (CODA)"
-    ],
-    "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -22847,9 +22814,14 @@
       "fc9521ba24efacd2e0533532"
     ],
     "source_titles": [
-      "Just Like You"
+      "Just Like You",
+      "Just Like You (International Deluxe Version)",
+      "Just Like You (Bonus Track Version)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Just Like You (International Deluxe Version)",
+      "Just Like You (Bonus Track Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -22885,39 +22857,31 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "f92850f68fad464839cab3c2",
-    "title": "Certified Hitmaker (AVA Leak Video Version)",
-    "normalized_title": "certified hitmaker ava leak video version",
-    "primary_artist_id": "718d5ef0d4b2b392513b7055",
-    "track_ids": [
-      "6ba020f9ae84e418f680052e",
-      "6fe5b1da73ef73741d795661",
-      "d9a0bd804fdbcc8cb70d554b",
-      "e1a67508a8ab5e4496b12e4c"
-    ],
-    "source_titles": [
-      "Certified Hitmaker (AVA Leak Video Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "f94209a484be4656e97c9b94",
     "title": "eternal sunshine deluxe: brighter days ahead",
     "normalized_title": "eternal sunshine deluxe brighter days ahead",
     "primary_artist_id": "231b55a52f11bd52bb830931",
     "track_ids": [
+      "08dd4bfa1944f8b5589232ae",
+      "182c544d9925c8e9549fba4d",
       "2772b3f245b6d2b8c3fdef63",
       "2ad8b184b8b6ccd3dfadfb24",
       "330bc83b442fef08f1fbaa1b",
       "37986bdcac710bad7eae2051",
       "7c911031649767a96bdb801b",
+      "ad42c83367a327fdc10cddaa",
+      "d51912b7ff2f0110dc17abe4",
+      "db4e4081192bc6386ebd1c61",
+      "e3a9c6ca78077f5240d8ab74",
       "f81f6de03234764036fcdadc"
     ],
     "source_titles": [
-      "eternal sunshine deluxe: brighter days ahead"
+      "eternal sunshine deluxe: brighter days ahead",
+      "eternal sunshine deluxe: brighter days ahead (a cappella version)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "eternal sunshine deluxe: brighter days ahead (a cappella version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -22933,9 +22897,12 @@
       "f637880123ba74ebfa24250b"
     ],
     "source_titles": [
-      "K.T.S.E."
+      "K.T.S.E.",
+      "K.T.S.E. (Video Album)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "K.T.S.E. (Video Album)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -22971,20 +22938,22 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "fa3dc1b6602c5db0cf069b93",
-    "title": "Ready To Die (The Remaster)",
-    "normalized_title": "ready to die the remaster",
-    "primary_artist_id": "55dff6000cac58d014a134c8",
+    "id": "fa8d3b251f46ac408fda5622",
+    "title": "The Shave Experiment",
+    "normalized_title": "the shave experiment",
+    "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "track_ids": [
-      "125047c3d404fa5df0b0a569",
-      "8ca519d962ee3093bc5e3604",
-      "bcda385744b31467d1b1d515"
+      "2052ab764deda7a8c5c4f128",
+      "3e6dc674f0a4ccf816c80145",
+      "550fe78d7838cc1f17a587c3"
     ],
     "source_titles": [
-      "Ready To Die (The Remaster)",
-      "Ready to Die - The Remaster"
+      "The Shave Experiment (Director's Cut)",
+      "The Shave Experiment"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "The Shave Experiment (Director's Cut)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -23084,23 +23053,6 @@
     ],
     "source_titles": [
       "Unknown Album"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
-    "id": "fb16b040f0479d913d375a33",
-    "title": "Iyamemeza (feat. Drip Gogo & The Lowkeys) - Single",
-    "normalized_title": "iyamemeza feat drip gogo and the lowkeys single",
-    "primary_artist_id": "bb5b17e13831e140c3731880",
-    "track_ids": [
-      "7ca6e0b43151b653bfa01b7e",
-      "832f9fe1047361c30a4d6b95",
-      "f5f93e43b4d16d7a07b66f00"
-    ],
-    "source_titles": [
-      "Iyamemeza (feat. Drip Gogo & The Lowkeys) - Single",
-      "Iyamemeza (feat. Drip Gogo & The Lowkeys)-Single"
     ],
     "edition_labels": [],
     "canonicalization_rule": "deluxe_expanded_family"
@@ -23225,41 +23177,6 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
-    "id": "fbe08bcb6ea3bc85c1721fab",
-    "title": "Pink Friday: Roman Reloaded the Re-Up (Booklet Version)",
-    "normalized_title": "pink friday roman reloaded the re up booklet version",
-    "primary_artist_id": "c9754d01cd182b725ddf9667",
-    "track_ids": [
-      "0ce797a55a6a75e578d8bab8",
-      "1ec3a6c46ef730aed6c933ff",
-      "24ce0ea744f23e58e57f153a",
-      "2778068afe853f86ea593233",
-      "2e084205e4c1dfd95f8b8f3c",
-      "3151db6194f9daf4464b18b2",
-      "40da06837d1b93e7f67ad6ac",
-      "434b12fc333280faf7c2dbdc",
-      "4550e4963f86cd3ed99fe2a5",
-      "5fe8a5a9cf517903022ef14d",
-      "608f5a8b7c1ce038d56b1088",
-      "66b183de5513ad757774085c",
-      "6a939110a89191723743e305",
-      "8f9ee92efd9a75bcbcd7ca2a",
-      "935b8b3b6c186bce155f3e97",
-      "99e9daa67b07f6b86df370a5",
-      "9faa1c8aa4872f45a05ca938",
-      "aab5e98fb1a8aff766af2a2d",
-      "b343788339571afe141ef482",
-      "e5fe0fb7af2c7432fbcf3cd4",
-      "e9e1fb523ecb7211efb131c4",
-      "f741e76181db0074b072f0d1"
-    ],
-    "source_titles": [
-      "Pink Friday: Roman Reloaded the Re-Up (Booklet Version)"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "deluxe_expanded_family"
-  },
-  {
     "id": "fbe904c832894e5517150afa",
     "title": "Life of a DON",
     "normalized_title": "life of a don",
@@ -23315,6 +23232,26 @@
       "Unknown Album"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "fc1f9b9ebec138a0e31347ae",
+    "title": "Iyamemeza - Single",
+    "normalized_title": "iyamemeza single",
+    "primary_artist_id": "bb5b17e13831e140c3731880",
+    "track_ids": [
+      "7ca6e0b43151b653bfa01b7e",
+      "832f9fe1047361c30a4d6b95",
+      "f5f93e43b4d16d7a07b66f00"
+    ],
+    "source_titles": [
+      "Iyamemeza (feat. Drip Gogo & The Lowkeys) - Single",
+      "Iyamemeza (feat. Drip Gogo & The Lowkeys)-Single"
+    ],
+    "edition_labels": [
+      "Iyamemeza (feat. Drip Gogo & The Lowkeys) - Single",
+      "Iyamemeza (feat. Drip Gogo & The Lowkeys)-Single"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -23410,6 +23347,28 @@
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
+    "id": "fcf764b6f4a368d033e4bb73",
+    "title": "Certified Hitmaker",
+    "normalized_title": "certified hitmaker",
+    "primary_artist_id": "718d5ef0d4b2b392513b7055",
+    "track_ids": [
+      "6ba020f9ae84e418f680052e",
+      "6fe5b1da73ef73741d795661",
+      "d9a0bd804fdbcc8cb70d554b",
+      "e1a67508a8ab5e4496b12e4c"
+    ],
+    "source_titles": [
+      "Certified Hitmaker",
+      "Certified Hitmaker (AVA Leak Video Version)",
+      "Certified Hitmaker (AVA Leak)"
+    ],
+    "edition_labels": [
+      "Certified Hitmaker (AVA Leak Video Version)",
+      "Certified Hitmaker (AVA Leak)"
+    ],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
     "id": "fd1a2556b00ccdac23b60b00",
     "title": "The Best of Keith Sweat: Make You Sweat",
     "normalized_title": "the best of keith sweat make you sweat",
@@ -23441,9 +23400,12 @@
       "fb2ee6b54f98b37ce6dbf033"
     ],
     "source_titles": [
+      "The Best of Keith Sweat: Make You Sweat (Remastered)",
       "The Best of Keith Sweat: Make You Sweat"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "The Best of Keith Sweat: Make You Sweat (Remastered)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -23460,6 +23422,25 @@
       "Unknown Album"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "deluxe_expanded_family"
+  },
+  {
+    "id": "fdcf5c5f021473c0b5f18b1a",
+    "title": "In a Perfect World...",
+    "normalized_title": "in a perfect world",
+    "primary_artist_id": "b233e7520ef7767a7569a9c4",
+    "track_ids": [
+      "348bc8a552253c961d0fbbb3",
+      "4d1bf0b4c533e2b7bddfb70d",
+      "9745c513bb6becce67bd46e6"
+    ],
+    "source_titles": [
+      "In a Perfect World... (Bonus Track Version)",
+      "In a Perfect World..."
+    ],
+    "edition_labels": [
+      "In a Perfect World... (Bonus Track Version)"
+    ],
     "canonicalization_rule": "deluxe_expanded_family"
   },
   {
@@ -23586,10 +23567,12 @@
     "normalized_title": "b day",
     "primary_artist_id": "d4b4d6c3df118803e75af84b",
     "track_ids": [
+      "1a229822be41bfe1c51cbdec",
       "1ae39dd93ce03acd0cac80f7",
       "1e7fe0ee41edfdc48f4e0d4c",
       "2335d07130d1f21309494875",
       "23d10dcd136dd58249ce27e7",
+      "40d983270cf4b798498a8585",
       "43c562abc2b945c737f8bf16",
       "45de95c95547e1b735aceff6",
       "4debcfa39af76b97d84b3dd0",
@@ -23607,12 +23590,14 @@
       "ed0bc35ed9127f9dde129a6d"
     ],
     "source_titles": [
+      "B'Day (20th Anniversary Deluxe Edition)",
       "B'Day Deluxe Edition",
       "B'Day",
       "B’Day",
       "B'Day (Deluxe Edition)"
     ],
     "edition_labels": [
+      "B'Day (20th Anniversary Deluxe Edition)",
       "B'Day Deluxe Edition",
       "B'Day (Deluxe Edition)"
     ],

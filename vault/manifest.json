@@ -5,9 +5,9 @@
   },
   "record_counts": {
     "artists": 4384,
-    "eligible_albums": 1119,
-    "ineligible_releases": 7951,
-    "all_albums": 9070,
+    "eligible_albums": 1093,
+    "ineligible_releases": 7712,
+    "all_albums": 8805,
     "tracks": 14727,
     "listening_events": 230029,
     "fuzzy_candidates_for_review": 396
@@ -17,7 +17,7 @@
     "method": "exact canonical track_id + exact non-empty timestamp",
     "fuzzy_metadata_matches_auto_merged": 0,
     "album_family_consolidation": "known deluxe/expanded/bonus-track suffixes; canonical track IDs unioned across family",
-    "album_families_consolidated": 503
+    "album_families_consolidated": 1581
   },
   "build_status": "success"
 }
