@@ -1,0 +1,35 @@
+name: Fetch New Last.fm Scrobbles
+
+on:
+  schedule:
+    # Runs at 00:00 UTC every Friday
+    - cron: '0 0 * * 5'
+  workflow_dispatch: # Allows you to manually trigger the update anytime
+
+permissions:
+  contents: write # Grants the action permission to push the updated file back to the repo
+
+jobs:
+  update-scrobbles:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        # Installs node-fetch v2 which is required for the require() syntax in your script
+        run: npm install node-fetch@2
+
+      - name: Run Fetch Script
+        run: node scripts/update_scrobbles.js
+        env:
+          # Automatically uses the built-in GitHub token to authenticate the file update
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_BRANCH: main
