@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090f">
+  <title>Track Profile — YourHot100</title>
+  <style>
+    /* CORE STYLES FROM YOUR DESIGN SYSTEM */
+    :root {
+      color-scheme: dark;
+      --bg: #09090f;
+      --panel: #11111b;
+      --panel-2: #171725;
+      --border: #28283a;
+      --text: #f5f5fb;
+      --muted: #9999b2;
+      --accent: #b9a5ff;
+      --accent-2: #f0a8df;
+      --green: #65d6a0;
+      --red: #ff858e;
+      --yellow: #f3d17a;
+      --radius: 16px;
+      --shadow: 0 12px 35px rgb(0 0 0 / 22%);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: radial-gradient(ellipse at 0% 0%, rgb(123 86 210 / 12%), transparent 38rem),
+                  radial-gradient(ellipse at 100% 5%, rgb(230 100 175 / 8%), transparent 34rem), var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    
+    .shell {
+      width: min(1400px, 100%);
+      margin: 0 auto;
+      padding: 26px clamp(14px, 3vw, 42px) 60px;
+    }
+
+    /* TRACK HERO SECTION */
+    .track-hero {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: clamp(24px, 4vw, 48px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: linear-gradient(120deg, rgb(114 85 184 / 15%), transparent 55%), var(--panel);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    @media (min-width: 768px) {
+      .track-hero { flex-direction: row; align-items: center; }
+    }
+    
+    .artwork-container {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
+      background: var(--panel-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .artwork-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .fallback-art { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 20px;}
+
+    .track-identity { flex-grow: 1; z-index: 2; }
+    .eyebrow { color: var(--accent); font-size: .85rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px;}
+    .track-title { font-size: clamp(2rem, 5vw, 4rem); line-height: 1.1; font-weight: 900; margin: 0 0 12px; letter-spacing: -.03em; }
+    .track-artists { font-size: 1.2rem; color: var(--muted); margin: 0; }
+    .track-artists a { color: var(--text); font-weight: 600; }
+    
+    .hero-meta { display: flex; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+    .pill { padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: rgb(255 255 255 / 5%); font-size: .8rem; color: var(--text); font-weight: 600;}
+    .pill.trend-up { color: var(--green); border-color: rgb(101 214 160 / 30%); }
+    .pill.trend-down { color: var(--red); border-color: rgb(255 133 142 / 30%); }
+    .pill.trend-new { color: var(--accent); border-color: rgb(185 165 255 / 30%); }
+
+    /* HEADLINE STATS & MILESTONES */
+    .section-title { margin: 40px 0 16px; font-size: 1.5rem; letter-spacing: -.03em; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .stat-card { padding: 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); box-shadow: var(--shadow); }
+    .stat-label { color: var(--muted); font-size: .75rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+    .stat-value { margin-top: 8px; font-size: 2.2rem; font-weight: 900; letter-spacing: -.03em; }
+    .stat-sub { margin-top: 6px; font-size: .85rem; color: var(--muted); }
+
+    /* TABLES (History & Sales Breakdown) */
+    .panel { border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); overflow: hidden; margin-bottom: 24px;}
+    .table-toolbar { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; flex-wrap: wrap; background: rgb(255 255 255 / 2%);}
+    .table-toolbar select, .table-toolbar input { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: .85rem;}
+    
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: .9rem; }
+    thead th { padding: 14px 16px; background: var(--panel-2); color: var(--muted); font-size: .75rem; font-weight: 700; letter-spacing: .05em; border-bottom: 1px solid var(--border); white-space: nowrap;}
+    tbody td { padding: 14px 16px; border-bottom: 1px solid rgb(255 255 255 / 5%); vertical-align: middle; }
+    tbody tr:hover { background: rgb(255 255 255 / 2%); }
+    
+    .rank-cell { font-weight: 900; font-size: 1.1rem; }
+    .trend { font-weight: 700; font-size: .85rem; }
+    .t-up { color: var(--green); }
+    .t-down { color: var(--red); }
+    .t-same { color: var(--muted); }
+    .t-new { color: var(--accent); }
+
+    /* UTILITIES */
+    .empty-state { padding: 40px; text-align: center; color: var(--muted); font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    
+    <!-- 3. & 4. TRACK ARTWORK, METADATA & HEADLINE STATS -->
+    <header class="track-hero" id="hero-section">
+      <div class="artwork-container" id="artwork-container">
+        <!-- Injected via JS -->
+      </div>
+      
+      <div class="track-identity">
+        <div class="eyebrow" id="album-link"></div>
+        <h1 class="track-title" id="title">Loading...</h1>
+        <p class="track-artists" id="artists"></p>
+        
+        <div class="hero-meta" id="headline-meta">
+          <!-- Populated by JS (e.g. 6-month movement) -->
+        </div>
+      </div>
+    </header>
+
+    <h2 class="section-title">Headline Statistics</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Current Position</div>
+        <div class="stat-value" id="stat-current">-</div>
+        <div class="stat-sub" id="stat-current-sub">Latest Snapshot</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Peak Position</div>
+        <div class="stat-value" id="stat-peak">-</div>
+        <div class="stat-sub" id="stat-peak-sub">Date unavailable</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Weeks Charted</div>
+        <div class="stat-value" id="stat-weeks">-</div>
+        <div class="stat-sub">Total official appearances</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Career Units Sold</div>
+        <div class="stat-value" id="stat-units">-</div>
+        <div class="stat-sub">YourHot100 derived units</div>
+      </div>
+    </div>
+
+    <!-- 5. CAREER MILESTONES -->
+    <h2 class="section-title">Career Milestones</h2>
+    <div class="stats-grid" id="milestones-grid">
+      <!-- Generated dynamically based on valid data -->
+    </div>
+
+    <!-- 6. COMPLETE WEEKLY CHART HISTORY -->
+    <h2 class="section-title">Official Chart History</h2>
+    <div class="panel">
+      <div class="table-toolbar">
+        <select id="history-year-filter">
+          <option value="all">All Available History</option>
+          <!-- Years injected here -->
+        </select>
+        <select id="history-sort">
+          <option value="date-desc">Newest First</option>
+          <option value="date-asc">Oldest First</option>
+          <option value="rank-asc">Highest Peak First</option>
+          <option value="units-desc">Highest Units First</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table id="history-table">
+          <thead>
+            <tr>
+              <th>WEEK COMMENCING</th>
+              <th>RANK</th>
+              <th>MOVEMENT</th>
+              <th>UNITS SOLD</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody">
+            <!-- Rows injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 7. SALES PERFORMANCE BREAKDOWN -->
+    <h2 class="section-title">Sales Performance Breakdown</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Debut Week Units</div>
+        <div class="stat-value" id="sales-debut">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Highest Weekly Units</div>
+        <div class="stat-value" id="sales-best">-</div>
+        <div class="stat-sub" id="sales-best-date"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Units / Week</div>
+        <div class="stat-value" id="sales-avg">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Best Calendar Year</div>
+        <div class="stat-value" id="sales-best-year">-</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>YEAR</th>
+              <th>WEEKS CHARTED</th>
+              <th>ANNUAL UNITS SOLD</th>
+              <th>% OF CAREER TOTAL</th>
+            </tr>
+          </thead>
+          <tbody id="annual-sales-tbody">
+             <!-- Rows injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /**
+     * YOURHOT100 - TRACK PROFILE CONTROLLER
+     * Note: "Plays" and "Points" are strictly prohibited from this UI.
+     */
+
+    // 1. DATA INTEGRATION HOOK
+    // Replace this mock data with your actual fetch logic accessing your vault JSONs.
+    async function fetchVaultData(canonicalTrackId) {
+      // MOCK DATA corresponding to the rules requested
+      return {
+        id: canonicalTrackId,
+        title: "Blinding Lights",
+        album: { id: "a1", title: "After Hours" },
+        artists: [
+          { id: "art1", name: "The Weeknd", role: "lead" }
+        ],
+        stats: {
+          currentPosition: 12,
+          peakPosition: 1,
+          peakDate: "2020-04-04",
+          weeksCharted: 90,
+          careerUnits: 12504000,
+          debutUnits: 85000,
+          highestUnits: 150000,
+          highestUnitsDate: "2020-04-11",
+          debutDate: "2019-12-14",
+          debutPosition: 11,
+          weeksAtNo1: 4,
+          top10Weeks: 57,
+          top40Weeks: 86
+        },
+        sixMonthMovement: {
+          available: true,
+          status: "Up", // "Up", "Down", "Unchanged", "New", "Re-entry"
+          difference: 5 
+        },
+        chartHistory: [
+          // Mock historical snapshot
+          { date: "2024-10-18", rank: 12, prevRank: 17, units: 32000, isReEntry: false },
+          { date: "2024-10-11", rank: 17, prevRank: 22, units: 28000, isReEntry: false },
+          { date: "2019-12-14", rank: 11, prevRank: null, units: 85000, isReEntry: false }
+        ],
+        annualSales: [
+          { year: 2024, weeks: 42, units: 1200000 },
+          { year: 2020, weeks: 52, units: 8500000 }
+        ]
+      };
+    }
+
+    // 2. LAST.FM ARTWORK CACHING HOOK
+    async function fetchArtwork(trackTitle, artistName) {
+      // IMPLEMENTATION NOTE: Check your local cache first.
+      // Do NOT expose Last.fm API keys here; fetch via a backend proxy if possible.
+      // Return a URL string or null for graceful fallback.
+      return "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.jpg"; // Mock
+    }
+
+    // 3. UI RENDERING
+    function formatNumber(num) {
+      return new Intl.NumberFormat('en-US').format(num);
+    }
+
+    function formatMovement(current, previous, isReEntry) {
+      if (!previous) return { class: 't-new trend', text: isReEntry ? 'RE-ENTRY' : 'NEW' };
+      if (current < previous) return { class: 't-up trend', text: `▲ +${previous - current}` };
+      if (current > previous) return { class: 't-down trend', text: `▼ -${current - previous}` };
+      return { class: 't-same trend', text: '＝ 0' };
+    }
+
+    async function initTrackProfile(trackId) {
+      try {
+        const data = await fetchVaultData(trackId);
+        if (!data) throw new Error("Track not found in vault.");
+
+        // Render Identity & Artwork
+        document.getElementById('title').textContent = data.title;
+        
+        // Artists linking
+        const artistsHtml = data.artists.map(a => 
+          `<a href="/artist/${a.id}">${a.name}</a>`
+        ).join(', ');
+        document.getElementById('artists').innerHTML = artistsHtml;
+
+        // Album linking
+        if (data.album) {
+          document.getElementById('album-link').innerHTML = `<a href="/album/${data.album.id}">${data.album.title}</a>`;
+        }
+
+        // Fetch & Render Artwork
+        const artUrl = await fetchArtwork(data.title, data.artists[0].name);
+        const artContainer = document.getElementById('artwork-container');
+        if (artUrl) {
+          artContainer.innerHTML = `<img src="${artUrl}" alt="Artwork for ${data.title}" />`;
+        } else {
+          artContainer.innerHTML = `<div class="fallback-art">No Artwork<br>Available</div>`;
+        }
+
+        // Render 6-month Meta Pill
+        if (data.sixMonthMovement.available) {
+          const m = data.sixMonthMovement;
+          let pillHtml = '';
+          if (m.status === 'Up') pillHtml = `<span class="pill trend-up">▲ Up ${m.difference} over 6 months</span>`;
+          else if (m.status === 'Down') pillHtml = `<span class="pill trend-down">▼ Down ${m.difference} over 6 months</span>`;
+          else if (m.status === 'New') pillHtml = `<span class="pill trend-new">★ New Entry in last 6 months</span>`;
+          
+          document.getElementById('headline-meta').innerHTML = pillHtml;
+        }
+
+        // Render Headline Stats
+        document.getElementById('stat-current').textContent = data.stats.currentPosition ? `#${data.stats.currentPosition}` : '-';
+        document.getElementById('stat-peak').textContent = `#${data.stats.peakPosition}`;
+        document.getElementById('stat-peak-sub').textContent = `Achieved ${data.stats.peakDate}`;
+        document.getElementById('stat-weeks').textContent = formatNumber(data.stats.weeksCharted);
+        document.getElementById('stat-units').textContent = formatNumber(data.stats.careerUnits);
+
+        // Render Milestones Grid
+        const milestones = [
+          { label: "Debut Date", val: data.stats.debutDate },
+          { label: "Debut Position", val: `#${data.stats.debutPosition}` },
+          { label: "Weeks at No. 1", val: data.stats.weeksAtNo1 > 0 ? data.stats.weeksAtNo1 : null },
+          { label: "Top 10 Weeks", val: data.stats.top10Weeks > 0 ? data.stats.top10Weeks : null },
+          { label: "Top 40 Weeks", val: data.stats.top40Weeks > 0 ? data.stats.top40Weeks : null }
+        ];
+
+        const mGrid = document.getElementById('milestones-grid');
+        mGrid.innerHTML = milestones.filter(m => m.val !== null).map(m => `
+          <div class="stat-card">
+            <div class="stat-label">${m.label}</div>
+            <div class="stat-value" style="font-size: 1.6rem;">${m.val}</div>
+          </div>
+        `).join('');
+
+        // Render Sales Breakdown
+        document.getElementById('sales-debut').textContent = formatNumber(data.stats.debutUnits);
+        document.getElementById('sales-best').textContent = formatNumber(data.stats.highestUnits);
+        document.getElementById('sales-best-date').textContent = `Week of ${data.stats.highestUnitsDate}`;
+        
+        const avgUnits = Math.round(data.stats.careerUnits / data.stats.weeksCharted);
+        document.getElementById('sales-avg').textContent = formatNumber(avgUnits);
+
+        const bestYear = [...data.annualSales].sort((a,b) => b.units - a.units)[0];
+        document.getElementById('sales-best-year').textContent = bestYear ? bestYear.year : '-';
+
+        // Render Annual Table
+        const annualTbody = document.getElementById('annual-sales-tbody');
+        annualTbody.innerHTML = data.annualSales.map(yearData => {
+          const pct = ((yearData.units / data.stats.careerUnits) * 100).toFixed(1);
+          return `
+            <tr>
+              <td><strong>${yearData.year}</strong></td>
+              <td>${yearData.weeks} weeks</td>
+              <td>${formatNumber(yearData.units)}</td>
+              <td>${pct}%</td>
+            </tr>
+          `;
+        }).join('');
+
+        // Render History Table
+        renderHistoryTable(data.chartHistory);
+
+      } catch (err) {
+        console.error("Error loading track profile:", err);
+        document.querySelector('.shell').innerHTML = `
+          <div class="empty-state">
+            <h2>Track Data Unavailable</h2>
+            <p>We could not find the requested canonical track in the vault.</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderHistoryTable(historyArray) {
+      const tbody = document.getElementById('history-tbody');
+      if (!historyArray || historyArray.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No chart history available.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = historyArray.map(week => {
+        const move = formatMovement(week.rank, week.prevRank, week.isReEntry);
+        let status = '';
+        if (week.rank === 1) status = '👑 No. 1';
+        else if (week.rank <= 10) status = '⭐ Top 10';
+        
+        return `
+          <tr>
+            <td>${week.date}</td>
+            <td class="rank-cell">#${week.rank}</td>
+            <td class="${move.class}">${move.text}</td>
+            <td>${formatNumber(week.units)}</td>
+            <td style="color: var(--muted);">${status}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Initialize with a dummy ID. Wire this up to your URL router!
+    document.addEventListener("DOMContentLoaded", () => {
+      // Example: const urlParams = new URLSearchParams(window.location.search);
+      // const trackId = urlParams.get('id');
+      initTrackProfile('canonical_track_123'); 
+    });
+  </script>
+</body>
+</html>
