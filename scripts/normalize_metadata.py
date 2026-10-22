@@ -45,7 +45,10 @@ def title_match_key(text: Any) -> str:
 # Only remove known trailing edition labels that indicate an expanded version of
 # the same studio album. Recording-type labels (Live, Remix, Acoustic, etc.) stay.
 _DELUXE_SUFFIX_RE = re.compile(
-    r"\s*(?:(?:\(|\[|[-:–—])\s*)?(?:deluxe(?:\s+(?:edition|version|album))?|expanded(?:\s+edition)?|bonus\s+tracks?(?:\s+edition)?)(?:\s*[)\]])?\s*$",
+    r"^(?P<base>.+?)\s*(?:"
+    r"(?:\(|\[)\s*(?:deluxe(?:\s+(?:edition|version|album))?|expanded(?:\s+edition)?|bonus\s+tracks?(?:\s+edition)?)\s*(?:\)|\])"
+    r"|(?:[-:–—]|\s+)\s*(?:deluxe(?:\s+(?:edition|version|album))?|expanded(?:\s+edition)?|bonus\s+tracks?(?:\s+edition)?)"
+    r")\s*$",
     re.IGNORECASE,
 )
 
@@ -59,6 +62,11 @@ def canonical_album_title(title: Any) -> str:
     previous = None
     while value != previous:
         previous = value
-        value = _DELUXE_SUFFIX_RE.sub("", value).strip()
+        match = _DELUXE_SUFFIX_RE.match(value)
+        if match:
+            value = match.group("base").strip()
+        else:
+            break
     return value or "Unknown Album"
+
 
