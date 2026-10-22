@@ -1,8 +1,13 @@
 {
+  "settings": {
+    "MIN_ALBUM_TRACKS": 3
+  },
   "record_counts": {
     "artists": 4305,
-    "albums": 9302,
+    "eligible_albums": 957,
+    "ineligible_releases": 8345,
     "tracks": 14646,
     "listening_events": 230030
-  }
+  },
+  "build_status": "success"
 }
