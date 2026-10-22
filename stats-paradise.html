@@ -395,4 +395,149 @@
     }
 
     .trend-up { color: var(--green); font-weight: 800; }
-    .trend-down { color: var(--red
+    .trend-down { color: var(--red); font-weight: 800; }
+
+  </style>
+</head>
+<body>
+  
+  <div class="shell">
+    
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="eyebrow">YourHot100</div>
+      <h1>Stats Paradise</h1>
+      <p>View your top tracks, analyze listening trends, and dive deep into your music data.</p>
+      
+      <div class="hero-meta">
+        <span class="pill good">System Online</span>
+        <span class="pill">Last updated: Today</span>
+      </div>
+    </header>
+
+    <!-- Stats Grid -->
+    <div class="section-title">
+      <h2>Overview</h2>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">TOTAL SCROBBLES</div>
+        <div class="stat-value">124,592</div>
+        <div class="stat-note"><span class="trend-up">↑ 12%</span> this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">TOP ARTIST</div>
+        <div class="stat-value">The Weeknd</div>
+        <div class="stat-note">8,402 plays</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">UNIQUE ALBUMS</div>
+        <div class="stat-value">1,402</div>
+        <div class="stat-note">Discovered 42 new</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">AVG DAILY LISTENS</div>
+        <div class="stat-value">114</div>
+        <div class="stat-note"><span class="trend-down">↓ 3%</span> this week</div>
+      </div>
+    </div>
+
+    <!-- Navigation & Filters -->
+    <nav class="nav">
+      <button class="active">Tracks</button>
+      <button>Artists</button>
+      <button>Albums</button>
+      <button>Recent</button>
+    </nav>
+
+    <div class="filters">
+      <div class="field">
+        <label>Search</label>
+        <input type="text" placeholder="Search tracks or artists...">
+      </div>
+      <div class="field">
+        <label>Time Period</label>
+        <select>
+          <option>Last 7 Days</option>
+          <option>Last 30 Days</option>
+          <option>All Time</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Genre</label>
+        <select>
+          <option>All Genres</option>
+          <option>Pop</option>
+          <option>Hip Hop</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Sort By</label>
+        <select>
+          <option>Play Count</option>
+          <option>Recent</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="panel">
+      <div class="table-heading">
+        <div>
+          <h2>Top Tracks</h2>
+          <p class="result-count">Showing 1-100 of 4,203 results</p>
+        </div>
+        <div class="table-actions">
+          <button class="action-button">Export CSV</button>
+        </div>
+      </div>
+      
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 60px;">RANK</th>
+              <th>TRACK / ARTIST</th>
+              <th>ALBUM</th>
+              <th style="width: 120px;">PLAYS</th>
+              <th style="width: 100px;">TREND</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="rank">#1</td>
+              <td>
+                <span class="cell-main">Blinding Lights</span>
+                <span class="cell-sub">The Weeknd</span>
+              </td>
+              <td>
+                <span class="cell-main">After Hours</span>
+              </td>
+              <td>
+                <span class="cell-main">1,204</span>
+              </td>
+              <td class="trend-up">↑ Up 2</td>
+            </tr>
+            <tr>
+              <td class="rank">#2</td>
+              <td>
+                <span class="cell-main">Starboy</span>
+                <span class="cell-sub">The Weeknd</span>
+              </td>
+              <td>
+                <span class="cell-main">Starboy</span>
+              </td>
+              <td>
+                <span class="cell-main">982</span>
+              </td>
+              <td class="trend-down">↓ Down 1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
