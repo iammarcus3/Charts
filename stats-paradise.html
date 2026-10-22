@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080808">
+  <title>Stats Paradise — YourHot100</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080808;
+      --panel: #111113;
+      --panel2: #171719;
+      --line: #29292d;
+      --text: #f5f5f5;
+      --muted: #96969e;
+      --accent: #c4b5fd;
+      --good: #86efac;
+      --warn: #fcd34d;
+      --bad: #fca5a5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font: 14px/1.5 Inter, system-ui, -apple-system, sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button, select, input {
+      color: var(--text); background: var(--panel2);
+      border: 1px solid var(--line); border-radius: 9px;
+      padding: 10px 12px;
+    }
+    button { cursor: pointer; }
+    button:hover, .nav-button.active { border-color: var(--accent); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .layout { display: grid; grid-template-columns: 245px minmax(0,1fr); min-height: 100vh; }
+    aside {
+      padding: 25px 17px; background: #0c0c0e;
+      border-right: 1px solid var(--line); position: sticky;
+      top: 0; height: 100vh; overflow: auto;
+    }
+    .brand { font-size: 25px; font-weight: 950; letter-spacing: -1.4px; }
+    .brand span { color: var(--accent); }
+    .eyebrow { color: var(--muted); text-transform: uppercase; letter-spacing: 2px; font-size: 10px; font-weight: 800; }
+    .nav { display: grid; gap: 7px; margin-top: 27px; }
+    .nav-button { text-align: left; width: 100%; background: transparent; border-color: transparent; }
+    .nav-button.active { background: #201d2b; color: #fff; }
+    .aside-note { margin-top: 28px; border-top: 1px solid var(--line); padding-top: 18px; font-size: 12px; color: var(--muted); }
+    main { padding: 30px; min-width: 0; max-width: 1700px; width: 100%; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap; margin-bottom:25px; }
+    h1 { font-size: clamp(28px,4vw,44px); line-height:1.08; letter-spacing:-1.5px; margin:6px 0; }
+    h2 { font-size:21px; margin:0; letter-spacing:-.4px; }
+    h3 { font-size:15px; margin:0; }
+    p { margin:6px 0; }
+    .muted { color:var(--muted); }
+    .small { font-size:12px; }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:19px; min-width:0; }
+    .section { display:grid; gap:17px; }
+    .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+    .grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .metric { background:var(--panel); border:1px solid var(--line); border-radius:13px; padding:17px; min-width:0; }
+    .metric .value { font-size:clamp(22px,3vw,32px); font-weight:900; letter-spacing:-1px; overflow-wrap:anywhere; }
+    .metric .label { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; }
+    .toolbar { display:flex; gap:9px; flex-wrap:wrap; align-items:center; }
+    .toolbar input[type=search] { flex:1; min-width:190px; }
+    .toolbar select { max-width:100%; }
+    .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:11px; }
+    table { width:100%; border-collapse:collapse; white-space:nowrap; font-size:12px; }
+    th, td { padding:12px 13px; border-bottom:1px solid #232327; text-align:left; }
+    th { color:var(--muted); background:#171719; font-size:10px; text-transform:uppercase; letter-spacing:.8px; position:sticky; top:0; z-index:1; }
+    th button { background:transparent; border:0; padding:0; color:inherit; text-transform:inherit; letter-spacing:inherit; }
+    td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+    tbody tr:hover { background:#19191d; }
+    .pill { display:inline-block; border:1px solid var(--line); border-radius:99px; padding:3px 8px; font-size:11px; }
+    .good { color:var(--good); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+    .status { padding:14px; border-radius:10px; background:#15151a; border:1px solid var(--line); color:var(--muted); }
+    .hidden { display:none !important; }
+    .bar-row { display:grid; grid-template-columns:minmax(110px,220px) minmax(50px,1fr) minmax(75px,auto); align-items:center; gap:12px; padding:8px 0; }
+    .bar-track { height:7px; background:#28282e; border-radius:10px; overflow:hidden; }
+    .bar-fill { height:100%; background:var(--accent); border-radius:10px; }
+    .footer { margin-top:28px; border-top:1px solid var(--line); padding-top:16px; color:var(--muted); font-size:11px; }
+    @media(max-width:1050px) {
+      .layout { grid-template-columns:1fr; }
+      aside { position:relative; width:100%; height:auto; border-right:0; border-bottom:1px solid var(--line); }
+      .nav { display:flex; overflow:auto; margin-top:16px; }
+      .nav-button { width:auto; flex:0 0 auto; }
+      .aside-note { display:none; }
+      main { padding:20px; }
+      .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media(max-width:560px) {
+      main { padding:13px; }
+      .grid, .grid.three { grid-template-columns:1fr 1fr; }
+      .panel { padding:14px; }
+      .bar-row { grid-template-columns:100px 1fr auto; gap:7px; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <div class="brand">STATS <span>PARADISE</span></div>
+    <p class="eyebrow">YourHot100 · Statistical Archive</p>
+    <nav class="nav" id="navigation">
+      <button class="nav-button active" data-view="imports">01 · Import Centre</button>
+      <button class="nav-button" data-view="overview">02 · All-Time Overview</button>
+      <button class="nav-button" data-view="songs">03 · Song Records</button>
+      <button class="nav-button" data-view="albums">04 · Album Records</button>
+      <button class="nav-button" data-view="artists">05 · Artist Records</button>
+      <button class="nav-button" data-view="debuts">06 · Debuts & Returns</button>
+      <button class="nav-button" data-view="numberones">07 · No. 1 Archive</button>
+      <button class="nav-button" data-view="records">08 · Record Book</button>
+      <button class="nav-button" data-view="calendar">09 · Calendar History</button>
+      <button class="nav-button" data-view="quality">10 · Vault Integrity</button>
+    </nav>
+    <div class="aside-note">
+      <strong>Independent application</strong>
+      <p>Reads your existing vault. It does not replace the charts or write to source data.</p>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">The complete record book</div>
+        <h1 id="page-title">Import Centre</h1>
+        <p class="muted" id="page-subtitle">Import coverage, source provenance and vault integrity come first.</p>
+      </div>
+      <div class="toolbar">
+        <button id="reload-button">Refresh vault</button>
+        <button id="export-button">Export visible table</button>
+      </div>
+    </header>
+
+    <section class="panel" style="margin-bottom:17px">
+      <div class="toolbar">
+        <label for="period-filter" class="muted small">Period</label>
+        <select id="period-filter">
+          <option value="all">All available history</option>
+        </select>
+        <label for="start-date" class="muted small">From</label>
+        <input id="start-date" type="date" aria-label="Start date">
+        <label for="end-date" class="muted small">To</label>
+        <input id="end-date" type="date" aria-label="End date">
+        <button id="apply-dates">Apply dates</button>
+        <button id="clear-dates">Clear</button>
+      </div>
+      <p class="small muted" id="coverage-note">Waiting for the vault…</p>
+    </section>
+
+    <div id="status" class="status">Loading the vault…</div>
+    <div id="content" class="section" style="margin-top:17px"></div>
+
+    <footer class="footer">
+      Stats Paradise · Independent statistics engine · Annual results use the Friday start date
+      of each Friday–Thursday chart week. Import diagnostics distinguish available vault records
+      from raw-source records that cannot be reconstructed from normalized data.
+    </footer>
+  </main>
+</div>
+<script src="stats-paradise.js"></script>
+</body>
+</html>
