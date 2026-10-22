@@ -70,8 +70,8 @@ function calcPoints(sales, streams, radio, maxSales, maxStreams, maxRadio) {
   if (maxStreams === 0) maxStreams = 1;
   if (maxRadio === 0) maxRadio = 1;
   return Math.round(200 * (
-    0.2.5 * (sales / maxSales) +
-    0.2.5 * (streams / maxStreams) +
+    0.3 * (sales / maxSales) +
+    0.2 * (streams / maxStreams) +
     0.5 * (radio / maxRadio)
   ));
 }
