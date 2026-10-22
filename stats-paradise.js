@@ -1,461 +1,543 @@
-(() => {
-  "use strict";
-
-  /*
-   * STATS PARADISE — YOURHOT100
-   * Standalone chart-history application.
-   *
-   * Expected source files:
-   *   vault/tracks.json
-   *   vault/albums.json
-   *   vault/artists.json
-   *   vault/listening_history.jsonl
-   *
-   * The sales figures are derived model values. Activity counts and rank
-   * scores are used privately to reconstruct the chart; they are never
-   * rendered in the interface or included in CSV exports.
-   */
-
-  const CONFIG = Object.freeze({
-    MIN_ALBUM_TRACKS: 3,
-    HOT100_SIZE: 100,
-    TABLE_LIMIT: 200,
-    SONG_UNIT_FACTOR: 50000,
-    ALBUM_UNIT_FACTOR: 5000,
-    RANK_UNIT_FACTOR: 500,
-    WEEK_MS: 7 * 24 * 60 * 60 * 1000
-  });
-
-  const $ = (selector) => document.querySelector(selector);
-
-  const ui = {
-    status: $("#data-status"),
-    archiveDescription: $("#archive-description"),
-    summary: $("#summary-cards"),
-    nav: $("#section-nav"),
-    search: $("#search-input"),
-    timeMode: $("#time-mode"),
-    year: $("#year-select"),
-    sort: $("#sort-select"),
-    direction: $("#sort-direction"),
-    customDates: $("#custom-date-filters"),
-    dateFrom: $("#date-from"),
-    dateTo: $("#date-to"),
-    title: $("#content-title"),
-    description: $("#content-description"),
-    content: $("#view-content"),
-    error: $("#error-container"),
-    reset: $("#reset-filters"),
-    export: $("#export-csv")
-  };
-
-  const state = {
-    currentView: "overview",
-    tracks: new Map(),
-    albums: new Map(),
-    artists: new Map(),
-    events: [],
-    snapshots: [],
-    songRecords: [],
-    albumRecords: [],
-    artistRecords: [],
-    weeklyRecords: [],
-    numberOneRecords: [],
-    debutRecords: [],
-    exitRecords: [],
-    allRecords: [],
-    albumDebuts: new Map(),
-    visibleRows: [],
-    visibleColumns: [],
-    years: [],
-    latestWeekStart: null,
-    earliestWeekStart: null,
-    currentSixMonthStart: null,
-    previousSixMonthStart: null,
-    previousSixMonthEnd: null
-  };
-
-  const VIEW_INFO = {
-    overview: {
-      title: "Overview",
-      description: "The biggest achievements across your available chart history."
-    },
-    songs: {
-      title: "Song Archive",
-      description: "Every distinct song that has appeared on your reconstructed Hot 100."
-    },
-    albums: {
-      title: "Album Archive",
-      description: "Eligible releases, simultaneous song qualifications and album-chart records."
-    },
-    artists: {
-      title: "Artist Archive",
-      description: "Artist achievements, credited song records and lead-artist album records."
-    },
-    weeks: {
-      title: "Weekly History",
-      description: "Observed Friday–Thursday chart weeks. Missing source weeks are not manufactured."
-    },
-    numberones: {
-      title: "No. 1 Archive",
-      description: "Every available week at the top of the song chart and album chart."
-    },
-    debuts: {
-      title: "Debuts & Returns",
-      description: "First chart appearances, confirmed re-entries and confirmed exits."
-    },
-    records: {
-      title: "The Record Book",
-      description: "The strongest runs, longest reigns and biggest career achievements."
-    }
-  };
-
-  const SORT_OPTIONS = {
-    overview: [
-      ["date", "Date"],
-      ["title", "Title"]
-    ],
-    songs: [
-      ["unitsSold", "Total units sold"],
-      ["latestRank", "Latest chart position"],
-      ["peak", "Peak position"],
-      ["weeksOnChart", "Weeks on chart"],
-      ["weeksAtNo1", "Weeks at No. 1"],
-      ["weeksTop10", "Top 10 weeks"],
-      ["debutTs", "Debut date"],
-      ["title", "Song title"],
-      ["artist", "Artist"]
-    ],
-    albums: [
-      ["unitsSold", "Total units sold"],
-      ["latestRank", "Latest album-chart position"],
-      ["peak", "Peak position"],
-      ["weeksOnChart", "Weeks on chart"],
-      ["weeksAtNo1", "Weeks at No. 1"],
-      ["weeksTop10", "Top 10 weeks"],
-      ["trackCount", "Distinct tracks"],
-      ["debutTs", "Official debut date"],
-      ["title", "Album title"],
-      ["artist", "Lead artist"]
-    ],
-    artists: [
-      ["recentUnits", "Latest six-month units sold"],
-      ["unitsSold", "Career units sold"],
-      ["songNo1Count", "Distinct No. 1 songs"],
-      ["songCount", "Distinct songs charted"],
-      ["albumCount", "Lead albums charted"],
-      ["no1Weeks", "Combined No. 1 weeks"],
-      ["name", "Artist name"]
-    ],
-    weeks: [
-      ["dateTs", "Chart-week date"],
-      ["songCount", "Songs charted"],
-      ["albumCount", "Albums charted"],
-      ["newEntries", "New entries"],
-      ["reentries", "Re-entries"]
-    ],
-    numberones: [
-      ["dateTs", "Chart-week date"],
-      ["songUnits", "No. 1 song units sold"],
-      ["albumUnits", "No. 1 album units sold"],
-      ["songTitle", "Song title"],
-      ["albumTitle", "Album title"]
-    ],
-    debuts: [
-      ["dateTs", "Date"],
-      ["type", "Chart type"],
-      ["status", "Event"],
-      ["rank", "Position"],
-      ["unitsSold", "Units sold"],
-      ["title", "Title"],
-      ["artist", "Artist"]
-    ],
-    records: [
-      ["valueNumber", "Record value"],
-      ["name", "Record"],
-      ["title", "Title"]
-    ]
-  };
-
-  function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    })[ch]);
-  }
-
-  function safeString(value, fallback = "Unknown") {
-    const text = String(value ?? "").trim();
-    return text || fallback;
-  }
-
-  function unique(values) {
-    return [...new Set(values.filter(value => value !== null && value !== undefined)
-      .map(value => String(value)))];
-  }
-
-  function asArray(value) {
-    if (value == null) return [];
-    if (Array.isArray(value)) return value;
-    return [value];
-  }
-
-  function idsFrom(value) {
-    return unique(asArray(value).map(item => {
-      if (item == null) return null;
-      if (typeof item === "object") {
-        return item.id ?? item.artist_id ?? item.track_id ?? item.album_id ?? null;
-      }
-      return item;
-    }));
-  }
-
-  function parseMap(data) {
-    if (Array.isArray(data)) {
-      return new Map(
-        data.filter(item => item && item.id != null)
-          .map(item => [String(item.id), item])
-      );
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090f">
+  <title>Stats Paradise — YourHot100</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #09090f;
+      --panel: #11111b;
+      --panel-2: #171725;
+      --border: #28283a;
+      --text: #f5f5fb;
+      --muted: #9999b2;
+      --accent: #b9a5ff;
+      --accent-2: #f0a8df;
+      --green: #65d6a0;
+      --red: #ff858e;
+      --yellow: #f3d17a;
+      --radius: 16px;
+      --shadow: 0 12px 35px rgb(0 0 0 / 22%);
     }
 
-    if (data && typeof data === "object") {
-      return new Map(Object.entries(data).map(([id, item]) => [
-        String(id),
-        item && typeof item === "object" ? { id: String(item.id ?? id), ...item } : { id, value: item }
-      ]));
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
     }
 
-    throw new Error("A Music Vault catalogue file has an unsupported structure.");
-  }
-
-  function timestampSeconds(value) {
-    if (value && typeof value === "object") {
-      value =
-        value.uts ??
-        value.timestamp ??
-        value.played_at ??
-        value.date ??
-        value.datetime ??
-        value["#text"];
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 0% 0%, rgb(123 86 210 / 12%), transparent 38rem),
+        radial-gradient(ellipse at 100% 5%, rgb(230 100 175 / 8%), transparent 34rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      line-height: 1.5;
     }
 
-    if (typeof value === "number" && Number.isFinite(value)) {
-      return Math.floor(value > 1e12 ? value / 1000 : value);
+    button, input, select {
+      font: inherit;
     }
 
-    if (typeof value === "string" && value.trim()) {
-      const numeric = Number(value);
-      if (Number.isFinite(numeric)) {
-        return Math.floor(numeric > 1e12 ? numeric / 1000 : numeric);
-      }
-
-      const parsed = Date.parse(value);
-      if (Number.isFinite(parsed)) return Math.floor(parsed / 1000);
+    button, select, input {
+      color: var(--text);
     }
 
-    return null;
-  }
-
-  function getWeekStartMs(seconds) {
-    const date = new Date(seconds * 1000);
-    date.setUTCHours(0, 0, 0, 0);
-
-    // Friday is day zero of each chart week.
-    const daysSinceFriday = (date.getUTCDay() + 2) % 7;
-    date.setUTCDate(date.getUTCDate() - daysSinceFriday);
-
-    return date.getTime();
-  }
-
-  function shiftMonthsUTC(timestamp, months) {
-    const date = new Date(timestamp);
-    const targetDay = date.getUTCDate();
-
-    date.setUTCDate(1);
-    date.setUTCMonth(date.getUTCMonth() + months);
-
-    const endOfMonth = new Date(Date.UTC(
-      date.getUTCFullYear(),
-      date.getUTCMonth() + 1,
-      0
-    )).getUTCDate();
-
-    date.setUTCDate(Math.min(targetDay, endOfMonth));
-    return date.getTime();
-  }
-
-  function formatDate(timestamp) {
-    if (!Number.isFinite(timestamp)) return "—";
-
-    return new Date(timestamp).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      timeZone: "UTC"
-    });
-  }
-
-  function dateKey(timestamp) {
-    if (!Number.isFinite(timestamp)) return "";
-    return new Date(timestamp).toISOString().slice(0, 10);
-  }
-
-  function formatNumber(value) {
-    if (!Number.isFinite(Number(value))) return "—";
-    return Math.round(Number(value)).toLocaleString("en-US");
-  }
-
-  function formatUnits(value) {
-    return formatNumber(value);
-  }
-
-  function formatPosition(value) {
-    return Number.isFinite(Number(value)) && Number(value) <= CONFIG.HOT100_SIZE
-      ? `#${Number(value)}`
-      : "—";
-  }
-
-  function dateForOffset(timestamp) {
-    return formatDate(timestamp);
-  }
-
-  function monthLabel(timestamp) {
-    if (!Number.isFinite(timestamp)) return "—";
-    return new Date(timestamp).toLocaleDateString("en-US", {
-      month: "short",
-      year: "numeric",
-      timeZone: "UTC"
-    });
-  }
-
-  function getName(item) {
-    if (!item || typeof item !== "object") return "Unknown";
-    return safeString(item.name ?? item.title ?? item.artist_name ?? item.track_title);
-  }
-
-  function getTrackTitle(track) {
-    return safeString(track?.title ?? track?.name ?? track?.track_title, "Unknown Song");
-  }
-
-  function getAlbumTitle(album) {
-    return safeString(album?.title ?? album?.name ?? album?.album_title, "Unknown Album");
-  }
-
-  function getArtistName(id) {
-    if (id == null) return "Unknown Artist";
-    const artist = state.artists.get(String(id));
-    if (artist) return getName(artist);
-    return "Unknown Artist";
-  }
-
-  function getTrackArtistIds(track) {
-    if (!track) return [];
-
-    const candidateLists = [
-      track.artist_ids,
-      track.credited_artist_ids,
-      track.artists,
-      track.artist_credits
-    ];
-
-    for (const candidate of candidateLists) {
-      const ids = idsFrom(candidate);
-      if (ids.length) return ids;
+    a {
+      color: var(--accent);
+      text-decoration: none;
     }
 
-    const fallback = track.primary_artist_id ?? track.artist_id;
-    return fallback != null ? [String(fallback)] : [];
-  }
+    a:hover { text-decoration: underline; }
 
-  function getTrackArtistNames(track) {
-    if (!track) return ["Unknown Artist"];
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
 
-    const ids = getTrackArtistIds(track);
-    if (ids.length) return ids.map(getArtistName);
+    .shell {
+      width: min(1800px, 100%);
+      margin: 0 auto;
+      padding: 26px clamp(14px, 3vw, 42px) 60px;
+    }
 
-    const supplied = track.artist_name ?? track.artist;
-    if (typeof supplied === "string" && supplied.trim()) return [supplied.trim()];
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 4vw, 48px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background:
+        linear-gradient(120deg, rgb(114 85 184 / 22%), transparent 55%),
+        linear-gradient(300deg, rgb(202 96 169 / 11%), transparent 50%),
+        var(--panel);
+      box-shadow: var(--shadow);
+    }
 
-    return ["Unknown Artist"];
-  }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      right: -80px;
+      top: -120px;
+      border-radius: 50%;
+      background: rgb(185 165 255 / 13%);
+      filter: blur(4px);
+      pointer-events: none;
+    }
 
-  function getLeadAlbumArtistId(album) {
-    if (!album) return null;
+    .eyebrow {
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
 
-    const candidate = album.primary_artist_id ?? album.artist_id;
-    if (candidate != null) return String(candidate);
+    h1 {
+      margin: 7px 0 12px;
+      font-size: clamp(2.2rem, 6vw, 4.8rem);
+      line-height: 1;
+      letter-spacing: -.055em;
+    }
 
-    const ids = idsFrom(album.artist_ids ?? album.artists);
-    return ids[0] ?? null;
-  }
+    .hero p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+    }
 
-  function getTrackAlbumIds(track) {
-    if (!track) return [];
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
 
-    return unique([
-      ...idsFrom(track.album_ids),
-      ...idsFrom(track.albums),
-      track.album_id,
-      track.primary_album_id
-    ]);
-  }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 100%;
+      padding: 6px 11px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgb(255 255 255 / 3%);
+      color: var(--muted);
+      font-size: .78rem;
+      overflow-wrap: anywhere;
+    }
 
-  function getTrackIdsFromAlbum(album) {
-    if (!album) return [];
+    .pill.good { color: var(--green); }
+    .pill.warn { color: var(--yellow); }
+    .pill.bad { color: var(--red); }
 
-    return unique([
-      ...idsFrom(album.track_ids),
-      ...idsFrom(album.tracks)
-    ]);
-  }
+    .section-title {
+      margin: 30px 0 14px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+    }
 
-  function pointsForInternalRank(rank) {
-    if (rank <= 1) return 100;
-    if (rank === 2) return 98;
+    .section-title h2 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2vw, 1.65rem);
+      letter-spacing: -.035em;
+    }
 
-    return Math.max(1, Math.round(98 - ((rank - 2) * 97 / 98)));
-  }
+    .section-title p {
+      color: var(--muted);
+      margin: 5px 0 0;
+      font-size: .86rem;
+    }
 
-  function makeChartEntries(countMap, type, allowedIds = null) {
-    const candidates = [];
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
 
-    countMap.forEach((activityCount, id) => {
-      const key = String(id);
+    .stat-card,
+    .record-card,
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
 
-      if (allowedIds && !allowedIds.has(key)) return;
-      if (!(activityCount > 0)) return;
+    .stat-card {
+      padding: 18px;
+    }
 
-      if (type === "songs") {
-        const track = state.tracks.get(key);
-        if (!track) return;
+    .stat-label {
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      overflow-wrap: anywhere;
+    }
 
-        candidates.push({
-          id: key,
-          title: getTrackTitle(track),
-          artist: getTrackArtistNames(track).join(", "),
-          artistIds: getTrackArtistIds(track),
-          activityCount,
-          trackCount: 1
-        });
-      } else {
-        const album = state.albums.get(key);
-        if (!album) return;
+    .stat-value {
+      margin-top: 8px;
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      font-weight: 850;
+      letter-spacing: -.045em;
+      overflow-wrap: anywhere;
+    }
 
-        const leadId = getLeadAlbumArtistId(album);
-        candidates.push({
-          id: key,
-          title: getAlbumTitle(album),
-          artist: getArtistName(leadId),
-          artistIds: leadId ? [leadId] : [],
-          leadArtistId: leadId,
-          activityCount,
-          trackCount: state.albumTrackMap.get(key)?.size ?? 0
-        });
-      }
-    });
+    .stat-note {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .78rem;
+      overflow-wrap: anywhere;
+    }
 
-    // Preserve the historical methodology: establish the internal activity
-    // order before calculating derived
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 25px 0 14px;
+    }
+
+    .nav button,
+    .action-button {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--panel);
+      color: var(--muted);
+      font-weight: 750;
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+
+    .nav button:hover,
+    .action-button:hover {
+      color: var(--text);
+      border-color: #555570;
+    }
+
+    .nav button.active {
+      color: #171020;
+      border-color: transparent;
+      background: linear-gradient(105deg, var(--accent), var(--accent-2));
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: minmax(180px, 2fr) repeat(3, minmax(130px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .field {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: .73rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-width: 0;
+      min-height: 42px;
+      padding: 9px 11px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #0b0b13;
+    }
+
+    .date-filters {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .date-filters[hidden] { display: none; }
+
+    .panel {
+      padding: clamp(12px, 2vw, 22px);
+    }
+
+    .table-heading {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .table-heading h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      letter-spacing: -.03em;
+      overflow-wrap: anywhere;
+    }
+
+    .table-heading p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .table-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .action-button {
+      padding: 8px 10px;
+      font-size: .78rem;
+    }
+
+    .result-count {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .table-wrap { min-width: 0; }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      font-size: .84rem;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 12px 9px;
+      background: #1b1b2b;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      color: #d4d1e8;
+      text-align: left;
+      font-size: .72rem;
+      letter-spacing: .035em;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    thead th:first-child {
+      border-left: 1px solid var(--border);
+      border-top-left-radius: 9px;
+    }
+
+    thead th:last-child {
+      border-right: 1px solid var(--border);
+      border-top-right-radius: 9px;
+    }
+
+    tbody td {
+      padding: 12px 9px;
+      border-bottom: 1px solid #222234;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+
+    tbody tr:hover td {
+      background: rgb(255 255 255 / 2%);
+    }
+
+    .cell-main {
+      display: block;
+      color: var(--text);
+      font-weight: 750;
+    }
+
+    .cell-sub {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .76rem;
+    }
+
+    .rank {
+      color: var(--accent);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .trend-up { color: var(--green); font-weight: 800; }
+    .trend-down { color: var(--red); font-weight: 800; }
+
+  </style>
+</head>
+<body>
+  
+  <div class="shell">
+    
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="eyebrow">YourHot100</div>
+      <h1>Stats Paradise</h1>
+      <p>View your top tracks, analyze listening trends, and dive deep into your music data.</p>
+      
+      <div class="hero-meta">
+        <span class="pill good">System Online</span>
+        <span class="pill">Last updated: Today</span>
+      </div>
+    </header>
+
+    <!-- Stats Grid -->
+    <div class="section-title">
+      <h2>Overview</h2>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">TOTAL SCROBBLES</div>
+        <div class="stat-value">124,592</div>
+        <div class="stat-note"><span class="trend-up">↑ 12%</span> this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">TOP ARTIST</div>
+        <div class="stat-value">The Weeknd</div>
+        <div class="stat-note">8,402 plays</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">UNIQUE ALBUMS</div>
+        <div class="stat-value">1,402</div>
+        <div class="stat-note">Discovered 42 new</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">AVG DAILY LISTENS</div>
+        <div class="stat-value">114</div>
+        <div class="stat-note"><span class="trend-down">↓ 3%</span> this week</div>
+      </div>
+    </div>
+
+    <!-- Navigation & Filters -->
+    <nav class="nav">
+      <button class="active">Tracks</button>
+      <button>Artists</button>
+      <button>Albums</button>
+      <button>Recent</button>
+    </nav>
+
+    <div class="filters">
+      <div class="field">
+        <label>Search</label>
+        <input type="text" placeholder="Search tracks or artists...">
+      </div>
+      <div class="field">
+        <label>Time Period</label>
+        <select>
+          <option>Last 7 Days</option>
+          <option>Last 30 Days</option>
+          <option>All Time</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Genre</label>
+        <select>
+          <option>All Genres</option>
+          <option>Pop</option>
+          <option>Hip Hop</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Sort By</label>
+        <select>
+          <option>Play Count</option>
+          <option>Recent</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="panel">
+      <div class="table-heading">
+        <div>
+          <h2>Top Tracks</h2>
+          <p class="result-count">Showing 1-100 of 4,203 results</p>
+        </div>
+        <div class="table-actions">
+          <button class="action-button">Export CSV</button>
+        </div>
+      </div>
+      
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 60px;">RANK</th>
+              <th>TRACK / ARTIST</th>
+              <th>ALBUM</th>
+              <th style="width: 120px;">PLAYS</th>
+              <th style="width: 100px;">TREND</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="rank">#1</td>
+              <td>
+                <span class="cell-main">Blinding Lights</span>
+                <span class="cell-sub">The Weeknd</span>
+              </td>
+              <td>
+                <span class="cell-main">After Hours</span>
+              </td>
+              <td>
+                <span class="cell-main">1,204</span>
+              </td>
+              <td class="trend-up">↑ Up 2</td>
+            </tr>
+            <tr>
+              <td class="rank">#2</td>
+              <td>
+                <span class="cell-main">Starboy</span>
+                <span class="cell-sub">The Weeknd</span>
+              </td>
+              <td>
+                <span class="cell-main">Starboy</span>
+              </td>
+              <td>
+                <span class="cell-main">982</span>
+              </td>
+              <td class="trend-down">↓ Down 1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
