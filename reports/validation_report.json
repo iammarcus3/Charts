@@ -8,8 +8,8 @@
   "fuzzy_candidates_for_review": 396,
   "notes": [
     "Exact normalized identities are canonicalized automatically.",
-    "Fuzzy title candidates are reported for review only.",
-    "Live, remix, remaster, acoustic and edit wording is preserved.",
-    "Album eligibility requires distinct canonical track IDs."
+    "Fuzzy matches are review-only and are not automatically merged.",
+    "Track album_ids may reference eligible or ineligible releases.",
+    "Album eligibility requires at least three distinct canonical tracks."
   ]
 }

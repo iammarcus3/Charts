@@ -1030,7 +1030,7 @@
     "track_b_id": "141a60b0fd712474f112afb1",
     "track_b_title": "Don't Forget About Us (Radio Edit)",
     "similarity": 0.9153,
-    "version_wording_differs": false,
+    "version_wording_differs": true,
     "action": "review_only_not_merged"
   },
   {
@@ -1107,7 +1107,7 @@
     "track_b_id": "3ce8311ea2442be4dff86a61",
     "track_b_title": "The World's Greatest (Radio Edit)",
     "similarity": 0.9123,
-    "version_wording_differs": false,
+    "version_wording_differs": true,
     "action": "review_only_not_merged"
   },
   {
@@ -1272,7 +1272,7 @@
     "track_b_id": "8873200b5974eadbdbd76646",
     "track_b_title": "The Power of Love - Radio Edit",
     "similarity": 0.902,
-    "version_wording_differs": false,
+    "version_wording_differs": true,
     "action": "review_only_not_merged"
   },
   {
@@ -1624,7 +1624,7 @@
     "track_b_id": "748e73b1df7d2817656c68bd",
     "track_b_title": "Body and Soul (Radio Edit)",
     "similarity": 0.8837,
-    "version_wording_differs": false,
+    "version_wording_differs": true,
     "action": "review_only_not_merged"
   },
   {
@@ -1767,7 +1767,7 @@
     "track_b_id": "0801e65993537b1f3cce011e",
     "track_b_title": "Maria Maria (feat. The Product G&B) [Radio Mix]",
     "similarity": 0.878,
-    "version_wording_differs": true,
+    "version_wording_differs": false,
     "action": "review_only_not_merged"
   },
   {
@@ -1778,7 +1778,7 @@
     "track_b_id": "9734990c47b270880d80fc08",
     "track_b_title": "Maria Maria (Radio Mix) [feat. The Product G&B]",
     "similarity": 0.878,
-    "version_wording_differs": true,
+    "version_wording_differs": false,
     "action": "review_only_not_merged"
   },
   {
@@ -1844,7 +1844,7 @@
     "track_b_id": "0fb31c822ba3340d34eb0aff",
     "track_b_title": "Don't Forget About Us (Radio",
     "similarity": 0.875,
-    "version_wording_differs": true,
+    "version_wording_differs": false,
     "action": "review_only_not_merged"
   },
   {
@@ -1877,7 +1877,7 @@
     "track_b_id": "4fafa47ae239577b15bfd0ba",
     "track_b_title": "Uptown Girl (Radio Edit)",
     "similarity": 0.8718,
-    "version_wording_differs": false,
+    "version_wording_differs": true,
     "action": "review_only_not_merged"
   },
   {
@@ -2284,7 +2284,7 @@
     "track_b_id": "4d952c03a0cf82144264e740",
     "track_b_title": "The Power of Love (Radio",
     "similarity": 0.85,
-    "version_wording_differs": true,
+    "version_wording_differs": false,
     "action": "review_only_not_merged"
   },
   {
@@ -2482,7 +2482,7 @@
     "track_b_id": "0479a51c882bda442224cf7c",
     "track_b_title": "Frontin' (feat. JAY Z) [Radio Mix/Club Mix]",
     "similarity": 0.8438,
-    "version_wording_differs": true,
+    "version_wording_differs": false,
     "action": "review_only_not_merged"
   },
   {
@@ -2603,7 +2603,7 @@
     "track_b_id": "67c5b5236807a29914a1d260",
     "track_b_title": "Only You (feat. The Notorious B.I.G.) - Radio Mix",
     "similarity": 0.8421,
-    "version_wording_differs": false,
+    "version_wording_differs": true,
     "action": "review_only_not_merged"
   },
   {
@@ -2823,7 +2823,7 @@
     "track_b_id": "5ea2d49bf39725610a3c7f79",
     "track_b_title": "Bamba la (Radio Mix) [feat. Leehleza & Stokie]",
     "similarity": 0.8354,
-    "version_wording_differs": true,
+    "version_wording_differs": false,
     "action": "review_only_not_merged"
   },
   {
@@ -3461,7 +3461,7 @@
     "track_b_id": "90cf6464f4deca7660072923",
     "track_b_title": "Body and Soul (Radio",
     "similarity": 0.8125,
-    "version_wording_differs": true,
+    "version_wording_differs": false,
     "action": "review_only_not_merged"
   },
   {
@@ -3747,7 +3747,7 @@
     "track_b_id": "67c5b5236807a29914a1d260",
     "track_b_title": "Only You (feat. The Notorious B.I.G.) - Radio Mix",
     "similarity": 0.8081,
-    "version_wording_differs": false,
+    "version_wording_differs": true,
     "action": "review_only_not_merged"
   },
   {
@@ -3769,7 +3769,7 @@
     "track_b_id": "698bb5f7de9dc71f25d1351f",
     "track_b_title": "Umshove (Radio Mix) [feat. Leehleza]",
     "similarity": 0.8077,
-    "version_wording_differs": true,
+    "version_wording_differs": false,
     "action": "review_only_not_merged"
   },
   {
@@ -4286,7 +4286,7 @@
     "track_b_id": "dbfe3865b0a39cae9cbbbf88",
     "track_b_title": "Tell Me How You Feel (Radio Mix)",
     "similarity": 0.8,
-    "version_wording_differs": true,
+    "version_wording_differs": false,
     "action": "review_only_not_merged"
   },
   {

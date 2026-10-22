@@ -14,7 +14,7 @@
   },
   "deduplication": {
     "duplicate_events_removed": 1,
-    "method": "Exact canonical track ID plus exact non-empty timestamp",
+    "method": "exact canonical track_id + exact non-empty timestamp",
     "fuzzy_metadata_matches_auto_merged": 0
   },
   "build_status": "success"
