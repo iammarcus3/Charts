@@ -1,165 +1,398 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080808">
+  <meta name="theme-color" content="#09090f">
   <title>Stats Paradise — YourHot100</title>
   <style>
     :root {
       color-scheme: dark;
-      --bg: #080808;
-      --panel: #111113;
-      --panel2: #171719;
-      --line: #29292d;
-      --text: #f5f5f5;
-      --muted: #96969e;
-      --accent: #c4b5fd;
-      --good: #86efac;
-      --warn: #fcd34d;
-      --bad: #fca5a5;
+      --bg: #09090f;
+      --panel: #11111b;
+      --panel-2: #171725;
+      --border: #28283a;
+      --text: #f5f5fb;
+      --muted: #9999b2;
+      --accent: #b9a5ff;
+      --accent-2: #f0a8df;
+      --green: #65d6a0;
+      --red: #ff858e;
+      --yellow: #f3d17a;
+      --radius: 16px;
+      --shadow: 0 12px 35px rgb(0 0 0 / 22%);
     }
+
     * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
     body {
-      margin: 0; background: var(--bg); color: var(--text);
-      font: 14px/1.5 Inter, system-ui, -apple-system, sans-serif;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 0% 0%, rgb(123 86 210 / 12%), transparent 38rem),
+        radial-gradient(ellipse at 100% 5%, rgb(230 100 175 / 8%), transparent 34rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      line-height: 1.5;
     }
-    button, input, select { font: inherit; }
+
+    button, input, select {
+      font: inherit;
+    }
+
     button, select, input {
-      color: var(--text); background: var(--panel2);
-      border: 1px solid var(--line); border-radius: 9px;
-      padding: 10px 12px;
+      color: var(--text);
     }
-    button { cursor: pointer; }
-    button:hover, .nav-button.active { border-color: var(--accent); }
-    a { color: var(--accent); text-decoration: none; }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
     a:hover { text-decoration: underline; }
-    .layout { display: grid; grid-template-columns: 245px minmax(0,1fr); min-height: 100vh; }
-    aside {
-      padding: 25px 17px; background: #0c0c0e;
-      border-right: 1px solid var(--line); position: sticky;
-      top: 0; height: 100vh; overflow: auto;
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
     }
-    .brand { font-size: 25px; font-weight: 950; letter-spacing: -1.4px; }
-    .brand span { color: var(--accent); }
-    .eyebrow { color: var(--muted); text-transform: uppercase; letter-spacing: 2px; font-size: 10px; font-weight: 800; }
-    .nav { display: grid; gap: 7px; margin-top: 27px; }
-    .nav-button { text-align: left; width: 100%; background: transparent; border-color: transparent; }
-    .nav-button.active { background: #201d2b; color: #fff; }
-    .aside-note { margin-top: 28px; border-top: 1px solid var(--line); padding-top: 18px; font-size: 12px; color: var(--muted); }
-    main { padding: 30px; min-width: 0; max-width: 1700px; width: 100%; }
-    .topbar { display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap; margin-bottom:25px; }
-    h1 { font-size: clamp(28px,4vw,44px); line-height:1.08; letter-spacing:-1.5px; margin:6px 0; }
-    h2 { font-size:21px; margin:0; letter-spacing:-.4px; }
-    h3 { font-size:15px; margin:0; }
-    p { margin:6px 0; }
-    .muted { color:var(--muted); }
-    .small { font-size:12px; }
-    .panel { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:19px; min-width:0; }
-    .section { display:grid; gap:17px; }
-    .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
-    .grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
-    .metric { background:var(--panel); border:1px solid var(--line); border-radius:13px; padding:17px; min-width:0; }
-    .metric .value { font-size:clamp(22px,3vw,32px); font-weight:900; letter-spacing:-1px; overflow-wrap:anywhere; }
-    .metric .label { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; }
-    .toolbar { display:flex; gap:9px; flex-wrap:wrap; align-items:center; }
-    .toolbar input[type=search] { flex:1; min-width:190px; }
-    .toolbar select { max-width:100%; }
-    .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:11px; }
-    table { width:100%; border-collapse:collapse; white-space:nowrap; font-size:12px; }
-    th, td { padding:12px 13px; border-bottom:1px solid #232327; text-align:left; }
-    th { color:var(--muted); background:#171719; font-size:10px; text-transform:uppercase; letter-spacing:.8px; position:sticky; top:0; z-index:1; }
-    th button { background:transparent; border:0; padding:0; color:inherit; text-transform:inherit; letter-spacing:inherit; }
-    td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
-    tbody tr:hover { background:#19191d; }
-    .pill { display:inline-block; border:1px solid var(--line); border-radius:99px; padding:3px 8px; font-size:11px; }
-    .good { color:var(--good); } .warn { color:var(--warn); } .bad { color:var(--bad); }
-    .status { padding:14px; border-radius:10px; background:#15151a; border:1px solid var(--line); color:var(--muted); }
-    .hidden { display:none !important; }
-    .bar-row { display:grid; grid-template-columns:minmax(110px,220px) minmax(50px,1fr) minmax(75px,auto); align-items:center; gap:12px; padding:8px 0; }
-    .bar-track { height:7px; background:#28282e; border-radius:10px; overflow:hidden; }
-    .bar-fill { height:100%; background:var(--accent); border-radius:10px; }
-    .footer { margin-top:28px; border-top:1px solid var(--line); padding-top:16px; color:var(--muted); font-size:11px; }
-    @media(max-width:1050px) {
-      .layout { grid-template-columns:1fr; }
-      aside { position:relative; width:100%; height:auto; border-right:0; border-bottom:1px solid var(--line); }
-      .nav { display:flex; overflow:auto; margin-top:16px; }
-      .nav-button { width:auto; flex:0 0 auto; }
-      .aside-note { display:none; }
-      main { padding:20px; }
-      .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+    .shell {
+      width: min(1800px, 100%);
+      margin: 0 auto;
+      padding: 26px clamp(14px, 3vw, 42px) 60px;
     }
-    @media(max-width:560px) {
-      main { padding:13px; }
-      .grid, .grid.three { grid-template-columns:1fr 1fr; }
-      .panel { padding:14px; }
-      .bar-row { grid-template-columns:100px 1fr auto; gap:7px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 4vw, 48px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background:
+        linear-gradient(120deg, rgb(114 85 184 / 22%), transparent 55%),
+        linear-gradient(300deg, rgb(202 96 169 / 11%), transparent 50%),
+        var(--panel);
+      box-shadow: var(--shadow);
     }
-  </style>
-</head>
-<body>
-<div class="layout">
-  <aside>
-    <div class="brand">STATS <span>PARADISE</span></div>
-    <p class="eyebrow">YourHot100 · Statistical Archive</p>
-    <nav class="nav" id="navigation">
-      <button class="nav-button active" data-view="imports">01 · Import Centre</button>
-      <button class="nav-button" data-view="overview">02 · All-Time Overview</button>
-      <button class="nav-button" data-view="songs">03 · Song Records</button>
-      <button class="nav-button" data-view="albums">04 · Album Records</button>
-      <button class="nav-button" data-view="artists">05 · Artist Records</button>
-      <button class="nav-button" data-view="debuts">06 · Debuts & Returns</button>
-      <button class="nav-button" data-view="numberones">07 · No. 1 Archive</button>
-      <button class="nav-button" data-view="records">08 · Record Book</button>
-      <button class="nav-button" data-view="calendar">09 · Calendar History</button>
-      <button class="nav-button" data-view="quality">10 · Vault Integrity</button>
-    </nav>
-    <div class="aside-note">
-      <strong>Independent application</strong>
-      <p>Reads your existing vault. It does not replace the charts or write to source data.</p>
-    </div>
-  </aside>
 
-  <main>
-    <header class="topbar">
-      <div>
-        <div class="eyebrow">The complete record book</div>
-        <h1 id="page-title">Import Centre</h1>
-        <p class="muted" id="page-subtitle">Import coverage, source provenance and vault integrity come first.</p>
-      </div>
-      <div class="toolbar">
-        <button id="reload-button">Refresh vault</button>
-        <button id="export-button">Export visible table</button>
-      </div>
-    </header>
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      right: -80px;
+      top: -120px;
+      border-radius: 50%;
+      background: rgb(185 165 255 / 13%);
+      filter: blur(4px);
+      pointer-events: none;
+    }
 
-    <section class="panel" style="margin-bottom:17px">
-      <div class="toolbar">
-        <label for="period-filter" class="muted small">Period</label>
-        <select id="period-filter">
-          <option value="all">All available history</option>
-        </select>
-        <label for="start-date" class="muted small">From</label>
-        <input id="start-date" type="date" aria-label="Start date">
-        <label for="end-date" class="muted small">To</label>
-        <input id="end-date" type="date" aria-label="End date">
-        <button id="apply-dates">Apply dates</button>
-        <button id="clear-dates">Clear</button>
-      </div>
-      <p class="small muted" id="coverage-note">Waiting for the vault…</p>
-    </section>
+    .eyebrow {
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
 
-    <div id="status" class="status">Loading the vault…</div>
-    <div id="content" class="section" style="margin-top:17px"></div>
+    h1 {
+      margin: 7px 0 12px;
+      font-size: clamp(2.2rem, 6vw, 4.8rem);
+      line-height: 1;
+      letter-spacing: -.055em;
+    }
 
-    <footer class="footer">
-      Stats Paradise · Independent statistics engine · Annual results use the Friday start date
-      of each Friday–Thursday chart week. Import diagnostics distinguish available vault records
-      from raw-source records that cannot be reconstructed from normalized data.
-    </footer>
-  </main>
-</div>
-<script src="stats-paradise.js"></script>
-</body>
-</html>
+    .hero p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 100%;
+      padding: 6px 11px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgb(255 255 255 / 3%);
+      color: var(--muted);
+      font-size: .78rem;
+      overflow-wrap: anywhere;
+    }
+
+    .pill.good { color: var(--green); }
+    .pill.warn { color: var(--yellow); }
+    .pill.bad { color: var(--red); }
+
+    .section-title {
+      margin: 30px 0 14px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2vw, 1.65rem);
+      letter-spacing: -.035em;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      margin: 5px 0 0;
+      font-size: .86rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat-card,
+    .record-card,
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card {
+      padding: 18px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      overflow-wrap: anywhere;
+    }
+
+    .stat-value {
+      margin-top: 8px;
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      font-weight: 850;
+      letter-spacing: -.045em;
+      overflow-wrap: anywhere;
+    }
+
+    .stat-note {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .78rem;
+      overflow-wrap: anywhere;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 25px 0 14px;
+    }
+
+    .nav button,
+    .action-button {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--panel);
+      color: var(--muted);
+      font-weight: 750;
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+
+    .nav button:hover,
+    .action-button:hover {
+      color: var(--text);
+      border-color: #555570;
+    }
+
+    .nav button.active {
+      color: #171020;
+      border-color: transparent;
+      background: linear-gradient(105deg, var(--accent), var(--accent-2));
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: minmax(180px, 2fr) repeat(3, minmax(130px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .field {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: .73rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-width: 0;
+      min-height: 42px;
+      padding: 9px 11px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #0b0b13;
+    }
+
+    .date-filters {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .date-filters[hidden] { display: none; }
+
+    .panel {
+      padding: clamp(12px, 2vw, 22px);
+    }
+
+    .table-heading {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .table-heading h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      letter-spacing: -.03em;
+      overflow-wrap: anywhere;
+    }
+
+    .table-heading p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .table-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .action-button {
+      padding: 8px 10px;
+      font-size: .78rem;
+    }
+
+    .result-count {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .table-wrap { min-width: 0; }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      font-size: .84rem;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 12px 9px;
+      background: #1b1b2b;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      color: #d4d1e8;
+      text-align: left;
+      font-size: .72rem;
+      letter-spacing: .035em;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    thead th:first-child {
+      border-left: 1px solid var(--border);
+      border-top-left-radius: 9px;
+    }
+
+    thead th:last-child {
+      border-right: 1px solid var(--border);
+      border-top-right-radius: 9px;
+    }
+
+    tbody td {
+      padding: 12px 9px;
+      border-bottom: 1px solid #222234;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+
+    tbody tr:hover td {
+      background: rgb(255 255 255 / 2%);
+    }
+
+    .cell-main {
+      display: block;
+      color: var(--text);
+      font-weight: 750;
+    }
+
+    .cell-sub {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .76rem;
+    }
+
+    .rank {
+      color: var(--accent);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .trend-up { color: var(--green); font-weight: 800; }
+    .trend-down { color: var(--red
