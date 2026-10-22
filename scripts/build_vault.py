@@ -1,5 +1,10 @@
 
-"""Build a normalized Music Vault from raw listening-history JSON files."""
+"""Build a normalized Music Vault from raw listening-history exports.
+
+Exact normalized identities are canonicalized.
+Fuzzy title matches are reported for review, never automatically merged.
+"""
+
 from __future__ import annotations
 
 import json
@@ -20,10 +25,8 @@ MIN_ALBUM_TRACKS = 3
 FUZZY_REVIEW_THRESHOLD = 0.80
 
 
-def _atomic_write_json(path: Path, data: Any) -> None:
-    """Write JSON through a temporary file to avoid partial files."""
+def atomic_write_json(path: Path, data: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-
     fd, temp_name = tempfile.mkstemp(
         prefix=f".{path.name}.",
         suffix=".tmp",
@@ -31,14 +34,10 @@ def _atomic_write_json(path: Path, data: Any) -> None:
     )
 
     try:
-        with os.fdopen(
-            fd, "w", encoding="utf-8", newline="\n"
-        ) as handle:
-            json.dump(data, handle, indent=2, ensure_ascii=False)
-            handle.write("\n")
-
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as file:
+            json.dump(data, file, indent=2, ensure_ascii=False)
+            file.write("\n")
         os.replace(temp_name, path)
-
     except Exception:
         try:
             os.unlink(temp_name)
@@ -47,13 +46,8 @@ def _atomic_write_json(path: Path, data: Any) -> None:
         raise
 
 
-def _atomic_write_jsonl(
-    path: Path,
-    records: list[dict[str, Any]],
-) -> None:
-    """Write JSON Lines through a temporary file."""
+def atomic_write_jsonl(path: Path, records: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-
     fd, temp_name = tempfile.mkstemp(
         prefix=f".{path.name}.",
         suffix=".tmp",
@@ -61,20 +55,12 @@ def _atomic_write_jsonl(
     )
 
     try:
-        with os.fdopen(
-            fd, "w", encoding="utf-8", newline="\n"
-        ) as handle:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as file:
             for record in records:
-                handle.write(
-                    json.dumps(
-                        record,
-                        ensure_ascii=False,
-                        sort_keys=True,
-                    ) + "\n"
+                file.write(
+                    json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n"
                 )
-
         os.replace(temp_name, path)
-
     except Exception:
         try:
             os.unlink(temp_name)
@@ -83,15 +69,12 @@ def _atomic_write_jsonl(
         raise
 
 
-def _deduplicate_events(
+def deduplicate_events(
     events: list[dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], int]:
-    """
-    Remove events with the same canonical track and exact non-empty
-    timestamp. Events without timestamps are preserved.
-    """
-    output = []
-    seen: set[tuple[str, str]] = set()
+    """Remove exact duplicate plays by canonical track and nonempty timestamp."""
+    result = []
+    seen = set()
     removed = 0
 
     for event in events:
@@ -99,7 +82,7 @@ def _deduplicate_events(
         track_id = event.get("track_id")
 
         if timestamp is None or not str(timestamp).strip():
-            output.append(event)
+            result.append(event)
             continue
 
         key = (str(track_id), str(timestamp).strip())
@@ -109,48 +92,31 @@ def _deduplicate_events(
             continue
 
         seen.add(key)
-        output.append(event)
+        result.append(event)
 
-    output.sort(
+    result.sort(
         key=lambda event: (
             str(event.get("timestamp") or ""),
             str(event.get("event_id") or ""),
         )
     )
 
-    return output, removed
+    return result, removed
 
 
-def _fuzzy_track_candidates(
+def fuzzy_track_candidates(
     tracks: dict[str, dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    """
-    Report similar titles by the same canonical artist.
-    Similarity is for review only and never triggers an automatic merge.
-    """
-    by_artist: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    """Create review-only suggestions for similar titles by the same artist."""
+    by_artist = defaultdict(list)
 
     for track in tracks.values():
-        artist_id = str(track.get("primary_artist_id", ""))
-        by_artist[artist_id].append(track)
+        by_artist[str(track.get("primary_artist_id", ""))].append(track)
 
     candidates = []
-
     version_terms = {
-        "live",
-        "remix",
-        "remaster",
-        "acoustic",
-        "instrumental",
-        "karaoke",
-        "edit",
-        "demo",
-        "version",
-        "sped",
-        "slowed",
-        "radio",
-        "clean",
-        "explicit",
+        "live", "remix", "remaster", "acoustic", "instrumental",
+        "karaoke", "edit", "version", "demo", "slowed", "sped",
     }
 
     for artist_id, artist_tracks in by_artist.items():
@@ -173,40 +139,45 @@ def _fuzzy_track_candidates(
                 if len(right_title) < 5 or left_title == right_title:
                     continue
 
-                left_words = set(left_title.split())
-                right_words = set(right_title.split())
-
-                left_has_version = bool(left_words & version_terms)
-                right_has_version = bool(right_words & version_terms)
-
                 score = SequenceMatcher(
                     None, left_title, right_title
                 ).ratio()
 
-                if score >= FUZZY_REVIEW_THRESHOLD:
-                    candidates.append({
-                        "entity_type": "track",
-                        "artist_id": artist_id,
-                        "track_a_id": left["id"],
-                        "track_a_title": left["title"],
-                        "track_b_id": right["id"],
-                        "track_b_title": right["title"],
-                        "similarity": round(score, 4),
-                        "version_wording_differs": (
-                            left_has_version != right_has_version
-                        ),
-                        "action": "review_only_not_merged",
-                    })
+                if score < FUZZY_REVIEW_THRESHOLD:
+                    continue
+
+                candidates.append({
+                    "entity_type": "track",
+                    "artist_id": artist_id,
+                    "track_a_id": left["id"],
+                    "track_a_title": left["title"],
+                    "track_b_id": right["id"],
+                    "track_b_title": right["title"],
+                    "similarity": round(score, 4),
+                    "version_wording_differs": (
+                        bool(set(left_title.split()) & version_terms)
+                        != bool(set(right_title.split()) & version_terms)
+                    ),
+                    "action": "review_only_not_merged",
+                })
 
     candidates.sort(
-        key=lambda candidate: (
-            -candidate["similarity"],
-            candidate["track_a_title"].casefold(),
-            candidate["track_b_title"].casefold(),
+        key=lambda item: (
+            -item["similarity"],
+            item["track_a_title"].casefold(),
+            item["track_b_title"].casefold(),
         )
     )
 
     return candidates
+
+
+def merge_aliases(existing: dict, incoming: dict, field: str) -> None:
+    aliases = existing.setdefault("aliases", [])
+
+    for value in [incoming.get(field), *incoming.get("aliases", [])]:
+        if value and value != existing.get(field) and value not in aliases:
+            aliases.append(value)
 
 
 def build() -> dict[str, Any]:
@@ -215,160 +186,170 @@ def build() -> dict[str, Any]:
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
     raw_files = sorted(
-        path for path in RAW_DIR.glob("*.json")
-        if path.is_file()
+        path for path in RAW_DIR.glob("*.json") if path.is_file()
     )
 
-    all_artists: dict[str, dict[str, Any]] = {}
-    all_albums: dict[str, dict[str, Any]] = {}
-    all_tracks: dict[str, dict[str, Any]] = {}
-    all_events: list[dict[str, Any]] = []
-    input_errors: list[dict[str, str]] = []
+    artists = {}
+    albums = {}
+    tracks = {}
+    events = []
+    input_errors = []
 
-    # Import and merge all files.
-    for file_path in raw_files:
-        print(f"Processing {file_path}...")
+    # Import and merge canonical entities from all source files.
+    for path in raw_files:
+        print(f"Processing {path}...")
 
         try:
-            artists, albums, tracks, events = (
-                ingest_zerocharts_file(file_path)
+            file_artists, file_albums, file_tracks, file_events = (
+                ingest_zerocharts_file(path)
             )
         except Exception as exc:
             input_errors.append({
-                "file": str(file_path),
+                "file": str(path),
                 "error": f"{type(exc).__name__}: {exc}",
             })
             continue
 
-        for artist_id, artist in artists.items():
-            if artist_id not in all_artists:
-                all_artists[artist_id] = artist
+        for entity_id, artist in file_artists.items():
+            if entity_id not in artists:
+                artists[entity_id] = artist
             else:
-                existing = all_artists[artist_id]
+                merge_aliases(artists[entity_id], artist, "name")
 
-                for alias in [
-                    artist.get("name"),
-                    *artist.get("aliases", []),
-                ]:
-                    if (
-                        alias
-                        and alias != existing["name"]
-                        and alias not in existing.setdefault("aliases", [])
-                    ):
-                        existing["aliases"].append(alias)
-
-        for album_id, album in albums.items():
-            if album_id not in all_albums:
-                all_albums[album_id] = album
+        for entity_id, album in file_albums.items():
+            if entity_id not in albums:
+                albums[entity_id] = album
             else:
-                existing = all_albums[album_id]
-
+                existing = albums[entity_id]
                 for track_id in album.get("track_ids", []):
                     if track_id not in existing.setdefault("track_ids", []):
                         existing["track_ids"].append(track_id)
 
-        for track_id, track in tracks.items():
-            if track_id not in all_tracks:
-                all_tracks[track_id] = track
+        for entity_id, track in file_tracks.items():
+            if entity_id not in tracks:
+                tracks[entity_id] = track
             else:
-                existing = all_tracks[track_id]
+                existing = tracks[entity_id]
 
                 for album_id in track.get("album_ids", []):
                     if album_id not in existing.setdefault("album_ids", []):
                         existing["album_ids"].append(album_id)
 
-                for alias in [
-                    track.get("title"),
-                    *track.get("aliases", []),
-                ]:
-                    if (
-                        alias
-                        and alias != existing["title"]
-                        and alias not in existing.setdefault("aliases", [])
-                    ):
-                        existing["aliases"].append(alias)
+                merge_aliases(existing, track, "title")
 
-        all_events.extend(events)
+        events.extend(file_events)
 
-    # Rebuild bidirectional album/track relationships.
-    for album in all_albums.values():
-        album["track_ids"] = sorted(set(album.get("track_ids", [])))
+    # Rebuild relationships in both directions using the final canonical IDs.
+    # Album membership is many-to-many: one track can belong to several releases.
+    integrity_issues = []
 
-    for track in all_tracks.values():
-        track["album_ids"] = sorted(set(track.get("album_ids", [])))
+    for album in albums.values():
+        album["track_ids"] = list(dict.fromkeys(album.get("track_ids", [])))
 
-        for album_id in track["album_ids"]:
-            if album_id in all_albums:
-                album_track_ids = all_albums[album_id].setdefault(
-                    "track_ids", []
-                )
+    for track in tracks.values():
+        track_id = track["id"]
+        album_ids = list(track.get("album_ids", []))
 
-                if track["id"] not in album_track_ids:
-                    album_track_ids.append(track["id"])
+        # Support older records that contain album_id but not album_ids.
+        legacy_album_id = track.get("album_id")
+        if legacy_album_id and legacy_album_id not in album_ids:
+            album_ids.append(legacy_album_id)
 
-        track["album_ids"] = sorted(track["album_ids"])
+        # Also preserve associations already recorded on album records.
+        for album_id, album in albums.items():
+            if track_id in album.get("track_ids", []) and album_id not in album_ids:
+                album_ids.append(album_id)
 
-        if track["album_ids"]:
-            track["album_id"] = track["album_ids"][0]
+        album_ids = sorted(set(album_ids))
 
-    integrity_issues: list[dict[str, Any]] = []
-
-    # Validate artists and album references.
-    for track in all_tracks.values():
-        artist_id = track.get("primary_artist_id")
-
-        if artist_id not in all_artists:
-            integrity_issues.append({
-                "type": "missing_track_artist",
-                "track_id": track["id"],
-                "artist_id": artist_id,
-            })
-
-        valid_album_ids = []
-
-        for album_id in track.get("album_ids", []):
-            if album_id not in all_albums:
+        for album_id in album_ids:
+            if album_id not in albums:
                 integrity_issues.append({
                     "type": "missing_track_album",
-                    "track_id": track["id"],
+                    "track_id": track_id,
                     "album_id": album_id,
                 })
             else:
-                valid_album_ids.append(album_id)
+                if track_id not in albums[album_id]["track_ids"]:
+                    albums[album_id]["track_ids"].append(track_id)
 
-        track["album_ids"] = valid_album_ids
+        artist_id = track.get("primary_artist_id")
+        if artist_id not in artists:
+            integrity_issues.append({
+                "type": "missing_track_artist",
+                "track_id": track_id,
+                "artist_id": artist_id,
+            })
 
-        if valid_album_ids:
-            track["album_id"] = valid_album_ids[0]
+        track["album_ids"] = album_ids
+
+        if album_ids:
+            # Keep the compatibility field only when it points to a real album.
+            track["album_id"] = album_ids[0]
         else:
             track.pop("album_id", None)
 
-    # Deduplicate exact repeat imports, not plays with different timestamps.
-    all_events, duplicate_event_count = _deduplicate_events(all_events)
+    for album in albums.values():
+        album["track_ids"] = sorted(set(album.get("track_ids", [])))
+
+        artist_id = album.get("primary_artist_id")
+        if artist_id and artist_id not in artists:
+            integrity_issues.append({
+                "type": "missing_album_artist",
+                "album_id": album["id"],
+                "artist_id": artist_id,
+            })
+
+        for track_id in album["track_ids"]:
+            if track_id not in tracks:
+                integrity_issues.append({
+                    "type": "missing_album_track",
+                    "album_id": album["id"],
+                    "track_id": track_id,
+                })
+
+    # Deduplicate exact timestamped plays and check event references.
+    events, duplicate_event_count = deduplicate_events(events)
 
     invalid_events = []
     valid_events = []
 
-    for event in all_events:
-        if event.get("track_id") not in all_tracks:
+    seen_event_ids = set()
+
+    for event in events:
+        track_id = event.get("track_id")
+        event_id = event.get("event_id")
+
+        if track_id not in tracks:
             invalid_events.append({
                 **event,
                 "validation_error": "track_id_not_found",
             })
-        else:
-            valid_events.append(event)
+            continue
 
-    all_events = valid_events
+        if event_id and event_id in seen_event_ids:
+            invalid_events.append({
+                **event,
+                "validation_error": "duplicate_event_id",
+            })
+            continue
 
-    # Album eligibility is based on distinct canonical track IDs.
-    eligible_albums: dict[str, dict[str, Any]] = {}
-    ineligible_releases: list[dict[str, Any]] = []
+        if event_id:
+            seen_event_ids.add(event_id)
 
-    for album_id, album in all_albums.items():
+        valid_events.append(event)
+
+    events = valid_events
+
+    # Album eligibility is based on distinct canonical tracks, never play counts.
+    eligible_albums = {}
+    ineligible_releases = []
+
+    for album_id, album in albums.items():
         distinct_track_ids = sorted({
             track_id
             for track_id in album.get("track_ids", [])
-            if track_id in all_tracks
+            if track_id in tracks
         })
 
         album["track_ids"] = distinct_track_ids
@@ -384,19 +365,18 @@ def build() -> dict[str, Any]:
                 "track_count": track_count,
                 "track_ids": distinct_track_ids,
                 "exclusion_reason": (
-                    f"Fewer than {MIN_ALBUM_TRACKS} "
-                    "distinct canonical tracks"
+                    f"Fewer than {MIN_ALBUM_TRACKS} distinct canonical tracks"
                 ),
             })
 
     ineligible_releases.sort(
-        key=lambda row: (
-            str(row["title"]).casefold(),
-            row["id"],
+        key=lambda release: (
+            str(release["title"]).casefold(),
+            release["id"],
         )
     )
 
-    fuzzy_candidates = _fuzzy_track_candidates(all_tracks)
+    fuzzy_candidates = fuzzy_track_candidates(tracks)
 
     validation = {
         "status": (
@@ -412,50 +392,30 @@ def build() -> dict[str, Any]:
         "fuzzy_candidates_for_review": len(fuzzy_candidates),
         "notes": [
             "Exact normalized identities are canonicalized automatically.",
-            "Fuzzy title candidates are reported for review only.",
-            "Live, remix, remaster, acoustic and edit wording is preserved.",
-            "Album eligibility requires distinct canonical track IDs.",
+            "Fuzzy matches are review-only and are not automatically merged.",
+            "Track album_ids may reference eligible or ineligible releases.",
+            "Album eligibility requires at least three distinct canonical tracks.",
         ],
     }
 
-    # Reports are written even if validation fails.
-    _atomic_write_json(
-        REPORTS_DIR / "input_errors.json",
-        input_errors,
-    )
-    _atomic_write_json(
-        REPORTS_DIR / "integrity_issues.json",
-        integrity_issues,
-    )
-    _atomic_write_json(
-        REPORTS_DIR / "invalid_events.json",
-        invalid_events,
-    )
-    _atomic_write_json(
-        REPORTS_DIR / "duplicate_candidates.json",
-        fuzzy_candidates,
-    )
-    _atomic_write_json(
-        REPORTS_DIR / "validation_report.json",
-        validation,
-    )
+    # Reports are written even when validation fails, to explain the failure.
+    atomic_write_json(REPORTS_DIR / "input_errors.json", input_errors)
+    atomic_write_json(REPORTS_DIR / "integrity_issues.json", integrity_issues)
+    atomic_write_json(REPORTS_DIR / "invalid_events.json", invalid_events)
+    atomic_write_json(REPORTS_DIR / "duplicate_candidates.json", fuzzy_candidates)
+    atomic_write_json(REPORTS_DIR / "validation_report.json", validation)
 
-    # Do not replace the existing Vault if validation fails.
+    # Never replace the previous vault if source integrity checks fail.
     if validation["status"] != "success":
         raise RuntimeError(
-            "Vault validation failed; existing Vault files were not "
-            "replaced. Check the reports directory."
+            "Vault build validation failed. Existing vault files were not "
+            "replaced. Check reports/integrity_issues.json, "
+            "reports/invalid_events.json and reports/input_errors.json."
         )
 
-    artists_out = [
-        all_artists[key] for key in sorted(all_artists)
-    ]
-    albums_out = [
-        eligible_albums[key] for key in sorted(eligible_albums)
-    ]
-    tracks_out = [
-        all_tracks[key] for key in sorted(all_tracks)
-    ]
+    artists_out = [artists[key] for key in sorted(artists)]
+    albums_out = [eligible_albums[key] for key in sorted(eligible_albums)]
+    tracks_out = [tracks[key] for key in sorted(tracks)]
 
     manifest = {
         "settings": {
@@ -466,46 +426,25 @@ def build() -> dict[str, Any]:
             "artists": len(artists_out),
             "eligible_albums": len(albums_out),
             "ineligible_releases": len(ineligible_releases),
-            "all_albums": len(all_albums),
+            "all_albums": len(albums),
             "tracks": len(tracks_out),
-            "listening_events": len(all_events),
+            "listening_events": len(events),
             "fuzzy_candidates_for_review": len(fuzzy_candidates),
         },
         "deduplication": {
             "duplicate_events_removed": duplicate_event_count,
-            "method": (
-                "Exact canonical track ID plus exact non-empty timestamp"
-            ),
+            "method": "exact canonical track_id + exact non-empty timestamp",
             "fuzzy_metadata_matches_auto_merged": 0,
         },
         "build_status": "success",
     }
 
-    # Write canonical datasets.
-    _atomic_write_json(
-        VAULT_DIR / "artists.json",
-        artists_out,
-    )
-    _atomic_write_json(
-        VAULT_DIR / "albums.json",
-        albums_out,
-    )
-    _atomic_write_json(
-        VAULT_DIR / "ineligible_releases.json",
-        ineligible_releases,
-    )
-    _atomic_write_json(
-        VAULT_DIR / "tracks.json",
-        tracks_out,
-    )
-    _atomic_write_jsonl(
-        VAULT_DIR / "listening_history.jsonl",
-        all_events,
-    )
-    _atomic_write_json(
-        VAULT_DIR / "manifest.json",
-        manifest,
-    )
+    atomic_write_json(VAULT_DIR / "artists.json", artists_out)
+    atomic_write_json(VAULT_DIR / "albums.json", albums_out)
+    atomic_write_json(VAULT_DIR / "ineligible_releases.json", ineligible_releases)
+    atomic_write_json(VAULT_DIR / "tracks.json", tracks_out)
+    atomic_write_jsonl(VAULT_DIR / "listening_history.jsonl", events)
+    atomic_write_json(VAULT_DIR / "manifest.json", manifest)
 
     print(json.dumps(manifest, indent=2))
     return manifest
