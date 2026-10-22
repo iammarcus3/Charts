@@ -63,7 +63,7 @@ def ingest_zerocharts_file(filepath: str | Path):
         elif raw_artist != artists[artist_id]["name"] and raw_artist not in artists[artist_id]["aliases"]:
             artists[artist_id]["aliases"].append(raw_artist)
 
-        # Canonicalize known deluxe/expanded variants to the parent album family.
+        # Remove bracketed/parenthesized album annotations for family matching.
         # Preserve original release names for auditability and bonus-track recovery.
         canonical_album = canonical_album_title(raw_album)
         album_id = generate_deterministic_id("album", raw_artist, canonical_album)
@@ -76,7 +76,7 @@ def ingest_zerocharts_file(filepath: str | Path):
                 "track_ids": [],
                 "source_titles": [],
                 "edition_labels": [],
-                "canonicalization_rule": "deluxe_expanded_family",
+                "canonicalization_rule": "bracketed_album_family",
             }
         album = albums[album_id]
         if raw_album not in album["source_titles"]:
@@ -119,4 +119,5 @@ def ingest_zerocharts_file(filepath: str | Path):
         })
 
     return artists, albums, tracks, events
+
 
