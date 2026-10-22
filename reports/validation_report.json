@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "raw_files_found": 1,
+  "raw_files_failed": 0,
+  "integrity_issue_count": 0,
+  "invalid_event_count": 0,
+  "duplicate_events_removed": 1,
+  "fuzzy_candidates_for_review": 396,
+  "notes": [
+    "Exact normalized identities are canonicalized automatically.",
+    "Fuzzy title candidates are reported for review only.",
+    "Live, remix, remaster, acoustic and edit wording is preserved.",
+    "Album eligibility requires distinct canonical track IDs."
+  ]
+}

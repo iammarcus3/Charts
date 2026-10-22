@@ -1,13 +1,21 @@
 {
   "settings": {
-    "MIN_ALBUM_TRACKS": 3
+    "MIN_ALBUM_TRACKS": 3,
+    "FUZZY_REVIEW_THRESHOLD": 0.8
   },
   "record_counts": {
     "artists": 4384,
-    "eligible_albums": 962,
-    "ineligible_releases": 8297,
+    "eligible_albums": 1154,
+    "ineligible_releases": 8105,
+    "all_albums": 9259,
     "tracks": 14727,
-    "listening_events": 230030
+    "listening_events": 230029,
+    "fuzzy_candidates_for_review": 396
+  },
+  "deduplication": {
+    "duplicate_events_removed": 1,
+    "method": "Exact canonical track ID plus exact non-empty timestamp",
+    "fuzzy_metadata_matches_auto_merged": 0
   },
   "build_status": "success"
 }
