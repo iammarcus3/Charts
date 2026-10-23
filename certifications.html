@@ -75,13 +75,28 @@ const res=await Promise.all(paths.map(p=>fetch(p)));const bad=res.find((r,i)=>!r
 const [td,ad,ard,ht]=await Promise.all([res[0].json(),res[1].json(),res[2].json(),res[3].text()]);
 const tracks=normalizeMap(td),albums=normalizeMap(ad),artists=normalizeMap(ard);
 const history=ht.trim()?ht.trim().split(/\r?\n/).filter(Boolean).map(x=>JSON.parse(x)).filter(x=>x&&x.track_id&&timestamp(x.timestamp)!==null).map(x=>({...x,ts:timestamp(x.timestamp)})).sort((a,b)=>a.ts-b.ts):[];
-const artistName=id=>{const a=artists.get(String(Array.isArray(id)?id[0]:id));return a?.name||a?.title||''};
+const canonicalArtistId=id=>{if(!id)return null;const key=String(Array.isArray(id)?id[0]:id);const a=artists.get(key);return a?.canonical_artist_id?String(a.canonical_artist_id):key};
+const artistName=id=>{const a=artists.get(canonicalArtistId(id));return a?.name||a?.title||''};
+const normalizeAlbumFamilyTitle=value=>String(value||'').toLowerCase().replace(/[’']/g,'').replace(/\\([^)]*\\)|\\[[^\\]]*\\]/g,' ').replace(/\\b(?:scary hours|deluxe|expanded|special|anniversary|bonus tracks?|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version)\\b/gi,' ').replace(/[^a-z0-9]+/g,' ').trim().replace(/\\s+/g,' ');
 const albumTrackSets=new Map();
 albums.forEach((a,id)=>albumTrackSets.set(String(id),new Set((Array.isArray(a.track_ids)?a.track_ids:[]).map(String).filter(tid=>tracks.has(tid)))));
 tracks.forEach((t,tid)=>{const ids=Array.isArray(t.album_ids)?t.album_ids:(t.album_id?[t.album_id]:[]);ids.forEach(id=>{if(albumTrackSets.has(String(id)))albumTrackSets.get(String(id)).add(String(tid))})});
 const eligible=new Set([...albumTrackSets].filter(([id,set])=>set.size>=3).map(([id])=>id));
 const weekly=new Map(), weekMs=7*24*60*60*1000;
-const weekStart=ts=>{const d=new Date(ts*1000);const day=(d.getUTCDay()+6)%7;return Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-day)/1000};
+// Match the main chart engine: chart weeks start on Friday (UTC).
+const weekStart=ts=>{const d=new Date(ts*1000);const day=(d.getUTCDay()+2)%7;return Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-day)/1000};
+const isAlbumEditionOf=(editionId,parentId)=>{
+ const edition=albums.get(String(editionId)),parent=albums.get(String(parentId));
+ if(!edition||!parent||String(editionId)===String(parentId))return false;
+ const ea=canonicalArtistId(edition.primary_artist_id||edition.artist_id),pa=canonicalArtistId(parent.primary_artist_id||parent.artist_id);
+ if(!ea||ea!==pa)return false;
+ const et=normalizeAlbumFamilyTitle(edition.title),pt=normalizeAlbumFamilyTitle(parent.title);
+ const hasCue=/\\b(?:deluxe|expanded|special|anniversary|bonus|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version|reloaded|scary hours|ep|single|cuffing season)\\b/i.test(edition.title||'');
+ if(!pt||!(et===pt||(hasCue&&et.startsWith(pt+' '))))return false;
+ const etr=albumTrackSets.get(String(editionId))||new Set(),ptr=albumTrackSets.get(String(parentId))||new Set();
+ let shared=0;etr.forEach(tid=>{if(ptr.has(String(tid)))shared++});
+ return shared>=3;
+};
 for(const e of history){const w=weekStart(e.ts);if(!weekly.has(w))weekly.set(w,[]);weekly.get(w).push(e)}
 const accumulated=new Map(), firstMilestone=new Map(), debutedAlbums=new Set();
 const pointsForRank=rank=>rank===1?100:rank===2?98:Math.max(1,Math.round(98-((rank-2)*97/98)));
@@ -101,8 +116,10 @@ const songs=[...songCounts].filter(([id])=>tracks.has(id)).map(([id,plays])=>({i
 const hotIds=new Set(songs.map(x=>x.id));
 for(const s of songs){const p=pointsForRank(songs.indexOf(s)+1),units=s.plays*50000+p*500,t=s.t;addWeek(s.id,t.title||'Unknown Song',artistName(t.primary_artist_id||t.artist_id),'song',s.plays,p,units,imageUrl(t),week)}
 const chartingByAlbum=new Map();
-for(const tid of hotIds){const t=tracks.get(tid);const ids=Array.isArray(t.album_ids)?t.album_ids:(t.album_id?[t.album_id]:[]);ids.forEach(aid=>{aid=String(aid);if(!eligible.has(aid))return;if(!chartingByAlbum.has(aid))chartingByAlbum.set(aid,new Set());chartingByAlbum.get(aid).add(tid)})}
-for(const [id,set] of chartingByAlbum){if(set.size>=3)debutedAlbums.add(id)}
+for(const tid of hotIds){const t=tracks.get(tid);const ids=Array.isArray(t.album_ids)&&t.album_ids.length?[...new Set(t.album_ids.map(String))]:(t.album_id?[String(t.album_id)]:[]);ids.forEach(aid=>{if(!eligible.has(aid))return;if(!chartingByAlbum.has(aid))chartingByAlbum.set(aid,new Set());chartingByAlbum.get(aid).add(tid)})}
+const qualifying=[...chartingByAlbum.entries()].filter(([id,set])=>eligible.has(String(id))&&set.size>=3).map(([id])=>String(id));
+qualifying.sort((a,b)=>String(albums.get(a)?.title||'').length-String(albums.get(b)?.title||'').length);
+for(const id of qualifying){if(debutedAlbums.has(id))continue;const edition=eligible.size>0&&[...eligible].some(parentId=>{const p=String(parentId);if(p===id)return false;if(!debutedAlbums.has(p)&&!qualifying.includes(p))return false;return isAlbumEditionOf(id,p)});if(!edition)debutedAlbums.add(id)}
 const albumRows=[...albumCounts].filter(([id])=>debutedAlbums.has(id)&&albums.has(id)).map(([id,plays])=>({id,plays,a:albums.get(id)})).sort((a,b)=>b.plays-a.plays||String(a.a.title||'').localeCompare(String(b.a.title||''))).slice(0,100);
 for(let i=0;i<albumRows.length;i++){const row=albumRows[i],p=pointsForRank(i+1),units=row.plays*5000+p*500,a=row.a;let art=imageUrl(a);if(!art){const tid=(a.track_ids||[]).find(id=>tracks.has(String(id)));const t=tracks.get(String(tid));art=imageUrl(t)}addWeek(row.id,a.title||'Unknown Album',artistName(a.primary_artist_id||a.artist_id),'album',row.plays,p,units,art,week)}
 }
