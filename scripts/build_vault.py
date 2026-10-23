@@ -148,15 +148,21 @@ def _merge_similar_tracks(
     for members in components.values():
         # Prefer the shortest normalized title (usually the original title), then
         # most-used spelling, then stable lexical/ID tie-breakers.
-        canonical_id = min(
-            members,
-            key=lambda tid: (
-                len(str(tracks[tid].get("normalized_title") or normalize_text(tracks[tid].get("title", "")))),
+        def canonical_title_priority(tid: str) -> tuple[int, int, int, str, str]:
+            title = str(tracks[tid].get("title") or "").strip()
+            normalized = normalize_text(title)
+            # A placeholder must never win over a genuine title merely because it
+            # is shorter. This protects canonical titles in automatic and approved merges.
+            placeholder = normalized in {"", "unknown", "unknown track", "untitled", "none", "null"}
+            return (
+                1 if placeholder else 0,
+                len(normalized),
                 -event_counts.get(tid, 0),
-                str(tracks[tid].get("normalized_title", "")),
+                normalized,
                 tid,
-            ),
-        )
+            )
+
+        canonical_id = min(members, key=canonical_title_priority)
         canonical = dict(tracks[canonical_id])
         canonical["album_ids"] = list(canonical.get("album_ids", []))
         canonical["aliases"] = list(canonical.get("aliases", []))
@@ -308,15 +314,21 @@ def _merge_approved_track_pairs(
     merged: dict[str, dict[str, Any]] = {}
     report: list[dict[str, Any]] = []
     for members in components.values():
-        canonical_id = min(
-            members,
-            key=lambda tid: (
-                len(str(tracks[tid].get("normalized_title") or normalize_text(tracks[tid].get("title", "")))),
+        def canonical_title_priority(tid: str) -> tuple[int, int, int, str, str]:
+            title = str(tracks[tid].get("title") or "").strip()
+            normalized = normalize_text(title)
+            # A placeholder must never win over a genuine title merely because it
+            # is shorter. This protects canonical titles in automatic and approved merges.
+            placeholder = normalized in {"", "unknown", "unknown track", "untitled", "none", "null"}
+            return (
+                1 if placeholder else 0,
+                len(normalized),
                 -event_counts.get(tid, 0),
-                str(tracks[tid].get("normalized_title", "")),
+                normalized,
                 tid,
-            ),
-        )
+            )
+
+        canonical_id = min(members, key=canonical_title_priority)
         canonical = dict(tracks[canonical_id])
         canonical["album_ids"] = list(canonical.get("album_ids", []))
         canonical["aliases"] = list(canonical.get("aliases", []))
