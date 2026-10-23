@@ -1246,8 +1246,8 @@
     "canonical_title": "AmaPiano Volume 4",
     "primary_artist_id": "4db0f575b0e8853c40823d65",
     "source_titles_merged": [
-      "Amapiano Volume 4",
-      "AmaPiano Volume 4"
+      "AmaPiano Volume 4",
+      "Amapiano Volume 4"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -1378,8 +1378,8 @@
     "canonical_title": "Anti - MusicFire.in",
     "primary_artist_id": "5e568be58fcbab5cdbc5fd89",
     "source_titles_merged": [
-      "Anti - MusicFire.in",
-      "Anti - Musicfire.in"
+      "Anti - Musicfire.in",
+      "Anti - MusicFire.in"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -2788,8 +2788,8 @@
     "canonical_title": "Blue Lights In The Basement",
     "primary_artist_id": "d7ef2790e9f724b1325b983f",
     "source_titles_merged": [
-      "Blue Lights in the Basement",
-      "Blue Lights In The Basement"
+      "Blue Lights In The Basement",
+      "Blue Lights in the Basement"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -4443,8 +4443,8 @@
     "canonical_title": "Dangerously In Love",
     "primary_artist_id": "160b28fbcb18cf650db5f12a",
     "source_titles_merged": [
-      "Dangerously in Love",
-      "Dangerously In Love"
+      "Dangerously In Love",
+      "Dangerously in Love"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -6230,8 +6230,8 @@
     "canonical_title": "For All the Dogs",
     "primary_artist_id": "d0bf8ece7f634cb21932e8f1",
     "source_titles_merged": [
-      "For All the Dogs",
-      "For All The Dogs"
+      "For All The Dogs",
+      "For All the Dogs"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -8102,8 +8102,8 @@
     "canonical_title": "HURRY UP TOMORROW",
     "primary_artist_id": "03b159383844f399c130860b",
     "source_titles_merged": [
-      "HURRY UP TOMORROW",
-      "Hurry Up Tomorrow"
+      "Hurry Up Tomorrow",
+      "HURRY UP TOMORROW"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -8142,8 +8142,8 @@
     "canonical_title": "HURRY UP TOMORROW",
     "primary_artist_id": "18408e4b94f5e92f93f8f86b",
     "source_titles_merged": [
-      "HURRY UP TOMORROW",
       "Hurry Up Tomorrow",
+      "HURRY UP TOMORROW",
       "Hurry Up Tomorrow (Video Album)"
     ],
     "edition_labels_merged": [
@@ -8905,8 +8905,8 @@
     "canonical_title": "Isimo",
     "primary_artist_id": "3066eac9ce20209493ec670d",
     "source_titles_merged": [
-      "iSimo",
-      "Isimo"
+      "Isimo",
+      "iSimo"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -9651,8 +9651,8 @@
     "canonical_title": "Kiss All The Time. Disco, Occasionally.",
     "primary_artist_id": "5262dc458929bbef3f0e1420",
     "source_titles_merged": [
-      "Kiss All the Time. Disco, Occasionally.",
-      "Kiss All The Time. Disco, Occasionally."
+      "Kiss All The Time. Disco, Occasionally.",
+      "Kiss All the Time. Disco, Occasionally."
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -15271,8 +15271,8 @@
     "canonical_title": "Set It Off",
     "primary_artist_id": "0c9205b178526ab06d6f41f0",
     "source_titles_merged": [
-      "SET IT OFF",
-      "Set It Off"
+      "Set It Off",
+      "SET IT OFF"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -15917,8 +15917,8 @@
     "canonical_title": "Smooth Jazz for Lovers",
     "primary_artist_id": "1a450a4e6b6c93c52afe120b",
     "source_titles_merged": [
-      "Smooth Jazz for Lovers",
-      "Smooth Jazz For Lovers"
+      "Smooth Jazz For Lovers",
+      "Smooth Jazz for Lovers"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -17190,8 +17190,8 @@
     "canonical_title": "The Best Of Anita Baker",
     "primary_artist_id": "1fbdda766b54a1bf97ee4cf7",
     "source_titles_merged": [
-      "The Best Of Anita Baker",
-      "The Best of Anita Baker"
+      "The Best of Anita Baker",
+      "The Best Of Anita Baker"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -17476,12 +17476,12 @@
     "canonical_title": "The Fighting Temptations",
     "primary_artist_id": "d4b4d6c3df118803e75af84b",
     "source_titles_merged": [
-      "The Fighting Temptations (Music From The Motion Picture)",
-      "The Fighting Temptations (Music from the Motion Picture)"
+      "The Fighting Temptations (Music from the Motion Picture)",
+      "The Fighting Temptations (Music From The Motion Picture)"
     ],
     "edition_labels_merged": [
-      "The Fighting Temptations (Music From The Motion Picture)",
-      "The Fighting Temptations (Music from the Motion Picture)"
+      "The Fighting Temptations (Music from the Motion Picture)",
+      "The Fighting Temptations (Music From The Motion Picture)"
     ],
     "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -17678,9 +17678,9 @@
     "canonical_title": "the idol",
     "primary_artist_id": "7d09e007f4cb7bd27b2b618b",
     "source_titles_merged": [
-      "the idol",
+      "The Idol",
       "THE IDOL",
-      "The Idol"
+      "the idol"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -18833,12 +18833,12 @@
     "canonical_title": "Trolls World Tour",
     "primary_artist_id": "a487c95e88214cd938d1ad66",
     "source_titles_merged": [
-      "Trolls World Tour (Original Motion Picture Soundtrack)",
-      "TROLLS World Tour (Original Motion Picture Soundtrack)"
+      "TROLLS World Tour (Original Motion Picture Soundtrack)",
+      "Trolls World Tour (Original Motion Picture Soundtrack)"
     ],
     "edition_labels_merged": [
-      "Trolls World Tour (Original Motion Picture Soundtrack)",
-      "TROLLS World Tour (Original Motion Picture Soundtrack)"
+      "TROLLS World Tour (Original Motion Picture Soundtrack)",
+      "Trolls World Tour (Original Motion Picture Soundtrack)"
     ],
     "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -19603,8 +19603,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "e869d7cdcc903a167b3ff93e",
     "source_titles_merged": [
-      "Waiting To Exhale",
       "Waiting to Exhale",
+      "Waiting To Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [
@@ -19659,8 +19659,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "52a2c160a0104e1b0a9a53d1",
     "source_titles_merged": [
-      "Waiting To Exhale",
       "Waiting to Exhale",
+      "Waiting To Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [
@@ -20278,8 +20278,8 @@
     "canonical_title": "When It's All Said And Done... Take Time",
     "primary_artist_id": "4f970bf3f9ccbf95aab1f5fc",
     "source_titles_merged": [
-      "When It's All Said And Done... Take Time",
-      "When It's All Said and Done... Take Time"
+      "When It's All Said and Done... Take Time",
+      "When It's All Said And Done... Take Time"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 6,
