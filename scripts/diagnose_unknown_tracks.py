@@ -13,9 +13,9 @@ for path in sorted(Path("raw/listening_history").glob("*.json")):
     for i, row in enumerate(rows):
         if not isinstance(row, dict):
             continue
-        title = next((row.get(k) for k in ("track", "track_name", "title") if row.get(k) not in (None, "")), None)
+        title = next((row.get(k) for k in ("track", "track_name", "title", "name") if row.get(k) not in (None, "")), None)
         if title is None:
-            missing.append((i, sorted(row.keys()), {k: row.get(k) for k in ("artist", "artist_name", "album", "album_title", "track", "track_name", "title") if k in row}))
+            missing.append((i, sorted(row.keys()), {k: row.get(k) for k in ("artist", "artist_name", "album", "album_title", "track", "track_name", "title", "name") if k in row}))
     print(f"DIAGNOSTIC {path.name}: records={len(rows)} missing_track_title={len(missing)}")
     for i, keys, values in missing[:12]:
         print(f"DIAGNOSTIC sample index={i} keys={keys} values={json.dumps(values, ensure_ascii=False)[:700]}")
