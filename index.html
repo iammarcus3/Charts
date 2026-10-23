@@ -451,7 +451,32 @@
                     if (type === 'songs') {
                         const track = this.state.raw.tracks.get(String(id));
                         if (!track) return;
-                        title = track.title || 'Unknown Track';
+                        const titleCandidates = [
+                            track.title,
+                            ...(Array.isArray(track.aliases) ? track.aliases : []),
+                            ...(Array.isArray(track.source_titles) ? track.source_titles : [])
+                        ];
+                        const readTrackTitle = value => {
+                            if (typeof value === 'string' || typeof value === 'number') {
+                                const text = String(value).trim();
+                                return text && !/^(unknown track|unknown|untitled|null|none)$/i.test(text) ? text : '';
+                            }
+                            if (Array.isArray(value)) {
+                                for (const item of value) {
+                                    const text = readTrackTitle(item);
+                                    if (text) return text;
+                                }
+                            } else if (value && typeof value === 'object') {
+                                for (const key of ['#text', '#TEXT', 'text', 'name', 'title', 'value']) {
+                                    if (key in value) {
+                                        const text = readTrackTitle(value[key]);
+                                        if (text) return text;
+                                    }
+                                }
+                            }
+                            return '';
+                        };
+                        title = titleCandidates.map(readTrackTitle).find(Boolean) || 'Unknown Track';
                         artistId = this.canonicalArtistId(track.primary_artist_id || track.artist_id);
                         artist = this.getArtistName(artistId);
                     } else {
