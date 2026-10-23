@@ -2,7 +2,8 @@
 
 This prints counts and a few field-level examples in CI so the importer can be
 fixed based on the actual ZeroCharts export schema rather than guesses. Last.fm
-exports use the top-level `name` field for the track title.
+exports use the top-level `name` field for the track title. The workflow also
+checks the rebuilt vault for any remaining Unknown Track references.
 """
 import json
 from pathlib import Path
