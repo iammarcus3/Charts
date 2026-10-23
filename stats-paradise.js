@@ -1,28 +1,33 @@
+
 (() => {
   "use strict";
 
   /*
    * YOURHOT100 — STATS PARADISE
    *
-   * Standalone historical statistics engine.
+   * Source of truth:
+   * vault/tracks.json
+   * vault/albums.json
+   * vault/artists.json
+   * vault/listening_history.jsonl
    *
-   * Album rules:
-   * 1. Catalogue eligibility requires 3 distinct canonical tracks.
-   * 2. First official debut requires 3 distinct tracks simultaneously on
-   *    the Hot 100, and this is a ONE-TIME activation.
-   * 3. AFTER that activation, the normal album calculation applies every
-   *    week. The album does not need 3 tracks on the Hot 100 again.
+   * Song and album rankings preserve the established YourHot100 model:
+   * weekly activity Top 100 -> rank-score units -> derived-units ranking.
    *
-   * Weeks are Friday–Thursday.
-   * Only observed source weeks are constructed.
-   * Tables are capped at 200 displayed rows; calculations use the full data.
-   * Source activity and rank-score inputs are never displayed or exported.
+   * Album eligibility and official album debut are distinct:
+   * - Eligibility: 3 distinct canonical catalogue tracks.
+   * - Official debut: first week with 3 distinct album tracks on the Hot 100.
+   * - Debut is a one-time activation.
+   * - After activation, the normal album model applies each week.
+   *
+   * Tables show at most 250 rows, but all history is used for calculations.
+   * Activity counts and rank-score inputs are never displayed or exported.
    */
 
   const CONFIG = Object.freeze({
     MIN_ALBUM_TRACKS: 3,
     HOT100_SIZE: 100,
-    TABLE_LIMIT: 200,
+    TABLE_LIMIT: 250,
     SONG_UNIT_FACTOR: 50000,
     ALBUM_UNIT_FACTOR: 5000,
     RANK_UNIT_FACTOR: 500,
@@ -56,6 +61,7 @@
   const state = {
     currentView: "overview",
     periodMode: "year",
+    sortTouched: false,
 
     tracks: new Map(),
     albums: new Map(),
@@ -96,15 +102,15 @@
     },
     songs: {
       title: "Song Archive",
-      description: "Song careers, chart peaks, No. 1 runs and lifetime derived units sold."
+      description: "Period units sold, career units sold, peaks and chart careers."
     },
     albums: {
       title: "Album Archive",
-      description: "Catalogue eligibility, official debut records and album-chart careers."
+      description: "Catalogue eligibility, official debut dates and album-chart careers."
     },
     artists: {
       title: "Artist Archive",
-      description: "Artist achievements, credited songs, lead albums and six-month movement."
+      description: "Period and career units, credited songs, lead albums and rank movement."
     },
     weeks: {
       title: "Weekly History",
@@ -116,7 +122,7 @@
     },
     debuts: {
       title: "Debuts & Returns",
-      description: "First appearances, official album debuts, re-entries and confirmed exits."
+      description: "Official album debut weeks, song debuts, re-entries and confirmed exits."
     },
     periods: {
       title: "Yearly & Monthly Performance",
@@ -124,7 +130,7 @@
     },
     records: {
       title: "The Record Book",
-      description: "Dynamically calculated all-time achievements."
+      description: "Dynamically calculated all-time song, album and artist achievements."
     }
   };
 
@@ -133,6 +139,7 @@
       ["title", "Title"]
     ],
     songs: [
+      ["periodUnitsSold", "Units sold"],
       ["unitsSold", "Career units sold"],
       ["latestRank", "Latest position"],
       ["peak", "Peak position"],
@@ -144,6 +151,7 @@
       ["artist", "Artist"]
     ],
     albums: [
+      ["periodUnitsSold", "Units sold"],
       ["unitsSold", "Career units sold"],
       ["latestRank", "Latest position"],
       ["peak", "Peak position"],
@@ -156,8 +164,9 @@
       ["artist", "Lead artist"]
     ],
     artists: [
-      ["recentUnits", "Latest six-month units"],
+      ["periodUnitsSold", "Units sold"],
       ["unitsSold", "Career units sold"],
+      ["recentUnits", "Latest six-month units"],
       ["songNo1Count", "Distinct No. 1 songs"],
       ["songCount", "Songs charted"],
       ["albumCount", "Lead albums charted"],
@@ -306,11 +315,8 @@
   function getWeekStartMs(seconds) {
     const date = new Date(seconds * 1000);
     date.setUTCHours(0, 0, 0, 0);
-
-    // Friday is day zero of a chart week.
     const daysSinceFriday = (date.getUTCDay() + 2) % 7;
     date.setUTCDate(date.getUTCDate() - daysSinceFriday);
-
     return date.getTime();
   }
 
@@ -375,13 +381,18 @@
 
     const number = Number(value);
 
-    if (
-      !Number.isInteger(number) ||
-      number < 1 ||
-      number > CONFIG.HOT100_SIZE
-    ) {
+    if (!Number.isInteger(number) || number < 1 || number > CONFIG.HOT100_SIZE) {
       return "—";
     }
+
+    return `#${number}`;
+  }
+
+  function formatLeaderboardPosition(value) {
+    if (value === null || value === undefined || value === "") return "—";
+
+    const number = Number(value);
+    if (!Number.isInteger(number) || number < 1) return "—";
 
     return `#${number}`;
   }
@@ -409,6 +420,16 @@
       album?.title ?? album?.name ?? album?.album_title,
       "Unknown Album"
     );
+  }
+
+  function readTimestampFromItem(item, keys) {
+    for (const key of keys) {
+      if (item && item[key] != null && item[key] !== "") {
+        const seconds = timestampSeconds(item[key]);
+        if (seconds != null) return seconds * 1000;
+      }
+    }
+    return null;
   }
 
   /* ---------------------------------------------------------------
@@ -466,7 +487,7 @@
       try {
         rawIds = JSON.parse(rawIds);
       } catch (_) {
-        // Continue with the source value; this is handled below.
+        // Continue with the supplied source value.
       }
     }
 
@@ -496,16 +517,13 @@
       track.primary_artist_id ?? track.artist_id
     );
 
-    if (leadId && !ids.includes(leadId)) {
-      ids.unshift(leadId);
-    }
+    if (leadId && !ids.includes(leadId)) ids.unshift(leadId);
 
     return ids;
   }
 
   function getTrackArtistNames(track) {
     const ids = getTrackArtistIds(track);
-
     if (ids.length) return ids.map(getArtistName);
 
     let credits =
@@ -524,7 +542,6 @@
       if (value && typeof value === "object") {
         return value.name ?? value.artist_name ?? value.title ?? "";
       }
-
       return String(value ?? "");
     }).filter(Boolean);
 
@@ -548,14 +565,11 @@
   function getTrackAlbumIds(track) {
     if (!track) return [];
 
-    // Follow the existing vault's track-to-album relationship.
     const listed = Array.isArray(track.album_ids)
       ? track.album_ids
       : [];
 
-    if (listed.length) {
-      return unique(listed);
-    }
+    if (listed.length) return unique(listed);
 
     const fallback = track.album_id ?? track.primary_album_id;
     return fallback != null ? [String(fallback)] : [];
@@ -575,13 +589,9 @@
     const trackToAlbums = new Map();
 
     state.albums.forEach((album, albumId) => {
-      albumTrackMap.set(
-        String(albumId),
-        new Set(getTrackIdsFromAlbum(album))
-      );
+      albumTrackMap.set(String(albumId), new Set(getTrackIdsFromAlbum(album)));
     });
 
-    // Include the reverse relationship from each canonical track as well.
     state.tracks.forEach((track, trackId) => {
       getTrackAlbumIds(track).forEach(albumId => {
         if (!state.albums.has(String(albumId))) return;
@@ -599,17 +609,15 @@
         if (!trackToAlbums.has(String(trackId))) {
           trackToAlbums.set(String(trackId), new Set());
         }
-
         trackToAlbums.get(String(trackId)).add(String(albumId));
       });
     });
 
     state.albumTrackMap = albumTrackMap;
     state.trackToAlbums = trackToAlbums;
-
-    // Catalogue eligibility only. No chart debut is implied here.
     state.eligibleAlbumIds = new Set();
 
+    // Catalogue eligibility only. It does not imply an official debut.
     albumTrackMap.forEach((trackIds, albumId) => {
       if (trackIds.size >= CONFIG.MIN_ALBUM_TRACKS) {
         state.eligibleAlbumIds.add(String(albumId));
@@ -631,15 +639,6 @@
     );
   }
 
-  /*
-   * Keep the existing operation sequence:
-   * 1. Sort candidates by weekly activity.
-   * 2. Keep the activity-ranked Top 100.
-   * 3. Calculate the established derived units using that rank score.
-   * 4. Sort the selected Top 100 by derived units and assign displayed rank.
-   *
-   * The activity counts and rank scores remain internal.
-   */
   function makeChartEntries(countMap, type, allowedIds = null) {
     const candidates = [];
 
@@ -716,11 +715,6 @@
     }));
   }
 
-  /*
-   * If the debuting album cannot receive modelled units under the existing
-   * activity-ranked Top 100 calculation, return null rather than inventing
-   * a score or rank outside the established model.
-   */
   function calculateAlbumDebutUnits(albumId, albumCounts, debutedIds) {
     const candidates = [];
 
@@ -749,18 +743,13 @@
       item => item.id === String(albumId)
     );
 
-    if (
-      activityIndex < 0 ||
-      activityIndex >= CONFIG.HOT100_SIZE
-    ) {
+    if (activityIndex < 0 || activityIndex >= CONFIG.HOT100_SIZE) {
       return null;
     }
 
     return (
-      candidates[activityIndex].activityCount *
-        CONFIG.ALBUM_UNIT_FACTOR +
-      rankScoreForRank(activityIndex + 1) *
-        CONFIG.RANK_UNIT_FACTOR
+      candidates[activityIndex].activityCount * CONFIG.ALBUM_UNIT_FACTOR +
+      rankScoreForRank(activityIndex + 1) * CONFIG.RANK_UNIT_FACTOR
     );
   }
 
@@ -782,7 +771,7 @@
       if (!responses[index].ok) {
         throw new Error(
           `Could not load ${paths[index]} (HTTP ${responses[index].status}). ` +
-          "Check the paths and make sure the page is served from the project root."
+          "Check the paths and serve the page from the project root."
         );
       }
     }
@@ -857,11 +846,10 @@
       if (!groupedEvents.has(event.weekStart)) {
         groupedEvents.set(event.weekStart, []);
       }
-
       groupedEvents.get(event.weekStart).push(event);
     });
 
-    // Do not construct artificial snapshots for missing source weeks.
+    // Only source-observed weeks are built.
     const weekStarts = [...groupedEvents.keys()].sort((a, b) => a - b);
 
     if (!weekStarts.length) {
@@ -871,13 +859,9 @@
     state.earliestWeekStart = weekStarts[0];
     state.latestWeekStart = weekStarts[weekStarts.length - 1];
 
-    state.currentSixMonthStart =
-      shiftMonthsUTC(state.latestWeekStart, -6);
-
+    state.currentSixMonthStart = shiftMonthsUTC(state.latestWeekStart, -6);
     state.previousSixMonthEnd = state.currentSixMonthStart - 1;
-
-    state.previousSixMonthStart =
-      shiftMonthsUTC(state.latestWeekStart, -12);
+    state.previousSixMonthStart = shiftMonthsUTC(state.latestWeekStart, -12);
 
     state.snapshots = [];
     state.albumDebuts = new Map();
@@ -908,39 +892,24 @@
         });
       });
 
-      // Build this week's Hot 100 using the established song model.
       const songs = makeChartEntries(trackCounts, "songs");
+      const chartingSongIds = new Set(songs.map(entry => String(entry.id)));
 
-      const chartingSongIds = new Set(
-        songs.map(entry => String(entry.id))
-      );
-
-      /*
-       * ONE-TIME DEBUT ACTIVATION.
-       *
-       * Catalogue eligibility was calculated separately and is static.
-       * An eligible album now officially debuts if this is the first
-       * snapshot with 3 or more distinct album tracks in the Hot 100.
-       */
+      // One-time activation on the first qualifying simultaneous three-track week.
       state.eligibleAlbumIds.forEach(albumId => {
         const id = String(albumId);
-
         if (state.debutedAlbumIds.has(id)) return;
 
         const trackIds = state.albumTrackMap.get(id) || new Set();
-
         let simultaneousTracks = 0;
 
         trackIds.forEach(trackId => {
-          if (chartingSongIds.has(String(trackId))) {
-            simultaneousTracks++;
-          }
+          if (chartingSongIds.has(String(trackId))) simultaneousTracks++;
         });
 
         if (simultaneousTracks < CONFIG.MIN_ALBUM_TRACKS) return;
 
         state.debutedAlbumIds.add(id);
-
         state.albumDebuts.set(id, {
           weekStart,
           simultaneousTracks,
@@ -949,17 +918,7 @@
         });
       });
 
-      /*
-       * IMPORTANT:
-       * The album chart is filtered by albums that have ALREADY debuted.
-       * There is deliberately NO recurring three-track Hot 100 test here.
-       *
-       * Once an album is activated, it follows the normal YourHot100 album
-       * activity, derived-units and Top 100 ranking calculation every week.
-       * The album can chart even if only one or zero of its tracks appear
-       * on the Hot 100 that week, provided the normal album calculation
-       * produces an eligible ranked result.
-       */
+      // Once activated, no recurring three-track condition is applied.
       const albums = makeChartEntries(
         albumCounts,
         "albums",
@@ -974,7 +933,6 @@
         );
 
         activation.rank = rankedEntry?.rank ?? null;
-
         activation.unitsSold = rankedEntry?.unitsSold ??
           calculateAlbumDebutUnits(
             albumId,
@@ -994,19 +952,19 @@
   }
 
   /* ---------------------------------------------------------------
-     RECORD AGGREGATION
+     ENTITY AGGREGATION
   ---------------------------------------------------------------- */
 
   function newEntityRecord(entry, firstWeek) {
     return {
       id: String(entry.id),
+      type: entry.type === "albums" ? "Album" : "Song",
       title: entry.title,
       artist: entry.artist,
       artistIds: entry.artistIds || [],
       leadArtistId: entry.leadArtistId || null,
 
       firstChartDate: firstWeek,
-      firstRankedOffset: firstWeek,
       lastOffset: firstWeek,
 
       peak: 101,
@@ -1030,6 +988,7 @@
       unitsSold: 0,
       bestWeek: null,
       firstNo1Date: null,
+      reentryCount: 0,
 
       history: [],
       appearances: []
@@ -1048,7 +1007,6 @@
       ) {
         break;
       }
-
       streak++;
     }
 
@@ -1059,11 +1017,8 @@
     let result = null;
 
     for (const snapshot of state.snapshots) {
-      if (snapshot.weekStart <= timestamp) {
-        result = snapshot;
-      } else {
-        break;
-      }
+      if (snapshot.weekStart <= timestamp) result = snapshot;
+      else break;
     }
 
     return result;
@@ -1084,48 +1039,31 @@
     for (const snapshot of state.snapshots) {
       const weekStart = snapshot.weekStart;
 
-      const songIdsNow = new Set(
-        snapshot.songs.map(entry => String(entry.id))
-      );
-
-      const albumIdsNow = new Set(
-        snapshot.albums.map(entry => String(entry.id))
-      );
-
-      const currentSongIds = new Set();
+      const songIdsNow = new Set(snapshot.songs.map(entry => String(entry.id)));
+      const albumIdsNow = new Set(snapshot.albums.map(entry => String(entry.id)));
 
       snapshot.songs.forEach(entry => {
         const id = String(entry.id);
-        currentSongIds.add(id);
-
         let record = songs.get(id);
         let entryStatus = null;
 
         if (!record) {
           record = newEntityRecord(entry, weekStart);
+          record.type = "Song";
           songs.set(id, record);
           entryStatus = "Debut";
         } else if (
           previousSnapshot &&
           previousSnapshot.weekStart + CONFIG.WEEK_MS === weekStart &&
-          !previousSnapshot.songs.some(
-            oldEntry => String(oldEntry.id) === id
-          )
+          !previousSnapshot.songs.some(oldEntry => String(oldEntry.id) === id)
         ) {
           entryStatus = "Re-entry";
+          record.reentryCount++;
         }
 
-        const consecutive =
-          record.lastOffset + CONFIG.WEEK_MS === weekStart;
-
-        record.currentChartStreak = consecutive
-          ? record.currentChartStreak + 1
-          : 1;
-
-        record.maxChartStreak = Math.max(
-          record.maxChartStreak,
-          record.currentChartStreak
-        );
+        const consecutive = record.lastOffset + CONFIG.WEEK_MS === weekStart;
+        record.currentChartStreak = consecutive ? record.currentChartStreak + 1 : 1;
+        record.maxChartStreak = Math.max(record.maxChartStreak, record.currentChartStreak);
 
         record.weeksOnChart++;
         record.lastOffset = weekStart;
@@ -1137,10 +1075,8 @@
           rank: entry.rank,
           unitsSold: Number(entry.unitsSold || 0)
         });
-
         record.appearances.push(weekStart);
 
-        // Keep the first date the all-time best position was achieved.
         if (entry.rank < record.peak) {
           record.peak = entry.rank;
           record.peakOffset = weekStart;
@@ -1148,21 +1084,14 @@
 
         if (entry.rank === 1) {
           record.weeksAtNo1++;
-
           record.currentNo1Streak =
             record.lastNo1Offset === weekStart - CONFIG.WEEK_MS
               ? record.currentNo1Streak + 1
               : 1;
-
           record.lastNo1Offset = weekStart;
-          record.maxNo1Streak = Math.max(
-            record.maxNo1Streak,
-            record.currentNo1Streak
-          );
+          record.maxNo1Streak = Math.max(record.maxNo1Streak, record.currentNo1Streak);
 
-          if (record.firstNo1Date == null) {
-            record.firstNo1Date = weekStart;
-          }
+          if (record.firstNo1Date == null) record.firstNo1Date = weekStart;
         } else {
           record.currentNo1Streak = 0;
           record.lastNo1Offset = null;
@@ -1174,10 +1103,7 @@
         if (entry.rank <= 50) record.weeksTop50++;
         if (entry.rank <= 100) record.weeksTop100++;
 
-        if (
-          !record.bestWeek ||
-          Number(entry.unitsSold || 0) > record.bestWeek.unitsSold
-        ) {
+        if (!record.bestWeek || Number(entry.unitsSold || 0) > record.bestWeek.unitsSold) {
           record.bestWeek = {
             weekStart,
             rank: entry.rank,
@@ -1202,35 +1128,26 @@
 
       snapshot.albums.forEach(entry => {
         const id = String(entry.id);
-
         let record = albumChartRecords.get(id);
         let entryStatus = null;
 
         if (!record) {
           record = newEntityRecord(entry, weekStart);
+          record.type = "Album";
           albumChartRecords.set(id, record);
           entryStatus = "First Top 100 appearance";
         } else if (
           previousSnapshot &&
           previousSnapshot.weekStart + CONFIG.WEEK_MS === weekStart &&
-          !previousSnapshot.albums.some(
-            oldEntry => String(oldEntry.id) === id
-          )
+          !previousSnapshot.albums.some(oldEntry => String(oldEntry.id) === id)
         ) {
           entryStatus = "Re-entry";
+          record.reentryCount++;
         }
 
-        const consecutive =
-          record.lastOffset + CONFIG.WEEK_MS === weekStart;
-
-        record.currentChartStreak = consecutive
-          ? record.currentChartStreak + 1
-          : 1;
-
-        record.maxChartStreak = Math.max(
-          record.maxChartStreak,
-          record.currentChartStreak
-        );
+        const consecutive = record.lastOffset + CONFIG.WEEK_MS === weekStart;
+        record.currentChartStreak = consecutive ? record.currentChartStreak + 1 : 1;
+        record.maxChartStreak = Math.max(record.maxChartStreak, record.currentChartStreak);
 
         record.weeksOnChart++;
         record.lastOffset = weekStart;
@@ -1242,7 +1159,6 @@
           rank: entry.rank,
           unitsSold: Number(entry.unitsSold || 0)
         });
-
         record.appearances.push(weekStart);
 
         if (entry.rank < record.peak) {
@@ -1252,21 +1168,14 @@
 
         if (entry.rank === 1) {
           record.weeksAtNo1++;
-
           record.currentNo1Streak =
             record.lastNo1Offset === weekStart - CONFIG.WEEK_MS
               ? record.currentNo1Streak + 1
               : 1;
-
           record.lastNo1Offset = weekStart;
-          record.maxNo1Streak = Math.max(
-            record.maxNo1Streak,
-            record.currentNo1Streak
-          );
+          record.maxNo1Streak = Math.max(record.maxNo1Streak, record.currentNo1Streak);
 
-          if (record.firstNo1Date == null) {
-            record.firstNo1Date = weekStart;
-          }
+          if (record.firstNo1Date == null) record.firstNo1Date = weekStart;
         } else {
           record.currentNo1Streak = 0;
           record.lastNo1Offset = null;
@@ -1278,10 +1187,7 @@
         if (entry.rank <= 50) record.weeksTop50++;
         if (entry.rank <= 100) record.weeksTop100++;
 
-        if (
-          !record.bestWeek ||
-          Number(entry.unitsSold || 0) > record.bestWeek.unitsSold
-        ) {
+        if (!record.bestWeek || Number(entry.unitsSold || 0) > record.bestWeek.unitsSold) {
           record.bestWeek = {
             weekStart,
             rank: entry.rank,
@@ -1304,14 +1210,13 @@
         }
       });
 
-      // Confirm exits only between adjacent observed calendar weeks.
+      // Only assert exits between adjacent observed calendar weeks.
       if (
         previousSnapshot &&
         previousSnapshot.weekStart + CONFIG.WEEK_MS === weekStart
       ) {
         previousSnapshot.songs.forEach(entry => {
           const id = String(entry.id);
-
           if (!songIdsNow.has(id)) {
             exitRecords.push({
               dateTs: weekStart,
@@ -1329,7 +1234,6 @@
 
         previousSnapshot.albums.forEach(entry => {
           const id = String(entry.id);
-
           if (!albumIdsNow.has(id)) {
             exitRecords.push({
               dateTs: weekStart,
@@ -1346,15 +1250,10 @@
         });
       }
 
-      const no1Song =
-        snapshot.songs.find(entry => entry.rank === 1) || null;
+      const no1Song = snapshot.songs.find(entry => entry.rank === 1) || null;
+      const no1Album = snapshot.albums.find(entry => entry.rank === 1) || null;
 
-      const no1Album =
-        snapshot.albums.find(entry => entry.rank === 1) || null;
-
-      const songEntryEventsThisWeek = songEvents.filter(
-        event => event.dateTs === weekStart
-      );
+      const songEntryEventsThisWeek = songEvents.filter(event => event.dateTs === weekStart);
 
       weeklyRecords.push({
         dateTs: weekStart,
@@ -1362,12 +1261,8 @@
         year: new Date(weekStart).getUTCFullYear(),
         songCount: snapshot.songs.length,
         albumCount: snapshot.albums.length,
-        newEntries: songEntryEventsThisWeek.filter(
-          event => event.status === "Debut"
-        ).length,
-        reentries: songEntryEventsThisWeek.filter(
-          event => event.status === "Re-entry"
-        ).length,
+        newEntries: songEntryEventsThisWeek.filter(event => event.status === "Debut").length,
+        reentries: songEntryEventsThisWeek.filter(event => event.status === "Re-entry").length,
         topSong: no1Song,
         topAlbum: no1Album,
         songUnits: no1Song?.unitsSold ?? null,
@@ -1397,25 +1292,16 @@
     const latestSnapshot = state.snapshots[state.snapshots.length - 1];
 
     const latestSongEntries = new Map(
-      (latestSnapshot?.songs || []).map(entry => [
-        String(entry.id),
-        entry
-      ])
+      (latestSnapshot?.songs || []).map(entry => [String(entry.id), entry])
     );
 
     const latestAlbumEntries = new Map(
-      (latestSnapshot?.albums || []).map(entry => [
-        String(entry.id),
-        entry
-      ])
+      (latestSnapshot?.albums || []).map(entry => [String(entry.id), entry])
     );
 
     state.songRecords = [...songs.values()].map(record => {
       const track = state.tracks.get(String(record.id));
-
-      const firstPeakIndex = record.history.findIndex(
-        entry => entry.rank === record.peak
-      );
+      const firstPeakIndex = record.history.findIndex(entry => entry.rank === record.peak);
 
       return {
         ...record,
@@ -1427,69 +1313,45 @@
         peakDate: formatDate(record.peakOffset),
         lastDate: formatDate(record.lastOffset),
         latestRank: latestSongEntries.get(String(record.id))?.rank ?? null,
-        weeksToPeak: firstPeakIndex >= 0 ? firstPeakIndex + 1 : null,
+        firstNo1Date: record.firstNo1Date == null ? "—" : formatDate(record.firstNo1Date),
         currentChartStreak: calculateCurrentStreak(record.history),
         officialDebuted: true,
         recentHistory: record.history
       };
     });
 
-    /*
-     * Include every statically eligible album, including releases that have
-     * not yet officially debuted or have never ranked in the album Top 100.
-     */
     state.albumRecords = [...state.eligibleAlbumIds].map(albumId => {
       const id = String(albumId);
       const album = state.albums.get(id);
       const chartRecord = albumChartRecords.get(id) || null;
       const activation = state.albumDebuts.get(id) || null;
-
       const albumHistory = chartRecord?.history || [];
+
       const hasRankedDebutWeek = activation
         ? albumHistory.some(item => item.weekStart === activation.weekStart)
         : false;
 
-      const rankedUnits = chartRecord?.unitsSold ?? 0;
-
-      // If a valid debut-week units figure was calculated outside a ranked
-      // album-chart appearance, include it once, never twice.
-      const extraDebutUnits =
-        activation && !hasRankedDebutWeek
-          ? Number(activation.unitsSold || 0)
-          : 0;
+      const extraDebutUnits = activation && !hasRankedDebutWeek
+        ? (activation.unitsSold == null ? 0 : Number(activation.unitsSold))
+        : 0;
 
       const careerUnits = chartRecord
-        ? rankedUnits + extraDebutUnits
+        ? chartRecord.unitsSold + extraDebutUnits
         : activation?.unitsSold ?? null;
 
-      const trackCount =
-        state.albumTrackMap.get(id)?.size ?? 0;
-
+      const trackCount = state.albumTrackMap.get(id)?.size ?? 0;
       const latestEntry = latestAlbumEntries.get(id) || null;
-
-      const officialDebutDate = activation
-        ? formatDate(activation.weekStart)
-        : "Not debuted";
-
       const firstRankedTs = chartRecord?.firstChartDate ?? null;
+      const firstPeakIndex = chartRecord
+        ? chartRecord.history.findIndex(item => item.rank === chartRecord.peak)
+        : -1;
 
       let status;
 
-      if (!activation) {
-        status = "Eligible · not debuted";
-      } else if (latestEntry) {
-        status = "Debuted · currently ranked";
-      } else if (chartRecord) {
-        status = "Debuted · not currently ranked";
-      } else {
-        status = "Debuted · no Top 100 appearance";
-      }
-
-      const firstPeakIndex = chartRecord
-        ? chartRecord.history.findIndex(
-            item => item.rank === chartRecord.peak
-          )
-        : -1;
+      if (!activation) status = "Eligible · not debuted";
+      else if (latestEntry) status = "Debuted · currently ranked";
+      else if (chartRecord) status = "Debuted · not currently ranked";
+      else status = "Debuted · no Top 100 appearance";
 
       return {
         id,
@@ -1503,31 +1365,28 @@
         status,
         trackCount,
 
-        debutDate: officialDebutDate,
+        importTs: readTimestampFromItem(album, ["imported_at", "import_date", "added_at", "created_at"]),
+        releaseTs: readTimestampFromItem(album, ["release_date", "released", "first_release_date", "releaseDate"]),
+        importDate: formatDate(readTimestampFromItem(album, ["imported_at", "import_date", "added_at", "created_at"])),
+        releaseDate: formatDate(readTimestampFromItem(album, ["release_date", "released", "first_release_date", "releaseDate"])),
+
+        debutDate: activation ? formatDate(activation.weekStart) : "Not debuted",
         debutTs: activation?.weekStart ?? null,
         debutUnits: activation?.unitsSold ?? null,
         qualifyingTracksAtDebut: activation?.simultaneousTracks ?? null,
 
-        firstRankedDate: firstRankedTs == null
-          ? "—"
-          : formatDate(firstRankedTs),
+        firstRankedDate: firstRankedTs == null ? "—" : formatDate(firstRankedTs),
         firstRankedTs,
 
         latestRank: latestEntry?.rank ?? null,
         peak: chartRecord?.weeksOnChart ? chartRecord.peak : null,
         peakOffset: chartRecord?.peakOffset ?? null,
-        peakDate: chartRecord?.peakOffset == null
-          ? "—"
-          : formatDate(chartRecord.peakOffset),
-        firstNo1Date: chartRecord?.firstNo1Date == null
-          ? "—"
-          : formatDate(chartRecord.firstNo1Date),
+        peakDate: chartRecord?.peakOffset == null ? "—" : formatDate(chartRecord.peakOffset),
+        firstNo1Date: chartRecord?.firstNo1Date == null ? "—" : formatDate(chartRecord.firstNo1Date),
         firstNo1Ts: chartRecord?.firstNo1Date ?? null,
 
         lastOffset: chartRecord?.lastOffset ?? null,
-        lastDate: chartRecord?.lastOffset == null
-          ? "—"
-          : formatDate(chartRecord.lastOffset),
+        lastDate: chartRecord?.lastOffset == null ? "—" : formatDate(chartRecord.lastOffset),
 
         weeksOnChart: chartRecord?.weeksOnChart ?? 0,
         weeksAtNo1: chartRecord?.weeksAtNo1 ?? 0,
@@ -1539,9 +1398,8 @@
 
         maxNo1Streak: chartRecord?.maxNo1Streak ?? 0,
         maxChartStreak: chartRecord?.maxChartStreak ?? 0,
-        currentChartStreak: chartRecord
-          ? calculateCurrentStreak(chartRecord.history)
-          : 0,
+        reentryCount: chartRecord?.reentryCount ?? 0,
+        currentChartStreak: chartRecord ? calculateCurrentStreak(chartRecord.history) : 0,
 
         unitsSold: careerUnits,
         bestWeek: chartRecord?.bestWeek ?? null,
@@ -1556,10 +1414,6 @@
     state.weeklyRecords = weeklyRecords;
     state.numberOneRecords = numberOneRecords;
 
-    /*
-     * Official album debuts are separate from first ranked album Top 100
-     * appearances. When both occur in the same week, one event describes both.
-     */
     const officialAlbumEvents = [];
 
     state.albumDebuts.forEach((activation, albumId) => {
@@ -1617,72 +1471,63 @@
   }
 
   /* ---------------------------------------------------------------
-     SIX-MONTH SONG AND ALBUM MOVEMENT
+     SIX-MONTH MOVEMENT
   ---------------------------------------------------------------- */
 
   function calculateMovement() {
     const latest = state.snapshots[state.snapshots.length - 1];
     if (!latest) return;
 
-    const comparison = findSnapshotOnOrBefore(
-      state.currentSixMonthStart
-    );
+    // Compare latest observed chart ranks to the closest observed snapshot
+    // on or before six calendar months earlier.
+    const comparison = findSnapshotOnOrBefore(state.currentSixMonthStart);
 
     const oldSongRanks = new Map(
-      (comparison?.songs || []).map(entry => [
-        String(entry.id),
-        entry.rank
-      ])
+      (comparison?.songs || []).map(entry => [String(entry.id), entry.rank])
     );
 
     const oldAlbumRanks = new Map(
-      (comparison?.albums || []).map(entry => [
-        String(entry.id),
-        entry.rank
-      ])
+      (comparison?.albums || []).map(entry => [String(entry.id), entry.rank])
     );
 
     state.songRecords.forEach(record => {
       const oldRank = oldSongRanks.get(String(record.id));
+      record.movementValue = null;
 
       if (record.latestRank == null) {
         record.movement = "Not currently charting";
-        record.movementValue = null;
       } else if (oldRank == null) {
         record.movement = record.firstChartDate >= state.currentSixMonthStart
           ? "New"
           : "No comparable rank";
-        record.movementValue = null;
       } else {
         record.movementValue = oldRank - record.latestRank;
         record.movement = record.movementValue > 0
-          ? `Up ${record.movementValue}`
+          ? "Up"
           : record.movementValue < 0
-            ? `Down ${Math.abs(record.movementValue)}`
+            ? "Down"
             : "Unchanged";
       }
     });
 
     state.albumRecords.forEach(record => {
       const oldRank = oldAlbumRanks.get(String(record.id));
+      record.movementValue = null;
 
       if (!record.officialDebuted) {
         record.movement = "Not debuted";
-        record.movementValue = null;
       } else if (record.latestRank == null) {
         record.movement = "Not currently ranked";
-        record.movementValue = null;
       } else if (oldRank == null) {
         record.movement = record.debutTs >= state.currentSixMonthStart
           ? "New"
           : "No comparable rank";
-        record.movementValue = null;
       } else {
         record.movementValue = oldRank - record.latestRank;
         record.movement = record.movementValue > 0
-          ? `Up ${record.movementValue}`
+          ? "Up"
           : record.movementValue < 0
-            ? `Down ${Math.abs(record.movementValue)}`
+            ? "Down"
             : "Unchanged";
       }
     });
@@ -1703,6 +1548,7 @@
       if (!artistMap.has(key)) {
         artistMap.set(key, {
           id: key,
+          type: "Artist",
           name: getArtistName(key),
 
           songUnitsSold: 0,
@@ -1715,6 +1561,7 @@
           songIds: new Set(),
           songNo1Ids: new Set(),
           albumIds: new Set(),
+          albumNo1Ids: new Set(),
 
           songAppearances: 0,
           albumAppearances: 0,
@@ -1778,7 +1625,6 @@
           artist.maxTop10SongsInWeek,
           count
         );
-
         artist.top10Weeks.add(snapshot.weekStart);
       });
 
@@ -1796,25 +1642,23 @@
         artist.albumIds.add(String(entry.id));
         artist.appearanceDates.push(snapshot.weekStart);
 
-        if (entry.rank === 1) artist.albumNo1Weeks++;
+        if (entry.rank === 1) {
+          artist.albumNo1Weeks++;
+          artist.albumNo1Ids.add(String(entry.id));
+        }
 
         if (isRecent) artist.recentUnits += units;
         if (isPrevious) artist.previousUnits += units;
       });
     }
 
-    /*
-     * Include a valid official album debut units result only if the album
-     * was not already counted as a ranked entry in that exact week.
-     */
+    // Include valid unranked debut-week units only if not already ranked that week.
     state.albumDebuts.forEach((activation, albumId) => {
       if (activation.unitsSold == null) return;
 
       const rankedThatWeek = state.snapshots.some(snapshot =>
         snapshot.weekStart === activation.weekStart &&
-        snapshot.albums.some(entry =>
-          String(entry.id) === String(albumId)
-        )
+        snapshot.albums.some(entry => String(entry.id) === String(albumId))
       );
 
       if (rankedThatWeek) return;
@@ -1845,32 +1689,30 @@
       artist.songCount = artist.songIds.size;
       artist.songNo1Count = artist.songNo1Ids.size;
       artist.albumCount = artist.albumIds.size;
+      artist.albumNo1Count = artist.albumNo1Ids.size;
       artist.top10WeeksCount = artist.top10Weeks.size;
       artist.no1Weeks = artist.songNo1Weeks + artist.albumNo1Weeks;
+
       artist.lastDateTs = artist.appearanceDates.length
         ? Math.max(...artist.appearanceDates)
         : null;
 
       if (artist.previousUnits === 0 && artist.recentUnits > 0) {
-        artist.movement = "New / no prior units";
-        artist.movementValue = null;
+        artist.salesMovement = "New / no prior units";
+        artist.salesMovementValue = null;
       } else if (artist.previousUnits === 0 && artist.recentUnits === 0) {
-        artist.movement = "No six-month activity";
-        artist.movementValue = null;
+        artist.salesMovement = "No six-month activity";
+        artist.salesMovementValue = null;
       } else {
-        artist.movementValue =
-          artist.recentUnits - artist.previousUnits;
-
-        artist.movement = artist.movementValue > 0
-          ? `Up ${formatUnits(artist.movementValue)}`
-          : artist.movementValue < 0
-            ? `Down ${formatUnits(Math.abs(artist.movementValue))}`
+        artist.salesMovementValue = artist.recentUnits - artist.previousUnits;
+        artist.salesMovement = artist.salesMovementValue > 0
+          ? "Up"
+          : artist.salesMovementValue < 0
+            ? "Down"
             : "Unchanged";
       }
 
-      artist.appearanceDates = unique(artist.appearanceDates.map(String))
-        .map(Number);
-
+      artist.appearanceDates = unique(artist.appearanceDates.map(String)).map(Number);
       return artist;
     });
 
@@ -1899,6 +1741,7 @@
     records.forEach(artist => {
       artist.currentSixMonthRank = currentPositions.get(artist.id) ?? null;
       artist.previousSixMonthRank = previousPositions.get(artist.id) ?? null;
+      artist.rankMovementValue = null;
 
       if (artist.currentSixMonthRank == null) {
         artist.rankMovement = artist.previousSixMonthRank != null
@@ -1910,10 +1753,11 @@
         const change =
           artist.previousSixMonthRank - artist.currentSixMonthRank;
 
+        artist.rankMovementValue = change;
         artist.rankMovement = change > 0
-          ? `Up ${change}`
+          ? "Up"
           : change < 0
-            ? `Down ${Math.abs(change)}`
+            ? "Down"
             : "Unchanged";
       }
     });
@@ -1933,9 +1777,7 @@
       const year = date.getUTCFullYear();
       const month = String(date.getUTCMonth() + 1).padStart(2, "0");
 
-      const key = periodMode === "year"
-        ? String(year)
-        : `${year}-${month}`;
+      const key = periodMode === "year" ? String(year) : `${year}-${month}`;
 
       const dateTs = periodMode === "year"
         ? Date.UTC(year, 0, 1)
@@ -1962,11 +1804,8 @@
       record.songAppearances += snapshot.songs.length;
       record.albumAppearances += snapshot.albums.length;
 
-      const songNo1 = snapshot.songs.find(entry => entry.rank === 1);
-      const albumNo1 = snapshot.albums.find(entry => entry.rank === 1);
-
-      if (songNo1) record.songNo1Weeks++;
-      if (albumNo1) record.albumNo1Weeks++;
+      if (snapshot.songs.some(entry => entry.rank === 1)) record.songNo1Weeks++;
+      if (snapshot.albums.some(entry => entry.rank === 1)) record.albumNo1Weeks++;
 
       snapshot.songs.forEach(entry => {
         record.songUnitsSold += Number(entry.unitsSold || 0);
@@ -1976,13 +1815,10 @@
         record.albumUnitsSold += Number(entry.unitsSold || 0);
       });
 
-      record.unitsSold =
-        record.songUnitsSold + record.albumUnitsSold;
+      record.unitsSold = record.songUnitsSold + record.albumUnitsSold;
     });
 
-    return [...records.values()].sort(
-      (a, b) => b.dateTs - a.dateTs
-    );
+    return [...records.values()].sort((a, b) => b.dateTs - a.dateTs);
   }
 
   /* ---------------------------------------------------------------
@@ -1998,9 +1834,7 @@
       records.push({
         name,
         value: String(value),
-        valueNumber: Number.isFinite(Number(numeric))
-          ? Number(numeric)
-          : 0,
+        valueNumber: Number.isFinite(Number(numeric)) ? Number(numeric) : 0,
         title: title || "—",
         detail: detail || "",
         type: type || null,
@@ -2019,230 +1853,289 @@
         .filter(item => Number.isFinite(selector(item)))
         .sort((a, b) => selector(b) - selector(a))[0] || null;
 
-    const longestSongNo1 = best(songs, item => item.maxNo1Streak);
-    const mostSongNo1Weeks = best(songs, item => item.weeksAtNo1);
-    const longestSongRun = best(songs, item => item.maxChartStreak);
-    const mostSongTop10 = best(songs, item => item.weeksTop10);
-    const mostSongUnits = best(songs, item => item.unitsSold);
-    const longestSongRunNo1 = best(songs, item => item.weeksAtNo1);
+    const longestSongNo1 = best(songs.filter(x => x.maxNo1Streak > 0), x => x.maxNo1Streak);
+    const mostSongNo1Weeks = best(songs.filter(x => x.weeksAtNo1 > 0), x => x.weeksAtNo1);
+    const longestSongRun = best(songs.filter(x => x.maxChartStreak > 0), x => x.maxChartStreak);
+    const mostSongTop10 = best(songs.filter(x => x.weeksTop10 > 0), x => x.weeksTop10);
+    const mostSongUnits = best(songs.filter(x => x.unitsSold != null), x => x.unitsSold);
 
-   const longestAlbumNo1 = best(albums, item => item.maxNo1Streak);
-const mostAlbumNo1Weeks = best(albums, item => item.weeksAtNo1);
-const mostAlbumNo1 = mostAlbumNo1Weeks;
-const longestAlbumRun = best(albums, item => item.maxChartStreak);
-const mostAlbumUnits = best(albums, item => item.unitsSold);
-
-    const artistMostSongNo1 = best(artists, item => item.songNo1Count);
-    const artistMostSongs = best(artists, item => item.songCount);
-    const artistMostTop10 = best(artists, item => item.maxTop10SongsInWeek);
-    const artistMostAlbumNo1 = best(artists, item => item.albumNo1Weeks);
-    const artistMostUnits = best(artists, item => item.unitsSold);
-
-    if (longestSongNo1) {
-      add(
-        "Longest song No. 1 streak",
-        `${longestSongNo1.maxNo1Streak} weeks`,
-        longestSongNo1.title,
-        longestSongNo1.artist,
-        longestSongNo1.maxNo1Streak,
-        "Song",
-        longestSongNo1.id
-      );
-    }
-
-    if (mostSongNo1Weeks) {
-      add(
-        "Most song weeks at No. 1",
-        `${mostSongNo1Weeks.weeksAtNo1} weeks`,
-        mostSongNo1Weeks.title,
-        mostSongNo1Weeks.artist,
-        mostSongNo1Weeks.weeksAtNo1,
-        "Song",
-        mostSongNo1Weeks.id
-      );
-    }
-
-    if (longestSongRun) {
-      add(
-        "Longest song chart run",
-        `${longestSongRun.maxChartStreak} weeks`,
-        longestSongRun.title,
-        longestSongRun.artist,
-        longestSongRun.maxChartStreak,
-        "Song",
-        longestSongRun.id
-      );
-    }
-
-    if (mostSongTop10) {
-      add(
-        "Most song Top 10 weeks",
-        `${mostSongTop10.weeksTop10} weeks`,
-        mostSongTop10.title,
-        mostSongTop10.artist,
-        mostSongTop10.weeksTop10,
-        "Song",
-        mostSongTop10.id
-      );
-    }
-
-    if (mostSongUnits) {
-      add(
-        "Highest career song units sold",
-        formatUnits(mostSongUnits.unitsSold),
-        mostSongUnits.title,
-        mostSongUnits.artist,
-        mostSongUnits.unitsSold,
-        "Song",
-        mostSongUnits.id
-      );
-    }
-
-    if (longestAlbumNo1) {
-      add(
-        "Longest album No. 1 streak",
-        `${longestAlbumNo1.maxNo1Streak} weeks`,
-        longestAlbumNo1.title,
-        longestAlbumNo1.artist,
-        longestAlbumNo1.maxNo1Streak,
-        "Album",
-        longestAlbumNo1.id
-      );
-    }
-if (mostAlbumNo1Weeks) {
-  add(
-    "Most album weeks at No. 1",
-    `${mostAlbumNo1Weeks.weeksAtNo1} weeks`,
-    mostAlbumNo1Weeks.title,
-    mostAlbumNo1Weeks.artist,
-    mostAlbumNo1Weeks.weeksAtNo1,
-    "Album",
-    mostAlbumNo1Weeks.id
-  );
-}
-
-if (longestAlbumRun) {
-  add(
-    "Longest album chart run",
-    `${longestAlbumRun.maxChartStreak} weeks`,
-    longestAlbumRun.title,
-    longestAlbumRun.artist,
-    longestAlbumRun.maxChartStreak,
-    "Album",
-    longestAlbumRun.id
-  );
-    }
-
-    if (mostAlbumUnits) {
-      add(
-        "Highest career album units sold",
-        formatUnits(mostAlbumUnits.unitsSold),
-        mostAlbumUnits.title,
-        mostAlbumUnits.artist,
-        mostAlbumUnits.unitsSold,
-        "Album",
-        mostAlbumUnits.id
-      );
-    }
-
-    if (artistMostSongNo1) {
-      add(
-        "Most distinct No. 1 songs credited",
-        `${artistMostSongNo1.songNo1Count} songs`,
-        artistMostSongNo1.name,
-        "Artist credits",
-        artistMostSongNo1.songNo1Count,
-        "Artist",
-        artistMostSongNo1.id
-      );
-    }
-
-    if (artistMostSongs) {
-      add(
-        "Most distinct songs charted",
-        `${artistMostSongs.songCount} songs`,
-        artistMostSongs.name,
-        "Artist",
-        artistMostSongs.songCount,
-        "Artist",
-        artistMostSongs.id
-      );
-    }
-
-    if (artistMostTop10) {
-      add(
-        "Most Top 10 songs in one week",
-        `${artistMostTop10.maxTop10SongsInWeek} songs`,
-        artistMostTop10.name,
-        "Artist",
-        artistMostTop10.maxTop10SongsInWeek,
-        "Artist",
-        artistMostTop10.id
-      );
-    }
-
-    if (artistMostAlbumNo1) {
-      add(
-        "Most lead-album No. 1 weeks",
-        `${artistMostAlbumNo1.albumNo1Weeks} weeks`,
-        artistMostAlbumNo1.name,
-        "Lead album artist",
-        artistMostAlbumNo1.albumNo1Weeks,
-        "Artist",
-        artistMostAlbumNo1.id
-      );
-    }
-
-    if (artistMostUnits) {
-      add(
-        "Highest combined artist units sold",
-        formatUnits(artistMostUnits.unitsSold),
-        artistMostUnits.name,
-        "Song credits plus lead-album credits",
-        artistMostUnits.unitsSold,
-        "Artist",
-        artistMostUnits.id
-      );
-    }
-
-    add(
-      "Observed chart weeks",
-      formatNumber(state.snapshots.length),
-      formatDate(state.earliestWeekStart),
-      `Latest observed week: ${formatDate(state.latestWeekStart)}`,
-      state.snapshots.length
+    const longestAlbumNo1 = best(albums.filter(x => x.maxNo1Streak > 0), x => x.maxNo1Streak);
+    const mostAlbumNo1Weeks = best(albums.filter(x => x.weeksAtNo1 > 0), x => x.weeksAtNo1);
+    const longestAlbumRun = best(albums.filter(x => x.maxChartStreak > 0), x => x.maxChartStreak);
+    const mostAlbumTop10 = best(albums.filter(x => x.weeksTop10 > 0), x => x.weeksTop10);
+    const mostAlbumChartWeeks = best(albums.filter(x => x.weeksOnChart > 0), x => x.weeksOnChart);
+    const mostAlbumReentries = best(albums.filter(x => x.reentryCount > 0), x => x.reentryCount);
+    const highestAlbumPeak = best(
+      albums.filter(x => x.weeksOnChart > 0 && Number.isFinite(x.peak)),
+      x => CONFIG.HOT100_SIZE + 1 - x.peak
     );
-
-    add(
-      "Distinct songs charted",
-      formatNumber(state.songRecords.length),
-      "YourHot100 song archive",
-      "Canonical song records",
-      state.songRecords.length
+    const mostAlbumDebutTracks = best(
+      albums.filter(x => Number.isFinite(x.qualifyingTracksAtDebut)),
+      x => x.qualifyingTracksAtDebut
     );
-
-    add(
-      "Eligible catalogue albums",
-      formatNumber(state.eligibleAlbumIds.size),
-      "YourHot100 album archive",
-      "At least three distinct canonical catalogue tracks",
-      state.eligibleAlbumIds.size
+    const highestAlbumDebutUnits = best(
+      albums.filter(x => x.debutUnits != null),
+      x => x.debutUnits
     );
+    const mostAlbumUnits = best(albums.filter(x => x.unitsSold != null), x => x.unitsSold);
 
-    add(
-      "Officially debuted albums",
-      formatNumber(state.albumDebuts.size),
-      "Official album debut archive",
-      "First qualifying simultaneous three-track Hot 100 week",
-      state.albumDebuts.size
-    );
+    const artistMostSongNo1 = best(artists.filter(x => x.songNo1Count > 0), x => x.songNo1Count);
+    const artistMostSongs = best(artists.filter(x => x.songCount > 0), x => x.songCount);
+    const artistMostTop10 = best(artists.filter(x => x.maxTop10SongsInWeek > 0), x => x.maxTop10SongsInWeek);
+    const artistMostAlbumNo1 = best(artists.filter(x => x.albumNo1Weeks > 0), x => x.albumNo1Weeks);
+    const artistMostDistinctNo1Albums = best(artists.filter(x => x.albumNo1Count > 0), x => x.albumNo1Count);
+    const artistMostUnits = best(artists.filter(x => x.unitsSold != null), x => x.unitsSold);
+
+    if (longestSongNo1) add("Longest song No. 1 streak", `${longestSongNo1.maxNo1Streak} weeks`, longestSongNo1.title, longestSongNo1.artist, longestSongNo1.maxNo1Streak, "Song", longestSongNo1.id);
+    if (mostSongNo1Weeks) add("Most song weeks at No. 1", `${mostSongNo1Weeks.weeksAtNo1} weeks`, mostSongNo1Weeks.title, mostSongNo1Weeks.artist, mostSongNo1Weeks.weeksAtNo1, "Song", mostSongNo1Weeks.id);
+    if (longestSongRun) add("Longest song chart run", `${longestSongRun.maxChartStreak} weeks`, longestSongRun.title, longestSongRun.artist, longestSongRun.maxChartStreak, "Song", longestSongRun.id);
+    if (mostSongTop10) add("Most song Top 10 weeks", `${mostSongTop10.weeksTop10} weeks`, mostSongTop10.title, mostSongTop10.artist, mostSongTop10.weeksTop10, "Song", mostSongTop10.id);
+    if (mostSongUnits) add("Highest career song units sold", formatUnits(mostSongUnits.unitsSold), mostSongUnits.title, mostSongUnits.artist, mostSongUnits.unitsSold, "Song", mostSongUnits.id);
+
+    if (longestAlbumNo1) add("Longest album No. 1 streak", `${longestAlbumNo1.maxNo1Streak} weeks`, longestAlbumNo1.title, longestAlbumNo1.artist, longestAlbumNo1.maxNo1Streak, "Album", longestAlbumNo1.id);
+    if (mostAlbumNo1Weeks) add("Most album weeks at No. 1", `${mostAlbumNo1Weeks.weeksAtNo1} weeks`, mostAlbumNo1Weeks.title, mostAlbumNo1Weeks.artist, mostAlbumNo1Weeks.weeksAtNo1, "Album", mostAlbumNo1Weeks.id);
+    if (longestAlbumRun) add("Longest album chart run", `${longestAlbumRun.maxChartStreak} weeks`, longestAlbumRun.title, longestAlbumRun.artist, longestAlbumRun.maxChartStreak, "Album", longestAlbumRun.id);
+    if (mostAlbumTop10) add("Most album Top 10 weeks", `${mostAlbumTop10.weeksTop10} weeks`, mostAlbumTop10.title, mostAlbumTop10.artist, mostAlbumTop10.weeksTop10, "Album", mostAlbumTop10.id);
+    if (mostAlbumChartWeeks) add("Most album chart weeks", `${mostAlbumChartWeeks.weeksOnChart} weeks`, mostAlbumChartWeeks.title, mostAlbumChartWeeks.artist, mostAlbumChartWeeks.weeksOnChart, "Album", mostAlbumChartWeeks.id);
+    if (highestAlbumPeak) add("Highest album peak", formatPosition(highestAlbumPeak.peak), highestAlbumPeak.title, highestAlbumPeak.artist, CONFIG.HOT100_SIZE + 1 - highestAlbumPeak.peak, "Album", highestAlbumPeak.id);
+    if (mostAlbumReentries) add("Most album re-entries", `${mostAlbumReentries.reentryCount} re-entries`, mostAlbumReentries.title, mostAlbumReentries.artist, mostAlbumReentries.reentryCount, "Album", mostAlbumReentries.id);
+    if (highestAlbumDebutUnits) add("Highest album debut-week units sold", formatUnits(highestAlbumDebutUnits.debutUnits), highestAlbumDebutUnits.title, highestAlbumDebutUnits.artist, highestAlbumDebutUnits.debutUnits, "Album", highestAlbumDebutUnits.id);
+    if (mostAlbumDebutTracks) add("Most Hot 100 tracks at album debut", `${mostAlbumDebutTracks.qualifyingTracksAtDebut} tracks`, mostAlbumDebutTracks.title, mostAlbumDebutTracks.artist, mostAlbumDebutTracks.qualifyingTracksAtDebut, "Album", mostAlbumDebutTracks.id);
+    if (mostAlbumUnits) add("Highest career album units sold", formatUnits(mostAlbumUnits.unitsSold), mostAlbumUnits.title, mostAlbumUnits.artist, mostAlbumUnits.unitsSold, "Album", mostAlbumUnits.id);
+
+    if (artistMostSongNo1) add("Most distinct No. 1 songs credited", `${artistMostSongNo1.songNo1Count} songs`, artistMostSongNo1.name, "Artist credits", artistMostSongNo1.songNo1Count, "Artist", artistMostSongNo1.id);
+    if (artistMostSongs) add("Most distinct songs charted", `${artistMostSongs.songCount} songs`, artistMostSongs.name, "Artist", artistMostSongs.songCount, "Artist", artistMostSongs.id);
+    if (artistMostTop10) add("Most Top 10 songs in one week", `${artistMostTop10.maxTop10SongsInWeek} songs`, artistMostTop10.name, "Artist", artistMostTop10.maxTop10SongsInWeek, "Artist", artistMostTop10.id);
+    if (artistMostAlbumNo1) add("Most lead-album No. 1 weeks", `${artistMostAlbumNo1.albumNo1Weeks} weeks`, artistMostAlbumNo1.name, "Lead album artist", artistMostAlbumNo1.albumNo1Weeks, "Artist", artistMostAlbumNo1.id);
+    if (artistMostDistinctNo1Albums) add("Most distinct No. 1 albums", `${artistMostDistinctNo1Albums.albumNo1Count} albums`, artistMostDistinctNo1Albums.name, "Lead album artist", artistMostDistinctNo1Albums.albumNo1Count, "Artist", artistMostDistinctNo1Albums.id);
+    if (artistMostUnits) add("Highest combined artist units sold", formatUnits(artistMostUnits.unitsSold), artistMostUnits.name, "Song credits plus lead-album credits", artistMostUnits.unitsSold, "Artist", artistMostUnits.id);
+
+    const debutsByYear = new Map();
+
+    state.albumDebuts.forEach(activation => {
+      const year = new Date(activation.weekStart).getUTCFullYear();
+      debutsByYear.set(year, (debutsByYear.get(year) || 0) + 1);
+    });
+
+    const busiestDebutYear = [...debutsByYear.entries()]
+      .sort((a, b) => b[1] - a[1] || b[0] - a[0])[0];
+
+    if (busiestDebutYear) {
+      add(
+        "Most official album debuts in one year",
+        `${busiestDebutYear[1]} albums`,
+        String(busiestDebutYear[0]),
+        "Albums counted by their official debut week",
+        busiestDebutYear[1]
+      );
+    }
+
+    const leadDebuts = new Map();
+
+    albums.filter(album => album.officialDebuted).forEach(album => {
+      if (!album.leadArtistId) return;
+      const id = String(album.leadArtistId);
+      leadDebuts.set(id, (leadDebuts.get(id) || 0) + 1);
+    });
+
+    const leadDebutLeader = [...leadDebuts.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
+
+    if (leadDebutLeader) {
+      add(
+        "Most official album debuts by one lead artist",
+        `${leadDebutLeader[1]} albums`,
+        getArtistName(leadDebutLeader[0]),
+        "Official album debuts",
+        leadDebutLeader[1],
+        "Artist",
+        leadDebutLeader[0]
+      );
+    }
+
+    add("Observed chart weeks", formatNumber(state.snapshots.length), formatDate(state.earliestWeekStart), `Latest observed week: ${formatDate(state.latestWeekStart)}`, state.snapshots.length);
+    add("Distinct songs charted", formatNumber(state.songRecords.length), "YourHot100 song archive", "Canonical song records", state.songRecords.length);
+    add("Eligible catalogue albums", formatNumber(state.eligibleAlbumIds.size), "YourHot100 album archive", "At least three distinct canonical catalogue tracks", state.eligibleAlbumIds.size);
+    add("Officially debuted albums", formatNumber(state.albumDebuts.size), "Official album debut archive", "First qualifying simultaneous three-track Hot 100 week", state.albumDebuts.size);
 
     state.allRecords = records;
   }
 
   /* ---------------------------------------------------------------
-     FILTERS, SORTING AND VIEW DATA
+     FILTERS, PERIOD UNITS AND SORTING
   ---------------------------------------------------------------- */
+
+  function getPeriodBounds() {
+    const mode = ui.timeMode.value;
+
+    if (mode === "all") {
+      return {
+        mode,
+        from: state.earliestWeekStart ?? -Infinity,
+        to: state.latestWeekStart ?? Infinity,
+        valid: true
+      };
+    }
+
+    if (mode === "year") {
+      const year = Number(ui.year.value);
+      if (!(year > 0)) return { mode, from: Infinity, to: -Infinity, valid: false };
+
+      return {
+        mode,
+        from: Date.UTC(year, 0, 1),
+        to: Date.UTC(year, 11, 31, 23, 59, 59, 999),
+        valid: true
+      };
+    }
+
+    if (mode === "custom") {
+      const from = ui.dateFrom.value
+        ? Date.parse(`${ui.dateFrom.value}T00:00:00Z`)
+        : -Infinity;
+      const to = ui.dateTo.value
+        ? Date.parse(`${ui.dateTo.value}T23:59:59Z`)
+        : Infinity;
+
+      return { mode, from, to, valid: from <= to };
+    }
+
+    if (mode === "recent6") {
+      return {
+        mode,
+        from: state.currentSixMonthStart,
+        to: state.latestWeekStart,
+        valid: true
+      };
+    }
+
+    if (mode === "previous6") {
+      return {
+        mode,
+        from: state.previousSixMonthStart,
+        to: state.previousSixMonthEnd,
+        valid: true
+      };
+    }
+
+    return { mode, from: -Infinity, to: Infinity, valid: true };
+  }
+
+  function historyMatchesPeriod(history, from, to) {
+    return (history || []).some(entry =>
+      entry.weekStart >= from && entry.weekStart <= to
+    );
+  }
+
+  /*
+   * Build totals for the selected date window. Song units go in full to each
+   * credited canonical artist. Album units go only to the lead album artist.
+   */
+  function buildPeriodUnitsIndex(from, to) {
+    const songUnits = new Map();
+    const albumUnits = new Map();
+    const artistUnits = new Map();
+
+    function addUnits(map, id, amount) {
+      if (id == null) return;
+
+      const key = String(id);
+
+      if (map.has(key) && map.get(key) === null) return;
+
+      if (amount == null || !Number.isFinite(Number(amount))) {
+        map.set(key, null);
+        return;
+      }
+
+      map.set(key, (map.get(key) || 0) + Number(amount));
+    }
+
+    const snapshotsByWeek = new Map(
+      state.snapshots.map(snapshot => [snapshot.weekStart, snapshot])
+    );
+
+    state.snapshots.forEach(snapshot => {
+      if (snapshot.weekStart < from || snapshot.weekStart > to) return;
+
+      snapshot.songs.forEach(entry => {
+        const units = Number(entry.unitsSold || 0);
+        addUnits(songUnits, entry.id, units);
+
+        (entry.artistIds || []).forEach(artistId => {
+          addUnits(artistUnits, artistId, units);
+        });
+      });
+
+      snapshot.albums.forEach(entry => {
+        const units = Number(entry.unitsSold || 0);
+        addUnits(albumUnits, entry.id, units);
+
+        const leadArtistId = entry.leadArtistId ||
+          getLeadAlbumArtistId(state.albums.get(String(entry.id)));
+
+        if (leadArtistId) addUnits(artistUnits, leadArtistId, units);
+      });
+    });
+
+    // Do not double-count a debut-week album already present in that chart.
+    state.albumDebuts.forEach((activation, albumId) => {
+      if (activation.weekStart < from || activation.weekStart > to) return;
+
+      const snapshot = snapshotsByWeek.get(activation.weekStart);
+      const rankedThatWeek = Boolean(
+        snapshot?.albums.some(entry => String(entry.id) === String(albumId))
+      );
+
+      if (rankedThatWeek) return;
+
+      addUnits(albumUnits, albumId, activation.unitsSold);
+
+      const leadArtistId = getLeadAlbumArtistId(state.albums.get(String(albumId)));
+      if (leadArtistId) addUnits(artistUnits, leadArtistId, activation.unitsSold);
+    });
+
+    return { songUnits, albumUnits, artistUnits };
+  }
+
+  function rowMatchesDate(row, bounds = getPeriodBounds()) {
+    if (
+      bounds.mode === "all" ||
+      state.currentView === "overview" ||
+      state.currentView === "records"
+    ) return true;
+
+    if (!bounds.valid) return false;
+
+    const { from, to } = bounds;
+
+    if (state.currentView === "songs") {
+      return historyMatchesPeriod(row.history, from, to);
+    }
+
+    if (state.currentView === "albums") {
+      const chartActivity = historyMatchesPeriod(row.history, from, to);
+
+      const debutedInPeriod =
+        row.officialDebuted &&
+        Number.isFinite(row.debutTs) &&
+        row.debutTs >= from &&
+        row.debutTs <= to;
+
+      // The Albums view can show chart activity in the selected period.
+      // The Debuts view below is separately filtered by official event date.
+      return chartActivity || debutedInPeriod;
+    }
+
+    if (state.currentView === "artists") {
+      return (row.appearanceDates || []).some(timestamp =>
+        timestamp >= from && timestamp <= to
+      );
+    }
+
+    const timestamp = row.dateTs;
+    return Number.isFinite(timestamp) && timestamp >= from && timestamp <= to;
+  }
 
   function currentViewRows() {
     switch (state.currentView) {
@@ -2258,116 +2151,56 @@ if (longestAlbumRun) {
     }
   }
 
-  function historyMatchesPeriod(history, from, to) {
-    return (history || []).some(entry =>
-      entry.weekStart >= from && entry.weekStart <= to
-    );
-  }
+  function getRowsForActivePeriod() {
+    const bounds = getPeriodBounds();
+    const baseRows = currentViewRows();
 
-  function rowMatchesDate(row) {
-    const mode = ui.timeMode.value;
-
-    if (
-      mode === "all" ||
-      state.currentView === "overview" ||
-      state.currentView === "records"
-    ) {
-      return true;
+    if (!["songs", "albums", "artists"].includes(state.currentView)) {
+      return baseRows.filter(row => rowMatchesDate(row, bounds));
     }
 
-    let from = -Infinity;
-    let to = Infinity;
+    const index = buildPeriodUnitsIndex(bounds.from, bounds.to);
 
-    if (mode === "year") {
-      const year = Number(ui.year.value);
-      if (!(year > 0)) return false;
+    return baseRows.map(row => {
+      const id = String(row.id);
+      let periodUnitsSold;
 
-      from = Date.UTC(year, 0, 1);
-      to = Date.UTC(year, 11, 31, 23, 59, 59, 999);
-    } else if (mode === "custom") {
-      from = ui.dateFrom.value
-        ? Date.parse(`${ui.dateFrom.value}T00:00:00Z`)
-        : -Infinity;
+      if (state.currentView === "songs") {
+        periodUnitsSold = index.songUnits.has(id) ? index.songUnits.get(id) : 0;
+      } else if (state.currentView === "albums") {
+        if (index.albumUnits.has(id)) {
+          periodUnitsSold = index.albumUnits.get(id);
+        } else {
+          // An eligible but inactive album has no sold units in this period.
+          periodUnitsSold = row.officialDebuted || row.unitsSold != null ? 0 : null;
+        }
+      } else {
+        periodUnitsSold = index.artistUnits.has(id) ? index.artistUnits.get(id) : 0;
+      }
 
-      to = ui.dateTo.value
-        ? Date.parse(`${ui.dateTo.value}T23:59:59Z`)
-        : Infinity;
-
-      if (from > to) return false;
-    } else if (mode === "recent6") {
-      from = state.currentSixMonthStart;
-      to = state.latestWeekStart;
-    } else if (mode === "previous6") {
-      from = state.previousSixMonthStart;
-      to = state.currentSixMonthStart - 1;
-    }
-
-    if (state.currentView === "songs" || state.currentView === "albums") {
-      const history = row.history || [];
-
-      if (historyMatchesPeriod(history, from, to)) return true;
-
-      // Official album debut can exist even without a ranked Top 100 entry.
-      return state.currentView === "albums" &&
-        row.officialDebuted &&
-        Number.isFinite(row.debutTs) &&
-        row.debutTs >= from &&
-        row.debutTs <= to;
-    }
-
-    if (state.currentView === "artists") {
-      return historyMatchesPeriod(
-        (row.appearanceDates || []).map(weekStart => ({ weekStart })),
-        from,
-        to
-      );
-    }
-
-    const timestamp = row.dateTs;
-    return Number.isFinite(timestamp) && timestamp >= from && timestamp <= to;
+      return { ...row, periodUnitsSold };
+    }).filter(row => rowMatchesDate(row, bounds));
   }
 
   function searchValue(row) {
-    // Search only approved display fields. Do not traverse internal history,
-    // count maps or the private source-data structures.
     const fieldsByView = {
-      songs: [
-        "title", "artist", "debutDate", "peakDate", "lastDate", "movement", "id"
-      ],
+      songs: ["title", "artist", "debutDate", "peakDate", "lastDate", "id"],
       albums: [
         "title", "artist", "status", "debutDate", "firstRankedDate",
-        "peakDate", "lastDate", "movement", "id"
+        "releaseDate", "importDate", "peakDate", "lastDate", "id"
       ],
-      artists: [
-        "name", "movement", "rankMovement", "id"
-      ],
-      weeks: [
-        "date", "year"
-      ],
-      numberones: [
-        "date", "songTitle", "songArtist", "albumTitle", "albumArtist"
-      ],
-      debuts: [
-        "date", "status", "type", "title", "artist", "id"
-      ],
-      periods: [
-        "period"
-      ],
-      records: [
-        "name", "value", "title", "detail"
-      ]
+      artists: ["name", "id"],
+      weeks: ["date", "year"],
+      numberones: ["date", "songTitle", "songArtist", "albumTitle", "albumArtist"],
+      debuts: ["date", "status", "type", "title", "artist", "id"],
+      periods: ["period"],
+      records: ["name", "value", "title", "detail"]
     };
 
-    const fields = fieldsByView[state.currentView] || [];
-
-    return fields
+    return (fieldsByView[state.currentView] || [])
       .map(key => {
         const value = row[key];
-
-        if (value && typeof value === "object") {
-          return value.title ?? value.name ?? "";
-        }
-
+        if (value && typeof value === "object") return value.title ?? value.name ?? "";
         return value ?? "";
       })
       .join(" ")
@@ -2376,9 +2209,9 @@ if (longestAlbumRun) {
 
   function defaultSortField() {
     const defaults = {
-      songs: "unitsSold",
-      albums: "unitsSold",
-      artists: "recentUnits",
+      songs: "periodUnitsSold",
+      albums: "periodUnitsSold",
+      artists: "periodUnitsSold",
       weeks: "dateTs",
       numberones: "dateTs",
       debuts: "dateTs",
@@ -2389,7 +2222,7 @@ if (longestAlbumRun) {
     return defaults[state.currentView] || "title";
   }
 
-  function configureSortMenu() {
+  function configureSortMenu(forceDefault = false) {
     const options = SORT_OPTIONS[state.currentView] || [];
     const selected = ui.sort.value;
 
@@ -2397,7 +2230,8 @@ if (longestAlbumRun) {
       `<option value="${escapeHTML(value)}">${escapeHTML(label)}</option>`
     ).join("");
 
-    const desired = options.some(([value]) => value === selected)
+    const selectedIsValid = options.some(([value]) => value === selected);
+    const desired = !forceDefault && selectedIsValid
       ? selected
       : defaultSortField();
 
@@ -2406,26 +2240,23 @@ if (longestAlbumRun) {
       : options[0]?.[0] || "";
   }
 
-  function getFilteredRows() {
+  function getFilteredRows(periodRows = getRowsForActivePeriod()) {
     const query = ui.search.value.trim().toLowerCase();
 
-    let rows = currentViewRows().filter(row => rowMatchesDate(row));
-
-    if (query) {
-      rows = rows.filter(row => searchValue(row).includes(query));
-    }
+    let rows = query
+      ? periodRows.filter(row => searchValue(row).includes(query))
+      : [...periodRows];
 
     const sortField = ui.sort.value || defaultSortField();
     const direction = ui.direction.value === "asc" ? 1 : -1;
 
-    rows = [...rows].sort((a, b) => {
+    rows.sort((a, b) => {
       const av = a[sortField];
       const bv = b[sortField];
 
       const aMissing = av == null || av === "";
       const bMissing = bv == null || bv === "";
 
-      // Unavailable values stay last in either sort direction.
       if (aMissing && bMissing) return 0;
       if (aMissing) return 1;
       if (bMissing) return -1;
@@ -2441,6 +2272,7 @@ if (longestAlbumRun) {
       ) * direction;
     });
 
+    // Calculate on every available record first, then cap display/export.
     return rows.slice(0, CONFIG.TABLE_LIMIT);
   }
 
@@ -2453,19 +2285,18 @@ if (longestAlbumRun) {
 
     ui.year.innerHTML = [
       '<option value="">Choose year</option>',
-      ...state.years.map(year =>
-        `<option value="${year}">${year}</option>`
-      )
+      ...state.years.map(year => `<option value="${year}">${year}</option>`)
     ].join("");
 
-    if (state.years.includes(Number(selected))) {
-      ui.year.value = selected;
-    }
+    if (state.years.includes(Number(selected))) ui.year.value = selected;
   }
 
   function updateDateControls() {
     ui.year.disabled = ui.timeMode.value !== "year";
     ui.customDates.hidden = ui.timeMode.value !== "custom";
+
+    if (!state.sortTouched) configureSortMenu(true);
+
     renderContent();
   }
 
@@ -2478,13 +2309,14 @@ if (longestAlbumRun) {
     ui.direction.value = "desc";
     ui.customDates.hidden = true;
     ui.year.disabled = true;
+    state.sortTouched = false;
 
-    configureSortMenu();
+    configureSortMenu(true);
     renderContent();
   }
 
   /* ---------------------------------------------------------------
-     RENDERING
+     SUMMARY AND STATUS
   ---------------------------------------------------------------- */
 
   function setStatus(label, kind = "good") {
@@ -2521,13 +2353,11 @@ if (longestAlbumRun) {
       {
         label: "Official Album Debuts",
         value: formatNumber(state.albumDebuts.size),
-        note: "First simultaneous three-track Hot 100 week"
+        note: "First qualifying three-track Hot 100 week"
       },
       {
         label: "Ranked Album Records",
-        value: formatNumber(
-          state.albumRecords.filter(album => album.weeksOnChart > 0).length
-        ),
+        value: formatNumber(state.albumRecords.filter(album => album.weeksOnChart > 0).length),
         note: "At least one Top 100 album-chart appearance"
       },
       {
@@ -2549,11 +2379,12 @@ if (longestAlbumRun) {
       `${formatDate(state.earliestWeekStart)} through ${formatDate(state.latestWeekStart)} · ` +
       `${state.events.length.toLocaleString("en-US")} source history records loaded`;
 
-    setStatus(
-      `Loaded · latest week ${formatDate(state.latestWeekStart)}`,
-      "good"
-    );
+    setStatus(`Loaded · latest week ${formatDate(state.latestWeekStart)}`, "good");
   }
+
+  /* ---------------------------------------------------------------
+     LINKS, MOVEMENT INDICATORS AND TABLE COLUMNS
+  ---------------------------------------------------------------- */
 
   function makePageLink(type, id, label) {
     const paths = {
@@ -2566,68 +2397,83 @@ if (longestAlbumRun) {
     const safeLabel = escapeHTML(label ?? "—");
 
     if (!path || id == null) return safeLabel;
-
     return `<a href="${path}?id=${encodeURIComponent(String(id))}">${safeLabel}</a>`;
   }
 
-  function trendClass(value) {
-    const text = String(value ?? "").toLowerCase();
+  function renderMovementIndicator(value, label) {
+    if (value !== null && value !== undefined && Number.isFinite(Number(value))) {
+      const movement = Number(value);
 
-    if (text.startsWith("up")) return "trend-up";
-    if (text.startsWith("down")) return "trend-down";
-    if (text === "new" || text.startsWith("new /")) return "trend-new";
+      if (movement > 0) {
+        return `<span class="rank-arrow trend-up" role="img" aria-label="Rank improved" title="Rank improved">↑</span>`;
+      }
 
-    return "trend-neutral";
+      if (movement < 0) {
+        return `<span class="rank-arrow trend-down" role="img" aria-label="Rank declined" title="Rank declined">↓</span>`;
+      }
+
+      return `<span class="rank-arrow trend-neutral" role="img" aria-label="Rank unchanged" title="Rank unchanged">→</span>`;
+    }
+
+    const text = String(label || "").toLowerCase();
+
+    if (text === "new" || text.startsWith("new /")) {
+      return `<span class="rank-arrow trend-new" role="img" aria-label="New entry" title="New entry">•</span>`;
+    }
+
+    return `<span class="rank-arrow trend-neutral" role="img" aria-label="No comparable rank" title="No comparable rank">—</span>`;
+  }
+
+  function renderRankCell(rank, movementValue, movementLabel, isArtist = false) {
+    const formatted = isArtist
+      ? formatLeaderboardPosition(rank)
+      : formatPosition(rank);
+
+    if (rank == null) return `<span class="rank-cell"><span class="rank">—</span></span>`;
+
+    return `
+      <span class="rank-cell">
+        <span class="rank">${escapeHTML(formatted)}</span>
+        ${renderMovementIndicator(movementValue, movementLabel)}
+      </span>`;
   }
 
   function getColumns(view) {
     const columns = {
       songs: [
-        ["latestRank", "Latest position"],
+        ["latestRank", "Rank"],
         ["title", "Song"],
         ["artist", "Artist"],
         ["peak", "Peak"],
-        ["debutDate", "Debut date"],
-        ["firstNo1Date", "First No. 1"],
-        ["weeksOnChart", "Weeks charted"],
+        ["weeksOnChart", "Weeks"],
         ["weeksAtNo1", "No. 1 weeks"],
-        ["weeksTop10", "Top 10 weeks"],
-        ["unitsSold", "Career units sold"],
-        ["movement", "Six-month movement"]
+        ["periodUnitsSold", "Units sold"],
+        ["unitsSold", "Career units"]
       ],
       albums: [
         ["status", "Album status"],
         ["title", "Album"],
         ["artist", "Lead artist"],
-        ["trackCount", "Catalogue tracks"],
-        ["qualifyingTracksAtDebut", "Tracks at debut"],
+        ["trackCount", "Tracks"],
         ["debutDate", "Official debut"],
-        ["debutUnits", "Debut-week units sold"],
-        ["firstRankedDate", "First Top 100"],
-        ["latestRank", "Latest position"],
-        ["peak", "Peak"],
-        ["weeksOnChart", "Weeks charted"],
+        ["latestRank", "Rank"],
         ["weeksAtNo1", "No. 1 weeks"],
-        ["unitsSold", "Career units sold"],
-        ["movement", "Six-month movement"]
+        ["periodUnitsSold", "Units sold"],
+        ["unitsSold", "Career units"]
       ],
       artists: [
         ["currentSixMonthRank", "Recent rank"],
         ["name", "Artist"],
-        ["songCount", "Songs charted"],
+        ["songCount", "Songs"],
         ["songNo1Count", "No. 1 songs"],
         ["albumCount", "Lead albums"],
-        ["songNo1Weeks", "Song No. 1 weeks"],
-        ["albumNo1Weeks", "Album No. 1 weeks"],
-        ["unitsSold", "Career units sold"],
-        ["recentUnits", "Recent six-month units"],
-        ["movement", "Sales movement"],
-        ["rankMovement", "Rank movement"]
+        ["periodUnitsSold", "Units sold"],
+        ["unitsSold", "Career units"]
       ],
       weeks: [
         ["date", "Chart week"],
-        ["songCount", "Songs charted"],
-        ["albumCount", "Albums charted"],
+        ["songCount", "Songs"],
+        ["albumCount", "Albums"],
         ["newEntries", "New song entries"],
         ["reentries", "Song re-entries"],
         ["topSong", "Song No. 1"],
@@ -2652,29 +2498,17 @@ if (longestAlbumRun) {
         ["unitsSold", "Units sold"],
         ["simultaneousTracks", "Tracks at album debut"]
       ],
-      periods: state.periodMode === "year"
-        ? [
-            ["period", "Year"],
-            ["chartWeeks", "Observed chart weeks"],
-            ["songAppearances", "Song appearances"],
-            ["albumAppearances", "Album appearances"],
-            ["songNo1Weeks", "Song No. 1 weeks"],
-            ["albumNo1Weeks", "Album No. 1 weeks"],
-            ["songUnitsSold", "Song units sold"],
-            ["albumUnitsSold", "Album units sold"],
-            ["unitsSold", "Combined units sold"]
-          ]
-        : [
-            ["period", "Month"],
-            ["chartWeeks", "Observed chart weeks"],
-            ["songAppearances", "Song appearances"],
-            ["albumAppearances", "Album appearances"],
-            ["songNo1Weeks", "Song No. 1 weeks"],
-            ["albumNo1Weeks", "Album No. 1 weeks"],
-            ["songUnitsSold", "Song units sold"],
-            ["albumUnitsSold", "Album units sold"],
-            ["unitsSold", "Combined units sold"]
-          ],
+      periods: [
+        ["period", state.periodMode === "year" ? "Year" : "Month"],
+        ["chartWeeks", "Observed chart weeks"],
+        ["songAppearances", "Song appearances"],
+        ["albumAppearances", "Album appearances"],
+        ["songNo1Weeks", "Song No. 1 weeks"],
+        ["albumNo1Weeks", "Album No. 1 weeks"],
+        ["songUnitsSold", "Song units sold"],
+        ["albumUnitsSold", "Album units sold"],
+        ["unitsSold", "Combined units sold"]
+      ],
       records: [
         ["name", "Record"],
         ["value", "Achievement"],
@@ -2686,12 +2520,34 @@ if (longestAlbumRun) {
     return (columns[view] || []).map(([key, label]) => ({ key, label }));
   }
 
+  function columnWidth(view, key) {
+    const widths = {
+      songs: {
+        latestRank: 9, title: 22, artist: 18, peak: 7,
+        weeksOnChart: 7, weeksAtNo1: 9, periodUnitsSold: 14, unitsSold: 14
+      },
+      albums: {
+        status: 15, title: 19, artist: 14, trackCount: 6,
+        debutDate: 12, latestRank: 8, weeksAtNo1: 8,
+        periodUnitsSold: 9, unitsSold: 9
+      },
+      artists: {
+        currentSixMonthRank: 13, name: 23, songCount: 9,
+        songNo1Count: 11, albumCount: 11, periodUnitsSold: 16, unitsSold: 17
+      }
+    };
+
+    if (widths[view]?.[key]) return widths[view][key];
+
+    const columns = getColumns(view);
+    return columns.length ? 100 / columns.length : 100;
+  }
+
   function renderCell(row, column) {
     const key = column.key;
 
     if (key === "title") {
-      const type = row.type;
-      return `<span class="cell-main">${makePageLink(type, row.id, row.title)}</span>`;
+      return `<span class="cell-main">${makePageLink(row.type, row.id, row.title)}</span>`;
     }
 
     if (key === "name") {
@@ -2738,17 +2594,26 @@ if (longestAlbumRun) {
         : escapeHTML(row.albumTitle ?? "—");
     }
 
-    if (key === "movement" || key === "rankMovement") {
-      const value = row[key] ?? "—";
-      return `<span class="${trendClass(value)}">${escapeHTML(value)}</span>`;
+    if (key === "latestRank") {
+      return renderRankCell(row.latestRank, row.movementValue, row.movement);
     }
 
-    if (key === "latestRank" || key === "rank" || key === "peak") {
+    if (key === "currentSixMonthRank") {
+      return renderRankCell(
+        row.currentSixMonthRank,
+        row.rankMovementValue,
+        row.rankMovement,
+        true
+      );
+    }
+
+    if (key === "rank" || key === "peak") {
       return `<span class="rank">${escapeHTML(formatPosition(row[key]))}</span>`;
     }
 
     if (
       key === "unitsSold" ||
+      key === "periodUnitsSold" ||
       key === "debutUnits" ||
       key === "songUnits" ||
       key === "albumUnits" ||
@@ -2759,9 +2624,11 @@ if (longestAlbumRun) {
       return escapeHTML(formatUnits(row[key]));
     }
 
-    if (key === "debutDate" || key === "firstRankedDate" ||
-        key === "peakDate" || key === "firstNo1Date" ||
-        key === "lastDate") {
+    if (
+      key === "debutDate" || key === "firstRankedDate" ||
+      key === "peakDate" || key === "firstNo1Date" ||
+      key === "lastDate" || key === "releaseDate" || key === "importDate"
+    ) {
       return escapeHTML(row[key] ?? "—");
     }
 
@@ -2776,7 +2643,8 @@ if (longestAlbumRun) {
 
   function renderTable() {
     const columns = getColumns(state.currentView);
-    const rows = getFilteredRows();
+    const periodRows = getRowsForActivePeriod();
+    const rows = getFilteredRows(periodRows);
 
     state.visibleRows = rows;
     state.visibleColumns = columns;
@@ -2795,6 +2663,10 @@ if (longestAlbumRun) {
       return;
     }
 
+    const colgroup = columns.map(column =>
+      `<col style="width:${columnWidth(state.currentView, column.key)}%">`
+    ).join("");
+
     const head = columns.map(column =>
       `<th scope="col">${escapeHTML(column.label)}</th>`
     ).join("");
@@ -2812,11 +2684,16 @@ if (longestAlbumRun) {
     ui.content.innerHTML = `
       <div class="result-count">
         Showing ${formatNumber(rows.length)} of
-        ${formatNumber(currentViewRows().filter(rowMatchesDate).length)}
-        matching records. Maximum ${CONFIG.TABLE_LIMIT} rows per view.
+        ${formatNumber(
+          ui.search.value.trim()
+            ? periodRows.filter(row => searchValue(row).includes(ui.search.value.trim().toLowerCase())).length
+            : periodRows.length
+        )}
+        matching records. Maximum ${CONFIG.TABLE_LIMIT} rows displayed.
       </div>
       <div class="table-wrap">
         <table>
+          <colgroup>${colgroup}</colgroup>
           <thead><tr>${head}</tr></thead>
           <tbody>${body}</tbody>
         </table>
@@ -2826,7 +2703,6 @@ if (longestAlbumRun) {
 
   function renderOverview() {
     const latest = state.snapshots[state.snapshots.length - 1];
-
     const no1Song = latest?.songs.find(entry => entry.rank === 1) ?? null;
     const no1Album = latest?.albums.find(entry => entry.rank === 1) ?? null;
 
@@ -2867,7 +2743,7 @@ if (longestAlbumRun) {
       }
     ];
 
-    const records = state.allRecords.slice(0, CONFIG.TABLE_LIMIT);
+    const recordCards = state.allRecords.slice(0, CONFIG.TABLE_LIMIT);
 
     ui.content.innerHTML = `
       <div class="records-grid">
@@ -2888,7 +2764,7 @@ if (longestAlbumRun) {
       </div>
 
       <div class="records-grid">
-        ${records.map(record => `
+        ${recordCards.map(record => `
           <article class="record-card">
             <div class="record-label">${escapeHTML(record.name)}</div>
             <div class="record-value">${escapeHTML(record.value)}</div>
@@ -2934,7 +2810,6 @@ if (longestAlbumRun) {
       state.currentView === "records";
 
     $("#browser-section").style.display = filterDisabled ? "none" : "";
-
     ui.periodSwitch.hidden = state.currentView !== "periods";
 
     ui.periodSwitch.querySelectorAll("[data-period]").forEach(button => {
@@ -2944,31 +2819,28 @@ if (longestAlbumRun) {
       );
     });
 
-    if (state.currentView === "overview") {
-      renderOverview();
-    } else {
-      renderTable();
-    }
+    if (state.currentView === "overview") renderOverview();
+    else renderTable();
   }
 
   function setView(view) {
     if (!VIEW_INFO[view]) return;
 
     state.currentView = view;
+    state.sortTouched = false;
 
     ui.nav.querySelectorAll("[data-view]").forEach(button => {
       const active = button.dataset.view === view;
-
       button.classList.toggle("active", active);
       button.setAttribute("aria-current", active ? "page" : "false");
     });
 
-    configureSortMenu();
+    configureSortMenu(true);
     renderContent();
   }
 
   /* ---------------------------------------------------------------
-     EXPORT — ONLY EXPLICIT DISPLAY COLUMNS
+     EXPORT — DISPLAYED COLUMNS ONLY
   ---------------------------------------------------------------- */
 
   function csvEscape(value) {
@@ -2977,15 +2849,11 @@ if (longestAlbumRun) {
 
   function getExportValue(row, key) {
     if (key === "topSong") {
-      return row.topSong
-        ? `${row.topSong.title} — ${row.topSong.artist}`
-        : "";
+      return row.topSong ? `${row.topSong.title} — ${row.topSong.artist}` : "";
     }
 
     if (key === "topAlbum") {
-      return row.topAlbum
-        ? `${row.topAlbum.title} — ${row.topAlbum.artist}`
-        : "";
+      return row.topAlbum ? `${row.topAlbum.title} — ${row.topAlbum.artist}` : "";
     }
 
     if (key === "songTitle") return row.songTitle ?? "";
@@ -2993,6 +2861,7 @@ if (longestAlbumRun) {
 
     if (
       key === "unitsSold" ||
+      key === "periodUnitsSold" ||
       key === "debutUnits" ||
       key === "songUnits" ||
       key === "albumUnits" ||
@@ -3003,7 +2872,10 @@ if (longestAlbumRun) {
       return row[key] == null ? "" : row[key];
     }
 
-    return row[key] ?? "";
+    // Prevent the internal objects from entering CSV by accident.
+    const value = row[key];
+    if (value && typeof value === "object") return "";
+    return value ?? "";
   }
 
   function exportVisibleRows() {
@@ -3017,9 +2889,7 @@ if (longestAlbumRun) {
     const content = [
       columns.map(column => csvEscape(column.label)),
       ...state.visibleRows.map(row =>
-        columns.map(column =>
-          csvEscape(getExportValue(row, column.key))
-        )
+        columns.map(column => csvEscape(getExportValue(row, column.key)))
       )
     ].map(row => row.join(",")).join("\r\n");
 
@@ -3055,17 +2925,36 @@ if (longestAlbumRun) {
       if (!button) return;
 
       state.periodMode = button.dataset.period;
-      configureSortMenu();
+      configureSortMenu(true);
       renderContent();
     });
 
     ui.search.addEventListener("input", renderContent);
+
     ui.timeMode.addEventListener("change", updateDateControls);
-    ui.year.addEventListener("change", renderContent);
-    ui.sort.addEventListener("change", renderContent);
+
+    ui.year.addEventListener("change", () => {
+      if (!state.sortTouched) configureSortMenu(true);
+      renderContent();
+    });
+
+    ui.sort.addEventListener("change", () => {
+      state.sortTouched = true;
+      renderContent();
+    });
+
     ui.direction.addEventListener("change", renderContent);
-    ui.dateFrom.addEventListener("change", renderContent);
-    ui.dateTo.addEventListener("change", renderContent);
+
+    ui.dateFrom.addEventListener("change", () => {
+      if (!state.sortTouched) configureSortMenu(true);
+      renderContent();
+    });
+
+    ui.dateTo.addEventListener("change", () => {
+      if (!state.sortTouched) configureSortMenu(true);
+      renderContent();
+    });
+
     ui.reset.addEventListener("click", resetFilters);
     ui.export.addEventListener("click", exportVisibleRows);
   }
@@ -3082,7 +2971,7 @@ if (longestAlbumRun) {
       aggregateEntityRecords();
       refreshYearOptions();
       renderSummary();
-      configureSortMenu();
+      configureSortMenu(true);
       renderContent();
     } catch (error) {
       console.error("Stats Paradise failed to initialise:", error);
@@ -3100,3 +2989,4 @@ if (longestAlbumRun) {
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
