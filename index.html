@@ -751,6 +751,7 @@
                     const top10 = songs.slice(0, 10);
                     const top10Up = top10.filter(s => s.previous_rank && s.rank < s.previous_rank).length;
                     const top10Down = top10.filter(s => s.previous_rank && s.rank > s.previous_rank).length;
+                    const top10New = top10.filter(s => s.is_new).length;
                     
                     return `
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
