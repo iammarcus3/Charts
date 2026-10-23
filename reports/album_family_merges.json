@@ -260,8 +260,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "0f82792eefe3cbf090481849",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -272,8 +272,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "f6e0a45440a790e7ff61ad04",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -284,8 +284,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "dcae62d84e1cf925a05af41f",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -1246,8 +1246,8 @@
     "canonical_title": "AmaPiano Volume 4",
     "primary_artist_id": "4db0f575b0e8853c40823d65",
     "source_titles_merged": [
-      "Amapiano Volume 4",
-      "AmaPiano Volume 4"
+      "AmaPiano Volume 4",
+      "Amapiano Volume 4"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -1378,8 +1378,8 @@
     "canonical_title": "Anti - MusicFire.in",
     "primary_artist_id": "5e568be58fcbab5cdbc5fd89",
     "source_titles_merged": [
-      "Anti - Musicfire.in",
-      "Anti - MusicFire.in"
+      "Anti - MusicFire.in",
+      "Anti - Musicfire.in"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -3922,8 +3922,8 @@
     "canonical_title": "Confessions II",
     "primary_artist_id": "8a28af176378f7b9dc69e715",
     "source_titles_merged": [
-      "Confessions II",
-      "CONFESSIONS II"
+      "CONFESSIONS II",
+      "Confessions II"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -5818,8 +5818,8 @@
     "canonical_title": "Fear Of Flying",
     "primary_artist_id": "7bce3bfee0283bf64306adcb",
     "source_titles_merged": [
-      "Fear of Flying",
       "Fear Of Flying",
+      "Fear of Flying",
       "Fear Of Flying (Expanded Edition)"
     ],
     "edition_labels_merged": [
@@ -8905,8 +8905,8 @@
     "canonical_title": "Isimo",
     "primary_artist_id": "3066eac9ce20209493ec670d",
     "source_titles_merged": [
-      "Isimo",
-      "iSimo"
+      "iSimo",
+      "Isimo"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -9651,8 +9651,8 @@
     "canonical_title": "Kiss All The Time. Disco, Occasionally.",
     "primary_artist_id": "5262dc458929bbef3f0e1420",
     "source_titles_merged": [
-      "Kiss All The Time. Disco, Occasionally.",
-      "Kiss All the Time. Disco, Occasionally."
+      "Kiss All the Time. Disco, Occasionally.",
+      "Kiss All The Time. Disco, Occasionally."
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -15271,8 +15271,8 @@
     "canonical_title": "Set It Off",
     "primary_artist_id": "0c9205b178526ab06d6f41f0",
     "source_titles_merged": [
-      "Set It Off",
-      "SET IT OFF"
+      "SET IT OFF",
+      "Set It Off"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -15917,8 +15917,8 @@
     "canonical_title": "Smooth Jazz for Lovers",
     "primary_artist_id": "1a450a4e6b6c93c52afe120b",
     "source_titles_merged": [
-      "Smooth Jazz for Lovers",
-      "Smooth Jazz For Lovers"
+      "Smooth Jazz For Lovers",
+      "Smooth Jazz for Lovers"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -15996,8 +15996,8 @@
     "canonical_title": "Solace",
     "primary_artist_id": "3c0cdf63735b97ba26e7fc40",
     "source_titles_merged": [
-      "Solace",
-      "SOLACE"
+      "SOLACE",
+      "Solace"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -17190,8 +17190,8 @@
     "canonical_title": "The Best Of Anita Baker",
     "primary_artist_id": "1fbdda766b54a1bf97ee4cf7",
     "source_titles_merged": [
-      "The Best of Anita Baker",
-      "The Best Of Anita Baker"
+      "The Best Of Anita Baker",
+      "The Best of Anita Baker"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -17476,12 +17476,12 @@
     "canonical_title": "The Fighting Temptations",
     "primary_artist_id": "d4b4d6c3df118803e75af84b",
     "source_titles_merged": [
-      "The Fighting Temptations (Music From The Motion Picture)",
-      "The Fighting Temptations (Music from the Motion Picture)"
+      "The Fighting Temptations (Music from the Motion Picture)",
+      "The Fighting Temptations (Music From The Motion Picture)"
     ],
     "edition_labels_merged": [
-      "The Fighting Temptations (Music From The Motion Picture)",
-      "The Fighting Temptations (Music from the Motion Picture)"
+      "The Fighting Temptations (Music from the Motion Picture)",
+      "The Fighting Temptations (Music From The Motion Picture)"
     ],
     "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -17678,9 +17678,9 @@
     "canonical_title": "the idol",
     "primary_artist_id": "7d09e007f4cb7bd27b2b618b",
     "source_titles_merged": [
-      "THE IDOL",
       "the idol",
-      "The Idol"
+      "The Idol",
+      "THE IDOL"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -18989,8 +18989,8 @@
     "primary_artist_id": "660c70a28002cfa16b883f3e",
     "source_titles_merged": [
       "TYLA",
-      "TYLA +",
-      "Tyla +"
+      "Tyla +",
+      "TYLA +"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -19603,8 +19603,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "e869d7cdcc903a167b3ff93e",
     "source_titles_merged": [
-      "Waiting To Exhale",
       "Waiting to Exhale",
+      "Waiting To Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [
@@ -19659,8 +19659,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "52a2c160a0104e1b0a9a53d1",
     "source_titles_merged": [
-      "Waiting To Exhale",
       "Waiting to Exhale",
+      "Waiting To Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [
