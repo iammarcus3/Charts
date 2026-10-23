@@ -17,7 +17,7 @@
     "duplicate_events_removed": 1,
     "method": "exact canonical track_id + exact non-empty timestamp",
     "fuzzy_metadata_matches_auto_merged": 0,
-    "track_similarity_auto_merge_threshold": 0.9,
+    "track_similarity_auto_merge_threshold": null,
     "album_family_consolidation": "all bracketed and parenthesized album-title annotations stripped for family matching; canonical track IDs unioned across family",
     "album_families_consolidated": 1582
   },
