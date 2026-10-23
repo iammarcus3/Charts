@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -49,4 +49,6 @@ jobs:
           git add vault/ reports/
           # Prevent failing if there are no changes
           git diff --quiet && git diff --staged --quiet || git commit -m "chore: update canonical music vault"
+          # Another commit may land while the vault is building; rebase before pushing.
+          git pull --rebase origin main
           git push
