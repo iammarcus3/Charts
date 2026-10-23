@@ -441,7 +441,12 @@
   function getArtistName(id) {
     if (id == null) return "Unknown Artist";
 
-    const artist = state.artists.get(String(id));
+    const rawArtist = state.artists.get(String(id));
+    const canonicalId = rawArtist?.canonical_artist_id;
+    const artist = canonicalId != null
+      ? (state.artists.get(String(canonicalId)) || rawArtist)
+      : rawArtist;
+
     return artist ? getName(artist) : "Unknown Artist";
   }
 
@@ -459,7 +464,13 @@
 
     const key = String(value).trim();
 
-    if (state.artists.has(key)) return key;
+    if (state.artists.has(key)) {
+      const artist = state.artists.get(key);
+      const canonicalId = artist?.canonical_artist_id;
+      return canonicalId != null && state.artists.has(String(canonicalId))
+        ? String(canonicalId)
+        : key;
+    }
 
     const lower = key.toLowerCase();
 
@@ -467,8 +478,17 @@
       const name = String(artist?.name ?? artist?.title ?? "")
         .trim()
         .toLowerCase();
+      const aliases = Array.isArray(artist?.aliases) ? artist.aliases : [];
+      const aliasMatches = aliases.some(alias =>
+        String(alias ?? "").trim().toLowerCase() === lower
+      );
 
-      if (name && name === lower) return String(id);
+      if ((name && name === lower) || aliasMatches) {
+        const canonicalId = artist?.canonical_artist_id;
+        return canonicalId != null && state.artists.has(String(canonicalId))
+          ? String(canonicalId)
+          : String(id);
+      }
     }
 
     return null;
