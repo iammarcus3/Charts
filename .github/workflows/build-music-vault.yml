@@ -32,6 +32,28 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
+      - name: Diagnose Unknown Track source records
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          files = sorted(Path("raw/listening_history").glob("*.json"))
+          for path in files:
+              data = json.loads(path.read_text(encoding="utf-8"))
+              rows = data if isinstance(data, list) else data.get("scrobbles", [])
+              missing = []
+              for i, row in enumerate(rows):
+                  if not isinstance(row, dict):
+                      continue
+                  title = next((row.get(k) for k in ("track", "track_name", "title") if row.get(k) not in (None, "")), None)
+                  if title is None:
+                      missing.append((i, sorted(row.keys()), {k: row.get(k) for k in ("artist", "artist_name", "album", "album_title", "track", "track_name", "title") if k in row}))
+              print(f"DIAGNOSTIC {path.name}: records={len(rows)} missing_track_title={len(missing)}")
+              for i, keys, values in missing[:8]:
+                  print(f"DIAGNOSTIC sample index={i} keys={keys} values={json.dumps(values, ensure_ascii=False)[:700]}")
+          PY
+
       - name: Run Unit Tests
         run: python scripts/test_eligibility.py
 
