@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,8 +17,8 @@
       --muted: #9999b2;
       --accent: #b9a5ff;
       --accent2: #f0a8df;
-      --green: #65d6a0;
-      --red: #ff858e;
+      --green: #22c55e;
+      --red: #ef4444;
       --yellow: #f3d17a;
       --radius: 16px;
       --shadow: 0 12px 35px rgb(0 0 0 / 22%);
@@ -25,16 +26,17 @@
 
     * { box-sizing: border-box; }
 
-    html {
+    html, body {
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: clip;
       background: var(--bg);
       color: var(--text);
       scroll-behavior: smooth;
     }
 
     body {
-      margin: 0;
-      min-width: 0;
-      color: var(--text);
       background:
         radial-gradient(ellipse at 0 0, rgb(123 86 210 / 12%), transparent 38rem),
         radial-gradient(ellipse at 100% 5%, rgb(230 100 175 / 8%), transparent 34rem),
@@ -43,15 +45,10 @@
         BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    button, input, select { font: inherit; }
-    button, input, select { color: var(--text); }
+    button, input, select { font: inherit; color: var(--text); }
     button { cursor: pointer; }
 
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
+    a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
     button:focus-visible,
@@ -64,6 +61,8 @@
 
     .shell {
       width: min(1800px, 100%);
+      max-width: 100%;
+      min-width: 0;
       margin: 0 auto;
       padding: 24px clamp(12px, 3vw, 42px) 52px;
     }
@@ -108,11 +107,7 @@
       letter-spacing: -.055em;
     }
 
-    .hero p {
-      max-width: 800px;
-      margin: 0;
-      color: var(--muted);
-    }
+    .hero p { max-width: 800px; margin: 0; color: var(--muted); }
 
     .hero-meta {
       display: flex;
@@ -166,6 +161,7 @@
 
     .stat-card, .record-card, .panel {
       min-width: 0;
+      max-width: 100%;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--panel);
@@ -207,6 +203,7 @@
 
     .nav button, .action-button, .period-button {
       min-width: 0;
+      max-width: 100%;
       padding: 9px 13px;
       border: 1px solid var(--border);
       border-radius: 11px;
@@ -231,13 +228,14 @@
 
     .filters {
       display: grid;
-      grid-template-columns: minmax(180px, 2fr) repeat(3, minmax(125px, 1fr));
+      grid-template-columns: minmax(180px, 2fr) repeat(3, minmax(0, 1fr));
       gap: 10px;
       margin: 14px 0;
       padding: 13px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--panel);
+      min-width: 0;
     }
 
     .field {
@@ -253,6 +251,7 @@
       font-weight: 800;
       letter-spacing: .06em;
       text-transform: uppercase;
+      overflow-wrap: anywhere;
     }
 
     .field input, .field select {
@@ -282,7 +281,10 @@
       justify-content: space-between;
       gap: 14px;
       margin-bottom: 14px;
+      min-width: 0;
     }
+
+    .table-heading > div { min-width: 0; }
 
     .table-heading h2 {
       margin: 0;
@@ -295,6 +297,7 @@
       margin: 4px 0 0;
       color: var(--muted);
       font-size: .82rem;
+      overflow-wrap: anywhere;
     }
 
     .table-actions, .period-switch {
@@ -316,28 +319,36 @@
       font-size: .82rem;
     }
 
-    .table-wrap { width: 100%; min-width: 0; }
+    .table-wrap {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      overflow: visible;
+    }
 
     table {
       width: 100%;
+      max-width: 100%;
+      min-width: 0;
       table-layout: fixed;
       border-collapse: separate;
       border-spacing: 0;
-      font-size: .82rem;
+      font-size: .79rem;
     }
 
     thead th {
       position: sticky;
       top: 0;
-      z-index: 5;
-      padding: 11px 8px;
+      z-index: 20;
+      padding: 10px 7px;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       background: #1b1b2b;
       color: #d4d1e8;
-      font-size: .70rem;
+      font-size: .68rem;
       text-align: left;
-      letter-spacing: .025em;
+      letter-spacing: .015em;
       white-space: normal;
       overflow-wrap: anywhere;
       word-break: normal;
@@ -354,7 +365,8 @@
     }
 
     tbody td {
-      padding: 11px 8px;
+      min-width: 0;
+      padding: 10px 7px;
       border-bottom: 1px solid #222234;
       vertical-align: top;
       overflow-wrap: anywhere;
@@ -374,19 +386,36 @@
       display: block;
       margin-top: 3px;
       color: var(--muted);
-      font-size: .75rem;
+      font-size: .73rem;
       overflow-wrap: anywhere;
     }
 
-    .rank {
-      color: var(--accent);
-      font-weight: 900;
+    .rank { color: var(--accent); font-weight: 900; }
+
+    .rank-cell {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      width: 100%;
+      min-width: 0;
     }
 
-    .trend-up { color: var(--green); font-weight: 800; }
-    .trend-down { color: var(--red); font-weight: 800; }
-    .trend-new { color: var(--accent); font-weight: 800; }
-    .trend-neutral { color: var(--muted); }
+    .rank-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      min-width: 1rem;
+      font-size: 1.12rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .trend-up { color: #22c55e; }
+    .trend-down { color: #ef4444; }
+    .trend-new { color: var(--accent); }
+    .trend-neutral { color: #9292a5; }
 
     .records-grid {
       display: grid;
@@ -415,15 +444,11 @@
       background: rgb(255 255 255 / 2%);
       color: var(--muted);
       font-size: .82rem;
+      overflow-wrap: anywhere;
     }
 
     .notice strong { color: var(--text); }
-
-    .empty, .loading {
-      padding: 40px 14px;
-      color: var(--muted);
-      text-align: center;
-    }
+    .empty, .loading { padding: 40px 14px; color: var(--muted); text-align: center; }
 
     .error-box {
       margin-top: 18px;
@@ -446,16 +471,16 @@
       .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .records-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      table { font-size: .75rem; }
+      thead th, tbody td { padding: 8px 5px; }
     }
 
-    @media (max-width: 650px) {
-      .shell { padding: 12px 10px 34px; }
+    /* Tablets and phones use labelled cards instead of squeezing tables. */
+    @media (max-width: 900px) {
+      .shell { padding: 14px 12px 36px; }
       .hero { padding: 22px 17px; border-radius: 17px; }
       .stats-grid { gap: 8px; }
       .stat-card { padding: 12px; }
-      .filters { grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
-      .filters .field:first-child { grid-column: 1 / -1; }
-      .date-filters { grid-template-columns: 1fr 1fr; }
       .section-heading { align-items: start; flex-direction: column; }
       .records-grid { grid-template-columns: 1fr; }
       .table-heading { flex-direction: column; }
@@ -463,24 +488,30 @@
       .nav { gap: 6px; }
       .nav button { flex: 1 1 auto; padding: 9px; font-size: .78rem; }
 
-      /* Mobile: table rows become labelled cards, not horizontal tables. */
-      table, tbody, tr, td { display: block; width: 100%; }
+      .table-wrap { overflow: visible; }
+      table, tbody, tr, td { display: block; width: 100%; max-width: 100%; }
+      table { table-layout: auto; }
+
       thead {
         position: absolute;
         width: 1px;
         height: 1px;
+        padding: 0;
+        margin: -1px;
         overflow: hidden;
         clip: rect(0, 0, 0, 0);
         white-space: nowrap;
+        border: 0;
       }
 
       tbody {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: 10px;
       }
 
       tbody tr {
+        min-width: 0;
         overflow: hidden;
         border: 1px solid var(--border);
         border-radius: 12px;
@@ -489,7 +520,7 @@
 
       tbody td {
         display: grid;
-        grid-template-columns: minmax(88px, 34%) minmax(0, 1fr);
+        grid-template-columns: minmax(90px, 34%) minmax(0, 1fr);
         gap: 10px;
         padding: 10px 11px;
         border-bottom: 1px solid #252538;
@@ -502,8 +533,21 @@
         color: var(--muted);
         font-size: .70rem;
         font-weight: 800;
+        letter-spacing: .01em;
         overflow-wrap: anywhere;
       }
+    }
+
+    @media (max-width: 480px) {
+      .shell { padding: 10px 8px 30px; }
+      .hero { padding: 20px 14px; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .filters { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; padding: 10px; }
+      .filters .field:first-child { grid-column: 1 / -1; }
+      .date-filters { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+      .table-heading { gap: 10px; }
+      tbody td { grid-template-columns: minmax(78px, 32%) minmax(0, 1fr); }
+      .action-button { flex: 1 1 auto; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -527,7 +571,7 @@
       <div class="hero-meta">
         <span class="pill">Standalone application</span>
         <span class="pill">Friday–Thursday chart weeks</span>
-        <span class="pill">Up to 200 rows per view</span>
+        <span class="pill">Up to 250 rows per view</span>
         <span id="data-status" class="pill warn">Loading Music Vault…</span>
       </div>
     </header>
@@ -615,22 +659,14 @@
           <p id="content-description">Highlights from your chart archive.</p>
         </div>
         <div class="table-actions">
-          <button type="button" class="action-button" id="reset-filters">
-            Reset filters
-          </button>
-          <button type="button" class="action-button" id="export-csv">
-            Export visible rows
-          </button>
+          <button type="button" class="action-button" id="reset-filters">Reset filters</button>
+          <button type="button" class="action-button" id="export-csv">Export visible rows</button>
         </div>
       </div>
 
       <div id="period-switch" class="period-switch" hidden>
-        <button class="period-button active" type="button" data-period="year">
-          Yearly
-        </button>
-        <button class="period-button" type="button" data-period="month">
-          Monthly
-        </button>
+        <button class="period-button active" type="button" data-period="year">Yearly</button>
+        <button class="period-button" type="button" data-period="month">Monthly</button>
       </div>
 
       <div id="view-content">
@@ -646,7 +682,8 @@
       based on at least three distinct canonical catalogue tracks. The first
       simultaneous three-track Hot 100 week records the official album debut;
       later album-chart eligibility follows the normal YourHot100 album model.
-      Missing source weeks are not invented.
+      Missing source weeks are not invented. No play counts or chart points are
+      displayed in this statistics application.
     </div>
 
     <footer class="footer">
@@ -655,3 +692,4 @@
   </main>
 </body>
 </html>
+
