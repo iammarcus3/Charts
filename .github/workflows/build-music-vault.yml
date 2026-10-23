@@ -60,6 +60,27 @@ jobs:
       - name: Run Music Vault Pipeline
         run: python scripts/build_vault.py
 
+      - name: Verify recovered track titles
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          tracks = json.loads(Path("vault/tracks.json").read_text(encoding="utf-8"))
+          history_path = Path("vault/listening_history.jsonl")
+          unknown_ids = {t.get("id") for t in tracks if str(t.get("title", "")).strip().casefold() in {"", "unknown track"}}
+          linked_unknown_events = 0
+          event_count = 0
+          with history_path.open(encoding="utf-8") as handle:
+              for line in handle:
+                  if not line.strip():
+                      continue
+                  event = json.loads(line)
+                  event_count += 1
+                  if event.get("track_id") in unknown_ids:
+                      linked_unknown_events += 1
+          print(f"VAULT_DIAGNOSTIC tracks={len(tracks)} unknown_title_tracks={len(unknown_ids)} listening_events={event_count} events_linked_to_unknown_titles={linked_unknown_events}")
+          PY
+
       - name: Validate Vault Integrity
         run: python scripts/validate_vault.py
 
