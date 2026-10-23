@@ -2292,6 +2292,10 @@
       ) * direction;
     });
 
+    // Add a clear position within the table being viewed. This is separate
+    // from latestRank/currentSixMonthRank, which describe the actual chart.
+    rows = rows.map((row, index) => ({ ...row, listRank: index + 1 }));
+
     // Calculate on every available record first, then cap display/export.
     return rows.slice(0, CONFIG.TABLE_LIMIT);
   }
@@ -2461,7 +2465,8 @@
   function getColumns(view) {
     const columns = {
       songs: [
-        ["latestRank", "Rank"],
+        ["listRank", "List #"],
+        ["latestRank", "Chart rank"],
         ["title", "Song"],
         ["artist", "Artist"],
         ["peak", "Peak"],
@@ -2471,6 +2476,7 @@
         ["unitsSold", "Career units"]
       ],
       albums: [
+        ["listRank", "List #"],
         ["status", "Album status"],
         ["title", "Album"],
         ["artist", "Lead artist"],
@@ -2486,7 +2492,8 @@
         ["unitsSold", "Career units"]
       ],
       artists: [
-        ["currentSixMonthRank", "Recent rank"],
+        ["listRank", "List #"],
+        ["currentSixMonthRank", "Leaderboard rank"],
         ["name", "Artist"],
         ["songCount", "Songs"],
         ["songNo1Count", "No. 1 songs"],
@@ -2546,11 +2553,11 @@
   function columnWidth(view, key) {
     const widths = {
       songs: {
-        latestRank: 9, title: 22, artist: 18, peak: 7,
-        weeksOnChart: 7, weeksAtNo1: 9, periodUnitsSold: 14, unitsSold: 14
+        listRank: 5, latestRank: 9, title: 20, artist: 17, peak: 6,
+        weeksOnChart: 6, weeksAtNo1: 8, periodUnitsSold: 15, unitsSold: 14
       },
       albums: {
-        status: 10, title: 16, artist: 11, trackCount: 4,
+        listRank: 4, status: 9, title: 14, artist: 10, trackCount: 4,
         importDate: 7, releaseDate: 7, debutDate: 8, firstRankedDate: 8,
         latestRank: 5, weeksAtNo1: 6, reentryCount: 5,
         periodUnitsSold: 7, unitsSold: 6
