@@ -359,8 +359,45 @@
             }
         });
 
+        // Album debut qualification is evaluated chronologically against this week's official Hot 100.
+        // Once qualified, an album stays qualified even in weeks with no charting tracks.
+        if (!state.debutedAlbums) state.debutedAlbums = new Set();
+        const qualificationTrackPlays = new Map();
+        events.forEach(ev => {
+          const trackId = String(ev.track_id);
+          if (state.raw.tracks.has(trackId)) {
+            qualificationTrackPlays.set(trackId, (qualificationTrackPlays.get(trackId) || 0) + 1);
+          }
+        });
+        let qualificationSongs = [];
+        qualificationTrackPlays.forEach((plays, id) => {
+          const track = state.raw.tracks.get(id);
+          if (track) qualificationSongs.push({ id, plays, title: track.title || 'Unknown Track' });
+        });
+        qualificationSongs.sort((a, b) => b.plays - a.plays || a.title.localeCompare(b.title));
+        qualificationSongs = qualificationSongs.slice(0, 100).map((song, i) => ({
+          ...song,
+          units_sold: (song.plays * 50000) + (pointsForRank(i + 1) * 500)
+        }));
+        qualificationSongs.sort((a, b) => b.units_sold - a.units_sold || b.plays - a.plays || a.title.localeCompare(b.title));
+        const chartingTracksPerAlbum = new Map();
+        qualificationSongs.forEach(song => {
+          const track = state.raw.tracks.get(song.id);
+          if (!track) return;
+          getTrackAlbumIds(track).forEach(albumId => {
+            if (!chartingTracksPerAlbum.has(albumId)) chartingTracksPerAlbum.set(albumId, new Set());
+            chartingTracksPerAlbum.get(albumId).add(String(song.id));
+          });
+        });
+        chartingTracksPerAlbum.forEach((trackIds, albumId) => {
+          if (eligibleAlbumIds.has(String(albumId)) && trackIds.size >= MIN_ALBUM_TRACKS) {
+            state.debutedAlbums.add(String(albumId));
+          }
+        });
+
         let entries = [];
         albumPlays.forEach((plays, id) => {
+          if (!state.debutedAlbums.has(String(id))) return;
           const album = state.raw.albums.get(id);
           if (album) entries.push({ id, plays, title: album.title, artistId: canonicalArtistId(album.primary_artist_id || album.artist_id) });
         });
