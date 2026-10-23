@@ -5,18 +5,18 @@
   },
   "record_counts": {
     "artists": 4388,
-    "eligible_albums": 1085,
-    "ineligible_releases": 7726,
+    "eligible_albums": 1093,
+    "ineligible_releases": 7718,
     "all_albums": 8811,
-    "tracks": 14618,
-    "listening_events": 232716,
-    "fuzzy_candidates_for_review": 259,
-    "song_families_merged": 106
+    "tracks": 14734,
+    "listening_events": 232719,
+    "fuzzy_candidates_for_review": 274,
+    "song_families_merged": 0
   },
   "deduplication": {
-    "duplicate_events_removed": 4,
+    "duplicate_events_removed": 1,
     "method": "exact canonical track_id + exact non-empty timestamp",
-    "fuzzy_metadata_matches_auto_merged": 106,
+    "fuzzy_metadata_matches_auto_merged": 0,
     "track_similarity_auto_merge_threshold": 0.9,
     "album_family_consolidation": "all bracketed and parenthesized album-title annotations stripped for family matching; canonical track IDs unioned across family",
     "album_families_consolidated": 1582
