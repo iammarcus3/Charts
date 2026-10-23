@@ -42,12 +42,6 @@
     "aliases": []
   },
   {
-    "id": "0085adf4cfad3027701556ed",
-    "name": "{'mbid': '', '#text': 'KAYTRANADA'}",
-    "normalized_name": "mbid text kaytranada",
-    "aliases": []
-  },
-  {
     "id": "0092b29ea3f932b6e28b091b",
     "name": "Twista",
     "normalized_name": "twista",
@@ -170,12 +164,6 @@
     "aliases": []
   },
   {
-    "id": "01a216fa265c94e1c95094aa",
-    "name": "{'mbid': '', '#text': 'Cardi B & YG'}",
-    "normalized_name": "mbid text cardi b and yg",
-    "aliases": []
-  },
-  {
     "id": "01c07fa0392fdaa219db2bd0",
     "name": "The Weeknd & Lana Del Rey",
     "normalized_name": "the weeknd and lana del rey",
@@ -272,18 +260,6 @@
     "aliases": []
   },
   {
-    "id": "02f531a3d14d62eeee82b4e2",
-    "name": "{'mbid': '', '#text': 'Jenevieve & JIHYO'}",
-    "normalized_name": "mbid text jenevieve and jihyo",
-    "aliases": []
-  },
-  {
-    "id": "02f967051bb13a9b940b37cf",
-    "name": "{'mbid': '0fb01f2a-0377-404e-815c-fd08670857ff', '#text': 'Glenn Jones'}",
-    "normalized_name": "mbid 0fb01f2a 0377 404e 815c fd08670857ff text glenn jones",
-    "aliases": []
-  },
-  {
     "id": "0309c63e0dfbc1ca9e358177",
     "name": "Jay Shalé",
     "normalized_name": "jay shale",
@@ -367,12 +343,6 @@
     "id": "03b159383844f399c130860b",
     "name": "The Weeknd & Playboi Carti",
     "normalized_name": "the weeknd and playboi carti",
-    "aliases": []
-  },
-  {
-    "id": "03ce3d45569b288e059e6e07",
-    "name": "{'mbid': '', '#text': 'Giggs Superstar & Dr Duda'}",
-    "normalized_name": "mbid text giggs superstar and dr duda",
     "aliases": []
   },
   {
@@ -508,12 +478,6 @@
     "aliases": []
   },
   {
-    "id": "0488e878efca7c2f744d5b4e",
-    "name": "{'mbid': '59f206bf-051b-4cdc-9067-a885fdc08f86', '#text': 'Q'}",
-    "normalized_name": "mbid 59f206bf 051b 4cdc 9067 a885fdc08f86 text q",
-    "aliases": []
-  },
-  {
     "id": "048a85b425016eb8685f45c3",
     "name": "FLO",
     "normalized_name": "flo",
@@ -529,12 +493,6 @@
     "id": "04b63a1f32a7e865d6fb1169",
     "name": "Eve, Drag-on",
     "normalized_name": "eve drag on",
-    "aliases": []
-  },
-  {
-    "id": "04e03ec00b84077817cf2ed1",
-    "name": "{'mbid': '293029f7-ac9e-4a8b-bb50-67935b373c47', '#text': 'Teddy Pendergrass'}",
-    "normalized_name": "mbid 293029f7 ac9e 4a8b bb50 67935b373c47 text teddy pendergrass",
     "aliases": []
   },
   {
@@ -568,12 +526,6 @@
     "aliases": []
   },
   {
-    "id": "05523d8875ab7210775c21cd",
-    "name": "{'mbid': '525f1f1c-03f0-4bc8-8dfd-e7521f87631b', '#text': 'Charlie Puth'}",
-    "normalized_name": "mbid 525f1f1c 03f0 4bc8 8dfd e7521f87631b text charlie puth",
-    "aliases": []
-  },
-  {
     "id": "05602a174fc45ebe5fbff677",
     "name": "Litalici0us",
     "normalized_name": "litalici0us",
@@ -586,12 +538,6 @@
     "aliases": []
   },
   {
-    "id": "0563b59b0181ab1f1b0518b2",
-    "name": "{'mbid': '', '#text': 'Kanye West'}",
-    "normalized_name": "mbid text kanye west",
-    "aliases": []
-  },
-  {
     "id": "056ba449cee13b008fecc07b",
     "name": "Nicki Minaj, Beyoncé",
     "normalized_name": "nicki minaj beyonce",
@@ -601,12 +547,6 @@
     "id": "05850423709c70a24fb3a2f4",
     "name": "Jvck James & Jada Maria",
     "normalized_name": "jvck james and jada maria",
-    "aliases": []
-  },
-  {
-    "id": "05a3ec9a03467a9d43bb6215",
-    "name": "{'mbid': '', '#text': 'Samson'}",
-    "normalized_name": "mbid text samson",
     "aliases": []
   },
   {
@@ -676,15 +616,15 @@
     "aliases": []
   },
   {
-    "id": "06a0d642d81980fc151213b3",
-    "name": "{'mbid': '', '#text': 'Justice, Tame Impala, SZA & Grand Theft Auto VI'}",
-    "normalized_name": "mbid text justice tame impala sza and grand theft auto vi",
-    "aliases": []
-  },
-  {
     "id": "06b6c696d5a7dfe56cab1481",
     "name": "Teddy Pendergrass",
     "normalized_name": "teddy pendergrass",
+    "aliases": []
+  },
+  {
+    "id": "06bd0195b0771b1d78c07a49",
+    "name": "Johnny Drille, Ayra Starr & Young Jonn",
+    "normalized_name": "johnny drille ayra starr and young jonn",
     "aliases": []
   },
   {
@@ -877,12 +817,6 @@
     "id": "08aebdbd4aff84309ad17516",
     "name": "Ariana Grande, Normani & Nicki Minaj",
     "normalized_name": "ariana grande normani and nicki minaj",
-    "aliases": []
-  },
-  {
-    "id": "08b1810e619e35dee95745ae",
-    "name": "{'mbid': '', '#text': 'threetwenty'}",
-    "normalized_name": "mbid text threetwenty",
     "aliases": []
   },
   {
@@ -1114,12 +1048,6 @@
     "aliases": []
   },
   {
-    "id": "0a724e98ede4a816a22f5878",
-    "name": "{'mbid': 'f4b25300-be93-49bc-9d44-15f9de480f50', '#text': 'Philip Bailey'}",
-    "normalized_name": "mbid f4b25300 be93 49bc 9d44 15f9de480f50 text philip bailey",
-    "aliases": []
-  },
-  {
     "id": "0a79762ae7e748c293e79958",
     "name": "Tebza De DJ, DJ Nomza The King",
     "normalized_name": "tebza de dj dj nomza the king",
@@ -1171,12 +1099,6 @@
     "id": "0b1e893cc3f2afb48b3d12e5",
     "name": "Rag'n'Bone Man",
     "normalized_name": "rag n bone man",
-    "aliases": []
-  },
-  {
-    "id": "0b20cc84f1db518d7eadb1c1",
-    "name": "{'mbid': '6ccba1f4-7929-4392-bc57-fe8cadc8a618', '#text': 'DJ Kent'}",
-    "normalized_name": "mbid 6ccba1f4 7929 4392 bc57 fe8cadc8a618 text dj kent",
     "aliases": []
   },
   {
@@ -1273,12 +1195,6 @@
     "id": "0c0a348989be0827dd757696",
     "name": "Rod Wave",
     "normalized_name": "rod wave",
-    "aliases": []
-  },
-  {
-    "id": "0c0b2928b78fcf187586dd87",
-    "name": "{'mbid': '', '#text': 'Ce Ce Peniston'}",
-    "normalized_name": "mbid text ce ce peniston",
     "aliases": []
   },
   {
@@ -1432,12 +1348,6 @@
     "aliases": []
   },
   {
-    "id": "0d1ae1d6e974c8633b37d7ee",
-    "name": "{'mbid': '', '#text': 'All-4-One'}",
-    "normalized_name": "mbid text all 4 one",
-    "aliases": []
-  },
-  {
     "id": "0d1b79d7b177932dfabae42e",
     "name": "Bow Wow & Chris Brown",
     "normalized_name": "bow wow and chris brown",
@@ -1450,33 +1360,9 @@
     "aliases": []
   },
   {
-    "id": "0d371da19fdfd94213fb42ab",
-    "name": "{'mbid': '', '#text': 'Q Marsden'}",
-    "normalized_name": "mbid text q marsden",
-    "aliases": []
-  },
-  {
     "id": "0d438f883e1a51b690fe5421",
     "name": "Elmiene",
     "normalized_name": "elmiene",
-    "aliases": []
-  },
-  {
-    "id": "0d488acece9ee088522cd9cd",
-    "name": "{'mbid': 'e0122b5e-5aa7-4d61-822a-e14ab72b4c84', '#text': 'Kiana Ledé'}",
-    "normalized_name": "mbid e0122b5e 5aa7 4d61 822a e14ab72b4c84 text kiana lede",
-    "aliases": []
-  },
-  {
-    "id": "0d48c0d9eff20c3d00d7c9c9",
-    "name": "{'mbid': 'add5f522-25df-41c4-815e-0ca9f60b83e4', '#text': 'Ava Max'}",
-    "normalized_name": "mbid add5f522 25df 41c4 815e 0ca9f60b83e4 text ava max",
-    "aliases": []
-  },
-  {
-    "id": "0d49c51e0f7895d8d3c2b71e",
-    "name": "{'mbid': '', '#text': 'Wale & Elmiene'}",
-    "normalized_name": "mbid text wale and elmiene",
     "aliases": []
   },
   {
@@ -1582,12 +1468,6 @@
     "aliases": []
   },
   {
-    "id": "0e96dc153fca9e36f62a0bec",
-    "name": "{'mbid': 'd1338719-b2e2-45d6-a457-671232f553d4', '#text': 'Hotel Ugly'}",
-    "normalized_name": "mbid d1338719 b2e2 45d6 a457 671232f553d4 text hotel ugly",
-    "aliases": []
-  },
-  {
     "id": "0ebda34090852843a4f2b0b9",
     "name": "Demor & Nontu X",
     "normalized_name": "demor and nontu x",
@@ -1639,18 +1519,6 @@
     "id": "0f23885b8f1cec9163f022ca",
     "name": "The Whispers",
     "normalized_name": "the whispers",
-    "aliases": []
-  },
-  {
-    "id": "0f2427a83f6b166fcf031517",
-    "name": "{'mbid': '499bb346-ea82-4faf-8c64-db99188a2913', '#text': 'Cruza'}",
-    "normalized_name": "mbid 499bb346 ea82 4faf 8c64 db99188a2913 text cruza",
-    "aliases": []
-  },
-  {
-    "id": "0f265b031f3cade380359fb6",
-    "name": "{'mbid': '', '#text': 'modernotaku'}",
-    "normalized_name": "mbid text modernotaku",
     "aliases": []
   },
   {
@@ -1717,12 +1585,6 @@
     "id": "0fda2678b40a30cf234c0099",
     "name": "Q & Marco McKinnis",
     "normalized_name": "q and marco mckinnis",
-    "aliases": []
-  },
-  {
-    "id": "0fe46eab40c9bacac43c8728",
-    "name": "{'mbid': '', '#text': 'Joe'}",
-    "normalized_name": "mbid text joe",
     "aliases": []
   },
   {
@@ -1819,12 +1681,6 @@
     "id": "109b127ab4c82c6f6389a986",
     "name": "Emo Kid",
     "normalized_name": "emo kid",
-    "aliases": []
-  },
-  {
-    "id": "10a959591f5c34c73409c8dd",
-    "name": "{'mbid': '', '#text': 'Imagination'}",
-    "normalized_name": "mbid text imagination",
     "aliases": []
   },
   {
@@ -1968,18 +1824,6 @@
     "aliases": []
   },
   {
-    "id": "127ec7d016e69864c1952078",
-    "name": "{'mbid': '2258c0cf-77d7-4ddd-9440-f36e3c7a5e22', '#text': 'Karyn White'}",
-    "normalized_name": "mbid 2258c0cf 77d7 4ddd 9440 f36e3c7a5e22 text karyn white",
-    "aliases": []
-  },
-  {
-    "id": "128dea19830d100bcb150115",
-    "name": "{'mbid': '0698b547-b992-4edf-a244-18eed7cdba98', '#text': 'Robert Owens'}",
-    "normalized_name": "mbid 0698b547 b992 4edf a244 18eed7cdba98 text robert owens",
-    "aliases": []
-  },
-  {
     "id": "128ef35ecad6cf9440636b9b",
     "name": "DJ Ngwazi & Master KG",
     "normalized_name": "dj ngwazi and master kg",
@@ -2070,12 +1914,6 @@
     "aliases": []
   },
   {
-    "id": "132088a42c01813410a4f2bd",
-    "name": "{'mbid': '', '#text': 'Snoh Aalegra, Tyler， The Creator'}",
-    "normalized_name": "mbid text snoh aalegra tyler the creator",
-    "aliases": []
-  },
-  {
     "id": "13370b79509fd4f337f87502",
     "name": "Professor, Speedy",
     "normalized_name": "professor speedy",
@@ -2136,21 +1974,9 @@
     "aliases": []
   },
   {
-    "id": "1391f46f4dcdbd3de1296191",
-    "name": "{'mbid': '', '#text': 'Bridgitte'}",
-    "normalized_name": "mbid text bridgitte",
-    "aliases": []
-  },
-  {
     "id": "139ca4fa3c42f355f16df52d",
     "name": "Yuno",
     "normalized_name": "yuno",
-    "aliases": []
-  },
-  {
-    "id": "13a4f398c525199e18454b89",
-    "name": "{'mbid': 'd2b5e992-9672-45a8-9d01-97f3b1afb053', '#text': 'Sekou'}",
-    "normalized_name": "mbid d2b5e992 9672 45a8 9d01 97f3b1afb053 text sekou",
     "aliases": []
   },
   {
@@ -2238,12 +2064,6 @@
     "aliases": []
   },
   {
-    "id": "14b1a169c7c23aafa6a9398a",
-    "name": "{'mbid': '8ef1df30-ae4f-4dbd-9351-1a32b208a01e', '#text': 'Alicia Keys'}",
-    "normalized_name": "mbid 8ef1df30 ae4f 4dbd 9351 1a32b208a01e text alicia keys",
-    "aliases": []
-  },
-  {
     "id": "14b263c1d2c43612dd629b32",
     "name": "Tellaman",
     "normalized_name": "tellaman",
@@ -2262,33 +2082,15 @@
     "aliases": []
   },
   {
-    "id": "14c28adb91d03e9e0daac5e7",
-    "name": "{'mbid': '367e411c-3f5c-4d86-b295-e13e561fc4f7', '#text': 'Sybil'}",
-    "normalized_name": "mbid 367e411c 3f5c 4d86 b295 e13e561fc4f7 text sybil",
-    "aliases": []
-  },
-  {
     "id": "14cfd60dc2b2adb94c9211be",
     "name": "Major Lazer & DJ Maphorisa",
     "normalized_name": "major lazer and dj maphorisa",
     "aliases": []
   },
   {
-    "id": "14e9fdd5f3bd472f22716da6",
-    "name": "{'mbid': '', '#text': 'Gladys Knight'}",
-    "normalized_name": "mbid text gladys knight",
-    "aliases": []
-  },
-  {
     "id": "14eda3da11e41e3c24deb993",
     "name": "IAmJohnDuff",
     "normalized_name": "iamjohnduff",
-    "aliases": []
-  },
-  {
-    "id": "15020f2196d2a10a922a572a",
-    "name": "{'mbid': 'c8b03190-306c-4120-bb0b-6f2ebfc06ea9', '#text': 'The Weeknd'}",
-    "normalized_name": "mbid c8b03190 306c 4120 bb0b 6f2ebfc06ea9 text the weeknd",
     "aliases": []
   },
   {
@@ -2340,12 +2142,6 @@
     "aliases": []
   },
   {
-    "id": "158335abeca1f7aa0d3eae29",
-    "name": "{'mbid': 'ee27b2d8-648c-4a9d-a68c-e55066959975', '#text': 'Megan Thee Stallion'}",
-    "normalized_name": "mbid ee27b2d8 648c 4a9d a68c e55066959975 text megan thee stallion",
-    "aliases": []
-  },
-  {
     "id": "15841273821da4dc7d3cdafe",
     "name": "Celine Dion live performance",
     "normalized_name": "celine dion live performance",
@@ -2364,27 +2160,9 @@
     "aliases": []
   },
   {
-    "id": "15a275c9859e991cd6f22503",
-    "name": "{'mbid': '', '#text': 'Rowlene & IAN LOVLY'}",
-    "normalized_name": "mbid text rowlene and ian lovly",
-    "aliases": []
-  },
-  {
-    "id": "15ba537fa9fba477371ef45f",
-    "name": "{'mbid': 'b29020d6-5dbf-4c99-b16f-c009f8a712ff', '#text': 'Steve Lacy'}",
-    "normalized_name": "mbid b29020d6 5dbf 4c99 b16f c009f8a712ff text steve lacy",
-    "aliases": []
-  },
-  {
     "id": "15bb21c1545ae2d52a21ef85",
     "name": "Shekhinah",
     "normalized_name": "shekhinah",
-    "aliases": []
-  },
-  {
-    "id": "15bc7aca9024f3bec78c502e",
-    "name": "{'mbid': '56039d03-34f5-4bbb-b753-75f81259e799', '#text': 'Black Motion'}",
-    "normalized_name": "mbid 56039d03 34f5 4bbb b753 75f81259e799 text black motion",
     "aliases": []
   },
   {
@@ -2430,12 +2208,6 @@
     "aliases": []
   },
   {
-    "id": "16203995801b58a0f99a9990",
-    "name": "{'mbid': '6be2828f-6c0d-4059-99d4-fa18acf1a296', '#text': 'Janet Jackson'}",
-    "normalized_name": "mbid 6be2828f 6c0d 4059 99d4 fa18acf1a296 text janet jackson",
-    "aliases": []
-  },
-  {
     "id": "16224a06552e8392e9a3f1b2",
     "name": "Latto Freestyle",
     "normalized_name": "latto freestyle",
@@ -2463,12 +2235,6 @@
     "id": "16677b213bce28fbecc7415b",
     "name": "Tems, Temilade Openiyi",
     "normalized_name": "tems temilade openiyi",
-    "aliases": []
-  },
-  {
-    "id": "16681130c1c0f416e400f53e",
-    "name": "{'mbid': 'b8d45ed6-5a81-41d5-a59c-ea92aab9c722', '#text': 'Christian Kuria'}",
-    "normalized_name": "mbid b8d45ed6 5a81 41d5 a59c ea92aab9c722 text christian kuria",
     "aliases": []
   },
   {
@@ -2580,12 +2346,6 @@
     "aliases": []
   },
   {
-    "id": "173c5d5acd7d05f2eab1c407",
-    "name": "{'mbid': '', '#text': 'LeA Robinson'}",
-    "normalized_name": "mbid text lea robinson",
-    "aliases": []
-  },
-  {
     "id": "174d60871af81aab005c28c3",
     "name": "sudzdogg.wen.ru",
     "normalized_name": "sudzdogg wen ru",
@@ -2658,12 +2418,6 @@
     "aliases": []
   },
   {
-    "id": "17ddbbd2dc74bcb3bd175bdb",
-    "name": "{'mbid': '', '#text': 'Jungle'}",
-    "normalized_name": "mbid text jungle",
-    "aliases": []
-  },
-  {
     "id": "17e060c7fc32f2dbfa91306c",
     "name": "Art by Ak",
     "normalized_name": "art by ak",
@@ -2697,12 +2451,6 @@
     "id": "182d71d6462a1a126312fba0",
     "name": "Steve Lacy, Matt Martians",
     "normalized_name": "steve lacy matt martians",
-    "aliases": []
-  },
-  {
-    "id": "183ff74e15230bcbe381b251",
-    "name": "{'mbid': '35521d07-4346-49f6-a40e-5b04b70f871e', '#text': 'Natanya'}",
-    "normalized_name": "mbid 35521d07 4346 49f6 a40e 5b04b70f871e text natanya",
     "aliases": []
   },
   {
@@ -2816,12 +2564,6 @@
     "aliases": []
   },
   {
-    "id": "191a13391e7d8f1a1e1210ee",
-    "name": "{'mbid': '36fdc640-aebc-41c5-a4df-c86b953dd1fd', '#text': 'Cortex'}",
-    "normalized_name": "mbid 36fdc640 aebc 41c5 a4df c86b953dd1fd text cortex",
-    "aliases": []
-  },
-  {
     "id": "191a14d1ca04c62bea9c2a5f",
     "name": "Kevin Abstract",
     "normalized_name": "kevin abstract",
@@ -2870,12 +2612,6 @@
     "aliases": []
   },
   {
-    "id": "1992f7a7beff7119572fe745",
-    "name": "{'mbid': 'c7f33343-7870-4e03-9892-65ad81d18db5', '#text': 'Color Me Badd'}",
-    "normalized_name": "mbid c7f33343 7870 4e03 9892 65ad81d18db5 text color me badd",
-    "aliases": []
-  },
-  {
     "id": "19ac81a664b257b1756c3619",
     "name": "Fergie",
     "normalized_name": "fergie",
@@ -2897,12 +2633,6 @@
     "id": "1a05fc8f79ac8d98a312021f",
     "name": "Mickey & Sylvia",
     "normalized_name": "mickey and sylvia",
-    "aliases": []
-  },
-  {
-    "id": "1a0e496c8793d7ad0c1d9f88",
-    "name": "{'mbid': '039ac48b-0836-4ae3-96b7-99fb306dffab', '#text': 'Greg Shilling'}",
-    "normalized_name": "mbid 039ac48b 0836 4ae3 96b7 99fb306dffab text greg shilling",
     "aliases": []
   },
   {
@@ -2972,12 +2702,6 @@
     "aliases": []
   },
   {
-    "id": "1a9875c6b50f9b9e3d85adeb",
-    "name": "{'mbid': 'b20e1759-4a47-459f-9e4b-c35a95028e6c', '#text': 'De Mthuda'}",
-    "normalized_name": "mbid b20e1759 4a47 459f 9e4b c35a95028e6c text de mthuda",
-    "aliases": []
-  },
-  {
     "id": "1a9f5901b0733ff351f5a252",
     "name": "Melodycloud",
     "normalized_name": "melodycloud",
@@ -3011,12 +2735,6 @@
     "id": "1afd37ca38b6c1485c6ca5aa",
     "name": "Rochelle Jordan",
     "normalized_name": "rochelle jordan",
-    "aliases": []
-  },
-  {
-    "id": "1b028263b914358b4f4c4495",
-    "name": "{'mbid': '8e8f6e7f-92b5-4c7c-af74-966df9973cbd', '#text': 'PJ'}",
-    "normalized_name": "mbid 8e8f6e7f 92b5 4c7c af74 966df9973cbd text pj",
     "aliases": []
   },
   {
@@ -3182,12 +2900,6 @@
     "aliases": []
   },
   {
-    "id": "1c644d6805f1d0e6a5947dcb",
-    "name": "{'mbid': '3d254f1e-7d18-431b-baeb-68e57695dfdb', '#text': 'Blood Orange'}",
-    "normalized_name": "mbid 3d254f1e 7d18 431b baeb 68e57695dfdb text blood orange",
-    "aliases": []
-  },
-  {
     "id": "1c73289c3104cd47c5fa5e44",
     "name": "Kashif",
     "normalized_name": "kashif",
@@ -3215,12 +2927,6 @@
     "id": "1c863ce4fa8556be2a56536f",
     "name": "Next",
     "normalized_name": "next",
-    "aliases": []
-  },
-  {
-    "id": "1c8fd9fe8897cc06abe68d41",
-    "name": "{'mbid': '467f69b6-8d6d-4d2c-bfad-e89adf2806ff', '#text': 'George Benson'}",
-    "normalized_name": "mbid 467f69b6 8d6d 4d2c bfad e89adf2806ff text george benson",
     "aliases": []
   },
   {
@@ -3308,12 +3014,6 @@
     "aliases": []
   },
   {
-    "id": "1d2099805331fe78201a7b7b",
-    "name": "{'mbid': '4b789d86-691f-4878-aea5-9f597c23c9bb', '#text': 'Phonique'}",
-    "normalized_name": "mbid 4b789d86 691f 4878 aea5 9f597c23c9bb text phonique",
-    "aliases": []
-  },
-  {
     "id": "1d211a132f015e1ad57a3fd3",
     "name": "Phil Fearon & Galaxy",
     "normalized_name": "phil fearon and galaxy",
@@ -3374,12 +3074,6 @@
     "aliases": []
   },
   {
-    "id": "1dea70448fb1467e36f9debe",
-    "name": "{'mbid': '', '#text': 'Victoria Monét'}",
-    "normalized_name": "mbid text victoria monet",
-    "aliases": []
-  },
-  {
     "id": "1df0d17c6bd34d3ed8a6d74f",
     "name": "Femme It Forward, Asiahn & ELHAE",
     "normalized_name": "femme it forward asiahn and elhae",
@@ -3437,12 +3131,6 @@
     "id": "1e84c26fa1a5a8fb501835c7",
     "name": "Gotye",
     "normalized_name": "gotye",
-    "aliases": []
-  },
-  {
-    "id": "1ead79df47b81792efc8ed16",
-    "name": "{'mbid': '', '#text': 'Brent Faiyaz, A$AP Rocky & N3WYRKLA'}",
-    "normalized_name": "mbid text brent faiyaz a ap rocky and n3wyrkla",
     "aliases": []
   },
   {
@@ -3542,12 +3230,6 @@
     "aliases": []
   },
   {
-    "id": "1fa1425e9f175d4765cfa99b",
-    "name": "{'mbid': 'b46e298d-d3a5-4695-a03e-63e8c523b23e', '#text': 'Daniel Caesar'}",
-    "normalized_name": "mbid b46e298d d3a5 4695 a03e 63e8c523b23e text daniel caesar",
-    "aliases": []
-  },
-  {
     "id": "1fa5af309d5c73399e6cdc3f",
     "name": "Marigold",
     "normalized_name": "marigold",
@@ -3614,12 +3296,6 @@
     "aliases": []
   },
   {
-    "id": "201da037848b938326a28241",
-    "name": "{'mbid': '', '#text': 'Jenevieve & Lous and The Yakuza'}",
-    "normalized_name": "mbid text jenevieve and lous and the yakuza",
-    "aliases": []
-  },
-  {
     "id": "201fe30fa8199e9c09491c50",
     "name": "BANKS",
     "normalized_name": "banks",
@@ -3629,12 +3305,6 @@
     "id": "202e6775aab660096078854d",
     "name": "Cardi B, Kehlani",
     "normalized_name": "cardi b kehlani",
-    "aliases": []
-  },
-  {
-    "id": "2036e8eaf594d2b8b58d36eb",
-    "name": "{'mbid': '', '#text': 'Black Box'}",
-    "normalized_name": "mbid text black box",
     "aliases": []
   },
   {
@@ -3674,12 +3344,6 @@
     "aliases": []
   },
   {
-    "id": "208a72dc28fca70c699fd9de",
-    "name": "{'mbid': '47e10b14-4b74-4650-bc2b-34424c1c6bcb', '#text': 'Odeal'}",
-    "normalized_name": "mbid 47e10b14 4b74 4650 bc2b 34424c1c6bcb text odeal",
-    "aliases": []
-  },
-  {
     "id": "20a4333434da69b3d4a72206",
     "name": "No Rome",
     "normalized_name": "no rome",
@@ -3695,12 +3359,6 @@
     "id": "20c802a9713cef73f03982e4",
     "name": "Mura Masa",
     "normalized_name": "mura masa",
-    "aliases": []
-  },
-  {
-    "id": "20dcc4e6750bc85f123ba4a9",
-    "name": "{'mbid': '', '#text': 'Amber Mark & Anderson .Paak'}",
-    "normalized_name": "mbid text amber mark and anderson paak",
     "aliases": []
   },
   {
@@ -3964,12 +3622,6 @@
     "aliases": []
   },
   {
-    "id": "22dd5d9a34b125720ee77197",
-    "name": "{'mbid': '9009c557-4e21-4853-b093-ca7e1a348263', '#text': 'South Street Player'}",
-    "normalized_name": "mbid 9009c557 4e21 4853 b093 ca7e1a348263 text south street player",
-    "aliases": []
-  },
-  {
     "id": "22e6ef71d42603931c7e8e9f",
     "name": "Drizabone",
     "normalized_name": "drizabone",
@@ -4003,12 +3655,6 @@
     "id": "23335f59bd0595fae5176c76",
     "name": "Trim",
     "normalized_name": "trim",
-    "aliases": []
-  },
-  {
-    "id": "2339d3da55839879fe7ddbd7",
-    "name": "{'mbid': '', '#text': 'Nicki Minaj, Lil Wayne, Tate Kobang'}",
-    "normalized_name": "mbid text nicki minaj lil wayne tate kobang",
     "aliases": []
   },
   {
@@ -4087,12 +3733,6 @@
     "id": "23b821b877b5a64dba2a672a",
     "name": "Tones And I",
     "normalized_name": "tones and i",
-    "aliases": []
-  },
-  {
-    "id": "23c18014beada24852da8ca5",
-    "name": "{'mbid': 'ddfd9b2f-186e-4b2c-ad09-01aa5380c225', '#text': 'Robin Thicke'}",
-    "normalized_name": "mbid ddfd9b2f 186e 4b2c ad09 01aa5380c225 text robin thicke",
     "aliases": []
   },
   {
@@ -4362,12 +4002,6 @@
     "aliases": []
   },
   {
-    "id": "25d42d749453a21000defcfb",
-    "name": "{'mbid': '', '#text': 'Teddy Swims & Givēon'}",
-    "normalized_name": "mbid text teddy swims and giveon",
-    "aliases": []
-  },
-  {
     "id": "25e348bf97a71d0ba1f458e7",
     "name": "NxWorries, Anderson .Paak & Knxwledge",
     "normalized_name": "nxworries anderson paak and knxwledge",
@@ -4422,12 +4056,6 @@
     "aliases": []
   },
   {
-    "id": "267d1201d7f56e049f2e0a25",
-    "name": "{'mbid': 'ebcd0bad-75ef-4203-b7b3-7af38a9ef198', '#text': 'Faith Evans'}",
-    "normalized_name": "mbid ebcd0bad 75ef 4203 b7b3 7af38a9ef198 text faith evans",
-    "aliases": []
-  },
-  {
     "id": "2682f6b50a3a0201c9b0bdae",
     "name": "Lola Young",
     "normalized_name": "lola young",
@@ -4443,12 +4071,6 @@
     "id": "2697039661b72d9475e342e3",
     "name": "Violet Skies",
     "normalized_name": "violet skies",
-    "aliases": []
-  },
-  {
-    "id": "269a7e4ea081307733a66f5b",
-    "name": "{'mbid': '', '#text': 'Cupidon'}",
-    "normalized_name": "mbid text cupidon",
     "aliases": []
   },
   {
@@ -4578,12 +4200,6 @@
     "aliases": []
   },
   {
-    "id": "27b837e2eea30d66c0f913e7",
-    "name": "{'mbid': '', '#text': 'Khalid & Disclosure'}",
-    "normalized_name": "mbid text khalid and disclosure",
-    "aliases": []
-  },
-  {
     "id": "27be919e0ab425484837ce9c",
     "name": "Holly Rey",
     "normalized_name": "holly rey",
@@ -4596,21 +4212,9 @@
     "aliases": []
   },
   {
-    "id": "27da2bb0d979fd642d2218ab",
-    "name": "{'mbid': '7e987fc0-7606-4637-8eb1-8c9c3e57a65c', '#text': 'Yung Miami'}",
-    "normalized_name": "mbid 7e987fc0 7606 4637 8eb1 8c9c3e57a65c text yung miami",
-    "aliases": []
-  },
-  {
     "id": "27ea012be94d1b4117f70133",
     "name": "Kanye West & Lil Pump",
     "normalized_name": "kanye west and lil pump",
-    "aliases": []
-  },
-  {
-    "id": "27ff16a91c7ce95a8172c85b",
-    "name": "{'mbid': '67930b3e-e00b-469f-8c74-fd69f20522ec', '#text': 'Sade'}",
-    "normalized_name": "mbid 67930b3e e00b 469f 8c74 fd69f20522ec text sade",
     "aliases": []
   },
   {
@@ -4665,12 +4269,6 @@
     "id": "287adfc292ccde6f17ceedcd",
     "name": "Pcee, Officixl RSA • From Smart Shuffle",
     "normalized_name": "pcee officixl rsa from smart shuffle",
-    "aliases": []
-  },
-  {
-    "id": "287e9138c2e98e57a0ebd835",
-    "name": "{'mbid': 'f3e2a7d9-c6bb-4848-95e5-04c0a1e2f511', '#text': 'Orbital'}",
-    "normalized_name": "mbid f3e2a7d9 c6bb 4848 95e5 04c0a1e2f511 text orbital",
     "aliases": []
   },
   {
@@ -4758,21 +4356,9 @@
     "aliases": []
   },
   {
-    "id": "29159caf5de1a8e52b4d5b0d",
-    "name": "{'mbid': '', '#text': 'Jenevieve & lophiile'}",
-    "normalized_name": "mbid text jenevieve and lophiile",
-    "aliases": []
-  },
-  {
     "id": "291ca14d88a3ae47c3a9cf2a",
     "name": "Natalie La Rose",
     "normalized_name": "natalie la rose",
-    "aliases": []
-  },
-  {
-    "id": "29237d27e0f71ed63b31edae",
-    "name": "{'mbid': 'd72d000b-b860-44f4-9ac1-5d82e3fff9a9', '#text': 'Blackstreet'}",
-    "normalized_name": "mbid d72d000b b860 44f4 9ac1 5d82e3fff9a9 text blackstreet",
     "aliases": []
   },
   {
@@ -4854,12 +4440,6 @@
     "aliases": []
   },
   {
-    "id": "29f7b6fa5e8b488ae816c58b",
-    "name": "{'mbid': '', '#text': 'Don Toliver'}",
-    "normalized_name": "mbid text don toliver",
-    "aliases": []
-  },
-  {
     "id": "2a003a22ab84c2061e0783ab",
     "name": "Natalie Cole",
     "normalized_name": "natalie cole",
@@ -4869,18 +4449,6 @@
     "id": "2a100d64cce79d863d63c5cd",
     "name": "Titom",
     "normalized_name": "titom",
-    "aliases": []
-  },
-  {
-    "id": "2a1183ba2563c3a332db1259",
-    "name": "{'mbid': '8e57b7d5-4548-4e2b-b32d-af4b4a51cb80', '#text': 'Shalamar'}",
-    "normalized_name": "mbid 8e57b7d5 4548 4e2b b32d af4b4a51cb80 text shalamar",
-    "aliases": []
-  },
-  {
-    "id": "2a12882c75f94a6ac98ee8fa",
-    "name": "{'mbid': '', '#text': 'Madonna & Sabrina Carpenter'}",
-    "normalized_name": "mbid text madonna and sabrina carpenter",
     "aliases": []
   },
   {
@@ -4938,12 +4506,6 @@
     "aliases": []
   },
   {
-    "id": "2aa81b49f95158e6f2da2739",
-    "name": "{'mbid': '', '#text': 'Chris Brown, Tank'}",
-    "normalized_name": "mbid text chris brown tank",
-    "aliases": []
-  },
-  {
     "id": "2aad910689433872264901c8",
     "name": "Rihanna",
     "normalized_name": "rihanna",
@@ -4965,12 +4527,6 @@
     "id": "2adde292329df0166e0d36f3",
     "name": "Uncle Waffles, 2woBunnies & Jay Music",
     "normalized_name": "uncle waffles 2wobunnies and jay music",
-    "aliases": []
-  },
-  {
-    "id": "2ae81034d63631e5027562cc",
-    "name": "{'mbid': 'bda6d00e-f8f7-43a5-b8f8-f1ebc55b46d3', '#text': 'John Tejada'}",
-    "normalized_name": "mbid bda6d00e f8f7 43a5 b8f8 f1ebc55b46d3 text john tejada",
     "aliases": []
   },
   {
@@ -5031,12 +4587,6 @@
     "id": "2b507062ec8d7949ed2914e8",
     "name": "James Ingram",
     "normalized_name": "james ingram",
-    "aliases": []
-  },
-  {
-    "id": "2b54570cf67fa581b192d6b9",
-    "name": "{'mbid': '10d34296-e9bb-45bc-8da4-e6d0152a1e38', '#text': 'Lusanda'}",
-    "normalized_name": "mbid 10d34296 e9bb 45bc 8da4 e6d0152a1e38 text lusanda",
     "aliases": []
   },
   {
@@ -5164,21 +4714,9 @@
     "aliases": []
   },
   {
-    "id": "2c67409241c70c40240cc828",
-    "name": "{'mbid': '', '#text': 'Jaymin'}",
-    "normalized_name": "mbid text jaymin",
-    "aliases": []
-  },
-  {
     "id": "2c6ca32aadc8f78693cc3788",
     "name": "David Guetta",
     "normalized_name": "david guetta",
-    "aliases": []
-  },
-  {
-    "id": "2c6dcbaa1b32ccf1ce5f0109",
-    "name": "{'mbid': '21455a27-0f29-4a45-98e8-626e2394f778', '#text': 'Noya'}",
-    "normalized_name": "mbid 21455a27 0f29 4a45 98e8 626e2394f778 text noya",
     "aliases": []
   },
   {
@@ -5221,12 +4759,6 @@
     "id": "2ccb61a34204a96e15f7722e",
     "name": "L'vovo Derrango",
     "normalized_name": "l vovo derrango",
-    "aliases": []
-  },
-  {
-    "id": "2cdf8b54aa0155c1e2a52fef",
-    "name": "{'mbid': '', '#text': 'Fused'}",
-    "normalized_name": "mbid text fused",
     "aliases": []
   },
   {
@@ -5296,21 +4828,9 @@
     "aliases": []
   },
   {
-    "id": "2d3c8bd53509fd8b64bb75d7",
-    "name": "{'mbid': '1239d1bc-cc09-43e0-bcd0-374f60346138', '#text': 'Kelis'}",
-    "normalized_name": "mbid 1239d1bc cc09 43e0 bcd0 374f60346138 text kelis",
-    "aliases": []
-  },
-  {
     "id": "2d3daa5ecb9491a233feb3bf",
     "name": "Anita Ward",
     "normalized_name": "anita ward",
-    "aliases": []
-  },
-  {
-    "id": "2d551b55e2cf700fa16f683c",
-    "name": "{'mbid': '', '#text': 'Ashanti'}",
-    "normalized_name": "mbid text ashanti",
     "aliases": []
   },
   {
@@ -5478,21 +4998,9 @@
     "aliases": []
   },
   {
-    "id": "2eda508ac697c2267a9b11d5",
-    "name": "{'mbid': '6bbb3983-ce8a-4971-96e0-7cae73268fc4', '#text': 'Jungle'}",
-    "normalized_name": "mbid 6bbb3983 ce8a 4971 96e0 7cae73268fc4 text jungle",
-    "aliases": []
-  },
-  {
     "id": "2f202a85937d8fd1e0c42525",
     "name": "Sidil_ kt",
     "normalized_name": "sidil_ kt",
-    "aliases": []
-  },
-  {
-    "id": "2f24808f7d13b3c17131724c",
-    "name": "{'mbid': '', '#text': 'Next'}",
-    "normalized_name": "mbid text next",
     "aliases": []
   },
   {
@@ -5505,12 +5013,6 @@
     "id": "2f44b677f9d81c8c6530a261",
     "name": "Imogen Heap",
     "normalized_name": "imogen heap",
-    "aliases": []
-  },
-  {
-    "id": "2f47ad54e4aedc68c3f4cb12",
-    "name": "{'mbid': 'aef80c5e-2585-4716-a621-c3ce35281a12', '#text': 'Tina Moore'}",
-    "normalized_name": "mbid aef80c5e 2585 4716 a621 c3ce35281a12 text tina moore",
     "aliases": []
   },
   {
@@ -5574,12 +5076,6 @@
     "aliases": []
   },
   {
-    "id": "2fcadaf3b3434620738baafa",
-    "name": "{'mbid': '', '#text': 'Kendrick Lamar'}",
-    "normalized_name": "mbid text kendrick lamar",
-    "aliases": []
-  },
-  {
     "id": "2feaee2e7587db710f511b67",
     "name": "Samthing Soweto ft Shasha - Thanda Wena(Elusiveboy's Soothing Sounds Mix)",
     "normalized_name": "samthing soweto ft shasha thanda wena elusiveboy s soothing sounds mix",
@@ -5637,12 +5133,6 @@
     "id": "3066eac9ce20209493ec670d",
     "name": "Kabza De Small & Mthunzi",
     "normalized_name": "kabza de small and mthunzi",
-    "aliases": []
-  },
-  {
-    "id": "307ae9669c7c477247d367ef",
-    "name": "{'mbid': '', '#text': 'Durand Bernarr'}",
-    "normalized_name": "mbid text durand bernarr",
     "aliases": []
   },
   {
@@ -5900,27 +5390,9 @@
     "aliases": []
   },
   {
-    "id": "3231fc42761083145fa7eb80",
-    "name": "{'mbid': '49b5386b-a606-41b1-90e8-d9e7983b6f1b', '#text': 'Alewya'}",
-    "normalized_name": "mbid 49b5386b a606 41b1 90e8 d9e7983b6f1b text alewya",
-    "aliases": []
-  },
-  {
     "id": "3241023558783ade2b991441",
     "name": "Birdman",
     "normalized_name": "birdman",
-    "aliases": []
-  },
-  {
-    "id": "324a352f90743103ef446e16",
-    "name": "{'mbid': 'a4427870-c931-4582-acad-22cea35c1b49', '#text': 'Appleby'}",
-    "normalized_name": "mbid a4427870 c931 4582 acad 22cea35c1b49 text appleby",
-    "aliases": []
-  },
-  {
-    "id": "324b3651ea2286e69c274dc5",
-    "name": "{'mbid': '401c3991-b76b-499d-8082-9f2df958ef78', '#text': 'Phil Collins'}",
-    "normalized_name": "mbid 401c3991 b76b 499d 8082 9f2df958ef78 text phil collins",
     "aliases": []
   },
   {
@@ -5933,12 +5405,6 @@
     "id": "326c0c01210ca6670fda3b8f",
     "name": "Fifty Fifty",
     "normalized_name": "fifty fifty",
-    "aliases": []
-  },
-  {
-    "id": "327722e3723384ba29c0fe03",
-    "name": "{'mbid': '8e70a186-e64b-4003-bae1-f2f93da013ce', '#text': 'Was (Not Was)'}",
-    "normalized_name": "mbid 8e70a186 e64b 4003 bae1 f2f93da013ce text was not was",
     "aliases": []
   },
   {
@@ -5969,12 +5435,6 @@
     "id": "32c5c7483935134074f8ecfb",
     "name": "Liberty City, Fla",
     "normalized_name": "liberty city fla",
-    "aliases": []
-  },
-  {
-    "id": "32ca5fc169b6d9a87db83abd",
-    "name": "{'mbid': '', '#text': 'Chunda Munki'}",
-    "normalized_name": "mbid text chunda munki",
     "aliases": []
   },
   {
@@ -6098,12 +5558,6 @@
     "aliases": []
   },
   {
-    "id": "33b4458bd136c29073b4cd33",
-    "name": "{'mbid': '', '#text': 'Simply Red'}",
-    "normalized_name": "mbid text simply red",
-    "aliases": []
-  },
-  {
     "id": "33b450c31e4b0bfe9be41c1f",
     "name": "Muni Long",
     "normalized_name": "muni long",
@@ -6164,12 +5618,6 @@
     "aliases": []
   },
   {
-    "id": "345718dc6f2fbf5cf30c496d",
-    "name": "{'mbid': '355cc194-b8db-4af2-8678-c7ad54213f4b', '#text': 'Latto'}",
-    "normalized_name": "mbid 355cc194 b8db 4af2 8678 c7ad54213f4b text latto",
-    "aliases": []
-  },
-  {
     "id": "345be2da7a5bfd4196aa1cf8",
     "name": "Roberta Flack",
     "normalized_name": "roberta flack",
@@ -6182,12 +5630,6 @@
     "aliases": []
   },
   {
-    "id": "347f7373388942a6ecc13b9c",
-    "name": "{'mbid': '', '#text': 'Midnight Jet'}",
-    "normalized_name": "mbid text midnight jet",
-    "aliases": []
-  },
-  {
     "id": "348633358d9c2222317813ce",
     "name": "DJ Lag & Dladla Mshunqisi",
     "normalized_name": "dj lag and dladla mshunqisi",
@@ -6197,12 +5639,6 @@
     "id": "3487e112dc0838022380559b",
     "name": "Madonna Flashback",
     "normalized_name": "madonna flashback",
-    "aliases": []
-  },
-  {
-    "id": "349dc809fd3806a01c6f960a",
-    "name": "{'mbid': '', '#text': 'Artwork Sounds, CocoSA & Dj Stokie'}",
-    "normalized_name": "mbid text artwork sounds cocosa and dj stokie",
     "aliases": []
   },
   {
@@ -6236,12 +5672,6 @@
     "aliases": [
       "Sinead Harnett"
     ]
-  },
-  {
-    "id": "35104c770b46e88e4c2de625",
-    "name": "{'mbid': 'bc089d56-5551-482f-babd-36365f9d9f0f', '#text': 'Coco Jones'}",
-    "normalized_name": "mbid bc089d56 5551 482f babd 36365f9d9f0f text coco jones",
-    "aliases": []
   },
   {
     "id": "3525f4fd2b7b7d110eb9f8a1",
@@ -6346,12 +5776,6 @@
     "aliases": []
   },
   {
-    "id": "35b0d7a06718a3caed426166",
-    "name": "{'mbid': '', '#text': 'Sparks Bantwana'}",
-    "normalized_name": "mbid text sparks bantwana",
-    "aliases": []
-  },
-  {
     "id": "35bb4ca4d1c7194114611fe0",
     "name": "Sixpence None the Richer",
     "normalized_name": "sixpence none the richer",
@@ -6430,12 +5854,6 @@
     "aliases": []
   },
   {
-    "id": "364e496cd9a0f41850bdbc1a",
-    "name": "{'mbid': '9b214042-4154-4571-8f6c-5643eb4bc06f', '#text': 'Brownstone'}",
-    "normalized_name": "mbid 9b214042 4154 4571 8f6c 5643eb4bc06f text brownstone",
-    "aliases": []
-  },
-  {
     "id": "36ac420abefc54656c8dbae9",
     "name": "DJ Cleo, King Zeph, K Sugah",
     "normalized_name": "dj cleo king zeph k sugah",
@@ -6465,12 +5883,6 @@
     "id": "36ca8370860f4b28efa8846d",
     "name": "Q-Mark & Tpzee",
     "normalized_name": "q mark and tpzee",
-    "aliases": []
-  },
-  {
-    "id": "36cd395789dbd8a048ba8b90",
-    "name": "{'mbid': 'c9ea6066-593f-4824-a46a-7b0f858a99a8', '#text': 'Shanice'}",
-    "normalized_name": "mbid c9ea6066 593f 4824 a46a 7b0f858a99a8 text shanice",
     "aliases": []
   },
   {
@@ -6561,12 +5973,6 @@
     "id": "3798a412a8b21d75311ca93c",
     "name": "Chloe x Halle",
     "normalized_name": "chloe x halle",
-    "aliases": []
-  },
-  {
-    "id": "3799e5a1814e25b047b73880",
-    "name": "{'mbid': 'f6372053-44f7-4353-9c76-979116a9822d', '#text': 'Shakatak'}",
-    "normalized_name": "mbid f6372053 44f7 4353 9c76 979116a9822d text shakatak",
     "aliases": []
   },
   {
@@ -6672,12 +6078,6 @@
     "aliases": []
   },
   {
-    "id": "38d7f2b4fce2f86822ebdd56",
-    "name": "{'mbid': '045494aa-e913-4e62-bf4e-dcc276e0075a', '#text': 'Kelela'}",
-    "normalized_name": "mbid 045494aa e913 4e62 bf4e dcc276e0075a text kelela",
-    "aliases": []
-  },
-  {
     "id": "38ef95ffd30ad19a36a608b9",
     "name": "LeVert",
     "normalized_name": "levert",
@@ -6710,12 +6110,6 @@
     "aliases": []
   },
   {
-    "id": "3950fd36e7e066fdfbebf55d",
-    "name": "{'mbid': '79239441-bfd5-4981-a70c-55c3f15c1287', '#text': 'Madonna'}",
-    "normalized_name": "mbid 79239441 bfd5 4981 a70c 55c3f15c1287 text madonna",
-    "aliases": []
-  },
-  {
     "id": "39541d71a06b1a2ff3864774",
     "name": "Marlon D & Underground Collection",
     "normalized_name": "marlon d and underground collection",
@@ -6731,12 +6125,6 @@
     "id": "395ca333c6932bb5e747dd0c",
     "name": "J. Cole",
     "normalized_name": "j cole",
-    "aliases": []
-  },
-  {
-    "id": "3988e40b131e4e7930b49288",
-    "name": "{'mbid': '', '#text': 'Rowlene & Jesse Clegg'}",
-    "normalized_name": "mbid text rowlene and jesse clegg",
     "aliases": []
   },
   {
@@ -6944,12 +6332,6 @@
     "aliases": []
   },
   {
-    "id": "3b57f4b531ef98dcf91f58e0",
-    "name": "{'mbid': '', '#text': 'Hall & Oates'}",
-    "normalized_name": "mbid text hall and oates",
-    "aliases": []
-  },
-  {
     "id": "3b58c10c0345da9e778536fb",
     "name": "Howard Hewett",
     "normalized_name": "howard hewett",
@@ -6998,18 +6380,6 @@
     "aliases": []
   },
   {
-    "id": "3b9a977e64e90aa8d1675d94",
-    "name": "{'mbid': '02349767-d5ac-4528-892d-17b6d40107a1', '#text': 'Anita Baker'}",
-    "normalized_name": "mbid 02349767 d5ac 4528 892d 17b6d40107a1 text anita baker",
-    "aliases": []
-  },
-  {
-    "id": "3b9febc9070eb10bc0d747b1",
-    "name": "{'mbid': '7c5e39c3-7645-4e37-968d-a4e45cd38c5d', '#text': 'Mýa'}",
-    "normalized_name": "mbid 7c5e39c3 7645 4e37 968d a4e45cd38c5d text mya",
-    "aliases": []
-  },
-  {
     "id": "3ba65912619f35980a24dbc4",
     "name": "Kali Uchis, Omar Apollo",
     "normalized_name": "kali uchis omar apollo",
@@ -7043,12 +6413,6 @@
     "id": "3bdbf40c4693e05f0629bee9",
     "name": "Olly Alexander",
     "normalized_name": "olly alexander",
-    "aliases": []
-  },
-  {
-    "id": "3be935a82320036c50fe1090",
-    "name": "{'mbid': '5a85c140-dcf9-4dd2-b2c8-aff0471549f3', '#text': 'Sam Smith'}",
-    "normalized_name": "mbid 5a85c140 dcf9 4dd2 b2c8 aff0471549f3 text sam smith",
     "aliases": []
   },
   {
@@ -7097,12 +6461,6 @@
     "id": "3c3c12ff84625a26824579b5",
     "name": "Washington",
     "normalized_name": "washington",
-    "aliases": []
-  },
-  {
-    "id": "3c4586806cbce0a3ba36cb69",
-    "name": "{'mbid': '', '#text': 'Johnny Venus'}",
-    "normalized_name": "mbid text johnny venus",
     "aliases": []
   },
   {
@@ -7157,18 +6515,6 @@
     "id": "3c8289c6c163cbf5598803b8",
     "name": "Da Brat",
     "normalized_name": "da brat",
-    "aliases": []
-  },
-  {
-    "id": "3ca9c85941b2b5443c53006d",
-    "name": "{'mbid': '', '#text': 'Bone Thugs-N-Harmony'}",
-    "normalized_name": "mbid text bone thugs n harmony",
-    "aliases": []
-  },
-  {
-    "id": "3cab9edc96cc209f12ed7aca",
-    "name": "{'mbid': '3e70bc34-17ea-40a4-bd4e-12969e1db36d', '#text': 'Sam Ezeh'}",
-    "normalized_name": "mbid 3e70bc34 17ea 40a4 bd4e 12969e1db36d text sam ezeh",
     "aliases": []
   },
   {
@@ -7292,12 +6638,6 @@
     "aliases": []
   },
   {
-    "id": "3ddda18d37e639da52b92e98",
-    "name": "{'mbid': 'a0723a3c-4135-438e-85c5-012712144ede', '#text': 'Don Toliver'}",
-    "normalized_name": "mbid a0723a3c 4135 438e 85c5 012712144ede text don toliver",
-    "aliases": []
-  },
-  {
     "id": "3de0e0f29363336e2044e79f",
     "name": "Mick man",
     "normalized_name": "mick man",
@@ -7376,12 +6716,6 @@
     "aliases": []
   },
   {
-    "id": "3e97ed264489a6755cde2d0d",
-    "name": "{'mbid': 'bfcc6d75-a6a5-4bc6-8282-47aec8531818', '#text': 'Cher'}",
-    "normalized_name": "mbid bfcc6d75 a6a5 4bc6 8282 47aec8531818 text cher",
-    "aliases": []
-  },
-  {
     "id": "3e9f9b271949adad867d8019",
     "name": "Wet",
     "normalized_name": "wet",
@@ -7403,18 +6737,6 @@
     "id": "3ec4c32214b352e9f9546a73",
     "name": "benny blanco",
     "normalized_name": "benny blanco",
-    "aliases": []
-  },
-  {
-    "id": "3ecabcc5d3d1339a8dcfb2f8",
-    "name": "{'mbid': '03a0c292-3569-46cf-9876-d3c79af048eb', '#text': 'Tink'}",
-    "normalized_name": "mbid 03a0c292 3569 46cf 9876 d3c79af048eb text tink",
-    "aliases": []
-  },
-  {
-    "id": "3ed66c0219b7681fada0c1d0",
-    "name": "{'mbid': '', '#text': 'Charlie Puth & Ravyn Lenae'}",
-    "normalized_name": "mbid text charlie puth and ravyn lenae",
     "aliases": []
   },
   {
@@ -7499,12 +6821,6 @@
     "id": "3f70ef8733cd4801ed6f282e",
     "name": "Q-Burn",
     "normalized_name": "q burn",
-    "aliases": []
-  },
-  {
-    "id": "3f880419a4d5c448235eeed9",
-    "name": "{'mbid': '18dbe3ed-1517-4cdb-a56e-e67154138199', '#text': 'Sunni Colón'}",
-    "normalized_name": "mbid 18dbe3ed 1517 4cdb a56e e67154138199 text sunni colon",
     "aliases": []
   },
   {
@@ -7610,18 +6926,6 @@
     "aliases": []
   },
   {
-    "id": "40a1157acac044300a04f1b8",
-    "name": "{'mbid': '', '#text': 'Mariah the Scientist & Kali Uchis'}",
-    "normalized_name": "mbid text mariah the scientist and kali uchis",
-    "aliases": []
-  },
-  {
-    "id": "40b6a9e6e9802eee0dab6593",
-    "name": "{'mbid': '', '#text': 'JayO'}",
-    "normalized_name": "mbid text jayo",
-    "aliases": []
-  },
-  {
     "id": "40bb2a8398f597efdf4868bc",
     "name": "Q Marsden & Deb Never",
     "normalized_name": "q marsden and deb never",
@@ -7631,12 +6935,6 @@
     "id": "40bbf382143a0ca63b200a06",
     "name": "NxWorries, Anderson .Paak, H.E.R. & Knxwledge",
     "normalized_name": "nxworries anderson paak h e r and knxwledge",
-    "aliases": []
-  },
-  {
-    "id": "40be5be5927f992d0bfbc925",
-    "name": "{'mbid': 'd73596bb-a8f8-4aae-a323-d881f5245149', '#text': 'Black Box'}",
-    "normalized_name": "mbid d73596bb a8f8 4aae a323 d881f5245149 text black box",
     "aliases": []
   },
   {
@@ -7778,12 +7076,6 @@
     "aliases": []
   },
   {
-    "id": "427b664714f7fe8d510a523f",
-    "name": "{'mbid': '', '#text': 'Fish Go Deep'}",
-    "normalized_name": "mbid text fish go deep",
-    "aliases": []
-  },
-  {
     "id": "4294c1bb438d7e71f4d8135e",
     "name": "Jamali",
     "normalized_name": "jamali",
@@ -7796,6 +7088,12 @@
     "aliases": []
   },
   {
+    "id": "42a3482a4531ce45de6ec7da",
+    "name": "Justice, Tame Impala, SZA & Grand Theft Auto VI",
+    "normalized_name": "justice tame impala sza and grand theft auto vi",
+    "aliases": []
+  },
+  {
     "id": "42bbaf044593316f609521d7",
     "name": "Bon Jovi",
     "normalized_name": "bon jovi",
@@ -7805,12 +7103,6 @@
     "id": "42e6600136824f4078730c72",
     "name": "Andile",
     "normalized_name": "andile",
-    "aliases": []
-  },
-  {
-    "id": "42ef90fdbd18fa2595bcbc40",
-    "name": "{'mbid': '31aa6f87-8d00-4ae9-a5cc-6d7eeea109d2', '#text': 'Alphaville'}",
-    "normalized_name": "mbid 31aa6f87 8d00 4ae9 a5cc 6d7eeea109d2 text alphaville",
     "aliases": []
   },
   {
@@ -7880,18 +7172,6 @@
     "aliases": []
   },
   {
-    "id": "437dae553ebae173ee1f01af",
-    "name": "{'mbid': '', '#text': 'Sabrina'}",
-    "normalized_name": "mbid text sabrina",
-    "aliases": []
-  },
-  {
-    "id": "43818cf511ae5e17800a192e",
-    "name": "{'mbid': '', '#text': 'Loe Shimmy'}",
-    "normalized_name": "mbid text loe shimmy",
-    "aliases": []
-  },
-  {
     "id": "438548d3b43c5460a548c6c5",
     "name": "paranoyaboi",
     "normalized_name": "paranoyaboi",
@@ -7909,12 +7189,6 @@
     "id": "438ac8522400d6c6ae3b108f",
     "name": "Mthunzi & Sun-El Musician",
     "normalized_name": "mthunzi and sun el musician",
-    "aliases": []
-  },
-  {
-    "id": "439aa0ba9c54518da81cf272",
-    "name": "{'mbid': '', '#text': 'jsilos'}",
-    "normalized_name": "mbid text jsilos",
     "aliases": []
   },
   {
@@ -7939,12 +7213,6 @@
     "id": "43c635ac5f2db10b9649a444",
     "name": "Snoh Aalegra, Marcus James",
     "normalized_name": "snoh aalegra marcus james",
-    "aliases": []
-  },
-  {
-    "id": "43c6dec71e17b053175d1174",
-    "name": "{'mbid': 'db21a231-40ee-4c18-9604-bd7508a05998', '#text': 'Tweet'}",
-    "normalized_name": "mbid db21a231 40ee 4c18 9604 bd7508a05998 text tweet",
     "aliases": []
   },
   {
@@ -8064,12 +7332,6 @@
     "aliases": []
   },
   {
-    "id": "449bae118f9745355ab9eb93",
-    "name": "{'mbid': 'cc30e630-8c75-4d78-b205-8e2edc6bdaa7', '#text': 'Coolio'}",
-    "normalized_name": "mbid cc30e630 8c75 4d78 b205 8e2edc6bdaa7 text coolio",
-    "aliases": []
-  },
-  {
     "id": "44b846dc6e911b29e531d9d0",
     "name": "Sam Deep, Nia Pearl & Boohle",
     "normalized_name": "sam deep nia pearl and boohle",
@@ -8121,12 +7383,6 @@
     "id": "452a5848480f811fbb937458",
     "name": "Zakes Bantwini",
     "normalized_name": "zakes bantwini",
-    "aliases": []
-  },
-  {
-    "id": "4535b528b7bb409003a1c13d",
-    "name": "{'mbid': '', '#text': 'Fridayy & Mariah the Scientist'}",
-    "normalized_name": "mbid text fridayy and mariah the scientist",
     "aliases": []
   },
   {
@@ -8292,21 +7548,9 @@
     "aliases": []
   },
   {
-    "id": "474d00ff876563e94335429a",
-    "name": "{'mbid': '', '#text': 'Summer Walker & Chris Brown'}",
-    "normalized_name": "mbid text summer walker and chris brown",
-    "aliases": []
-  },
-  {
     "id": "4755fa612c1df590ea00f394",
     "name": "Iggy Azalea",
     "normalized_name": "iggy azalea",
-    "aliases": []
-  },
-  {
-    "id": "477503cee24edf217157f197",
-    "name": "{'mbid': '', '#text': 'Anita Baker'}",
-    "normalized_name": "mbid text anita baker",
     "aliases": []
   },
   {
@@ -8364,18 +7608,6 @@
     "aliases": []
   },
   {
-    "id": "47e4141d4eeb7ecbdda3a8fa",
-    "name": "{'mbid': 'ff1d04f2-2bbd-47d8-b722-6ac8c53b71b3', '#text': 'Donell Jones'}",
-    "normalized_name": "mbid ff1d04f2 2bbd 47d8 b722 6ac8c53b71b3 text donell jones",
-    "aliases": []
-  },
-  {
-    "id": "47ed71628b9fb4a10c6ab3ff",
-    "name": "{'mbid': '', '#text': 'Shevya'}",
-    "normalized_name": "mbid text shevya",
-    "aliases": []
-  },
-  {
     "id": "47ee128f3956776592f86d99",
     "name": "Monotone",
     "normalized_name": "monotone",
@@ -8418,12 +7650,6 @@
     "aliases": []
   },
   {
-    "id": "48651cf74f07ca4fd5f0c6f6",
-    "name": "{'mbid': '', '#text': 'Oliver Wells'}",
-    "normalized_name": "mbid text oliver wells",
-    "aliases": []
-  },
-  {
     "id": "486c93b7af20d5a8f5c2027c",
     "name": "Kaylow",
     "normalized_name": "kaylow",
@@ -8441,12 +7667,6 @@
     "id": "48831886505587dfd63ca1db",
     "name": "98º",
     "normalized_name": "98o",
-    "aliases": []
-  },
-  {
-    "id": "488f2c3e10d5ca0a322faf1e",
-    "name": "{'mbid': '', '#text': 'Madonna & Martin Garrix'}",
-    "normalized_name": "mbid text madonna and martin garrix",
     "aliases": []
   },
   {
@@ -8471,12 +7691,6 @@
     "id": "48c1cf12390ac11faf316a62",
     "name": "Josh Waters",
     "normalized_name": "josh waters",
-    "aliases": []
-  },
-  {
-    "id": "48de244131cf4a21768cb0f9",
-    "name": "{'mbid': '', '#text': '4batz'}",
-    "normalized_name": "mbid text 4batz",
     "aliases": []
   },
   {
@@ -8513,12 +7727,6 @@
     "id": "4929c5c0bdc619fe63289899",
     "name": "Aaron Hall",
     "normalized_name": "aaron hall",
-    "aliases": []
-  },
-  {
-    "id": "494421f8c1ca43a33d31687d",
-    "name": "{'mbid': '', '#text': 'Mariah Carey'}",
-    "normalized_name": "mbid text mariah carey",
     "aliases": []
   },
   {
@@ -8561,18 +7769,6 @@
     "id": "4979ac7d6dc9ea9292d2f56c",
     "name": "Oliver Cheatham",
     "normalized_name": "oliver cheatham",
-    "aliases": []
-  },
-  {
-    "id": "49b19561fae279861a1dc5d4",
-    "name": "{'mbid': '', '#text': 'BANKS'}",
-    "normalized_name": "mbid text banks",
-    "aliases": []
-  },
-  {
-    "id": "49b1fff646250500419f4eb9",
-    "name": "{'mbid': '', '#text': 'Kleber N. Viana'}",
-    "normalized_name": "mbid text kleber n viana",
     "aliases": []
   },
   {
@@ -8720,12 +7916,6 @@
     "aliases": []
   },
   {
-    "id": "4b0147fd2d93d48f3a5f9811",
-    "name": "{'mbid': '494e8d09-f85b-4543-892f-a5096aed1cd4', '#text': 'Mariah Carey'}",
-    "normalized_name": "mbid 494e8d09 f85b 4543 892f a5096aed1cd4 text mariah carey",
-    "aliases": []
-  },
-  {
     "id": "4b08aca582188623afa4a4d4",
     "name": "Sparks Bantwana",
     "normalized_name": "sparks bantwana",
@@ -8771,12 +7961,6 @@
     "id": "4b5fc0f64fb07774cef5c809",
     "name": "Major League DJz & Focalistic",
     "normalized_name": "major league djz and focalistic",
-    "aliases": []
-  },
-  {
-    "id": "4b6805f75902390a01de23a4",
-    "name": "{'mbid': '', '#text': 'Charlie Puth & Coco Jones'}",
-    "normalized_name": "mbid text charlie puth and coco jones",
     "aliases": []
   },
   {
@@ -8831,12 +8015,6 @@
     "id": "4bb3416dce851d5aefd8ae0a",
     "name": "Kendrick Lamar, Dody6",
     "normalized_name": "kendrick lamar dody6",
-    "aliases": []
-  },
-  {
-    "id": "4bb37b05208551867adc3460",
-    "name": "{'mbid': 'bf75ef89-7b4c-4771-ac43-4d5c10617190', '#text': 'Brian McKnight'}",
-    "normalized_name": "mbid bf75ef89 7b4c 4771 ac43 4d5c10617190 text brian mcknight",
     "aliases": []
   },
   {
@@ -8915,12 +8093,6 @@
     "id": "4c7c257ef135a33cdb6adb53",
     "name": "Agentic Orange",
     "normalized_name": "agentic orange",
-    "aliases": []
-  },
-  {
-    "id": "4c8d7f3b1eac778cec52ec03",
-    "name": "{'mbid': '76afa937-2afb-4359-923f-5faa18070e81', '#text': 'Kelly Price'}",
-    "normalized_name": "mbid 76afa937 2afb 4359 923f 5faa18070e81 text kelly price",
     "aliases": []
   },
   {
@@ -9118,12 +8290,6 @@
     "aliases": []
   },
   {
-    "id": "4e27d341072954164eab6b24",
-    "name": "{'mbid': '02ee5826-4cd2-4e21-9835-8a11e3d74099', '#text': 'Alex Guesta'}",
-    "normalized_name": "mbid 02ee5826 4cd2 4e21 9835 8a11e3d74099 text alex guesta",
-    "aliases": []
-  },
-  {
     "id": "4e2f259cc216856d65e57210",
     "name": "Mary J. Blige",
     "normalized_name": "mary j blige",
@@ -9214,21 +8380,9 @@
     "aliases": []
   },
   {
-    "id": "4ef7bc41734510bb95649625",
-    "name": "{'mbid': '', '#text': 'Bia'}",
-    "normalized_name": "mbid text bia",
-    "aliases": []
-  },
-  {
     "id": "4eff0b07becc4d2e2d343489",
     "name": "Tom Odell",
     "normalized_name": "tom odell",
-    "aliases": []
-  },
-  {
-    "id": "4f0e65d4fc314f161002899c",
-    "name": "{'mbid': '8dce8a2d-8ed5-4672-b25e-bfe198b02b82', '#text': 'The Manhattans'}",
-    "normalized_name": "mbid 8dce8a2d 8ed5 4672 b25e bfe198b02b82 text the manhattans",
     "aliases": []
   },
   {
@@ -9432,12 +8586,6 @@
     "aliases": []
   },
   {
-    "id": "50c2ce4deed3b0a6552c5a0e",
-    "name": "{'mbid': '', '#text': 'Enur'}",
-    "normalized_name": "mbid text enur",
-    "aliases": []
-  },
-  {
     "id": "50d1d44017da7fa9b6f83107",
     "name": "Tyrese",
     "normalized_name": "tyrese",
@@ -9477,12 +8625,6 @@
     "id": "50ec35c779ddaf5bdbd9c2b7",
     "name": "Gloria Gaynor",
     "normalized_name": "gloria gaynor",
-    "aliases": []
-  },
-  {
-    "id": "50ec8b4fe0aa72f184a69d25",
-    "name": "{'mbid': '', '#text': 'Kali Uchis & Mariah the Scientist'}",
-    "normalized_name": "mbid text kali uchis and mariah the scientist",
     "aliases": []
   },
   {
@@ -9702,18 +8844,6 @@
     "aliases": []
   },
   {
-    "id": "52f976d28aed6f971b0debb9",
-    "name": "{'mbid': 'e3645792-a5e8-4818-be43-5ac4c1e18c1f', '#text': 'Chlöe'}",
-    "normalized_name": "mbid e3645792 a5e8 4818 be43 5ac4c1e18c1f text chloe",
-    "aliases": []
-  },
-  {
-    "id": "5302a5173709159b90024b99",
-    "name": "{'mbid': '5a5d32e1-f3d2-4fde-8b41-24a78e696b83', '#text': 'CeCe Winans'}",
-    "normalized_name": "mbid 5a5d32e1 f3d2 4fde 8b41 24a78e696b83 text cece winans",
-    "aliases": []
-  },
-  {
     "id": "53032168c400ba2c9bebd8ec",
     "name": "Madonna & Maluma",
     "normalized_name": "madonna and maluma",
@@ -9780,12 +8910,6 @@
     "aliases": []
   },
   {
-    "id": "5342ec0b1ac105b6ec2c0ff6",
-    "name": "{'mbid': 'f6712d78-3c16-42ad-b250-e4f4bd71682e', '#text': 'Sam Salter'}",
-    "normalized_name": "mbid f6712d78 3c16 42ad b250 e4f4bd71682e text sam salter",
-    "aliases": []
-  },
-  {
     "id": "5347e430e52589e0e2c5578d",
     "name": "Landry M",
     "normalized_name": "landry m",
@@ -9813,12 +8937,6 @@
     "id": "536021bcaeea64c649b97dd7",
     "name": "The Weeknd, Playboi Carti & Madonna",
     "normalized_name": "the weeknd playboi carti and madonna",
-    "aliases": []
-  },
-  {
-    "id": "5369c53978f9ebc74bbf756c",
-    "name": "{'mbid': 'e90eb914-89e7-4ca2-b5c6-8903cd936ae0', '#text': 'Amie Blu'}",
-    "normalized_name": "mbid e90eb914 89e7 4ca2 b5c6 8903cd936ae0 text amie blu",
     "aliases": []
   },
   {
@@ -9885,12 +9003,6 @@
     "id": "5414b88defe697107585564f",
     "name": "The Pussycat Dolls & Busta Rhymes",
     "normalized_name": "the pussycat dolls and busta rhymes",
-    "aliases": []
-  },
-  {
-    "id": "543314284ea79d3b873bad11",
-    "name": "{'mbid': 'f4fdbb4c-e4b7-47a0-b83b-d91bbfcfa387', '#text': 'Ariana Grande'}",
-    "normalized_name": "mbid f4fdbb4c e4b7 47a0 b83b d91bbfcfa387 text ariana grande",
     "aliases": []
   },
   {
@@ -10106,12 +9218,6 @@
     ]
   },
   {
-    "id": "55d8de89bc3747f88c3b8d32",
-    "name": "{'mbid': '29e686ca-134e-46d5-8a5b-7193f618ff35', '#text': 'Sonder'}",
-    "normalized_name": "mbid 29e686ca 134e 46d5 8a5b 7193f618ff35 text sonder",
-    "aliases": []
-  },
-  {
     "id": "55d9ff865b144ef7b031634e",
     "name": "Khanyisa",
     "normalized_name": "khanyisa",
@@ -10151,12 +9257,6 @@
     "id": "5637a978c1a8091706e1ee42",
     "name": "Julien Jabre",
     "normalized_name": "julien jabre",
-    "aliases": []
-  },
-  {
-    "id": "564988f502065931529b61c4",
-    "name": "{'mbid': '396a9525-0994-4542-b480-c4587feeb476', '#text': 'Tinashe'}",
-    "normalized_name": "mbid 396a9525 0994 4542 b480 c4587feeb476 text tinashe",
     "aliases": []
   },
   {
@@ -10238,12 +9338,6 @@
     "aliases": []
   },
   {
-    "id": "56dc69da7f6b4b1b9e29bb3e",
-    "name": "{'mbid': '3c8a8696-e176-4c46-a2d3-48b6b1525c7f', '#text': 'Toni Braxton'}",
-    "normalized_name": "mbid 3c8a8696 e176 4c46 a2d3 48b6b1525c7f text toni braxton",
-    "aliases": []
-  },
-  {
     "id": "56e72fb9d0780ce783de976a",
     "name": "Conan Gray",
     "normalized_name": "conan gray",
@@ -10271,18 +9365,6 @@
     "id": "57292a8fc968b476e3103430",
     "name": "Julia Church",
     "normalized_name": "julia church",
-    "aliases": []
-  },
-  {
-    "id": "5733c319ab08a6ebe78469a2",
-    "name": "{'mbid': '', '#text': 'Lisa Stansfield'}",
-    "normalized_name": "mbid text lisa stansfield",
-    "aliases": []
-  },
-  {
-    "id": "573954e5cbee8dc6dd70f60a",
-    "name": "{'mbid': '70f44b56-d358-4dd0-a0df-c0a61950e5a7', '#text': 'Da Capo'}",
-    "normalized_name": "mbid 70f44b56 d358 4dd0 a0df c0a61950e5a7 text da capo",
     "aliases": []
   },
   {
@@ -10325,12 +9407,6 @@
     "id": "57a87f1f73ca6ffc4917bf82",
     "name": "Flying Lotus",
     "normalized_name": "flying lotus",
-    "aliases": []
-  },
-  {
-    "id": "57b3e74ed6ec823e71074681",
-    "name": "{'mbid': '', '#text': 'The Weeknd, JENNIE, Lily Rose Depp'}",
-    "normalized_name": "mbid text the weeknd jennie lily rose depp",
     "aliases": []
   },
   {
@@ -10382,12 +9458,6 @@
     "aliases": []
   },
   {
-    "id": "580368edfc3bed921597811c",
-    "name": "{'mbid': '2fddb92d-24b2-46a5-bf28-3aed46f4684c', '#text': 'Kylie Minogue'}",
-    "normalized_name": "mbid 2fddb92d 24b2 46a5 bf28 3aed46f4684c text kylie minogue",
-    "aliases": []
-  },
-  {
     "id": "580b010fd80c4f59660fc94c",
     "name": "Lokshin",
     "normalized_name": "lokshin",
@@ -10418,27 +9488,9 @@
     "aliases": []
   },
   {
-    "id": "58637d738e612d4890eb4af9",
-    "name": "{'mbid': 'a796b92e-c137-4895-9c89-10f900617a4f', '#text': \"Destiny's Child\"}",
-    "normalized_name": "mbid a796b92e c137 4895 9c89 10f900617a4f text destiny s child",
-    "aliases": []
-  },
-  {
-    "id": "586c96d685fe460de324089d",
-    "name": "{'mbid': '', '#text': 'Wale & Leon Thomas'}",
-    "normalized_name": "mbid text wale and leon thomas",
-    "aliases": []
-  },
-  {
     "id": "5877ffe2d33ff15f9a88e2f8",
     "name": "Calvin Harris, Dua Lipa",
     "normalized_name": "calvin harris dua lipa",
-    "aliases": []
-  },
-  {
-    "id": "587e1675278d5980570f0642",
-    "name": "{'mbid': '', '#text': 'Summer Walker & Mariah the Scientist'}",
-    "normalized_name": "mbid text summer walker and mariah the scientist",
     "aliases": []
   },
   {
@@ -10493,12 +9545,6 @@
     "id": "590edb6137cc63ce99c8b358",
     "name": "Syd & Lucky Daye",
     "normalized_name": "syd and lucky daye",
-    "aliases": []
-  },
-  {
-    "id": "5926a10e4b415f1848943de3",
-    "name": "{'mbid': '', '#text': 'Luka X'}",
-    "normalized_name": "mbid text luka x",
     "aliases": []
   },
   {
@@ -10568,12 +9614,6 @@
     "aliases": []
   },
   {
-    "id": "5a6c60cee95a2cb1cd6fb6ca",
-    "name": "{'mbid': '0b966a38-5ad9-43c1-b86b-c07079523165', '#text': 'Omar Apollo'}",
-    "normalized_name": "mbid 0b966a38 5ad9 43c1 b86b c07079523165 text omar apollo",
-    "aliases": []
-  },
-  {
     "id": "5a76d8742ec6019afaced671",
     "name": "Yumbs & Simmy",
     "normalized_name": "yumbs and simmy",
@@ -10607,12 +9647,6 @@
     "id": "5aac4ad4b113836d4b659d13",
     "name": "DjCoope B.L.M.",
     "normalized_name": "djcoope b l m",
-    "aliases": []
-  },
-  {
-    "id": "5aafba6928161053b3ec671c",
-    "name": "{'mbid': '', '#text': 'Q Marsden & Deb Never'}",
-    "normalized_name": "mbid text q marsden and deb never",
     "aliases": []
   },
   {
@@ -10792,12 +9826,6 @@
     "aliases": []
   },
   {
-    "id": "5c1c167a70f86824369e608e",
-    "name": "{'mbid': '4af58bba-4a85-45b7-93e1-949d66234a78', '#text': 'Mas Musiq'}",
-    "normalized_name": "mbid 4af58bba 4a85 45b7 93e1 949d66234a78 text mas musiq",
-    "aliases": []
-  },
-  {
     "id": "5c2a82d1c91a6fe478c72134",
     "name": "Rhys Lewis",
     "normalized_name": "rhys lewis",
@@ -10822,12 +9850,6 @@
     "aliases": []
   },
   {
-    "id": "5c5983609021b586c2f4d285",
-    "name": "{'mbid': '272989c8-5535-492d-a25c-9f58803e027f', '#text': 'SZA'}",
-    "normalized_name": "mbid 272989c8 5535 492d a25c 9f58803e027f text sza",
-    "aliases": []
-  },
-  {
     "id": "5c6413187bfbd58503ee77b7",
     "name": "Alonestar",
     "normalized_name": "alonestar",
@@ -10849,12 +9871,6 @@
     "id": "5c95385246f0b1b8a17f282a",
     "name": "Lucky Daye & Leon Thomas",
     "normalized_name": "lucky daye and leon thomas",
-    "aliases": []
-  },
-  {
-    "id": "5c9f6e4a4911a6ff2cb60afc",
-    "name": "{'mbid': '93938558-9a84-4a7f-a15c-6f145100ff5c', '#text': 'Marshall Jefferson'}",
-    "normalized_name": "mbid 93938558 9a84 4a7f a15c 6f145100ff5c text marshall jefferson",
     "aliases": []
   },
   {
@@ -10900,12 +9916,6 @@
     "aliases": []
   },
   {
-    "id": "5ce35463707f844a3ee0e1e0",
-    "name": "{'mbid': 'eead7215-59da-45f5-b719-62f349ef4133', '#text': 'Hugel'}",
-    "normalized_name": "mbid eead7215 59da 45f5 b719 62f349ef4133 text hugel",
-    "aliases": []
-  },
-  {
     "id": "5cf459bbd2a2709bf999a060",
     "name": "Lady Zamar",
     "normalized_name": "lady zamar",
@@ -10915,12 +9925,6 @@
     "id": "5d03045115a0987a1bd68357",
     "name": "Tyrone Davis",
     "normalized_name": "tyrone davis",
-    "aliases": []
-  },
-  {
-    "id": "5d0d4f9f777732ea1e8682ca",
-    "name": "{'mbid': '', '#text': 'Chloe x Halle'}",
-    "normalized_name": "mbid text chloe x halle",
     "aliases": []
   },
   {
@@ -10963,12 +9967,6 @@
     "id": "5d43c6e3b4772bad429e276a",
     "name": "Lauren Sanderson",
     "normalized_name": "lauren sanderson",
-    "aliases": []
-  },
-  {
-    "id": "5d4c74bee954576b40bd30e0",
-    "name": "{'mbid': '', '#text': 'Boyz 2 Men ( Dear God'}",
-    "normalized_name": "mbid text boyz 2 men dear god",
     "aliases": []
   },
   {
@@ -11025,12 +10023,6 @@
     "id": "5db7817ddf9adc541f4e877a",
     "name": "T.I.",
     "normalized_name": "t i",
-    "aliases": []
-  },
-  {
-    "id": "5dbf4970d33385c2f85f595e",
-    "name": "{'mbid': '17e359d0-966e-4c2a-a632-3e5c7de0a1d4', '#text': 'Chanté Moore'}",
-    "normalized_name": "mbid 17e359d0 966e 4c2a a632 3e5c7de0a1d4 text chante moore",
     "aliases": []
   },
   {
@@ -11123,12 +10115,6 @@
     "id": "5e6abc370fbe254355b46d99",
     "name": "Paul Johnson",
     "normalized_name": "paul johnson",
-    "aliases": []
-  },
-  {
-    "id": "5e7aee79183f6c73f365ed93",
-    "name": "{'mbid': '', '#text': 'Johnny Drille, Ayra Starr & Young Jonn'}",
-    "normalized_name": "mbid text johnny drille ayra starr and young jonn",
     "aliases": []
   },
   {
@@ -11258,12 +10244,6 @@
     "aliases": []
   },
   {
-    "id": "5f42abbd698acf4489490d22",
-    "name": "{'mbid': '', '#text': 'DJ Pepsi'}",
-    "normalized_name": "mbid text dj pepsi",
-    "aliases": []
-  },
-  {
     "id": "5f74c20a211b74dbabd754ef",
     "name": "Casanova",
     "normalized_name": "casanova",
@@ -11288,12 +10268,6 @@
     "aliases": []
   },
   {
-    "id": "5fdb4c9a7e9c8d2b28f042d7",
-    "name": "{'mbid': '', '#text': 'Ne-Yo'}",
-    "normalized_name": "mbid text ne yo",
-    "aliases": []
-  },
-  {
     "id": "5fe916cc6640f779bd98c0c6",
     "name": "Chuckie031, SIR Linho",
     "normalized_name": "chuckie031 sir linho",
@@ -11303,12 +10277,6 @@
     "id": "5feee28b82599796a2985d34",
     "name": "Alexander O'Neal",
     "normalized_name": "alexander o neal",
-    "aliases": []
-  },
-  {
-    "id": "5ff82706eb5759d4cf141afb",
-    "name": "{'mbid': '6fe1f2c3-2a9d-4c2c-a642-2abfb952d5a9', '#text': 'Jastin Martin'}",
-    "normalized_name": "mbid 6fe1f2c3 2a9d 4c2c a642 2abfb952d5a9 text jastin martin",
     "aliases": []
   },
   {
@@ -11333,12 +10301,6 @@
     "id": "603c9c0fc30647cd622f4110",
     "name": "The Weeknd & Anitta",
     "normalized_name": "the weeknd and anitta",
-    "aliases": []
-  },
-  {
-    "id": "60411b91235c9ae5d1561852",
-    "name": "{'mbid': '', '#text': 'Tyla, Gunna, Skillibeng'}",
-    "normalized_name": "mbid text tyla gunna skillibeng",
     "aliases": []
   },
   {
@@ -11381,12 +10343,6 @@
     "id": "60c38167721ddd1e7ccb20e3",
     "name": "Saint Harison & Tiana Major9",
     "normalized_name": "saint harison and tiana major9",
-    "aliases": []
-  },
-  {
-    "id": "60c920a37c0974ccf703a140",
-    "name": "{'mbid': '899ba710-0291-4e65-827b-b026e80be073', '#text': 'Mi Casa'}",
-    "normalized_name": "mbid 899ba710 0291 4e65 827b b026e80be073 text mi casa",
     "aliases": []
   },
   {
@@ -11606,12 +10562,6 @@
     "aliases": []
   },
   {
-    "id": "626c79ceee5c737a617604eb",
-    "name": "{'mbid': '6500ea06-c13b-4bbe-8a48-65c2fddfdc21', '#text': 'Adventures of Stevie V'}",
-    "normalized_name": "mbid 6500ea06 c13b 4bbe 8a48 65c2fddfdc21 text adventures of stevie v",
-    "aliases": []
-  },
-  {
     "id": "627030fc903763b7e9fefcdb",
     "name": "Dreane",
     "normalized_name": "dreane",
@@ -11657,12 +10607,6 @@
     "id": "62fc26947c2da6400cab4ac4",
     "name": "HAIM",
     "normalized_name": "haim",
-    "aliases": []
-  },
-  {
-    "id": "630aec4d72159985df17e8b5",
-    "name": "{'mbid': '', '#text': 'Drake & Loe Shimmy'}",
-    "normalized_name": "mbid text drake and loe shimmy",
     "aliases": []
   },
   {
@@ -11744,12 +10688,6 @@
     "aliases": []
   },
   {
-    "id": "63cae33c42e70fe38a0136ef",
-    "name": "{'mbid': '859d0860-d480-4efd-970c-c05d5f1776b8', '#text': 'Beyoncé'}",
-    "normalized_name": "mbid 859d0860 d480 4efd 970c c05d5f1776b8 text beyonce",
-    "aliases": []
-  },
-  {
     "id": "63d562a290533b4837cacb3e",
     "name": "Kendrick Lamar, Travis Scott",
     "normalized_name": "kendrick lamar travis scott",
@@ -11777,12 +10715,6 @@
     "id": "640e42c5a63ab58039be7fa4",
     "name": "Silver Dust",
     "normalized_name": "silver dust",
-    "aliases": []
-  },
-  {
-    "id": "642c9963125b8457aca933bf",
-    "name": "{'mbid': '9192e645-19cb-4c80-9412-d0447a3e1dc6', '#text': \"D'Leesa\"}",
-    "normalized_name": "mbid 9192e645 19cb 4c80 9412 d0447a3e1dc6 text d leesa",
     "aliases": []
   },
   {
@@ -11822,12 +10754,6 @@
     "aliases": []
   },
   {
-    "id": "646f99aab113ba467449bdd8",
-    "name": "{'mbid': 'd8fd8d9b-473b-4f06-83c8-869b1bb9de89', '#text': 'Bryson Tiller'}",
-    "normalized_name": "mbid d8fd8d9b 473b 4f06 83c8 869b1bb9de89 text bryson tiller",
-    "aliases": []
-  },
-  {
     "id": "6471a0bfbf389133ba852735",
     "name": "Monsune",
     "normalized_name": "monsune",
@@ -11855,12 +10781,6 @@
     "id": "64b6026090485abed6d851dc",
     "name": "A Nightmare on Elm Street",
     "normalized_name": "a nightmare on elm street",
-    "aliases": []
-  },
-  {
-    "id": "64ce73b8f53c885bfea1b406",
-    "name": "{'mbid': '', '#text': 'Freeway, Jay-Z & Mariah Carey'}",
-    "normalized_name": "mbid text freeway jay z and mariah carey",
     "aliases": []
   },
   {
@@ -11924,12 +10844,6 @@
     "aliases": []
   },
   {
-    "id": "6531b3491fa135d0122b98d4",
-    "name": "{'mbid': 'e50519c1-6940-40fe-b920-f73f522005e2', '#text': 'B2K'}",
-    "normalized_name": "mbid e50519c1 6940 40fe b920 f73f522005e2 text b2k",
-    "aliases": []
-  },
-  {
     "id": "6549da730454f2aa5b891e61",
     "name": "Tracie Spencer",
     "normalized_name": "tracie spencer",
@@ -11966,33 +10880,15 @@
     "aliases": []
   },
   {
-    "id": "659bc5ef54c6c687e14826d4",
-    "name": "{'mbid': '29334bdb-767e-4d45-ae6f-123a6645454a', '#text': 'Joy Enriquez'}",
-    "normalized_name": "mbid 29334bdb 767e 4d45 ae6f 123a6645454a text joy enriquez",
-    "aliases": []
-  },
-  {
     "id": "659ce1bb3b189a9fa0e773fb",
     "name": "Saweetie & London On Da Track",
     "normalized_name": "saweetie and london on da track",
     "aliases": []
   },
   {
-    "id": "65aa89fcf01d2d68cfc1bd13",
-    "name": "{'mbid': '56a210e8-5482-4b52-a8c4-eaf785cbcb59', '#text': 'Qendresa'}",
-    "normalized_name": "mbid 56a210e8 5482 4b52 a8c4 eaf785cbcb59 text qendresa",
-    "aliases": []
-  },
-  {
     "id": "65ac015cae8bca2e35623b83",
     "name": "Yvette Michelle",
     "normalized_name": "yvette michelle",
-    "aliases": []
-  },
-  {
-    "id": "65af986b07c17df860f71a05",
-    "name": "{'mbid': '382f1005-e9ab-4684-afd4-0bdae4ee37f2', '#text': '2Pac'}",
-    "normalized_name": "mbid 382f1005 e9ab 4684 afd4 0bdae4ee37f2 text 2pac",
     "aliases": []
   },
   {
@@ -12023,18 +10919,6 @@
     "id": "65d5d68003bfe07d099ecd5d",
     "name": "Julia Harriman",
     "normalized_name": "julia harriman",
-    "aliases": []
-  },
-  {
-    "id": "65e30d844151b44017ec5487",
-    "name": "{'mbid': '642489a8-a6b2-4bc9-8b41-6bf9613812ae', '#text': 'Sharon Redd'}",
-    "normalized_name": "mbid 642489a8 a6b2 4bc9 8b41 6bf9613812ae text sharon redd",
-    "aliases": []
-  },
-  {
-    "id": "65eea87614a352778eb35c08",
-    "name": "{'mbid': '', '#text': 'Qendresa, Engine Earz'}",
-    "normalized_name": "mbid text qendresa engine earz",
     "aliases": []
   },
   {
@@ -12074,12 +10958,6 @@
     "aliases": []
   },
   {
-    "id": "662a1f75cb00ab2f1fbf3dec",
-    "name": "{'mbid': '5f899b2a-7f41-4f36-8571-f7afd1fd6661', '#text': 'Sean Leon'}",
-    "normalized_name": "mbid 5f899b2a 7f41 4f36 8571 f7afd1fd6661 text sean leon",
-    "aliases": []
-  },
-  {
     "id": "6636149ae45ff58db3c6c997",
     "name": "Kavinsky",
     "normalized_name": "kavinsky",
@@ -12101,12 +10979,6 @@
     "id": "667d47d5fc7bbf59ac3b36e1",
     "name": "Saturday Night Live",
     "normalized_name": "saturday night live",
-    "aliases": []
-  },
-  {
-    "id": "6682b26b29a057e5b095116e",
-    "name": "{'mbid': '45dc5f07-6609-4760-a933-8c9e0f858d05', '#text': 'French Montana'}",
-    "normalized_name": "mbid 45dc5f07 6609 4760 a933 8c9e0f858d05 text french montana",
     "aliases": []
   },
   {
@@ -12134,12 +11006,6 @@
     "aliases": []
   },
   {
-    "id": "66b9313508b801508f7cc34c",
-    "name": "{'mbid': '', '#text': 'Drake'}",
-    "normalized_name": "mbid text drake",
-    "aliases": []
-  },
-  {
     "id": "66dd426ee8f4f0a0f5137624",
     "name": "Soul II Soul",
     "normalized_name": "soul ii soul",
@@ -12158,21 +11024,9 @@
     "aliases": []
   },
   {
-    "id": "66fdfdb06e0e898e4662e8cd",
-    "name": "{'mbid': '63edbf7d-091a-4b68-878f-845e367d637c', '#text': 'A.D.O.R.'}",
-    "normalized_name": "mbid 63edbf7d 091a 4b68 878f 845e367d637c text a d o r",
-    "aliases": []
-  },
-  {
     "id": "672a089761a9c8e9b1927d1c",
     "name": "HONNE & Izzy Bizu",
     "normalized_name": "honne and izzy bizu",
-    "aliases": []
-  },
-  {
-    "id": "672c0731aa92c38cf2f842b7",
-    "name": "{'mbid': '', '#text': 'Laila!'}",
-    "normalized_name": "mbid text laila",
     "aliases": []
   },
   {
@@ -12185,12 +11039,6 @@
     "id": "67575a628dac3d0c3adca71a",
     "name": "DJ Ganyani",
     "normalized_name": "dj ganyani",
-    "aliases": []
-  },
-  {
-    "id": "675824b867ea2a7ba25c851a",
-    "name": "{'mbid': 'a68dd495-8f33-493c-9832-3ef058c96034', '#text': 'After 7'}",
-    "normalized_name": "mbid a68dd495 8f33 493c 9832 3ef058c96034 text after 7",
     "aliases": []
   },
   {
@@ -12209,12 +11057,6 @@
     "id": "6767414848a928ef963fa348",
     "name": "XO FANATiK",
     "normalized_name": "xo fanatik",
-    "aliases": []
-  },
-  {
-    "id": "67697b9f589da70481a6fc76",
-    "name": "{'mbid': '73e5e69d-3554-40d8-8516-00cb38737a1c', '#text': 'Rihanna'}",
-    "normalized_name": "mbid 73e5e69d 3554 40d8 8516 00cb38737a1c text rihanna",
     "aliases": []
   },
   {
@@ -12302,27 +11144,9 @@
     "aliases": []
   },
   {
-    "id": "686835eccb80f5422e88bc60",
-    "name": "{'mbid': '1978391f-956e-4fe6-93c1-5053b43138c7', '#text': 'Deborah Cox'}",
-    "normalized_name": "mbid 1978391f 956e 4fe6 93c1 5053b43138c7 text deborah cox",
-    "aliases": []
-  },
-  {
-    "id": "6869a7fe31a0762b5d33c052",
-    "name": "{'mbid': '', '#text': 'Roula'}",
-    "normalized_name": "mbid text roula",
-    "aliases": []
-  },
-  {
     "id": "6874344da6177edadb2b7ce5",
     "name": "50 Cent",
     "normalized_name": "50 cent",
-    "aliases": []
-  },
-  {
-    "id": "68796eda9dbba9955104578c",
-    "name": "{'mbid': '81d12ca7-5b89-4d21-8736-860b7400b4eb', '#text': 'Baby Keem'}",
-    "normalized_name": "mbid 81d12ca7 5b89 4d21 8736 860b7400b4eb text baby keem",
     "aliases": []
   },
   {
@@ -12350,21 +11174,9 @@
     "aliases": []
   },
   {
-    "id": "68b03ffbfcee0c49eb40d3c6",
-    "name": "{'mbid': '', '#text': 'Lauryn Hill, 蘿倫希爾, Mary J. Blige'}",
-    "normalized_name": "mbid text lauryn hill 蘿倫希爾 mary j blige",
-    "aliases": []
-  },
-  {
     "id": "68b45ec4734a3a76c4e49355",
     "name": "Jungle, Josh Lloyd Watson, Lydia Kitto",
     "normalized_name": "jungle josh lloyd watson lydia kitto",
-    "aliases": []
-  },
-  {
-    "id": "68c898a6e8b757849087c4ef",
-    "name": "{'mbid': 'f4abc0b5-3f7a-4eff-8f78-ac078dbce533', '#text': 'Billie Eilish'}",
-    "normalized_name": "mbid f4abc0b5 3f7a 4eff 8f78 ac078dbce533 text billie eilish",
     "aliases": []
   },
   {
@@ -12400,12 +11212,6 @@
     "aliases": []
   },
   {
-    "id": "691b9bc67abb68f059ce7907",
-    "name": "{'mbid': '', '#text': 'Gregor Salto'}",
-    "normalized_name": "mbid text gregor salto",
-    "aliases": []
-  },
-  {
     "id": "6921b9450c973f1e0c96515b",
     "name": "Rosa Linn",
     "normalized_name": "rosa linn",
@@ -12418,12 +11224,6 @@
     "aliases": []
   },
   {
-    "id": "6933e23311952133bb701357",
-    "name": "{'mbid': '1036b808-f58c-4a3e-b461-a2c4492ecf1b', '#text': 'Nicki Minaj'}",
-    "normalized_name": "mbid 1036b808 f58c 4a3e b461 a2c4492ecf1b text nicki minaj",
-    "aliases": []
-  },
-  {
     "id": "6935917ad52fe273475f7e33",
     "name": "Berwyn",
     "normalized_name": "berwyn",
@@ -12433,12 +11233,6 @@
     "id": "696247ef4f9b5f31a85599a0",
     "name": "God's Property",
     "normalized_name": "god s property",
-    "aliases": []
-  },
-  {
-    "id": "6966ceae3af0bfeb844fb1ad",
-    "name": "{'mbid': 'b42eca0f-9381-43db-badb-1cba080a7dc2', '#text': 'Boyz II Men'}",
-    "normalized_name": "mbid b42eca0f 9381 43db badb 1cba080a7dc2 text boyz ii men",
     "aliases": []
   },
   {
@@ -12538,12 +11332,6 @@
     "aliases": []
   },
   {
-    "id": "6a5741c00ab8e6973aee27f5",
-    "name": "{'mbid': '044fd265-79dd-43eb-afc4-8b20becf7e17', '#text': 'Thundercat'}",
-    "normalized_name": "mbid 044fd265 79dd 43eb afc4 8b20becf7e17 text thundercat",
-    "aliases": []
-  },
-  {
     "id": "6a5fee316029b20931cf7229",
     "name": "Michael Jackson & Justin Timberlake",
     "normalized_name": "michael jackson and justin timberlake",
@@ -12612,12 +11400,6 @@
     "aliases": []
   },
   {
-    "id": "6afe3069565249fa28483aa5",
-    "name": "{'mbid': '', '#text': 'Joey Bada$$ & Ty Dolla $ign'}",
-    "normalized_name": "mbid text joey bada and ty dolla ign",
-    "aliases": []
-  },
-  {
     "id": "6b0cc863f3ebe86de1d33905",
     "name": "Victoria Monét",
     "normalized_name": "victoria monet",
@@ -12633,12 +11415,6 @@
     "id": "6b27ee0af8c5e61988b7857d",
     "name": "Cian Ducrot & Ella Henderson",
     "normalized_name": "cian ducrot and ella henderson",
-    "aliases": []
-  },
-  {
-    "id": "6b2ad2011b69625067dc7255",
-    "name": "{'mbid': '', '#text': 'Q Marsden & Marco McKinnis'}",
-    "normalized_name": "mbid text q marsden and marco mckinnis",
     "aliases": []
   },
   {
@@ -12696,21 +11472,9 @@
     "aliases": []
   },
   {
-    "id": "6bd9482b0a5769d8866daa15",
-    "name": "{'mbid': '', '#text': 'Nanette'}",
-    "normalized_name": "mbid text nanette",
-    "aliases": []
-  },
-  {
     "id": "6bd96e8973f90b4725e6a9d8",
     "name": "The Williams Brothers",
     "normalized_name": "the williams brothers",
-    "aliases": []
-  },
-  {
-    "id": "6bde082c36be3e5990a9c9c9",
-    "name": "{'mbid': '', '#text': 'Marcus Harvey & Mick Jenkins'}",
-    "normalized_name": "mbid text marcus harvey and mick jenkins",
     "aliases": []
   },
   {
@@ -12726,21 +11490,9 @@
     "aliases": []
   },
   {
-    "id": "6bee3ca4c33e1784e2963ed4",
-    "name": "{'mbid': '3414d446-735a-443c-931f-10634f57e5b9', '#text': 'Usher'}",
-    "normalized_name": "mbid 3414d446 735a 443c 931f 10634f57e5b9 text usher",
-    "aliases": []
-  },
-  {
     "id": "6bf272059532f0ccad2ff399",
     "name": "Dr Mageu ft Sbu",
     "normalized_name": "dr mageu ft sbu",
-    "aliases": []
-  },
-  {
-    "id": "6bf4026b0863228243cae6f5",
-    "name": "{'mbid': '', '#text': 'Summer Walker, Latto & Doja Cat'}",
-    "normalized_name": "mbid text summer walker latto and doja cat",
     "aliases": []
   },
   {
@@ -12789,12 +11541,6 @@
     "id": "6c68324695340bb367ff0938",
     "name": "For Real",
     "normalized_name": "for real",
-    "aliases": []
-  },
-  {
-    "id": "6c6daeaa3e37599f81301ce9",
-    "name": "{'mbid': 'f40856e6-079f-4a0a-916e-9e6a5e04f646', '#text': 'ADÉLA'}",
-    "normalized_name": "mbid f40856e6 079f 4a0a 916e 9e6a5e04f646 text adela",
     "aliases": []
   },
   {
@@ -13008,12 +11754,6 @@
     "aliases": []
   },
   {
-    "id": "6e716b84ac101c9888ae3075",
-    "name": "{'mbid': '', '#text': 'Quentin Harris'}",
-    "normalized_name": "mbid text quentin harris",
-    "aliases": []
-  },
-  {
     "id": "6eb15def042201e3b0957f62",
     "name": "Camp Lo",
     "normalized_name": "camp lo",
@@ -13043,18 +11783,6 @@
     "id": "6ee5532837a35d4699919012",
     "name": "Whitney Houston & R. Kelly",
     "normalized_name": "whitney houston and r kelly",
-    "aliases": []
-  },
-  {
-    "id": "6ef204e02787777e24b59fba",
-    "name": "{'mbid': '', '#text': 'Tyler， The Creator'}",
-    "normalized_name": "mbid text tyler the creator",
-    "aliases": []
-  },
-  {
-    "id": "6ef28e0aab0ee23330918520",
-    "name": "{'mbid': '7c0f0759-ac44-4403-b366-c0a89b808504', '#text': 'CHXRRY'}",
-    "normalized_name": "mbid 7c0f0759 ac44 4403 b366 c0a89b808504 text chxrry",
     "aliases": []
   },
   {
@@ -13106,12 +11834,6 @@
     "aliases": []
   },
   {
-    "id": "6f2f228ea00d71aa0627115c",
-    "name": "{'mbid': '29037fbf-ca05-4819-9f2b-de685b5b26b0', '#text': 'UMI'}",
-    "normalized_name": "mbid 29037fbf ca05 4819 9f2b de685b5b26b0 text umi",
-    "aliases": []
-  },
-  {
     "id": "6f3c489f31aede058cbdea95",
     "name": "Kabza De Small, DJ Maphorisa, Robot Boii",
     "normalized_name": "kabza de small dj maphorisa robot boii",
@@ -13121,12 +11843,6 @@
     "id": "6f46fd8b887f4c8c3411a245",
     "name": "Dj Covered",
     "normalized_name": "dj covered",
-    "aliases": []
-  },
-  {
-    "id": "6f50dd6aafacb5338addf67b",
-    "name": "{'mbid': '', '#text': 'Ralf Gum'}",
-    "normalized_name": "mbid text ralf gum",
     "aliases": []
   },
   {
@@ -13193,12 +11909,6 @@
     "id": "6fe15abefed1cff5b367ab3d",
     "name": "Black Box",
     "normalized_name": "black box",
-    "aliases": []
-  },
-  {
-    "id": "6ffd0ae2dd3ebd7559588674",
-    "name": "{'mbid': '45dd2329-b804-49d8-ab75-3f1ce70b3122', '#text': 'Monica'}",
-    "normalized_name": "mbid 45dd2329 b804 49d8 ab75 3f1ce70b3122 text monica",
     "aliases": []
   },
   {
@@ -13298,6 +12008,12 @@
     "aliases": []
   },
   {
+    "id": "711d8107e968e50cc1657033",
+    "name": "Lynda Dawn & Bes Kept",
+    "normalized_name": "lynda dawn and bes kept",
+    "aliases": []
+  },
+  {
     "id": "7129b797de33b9c75930ad05",
     "name": "Tove Lo",
     "normalized_name": "tove lo",
@@ -13322,27 +12038,21 @@
     "aliases": []
   },
   {
+    "id": "71444016d917ca3dcdbc7b91",
+    "name": "Shay Lia & Kaytranada",
+    "normalized_name": "shay lia and kaytranada",
+    "aliases": []
+  },
+  {
     "id": "714e928eb5b4d8800712251a",
     "name": "DJ Boonu",
     "normalized_name": "dj boonu",
     "aliases": []
   },
   {
-    "id": "715d10d9ddc1edbdcadab154",
-    "name": "{'mbid': 'e8414012-4a1c-4ad4-be5e-fc55294e28cc', '#text': 'Lauryn Hill'}",
-    "normalized_name": "mbid e8414012 4a1c 4ad4 be5e fc55294e28cc text lauryn hill",
-    "aliases": []
-  },
-  {
     "id": "715d57f371d4f7796b45db29",
     "name": "slenderbodies",
     "normalized_name": "slenderbodies",
-    "aliases": []
-  },
-  {
-    "id": "7162ba5dcbe59d177f68b80d",
-    "name": "{'mbid': '1f855ee9-8114-48e0-a07b-5e7bdfbfe952', '#text': 'Eugene Wilde'}",
-    "normalized_name": "mbid 1f855ee9 8114 48e0 a07b 5e7bdfbfe952 text eugene wilde",
     "aliases": []
   },
   {
@@ -13454,12 +12164,6 @@
     "aliases": []
   },
   {
-    "id": "7243dc422941bbe7f9347bb5",
-    "name": "{'mbid': '66acfbaf-a28e-49c1-aeff-ef92e4358d90', '#text': 'Muni Long'}",
-    "normalized_name": "mbid 66acfbaf a28e 49c1 aeff ef92e4358d90 text muni long",
-    "aliases": []
-  },
-  {
     "id": "724d910ff4373745e6d875d4",
     "name": "Travis Scott",
     "normalized_name": "travis scott",
@@ -13469,12 +12173,6 @@
     "id": "728c8bcf4759c228a3d83c38",
     "name": "Kweyama Brothers",
     "normalized_name": "kweyama brothers",
-    "aliases": []
-  },
-  {
-    "id": "728f2ec09ab58e3b5f9d3a2e",
-    "name": "{'mbid': 'eed5f159-4858-4464-93c3-fc2da3796446', '#text': 'Betty Wright'}",
-    "normalized_name": "mbid eed5f159 4858 4464 93c3 fc2da3796446 text betty wright",
     "aliases": []
   },
   {
@@ -13700,12 +12398,6 @@
     "aliases": []
   },
   {
-    "id": "74604b38f0e3ec8452b7b695",
-    "name": "{'mbid': '02914430-0618-4aca-b8dd-7e3d49b2b565', '#text': 'Dr Victor & the Rasta Rebels'}",
-    "normalized_name": "mbid 02914430 0618 4aca b8dd 7e3d49b2b565 text dr victor and the rasta rebels",
-    "aliases": []
-  },
-  {
     "id": "7478769e15d6a62b4b420ac3",
     "name": "Bia, Key Glock",
     "normalized_name": "bia key glock",
@@ -13759,18 +12451,6 @@
     "id": "7531cb546c3d2a5e3ff55dc3",
     "name": "P.M Project",
     "normalized_name": "p m project",
-    "aliases": []
-  },
-  {
-    "id": "753568a78b36f5211bd0f167",
-    "name": "{'mbid': '5b2a8faa-ffee-4706-a1a8-58f109bc8ca2', '#text': 'Tems'}",
-    "normalized_name": "mbid 5b2a8faa ffee 4706 a1a8 58f109bc8ca2 text tems",
-    "aliases": []
-  },
-  {
-    "id": "7536c15123b1083ff58fafe4",
-    "name": "{'mbid': '', '#text': 'Lucky Daye & Leon Thomas'}",
-    "normalized_name": "mbid text lucky daye and leon thomas",
     "aliases": []
   },
   {
@@ -13852,12 +12532,6 @@
     "aliases": []
   },
   {
-    "id": "762cc443ffaab2223dda11cb",
-    "name": "{'mbid': 'a9100753-f539-43cf-bcc9-579566fb512e', '#text': 'Simply Red'}",
-    "normalized_name": "mbid a9100753 f539 43cf bcc9 579566fb512e text simply red",
-    "aliases": []
-  },
-  {
     "id": "76301e3043b0554e8057ba6a",
     "name": "Rafael Ribeiro",
     "normalized_name": "rafael ribeiro",
@@ -13924,12 +12598,6 @@
     "aliases": []
   },
   {
-    "id": "76b0c6951500c556c40fdb09",
-    "name": "{'mbid': '0307edfc-437c-4b48-8700-80680e66a228', '#text': 'Whitney Houston'}",
-    "normalized_name": "mbid 0307edfc 437c 4b48 8700 80680e66a228 text whitney houston",
-    "aliases": []
-  },
-  {
     "id": "76d99707e024916e62f0380d",
     "name": "Velvet Funk",
     "normalized_name": "velvet funk",
@@ -13972,12 +12640,6 @@
     "aliases": []
   },
   {
-    "id": "772cc3136f138c56bc5a73da",
-    "name": "{'mbid': '', '#text': 'Joji & GIVĒON'}",
-    "normalized_name": "mbid text joji and giveon",
-    "aliases": []
-  },
-  {
     "id": "772f218b3d0e8d81a12b5eb7",
     "name": "PJ Morton",
     "normalized_name": "pj morton",
@@ -14002,33 +12664,15 @@
     "aliases": []
   },
   {
-    "id": "7748532a7047694b979aeae1",
-    "name": "{'mbid': 'f368568b-1f9f-4d29-99e7-89a2125d0cfe', '#text': 'Tevin Campbell'}",
-    "normalized_name": "mbid f368568b 1f9f 4d29 99e7 89a2125d0cfe text tevin campbell",
-    "aliases": []
-  },
-  {
     "id": "7758dfe53bd38bb5af972bc8",
     "name": "Chrissi",
     "normalized_name": "chrissi",
     "aliases": []
   },
   {
-    "id": "775b8e0d4ada1dfc8600e257",
-    "name": "{'mbid': '', '#text': 'Ty Dolla $ign'}",
-    "normalized_name": "mbid text ty dolla ign",
-    "aliases": []
-  },
-  {
     "id": "775bc201629002e95d1a1b2d",
     "name": "Popcaan",
     "normalized_name": "popcaan",
-    "aliases": []
-  },
-  {
-    "id": "7769c427696ef64c9f13af00",
-    "name": "{'mbid': 'cf905ea4-8e81-40d0-9cf9-7aa2af41fa3e', '#text': 'Xscape'}",
-    "normalized_name": "mbid cf905ea4 8e81 40d0 9cf9 7aa2af41fa3e text xscape",
     "aliases": []
   },
   {
@@ -14119,12 +12763,6 @@
     "id": "7863d62050cf5c0bee654811",
     "name": "Jesse Powell and His Orchestra",
     "normalized_name": "jesse powell and his orchestra",
-    "aliases": []
-  },
-  {
-    "id": "7876b3bcbf17de2f915aee6c",
-    "name": "{'mbid': 'db76c5ca-d555-4f09-b1db-baa1b713d875', '#text': 'Mary J. Blige'}",
-    "normalized_name": "mbid db76c5ca d555 4f09 b1db baa1b713d875 text mary j blige",
     "aliases": []
   },
   {
@@ -14260,12 +12898,6 @@
     "aliases": []
   },
   {
-    "id": "79df55c04a7f8a029b9b18e2",
-    "name": "{'mbid': '', '#text': 'Janet Jackson'}",
-    "normalized_name": "mbid text janet jackson",
-    "aliases": []
-  },
-  {
     "id": "79f8edf22aaf260d4f2d4995",
     "name": "Minke",
     "normalized_name": "minke",
@@ -14328,12 +12960,6 @@
     "aliases": []
   },
   {
-    "id": "7aaae616e4613cc804edf0d5",
-    "name": "{'mbid': '471e21ab-7a14-4190-a9d2-f95197616df4', '#text': 'Matthew Wilder'}",
-    "normalized_name": "mbid 471e21ab 7a14 4190 a9d2 f95197616df4 text matthew wilder",
-    "aliases": []
-  },
-  {
     "id": "7aacc9e3636b06579d0e5e5b",
     "name": "Brent Faiyaz & Tokischa",
     "normalized_name": "brent faiyaz and tokischa",
@@ -14361,12 +12987,6 @@
     "id": "7ae912dc37ad54dc719926d2",
     "name": "Reuben James",
     "normalized_name": "reuben james",
-    "aliases": []
-  },
-  {
-    "id": "7ae94e51b995eeef1dfabbbd",
-    "name": "{'mbid': '', '#text': 'Lynda Dawn & Bes Kept'}",
-    "normalized_name": "mbid text lynda dawn and bes kept",
     "aliases": []
   },
   {
@@ -14448,12 +13068,6 @@
     "aliases": []
   },
   {
-    "id": "7bbc550cbb488932ae42e89c",
-    "name": "{'mbid': '260b6184-8828-48eb-945c-bc4cb6fc34ca', '#text': 'Charli xcx'}",
-    "normalized_name": "mbid 260b6184 8828 48eb 945c bc4cb6fc34ca text charli xcx",
-    "aliases": []
-  },
-  {
     "id": "7bbf23b9cc33392d59d170b6",
     "name": "kwanele_mbhense",
     "normalized_name": "kwanele_mbhense",
@@ -14469,12 +13083,6 @@
     "id": "7bc742b02bb54ec1701ee227",
     "name": "Khamari",
     "normalized_name": "khamari",
-    "aliases": []
-  },
-  {
-    "id": "7bc8253d968bcd8e1c72f66d",
-    "name": "{'mbid': 'f90e8b26-9e52-4669-a5c9-e28529c47894', '#text': 'Snoop Dogg'}",
-    "normalized_name": "mbid f90e8b26 9e52 4669 a5c9 e28529c47894 text snoop dogg",
     "aliases": []
   },
   {
@@ -14514,12 +13122,6 @@
     "aliases": []
   },
   {
-    "id": "7c1ef0221266691a498a1e5f",
-    "name": "{'mbid': '', '#text': 'Madonna & Charli xcx'}",
-    "normalized_name": "mbid text madonna and charli xcx",
-    "aliases": []
-  },
-  {
     "id": "7c20719e0c82c65354f10d2f",
     "name": "AKA, KDDO",
     "normalized_name": "aka kddo",
@@ -14541,12 +13143,6 @@
     "id": "7c4b7a90243f71f8059d5a40",
     "name": "Travis Scott & Kodak Black",
     "normalized_name": "travis scott and kodak black",
-    "aliases": []
-  },
-  {
-    "id": "7c4c8da4945b9ffdcee9452b",
-    "name": "{'mbid': '', '#text': 'Christ Cross'}",
-    "normalized_name": "mbid text christ cross",
     "aliases": []
   },
   {
@@ -14583,12 +13179,6 @@
     "id": "7c8b30c6c9e0c5b702f4c8f1",
     "name": "Terrace Martin",
     "normalized_name": "terrace martin",
-    "aliases": []
-  },
-  {
-    "id": "7c915acba2e18a78333f056d",
-    "name": "{'mbid': '', '#text': 'Janet Jackson & Nelly'}",
-    "normalized_name": "mbid text janet jackson and nelly",
     "aliases": []
   },
   {
@@ -14648,12 +13238,6 @@
     ]
   },
   {
-    "id": "7d1c266d4af6fcef99b5e9b7",
-    "name": "{'mbid': 'a668565b-41b8-44a8-9d5c-8e609dbf69fc', '#text': 'Lil Yachty'}",
-    "normalized_name": "mbid a668565b 41b8 44a8 9d5c 8e609dbf69fc text lil yachty",
-    "aliases": []
-  },
-  {
     "id": "7d26066fc0975be0106e4071",
     "name": "Tanya Blount",
     "normalized_name": "tanya blount",
@@ -14672,12 +13256,6 @@
     "aliases": []
   },
   {
-    "id": "7d35b072c09ef30aac0b9dac",
-    "name": "{'mbid': '68f6268a-2666-4fd6-aba9-47b142dfcd01', '#text': 'Manana'}",
-    "normalized_name": "mbid 68f6268a 2666 4fd6 aba9 47b142dfcd01 text manana",
-    "aliases": []
-  },
-  {
     "id": "7d3b1bee5d6e17b99b3a7e27",
     "name": "King Monada",
     "normalized_name": "king monada",
@@ -14690,21 +13268,9 @@
     "aliases": []
   },
   {
-    "id": "7d7f39dd5ee7d6bf56d71d40",
-    "name": "{'mbid': '', '#text': 'Kalisway & LAYA'}",
-    "normalized_name": "mbid text kalisway and laya",
-    "aliases": []
-  },
-  {
     "id": "7d8864daac17cab76903ddf0",
     "name": "Manqonqo",
     "normalized_name": "manqonqo",
-    "aliases": []
-  },
-  {
-    "id": "7d9d7b7d6d82f85d26ac2c02",
-    "name": "{'mbid': '', '#text': 'Donald Sheffey'}",
-    "normalized_name": "mbid text donald sheffey",
     "aliases": []
   },
   {
@@ -14972,12 +13538,6 @@
     "aliases": []
   },
   {
-    "id": "7fb6fcc810d6ada5310f1ee4",
-    "name": "{'mbid': '', '#text': 'Dreane'}",
-    "normalized_name": "mbid text dreane",
-    "aliases": []
-  },
-  {
     "id": "7fb9ced427060953cfb691af",
     "name": "Chrisette Michele",
     "normalized_name": "chrisette michele",
@@ -15005,12 +13565,6 @@
     "id": "7ff3ccbd30050bbe9c7823c1",
     "name": "Shelley FKA DRAM",
     "normalized_name": "shelley fka dram",
-    "aliases": []
-  },
-  {
-    "id": "7ffc1c4f64659da5d766f142",
-    "name": "{'mbid': '', '#text': 'Bobby Brown'}",
-    "normalized_name": "mbid text bobby brown",
     "aliases": []
   },
   {
@@ -15092,33 +13646,9 @@
     "aliases": []
   },
   {
-    "id": "80a8eb0f544d1c5fc3c72055",
-    "name": "{'mbid': '4d2956d1-a3f7-44bb-9a41-67563e1a0c94', '#text': 'Blondie'}",
-    "normalized_name": "mbid 4d2956d1 a3f7 44bb 9a41 67563e1a0c94 text blondie",
-    "aliases": []
-  },
-  {
-    "id": "80b502105dc33606dc125b19",
-    "name": "{'mbid': '', '#text': 'Jennie'}",
-    "normalized_name": "mbid text jennie",
-    "aliases": []
-  },
-  {
-    "id": "80bf3c1b7db3ba8deb5085bf",
-    "name": "{'mbid': '', '#text': 'Lauryn Hill, 蘿倫希爾'}",
-    "normalized_name": "mbid text lauryn hill 蘿倫希爾",
-    "aliases": []
-  },
-  {
     "id": "80c7528764fdd4465d50e94d",
     "name": "Themba",
     "normalized_name": "themba",
-    "aliases": []
-  },
-  {
-    "id": "80c93c7d412bfdca9bfae426",
-    "name": "{'mbid': '', '#text': 'lordkez & Kwesta'}",
-    "normalized_name": "mbid text lordkez and kwesta",
     "aliases": []
   },
   {
@@ -15236,12 +13766,6 @@
     "aliases": []
   },
   {
-    "id": "82041f0dc718b425325450ee",
-    "name": "{'mbid': 'ef73e6ed-9096-4ddb-9799-b94874d0ce33', '#text': 'Keyshia Cole'}",
-    "normalized_name": "mbid ef73e6ed 9096 4ddb 9799 b94874d0ce33 text keyshia cole",
-    "aliases": []
-  },
-  {
     "id": "82179822fc329aa2a104ea51",
     "name": "Mimikat",
     "normalized_name": "mimikat",
@@ -15314,12 +13838,6 @@
     "aliases": []
   },
   {
-    "id": "82b2736f9c47453d5ef031ec",
-    "name": "{'mbid': '', '#text': 'Davido'}",
-    "normalized_name": "mbid text davido",
-    "aliases": []
-  },
-  {
     "id": "82bc27cc8db5f9db3da2c153",
     "name": "UMI & COLORS",
     "normalized_name": "umi and colors",
@@ -15382,21 +13900,9 @@
     "aliases": []
   },
   {
-    "id": "83121dfb422ef0721aa852e3",
-    "name": "{'mbid': 'ceb3f5b7-9f1a-430f-afbe-976fdcf30482', '#text': 'Jhené Aiko'}",
-    "normalized_name": "mbid ceb3f5b7 9f1a 430f afbe 976fdcf30482 text jhene aiko",
-    "aliases": []
-  },
-  {
     "id": "8314ef7c149c6a59fa7d6d92",
     "name": "Soa mattrix, Mashudu, Happy Jazzman, Emotionz DJ",
     "normalized_name": "soa mattrix mashudu happy jazzman emotionz dj",
-    "aliases": []
-  },
-  {
-    "id": "83185cf02a29941c38a37f77",
-    "name": "{'mbid': '1c0a8be6-017e-4e14-97fe-606d02fded82', '#text': 'Underground Solution'}",
-    "normalized_name": "mbid 1c0a8be6 017e 4e14 97fe 606d02fded82 text underground solution",
     "aliases": []
   },
   {
@@ -15508,12 +14014,6 @@
     "aliases": []
   },
   {
-    "id": "84255e518618698e36cf8dab",
-    "name": "{'mbid': '48e78462-2f0b-4a1a-9fa4-0585e2991e80', '#text': 'Bobby Womack'}",
-    "normalized_name": "mbid 48e78462 2f0b 4a1a 9fa4 0585e2991e80 text bobby womack",
-    "aliases": []
-  },
-  {
     "id": "84449d0bd03ad91a7d07eb3f",
     "name": "Beginner's Guide To The Gym",
     "normalized_name": "beginner s guide to the gym",
@@ -15562,27 +14062,9 @@
     "aliases": []
   },
   {
-    "id": "84947590e26f925e63544824",
-    "name": "{'mbid': '', '#text': 'Brent Faiyaz & Ama'}",
-    "normalized_name": "mbid text brent faiyaz and ama",
-    "aliases": []
-  },
-  {
     "id": "8494c7289a8d1ba689ab73b6",
     "name": "iyla & Benny the Butcher",
     "normalized_name": "iyla and benny the butcher",
-    "aliases": []
-  },
-  {
-    "id": "84970914811c86cda70c6f42",
-    "name": "{'mbid': '', '#text': 'Cautious Clay'}",
-    "normalized_name": "mbid text cautious clay",
-    "aliases": []
-  },
-  {
-    "id": "8497cfc8d4a68b6198b5ff08",
-    "name": "{'mbid': '', '#text': 'Rihanna'}",
-    "normalized_name": "mbid text rihanna",
     "aliases": []
   },
   {
@@ -15688,12 +14170,6 @@
     "aliases": []
   },
   {
-    "id": "856f09c83795f48a981d884e",
-    "name": "{'mbid': 'e5712ceb-c37a-4c49-a11c-ccf4e21852d4', '#text': 'Troye Sivan'}",
-    "normalized_name": "mbid e5712ceb c37a 4c49 a11c ccf4e21852d4 text troye sivan",
-    "aliases": []
-  },
-  {
     "id": "8575742b140ece99beab4873",
     "name": "Years & Years & Jax Jones",
     "normalized_name": "years and years and jax jones",
@@ -15715,12 +14191,6 @@
     "id": "859f023bacf1e0016eb47a77",
     "name": "Snakehips",
     "normalized_name": "snakehips",
-    "aliases": []
-  },
-  {
-    "id": "85c72a56b56005a680e36387",
-    "name": "{'mbid': '', '#text': 'Doso'}",
-    "normalized_name": "mbid text doso",
     "aliases": []
   },
   {
@@ -15760,12 +14230,6 @@
     "aliases": []
   },
   {
-    "id": "8634c8d1c476d9881c1cafb5",
-    "name": "{'mbid': '90bfadac-a238-455d-93d1-9308f97f4522', '#text': 'Koffee Brown'}",
-    "normalized_name": "mbid 90bfadac a238 455d 93d1 9308f97f4522 text koffee brown",
-    "aliases": []
-  },
-  {
     "id": "864af36bd6092826fa2ed768",
     "name": "Lewis Capaldi",
     "normalized_name": "lewis capaldi",
@@ -15781,12 +14245,6 @@
     "id": "8667b280a1078a8c1a0e6383",
     "name": "*NSYNC",
     "normalized_name": "nsync",
-    "aliases": []
-  },
-  {
-    "id": "8668d0f0e65a8b7b6b2c2743",
-    "name": "{'mbid': '', '#text': 'paranoyaboi'}",
-    "normalized_name": "mbid text paranoyaboi",
     "aliases": []
   },
   {
@@ -15844,12 +14302,6 @@
     "aliases": []
   },
   {
-    "id": "86fa9025a631a35c36155637",
-    "name": "{'mbid': '', '#text': 'DJ Fortee'}",
-    "normalized_name": "mbid text dj fortee",
-    "aliases": []
-  },
-  {
     "id": "86fffd2479ff059aa857d59c",
     "name": "Teedra Moses",
     "normalized_name": "teedra moses",
@@ -15886,12 +14338,6 @@
     "aliases": []
   },
   {
-    "id": "8737903f8b2a3232d3281c7b",
-    "name": "{'mbid': '', '#text': 'Charlie Puth & Hikaru Utada'}",
-    "normalized_name": "mbid text charlie puth and hikaru utada",
-    "aliases": []
-  },
-  {
     "id": "87400abd6a22e2f85e38f163",
     "name": "TheEllenShow",
     "normalized_name": "theellenshow",
@@ -15916,12 +14362,6 @@
     "aliases": []
   },
   {
-    "id": "87ce9ea4f8ddc1facad05254",
-    "name": "{'mbid': '', '#text': 'Lekan'}",
-    "normalized_name": "mbid text lekan",
-    "aliases": []
-  },
-  {
     "id": "87d21119a1a24fd0088d85dd",
     "name": "Zonke",
     "normalized_name": "zonke",
@@ -15940,21 +14380,9 @@
     "aliases": []
   },
   {
-    "id": "8832d00093b0c64b78dbf776",
-    "name": "{'mbid': '', '#text': 'Dennis Ferrer'}",
-    "normalized_name": "mbid text dennis ferrer",
-    "aliases": []
-  },
-  {
     "id": "8844f343cf83d63dab44708d",
     "name": "Ella Eyre",
     "normalized_name": "ella eyre",
-    "aliases": []
-  },
-  {
-    "id": "88519ab4371a262999814ac8",
-    "name": "{'mbid': '9b16908a-a78c-45a7-8366-d2a41967f745', '#text': 'Bell Biv DeVoe'}",
-    "normalized_name": "mbid 9b16908a a78c 45a7 8366 d2a41967f745 text bell biv devoe",
     "aliases": []
   },
   {
@@ -16021,12 +14449,6 @@
     "id": "88d6e9c565a20fca9bfe6623",
     "name": "TA Thomas",
     "normalized_name": "ta thomas",
-    "aliases": []
-  },
-  {
-    "id": "89017a9cff389dced2065d1f",
-    "name": "{'mbid': '2f3c4d70-0462-40da-bba3-0aec5772c556', '#text': 'Cardi B'}",
-    "normalized_name": "mbid 2f3c4d70 0462 40da bba3 0aec5772c556 text cardi b",
     "aliases": []
   },
   {
@@ -16138,21 +14560,9 @@
     "aliases": []
   },
   {
-    "id": "89f271620f728fbfb6729fe3",
-    "name": "{'mbid': '', '#text': 'Mario'}",
-    "normalized_name": "mbid text mario",
-    "aliases": []
-  },
-  {
     "id": "89f9475feb33ab186954ebfa",
     "name": "How Nuclear Weapons are Made",
     "normalized_name": "how nuclear weapons are made",
-    "aliases": []
-  },
-  {
-    "id": "8a08c9a074962298daa2659e",
-    "name": "{'mbid': '37a0943e-9638-48fe-9a56-7192d7efbbed', '#text': 'Robin S'}",
-    "normalized_name": "mbid 37a0943e 9638 48fe 9a56 7192d7efbbed text robin s",
     "aliases": []
   },
   {
@@ -16312,12 +14722,6 @@
     "aliases": []
   },
   {
-    "id": "8bb49cedf6db3b8b583e52cc",
-    "name": "{'mbid': '', '#text': 'Monika XYZ'}",
-    "normalized_name": "mbid text monika xyz",
-    "aliases": []
-  },
-  {
     "id": "8bd24396b89c118398846cb6",
     "name": "RAYE, Mabel & Stefflon Don",
     "normalized_name": "raye mabel and stefflon don",
@@ -16366,21 +14770,9 @@
     "aliases": []
   },
   {
-    "id": "8cc28ffb730cd6941e926d17",
-    "name": "{'mbid': '', '#text': 'Dave & Tems'}",
-    "normalized_name": "mbid text dave and tems",
-    "aliases": []
-  },
-  {
     "id": "8cd48f243578ebbf78f26d75",
     "name": "Rehsa",
     "normalized_name": "rehsa",
-    "aliases": []
-  },
-  {
-    "id": "8ce2730126c8ebf43b007351",
-    "name": "{'mbid': 'ffb5f70c-cd10-48a5-92d0-cea440e6fd40', '#text': 'Tamar Braxton'}",
-    "normalized_name": "mbid ffb5f70c cd10 48a5 92d0 cea440e6fd40 text tamar braxton",
     "aliases": []
   },
   {
@@ -16405,12 +14797,6 @@
     "id": "8d22fd098dbc414236a5fa69",
     "name": "Nicki Minaj, The Weeknd",
     "normalized_name": "nicki minaj the weeknd",
-    "aliases": []
-  },
-  {
-    "id": "8d2b1b6670b45a2ce7bf4fb0",
-    "name": "{'mbid': 'ad322b8b-31b2-437d-8fd8-1af13c1d7b91', '#text': 'Givēon'}",
-    "normalized_name": "mbid ad322b8b 31b2 437d 8fd8 1af13c1d7b91 text giveon",
     "aliases": []
   },
   {
@@ -16446,12 +14832,6 @@
     "aliases": [
       "DeJ Loaf"
     ]
-  },
-  {
-    "id": "8da0b74da4663fe792221585",
-    "name": "{'mbid': '', '#text': 'Swedish Hit Makers'}",
-    "normalized_name": "mbid text swedish hit makers",
-    "aliases": []
   },
   {
     "id": "8da6d1013d70f3d947a4fa2b",
@@ -16686,12 +15066,6 @@
     "aliases": []
   },
   {
-    "id": "8fae5bb39c5a8478afe19725",
-    "name": "{'mbid': '', '#text': 'Keith Sweat Featuring Athena Cage'}",
-    "normalized_name": "mbid text keith sweat featuring athena cage",
-    "aliases": []
-  },
-  {
     "id": "8fb22689b9a23bbfb8629b30",
     "name": "modernotaku",
     "normalized_name": "modernotaku",
@@ -16701,18 +15075,6 @@
     "id": "8fbe9533e72ba9730c890c18",
     "name": "Madanon",
     "normalized_name": "madanon",
-    "aliases": []
-  },
-  {
-    "id": "8fda9c38add2c37e1bf17eeb",
-    "name": "{'mbid': '321531fc-db73-4ffa-a959-61a61a2908c1', '#text': 'Erykah Badu'}",
-    "normalized_name": "mbid 321531fc db73 4ffa a959 61a61a2908c1 text erykah badu",
-    "aliases": []
-  },
-  {
-    "id": "8febf9263c2912b0e6da031c",
-    "name": "{'mbid': '05912615-e498-4690-9822-074e4ba8fb4a', '#text': 'spencer.'}",
-    "normalized_name": "mbid 05912615 e498 4690 9822 074e4ba8fb4a text spencer",
     "aliases": []
   },
   {
@@ -16914,12 +15276,6 @@
     "aliases": []
   },
   {
-    "id": "91a873bfa04357eea060bc02",
-    "name": "{'mbid': 'f5bad1a5-53cf-40c1-b03b-c5cf05c65768', '#text': 'Eric Benét'}",
-    "normalized_name": "mbid f5bad1a5 53cf 40c1 b03b c5cf05c65768 text eric benet",
-    "aliases": []
-  },
-  {
     "id": "91bd39ddb59e3741bd25fe03",
     "name": "Philip Bloom",
     "normalized_name": "philip bloom",
@@ -16971,12 +15327,6 @@
     "id": "92151c8ef2efff05f8f7c9cb",
     "name": "Jungle & Bas",
     "normalized_name": "jungle and bas",
-    "aliases": []
-  },
-  {
-    "id": "92269572a6329170699beab8",
-    "name": "{'mbid': '', '#text': 'DON’T LOOK UP'}",
-    "normalized_name": "mbid text don t look up",
     "aliases": []
   },
   {
@@ -17346,12 +15696,6 @@
     "aliases": []
   },
   {
-    "id": "9501cb69cbd0647f759fd3ae",
-    "name": "{'mbid': '', '#text': 'Charlie Puth, Michael McDonald & Kenny Loggins'}",
-    "normalized_name": "mbid text charlie puth michael mcdonald and kenny loggins",
-    "aliases": []
-  },
-  {
     "id": "9503afc1c6e7a5ee1409ff08",
     "name": "Serena Isioma",
     "normalized_name": "serena isioma",
@@ -17364,21 +15708,9 @@
     "aliases": []
   },
   {
-    "id": "95115805418d68dc5eec32e2",
-    "name": "{'mbid': '7a305f29-539a-456e-93b7-61b0e2ba3ef2', '#text': 'Queen Latifah'}",
-    "normalized_name": "mbid 7a305f29 539a 456e 93b7 61b0e2ba3ef2 text queen latifah",
-    "aliases": []
-  },
-  {
     "id": "951210cefa412a1575c07a45",
     "name": "Babyface",
     "normalized_name": "babyface",
-    "aliases": []
-  },
-  {
-    "id": "9512d40af9d9734d8a1d91a8",
-    "name": "{'mbid': '2f9ecbed-27be-40e6-abca-6de49d50299e', '#text': 'Aretha Franklin'}",
-    "normalized_name": "mbid 2f9ecbed 27be 40e6 abca 6de49d50299e text aretha franklin",
     "aliases": []
   },
   {
@@ -17454,12 +15786,6 @@
     "aliases": []
   },
   {
-    "id": "95aa4070eabbef01ad291fbe",
-    "name": "{'mbid': '2282c539-05a2-477c-82b7-fe40798d37f3', '#text': '6ix9ine'}",
-    "normalized_name": "mbid 2282c539 05a2 477c 82b7 fe40798d37f3 text 6ix9ine",
-    "aliases": []
-  },
-  {
     "id": "95ce967d3c4e365029c72276",
     "name": "Novo Amor",
     "normalized_name": "novo amor",
@@ -17505,12 +15831,6 @@
     "id": "9628d54bbf210cf7a00d0782",
     "name": "Christina Milian",
     "normalized_name": "christina milian",
-    "aliases": []
-  },
-  {
-    "id": "96682aa6b958d51fe5151e94",
-    "name": "{'mbid': 'dacc2d64-7e59-42a8-87a9-10c53919aff2', '#text': 'Clean Bandit'}",
-    "normalized_name": "mbid dacc2d64 7e59 42a8 87a9 10c53919aff2 text clean bandit",
     "aliases": []
   },
   {
@@ -17577,12 +15897,6 @@
     "id": "9724e289b9c89cc6a5645214",
     "name": "DLJ",
     "normalized_name": "dlj",
-    "aliases": []
-  },
-  {
-    "id": "972b5b337543b738acc6fec4",
-    "name": "{'mbid': '25e0497c-faa4-4765-b232-baa20e5e35a7', '#text': 'Sisqó'}",
-    "normalized_name": "mbid 25e0497c faa4 4765 b232 baa20e5e35a7 text sisqo",
     "aliases": []
   },
   {
@@ -17729,18 +16043,6 @@
     "id": "98369f2f5f589568a9a09430",
     "name": "lordkez",
     "normalized_name": "lordkez",
-    "aliases": []
-  },
-  {
-    "id": "985398422aa65728bd619793",
-    "name": "{'mbid': 'f23ef341-33bd-47c1-b83c-846a78581f05', '#text': 'PARTYNEXTDOOR'}",
-    "normalized_name": "mbid f23ef341 33bd 47c1 b83c 846a78581f05 text partynextdoor",
-    "aliases": []
-  },
-  {
-    "id": "98605e1f3e2f001730066f3e",
-    "name": "{'mbid': '', '#text': \"Lauryn Hill, 蘿倫希爾, D'Angelo\"}",
-    "normalized_name": "mbid text lauryn hill 蘿倫希爾 d angelo",
     "aliases": []
   },
   {
@@ -17930,33 +16232,15 @@
     "aliases": []
   },
   {
-    "id": "9a2187e6e74f12d4ddc52bb2",
-    "name": "{'mbid': '28737730-ec70-4da5-89c5-77ac13c5c34d', '#text': 'Khalid'}",
-    "normalized_name": "mbid 28737730 ec70 4da5 89c5 77ac13c5c34d text khalid",
-    "aliases": []
-  },
-  {
     "id": "9a27696dd1c4d1281c7b23c1",
     "name": "Nonso Amadi",
     "normalized_name": "nonso amadi",
     "aliases": []
   },
   {
-    "id": "9a2972301d74f1fac20b9d1f",
-    "name": "{'mbid': 'e3ced5f8-085e-45a9-aa63-e67bd5d08cfa', '#text': 'Monifah'}",
-    "normalized_name": "mbid e3ced5f8 085e 45a9 aa63 e67bd5d08cfa text monifah",
-    "aliases": []
-  },
-  {
     "id": "9a2c675f373f82febe52e756",
     "name": "Bryan Ferry",
     "normalized_name": "bryan ferry",
-    "aliases": []
-  },
-  {
-    "id": "9a33ca3013dabfabc0cfb22e",
-    "name": "{'mbid': '', '#text': 'Baby Rose & Leon Thomas'}",
-    "normalized_name": "mbid text baby rose and leon thomas",
     "aliases": []
   },
   {
@@ -18022,12 +16306,6 @@
     "aliases": []
   },
   {
-    "id": "9aaf7e88a8845ba3a3c6b9e6",
-    "name": "{'mbid': '90e06458-7717-4618-b6b2-7942ac23ab05', '#text': 'bLAck pARty'}",
-    "normalized_name": "mbid 90e06458 7717 4618 b6b2 7942ac23ab05 text black party",
-    "aliases": []
-  },
-  {
     "id": "9ab2a18f748e6961910e8797",
     "name": "Plies",
     "normalized_name": "plies",
@@ -18070,12 +16348,6 @@
     "aliases": []
   },
   {
-    "id": "9af56ab0c0e04444a43225f6",
-    "name": "{'mbid': '6f92929a-6381-48ac-b348-83b43b9cf646', '#text': 'Jazmine Sullivan'}",
-    "normalized_name": "mbid 6f92929a 6381 48ac b348 83b43b9cf646 text jazmine sullivan",
-    "aliases": []
-  },
-  {
     "id": "9afc6c4fc5c52455d26ee538",
     "name": "Kelela, Flexulant, BAMBII, Rahrah Gabor, and Brazy",
     "normalized_name": "kelela flexulant bambii rahrah gabor and brazy",
@@ -18100,12 +16372,6 @@
     "aliases": []
   },
   {
-    "id": "9b2ac55b307e1754630ac5e1",
-    "name": "{'mbid': '944ac30d-4bb0-4321-9267-4c484385281b', '#text': 'Sabrina Claudio'}",
-    "normalized_name": "mbid 944ac30d 4bb0 4321 9267 4c484385281b text sabrina claudio",
-    "aliases": []
-  },
-  {
     "id": "9b2b117b6d48a820900c8ec6",
     "name": "oatsfield",
     "normalized_name": "oatsfield",
@@ -18115,12 +16381,6 @@
     "id": "9b4c8f37a8df68586029c858",
     "name": "Chris Brown, Tank",
     "normalized_name": "chris brown tank",
-    "aliases": []
-  },
-  {
-    "id": "9b4d4b73060ed93476137c93",
-    "name": "{'mbid': 'abaa7001-0d80-4e58-be5d-d2d246fd9d87', '#text': 'Majid Jordan'}",
-    "normalized_name": "mbid abaa7001 0d80 4e58 be5d d2d246fd9d87 text majid jordan",
     "aliases": []
   },
   {
@@ -18139,12 +16399,6 @@
     "id": "9b682fe1c471379c0f5a0d56",
     "name": "Jungle, Mood Talk, Jamie Lloyd Taylor, Josh Lloyd Watson, Larry H Jordan, Lydia Kitto, Thomas McFarland",
     "normalized_name": "jungle mood talk jamie lloyd taylor josh lloyd watson larry h jordan lydia kitto thomas mcfarland",
-    "aliases": []
-  },
-  {
-    "id": "9b68ecc728b647c84826052c",
-    "name": "{'mbid': '', '#text': 'Young Stunna'}",
-    "normalized_name": "mbid text young stunna",
     "aliases": []
   },
   {
@@ -18256,12 +16510,6 @@
     "aliases": []
   },
   {
-    "id": "9cb3085c060049cbcfd6ae93",
-    "name": "{'mbid': '01e60eba-52df-4694-8f09-39f43abe54e9', '#text': 'Brandy'}",
-    "normalized_name": "mbid 01e60eba 52df 4694 8f09 39f43abe54e9 text brandy",
-    "aliases": []
-  },
-  {
     "id": "9cb4cba2ee114da1953dcc2a",
     "name": "HUSH FORTE",
     "normalized_name": "hush forte",
@@ -18280,12 +16528,6 @@
     "aliases": []
   },
   {
-    "id": "9cd74ea5b54047b23f3eaa1d",
-    "name": "{'mbid': '', '#text': 'Shay Lia & Kaytranada'}",
-    "normalized_name": "mbid text shay lia and kaytranada",
-    "aliases": []
-  },
-  {
     "id": "9ce1fcb9209c90099284ccbf",
     "name": "Felo Le Tee, Scotts Maphuma & Thabza Tee",
     "normalized_name": "felo le tee scotts maphuma and thabza tee",
@@ -18295,12 +16537,6 @@
     "id": "9ce3ad0a3c07111d74d53be1",
     "name": "spencer.",
     "normalized_name": "spencer",
-    "aliases": []
-  },
-  {
-    "id": "9cf24f4c005dda1ac01c94e7",
-    "name": "{'mbid': 'fb7272ba-f130-4f0a-934d-6eeea4c18c9a', '#text': 'Al Green'}",
-    "normalized_name": "mbid fb7272ba f130 4f0a 934d 6eeea4c18c9a text al green",
     "aliases": []
   },
   {
@@ -18370,27 +16606,9 @@
     "aliases": []
   },
   {
-    "id": "9d89ef5a13525bfb8dda7339",
-    "name": "{'mbid': 'd0c7656d-8169-4f77-9dbe-b8f24e40105d', '#text': 'Kali Uchis'}",
-    "normalized_name": "mbid d0c7656d 8169 4f77 9dbe b8f24e40105d text kali uchis",
-    "aliases": []
-  },
-  {
-    "id": "9db3cc8879751ab43f79a959",
-    "name": "{'mbid': '59244c81-10e6-41b4-a1f0-1c403565c354', '#text': 'Lou Val'}",
-    "normalized_name": "mbid 59244c81 10e6 41b4 a1f0 1c403565c354 text lou val",
-    "aliases": []
-  },
-  {
     "id": "9dce79353bb7e0bcd478dddc",
     "name": "Jon Secada",
     "normalized_name": "jon secada",
-    "aliases": []
-  },
-  {
-    "id": "9de62907acdf8f112fab89ea",
-    "name": "{'mbid': '16bfd8cf-bba9-4db4-95f9-2476cf198692', '#text': 'Callio'}",
-    "normalized_name": "mbid 16bfd8cf bba9 4db4 95f9 2476cf198692 text callio",
     "aliases": []
   },
   {
@@ -18658,12 +16876,6 @@
     "aliases": []
   },
   {
-    "id": "a0ef57725369b4b350771778",
-    "name": "{'mbid': '15e0d608-0869-429b-898d-3d8db3ecedd5', '#text': 'Olivia Dean'}",
-    "normalized_name": "mbid 15e0d608 0869 429b 898d 3d8db3ecedd5 text olivia dean",
-    "aliases": []
-  },
-  {
     "id": "a0fc25f7912f9b9f3a107691",
     "name": "Bueno",
     "normalized_name": "bueno",
@@ -18724,12 +16936,6 @@
     "aliases": []
   },
   {
-    "id": "a1673025db7486ac55b85b98",
-    "name": "{'mbid': '7dc35846-c93a-4261-b665-ae750e3afdfb', '#text': 'Johnny Gill'}",
-    "normalized_name": "mbid 7dc35846 c93a 4261 b665 ae750e3afdfb text johnny gill",
-    "aliases": []
-  },
-  {
     "id": "a1721e63d6764cdbdaaa26aa",
     "name": "Olivia Newton-John",
     "normalized_name": "olivia newton john",
@@ -18739,12 +16945,6 @@
     "id": "a18c907decaf42e230013981",
     "name": "Bob Carlisle",
     "normalized_name": "bob carlisle",
-    "aliases": []
-  },
-  {
-    "id": "a18d5ccf6485c2caee874b4d",
-    "name": "{'mbid': '', '#text': 'Beyoncé, Drake'}",
-    "normalized_name": "mbid text beyonce drake",
     "aliases": []
   },
   {
@@ -18868,12 +17068,6 @@
     "aliases": []
   },
   {
-    "id": "a2c0cb6ceb15b081d9587e08",
-    "name": "{'mbid': '', '#text': 'KWiiSH SA'}",
-    "normalized_name": "mbid text kwiish sa",
-    "aliases": []
-  },
-  {
     "id": "a2ddf176a5008f834398a80b",
     "name": "DJ Mshega",
     "normalized_name": "dj mshega",
@@ -18918,12 +17112,6 @@
     "aliases": []
   },
   {
-    "id": "a31b3fe4f718e12e01ebc6c8",
-    "name": "{'mbid': 'fffc6a35-ae65-48be-bcc0-9d604e05665e', '#text': 'SWV'}",
-    "normalized_name": "mbid fffc6a35 ae65 48be bcc0 9d604e05665e text swv",
-    "aliases": []
-  },
-  {
     "id": "a335c2b530751c5f7b529749",
     "name": "Uncle Waffles",
     "normalized_name": "uncle waffles",
@@ -18945,12 +17133,6 @@
     "id": "a3580b21e0ecbda361936ed7",
     "name": "Oh, the Joy.",
     "normalized_name": "oh the joy",
-    "aliases": []
-  },
-  {
-    "id": "a35a229b5d514780bc40f42b",
-    "name": "{'mbid': 'cfe625e1-a5ce-4c48-a4a4-d781c44fb64f', '#text': 'Joe Goddard'}",
-    "normalized_name": "mbid cfe625e1 a5ce 4c48 a4a4 d781c44fb64f text joe goddard",
     "aliases": []
   },
   {
@@ -19056,12 +17238,6 @@
     "aliases": []
   },
   {
-    "id": "a41cdd7d5fc52496c945a264",
-    "name": "{'mbid': '4fac8f5d-0e44-4efa-b518-7f8a8f02c162', '#text': 'Yolanda Adams'}",
-    "normalized_name": "mbid 4fac8f5d 0e44 4efa b518 7f8a8f02c162 text yolanda adams",
-    "aliases": []
-  },
-  {
     "id": "a41e57c5367aa8ba8e059ed0",
     "name": "FYO PIX",
     "normalized_name": "fyo pix",
@@ -19080,12 +17256,6 @@
     "aliases": []
   },
   {
-    "id": "a4288e3d3c1fedae36f6ed0b",
-    "name": "{'mbid': 'ee74db56-c264-4c23-9504-29e2d8078f36', '#text': 'keshi'}",
-    "normalized_name": "mbid ee74db56 c264 4c23 9504 29e2d8078f36 text keshi",
-    "aliases": []
-  },
-  {
     "id": "a435c459720105532fc79330",
     "name": "M83",
     "normalized_name": "m83",
@@ -19095,12 +17265,6 @@
     "id": "a4374509c08f4af51feae2c4",
     "name": "Lisa Loeb",
     "normalized_name": "lisa loeb",
-    "aliases": []
-  },
-  {
-    "id": "a45c8140adbf1f345d44a37a",
-    "name": "{'mbid': '', '#text': 'GloRilla & Latto'}",
-    "normalized_name": "mbid text glorilla and latto",
     "aliases": []
   },
   {
@@ -19185,12 +17349,6 @@
     "id": "a4d3840dbd04c502297000c3",
     "name": "Lumidee",
     "normalized_name": "lumidee",
-    "aliases": []
-  },
-  {
-    "id": "a4e4121b280b7e8d7c754cfa",
-    "name": "{'mbid': '', '#text': 'Paul Johnson'}",
-    "normalized_name": "mbid text paul johnson",
     "aliases": []
   },
   {
@@ -19428,12 +17586,6 @@
     "aliases": []
   },
   {
-    "id": "a7f75c73cf545de30a6c309d",
-    "name": "{'mbid': '285e1285-aecc-478f-a8da-0c8cf69e1217', '#text': 'Miguel'}",
-    "normalized_name": "mbid 285e1285 aecc 478f a8da 0c8cf69e1217 text miguel",
-    "aliases": []
-  },
-  {
     "id": "a7faa6c9bd73a3b4180cac2a",
     "name": "Naomi Sharon",
     "normalized_name": "naomi sharon",
@@ -19548,12 +17700,6 @@
     "aliases": []
   },
   {
-    "id": "a9076ce6e47e1e72f0fae647",
-    "name": "{'mbid': '', '#text': 'Jenevieve'}",
-    "normalized_name": "mbid text jenevieve",
-    "aliases": []
-  },
-  {
     "id": "a91dd7012bebec57d7446bc6",
     "name": "One Direction",
     "normalized_name": "one direction",
@@ -19641,12 +17787,6 @@
     "id": "a99c7a4e9ba62842eca3651a",
     "name": "Jazmine Sullivan",
     "normalized_name": "jazmine sullivan",
-    "aliases": []
-  },
-  {
-    "id": "a99ed673ef66d91704e27801",
-    "name": "{'mbid': '', '#text': 'DJ STOKIE'}",
-    "normalized_name": "mbid text dj stokie",
     "aliases": []
   },
   {
@@ -19740,12 +17880,6 @@
     "aliases": []
   },
   {
-    "id": "aa39739265a9591069710db8",
-    "name": "{'mbid': '', '#text': 'Teyana Taylor & Wale'}",
-    "normalized_name": "mbid text teyana taylor and wale",
-    "aliases": []
-  },
-  {
     "id": "aa4af85783e8f27554382147",
     "name": "DBN Gogo, Blaqnick & MasterBlaq, Mpura, Ama Avenger, M.J",
     "normalized_name": "dbn gogo blaqnick and masterblaq mpura ama avenger m j",
@@ -19797,18 +17931,6 @@
     "id": "ab0014373e1e7137a3a72615",
     "name": "Barbra Streisand",
     "normalized_name": "barbra streisand",
-    "aliases": []
-  },
-  {
-    "id": "ab08cfa08cb0415e90f10cad",
-    "name": "{'mbid': 'e1235abf-1fab-40a5-833a-057968d90e48', '#text': 'Regina Belle'}",
-    "normalized_name": "mbid e1235abf 1fab 40a5 833a 057968d90e48 text regina belle",
-    "aliases": []
-  },
-  {
-    "id": "ab2068520e708bb8691f7f15",
-    "name": "{'mbid': '', '#text': 'Tyler ICU & Leemckrazy'}",
-    "normalized_name": "mbid text tyler icu and leemckrazy",
     "aliases": []
   },
   {
@@ -20162,12 +18284,6 @@
     "aliases": []
   },
   {
-    "id": "ae2bc1fe87ab84019920a83f",
-    "name": "{'mbid': '', '#text': 'Juls'}",
-    "normalized_name": "mbid text juls",
-    "aliases": []
-  },
-  {
     "id": "ae50175eba60eee96af0718b",
     "name": "DJ Khaled feat. Rihanna & Bryson Tiller [TakTaraneh.Com]",
     "normalized_name": "dj khaled feat rihanna and bryson tiller taktaraneh com",
@@ -20183,12 +18299,6 @@
     "id": "ae597b8975dbed9874e3f9f2",
     "name": "Hanson",
     "normalized_name": "hanson",
-    "aliases": []
-  },
-  {
-    "id": "ae5f16db8ec02d9447b28932",
-    "name": "{'mbid': '', '#text': 'Magnus Ferrell'}",
-    "normalized_name": "mbid text magnus ferrell",
     "aliases": []
   },
   {
@@ -20270,12 +18380,6 @@
     "aliases": []
   },
   {
-    "id": "af19e87a6450e81185574a19",
-    "name": "{'mbid': 'ce1d406a-5396-4be2-889f-370f3642a17f', '#text': 'TK'}",
-    "normalized_name": "mbid ce1d406a 5396 4be2 889f 370f3642a17f text tk",
-    "aliases": []
-  },
-  {
     "id": "af1ccafbb71cafd9c1f036bf",
     "name": "Melo",
     "normalized_name": "melo",
@@ -20297,12 +18401,6 @@
     "id": "af5e9d214fd377b1218ac730",
     "name": "Maze Featuring Frankie Beverly",
     "normalized_name": "maze featuring frankie beverly",
-    "aliases": []
-  },
-  {
-    "id": "af77dfd2f1306f255c0185dc",
-    "name": "{'mbid': '565eef0d-e708-42e8-9f45-cd11849e233a', '#text': 'DJ Mujava'}",
-    "normalized_name": "mbid 565eef0d e708 42e8 9f45 cd11849e233a text dj mujava",
     "aliases": []
   },
   {
@@ -20339,12 +18437,6 @@
     "id": "aff5b78cec2be658af97dfea",
     "name": "Missy Elliott",
     "normalized_name": "missy elliott",
-    "aliases": []
-  },
-  {
-    "id": "b017bc7a9925fff8cafa4019",
-    "name": "{'mbid': '596ffa74-3d08-44ef-b113-765d43d12738', '#text': 'Justin Timberlake'}",
-    "normalized_name": "mbid 596ffa74 3d08 44ef b113 765d43d12738 text justin timberlake",
     "aliases": []
   },
   {
@@ -20414,18 +18506,6 @@
     "aliases": []
   },
   {
-    "id": "b083f7d6174d9bc539c769ca",
-    "name": "{'mbid': '7eb1ce54-a355-41f9-8d68-e018b096d427', '#text': 'Harry Styles'}",
-    "normalized_name": "mbid 7eb1ce54 a355 41f9 8d68 e018b096d427 text harry styles",
-    "aliases": []
-  },
-  {
-    "id": "b087b250a0435cbc28141507",
-    "name": "{'mbid': '', '#text': 'lordkez'}",
-    "normalized_name": "mbid text lordkez",
-    "aliases": []
-  },
-  {
     "id": "b08953f090b7a8097646267a",
     "name": "Charli xcx",
     "normalized_name": "charli xcx",
@@ -20468,12 +18548,6 @@
     "aliases": []
   },
   {
-    "id": "b0ec63cd6d48789a7907e867",
-    "name": "{'mbid': '', '#text': 'Tia Ray'}",
-    "normalized_name": "mbid text tia ray",
-    "aliases": []
-  },
-  {
     "id": "b0fb3416034beeaf35ea2bc2",
     "name": "DJ Ngwazi",
     "normalized_name": "dj ngwazi",
@@ -20510,12 +18584,6 @@
     "aliases": []
   },
   {
-    "id": "b1531747ca77535076bcc4a8",
-    "name": "{'mbid': '', '#text': 'Josh Levi'}",
-    "normalized_name": "mbid text josh levi",
-    "aliases": []
-  },
-  {
     "id": "b154081c60ff03343d9f833d",
     "name": "Thee Sacred Souls",
     "normalized_name": "thee sacred souls",
@@ -20525,12 +18593,6 @@
     "id": "b15f00fe4645ca59a162ba7c",
     "name": "Peter Gabriel",
     "normalized_name": "peter gabriel",
-    "aliases": []
-  },
-  {
-    "id": "b1772f43197d2344c9f2e1f8",
-    "name": "{'mbid': '869df960-03ff-4663-907c-ec3a9a5f32cb', '#text': 'Karri'}",
-    "normalized_name": "mbid 869df960 03ff 4663 907c ec3a9a5f32cb text karri",
     "aliases": []
   },
   {
@@ -20600,12 +18662,6 @@
     "aliases": []
   },
   {
-    "id": "b22d9bd3f7ec66ab2a90fed5",
-    "name": "{'mbid': '', '#text': 'Exotic'}",
-    "normalized_name": "mbid text exotic",
-    "aliases": []
-  },
-  {
     "id": "b233e7520ef7767a7569a9c4",
     "name": "Keri Hilson",
     "normalized_name": "keri hilson",
@@ -20615,12 +18671,6 @@
     "id": "b23b083c7195f3cb4aed706f",
     "name": "Lorayne",
     "normalized_name": "lorayne",
-    "aliases": []
-  },
-  {
-    "id": "b23e2c9bee396c9efbdf1ee7",
-    "name": "{'mbid': 'c7eb03c1-f8cb-4815-afc8-46df3b253129', '#text': 'Teyana Taylor'}",
-    "normalized_name": "mbid c7eb03c1 f8cb 4815 afc8 46df3b253129 text teyana taylor",
     "aliases": []
   },
   {
@@ -20664,12 +18714,6 @@
     ]
   },
   {
-    "id": "b2b9105dd75c8531891e086d",
-    "name": "{'mbid': '45425c84-9092-4e2c-b732-e1d0280b580a', '#text': 'Tyla'}",
-    "normalized_name": "mbid 45425c84 9092 4e2c b732 e1d0280b580a text tyla",
-    "aliases": []
-  },
-  {
     "id": "b2bb1a1f0e3cc3bdf04966a0",
     "name": "Stephen Sanchez",
     "normalized_name": "stephen sanchez",
@@ -20706,12 +18750,6 @@
     "aliases": []
   },
   {
-    "id": "b2eea6a8766e3f427f5e01a1",
-    "name": "{'mbid': '33ecb3d1-9ece-4462-b231-ce6e7a82dd50', '#text': 'Keith Sweat'}",
-    "normalized_name": "mbid 33ecb3d1 9ece 4462 b231 ce6e7a82dd50 text keith sweat",
-    "aliases": []
-  },
-  {
     "id": "b2f616a33732aa425b9c6698",
     "name": "Jacquees, Summer Walker & 6LACK",
     "normalized_name": "jacquees summer walker and 6lack",
@@ -20745,12 +18783,6 @@
     "id": "b34a5c7640108ff9dc8564fd",
     "name": "Nipsey Hussle",
     "normalized_name": "nipsey hussle",
-    "aliases": []
-  },
-  {
-    "id": "b3655046eb12fd25812131e2",
-    "name": "{'mbid': 'e520459c-dff4-491d-a6e4-c97be35e0044', '#text': 'Frank Ocean'}",
-    "normalized_name": "mbid e520459c dff4 491d a6e4 c97be35e0044 text frank ocean",
     "aliases": []
   },
   {
@@ -21008,33 +19040,9 @@
     "aliases": []
   },
   {
-    "id": "b5d2a883f662f64cb0cf2ec8",
-    "name": "{'mbid': 'e34e41f2-f480-45d3-8190-a3ce5ab34fab', '#text': 'Wale'}",
-    "normalized_name": "mbid e34e41f2 f480 45d3 8190 a3ce5ab34fab text wale",
-    "aliases": []
-  },
-  {
-    "id": "b5d91712e219544ef5ba7ea0",
-    "name": "{'mbid': '51100e4c-c2c7-4ee5-b281-0363910ea8da', '#text': 'Blaque'}",
-    "normalized_name": "mbid 51100e4c c2c7 4ee5 b281 0363910ea8da text blaque",
-    "aliases": []
-  },
-  {
-    "id": "b5ece98867c47bf4f449a3ed",
-    "name": "{'mbid': '', '#text': 'Versus Deez'}",
-    "normalized_name": "mbid text versus deez",
-    "aliases": []
-  },
-  {
     "id": "b605bda490c95cdab2669468",
     "name": "Chris Brown, Nicki Minaj",
     "normalized_name": "chris brown nicki minaj",
-    "aliases": []
-  },
-  {
-    "id": "b6065fa1e4b79efc02006b38",
-    "name": "{'mbid': '3f6ae36d-ffdb-40cf-98e6-8023cb1c41c9', '#text': 'Donny Hathaway'}",
-    "normalized_name": "mbid 3f6ae36d ffdb 40cf 98e6 8023cb1c41c9 text donny hathaway",
     "aliases": []
   },
   {
@@ -21047,12 +19055,6 @@
     "id": "b60a21db929f6f88f320b9b9",
     "name": "The Weeknd & Ariana Grande",
     "normalized_name": "the weeknd and ariana grande",
-    "aliases": []
-  },
-  {
-    "id": "b60b50450e064a392f2d2c66",
-    "name": "{'mbid': '17d218e4-3c75-45af-88f9-d47ed2f75e39', '#text': 'Santana'}",
-    "normalized_name": "mbid 17d218e4 3c75 45af 88f9 d47ed2f75e39 text santana",
     "aliases": []
   },
   {
@@ -21362,12 +19364,6 @@
     "aliases": []
   },
   {
-    "id": "b88be6a2fe763aae39c9c124",
-    "name": "{'mbid': '', '#text': 'Stephanie Mills'}",
-    "normalized_name": "mbid text stephanie mills",
-    "aliases": []
-  },
-  {
     "id": "b8a9161aba383db3a58258b6",
     "name": "Saint Levant",
     "normalized_name": "saint levant",
@@ -21454,12 +19450,6 @@
     "aliases": []
   },
   {
-    "id": "b9ae660ec3b70f979661a729",
-    "name": "{'mbid': 'e03cf5b6-d2ec-4465-adee-226b518bcfcd', '#text': 'Jay Sean'}",
-    "normalized_name": "mbid e03cf5b6 d2ec 4465 adee 226b518bcfcd text jay sean",
-    "aliases": []
-  },
-  {
     "id": "ba02fb22b5edb3f7a79c1085",
     "name": "Dj Jazzy D The GrooveMaster, GrooveMaster Band",
     "normalized_name": "dj jazzy d the groovemaster groovemaster band",
@@ -21510,21 +19500,9 @@
     "aliases": []
   },
   {
-    "id": "ba8ac7b9ff6b9003466c4ed4",
-    "name": "{'mbid': '9ec35d1f-d1cf-40b5-8931-a80915cf560a', '#text': 'Laura White'}",
-    "normalized_name": "mbid 9ec35d1f d1cf 40b5 8931 a80915cf560a text laura white",
-    "aliases": []
-  },
-  {
     "id": "ba97b502df71bcec325f90a0",
     "name": "Ceeka RSA",
     "normalized_name": "ceeka rsa",
-    "aliases": []
-  },
-  {
-    "id": "ba9800d2cd7b13f8dd7a092d",
-    "name": "{'mbid': '', '#text': 'Michael Jackson & Janet Jackson'}",
-    "normalized_name": "mbid text michael jackson and janet jackson",
     "aliases": []
   },
   {
@@ -21573,12 +19551,6 @@
     "id": "bada27b91ea15fc606c903be",
     "name": "Tee Grizzley, Chris Brown, Mariah the Scientist, Chris Brown and Mariah the Scientist",
     "normalized_name": "tee grizzley chris brown mariah the scientist chris brown and mariah the scientist",
-    "aliases": []
-  },
-  {
-    "id": "bae89596919e03d2b970dd96",
-    "name": "{'mbid': '', '#text': 'Charlie Puth & Kenny G'}",
-    "normalized_name": "mbid text charlie puth and kenny g",
     "aliases": []
   },
   {
@@ -21633,12 +19605,6 @@
     "id": "bb4325196d57f62020f903e1",
     "name": "Kwaito",
     "normalized_name": "kwaito",
-    "aliases": []
-  },
-  {
-    "id": "bb5614e46df455df8e517a15",
-    "name": "{'mbid': '', '#text': 'C-Blak'}",
-    "normalized_name": "mbid text c blak",
     "aliases": []
   },
   {
@@ -21974,12 +19940,6 @@
     "aliases": []
   },
   {
-    "id": "beae47ef089983c101173bc7",
-    "name": "{'mbid': '34e6869f-c666-4999-b645-113f74a6e5d9', '#text': 'Kenny Lattimore'}",
-    "normalized_name": "mbid 34e6869f c666 4999 b645 113f74a6e5d9 text kenny lattimore",
-    "aliases": []
-  },
-  {
     "id": "bee64bcc190876e2b350d85b",
     "name": "Gerald Levert, Eddie Levert",
     "normalized_name": "gerald levert eddie levert",
@@ -21989,12 +19949,6 @@
     "id": "beed12f846a9207533f6691a",
     "name": "Swedish House Mafia & The Weeknd",
     "normalized_name": "swedish house mafia and the weeknd",
-    "aliases": []
-  },
-  {
-    "id": "bf01b8a1a2e3b80b2b05664c",
-    "name": "{'mbid': '16591c16-b498-4f90-96ef-bd8e3fcc29d5', '#text': 'Jenevieve'}",
-    "normalized_name": "mbid 16591c16 b498 4f90 96ef bd8e3fcc29d5 text jenevieve",
     "aliases": []
   },
   {
@@ -22024,21 +19978,9 @@
     "aliases": []
   },
   {
-    "id": "bf5f520c3716acb8df0d11cf",
-    "name": "{'mbid': '', '#text': 'Ebony Riley & Skilla Baby'}",
-    "normalized_name": "mbid text ebony riley and skilla baby",
-    "aliases": []
-  },
-  {
     "id": "bf86270f2e9f2cf79d85535d",
     "name": "Azana",
     "normalized_name": "azana",
-    "aliases": []
-  },
-  {
-    "id": "bf8dd7aea24eb249d51b0062",
-    "name": "{'mbid': '9132d515-dc0e-4494-85ae-20f06eed14f9', '#text': '112'}",
-    "normalized_name": "mbid 9132d515 dc0e 4494 85ae 20f06eed14f9 text 112",
     "aliases": []
   },
   {
@@ -22078,12 +20020,6 @@
     "aliases": []
   },
   {
-    "id": "c00e390ed7264faf5e2ec30f",
-    "name": "{'mbid': '0bc858a1-3573-4216-9423-c96dd8c72919', '#text': 'Twista'}",
-    "normalized_name": "mbid 0bc858a1 3573 4216 9423 c96dd8c72919 text twista",
-    "aliases": []
-  },
-  {
     "id": "c0163443267a463da2349832",
     "name": "CNN",
     "normalized_name": "cnn",
@@ -22099,12 +20035,6 @@
     "id": "c033d37093952fa3d30d46da",
     "name": "Matthew Wilder",
     "normalized_name": "matthew wilder",
-    "aliases": []
-  },
-  {
-    "id": "c03a949a2aa002a29b6e8274",
-    "name": "{'mbid': '', '#text': 'Fantasia'}",
-    "normalized_name": "mbid text fantasia",
     "aliases": []
   },
   {
@@ -22129,12 +20059,6 @@
     "id": "c05fab1ad03a52d47dae5ceb",
     "name": "AHI",
     "normalized_name": "ahi",
-    "aliases": []
-  },
-  {
-    "id": "c06bf3e3811b02ef4231ca61",
-    "name": "{'mbid': '', '#text': 'Blackstreet'}",
-    "normalized_name": "mbid text blackstreet",
     "aliases": []
   },
   {
@@ -22180,12 +20104,6 @@
     "aliases": []
   },
   {
-    "id": "c12ff6e12818fac74f689807",
-    "name": "{'mbid': '875203e1-8e58-4b86-8dcb-7190faf411c5', '#text': 'J. Cole'}",
-    "normalized_name": "mbid 875203e1 8e58 4b86 8dcb 7190faf411c5 text j cole",
-    "aliases": []
-  },
-  {
     "id": "c1362bd852c193d241f5b3a8",
     "name": "Frankie Valli & the Four Seasons",
     "normalized_name": "frankie valli and the four seasons",
@@ -22201,12 +20119,6 @@
     "id": "c14eb4b4175ad74d914f76c5",
     "name": "The Great Yawn",
     "normalized_name": "the great yawn",
-    "aliases": []
-  },
-  {
-    "id": "c15d7b7f04081d25ae2237b0",
-    "name": "{'mbid': 'da03fe17-b354-4944-a680-6992deb144aa', '#text': 'Theo Kgosinkwe'}",
-    "normalized_name": "mbid da03fe17 b354 4944 a680 6992deb144aa text theo kgosinkwe",
     "aliases": []
   },
   {
@@ -22300,12 +20212,6 @@
     "aliases": []
   },
   {
-    "id": "c273b1d4f5137cfa95942465",
-    "name": "{'mbid': '', '#text': 'Ideal'}",
-    "normalized_name": "mbid text ideal",
-    "aliases": []
-  },
-  {
     "id": "c287c51ce5835a201aa8c62a",
     "name": "Marainctrl",
     "normalized_name": "marainctrl",
@@ -22390,21 +20296,9 @@
     "aliases": []
   },
   {
-    "id": "c3117e39f4c91e23dc0017aa",
-    "name": "{'mbid': '37e87694-b263-4ff4-839f-463f78cfef54', '#text': 'Cleo Sol'}",
-    "normalized_name": "mbid 37e87694 b263 4ff4 839f 463f78cfef54 text cleo sol",
-    "aliases": []
-  },
-  {
     "id": "c3128b30e0be1759392de90b",
     "name": "Nasty C",
     "normalized_name": "nasty c",
-    "aliases": []
-  },
-  {
-    "id": "c3175e9a6ba6d7aa88686536",
-    "name": "{'mbid': '3260ce89-5eb0-4c6a-89c7-379c0dfc2ab9', '#text': 'Kehlani'}",
-    "normalized_name": "mbid 3260ce89 5eb0 4c6a 89c7 379c0dfc2ab9 text kehlani",
     "aliases": []
   },
   {
@@ -22414,21 +20308,9 @@
     "aliases": []
   },
   {
-    "id": "c32c01e52143bdcf4eecd436",
-    "name": "{'mbid': '', '#text': '8synatra'}",
-    "normalized_name": "mbid text 8synatra",
-    "aliases": []
-  },
-  {
     "id": "c331be0f166ce1757bf4e961",
     "name": "µ-Ziq & Mrs Jynx",
     "normalized_name": "μ ziq and mrs jynx",
-    "aliases": []
-  },
-  {
-    "id": "c3361868a5e79f825b072e2c",
-    "name": "{'mbid': '5df62a88-cac9-490a-b62c-c7c88f4020f4', '#text': 'Doja Cat'}",
-    "normalized_name": "mbid 5df62a88 cac9 490a b62c c7c88f4020f4 text doja cat",
     "aliases": []
   },
   {
@@ -22471,12 +20353,6 @@
     "id": "c3e46914e6868bfa0efcb3b6",
     "name": "Lauryn Hill, 蘿倫希爾, Mary J. Blige",
     "normalized_name": "lauryn hill 蘿倫希爾 mary j blige",
-    "aliases": []
-  },
-  {
-    "id": "c3e49168eda798692a3c9017",
-    "name": "{'mbid': '', '#text': 'Foxy Brown'}",
-    "normalized_name": "mbid text foxy brown",
     "aliases": []
   },
   {
@@ -22732,21 +20608,9 @@
     "aliases": []
   },
   {
-    "id": "c5ea8cf32c069439702a2cb3",
-    "name": "{'mbid': '', '#text': 'nomi.'}",
-    "normalized_name": "mbid text nomi",
-    "aliases": []
-  },
-  {
     "id": "c5ed01ddb7511d5deb4f6c90",
     "name": "Oliver Skye",
     "normalized_name": "oliver skye",
-    "aliases": []
-  },
-  {
-    "id": "c5f07a921b639afffb651c68",
-    "name": "{'mbid': '', '#text': 'Remi'}",
-    "normalized_name": "mbid text remi",
     "aliases": []
   },
   {
@@ -22807,12 +20671,6 @@
     "id": "c68c81a7a7dc715559841ce4",
     "name": "Sdala B, Paige",
     "normalized_name": "sdala b paige",
-    "aliases": []
-  },
-  {
-    "id": "c68cb1cf475480619bdcdd84",
-    "name": "{'mbid': 'a0e8a1b1-5f8f-475a-a253-17415c17d0ff', '#text': 'Mac Miller'}",
-    "normalized_name": "mbid a0e8a1b1 5f8f 475a a253 17415c17d0ff text mac miller",
     "aliases": []
   },
   {
@@ -22884,21 +20742,9 @@
     "aliases": []
   },
   {
-    "id": "c75f1bce3f73a72502edd9b9",
-    "name": "{'mbid': '', '#text': 'Njelic & Boohle'}",
-    "normalized_name": "mbid text njelic and boohle",
-    "aliases": []
-  },
-  {
     "id": "c76fe6c250d57751a34a88d3",
     "name": "John Legend & Gary Clark Jr.",
     "normalized_name": "john legend and gary clark jr",
-    "aliases": []
-  },
-  {
-    "id": "c77dec34cd8ce00248745754",
-    "name": "{'mbid': '', '#text': 'Aka'}",
-    "normalized_name": "mbid text aka",
     "aliases": []
   },
   {
@@ -22932,12 +20778,6 @@
     "aliases": []
   },
   {
-    "id": "c7a4b73cce256fad1b3ea51f",
-    "name": "{'mbid': '8fd37400-c2ea-4913-a8fc-7f4726b751dd', '#text': 'Case'}",
-    "normalized_name": "mbid 8fd37400 c2ea 4913 a8fc 7f4726b751dd text case",
-    "aliases": []
-  },
-  {
     "id": "c7b1bf9f392dea7471431d7b",
     "name": "Tyla, Becky G",
     "normalized_name": "tyla becky g",
@@ -22959,12 +20799,6 @@
     "id": "c7c2e648d2bf769c1fe86628",
     "name": "Jacquees & Dej Loaf",
     "normalized_name": "jacquees and dej loaf",
-    "aliases": []
-  },
-  {
-    "id": "c7de60301e8dd5fa3f1d6a55",
-    "name": "{'mbid': '9167f739-da47-4495-9d63-9c13b40114ac', '#text': 'Summer Walker'}",
-    "normalized_name": "mbid 9167f739 da47 4495 9d63 9c13b40114ac text summer walker",
     "aliases": []
   },
   {
@@ -23007,12 +20841,6 @@
     "id": "c834e497546600c6a3a4dc34",
     "name": "S.O.S. Band",
     "normalized_name": "s o s band",
-    "aliases": []
-  },
-  {
-    "id": "c85c3d32a417da3fd75d2d56",
-    "name": "{'mbid': '', '#text': 'MALIBU MUSIC'}",
-    "normalized_name": "mbid text malibu music",
     "aliases": []
   },
   {
@@ -23178,12 +21006,6 @@
     "aliases": []
   },
   {
-    "id": "c9881c5b24a7e64246a377e0",
-    "name": "{'mbid': 'cae7634f-8104-4eb7-9371-6097ad078bb5', '#text': 'Cassper Nyovest'}",
-    "normalized_name": "mbid cae7634f 8104 4eb7 9371 6097ad078bb5 text cassper nyovest",
-    "aliases": []
-  },
-  {
     "id": "c9bc4e76a51b5c3f4d6006a9",
     "name": "Sola Vimi",
     "normalized_name": "sola vimi",
@@ -23316,12 +21138,6 @@
     "aliases": []
   },
   {
-    "id": "cae77b3bdf140fdf0cfee595",
-    "name": "{'mbid': 'bb09a8c5-dd68-46af-ae70-8f8318762b8f', '#text': 'Blackwhole'}",
-    "normalized_name": "mbid bb09a8c5 dd68 46af ae70 8f8318762b8f text blackwhole",
-    "aliases": []
-  },
-  {
     "id": "cae7cb48daeea273e0f96a59",
     "name": "Pat Benatar",
     "normalized_name": "pat benatar",
@@ -23412,12 +21228,6 @@
     "aliases": []
   },
   {
-    "id": "cbadc4d5093936f0194e1cad",
-    "name": "{'mbid': '463e38a9-94e1-4d37-b890-868b44cb54d9', '#text': 'Danny K'}",
-    "normalized_name": "mbid 463e38a9 94e1 4d37 b890 868b44cb54d9 text danny k",
-    "aliases": []
-  },
-  {
     "id": "cbaf1d690dae4e6b0a77d6b5",
     "name": "UMI",
     "normalized_name": "umi",
@@ -23463,12 +21273,6 @@
     "id": "cbea42a0b5f6a4e98734c393",
     "name": "Brenda Fassie",
     "normalized_name": "brenda fassie",
-    "aliases": []
-  },
-  {
-    "id": "cbec2367f22ad6aca11da4d5",
-    "name": "{'mbid': '93c66937-ac49-4068-b378-a1d2a4d093a1', '#text': 'P.M. Dawn'}",
-    "normalized_name": "mbid 93c66937 ac49 4068 b378 a1d2a4d093a1 text p m dawn",
     "aliases": []
   },
   {
@@ -23604,12 +21408,6 @@
     "aliases": []
   },
   {
-    "id": "cd0b73ca02e55daebb3fbcee",
-    "name": "{'mbid': 'f6beac20-5dfe-4d1f-ae02-0b0a740aafd6', '#text': 'Tyler, The Creator'}",
-    "normalized_name": "mbid f6beac20 5dfe 4d1f ae02 0b0a740aafd6 text tyler the creator",
-    "aliases": []
-  },
-  {
     "id": "cd0e02639ec4f403dc188f8e",
     "name": "Dabeull",
     "normalized_name": "dabeull",
@@ -23696,12 +21494,6 @@
     "aliases": []
   },
   {
-    "id": "cdb44e9aa0c9cb7130a87b84",
-    "name": "{'mbid': '772a926d-9b49-44af-adfc-5bd98eefb06a', '#text': 'Tanerélle'}",
-    "normalized_name": "mbid 772a926d 9b49 44af adfc 5bd98eefb06a text tanerelle",
-    "aliases": []
-  },
-  {
     "id": "cdc289e8735d0cae1d0b1d6c",
     "name": "Charles & Eddie",
     "normalized_name": "charles and eddie",
@@ -23729,18 +21521,6 @@
     "id": "cdf5dec2d7f25d7f22fe5ac5",
     "name": "Presss",
     "normalized_name": "presss",
-    "aliases": []
-  },
-  {
-    "id": "cdfd24e2a5f75d136e7b8b5d",
-    "name": "{'mbid': '1d331dbc-1b67-42a4-8a19-26d7ffc64856', '#text': 'Elaine'}",
-    "normalized_name": "mbid 1d331dbc 1b67 42a4 8a19 26d7ffc64856 text elaine",
-    "aliases": []
-  },
-  {
-    "id": "ce038d3ed0e2911354c00b8b",
-    "name": "{'mbid': '94c64122-dbd4-4927-b2fa-f204b0b4b0c2', '#text': 'Ravyn Lenae'}",
-    "normalized_name": "mbid 94c64122 dbd4 4927 b2fa f204b0b4b0c2 text ravyn lenae",
     "aliases": []
   },
   {
@@ -23780,12 +21560,6 @@
     "aliases": []
   },
   {
-    "id": "ce5922b1b099fd3e88ca025b",
-    "name": "{'mbid': '', '#text': 'Gunna'}",
-    "normalized_name": "mbid text gunna",
-    "aliases": []
-  },
-  {
     "id": "ce680ea5ed10e6dbb919354a",
     "name": "Keyshia Cole",
     "normalized_name": "keyshia cole",
@@ -23795,18 +21569,6 @@
     "id": "ce77eed24d4c456f7e322b2c",
     "name": "Soul Lingasiku",
     "normalized_name": "soul lingasiku",
-    "aliases": []
-  },
-  {
-    "id": "ce7c2b9d551ee159dcaad7af",
-    "name": "{'mbid': '8ce7c4c4-a074-4664-adee-396d9138cedd', '#text': 'Fatima Rainey'}",
-    "normalized_name": "mbid 8ce7c4c4 a074 4664 adee 396d9138cedd text fatima rainey",
-    "aliases": []
-  },
-  {
-    "id": "ce867160a39e2dac0da58036",
-    "name": "{'mbid': '9072df14-b61e-42e2-b4f4-6bbb7fdb5586', '#text': 'Tina Turner'}",
-    "normalized_name": "mbid 9072df14 b61e 42e2 b4f4 6bbb7fdb5586 text tina turner",
     "aliases": []
   },
   {
@@ -23870,21 +21632,9 @@
     "aliases": []
   },
   {
-    "id": "cf450dc1a44c2bcbe1940b1f",
-    "name": "{'mbid': '', '#text': '6LACK & Odeal'}",
-    "normalized_name": "mbid text 6lack and odeal",
-    "aliases": []
-  },
-  {
     "id": "cf49ac37c7a158cc33973eec",
     "name": "DJJAZZYD",
     "normalized_name": "djjazzyd",
-    "aliases": []
-  },
-  {
-    "id": "cf585b9b8d572fceb2aac0da",
-    "name": "{'mbid': '', '#text': 'Alastair Lane'}",
-    "normalized_name": "mbid text alastair lane",
     "aliases": []
   },
   {
@@ -23897,12 +21647,6 @@
     "id": "cf7201d750251f396cd175a6",
     "name": "Lauryn Hill & Bob Marley",
     "normalized_name": "lauryn hill and bob marley",
-    "aliases": []
-  },
-  {
-    "id": "cf9ada69c45369865477b7fa",
-    "name": "{'mbid': '11483ffe-6366-44ce-adb5-2fc142a7fdf9', '#text': 'Isaiah falls'}",
-    "normalized_name": "mbid 11483ffe 6366 44ce adb5 2fc142a7fdf9 text isaiah falls",
     "aliases": []
   },
   {
@@ -23927,18 +21671,6 @@
     "id": "cfb4c8d5847edd592050f0db",
     "name": "Dj Stokie, Ben Da Prince, Murumba Pitch, Jay Sax",
     "normalized_name": "dj stokie ben da prince murumba pitch jay sax",
-    "aliases": []
-  },
-  {
-    "id": "cfb91eda1a3614f85cb68a3c",
-    "name": "{'mbid': '2de9f057-67d8-429d-b899-759be13131a9', '#text': 'Tamia'}",
-    "normalized_name": "mbid 2de9f057 67d8 429d b899 759be13131a9 text tamia",
-    "aliases": []
-  },
-  {
-    "id": "cfbf923f5c01acd1bb4c5a28",
-    "name": "{'mbid': '', '#text': 'Girlfriend'}",
-    "normalized_name": "mbid text girlfriend",
     "aliases": []
   },
   {
@@ -24134,12 +21866,6 @@
     "aliases": []
   },
   {
-    "id": "d1d3a45ca9f4ddc2fe6a58f4",
-    "name": "{'mbid': '3c9c8ae5-5da1-4f11-8e64-4bfcfa9292ed', '#text': 'Garth Taylor'}",
-    "normalized_name": "mbid 3c9c8ae5 5da1 4f11 8e64 4bfcfa9292ed text garth taylor",
-    "aliases": []
-  },
-  {
     "id": "d1d57f27798475afe1130f2d",
     "name": "Zapp & Roger",
     "normalized_name": "zapp and roger",
@@ -24215,12 +21941,6 @@
     "id": "d2a3508462170097bd29decf",
     "name": "Major League Djz, Abidoza, Mpho Sebina",
     "normalized_name": "major league djz abidoza mpho sebina",
-    "aliases": []
-  },
-  {
-    "id": "d2b4a29c714620faf7d8d2d1",
-    "name": "{'mbid': '', '#text': 'Shaggy'}",
-    "normalized_name": "mbid text shaggy",
     "aliases": []
   },
   {
@@ -24308,12 +22028,6 @@
     "aliases": [
       "BeBe Winans"
     ]
-  },
-  {
-    "id": "d3596f39b7e86f28583189d9",
-    "name": "{'mbid': 'a096f30d-094f-4b0f-9667-829b6be176a0', '#text': 'Monsune'}",
-    "normalized_name": "mbid a096f30d 094f 4b0f 9667 829b6be176a0 text monsune",
-    "aliases": []
   },
   {
     "id": "d360087236aa9f90f4d8e947",
@@ -24412,12 +22126,6 @@
     "aliases": []
   },
   {
-    "id": "d47c0791169b664bbd215c89",
-    "name": "{'mbid': 'e01482f5-8865-4d25-b2f5-0ebfdf53d96c', '#text': 'SoulDecision'}",
-    "normalized_name": "mbid e01482f5 8865 4d25 b2f5 0ebfdf53d96c text souldecision",
-    "aliases": []
-  },
-  {
     "id": "d490e179c569593cbf240c18",
     "name": "Paul Woolford, Diplo & Kareen Lomax",
     "normalized_name": "paul woolford diplo and kareen lomax",
@@ -24427,12 +22135,6 @@
     "id": "d495008bca6abaf3f05f91a6",
     "name": "Needed Me",
     "normalized_name": "needed me",
-    "aliases": []
-  },
-  {
-    "id": "d49923ad6c7e86bae5a2fa68",
-    "name": "{'mbid': '816d9b5d-eaf9-4a97-b5f7-6e82cd01aafe', '#text': 'Luther Vandross'}",
-    "normalized_name": "mbid 816d9b5d eaf9 4a97 b5f7 6e82cd01aafe text luther vandross",
     "aliases": []
   },
   {
@@ -24519,12 +22221,6 @@
     ]
   },
   {
-    "id": "d5a23edc4ecfff5a23725755",
-    "name": "{'mbid': '7441014f-f8f5-494f-81db-ff166fbc078d', '#text': 'PinkPantheress'}",
-    "normalized_name": "mbid 7441014f f8f5 494f 81db ff166fbc078d text pinkpantheress",
-    "aliases": []
-  },
-  {
     "id": "d5a398ebf58ad1066f0a5a6d",
     "name": "Kyllex",
     "normalized_name": "kyllex",
@@ -24579,12 +22275,6 @@
     "aliases": []
   },
   {
-    "id": "d62ad1564839f8674de4bec3",
-    "name": "{'mbid': 'b44e2752-deb5-4f10-b8e9-6671484acb34', '#text': 'Amber Mark'}",
-    "normalized_name": "mbid b44e2752 deb5 4f10 b8e9 6671484acb34 text amber mark",
-    "aliases": []
-  },
-  {
     "id": "d62afcb05f7e082eafc22485",
     "name": "Shania Twain",
     "normalized_name": "shania twain",
@@ -24630,12 +22320,6 @@
     "id": "d66a6b56ff2b2bc9a48bf03b",
     "name": "3T",
     "normalized_name": "3t",
-    "aliases": []
-  },
-  {
-    "id": "d67232a85e134561604b3b3a",
-    "name": "{'mbid': '39f5d433-f157-422a-afa4-a8fd0331093f', '#text': 'Bucie'}",
-    "normalized_name": "mbid 39f5d433 f157 422a afa4 a8fd0331093f text bucie",
     "aliases": []
   },
   {
@@ -24705,12 +22389,6 @@
     "aliases": []
   },
   {
-    "id": "d6f8ae45b89b80dcb728f9e5",
-    "name": "{'mbid': 'f0602f55-1770-483d-89bd-4bae0d0ac086', '#text': 'Jennifer Lopez'}",
-    "normalized_name": "mbid f0602f55 1770 483d 89bd 4bae0d0ac086 text jennifer lopez",
-    "aliases": []
-  },
-  {
     "id": "d719bfd3e74821a06f10d658",
     "name": "Nomfundo Moh",
     "normalized_name": "nomfundo moh",
@@ -24764,12 +22442,6 @@
     "id": "d759050794a798f2641a8433",
     "name": "JusticejXD",
     "normalized_name": "justicejxd",
-    "aliases": []
-  },
-  {
-    "id": "d75923fb4451510a63920f7f",
-    "name": "{'mbid': 'c58c7817-420d-4268-bccf-f3d90565e2e6', '#text': 'Yuna'}",
-    "normalized_name": "mbid c58c7817 420d 4268 bccf f3d90565e2e6 text yuna",
     "aliases": []
   },
   {
@@ -24935,12 +22607,6 @@
     "aliases": []
   },
   {
-    "id": "d8c737a3c1a5db903c6c73e3",
-    "name": "{'mbid': '3a9cf658-0f0b-410e-b07e-8cf7eee53169', '#text': 'Jaheim'}",
-    "normalized_name": "mbid 3a9cf658 0f0b 410e b07e 8cf7eee53169 text jaheim",
-    "aliases": []
-  },
-  {
     "id": "d8eb128cd05b628cd9324996",
     "name": "Maeta",
     "normalized_name": "maeta",
@@ -24950,12 +22616,6 @@
     "id": "d8fb086d8c434a6d24d51108",
     "name": "Kulud",
     "normalized_name": "kulud",
-    "aliases": []
-  },
-  {
-    "id": "d905c743e318618f31329be1",
-    "name": "{'mbid': '', '#text': 'BJRNCK & G Herbo'}",
-    "normalized_name": "mbid text bjrnck and g herbo",
     "aliases": []
   },
   {
@@ -25025,21 +22685,9 @@
     "aliases": []
   },
   {
-    "id": "d9e120e1e1fab2b42d51393c",
-    "name": "{'mbid': 'cc51b589-4b0b-4fd5-9a3c-5264aa00a1c2', '#text': 'THEY.'}",
-    "normalized_name": "mbid cc51b589 4b0b 4fd5 9a3c 5264aa00a1c2 text they",
-    "aliases": []
-  },
-  {
     "id": "d9eef44330f4d74482f18902",
     "name": "BJRNCK & G Herbo",
     "normalized_name": "bjrnck and g herbo",
-    "aliases": []
-  },
-  {
-    "id": "d9f9671cf49da83e7114cd4c",
-    "name": "{'mbid': '', '#text': 'Amaarae'}",
-    "normalized_name": "mbid text amaarae",
     "aliases": []
   },
   {
@@ -25052,12 +22700,6 @@
     "id": "da0084bfa72240a60a5f5948",
     "name": "Smino",
     "normalized_name": "smino",
-    "aliases": []
-  },
-  {
-    "id": "da0113d0449807d686dcd273",
-    "name": "{'mbid': '2b7a71c8-7050-4e54-a9e4-5dde51ff7fde', '#text': 'Liberty City'}",
-    "normalized_name": "mbid 2b7a71c8 7050 4e54 a9e4 5dde51ff7fde text liberty city",
     "aliases": []
   },
   {
@@ -25115,12 +22757,6 @@
     "aliases": []
   },
   {
-    "id": "da5b036dde3ea11add230277",
-    "name": "{'mbid': '99790314-885a-4975-8614-9c5bc890364d', '#text': 'TLC'}",
-    "normalized_name": "mbid 99790314 885a 4975 8614 9c5bc890364d text tlc",
-    "aliases": []
-  },
-  {
     "id": "da61abb9ab5632cb8c8ad0f2",
     "name": "Moonchild Sanelly",
     "normalized_name": "moonchild sanelly",
@@ -25136,12 +22772,6 @@
     "id": "da87aaeffa775bcf3a66b3f2",
     "name": "Taylor Swift",
     "normalized_name": "taylor swift",
-    "aliases": []
-  },
-  {
-    "id": "da8eafc430123459c261fd1d",
-    "name": "{'mbid': '471f35c4-5641-4f98-9108-afb841af5692', '#text': 'Bebe & Cece Winans'}",
-    "normalized_name": "mbid 471f35c4 5641 4f98 9108 afb841af5692 text bebe and cece winans",
     "aliases": []
   },
   {
@@ -25253,12 +22883,6 @@
     "aliases": []
   },
   {
-    "id": "db6a12c4eec0765698d48fff",
-    "name": "{'mbid': '', '#text': 'JEMS!, Elujay & J.Robb'}",
-    "normalized_name": "mbid text jems elujay and j robb",
-    "aliases": []
-  },
-  {
     "id": "db79def2f84bb4a4a1a062db",
     "name": "Yung Bleu & Kelly Rowland",
     "normalized_name": "yung bleu and kelly rowland",
@@ -25301,12 +22925,6 @@
     "aliases": []
   },
   {
-    "id": "dc04fb07d692a611ed9c763a",
-    "name": "{'mbid': '', '#text': 'SOLO B'}",
-    "normalized_name": "mbid text solo b",
-    "aliases": []
-  },
-  {
     "id": "dc07556bb84098c569effca6",
     "name": "Sam Tsui",
     "normalized_name": "sam tsui",
@@ -25334,12 +22952,6 @@
     "id": "dc39b7de9bb042a3878e54d9",
     "name": "Kabelo",
     "normalized_name": "kabelo",
-    "aliases": []
-  },
-  {
-    "id": "dc4520145222ccaa0b8ef6ff",
-    "name": "{'mbid': 'ddf4255f-ccc9-44c0-8f1e-b325d51ee82f', '#text': 'Freddie Jackson'}",
-    "normalized_name": "mbid ddf4255f ccc9 44c0 8f1e b325d51ee82f text freddie jackson",
     "aliases": []
   },
   {
@@ -25397,12 +23009,6 @@
     "aliases": []
   },
   {
-    "id": "dca2b01990f2e24304e75f26",
-    "name": "{'mbid': '53610e70-3026-4157-8a4c-fca096054b8e', '#text': 'Andrea Martin'}",
-    "normalized_name": "mbid 53610e70 3026 4157 8a4c fca096054b8e text andrea martin",
-    "aliases": []
-  },
-  {
     "id": "dcae62d84e1cf925a05af41f",
     "name": "Cardi B",
     "normalized_name": "cardi b",
@@ -25445,12 +23051,6 @@
     "aliases": []
   },
   {
-    "id": "dd5753fbed30db837367e98c",
-    "name": "{'mbid': 'fc4af92a-1aa8-4f35-9aea-29b2ecbe0779', '#text': \"Alexander O'Neal\"}",
-    "normalized_name": "mbid fc4af92a 1aa8 4f35 9aea 29b2ecbe0779 text alexander o neal",
-    "aliases": []
-  },
-  {
     "id": "dd677fe9dd1a232941186da3",
     "name": "Leon Thomas & Halle",
     "normalized_name": "leon thomas and halle",
@@ -25460,12 +23060,6 @@
     "id": "dd7428537282d5a18d19b1f4",
     "name": "Portraits Of Tracy",
     "normalized_name": "portraits of tracy",
-    "aliases": []
-  },
-  {
-    "id": "dd79aa7b91f86618f0a092d7",
-    "name": "{'mbid': 'bd9e3d98-10bb-4138-bee2-130a9bf4c4b2', '#text': 'Max-A-Million'}",
-    "normalized_name": "mbid bd9e3d98 10bb 4138 bee2 130a9bf4c4b2 text max a million",
     "aliases": []
   },
   {
@@ -25493,24 +23087,12 @@
     "aliases": []
   },
   {
-    "id": "dddf8b7c3c90ead4ef8b6e99",
-    "name": "{'mbid': '201412c6-7ced-472b-87a9-9259ec3c07d3', '#text': 'Brent Faiyaz'}",
-    "normalized_name": "mbid 201412c6 7ced 472b 87a9 9259ec3c07d3 text brent faiyaz",
-    "aliases": []
-  },
-  {
     "id": "dde2e1c446a0ad62c8d03861",
     "name": "Suzi",
     "normalized_name": "suzi",
     "aliases": [
       "SUZI"
     ]
-  },
-  {
-    "id": "ddeeae98ebf204d56bab381e",
-    "name": "{'mbid': '410e7fd3-b865-4fa0-bb18-1b7fd53382ca', '#text': 'Solange'}",
-    "normalized_name": "mbid 410e7fd3 b865 4fa0 bb18 1b7fd53382ca text solange",
-    "aliases": []
   },
   {
     "id": "ddf44631260f394b6392da93",
@@ -25549,12 +23131,6 @@
     "aliases": []
   },
   {
-    "id": "de69d0e5ad78ae8894952303",
-    "name": "{'mbid': '', '#text': 'The Weeknd, Travis Scott, Florence, The Machine'}",
-    "normalized_name": "mbid text the weeknd travis scott florence the machine",
-    "aliases": []
-  },
-  {
     "id": "de8575ae7e8c6b7e9e603c14",
     "name": "Calvin Harris, The Weeknd",
     "normalized_name": "calvin harris the weeknd",
@@ -25582,18 +23158,6 @@
     "id": "deaf2fbfbab2553a98d5ad3f",
     "name": "U2",
     "normalized_name": "u2",
-    "aliases": []
-  },
-  {
-    "id": "dec375ebef01271465bdd211",
-    "name": "{'mbid': '253c9ae7-850b-46be-8fbb-65e9fa621058', '#text': 'Pop Smoke'}",
-    "normalized_name": "mbid 253c9ae7 850b 46be 8fbb 65e9fa621058 text pop smoke",
-    "aliases": []
-  },
-  {
-    "id": "dec99eea4d4c17b448be8dce",
-    "name": "{'mbid': '', '#text': 'JayDon & Paradise'}",
-    "normalized_name": "mbid text jaydon and paradise",
     "aliases": []
   },
   {
@@ -25717,12 +23281,6 @@
     "aliases": []
   },
   {
-    "id": "dffd2838a8068dd5369d2c46",
-    "name": "{'mbid': '', '#text': 'Liquideep'}",
-    "normalized_name": "mbid text liquideep",
-    "aliases": []
-  },
-  {
     "id": "e02cddff3b90a0bd88b44f94",
     "name": "Jason Derulo & David Guetta",
     "normalized_name": "jason derulo and david guetta",
@@ -25762,12 +23320,6 @@
     "id": "e073a05900705baae3399af9",
     "name": "Timbaland",
     "normalized_name": "timbaland",
-    "aliases": []
-  },
-  {
-    "id": "e08236333e8d2273e985f717",
-    "name": "{'mbid': '381086ea-f511-4aba-bdf9-71c753dc5077', '#text': 'Kendrick Lamar'}",
-    "normalized_name": "mbid 381086ea f511 4aba bdf9 71c753dc5077 text kendrick lamar",
     "aliases": []
   },
   {
@@ -25917,18 +23469,6 @@
     "aliases": []
   },
   {
-    "id": "e1cdf86d361db8d0f1420456",
-    "name": "{'mbid': 'd5d97b2b-b83b-4976-814a-056d9076c8c3', '#text': 'The Notorious B.I.G.'}",
-    "normalized_name": "mbid d5d97b2b b83b 4976 814a 056d9076c8c3 text the notorious b i g",
-    "aliases": []
-  },
-  {
-    "id": "e1d61d2c78d946db05146dd7",
-    "name": "{'mbid': '', '#text': 'CHLÖE & TIMBALAND'}",
-    "normalized_name": "mbid text chloe and timbaland",
-    "aliases": []
-  },
-  {
     "id": "e1d9e711c1147ed57abd609d",
     "name": "AI Experts",
     "normalized_name": "ai experts",
@@ -25947,12 +23487,6 @@
     "aliases": []
   },
   {
-    "id": "e20036ed6d389965f2edec43",
-    "name": "{'mbid': '', '#text': 'Chris Brown'}",
-    "normalized_name": "mbid text chris brown",
-    "aliases": []
-  },
-  {
     "id": "e20decb968b96fb845055587",
     "name": "Bryson Tiller/Musicfire.in",
     "normalized_name": "bryson tiller musicfire in",
@@ -25962,18 +23496,6 @@
     "id": "e2180c7e972c9e507a29a964",
     "name": "Rockwell",
     "normalized_name": "rockwell",
-    "aliases": []
-  },
-  {
-    "id": "e21a93608795710071d3424c",
-    "name": "{'mbid': '1c46e82f-4764-4d82-a33b-5d5aee5e2881', '#text': 'Fergie'}",
-    "normalized_name": "mbid 1c46e82f 4764 4d82 a33b 5d5aee5e2881 text fergie",
-    "aliases": []
-  },
-  {
-    "id": "e2241df1d098cb73504bf6dc",
-    "name": "{'mbid': '', '#text': 'Qiuntellii'}",
-    "normalized_name": "mbid text qiuntellii",
     "aliases": []
   },
   {
@@ -26013,18 +23535,6 @@
     "aliases": []
   },
   {
-    "id": "e24ffef099f8c6e0667f6830",
-    "name": "{'mbid': 'd82728c3-4908-4386-8252-835bbef4c97c', '#text': 'Lebo Mathosa'}",
-    "normalized_name": "mbid d82728c3 4908 4386 8252 835bbef4c97c text lebo mathosa",
-    "aliases": []
-  },
-  {
-    "id": "e258877a4302ba3fd56e382a",
-    "name": "{'mbid': '', '#text': 'Kendrick Lamar, AzChike'}",
-    "normalized_name": "mbid text kendrick lamar azchike",
-    "aliases": []
-  },
-  {
     "id": "e26425a7fd882a60bbc336a8",
     "name": "Kalisway & LAYA",
     "normalized_name": "kalisway and laya",
@@ -26052,12 +23562,6 @@
     "id": "e2cb06bc178621445ea51676",
     "name": "If Tomorrow Never Comes",
     "normalized_name": "if tomorrow never comes",
-    "aliases": []
-  },
-  {
-    "id": "e2d117cf32447d5f9a0ecdeb",
-    "name": "{'mbid': '692d7021-5520-4e26-903f-98696bd51772', '#text': 'Lolo Zouaï'}",
-    "normalized_name": "mbid 692d7021 5520 4e26 903f 98696bd51772 text lolo zouai",
     "aliases": []
   },
   {
@@ -26106,12 +23610,6 @@
     "id": "e325dfa863f65c4da9a80a75",
     "name": "Carl Thomas",
     "normalized_name": "carl thomas",
-    "aliases": []
-  },
-  {
-    "id": "e3656cf5ede44f102df01318",
-    "name": "{'mbid': '28d83274-26ab-4a6a-b9ff-340f4784e7dd', '#text': 'Victoria Monét'}",
-    "normalized_name": "mbid 28d83274 26ab 4a6a b9ff 340f4784e7dd text victoria monet",
     "aliases": []
   },
   {
@@ -26193,12 +23691,6 @@
     "aliases": []
   },
   {
-    "id": "e3edddfad6cc9b546b82548d",
-    "name": "{'mbid': '', '#text': 'Philippe Gould'}",
-    "normalized_name": "mbid text philippe gould",
-    "aliases": []
-  },
-  {
     "id": "e404cdb43ed25ece85023142",
     "name": "Playplain",
     "normalized_name": "playplain",
@@ -26226,18 +23718,6 @@
     "id": "e45b24119e22e5d52e19aae3",
     "name": "Drama",
     "normalized_name": "drama",
-    "aliases": []
-  },
-  {
-    "id": "e4608dfeedbb16aee2b16159",
-    "name": "{'mbid': 'c4ac4b97-2eac-46f6-85ae-f916c93847e4', '#text': 'Ayra Starr'}",
-    "normalized_name": "mbid c4ac4b97 2eac 46f6 85ae f916c93847e4 text ayra starr",
-    "aliases": []
-  },
-  {
-    "id": "e46dd7a1648a53ddc199ed23",
-    "name": "{'mbid': 'f27ec8db-af05-4f36-916e-3d57f91ecf5e', '#text': 'Michael Jackson'}",
-    "normalized_name": "mbid f27ec8db af05 4f36 916e 3d57f91ecf5e text michael jackson",
     "aliases": []
   },
   {
@@ -26373,12 +23853,6 @@
     "aliases": []
   },
   {
-    "id": "e59f4d6d7a37ed48ed98c048",
-    "name": "{'mbid': '', '#text': 'Russell Zuma'}",
-    "normalized_name": "mbid text russell zuma",
-    "aliases": []
-  },
-  {
     "id": "e5c428778a543be340220f2c",
     "name": "Nicki Minaj & Mike Will Made-It",
     "normalized_name": "nicki minaj and mike will made it",
@@ -26447,12 +23921,6 @@
     "aliases": []
   },
   {
-    "id": "e67705ae7fb2988e7d02ab6f",
-    "name": "{'mbid': '', '#text': 'Rowlene'}",
-    "normalized_name": "mbid text rowlene",
-    "aliases": []
-  },
-  {
     "id": "e67be35310fffa7feb84ccb3",
     "name": "Doso",
     "normalized_name": "doso",
@@ -26504,12 +23972,6 @@
     "id": "e6e7df229940c4f6f69b7e6d",
     "name": "Esosa Ogbebor",
     "normalized_name": "esosa ogbebor",
-    "aliases": []
-  },
-  {
-    "id": "e6e9f587c5cfcb503d5c8a53",
-    "name": "{'mbid': 'ac35fe80-f514-485b-94dd-337949c34c57', '#text': 'Groove Theory'}",
-    "normalized_name": "mbid ac35fe80 f514 485b 94dd 337949c34c57 text groove theory",
     "aliases": []
   },
   {
@@ -26707,12 +24169,6 @@
     "aliases": []
   },
   {
-    "id": "e8d481e1a662b9ba6e596e05",
-    "name": "{'mbid': '', '#text': 'FRQNCY'}",
-    "normalized_name": "mbid text frqncy",
-    "aliases": []
-  },
-  {
     "id": "e8ef6fdc2244f006fa525049",
     "name": "Bello no Gallo, DJ Tira, Sizwe Mdlalose, Dezzodigo, Major Lab",
     "normalized_name": "bello no gallo dj tira sizwe mdlalose dezzodigo major lab",
@@ -26775,27 +24231,9 @@
     "aliases": []
   },
   {
-    "id": "e97696df738c976042fce967",
-    "name": "{'mbid': '636e0fb6-f2ad-45fc-b385-4d994665e7e3', '#text': 'Snoh Aalegra'}",
-    "normalized_name": "mbid 636e0fb6 f2ad 45fc b385 4d994665e7e3 text snoh aalegra",
-    "aliases": []
-  },
-  {
     "id": "e984cf634667dfffd121ea96",
     "name": "WatchMojo.com",
     "normalized_name": "watchmojo com",
-    "aliases": []
-  },
-  {
-    "id": "e998ee73da85175e1f3fcbc3",
-    "name": "{'mbid': '', '#text': 'Amber Mark'}",
-    "normalized_name": "mbid text amber mark",
-    "aliases": []
-  },
-  {
-    "id": "e99d1595bbeda8639600b05a",
-    "name": "{'mbid': 'ccb8f30e-4d71-40c4-8b1d-846dafe73e2c', '#text': 'George Michael'}",
-    "normalized_name": "mbid ccb8f30e 4d71 40c4 8b1d 846dafe73e2c text george michael",
     "aliases": []
   },
   {
@@ -26955,27 +24393,9 @@
     "aliases": []
   },
   {
-    "id": "eb5cc88baaaa197aa424723e",
-    "name": "{'mbid': '', '#text': 'Rez-De-Chaussée'}",
-    "normalized_name": "mbid text rez de chaussee",
-    "aliases": []
-  },
-  {
     "id": "eb6c1d681c5675683593fb7d",
     "name": "Naughty Boy & Sam Smith",
     "normalized_name": "naughty boy and sam smith",
-    "aliases": []
-  },
-  {
-    "id": "eb7988d470f800af89d198d3",
-    "name": "{'mbid': '899a2e44-d749-4453-93d2-5e755cab218a', '#text': 'Kaylow'}",
-    "normalized_name": "mbid 899a2e44 d749 4453 93d2 5e755cab218a text kaylow",
-    "aliases": []
-  },
-  {
-    "id": "eb7dd801395fc6f6b265e1f9",
-    "name": "{'mbid': 'b1fb6a18-1626-4011-80fb-eaf83dfebcb6', '#text': 'Jill Scott'}",
-    "normalized_name": "mbid b1fb6a18 1626 4011 80fb eaf83dfebcb6 text jill scott",
     "aliases": []
   },
   {
@@ -27045,12 +24465,6 @@
     "aliases": []
   },
   {
-    "id": "ec1ee9b6a81e0ab8b0e7a486",
-    "name": "{'mbid': '', '#text': 'Babyface, Mariah Carey, Kenny G & Sheila E.'}",
-    "normalized_name": "mbid text babyface mariah carey kenny g and sheila e",
-    "aliases": []
-  },
-  {
     "id": "ec2e42e9d7429949e1fe87fd",
     "name": "Chris Brown & Tyga",
     "normalized_name": "chris brown and tyga",
@@ -27084,18 +24498,6 @@
     "id": "ec985173453dcb4c4dfdcc81",
     "name": "Roger",
     "normalized_name": "roger",
-    "aliases": []
-  },
-  {
-    "id": "ec9ad0505eeba08a56963fa7",
-    "name": "{'mbid': '', '#text': 'okay coleman!'}",
-    "normalized_name": "mbid text okay coleman",
-    "aliases": []
-  },
-  {
-    "id": "eca38afef341c6bdd615d56d",
-    "name": "{'mbid': '', '#text': 'The Weeknd'}",
-    "normalized_name": "mbid text the weeknd",
     "aliases": []
   },
   {
@@ -27173,12 +24575,6 @@
     "aliases": []
   },
   {
-    "id": "ed9427a6a0e3a10ca6596a44",
-    "name": "{'mbid': '', '#text': 'Phil Fearon & Galaxy'}",
-    "normalized_name": "mbid text phil fearon and galaxy",
-    "aliases": []
-  },
-  {
     "id": "ed9a239d7c9c942e981f70e5",
     "name": "7AM",
     "normalized_name": "7am",
@@ -27200,12 +24596,6 @@
     "id": "edbf8de6c83cf12406aff84c",
     "name": "DJ Franky",
     "normalized_name": "dj franky",
-    "aliases": []
-  },
-  {
-    "id": "edc46128c6082339de80f1e1",
-    "name": "{'mbid': '5fc55ebf-21bd-4eda-954c-dd250132331e', '#text': 'Mariah the Scientist'}",
-    "normalized_name": "mbid 5fc55ebf 21bd 4eda 954c dd250132331e text mariah the scientist",
     "aliases": []
   },
   {
@@ -27260,12 +24650,6 @@
     "id": "ee5c29a85158d46d3d4cdb88",
     "name": "CHXRRY",
     "normalized_name": "chxrry",
-    "aliases": []
-  },
-  {
-    "id": "ee8be7f6cfff9b1df9a10879",
-    "name": "{'mbid': '650e7db6-b795-4eb5-a702-5ea2fc46c848', '#text': 'Lady Gaga'}",
-    "normalized_name": "mbid 650e7db6 b795 4eb5 a702 5ea2fc46c848 text lady gaga",
     "aliases": []
   },
   {
@@ -27383,24 +24767,6 @@
     "aliases": []
   },
   {
-    "id": "ef716a2b6dd86f4932d3065b",
-    "name": "{'mbid': 'a0e20495-3245-422a-a7e8-075863c458d9', '#text': 'Ciarán'}",
-    "normalized_name": "mbid a0e20495 3245 422a a7e8 075863c458d9 text ciaran",
-    "aliases": []
-  },
-  {
-    "id": "efd060c2ece36da2b963325a",
-    "name": "{'mbid': '', '#text': 'Jenevieve & Jordan Ward'}",
-    "normalized_name": "mbid text jenevieve and jordan ward",
-    "aliases": []
-  },
-  {
-    "id": "f013bbbba14588f0889529c8",
-    "name": "{'mbid': '23c598be-b0ba-4067-8566-348e272a663f', '#text': 'Soul for Real'}",
-    "normalized_name": "mbid 23c598be b0ba 4067 8566 348e272a663f text soul for real",
-    "aliases": []
-  },
-  {
     "id": "f02505e822114a142bf4bb71",
     "name": "Johnny Venus",
     "normalized_name": "johnny venus",
@@ -27449,12 +24815,6 @@
     "aliases": []
   },
   {
-    "id": "f0a84cdfb726a90249103f7e",
-    "name": "{'mbid': '', '#text': 'Jullian Gomes'}",
-    "normalized_name": "mbid text jullian gomes",
-    "aliases": []
-  },
-  {
     "id": "f0c802beecedec5639439067",
     "name": "LIL WAYNE & NICKI MINAJ",
     "normalized_name": "lil wayne and nicki minaj",
@@ -27482,12 +24842,6 @@
     "id": "f0e5501522439f635fdfca97",
     "name": "Uli Jons",
     "normalized_name": "uli jons",
-    "aliases": []
-  },
-  {
-    "id": "f0ed0b06b298487c9083b707",
-    "name": "{'mbid': 'f361d30d-3b22-48be-b9e7-7f9baa8829bb', '#text': 'Puff Johnson'}",
-    "normalized_name": "mbid f361d30d 3b22 48be b9e7 7f9baa8829bb text puff johnson",
     "aliases": []
   },
   {
@@ -27613,12 +24967,6 @@
     "aliases": []
   },
   {
-    "id": "f1e6f5f62d20ee4745590bf0",
-    "name": "{'mbid': '', '#text': 'Janet Jackson & Daddy Yankee'}",
-    "normalized_name": "mbid text janet jackson and daddy yankee",
-    "aliases": []
-  },
-  {
     "id": "f1f0d5fff34ef52f4740f137",
     "name": "Blaque",
     "normalized_name": "blaque",
@@ -27667,12 +25015,6 @@
     "aliases": []
   },
   {
-    "id": "f26ed0ecbc2def4ae1cf3bb5",
-    "name": "{'mbid': 'ef7cd54b-2570-475c-a8fa-34c18cc51136', '#text': \"Meli'sa Morgan\"}",
-    "normalized_name": "mbid ef7cd54b 2570 475c a8fa 34c18cc51136 text meli sa morgan",
-    "aliases": []
-  },
-  {
     "id": "f273be9fb3488a3f3d27e8d9",
     "name": "Ben Böhmer",
     "normalized_name": "ben bohmer",
@@ -27688,12 +25030,6 @@
     "id": "f2ac4c9debe7b4af0006b166",
     "name": "DaMar Jackson",
     "normalized_name": "damar jackson",
-    "aliases": []
-  },
-  {
-    "id": "f2badfb014e23046df9ec1af",
-    "name": "{'mbid': '', '#text': 'Loe Shimmy & Summer Walker'}",
-    "normalized_name": "mbid text loe shimmy and summer walker",
     "aliases": []
   },
   {
@@ -27715,21 +25051,9 @@
     "aliases": []
   },
   {
-    "id": "f2ce2ed47a1347e70d19d9d2",
-    "name": "{'mbid': 'e56aee57-d90e-40cf-a70d-beb70f6f3c69', '#text': 'KAYTRANADA'}",
-    "normalized_name": "mbid e56aee57 d90e 40cf a70d beb70f6f3c69 text kaytranada",
-    "aliases": []
-  },
-  {
     "id": "f2d03a10f4ac245c6fa840fb",
     "name": "Aqua",
     "normalized_name": "aqua",
-    "aliases": []
-  },
-  {
-    "id": "f2d61ccf3e460075e283d7eb",
-    "name": "{'mbid': '', '#text': 'Rowena Fysx'}",
-    "normalized_name": "mbid text rowena fysx",
     "aliases": []
   },
   {
@@ -27748,12 +25072,6 @@
     "id": "f2ecd660a31b873f0547540a",
     "name": "The Weeknd",
     "normalized_name": "the weeknd",
-    "aliases": []
-  },
-  {
-    "id": "f32085678429118752b03fda",
-    "name": "{'mbid': '412ff65d-26bf-4849-ba19-d2a58030fd1a', '#text': 'Leon Thomas'}",
-    "normalized_name": "mbid 412ff65d 26bf 4849 ba19 d2a58030fd1a text leon thomas",
     "aliases": []
   },
   {
@@ -27826,12 +25144,6 @@
     "id": "f3c017472b9b195c2a6131e1",
     "name": "Tyla, Kooldrink",
     "normalized_name": "tyla kooldrink",
-    "aliases": []
-  },
-  {
-    "id": "f3cecb0b07b233609ac88a34",
-    "name": "{'mbid': 'bc85da58-52d9-457d-ae8d-5d8d4ec870a9', '#text': 'Aaliyah'}",
-    "normalized_name": "mbid bc85da58 52d9 457d ae8d 5d8d4ec870a9 text aaliyah",
     "aliases": []
   },
   {
@@ -27979,12 +25291,6 @@
     "aliases": []
   },
   {
-    "id": "f50109fae0bec28257d42cd4",
-    "name": "{'mbid': '03977acf-4a8d-4658-ab17-0aff9e63728d', '#text': 'Malaika'}",
-    "normalized_name": "mbid 03977acf 4a8d 4658 ab17 0aff9e63728d text malaika",
-    "aliases": []
-  },
-  {
     "id": "f51996184904caa513dd5dac",
     "name": "Sophie B. Hawkins",
     "normalized_name": "sophie b hawkins",
@@ -28039,12 +25345,6 @@
     "aliases": []
   },
   {
-    "id": "f579137d7cb72afd90821eb2",
-    "name": "{'mbid': 'afb680f2-b6eb-4cd7-a70b-a63b25c763d5', '#text': 'Bruno Mars'}",
-    "normalized_name": "mbid afb680f2 b6eb 4cd7 a70b a63b25c763d5 text bruno mars",
-    "aliases": []
-  },
-  {
     "id": "f57de3edd5956a244017beac",
     "name": "Audio Idols",
     "normalized_name": "audio idols",
@@ -28066,12 +25366,6 @@
     "id": "f58e0ddfc5a6884a63f4e7d0",
     "name": "Depeche Mode",
     "normalized_name": "depeche mode",
-    "aliases": []
-  },
-  {
-    "id": "f5c18bef68546e1e2f5ea9d0",
-    "name": "{'mbid': '', '#text': 'Nasty C & Tellaman'}",
-    "normalized_name": "mbid text nasty c and tellaman",
     "aliases": []
   },
   {
@@ -28120,12 +25414,6 @@
     "id": "f6335d8a3b8a499ea6c30d7c",
     "name": "Celebrity Glance",
     "normalized_name": "celebrity glance",
-    "aliases": []
-  },
-  {
-    "id": "f643aaabe4d480ee5373c999",
-    "name": "{'mbid': '', '#text': 'DJ Master Jam'}",
-    "normalized_name": "mbid text dj master jam",
     "aliases": []
   },
   {
@@ -28200,12 +25488,6 @@
     "id": "f6fc48b1b56e0873ad142f68",
     "name": "Orla Gartland",
     "normalized_name": "orla gartland",
-    "aliases": []
-  },
-  {
-    "id": "f70e5abfb85e596411876424",
-    "name": "{'mbid': '881c6fe4-afd3-4a2b-bfb4-a2dc30af2989', '#text': 'Billy Paul'}",
-    "normalized_name": "mbid 881c6fe4 afd3 4a2b bfb4 a2dc30af2989 text billy paul",
     "aliases": []
   },
   {
@@ -28293,12 +25575,6 @@
     "aliases": []
   },
   {
-    "id": "f7e3ffa4937f0c013ba87630",
-    "name": "{'mbid': '', '#text': 'Tkay Maidza & Jenevieve'}",
-    "normalized_name": "mbid text tkay maidza and jenevieve",
-    "aliases": []
-  },
-  {
     "id": "f7e57e1eb35887100a3c2c80",
     "name": "Mellow & Sleazy & Felo Le Tee",
     "normalized_name": "mellow and sleazy and felo le tee",
@@ -28314,12 +25590,6 @@
     "id": "f809aaa154cbf92adf364276",
     "name": "ELEGANT ROYAL CHANNEL",
     "normalized_name": "elegant royal channel",
-    "aliases": []
-  },
-  {
-    "id": "f81e5376f66edeffb502b81e",
-    "name": "{'mbid': '8f632c44-c97f-4b12-b1cd-caf2c6e2ed06', '#text': 'Lisa Stansfield'}",
-    "normalized_name": "mbid 8f632c44 c97f 4b12 b1cd caf2c6e2ed06 text lisa stansfield",
     "aliases": []
   },
   {
@@ -28511,12 +25781,6 @@
     "aliases": []
   },
   {
-    "id": "f9703cb223ad2dfc500b4c90",
-    "name": "{'mbid': '3472754c-1a8f-4466-aad8-b42626bbe8b0', '#text': 'Moliy'}",
-    "normalized_name": "mbid 3472754c 1a8f 4466 aad8 b42626bbe8b0 text moliy",
-    "aliases": []
-  },
-  {
     "id": "f97f32045c1b3a739270acbd",
     "name": "Janet Jackson & Daddy Yankee",
     "normalized_name": "janet jackson and daddy yankee",
@@ -28532,12 +25796,6 @@
     "id": "f995631644d32855b8afcd73",
     "name": "Prince Kaybee, Shimza, Black Motion & Ami Faku",
     "normalized_name": "prince kaybee shimza black motion and ami faku",
-    "aliases": []
-  },
-  {
-    "id": "f997c0f3e7bf896885b7ac99",
-    "name": "{'mbid': 'a81d1ad5-9f53-4a8c-877c-8d599836a2a0', '#text': 'Laya'}",
-    "normalized_name": "mbid a81d1ad5 9f53 4a8c 877c 8d599836a2a0 text laya",
     "aliases": []
   },
   {
@@ -28568,12 +25826,6 @@
     "id": "f9f366d26d0d044e8f04856c",
     "name": "Guru",
     "normalized_name": "guru",
-    "aliases": []
-  },
-  {
-    "id": "fa1fac9d41a46aeb33f85f18",
-    "name": "{'mbid': '89d42b97-8042-4c14-a596-a2ccaef5fc4c', '#text': 'Ella Mai'}",
-    "normalized_name": "mbid 89d42b97 8042 4c14 a596 a2ccaef5fc4c text ella mai",
     "aliases": []
   },
   {
@@ -28667,21 +25919,9 @@
     "aliases": []
   },
   {
-    "id": "fac224ce39cbf0eb29b43b7d",
-    "name": "{'mbid': '2f94016a-3880-4d8c-9af9-0e197ee77189', '#text': 'Moloko'}",
-    "normalized_name": "mbid 2f94016a 3880 4d8c 9af9 0e197ee77189 text moloko",
-    "aliases": []
-  },
-  {
     "id": "face9982b73a73f2641eff24",
     "name": "Sharon Brown",
     "normalized_name": "sharon brown",
-    "aliases": []
-  },
-  {
-    "id": "facfb5dbdd2f7d7d244eb963",
-    "name": "{'mbid': '1c513fb9-e6b7-4915-b4d3-026681c83065', '#text': 'Roger Sanchez'}",
-    "normalized_name": "mbid 1c513fb9 e6b7 4915 b4d3 026681c83065 text roger sanchez",
     "aliases": []
   },
   {
@@ -28775,12 +26015,6 @@
     "aliases": []
   },
   {
-    "id": "fbadca3ade375adb8f31c0ee",
-    "name": "{'mbid': '4822d466-5c1f-4e04-80e9-e33e8295c26b', '#text': '702'}",
-    "normalized_name": "mbid 4822d466 5c1f 4e04 80e9 e33e8295c26b text 702",
-    "aliases": []
-  },
-  {
     "id": "fbb2851e48813e922b9330d5",
     "name": "2Pac",
     "normalized_name": "2pac",
@@ -28841,12 +26075,6 @@
     "aliases": []
   },
   {
-    "id": "fc69e380c0d8d6d541a708d7",
-    "name": "{'mbid': '', '#text': 'Brandy & Monica'}",
-    "normalized_name": "mbid text brandy and monica",
-    "aliases": []
-  },
-  {
     "id": "fc85ad023bc88cfda58f5a71",
     "name": "Erick Sermon",
     "normalized_name": "erick sermon",
@@ -28868,12 +26096,6 @@
     "id": "fc9a7fadb98ea0bd4c174468",
     "name": "Tekno, Yemi Alade, Mr Eazi & Lord Afrixana",
     "normalized_name": "tekno yemi alade mr eazi and lord afrixana",
-    "aliases": []
-  },
-  {
-    "id": "fcb284efd564a952532fa82f",
-    "name": "{'mbid': '', '#text': 'Joyce Wrice & SALIMATA'}",
-    "normalized_name": "mbid text joyce wrice and salimata",
     "aliases": []
   },
   {
@@ -28904,12 +26126,6 @@
     "id": "fcdb9dda899987c9127361a6",
     "name": "shaggymedia",
     "normalized_name": "shaggymedia",
-    "aliases": []
-  },
-  {
-    "id": "fcf02795c6106b0af60457a9",
-    "name": "{'mbid': '', '#text': 'Daniel Caesar'}",
-    "normalized_name": "mbid text daniel caesar",
     "aliases": []
   },
   {
@@ -29018,12 +26234,6 @@
     "id": "fe243d6b4e3a114f25d3ef4b",
     "name": "Christian Kuria",
     "normalized_name": "christian kuria",
-    "aliases": []
-  },
-  {
-    "id": "fe3a035d66ad2d77cf3ff29a",
-    "name": "{'mbid': 'a163dbd2-4ec1-416b-af45-64f9ce31351f', '#text': 'Dennis Ferrer'}",
-    "normalized_name": "mbid a163dbd2 4ec1 416b af45 64f9ce31351f text dennis ferrer",
     "aliases": []
   },
   {
@@ -29141,12 +26351,6 @@
     "aliases": []
   },
   {
-    "id": "ff2f874c02cac3131d749514",
-    "name": "{'mbid': '2469950a-f0ca-425a-bfbc-baf55ea3afde', '#text': 'Kool & the Gang'}",
-    "normalized_name": "mbid 2469950a f0ca 425a bfbc baf55ea3afde text kool and the gang",
-    "aliases": []
-  },
-  {
     "id": "ff2fe2ae41ba615421bef096",
     "name": "Bobby Brown",
     "normalized_name": "bobby brown",
@@ -29185,12 +26389,6 @@
     "aliases": []
   },
   {
-    "id": "ff7f33f0735d1ddbd624b01a",
-    "name": "{'mbid': '8264722b-df00-467a-858e-5c97cda169c9', '#text': 'Joji'}",
-    "normalized_name": "mbid 8264722b df00 467a 858e 5c97cda169c9 text joji",
-    "aliases": []
-  },
-  {
     "id": "ff8902196eec1d3af5564396",
     "name": "Jeremy Fisher",
     "normalized_name": "jeremy fisher",
@@ -29206,12 +26404,6 @@
     "id": "ff92a63a7d9f431b907fa900",
     "name": "Bow Wow feat. Chris Brown",
     "normalized_name": "bow wow feat chris brown",
-    "aliases": []
-  },
-  {
-    "id": "ff9c82753151f316729e27d4",
-    "name": "{'mbid': '', '#text': 'Tweet'}",
-    "normalized_name": "mbid text tweet",
     "aliases": []
   },
   {

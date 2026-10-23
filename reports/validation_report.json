@@ -9,7 +9,7 @@
   "song_families_merged": 312,
   "approved_track_merge_families": 206,
   "approved_track_pairs_loaded": 259,
-  "album_families_consolidated": 1692,
+  "album_families_consolidated": 1582,
   "notes": [
     "All parenthesized (...) and bracketed [...] album-title annotations are removed for album-family matching; source titles are preserved.",
     "Original release titles and edition labels are preserved in album source_titles and edition_labels and reports/album_family_merges.json.",
