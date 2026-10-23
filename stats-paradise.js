@@ -2563,8 +2563,8 @@
         periodUnitsSold: 7, unitsSold: 6
       },
       artists: {
-        currentSixMonthRank: 13, name: 23, songCount: 9,
-        songNo1Count: 11, albumCount: 11, periodUnitsSold: 16, unitsSold: 17
+        listRank: 5, currentSixMonthRank: 12, name: 24, songCount: 8,
+        songNo1Count: 10, albumCount: 9, periodUnitsSold: 16, unitsSold: 16
       }
     };
 
@@ -2576,6 +2576,10 @@
 
   function renderCell(row, column) {
     const key = column.key;
+
+    if (key === "listRank") {
+      return `<span class="rank">${escapeHTML("#" + formatNumber(row.listRank))}</span>`;
+    }
 
     if (key === "title") {
       return `<span class="cell-main">${makePageLink(row.type, row.id, row.title)}</span>`;
