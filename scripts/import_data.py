@@ -10,11 +10,33 @@ from normalize_metadata import (
 )
 
 
+def _metadata_text(value: Any, fallback: str) -> str:
+    """Extract display text from plain values and ZeroCharts/Last.fm metadata objects."""
+    if isinstance(value, dict):
+        # ZeroCharts exports can encode values as {"#TEXT": "...", "MBID": "..."}.
+        for key in ("#text", "#TEXT", "text", "name", "title", "value"):
+            candidate = value.get(key)
+            if candidate is not None and not isinstance(candidate, (dict, list)):
+                result = display_text(candidate, "")
+                if result:
+                    return result
+        return fallback
+    if isinstance(value, list):
+        for candidate in value:
+            result = _metadata_text(candidate, "")
+            if result:
+                return result
+        return fallback
+    if value is None or isinstance(value, (dict, list)):
+        return fallback
+    return display_text(value, fallback)
+
+
 def _first_nonempty(item: dict[str, Any], keys: tuple[str, ...], fallback: str) -> str:
     for key in keys:
-        value = item.get(key)
-        if value is not None and str(value).strip():
-            return display_text(value, fallback)
+        value = _metadata_text(item.get(key), "")
+        if value:
+            return value
     return fallback
 
 
