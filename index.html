@@ -247,9 +247,18 @@
                 }
             },
 
-            getArtistName(idRef) {
-                if (!idRef) return 'Unknown Artist';
+            canonicalArtistId(idRef) {
+                if (!idRef) return null;
                 const id = Array.isArray(idRef) ? idRef[0] : idRef;
+                const obj = this.state.raw.artists.get(String(id));
+                return obj?.canonical_artist_id
+                    ? String(obj.canonical_artist_id)
+                    : String(id);
+            },
+
+            getArtistName(idRef) {
+                const id = this.canonicalArtistId(idRef);
+                if (!id) return 'Unknown Artist';
                 const obj = this.state.raw.artists.get(String(id));
                 if (obj && (obj.name || obj.title)) return obj.name || obj.title;
                 return 'Unknown Artist';
@@ -396,7 +405,7 @@
                         const track = this.state.raw.tracks.get(String(id));
                         if (!track) return;
                         title = track.title || 'Unknown Track';
-                        artistId = track.primary_artist_id || track.artist_id;
+                        artistId = this.canonicalArtistId(track.primary_artist_id || track.artist_id);
                         artist = this.getArtistName(artistId);
                     } else {
                         const albumId = String(id);
@@ -408,7 +417,7 @@
                         const album = this.state.raw.albums.get(albumId);
                         if (!album) return;
                         title = album.title || 'Unknown Album';
-                        artistId = album.primary_artist_id || album.artist_id;
+                        artistId = this.canonicalArtistId(album.primary_artist_id || album.artist_id);
                         artist = this.getArtistName(artistId);
                         albumTitle = title;
                         trackCount = this.state.albumTrackCounts?.get(albumId)?.size || 0;
