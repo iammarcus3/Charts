@@ -4,7 +4,7 @@
   "raw_files_failed": 0,
   "integrity_issue_count": 0,
   "invalid_event_count": 0,
-  "duplicate_events_removed": 10,
+  "duplicate_events_removed": 4,
   "fuzzy_candidates_for_review": 259,
   "song_families_merged": 106,
   "album_families_consolidated": 1582,
