@@ -437,7 +437,7 @@
                     });
 
                     // 3. Compile Top 100 Albums, allowing only officially debuted albums
-                    const currentAlbums = this.compileBaseEntries(albumPlays, 'albums', this.state.debutedAlbums);
+                    const currentAlbums = this.compileBaseEntries(albumPlays, 'albums');
 
                     this.state.snapshots.songs[offset] = this.applyHistory(currentSongs, songHistory, offset);
                     this.state.snapshots.albums[offset] = this.applyHistory(currentAlbums, albumHistory, offset);
