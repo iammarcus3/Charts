@@ -121,8 +121,8 @@
       description: "Recorded song and album No. 1 achievements."
     },
     debuts: {
-      title: "Debuts & Returns",
-      description: "Official album debut weeks, song debuts, re-entries and confirmed exits."
+      title: "Album Debuts & Returns",
+      description: "Official album debut weeks and album re-entries only. Eligible albums without an official debut remain in the Album Archive."
     },
     periods: {
       title: "Yearly & Monthly Performance",
@@ -157,7 +157,10 @@
       ["peak", "Peak position"],
       ["weeksOnChart", "Weeks charted"],
       ["weeksAtNo1", "No. 1 weeks"],
+      ["reentryCount", "Re-entries"],
       ["trackCount", "Distinct tracks"],
+      ["importTs", "Import date"],
+      ["releaseTs", "Release date"],
       ["debutTs", "Official debut date"],
       ["firstRankedTs", "First Top 100 appearance"],
       ["title", "Album title"],
@@ -189,13 +192,12 @@
       ["albumTitle", "Album title"]
     ],
     debuts: [
-      ["dateTs", "Event date"],
+      ["dateTs", "Official debut / return date"],
       ["status", "Event"],
-      ["type", "Chart"],
       ["rank", "Position"],
       ["unitsSold", "Units sold"],
-      ["title", "Title"],
-      ["artist", "Artist"]
+      ["title", "Album"],
+      ["artist", "Lead artist"]
     ],
     periods: [
       ["unitsSold", "Total units sold"],
@@ -1372,6 +1374,7 @@
 
         debutDate: activation ? formatDate(activation.weekStart) : "Not debuted",
         debutTs: activation?.weekStart ?? null,
+        debutRank: activation?.rank ?? null,
         debutUnits: activation?.unitsSold ?? null,
         qualifyingTracksAtDebut: activation?.simultaneousTracks ?? null,
 
@@ -1416,6 +1419,8 @@
 
     const officialAlbumEvents = [];
 
+    // The Debuts view is exclusively official album debuts. First Top 100
+    // appearance is a separate album archive field, not a second debut event.
     state.albumDebuts.forEach((activation, albumId) => {
       const id = String(albumId);
       const album = state.albums.get(id);
@@ -1435,33 +1440,14 @@
         simultaneousTracks: activation.simultaneousTracks,
         id
       });
-
-      const record = state.albumRecords.find(item => item.id === id);
-
-      if (
-        record &&
-        record.firstRankedTs != null &&
-        record.firstRankedTs !== activation.weekStart
-      ) {
-        officialAlbumEvents.push({
-          dateTs: record.firstRankedTs,
-          date: formatDate(record.firstRankedTs),
-          type: "Album",
-          status: "First Top 100 appearance",
-          title: record.title,
-          artist: record.artist,
-          rank: record.history[0]?.rank ?? null,
-          unitsSold: record.history[0]?.unitsSold ?? null,
-          id
-        });
-      }
     });
 
+    // Include album returns, but never song debuts or song/album exits.
     state.debutRecords = [
-      ...songEvents,
       ...officialAlbumEvents,
       ...albumReentryEvents
-    ].sort((a, b) => b.dateTs - a.dateTs);
+    ].filter(event => event.type === "Album")
+      .sort((a, b) => b.dateTs - a.dateTs);
 
     state.exitRecords = exitRecords;
 
@@ -1878,6 +1864,30 @@
       x => x.debutUnits
     );
     const mostAlbumUnits = best(albums.filter(x => x.unitsSold != null), x => x.unitsSold);
+    const mostAlbumTop20 = best(albums.filter(x => x.weeksTop20 > 0), x => x.weeksTop20);
+    const mostAlbumTop40 = best(albums.filter(x => x.weeksTop40 > 0), x => x.weeksTop40);
+    const mostAlbumTop50 = best(albums.filter(x => x.weeksTop50 > 0), x => x.weeksTop50);
+    const highestAlbumWeeklyUnits = best(
+      albums.filter(x => x.bestWeek && Number.isFinite(Number(x.bestWeek.unitsSold))),
+      x => Number(x.bestWeek.unitsSold)
+    );
+    const fastestAlbumToNo1 = best(
+      albums.filter(x => x.peak === 1 && Number.isFinite(x.weeksToPeak) && x.weeksToPeak > 0),
+      x => -x.weeksToPeak
+    );
+    const highestAlbumDebutRank = best(
+      albums.filter(x => x.debutRank != null && x.debutRank > 0),
+      x => 101 - x.debutRank
+    );
+    const longestAlbumDebutToChart = best(
+      albums.filter(x =>
+        x.officialDebuted &&
+        x.debutTs != null &&
+        x.firstRankedTs != null &&
+        x.firstRankedTs > x.debutTs
+      ),
+      x => (x.firstRankedTs - x.debutTs) / CONFIG.WEEK_MS
+    );
 
     const artistMostSongNo1 = best(artists.filter(x => x.songNo1Count > 0), x => x.songNo1Count);
     const artistMostSongs = best(artists.filter(x => x.songCount > 0), x => x.songCount);
@@ -1902,6 +1912,16 @@
     if (highestAlbumDebutUnits) add("Highest album debut-week units sold", formatUnits(highestAlbumDebutUnits.debutUnits), highestAlbumDebutUnits.title, highestAlbumDebutUnits.artist, highestAlbumDebutUnits.debutUnits, "Album", highestAlbumDebutUnits.id);
     if (mostAlbumDebutTracks) add("Most Hot 100 tracks at album debut", `${mostAlbumDebutTracks.qualifyingTracksAtDebut} tracks`, mostAlbumDebutTracks.title, mostAlbumDebutTracks.artist, mostAlbumDebutTracks.qualifyingTracksAtDebut, "Album", mostAlbumDebutTracks.id);
     if (mostAlbumUnits) add("Highest career album units sold", formatUnits(mostAlbumUnits.unitsSold), mostAlbumUnits.title, mostAlbumUnits.artist, mostAlbumUnits.unitsSold, "Album", mostAlbumUnits.id);
+    if (mostAlbumTop20) add("Most album Top 20 weeks", mostAlbumTop20.weeksTop20 + " weeks", mostAlbumTop20.title, mostAlbumTop20.artist, mostAlbumTop20.weeksTop20, "Album", mostAlbumTop20.id);
+    if (mostAlbumTop40) add("Most album Top 40 weeks", mostAlbumTop40.weeksTop40 + " weeks", mostAlbumTop40.title, mostAlbumTop40.artist, mostAlbumTop40.weeksTop40, "Album", mostAlbumTop40.id);
+    if (mostAlbumTop50) add("Most album Top 50 weeks", mostAlbumTop50.weeksTop50 + " weeks", mostAlbumTop50.title, mostAlbumTop50.artist, mostAlbumTop50.weeksTop50, "Album", mostAlbumTop50.id);
+    if (highestAlbumWeeklyUnits) add("Highest single-week album units sold", formatUnits(highestAlbumWeeklyUnits.bestWeek.unitsSold), highestAlbumWeeklyUnits.title, highestAlbumWeeklyUnits.artist, highestAlbumWeeklyUnits.bestWeek.unitsSold, "Album", highestAlbumWeeklyUnits.id);
+    if (fastestAlbumToNo1) add("Fastest album to reach No. 1", fastestAlbumToNo1.weeksToPeak + " chart weeks", fastestAlbumToNo1.title, fastestAlbumToNo1.artist, 1 / fastestAlbumToNo1.weeksToPeak, "Album", fastestAlbumToNo1.id);
+    if (highestAlbumDebutRank) add("Highest official album debut position", formatPosition(highestAlbumDebutRank.debutRank), highestAlbumDebutRank.title, highestAlbumDebutRank.artist, 101 - highestAlbumDebutRank.debutRank, "Album", highestAlbumDebutRank.id);
+    if (longestAlbumDebutToChart) {
+      const delayWeeks = Math.round((longestAlbumDebutToChart.firstRankedTs - longestAlbumDebutToChart.debutTs) / CONFIG.WEEK_MS);
+      add("Longest wait from album debut to Top 100", delayWeeks + " weeks", longestAlbumDebutToChart.title, longestAlbumDebutToChart.artist, delayWeeks, "Album", longestAlbumDebutToChart.id);
+    }
 
     if (artistMostSongNo1) add("Most distinct No. 1 songs credited", `${artistMostSongNo1.songNo1Count} songs`, artistMostSongNo1.name, "Artist credits", artistMostSongNo1.songNo1Count, "Artist", artistMostSongNo1.id);
     if (artistMostSongs) add("Most distinct songs charted", `${artistMostSongs.songCount} songs`, artistMostSongs.name, "Artist", artistMostSongs.songCount, "Artist", artistMostSongs.id);
@@ -2144,7 +2164,7 @@
       case "artists": return state.artistRecords;
       case "weeks": return state.weeklyRecords;
       case "numberones": return state.numberOneRecords;
-      case "debuts": return [...state.debutRecords, ...state.exitRecords];
+      case "debuts": return state.debutRecords.filter(row => row.type === "Album");
       case "periods": return buildPeriodRecords(state.periodMode);
       case "records": return state.allRecords;
       default: return [];
@@ -2455,9 +2475,13 @@
         ["title", "Album"],
         ["artist", "Lead artist"],
         ["trackCount", "Tracks"],
+        ["importDate", "Imported"],
+        ["releaseDate", "Released"],
         ["debutDate", "Official debut"],
-        ["latestRank", "Rank"],
+        ["firstRankedDate", "First Top 100"],
+        ["latestRank", "Latest rank"],
         ["weeksAtNo1", "No. 1 weeks"],
+        ["reentryCount", "Re-entries"],
         ["periodUnitsSold", "Units sold"],
         ["unitsSold", "Career units"]
       ],
@@ -2489,14 +2513,13 @@
         ["albumUnits", "Album units sold"]
       ],
       debuts: [
-        ["date", "Event date"],
-        ["type", "Chart"],
+        ["date", "Official debut / return date"],
         ["status", "Event"],
         ["rank", "Position"],
-        ["title", "Title"],
-        ["artist", "Artist"],
+        ["title", "Album"],
+        ["artist", "Lead artist"],
         ["unitsSold", "Units sold"],
-        ["simultaneousTracks", "Tracks at album debut"]
+        ["simultaneousTracks", "Tracks at debut"]
       ],
       periods: [
         ["period", state.periodMode === "year" ? "Year" : "Month"],
@@ -2527,9 +2550,10 @@
         weeksOnChart: 7, weeksAtNo1: 9, periodUnitsSold: 14, unitsSold: 14
       },
       albums: {
-        status: 15, title: 19, artist: 14, trackCount: 6,
-        debutDate: 12, latestRank: 8, weeksAtNo1: 8,
-        periodUnitsSold: 9, unitsSold: 9
+        status: 10, title: 16, artist: 11, trackCount: 4,
+        importDate: 7, releaseDate: 7, debutDate: 8, firstRankedDate: 8,
+        latestRank: 5, weeksAtNo1: 6, reentryCount: 5,
+        periodUnitsSold: 7, unitsSold: 6
       },
       artists: {
         currentSixMonthRank: 13, name: 23, songCount: 9,
