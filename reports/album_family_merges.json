@@ -260,8 +260,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "0f82792eefe3cbf090481849",
     "source_titles_merged": [
-      "3 Am",
-      "3 AM"
+      "3 AM",
+      "3 Am"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -272,8 +272,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "f6e0a45440a790e7ff61ad04",
     "source_titles_merged": [
-      "3 Am",
-      "3 AM"
+      "3 AM",
+      "3 Am"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -284,8 +284,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "dcae62d84e1cf925a05af41f",
     "source_titles_merged": [
-      "3 Am",
-      "3 AM"
+      "3 AM",
+      "3 Am"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -1378,8 +1378,8 @@
     "canonical_title": "Anti - MusicFire.in",
     "primary_artist_id": "5e568be58fcbab5cdbc5fd89",
     "source_titles_merged": [
-      "Anti - Musicfire.in",
-      "Anti - MusicFire.in"
+      "Anti - MusicFire.in",
+      "Anti - Musicfire.in"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -3922,8 +3922,8 @@
     "canonical_title": "Confessions II",
     "primary_artist_id": "8a28af176378f7b9dc69e715",
     "source_titles_merged": [
-      "CONFESSIONS II",
-      "Confessions II"
+      "Confessions II",
+      "CONFESSIONS II"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -3961,8 +3961,8 @@
     "canonical_title": "Cool Relax",
     "primary_artist_id": "438a144b0be1cc5153b3fd33",
     "source_titles_merged": [
-      "Cool Relax",
-      "COOL RELAX"
+      "COOL RELAX",
+      "Cool Relax"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -4443,8 +4443,8 @@
     "canonical_title": "Dangerously In Love",
     "primary_artist_id": "160b28fbcb18cf650db5f12a",
     "source_titles_merged": [
-      "Dangerously in Love",
-      "Dangerously In Love"
+      "Dangerously In Love",
+      "Dangerously in Love"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -7798,8 +7798,8 @@
     "canonical_title": "History - Past, Present And Future - Book I",
     "primary_artist_id": "296c92c1f42e7111ebe867e3",
     "source_titles_merged": [
-      "History - Past, Present And Future - Book I",
       "HIStory - Past, Present and Future - Book I",
+      "History - Past, Present And Future - Book I",
       "HIStory: Past, Present and Future, Book I"
     ],
     "edition_labels_merged": [],
@@ -8102,8 +8102,8 @@
     "canonical_title": "HURRY UP TOMORROW",
     "primary_artist_id": "03b159383844f399c130860b",
     "source_titles_merged": [
-      "Hurry Up Tomorrow",
-      "HURRY UP TOMORROW"
+      "HURRY UP TOMORROW",
+      "Hurry Up Tomorrow"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -8142,8 +8142,8 @@
     "canonical_title": "HURRY UP TOMORROW",
     "primary_artist_id": "18408e4b94f5e92f93f8f86b",
     "source_titles_merged": [
-      "Hurry Up Tomorrow",
       "HURRY UP TOMORROW",
+      "Hurry Up Tomorrow",
       "Hurry Up Tomorrow (Video Album)"
     ],
     "edition_labels_merged": [
@@ -8905,8 +8905,8 @@
     "canonical_title": "Isimo",
     "primary_artist_id": "3066eac9ce20209493ec670d",
     "source_titles_merged": [
-      "iSimo",
-      "Isimo"
+      "Isimo",
+      "iSimo"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -11612,8 +11612,8 @@
     "canonical_title": "MUSIC",
     "primary_artist_id": "4ea5a76f09ac137cd2c3dfff",
     "source_titles_merged": [
-      "Music",
-      "MUSIC"
+      "MUSIC",
+      "Music"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -15996,8 +15996,8 @@
     "canonical_title": "Solace",
     "primary_artist_id": "3c0cdf63735b97ba26e7fc40",
     "source_titles_merged": [
-      "Solace",
-      "SOLACE"
+      "SOLACE",
+      "Solace"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -17257,8 +17257,8 @@
     "canonical_title": "The Best Of Me",
     "primary_artist_id": "0bb09d501196085da8de130a",
     "source_titles_merged": [
-      "The Best of Me",
-      "The Best Of Me"
+      "The Best Of Me",
+      "The Best of Me"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -17678,9 +17678,9 @@
     "canonical_title": "the idol",
     "primary_artist_id": "7d09e007f4cb7bd27b2b618b",
     "source_titles_merged": [
-      "the idol",
       "THE IDOL",
-      "The Idol"
+      "The Idol",
+      "the idol"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -18833,12 +18833,12 @@
     "canonical_title": "Trolls World Tour",
     "primary_artist_id": "a487c95e88214cd938d1ad66",
     "source_titles_merged": [
-      "TROLLS World Tour (Original Motion Picture Soundtrack)",
-      "Trolls World Tour (Original Motion Picture Soundtrack)"
+      "Trolls World Tour (Original Motion Picture Soundtrack)",
+      "TROLLS World Tour (Original Motion Picture Soundtrack)"
     ],
     "edition_labels_merged": [
-      "TROLLS World Tour (Original Motion Picture Soundtrack)",
-      "Trolls World Tour (Original Motion Picture Soundtrack)"
+      "Trolls World Tour (Original Motion Picture Soundtrack)",
+      "TROLLS World Tour (Original Motion Picture Soundtrack)"
     ],
     "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -18989,8 +18989,8 @@
     "primary_artist_id": "660c70a28002cfa16b883f3e",
     "source_titles_merged": [
       "TYLA",
-      "TYLA +",
-      "Tyla +"
+      "Tyla +",
+      "TYLA +"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -19659,8 +19659,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "52a2c160a0104e1b0a9a53d1",
     "source_titles_merged": [
-      "Waiting to Exhale",
       "Waiting To Exhale",
+      "Waiting to Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [
