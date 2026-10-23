@@ -121,8 +121,8 @@
       description: "Recorded song and album No. 1 achievements."
     },
     debuts: {
-      title: "Debuts & Returns",
-      description: "Official album debut weeks, song debuts, re-entries and confirmed exits."
+      title: "Album Debuts & Returns",
+      description: "Official album debut weeks and album re-entries only. Eligible albums without an official debut remain in the Album Archive."
     },
     periods: {
       title: "Yearly & Monthly Performance",
@@ -192,13 +192,12 @@
       ["albumTitle", "Album title"]
     ],
     debuts: [
-      ["dateTs", "Event date"],
+      ["dateTs", "Official debut / return date"],
       ["status", "Event"],
-      ["type", "Chart"],
       ["rank", "Position"],
       ["unitsSold", "Units sold"],
-      ["title", "Title"],
-      ["artist", "Artist"]
+      ["title", "Album"],
+      ["artist", "Lead artist"]
     ],
     periods: [
       ["unitsSold", "Total units sold"],
@@ -1420,6 +1419,8 @@
 
     const officialAlbumEvents = [];
 
+    // The Debuts view is exclusively official album debuts. First Top 100
+    // appearance is a separate album archive field, not a second debut event.
     state.albumDebuts.forEach((activation, albumId) => {
       const id = String(albumId);
       const album = state.albums.get(id);
@@ -1439,33 +1440,14 @@
         simultaneousTracks: activation.simultaneousTracks,
         id
       });
-
-      const record = state.albumRecords.find(item => item.id === id);
-
-      if (
-        record &&
-        record.firstRankedTs != null &&
-        record.firstRankedTs !== activation.weekStart
-      ) {
-        officialAlbumEvents.push({
-          dateTs: record.firstRankedTs,
-          date: formatDate(record.firstRankedTs),
-          type: "Album",
-          status: "First Top 100 appearance",
-          title: record.title,
-          artist: record.artist,
-          rank: record.history[0]?.rank ?? null,
-          unitsSold: record.history[0]?.unitsSold ?? null,
-          id
-        });
-      }
     });
 
+    // Include album returns, but never song debuts or song/album exits.
     state.debutRecords = [
-      ...songEvents,
       ...officialAlbumEvents,
       ...albumReentryEvents
-    ].sort((a, b) => b.dateTs - a.dateTs);
+    ].filter(event => event.type === "Album")
+      .sort((a, b) => b.dateTs - a.dateTs);
 
     state.exitRecords = exitRecords;
 
@@ -2182,7 +2164,7 @@
       case "artists": return state.artistRecords;
       case "weeks": return state.weeklyRecords;
       case "numberones": return state.numberOneRecords;
-      case "debuts": return [...state.debutRecords, ...state.exitRecords];
+      case "debuts": return state.debutRecords.filter(row => row.type === "Album");
       case "periods": return buildPeriodRecords(state.periodMode);
       case "records": return state.allRecords;
       default: return [];
@@ -2531,14 +2513,13 @@
         ["albumUnits", "Album units sold"]
       ],
       debuts: [
-        ["date", "Event date"],
-        ["type", "Chart"],
+        ["date", "Official debut / return date"],
         ["status", "Event"],
         ["rank", "Position"],
-        ["title", "Title"],
-        ["artist", "Artist"],
+        ["title", "Album"],
+        ["artist", "Lead artist"],
         ["unitsSold", "Units sold"],
-        ["simultaneousTracks", "Tracks at album debut"]
+        ["simultaneousTracks", "Tracks at debut"]
       ],
       periods: [
         ["period", state.periodMode === "year" ? "Year" : "Month"],
