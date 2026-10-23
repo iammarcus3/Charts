@@ -74,11 +74,11 @@ const pointsForRank=rank=>rank===1?100:rank===2?98:Math.max(1,Math.round(98-((ra
 const addWeek=(id,title,artist,kind,plays,points,units,art,date)=>{
 let x=accumulated.get(kind+':'+id);if(!x){x={id,title,artist,kind,plays:0,points:0,units:0,art,date:null,href:'index.html',milestones:[]};accumulated.set(kind+':'+id,x)}
 const old=x.units;x.plays+=plays;x.points=points;x.units+=units;x.art=x.art||art;x.date=date;
-const prev=tierFor(old),next=tierFor(x.units);
-if(next&&(!prev||next.key!==prev.key||next.name!==prev.name)){
-x.milestones.push({name:next.name,key:next.key,units:x.units,date});
-if(!firstMilestone.has(kind+':'+id))firstMilestone.set(kind+':'+id,date);
-}
+const thresholds=[{units:500000,name:'Gold',key:'gold'},{units:1000000,name:'Platinum',key:'platinum'}];
+for(let n=2;n<10;n++)thresholds.push({units:n*1000000,name:n+'× Platinum',key:'platinum'});
+thresholds.push({units:10000000,name:'Diamond',key:'diamond'});
+for(const milestone of thresholds){if(old<milestone.units&&x.units>=milestone.units&&!x.milestones.some(m=>m.units===milestone.units)){x.milestones.push({...milestone,date});if(!firstMilestone.has(kind+':'+id))firstMilestone.set(kind+':'+id,date)}}
+
 };
 for(const [week,events] of [...weekly.entries()].sort((a,b)=>a[0]-b[0])){
 const songCounts=new Map(),albumCounts=new Map(),trackAlbums=new Map();
@@ -106,7 +106,7 @@ $('hall').innerHTML=certified.slice(0,3).map((x,i)=>'<article class="bg-black/50
 let list=certified.filter(x=>(kind==='all'||x.kind===kind)&&((x.title+' '+x.artist).toLowerCase().includes($('search').value.toLowerCase()))&&($('tier').value==='all'||($('tier').value==='gold'?x.units>=500000&&x.units<1000000:$('tier').value==='platinum'?x.units>=1000000:x.units>=10000000)));
 if($('sort').value==='title')list.sort((a,b)=>a.title.localeCompare(b.title));else list.sort((a,b)=>b.units-a.units);
 $('result-count').textContent=fmt(list.length)+' titles';
-$('results').innerHTML=list.map(x=>'<article class="entry"><div class="art w-[60px] h-[60px] rounded-lg">'+(safeImg(x.art)?'<img src="'+esc(x.art)+'" alt="">':'<i class="ph '+(x.kind==='album'?'ph-vinyl-record':'ph-music-notes')+' text-2xl text-zinc-500"></i>')+'</div><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-1"><span class="text-[10px] uppercase tracking-widest font-bold text-zinc-500">'+(x.kind==='album'?'Album':'Song')+'</span><span class="text-[10px] rounded-full border border-zinc-700 px-2 py-0.5 text-zinc-300">'+esc(x.cert.name)+'</span></div><h3 class="font-bold truncate">'+esc(x.title)+'</h3><p class="text-sm text-zinc-500 truncate">'+esc(x.artist||'Unknown artist')+'</p><p class="text-xs text-zinc-600 mt-1">'+(x.date?'First certification: '+dateLabel(x.date):'Certification date not yet recorded')+'</p></div><div class="entry-side text-right"><div class="text-lg font-black">'+fmt(x.units)+'</div><div class="text-[10px] text-zinc-500 uppercase tracking-widest">Units sold</div><div class="text-xs text-zinc-600 mt-1">'+fmt(x.plays)+' plays · '+x.points+' pts</div></div></article>').join('')||'<div class="text-center py-12 border border-dashed border-zinc-800 rounded-xl text-zinc-500">No titles match these filters.</div>';
+$('results').innerHTML=list.map(x=>'<article class="entry"><div class="art w-[60px] h-[60px] rounded-lg">'+(safeImg(x.art)?'<img src="'+esc(x.art)+'" alt="">':'<i class="ph '+(x.kind==='album'?'ph-vinyl-record':'ph-music-notes')+' text-2xl text-zinc-500"></i>')+'</div><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-1"><span class="text-[10px] uppercase tracking-widest font-bold text-zinc-500">'+(x.kind==='album'?'Album':'Song')+'</span><span class="text-[10px] rounded-full border border-zinc-700 px-2 py-0.5 text-zinc-300">'+esc(x.cert.name)+'</span></div><h3 class="font-bold truncate">'+esc(x.title)+'</h3><p class="text-sm text-zinc-500 truncate">'+esc(x.artist||'Unknown artist')+'</p><p class="text-xs text-zinc-600 mt-1">'+(x.date?'First certification: '+dateLabel(x.date):'Certification date not yet recorded')+'</p><div class="flex flex-wrap gap-1 mt-2">'+(x.milestones||[]).map(m=>'<span title="'+esc(m.name)+' · '+dateLabel(m.date)+'" class="text-[10px] rounded border border-zinc-800 px-2 py-1 text-zinc-500">'+esc(m.name)+' · '+dateLabel(m.date)+'</span>').join('')+'</div></div><div class="entry-side text-right"><div class="text-lg font-black">'+fmt(x.units)+'</div><div class="text-[10px] text-zinc-500 uppercase tracking-widest">Units sold</div><div class="text-xs text-zinc-600 mt-1">'+fmt(x.plays)+' plays · '+x.points+' pts</div></div></article>').join('')||'<div class="text-center py-12 border border-dashed border-zinc-800 rounded-xl text-zinc-500">No titles match these filters.</div>';
 }
 document.querySelectorAll('[data-kind]').forEach(b=>b.addEventListener('click',()=>{kind=b.dataset.kind;document.querySelectorAll('[data-kind]').forEach(x=>x.classList.toggle('active',x===b));render()}));
 ['search','tier','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',render));
