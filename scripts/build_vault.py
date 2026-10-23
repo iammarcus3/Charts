@@ -434,8 +434,12 @@ def build() -> dict[str, Any]:
 
     # Canonicalize high-similarity records, then apply explicit user-approved pairs.
     all_tracks, song_merge_report, track_id_remap = _merge_similar_tracks(all_tracks, all_events, 0.90)
-    approved_manifest_path = Path("config/approved_track_merges.json")
-    if approved_manifest_path.exists():
+    repository_root = Path(__file__).resolve().parents[1]
+    approved_manifest_path = repository_root / "config" / "approved_track_merges.json"
+    repository_raw_dir = repository_root / "raw" / "listening_history"
+    # Unit tests and custom fixture builds override RAW_DIR; never apply the
+    # production vault's approval manifest to those isolated datasets.
+    if RAW_DIR.resolve() == repository_raw_dir.resolve() and approved_manifest_path.exists():
         with approved_manifest_path.open("r", encoding="utf-8") as handle:
             approved_manifest = json.load(handle)
         approved_pairs = approved_manifest.get("approved_pairs", [])
