@@ -1,4 +1,5 @@
 """Import ZeroCharts scrobbles into normalized, deterministic records."""
+# Rebuild after reverting the unsafe approved-track merge changes.
 from __future__ import annotations
 
 import json
