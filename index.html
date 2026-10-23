@@ -140,7 +140,8 @@
                 minOffset: 0,
                 data: { songs: [], albums: [] },
                 raw: { tracks: null, albums: null, artists: null, history: null },
-                snapshots: { songs: {}, albums: {}, dates: {} }
+                snapshots: { songs: {}, albums: {}, dates: {} },
+                officialAlbumDebutsByOffset: {}
             },
 
             escapeHTML(value) {
@@ -309,8 +310,9 @@
                 this.state.minOffset = minOffset;
                 this.state.snapshots = { songs: {}, albums: {}, dates: {} };
                 
-                // Track albums that have officially debuted (persists chronologically)
+                // Track one-time official album debuts (3 distinct Hot 100 tracks).
                 this.state.debutedAlbums = new Set();
+                this.state.officialAlbumDebutsByOffset = {};
 
                 const songHistory = {};
                 const albumHistory = {};
@@ -352,9 +354,26 @@
                     });
 
                     chartingTracksPerAlbum.forEach((trackSet, albumId) => {
-                        // If >= 3 distinct tracks are charting, it officially debuts
-                        if (trackSet.size >= MIN_ALBUM_TRACKS) {
-                            this.state.debutedAlbums.add(albumId);
+                        // Record only the first qualifying week for this album.
+                        if (
+                            trackSet.size >= MIN_ALBUM_TRACKS &&
+                            !this.state.debutedAlbums.has(String(albumId))
+                        ) {
+                            const id = String(albumId);
+                            this.state.debutedAlbums.add(id);
+
+                            const album = this.state.raw.albums.get(id);
+                            if (album) {
+                                if (!this.state.officialAlbumDebutsByOffset[offset]) {
+                                    this.state.officialAlbumDebutsByOffset[offset] = [];
+                                }
+
+                                this.state.officialAlbumDebutsByOffset[offset].push({
+                                    id,
+                                    title: album.title || 'Unknown Album',
+                                    artist: this.getArtistName(album.primary_artist_id || album.artist_id)
+                                });
+                            }
                         }
                     });
 
@@ -626,9 +645,8 @@
                     const songs = app.state.data.songs || [];
                     const albums = app.state.data.albums || [];
 
-                    const newSongs = songs.filter(s => s.is_new);
                     const reEntries = songs.filter(s => s.is_reentry);
-                    const newAlbums = albums.filter(a => a.is_new);
+                    const newAlbums = app.state.officialAlbumDebutsByOffset?.[app.state.weekOffset] || [];
                     
                     let highestClimber = null;
                     let biggestDropper = null;
@@ -650,7 +668,6 @@
                     });
 
                     const top10 = songs.slice(0, 10);
-                    const top10New = top10.filter(s => s.is_new).length;
                     const top10Up = top10.filter(s => s.previous_rank && s.rank < s.previous_rank).length;
                     const top10Down = top10.filter(s => s.previous_rank && s.rank > s.previous_rank).length;
                     
@@ -687,14 +704,9 @@
                             <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-zinc-300 border-b border-zinc-800 pb-2">Week Insights</h3>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg">
-                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">New Songs</p>
-                                    <p class="text-2xl font-black text-white">${newSongs.length}</p>
-                                    <p class="text-xs text-zinc-400 mt-1 truncate">${newSongs.length > 0 ? 'Top: ' + app.escapeHTML(newSongs[0].title) : 'No new debuts'}</p>
-                                </div>
-                                <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg">
-                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Album Debuts</p>
+                                    <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Official Album Debuts</p>
                                     <p class="text-2xl font-black text-white">${newAlbums.length}</p>
-                                    <p class="text-xs text-zinc-400 mt-1 truncate">${newAlbums.length > 0 ? 'Top: ' + app.escapeHTML(newAlbums[0].title) : 'No new debuts'}</p>
+                                    <p class="text-xs text-zinc-400 mt-1 truncate">${newAlbums.length > 0 ? 'Top: ' + app.escapeHTML(newAlbums[0].title) : 'No official album debuts'}</p>
                                 </div>
                                 <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-lg">
                                     <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Highest Climber</p>
