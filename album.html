@@ -279,6 +279,32 @@
       return track?.album_id ? [String(track.album_id)] : [];
     }
 
+    function normalizeAlbumFamilyTitle(value) {
+      let title = String(value || '').toLowerCase().replace(/[’']/g, '');
+      title = title.replace(/\([^)]*\)|\[[^\]]*\]/g, ' ');
+      title = title.replace(/\b(?:scary hours|deluxe|expanded|special|anniversary|bonus tracks?|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version)\b/gi, ' ');
+      return title.replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
+    }
+    function isAlbumEditionOf(editionId, parentId) {
+      const editionKey = String(editionId), parentKey = String(parentId);
+      if (editionKey === parentKey) return false;
+      const edition = state.raw.albums.get(editionKey), parent = state.raw.albums.get(parentKey);
+      if (!edition || !parent) return false;
+      const editionArtist = canonicalArtistId(edition.primary_artist_id || edition.artist_id);
+      const parentArtist = canonicalArtistId(parent.primary_artist_id || parent.artist_id);
+      if (!editionArtist || editionArtist !== parentArtist) return false;
+      const editionTitle = normalizeAlbumFamilyTitle(edition.title);
+      const parentTitle = normalizeAlbumFamilyTitle(parent.title);
+      const editionHasReleaseCue = /\b(?:deluxe|expanded|special|anniversary|bonus|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version|reloaded|scary hours|ep|single|cuffing season)\b/i.test(edition.title || '');
+      const sameTitleFamily = editionTitle === parentTitle || (editionHasReleaseCue && editionTitle.startsWith(parentTitle + ' '));
+      if (!parentTitle || !sameTitleFamily) return false;
+      const editionTracks = state.albumTrackCounts?.get(editionKey) || new Set();
+      const parentTracks = state.albumTrackCounts?.get(parentKey) || new Set();
+      let sharedTracks = 0;
+      editionTracks.forEach(trackId => { if (parentTracks.has(String(trackId))) sharedTracks++; });
+      return sharedTracks >= MIN_ALBUM_TRACKS;
+    }
+
     // --- DATA ENGINE ---
     async function loadVault() {
       const paths = ['vault/tracks.json', 'vault/albums.json', 'vault/artists.json', 'vault/listening_history.jsonl'];
@@ -389,10 +415,21 @@
             chartingTracksPerAlbum.get(albumId).add(String(song.id));
           });
         });
-        chartingTracksPerAlbum.forEach((trackIds, albumId) => {
-          if (eligibleAlbumIds.has(String(albumId)) && trackIds.size >= MIN_ALBUM_TRACKS) {
-            state.debutedAlbums.add(String(albumId));
-          }
+        const qualifyingAlbumIds = [...chartingTracksPerAlbum.entries()]
+          .filter(([albumId, trackIds]) => eligibleAlbumIds.has(String(albumId)) && trackIds.size >= MIN_ALBUM_TRACKS)
+          .map(([albumId]) => String(albumId));
+        qualifyingAlbumIds.sort((a, b) =>
+          String(state.raw.albums.get(a)?.title || '').length - String(state.raw.albums.get(b)?.title || '').length
+        );
+        qualifyingAlbumIds.forEach(id => {
+          if (state.debutedAlbums.has(id)) return;
+          const isEdition = [...eligibleAlbumIds].some(parentId => {
+            const parentKey = String(parentId);
+            if (parentKey === id) return false;
+            if (!state.debutedAlbums.has(parentKey) && !qualifyingAlbumIds.includes(parentKey)) return false;
+            return isAlbumEditionOf(id, parentKey);
+          });
+          if (!isEdition) state.debutedAlbums.add(id);
         });
 
         let entries = [];
