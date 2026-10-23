@@ -184,5 +184,19 @@ class TestAlbumEligibility(unittest.TestCase):
         )
 
 
+    def test_lastfm_name_field_is_used_as_track_title(self):
+        _, _, _, tracks = self.build_from_scrobbles([
+            {
+                "artist": {"mbid": "artist-id", "#text": "Aaliyah"},
+                "album": {"mbid": "album-id", "#text": "Age Ain't Nothing but a Number"},
+                "name": "Back & Forth",
+                "date": {"uts": "1760000000", "#text": "Thu, 09 Oct 2025 00:00:00"},
+            },
+        ])
+        self.assertEqual(len(tracks), 1)
+        self.assertEqual(tracks[0]["title"], "Back & Forth")
+        self.assertNotEqual(tracks[0]["title"], "Unknown Track")
+
+
 if __name__ == "__main__":
     unittest.main()
