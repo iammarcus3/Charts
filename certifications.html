@@ -80,7 +80,7 @@ const artistName=id=>{const a=artists.get(canonicalArtistId(id));return a?.name|
 const normalizeAlbumFamilyTitle=value=>String(value||'').toLowerCase().replace(/[’']/g,'').replace(/\([^)]*\)|\[[^\]]*\]/g,' ').replace(/\b(?:scary hours|deluxe|expanded|special|anniversary|bonus tracks?|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version)\b/gi,' ').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
 const albumTrackSets=new Map();
 albums.forEach((a,id)=>albumTrackSets.set(String(id),new Set((Array.isArray(a.track_ids)?a.track_ids:[]).map(String).filter(tid=>tracks.has(tid)))));
-tracks.forEach((t,tid)=>{const ids=Array.isArray(t.album_ids)?t.album_ids:(t.album_id?[t.album_id]:[]);ids.forEach(id=>{if(albumTrackSets.has(String(id)))albumTrackSets.get(String(id)).add(String(tid))})});
+tracks.forEach((t,tid)=>{const ids=Array.isArray(t.album_ids)&&t.album_ids.length?[...new Set(t.album_ids.map(String))]:(t.album_id?[String(t.album_id)]:[]);ids.forEach(id=>{if(albumTrackSets.has(String(id)))albumTrackSets.get(String(id)).add(String(tid))})});
 const eligible=new Set([...albumTrackSets].filter(([id,set])=>set.size>=3).map(([id])=>id));
 const weekly=new Map(), weekMs=7*24*60*60*1000;
 // Match the main chart engine: chart weeks start on Friday (UTC).
