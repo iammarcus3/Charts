@@ -183,7 +183,6 @@
             pointsForRank(rank) {
                 if (rank === 1) return 100;
                 if (rank === 2) return 98;
-                // Smoothly interpolate from #2 = 98 to #100 = 1.
                 return Math.max(1, Math.round(98 - ((rank - 2) * 97 / 98)));
             },
 
@@ -268,7 +267,6 @@
                     return;
                 }
 
-                // Rebuild distinct album membership from both sides of the vault relationship.
                 const albumTrackSets = new Map();
                 this.state.raw.albums.forEach((album, albumId) => {
                     albumTrackSets.set(String(albumId), new Set(
@@ -284,7 +282,7 @@
                     });
                 });
 
-                // Only releases with at least three distinct canonical tracks qualify.
+                // Rule A: Static Album Eligibility
                 const eligibleAlbumIds = new Set();
                 albumTrackSets.forEach((trackIds, albumId) => {
                     if (trackIds.size >= MIN_ALBUM_TRACKS) eligibleAlbumIds.add(albumId);
@@ -292,7 +290,6 @@
                 this.state.eligibleAlbumIds = eligibleAlbumIds;
                 this.state.albumTrackCounts = albumTrackSets;
 
-                // The latest available scrobble determines the latest chart week.
                 const latestTimestamp = history[history.length - 1].timestamp;
                 const latestWeekStart = this.getWeekStartMs(latestTimestamp);
                 const latestWeekEnd = latestWeekStart + WEEK_MS - 1;
@@ -311,6 +308,9 @@
 
                 this.state.minOffset = minOffset;
                 this.state.snapshots = { songs: {}, albums: {}, dates: {} };
+                
+                // Track albums that have officially debuted (persists chronologically)
+                this.state.debutedAlbums = new Set();
 
                 const songHistory = {};
                 const albumHistory = {};
@@ -331,15 +331,35 @@
                         const track = this.state.raw.tracks.get(trackId);
                         if (!track) return;
 
-                        // A play contributes to each eligible release containing this track.
                         this.getTrackAlbumIds(track).forEach(albumId => {
                             if (!eligibleAlbumIds.has(albumId)) return;
                             albumPlays.set(albumId, (albumPlays.get(albumId) || 0) + 1);
                         });
                     });
 
+                    // 1. Compile the Hot 100 first
                     const currentSongs = this.compileBaseEntries(trackPlays, 'songs');
-                    const currentAlbums = this.compileBaseEntries(albumPlays, 'albums');
+
+                    // 2. Rule B: Check for new Album Debuts based on this week's Hot 100 entries
+                    const chartingTracksPerAlbum = new Map();
+                    currentSongs.forEach(song => {
+                        const track = this.state.raw.tracks.get(song.id);
+                        if (!track) return;
+                        this.getTrackAlbumIds(track).forEach(albumId => {
+                            if (!chartingTracksPerAlbum.has(albumId)) chartingTracksPerAlbum.set(albumId, new Set());
+                            chartingTracksPerAlbum.get(albumId).add(song.id);
+                        });
+                    });
+
+                    chartingTracksPerAlbum.forEach((trackSet, albumId) => {
+                        // If >= 3 distinct tracks are charting, it officially debuts
+                        if (trackSet.size >= MIN_ALBUM_TRACKS) {
+                            this.state.debutedAlbums.add(albumId);
+                        }
+                    });
+
+                    // 3. Compile Top 100 Albums, allowing only officially debuted albums
+                    const currentAlbums = this.compileBaseEntries(albumPlays, 'albums', this.state.debutedAlbums);
 
                     this.state.snapshots.songs[offset] = this.applyHistory(currentSongs, songHistory, offset);
                     this.state.snapshots.albums[offset] = this.applyHistory(currentAlbums, albumHistory, offset);
@@ -348,7 +368,7 @@
                 this.loadSnapshot(0);
             },
 
-            compileBaseEntries(playCountsMap, type) {
+            compileBaseEntries(playCountsMap, type, allowedAlbums = null) {
                 let entries = [];
                 playCountsMap.forEach((plays, id) => {
                     let title, artist, artistId, albumTitle = null, trackCount = null;
@@ -362,6 +382,10 @@
                     } else {
                         const albumId = String(id);
                         if (!this.state.eligibleAlbumIds?.has(albumId)) return;
+                        
+                        // Enforce album debut rule (only process if it has officially debuted)
+                        if (allowedAlbums && !allowedAlbums.has(albumId)) return;
+
                         const album = this.state.raw.albums.get(albumId);
                         if (!album) return;
                         title = album.title || 'Unknown Album';
@@ -377,7 +401,6 @@
                     });
                 });
 
-                // Points are based on play rank; calculated units then determine the displayed rank.
                 entries.sort((a, b) => b.plays - a.plays || a.title.localeCompare(b.title));
                 entries = entries.slice(0, 100).map((entry, index) => {
                     const points = this.pointsForRank(index + 1);
@@ -557,7 +580,6 @@
                 };
 
                 try {
-                    // First try the actual track so the Hot 100 can use its album artwork.
                     if (cleanTrack) {
                         const trackData = await request({ method: 'track.getInfo', artist: cleanArtist, track: cleanTrack });
                         const trackImage = pickImage(trackData?.track?.album?.image);
@@ -566,7 +588,6 @@
                             return trackImage;
                         }
 
-                        // Last.fm track info may provide the album name even if it has no image.
                         const discoveredAlbum = trackData?.track?.album?.title;
                         if (!cleanAlbum && discoveredAlbum) {
                             const albumData = await request({ method: 'album.getInfo', artist: cleanArtist, album: discoveredAlbum });
@@ -605,7 +626,6 @@
                     const songs = app.state.data.songs || [];
                     const albums = app.state.data.albums || [];
 
-                    // --- NEW DATA ANALYSIS LOGIC ---
                     const newSongs = songs.filter(s => s.is_new);
                     const reEntries = songs.filter(s => s.is_reentry);
                     const newAlbums = albums.filter(a => a.is_new);
@@ -629,12 +649,10 @@
                         }
                     });
 
-                    // Top 10 breakdown
                     const top10 = songs.slice(0, 10);
                     const top10New = top10.filter(s => s.is_new).length;
                     const top10Up = top10.filter(s => s.previous_rank && s.rank < s.previous_rank).length;
                     const top10Down = top10.filter(s => s.previous_rank && s.rank > s.previous_rank).length;
-                    // --- END ANALYSIS LOGIC ---
                     
                     return `
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
@@ -665,7 +683,6 @@
                             </div>
                         </div>
 
-                        <!-- NEW INSIGHTS DASHBOARD -->
                         <div class="mb-12">
                             <h3 class="text-xl font-bold mb-4 uppercase tracking-wider text-zinc-300 border-b border-zinc-800 pb-2">Week Insights</h3>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
