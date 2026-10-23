@@ -587,12 +587,15 @@
       document.getElementById('sales-debut-sub').textContent = officialDebutDate
         ? 'First week with 3 tracks on the Hot 100'
         : 'Has not met the official debut rule';
-      document.getElementById('sales-debut').textContent = debutDate
-        ? formatNumber((state.snapshots.albums[Object.keys(state.snapshots.albums).map(Number).find(offset => {
-            const row = (state.snapshots.albums[offset] || []).find(item => item.id === albumId);
-            return row && new Date(state.snapshots.dates[offset].start).getTime() === new Date(debutDate).getTime();
-          })] || []).find(item => item.id === albumId)?.units_sold || 0)
-        : '—';
+      const officialDebutOffset = officialDebutMs == null ? null :
+        Object.keys(state.snapshots.dates).map(Number).find(offset =>
+          state.snapshots.dates[offset]?.start === officialDebutMs
+        );
+      const officialDebutEntry = officialDebutOffset == null ? null :
+        (state.snapshots.albums[officialDebutOffset] || []).find(item => item.id === albumId);
+      document.getElementById('sales-debut').textContent = officialDebutMs == null
+        ? '—'
+        : formatNumber(officialDebutEntry?.units_sold || 0);
 
       // Populate UI
       document.getElementById('stat-current').textContent = currentRank !== '-' ? `#${currentRank}` : '-';
