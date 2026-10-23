@@ -11,6 +11,14 @@ from normalize_metadata import (
 )
 
 
+ARTIST_ALIASES = {"q": "Q Marsden"}
+
+
+def _canonical_artist(value: str) -> str:
+    """Apply explicitly confirmed artist-name corrections before IDs are generated."""
+    return ARTIST_ALIASES.get(normalize_text(value), value)
+
+
 def _metadata_text(value: Any, fallback: str) -> str:
     """Extract display text from plain values and ZeroCharts/Last.fm metadata objects."""
     if isinstance(value, dict):
@@ -75,7 +83,7 @@ def ingest_zerocharts_file(filepath: str | Path):
     for index, item in enumerate(scrobbles):
         if not isinstance(item, dict):
             continue
-        raw_artist = _first_nonempty(item, ("artist", "artist_name", "album_artist"), "Unknown Artist")
+        raw_artist = _canonical_artist(_first_nonempty(item, ("artist", "artist_name", "album_artist"), "Unknown Artist"))
         raw_album = _first_nonempty(item, ("album", "album_title", "release"), "Unknown Album")
         raw_track = _first_nonempty(item, ("track", "track_name", "title", "name"), "Unknown Track")
         timestamp = item.get("timestamp", item.get("played_at", item.get("date")))
