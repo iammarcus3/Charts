@@ -835,6 +835,7 @@
 
         events.push({
           trackId,
+          albumId: sourceEvent.album_id ?? sourceEvent.albumId ?? sourceEvent.album_id,
           timestamp,
           weekStart: getWeekStartMs(timestamp)
         });
@@ -902,16 +903,16 @@
           (trackCounts.get(trackId) || 0) + 1
         );
 
-        const albumIds = state.trackToAlbums.get(trackId) || new Set();
-
-        albumIds.forEach(albumId => {
-          if (!state.eligibleAlbumIds.has(String(albumId))) return;
-
+        // Match index.html and certifications.html: credit a scrobble only
+        // to the release attached to that listening event, not every catalogue
+        // release that happens to contain the same recording.
+        const sourceAlbumId = event.albumId;
+        if (sourceAlbumId != null && state.eligibleAlbumIds.has(String(sourceAlbumId))) {
           albumCounts.set(
-            String(albumId),
-            (albumCounts.get(String(albumId)) || 0) + 1
+            String(sourceAlbumId),
+            (albumCounts.get(String(sourceAlbumId)) || 0) + 1
           );
-        });
+        }
       });
 
       const songs = makeChartEntries(trackCounts, "songs");
