@@ -260,8 +260,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "0f82792eefe3cbf090481849",
     "source_titles_merged": [
-      "3 Am",
-      "3 AM"
+      "3 AM",
+      "3 Am"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -272,8 +272,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "f6e0a45440a790e7ff61ad04",
     "source_titles_merged": [
-      "3 Am",
-      "3 AM"
+      "3 AM",
+      "3 Am"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -284,8 +284,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "dcae62d84e1cf925a05af41f",
     "source_titles_merged": [
-      "3 Am",
-      "3 AM"
+      "3 AM",
+      "3 Am"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -2788,8 +2788,8 @@
     "canonical_title": "Blue Lights In The Basement",
     "primary_artist_id": "d7ef2790e9f724b1325b983f",
     "source_titles_merged": [
-      "Blue Lights In The Basement",
-      "Blue Lights in the Basement"
+      "Blue Lights in the Basement",
+      "Blue Lights In The Basement"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -3922,8 +3922,8 @@
     "canonical_title": "Confessions II",
     "primary_artist_id": "8a28af176378f7b9dc69e715",
     "source_titles_merged": [
-      "CONFESSIONS II",
-      "Confessions II"
+      "Confessions II",
+      "CONFESSIONS II"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -4443,8 +4443,8 @@
     "canonical_title": "Dangerously In Love",
     "primary_artist_id": "160b28fbcb18cf650db5f12a",
     "source_titles_merged": [
-      "Dangerously in Love",
-      "Dangerously In Love"
+      "Dangerously In Love",
+      "Dangerously in Love"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -5818,8 +5818,8 @@
     "canonical_title": "Fear Of Flying",
     "primary_artist_id": "7bce3bfee0283bf64306adcb",
     "source_titles_merged": [
-      "Fear Of Flying",
       "Fear of Flying",
+      "Fear Of Flying",
       "Fear Of Flying (Expanded Edition)"
     ],
     "edition_labels_merged": [
@@ -6230,8 +6230,8 @@
     "canonical_title": "For All the Dogs",
     "primary_artist_id": "d0bf8ece7f634cb21932e8f1",
     "source_titles_merged": [
-      "For All the Dogs",
-      "For All The Dogs"
+      "For All The Dogs",
+      "For All the Dogs"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -6251,19 +6251,6 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "1f193206221ff89f1e22de65",
-    "canonical_title": "Forest Green",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
-    "source_titles_merged": [
-      "Forest Green (Deluxe)"
-    ],
-    "edition_labels_merged": [
-      "Forest Green (Deluxe)"
-    ],
-    "distinct_canonical_track_count": 2,
-    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
-  },
-  {
     "canonical_album_id": "3fb7d1a0fc1cf4e89bd9a29e",
     "canonical_title": "Forest Green",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
@@ -6273,7 +6260,7 @@
     "edition_labels_merged": [
       "Forest Green (Deluxe)"
     ],
-    "distinct_canonical_track_count": 1,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -7703,19 +7690,6 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "1daeefbbef7e60d81feb5e1e",
-    "canonical_title": "hey there",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
-    "source_titles_merged": [
-      "hey there [i have a compulsive complex]"
-    ],
-    "edition_labels_merged": [
-      "hey there [i have a compulsive complex]"
-    ],
-    "distinct_canonical_track_count": 1,
-    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
-  },
-  {
     "canonical_album_id": "943cf9e3be2c8c14e2436399",
     "canonical_title": "hey there",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
@@ -7798,8 +7772,8 @@
     "canonical_title": "History - Past, Present And Future - Book I",
     "primary_artist_id": "296c92c1f42e7111ebe867e3",
     "source_titles_merged": [
-      "History - Past, Present And Future - Book I",
       "HIStory - Past, Present and Future - Book I",
+      "History - Past, Present And Future - Book I",
       "HIStory: Past, Present and Future, Book I"
     ],
     "edition_labels_merged": [],
@@ -8102,8 +8076,8 @@
     "canonical_title": "HURRY UP TOMORROW",
     "primary_artist_id": "03b159383844f399c130860b",
     "source_titles_merged": [
-      "HURRY UP TOMORROW",
-      "Hurry Up Tomorrow"
+      "Hurry Up Tomorrow",
+      "HURRY UP TOMORROW"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -8142,8 +8116,8 @@
     "canonical_title": "HURRY UP TOMORROW",
     "primary_artist_id": "18408e4b94f5e92f93f8f86b",
     "source_titles_merged": [
-      "HURRY UP TOMORROW",
       "Hurry Up Tomorrow",
+      "HURRY UP TOMORROW",
       "Hurry Up Tomorrow (Video Album)"
     ],
     "edition_labels_merged": [
@@ -9651,8 +9625,8 @@
     "canonical_title": "Kiss All The Time. Disco, Occasionally.",
     "primary_artist_id": "5262dc458929bbef3f0e1420",
     "source_titles_merged": [
-      "Kiss All the Time. Disco, Occasionally.",
-      "Kiss All The Time. Disco, Occasionally."
+      "Kiss All The Time. Disco, Occasionally.",
+      "Kiss All the Time. Disco, Occasionally."
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -10829,9 +10803,9 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "b155faccda1d74c88841843a",
+    "canonical_album_id": "e110c89af5505b5ec1492f58",
     "canonical_title": "LUV",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
+    "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "source_titles_merged": [
       "LUV (I KNOW I WANT THIS FOR REAL)"
     ],
@@ -11612,8 +11586,8 @@
     "canonical_title": "MUSIC",
     "primary_artist_id": "4ea5a76f09ac137cd2c3dfff",
     "source_titles_merged": [
-      "Music",
-      "MUSIC"
+      "MUSIC",
+      "Music"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -15271,8 +15245,8 @@
     "canonical_title": "Set It Off",
     "primary_artist_id": "0c9205b178526ab06d6f41f0",
     "source_titles_merged": [
-      "SET IT OFF",
-      "Set It Off"
+      "Set It Off",
+      "SET IT OFF"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -15996,8 +15970,8 @@
     "canonical_title": "Solace",
     "primary_artist_id": "3c0cdf63735b97ba26e7fc40",
     "source_titles_merged": [
-      "SOLACE",
-      "Solace"
+      "Solace",
+      "SOLACE"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -16296,6 +16270,30 @@
     "edition_labels_merged": [
       "Stay For The Night (Rockstar Energy Studios Freestyle) - Single"
     ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "11a5bc2cd497474c375bb42c",
+    "canonical_title": "Stereo Driver",
+    "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
+    "source_titles_merged": [
+      "Stereo Driver",
+      "STEREO DRIVER"
+    ],
+    "edition_labels_merged": [],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "5efdf883e5d786f0ac6f7535",
+    "canonical_title": "Stereo Driver - Single",
+    "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
+    "source_titles_merged": [
+      "STEREO DRIVER - Single",
+      "Stereo Driver - Single"
+    ],
+    "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
@@ -17257,8 +17255,8 @@
     "canonical_title": "The Best Of Me",
     "primary_artist_id": "0bb09d501196085da8de130a",
     "source_titles_merged": [
-      "The Best Of Me",
-      "The Best of Me"
+      "The Best of Me",
+      "The Best Of Me"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -17476,12 +17474,12 @@
     "canonical_title": "The Fighting Temptations",
     "primary_artist_id": "d4b4d6c3df118803e75af84b",
     "source_titles_merged": [
-      "The Fighting Temptations (Music from the Motion Picture)",
-      "The Fighting Temptations (Music From The Motion Picture)"
+      "The Fighting Temptations (Music From The Motion Picture)",
+      "The Fighting Temptations (Music from the Motion Picture)"
     ],
     "edition_labels_merged": [
-      "The Fighting Temptations (Music from the Motion Picture)",
-      "The Fighting Temptations (Music From The Motion Picture)"
+      "The Fighting Temptations (Music From The Motion Picture)",
+      "The Fighting Temptations (Music from the Motion Picture)"
     ],
     "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -17678,9 +17676,9 @@
     "canonical_title": "the idol",
     "primary_artist_id": "7d09e007f4cb7bd27b2b618b",
     "source_titles_merged": [
+      "THE IDOL",
       "the idol",
-      "The Idol",
-      "THE IDOL"
+      "The Idol"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -18094,20 +18092,6 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "973cce981360404d6e3af1a5",
-    "canonical_title": "The Shave Experiment",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
-    "source_titles_merged": [
-      "The Shave Experiment",
-      "The Shave Experiment (Director's Cut)"
-    ],
-    "edition_labels_merged": [
-      "The Shave Experiment (Director's Cut)"
-    ],
-    "distinct_canonical_track_count": 12,
-    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
-  },
-  {
     "canonical_album_id": "fa8d3b251f46ac408fda5622",
     "canonical_title": "The Shave Experiment",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
@@ -18118,7 +18102,7 @@
     "edition_labels_merged": [
       "The Shave Experiment (Director's Cut)"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 12,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -18989,8 +18973,8 @@
     "primary_artist_id": "660c70a28002cfa16b883f3e",
     "source_titles_merged": [
       "TYLA",
-      "Tyla +",
-      "TYLA +"
+      "TYLA +",
+      "Tyla +"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,

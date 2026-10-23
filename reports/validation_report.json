@@ -7,7 +7,7 @@
   "duplicate_events_removed": 1,
   "fuzzy_candidates_for_review": 274,
   "song_families_merged": 0,
-  "album_families_consolidated": 1582,
+  "album_families_consolidated": 1581,
   "notes": [
     "All parenthesized (...) and bracketed [...] album-title annotations are removed for album-family matching; source titles are preserved.",
     "Original release titles and edition labels are preserved in album source_titles and edition_labels and reports/album_family_merges.json.",

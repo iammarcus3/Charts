@@ -50,10 +50,16 @@
     "normalized_title": "soul present",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "track_ids": [
+      "2c98f66c281d0bcc52b0d916",
       "336e64eb0cf4ed770ec695ef",
+      "4900c0caf1c91b15017d63b0",
       "56627b337025be302802a140",
+      "87bd9c2244e895a26ae1d8de",
       "b0a6d24c2c391f37605a1045",
-      "b5409fb9a1259030581b8f68"
+      "b5409fb9a1259030581b8f68",
+      "cd17b1243702a1dac63fb9d6",
+      "db36f8ef5609dc457896d38c",
+      "f8a858c9c922377847c8021f"
     ],
     "source_titles": [
       "Soul,PRESENT"
@@ -1469,6 +1475,24 @@
     "edition_labels": [
       "19 (Deluxe Edition)"
     ],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "0e6d365379bb98ae0ae0aee3",
+    "title": "10 Songs",
+    "normalized_title": "10 songs",
+    "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
+    "track_ids": [
+      "026453308d239b780a2a5bee",
+      "1ac6513089637e2096dba15a",
+      "645c57e465ab7be3ad124572",
+      "942f99dafd1db54bda65b217",
+      "c98140e2f094db44e289550f"
+    ],
+    "source_titles": [
+      "10 Songs"
+    ],
+    "edition_labels": [],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -5231,23 +5255,6 @@
     ],
     "source_titles": [
       "For Certain"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "bracketed_album_family"
-  },
-  {
-    "id": "32ec41e53f7754f2fdfcb88c",
-    "title": "Unknown Album",
-    "normalized_title": "unknown album",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
-    "track_ids": [
-      "7046edeecd2ddea3024b11d3",
-      "84070325550ade5a6a4f5174",
-      "9c2aa7fd2d068faec8ba2cae",
-      "c8bdad1a3159b16d019c7e48"
-    ],
-    "source_titles": [
-      "Unknown Album"
     ],
     "edition_labels": [],
     "canonicalization_rule": "bracketed_album_family"
@@ -11240,31 +11247,6 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
-    "id": "765af4d30f9226a0b6b2ce82",
-    "title": "DO YOU SEE ME?",
-    "normalized_title": "do you see me",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
-    "track_ids": [
-      "348f0b78a28d08c30e18480b",
-      "36dc7f87a2dbada496878279",
-      "3ca8c60be3884697cd63799e",
-      "3e624b274ce829894e2c41a3",
-      "4674079cb7534efd5944035c",
-      "508ed11b62bc6f48853a7f89",
-      "78f2741e874e0d220099782d",
-      "8014fed91835826dd3476baa",
-      "8096d1266bb2020d0639b192",
-      "b9a29f2e37e31f6c1f6bfb37",
-      "fbf277529d2ab6e1cdb3d269",
-      "fd08eb68c883f476586d077c"
-    ],
-    "source_titles": [
-      "DO YOU SEE ME?"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "bracketed_album_family"
-  },
-  {
     "id": "7693222a34de912d4108738d",
     "title": "Apolonio",
     "normalized_title": "apolonio",
@@ -13849,6 +13831,23 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "92cfce97d44f7d017071056f",
+    "title": "Unknown Album",
+    "normalized_title": "unknown album",
+    "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
+    "track_ids": [
+      "191c0ef8a3f6a044dbee0051",
+      "469cef81a7b7435cd0f4ba40",
+      "56627b337025be302802a140",
+      "db36f8ef5609dc457896d38c"
+    ],
+    "source_titles": [
+      "Unknown Album"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "92ee91b374d0d4794b89a03f",
     "title": "Graffiti",
     "normalized_title": "graffiti",
@@ -14028,24 +14027,6 @@
       "Pink Friday (Roman Reloaded) [Deluxe Edition]",
       "Pink Friday (Deluxe)"
     ],
-    "canonicalization_rule": "bracketed_album_family"
-  },
-  {
-    "id": "944b48f923a3dd8dd79dd125",
-    "title": "10 Songs",
-    "normalized_title": "10 songs",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
-    "track_ids": [
-      "34a66ce8b83af552bc15bd8e",
-      "46e2a1a987eca9cdf2fc10dc",
-      "4a688db9171b72ffe456fb66",
-      "84c18296020cc10ac4cf1832",
-      "9cf33ecd2df4b99d7149d7ee"
-    ],
-    "source_titles": [
-      "10 Songs"
-    ],
-    "edition_labels": [],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -14311,34 +14292,6 @@
       "The Idol"
     ],
     "edition_labels": [],
-    "canonicalization_rule": "bracketed_album_family"
-  },
-  {
-    "id": "973cce981360404d6e3af1a5",
-    "title": "The Shave Experiment",
-    "normalized_title": "the shave experiment",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
-    "track_ids": [
-      "0532cf6eb2476d92e17ef379",
-      "254f090438eefe13f6352dc1",
-      "342ba5fe0791ed398e35a967",
-      "34f7c13eeae50b7e7d6cec45",
-      "46df91a0cb27a225920ab072",
-      "60cf4f751d0ef9665488ea62",
-      "778f9e1bb531a0dac88b6ae6",
-      "9a61d8668b5b167f73dfde7f",
-      "9c2aa7fd2d068faec8ba2cae",
-      "b0d5eba873bae6af9a901eca",
-      "d6dc0ffb4322e8c5a76661e7",
-      "fefa38017da86f6fa41d52e1"
-    ],
-    "source_titles": [
-      "The Shave Experiment (Director's Cut)",
-      "The Shave Experiment"
-    ],
-    "edition_labels": [
-      "The Shave Experiment (Director's Cut)"
-    ],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -20700,29 +20653,6 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
-    "id": "e0ca668c7f0641e8c9669e7c",
-    "title": "Soul,PRESENT",
-    "normalized_title": "soul present",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
-    "track_ids": [
-      "0e2baea6f50ce761581c5cc4",
-      "255cd895283288e3f054502d",
-      "41881a3f5d23cb277b73cb7a",
-      "7046edeecd2ddea3024b11d3",
-      "a781b11aa3ff7c2deab2c096",
-      "c8bdad1a3159b16d019c7e48",
-      "e3e0a42d81933ad643996a09",
-      "ed9cb728bf4273b77dcaa323",
-      "f365a159545a0d833dc1261b",
-      "f8f3219097845fd1d96bf5d6"
-    ],
-    "source_titles": [
-      "Soul,PRESENT"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "bracketed_album_family"
-  },
-  {
     "id": "e138fa565673b149e543a598",
     "title": "Unknown Album",
     "normalized_title": "unknown album",
@@ -21466,23 +21396,6 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
-    "id": "e8648d63404b87cbccc61a5f",
-    "title": "The Shave Experiment - EP",
-    "normalized_title": "the shave experiment ep",
-    "primary_artist_id": "ebe016675a9ad389cc9f08e0",
-    "track_ids": [
-      "0532cf6eb2476d92e17ef379",
-      "254f090438eefe13f6352dc1",
-      "342ba5fe0791ed398e35a967",
-      "34f7c13eeae50b7e7d6cec45"
-    ],
-    "source_titles": [
-      "The Shave Experiment - EP"
-    ],
-    "edition_labels": [],
-    "canonicalization_rule": "bracketed_album_family"
-  },
-  {
     "id": "e8a28f9f099b3650713ae775",
     "title": "$ome $exy $ongs 4 U",
     "normalized_title": "ome exy ongs 4 u",
@@ -22106,6 +22019,23 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "f2d540ffbac6c929a8e8303f",
+    "title": "The Shave Experiment - EP",
+    "normalized_title": "the shave experiment ep",
+    "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
+    "track_ids": [
+      "1032cba441b54e532bae4f58",
+      "2052ab764deda7a8c5c4f128",
+      "550fe78d7838cc1f17a587c3",
+      "7c8282938af808811eb21c2d"
+    ],
+    "source_titles": [
+      "The Shave Experiment - EP"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "f2e5b20df4099f09605fb06f",
     "title": "All Eyez on Me",
     "normalized_title": "all eyez on me",
@@ -22493,9 +22423,17 @@
     "normalized_title": "do you see me",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "track_ids": [
+      "1b61219688bd054b488299e1",
+      "1e556998a471127c81e6cd68",
+      "26fe42c1758686fc75e9b3f4",
+      "32de9f2b470bc88939abe746",
+      "440f235510635c7f651f7fd7",
       "49bf7646c780454c86f944dc",
+      "5af8b6e2b08baa0ed0743280",
       "7eee1a519943f6e932c622bf",
+      "ae318b797c0bbdeff2ffe137",
       "b54f347a2b525f80fdaab811",
+      "d82a1d06877c5d4453e8571c",
       "ddccc6e1561e8c65ca93e134"
     ],
     "source_titles": [
@@ -22943,9 +22881,18 @@
     "normalized_title": "the shave experiment",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "track_ids": [
+      "1032cba441b54e532bae4f58",
       "2052ab764deda7a8c5c4f128",
+      "2bbb05f59a14de5e64d2f8a7",
+      "2c60909eff7819ca61915366",
       "3e6dc674f0a4ccf816c80145",
-      "550fe78d7838cc1f17a587c3"
+      "469cef81a7b7435cd0f4ba40",
+      "550fe78d7838cc1f17a587c3",
+      "6abafaf134ff170321422329",
+      "776b493137655efc3a855a1e",
+      "7c8282938af808811eb21c2d",
+      "ccf585e5dfdd433d5be2519d",
+      "f7267febbfb17c72fbc3e75e"
     ],
     "source_titles": [
       "The Shave Experiment (Director's Cut)",
