@@ -186,6 +186,11 @@
     <h2 class="section-title">Sales Performance Breakdown</h2>
     <div class="stats-grid">
       <div class="stat-card">
+        <div class="stat-label">Official Album Debut</div>
+        <div class="stat-value" id="sales-debut-date">—</div>
+        <div class="stat-sub" id="sales-debut-sub">First week with 3 tracks on the Hot 100</div>
+      </div>
+      <div class="stat-card">
         <div class="stat-label">Debut Week Units</div>
         <div class="stat-value" id="sales-debut">-</div>
       </div>
@@ -368,6 +373,8 @@
       });
       state.minOffset = minOffset;
 
+      state.debutedAlbums = new Set();
+      state.albumDebutDates = new Map();
       const historyTracker = {};
       const songHistoryTracker = {};
       for (let offset = minOffset; offset <= 0; offset++) {
@@ -387,7 +394,6 @@
 
         // Album debut qualification is evaluated chronologically against this week's official Hot 100.
         // Once qualified, an album stays qualified even in weeks with no charting tracks.
-        if (!state.debutedAlbums) state.debutedAlbums = new Set();
         const qualificationTrackPlays = new Map();
         events.forEach(ev => {
           const trackId = String(ev.track_id);
@@ -429,7 +435,10 @@
             if (!state.debutedAlbums.has(parentKey) && !qualifyingAlbumIds.includes(parentKey)) return false;
             return isAlbumEditionOf(id, parentKey);
           });
-          if (!isEdition) state.debutedAlbums.add(id);
+          if (!isEdition) {
+            state.debutedAlbums.add(id);
+            state.albumDebutDates.set(id, startMs);
+          }
         });
 
         let entries = [];
@@ -568,6 +577,22 @@
 
         }
       }
+
+      // The official debut date is the first week the album met the three-track Hot 100 rule.
+      const officialDebutMs = state.albumDebutDates.get(String(albumId));
+      const officialDebutDate = officialDebutMs != null
+        ? new Date(officialDebutMs).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })
+        : null;
+      document.getElementById('sales-debut-date').textContent = officialDebutDate || 'Not debuted';
+      document.getElementById('sales-debut-sub').textContent = officialDebutDate
+        ? 'First week with 3 tracks on the Hot 100'
+        : 'Has not met the official debut rule';
+      document.getElementById('sales-debut').textContent = debutDate
+        ? formatNumber((state.snapshots.albums[Object.keys(state.snapshots.albums).map(Number).find(offset => {
+            const row = (state.snapshots.albums[offset] || []).find(item => item.id === albumId);
+            return row && new Date(state.snapshots.dates[offset].start).getTime() === new Date(debutDate).getTime();
+          })] || []).find(item => item.id === albumId)?.units_sold || 0)
+        : '—';
 
       // Populate UI
       document.getElementById('stat-current').textContent = currentRank !== '-' ? `#${currentRank}` : '-';
