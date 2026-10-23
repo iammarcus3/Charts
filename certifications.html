@@ -77,7 +77,7 @@ const tracks=normalizeMap(td),albums=normalizeMap(ad),artists=normalizeMap(ard);
 const history=ht.trim()?ht.trim().split(/\r?\n/).filter(Boolean).map(x=>JSON.parse(x)).filter(x=>x&&x.track_id&&timestamp(x.timestamp)!==null).map(x=>({...x,ts:timestamp(x.timestamp)})).sort((a,b)=>a.ts-b.ts):[];
 const canonicalArtistId=id=>{if(!id)return null;const key=String(Array.isArray(id)?id[0]:id);const a=artists.get(key);return a?.canonical_artist_id?String(a.canonical_artist_id):key};
 const artistName=id=>{const a=artists.get(canonicalArtistId(id));return a?.name||a?.title||''};
-const normalizeAlbumFamilyTitle=value=>String(value||'').toLowerCase().replace(/[’']/g,'').replace(/\\([^)]*\\)|\\[[^\\]]*\\]/g,' ').replace(/\\b(?:scary hours|deluxe|expanded|special|anniversary|bonus tracks?|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version)\\b/gi,' ').replace(/[^a-z0-9]+/g,' ').trim().replace(/\\s+/g,' ');
+const normalizeAlbumFamilyTitle=value=>String(value||'').toLowerCase().replace(/[’']/g,'').replace(/\([^)]*\)|\[[^\]]*\]/g,' ').replace(/\b(?:scary hours|deluxe|expanded|special|anniversary|bonus tracks?|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version)\b/gi,' ').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
 const albumTrackSets=new Map();
 albums.forEach((a,id)=>albumTrackSets.set(String(id),new Set((Array.isArray(a.track_ids)?a.track_ids:[]).map(String).filter(tid=>tracks.has(tid)))));
 tracks.forEach((t,tid)=>{const ids=Array.isArray(t.album_ids)?t.album_ids:(t.album_id?[t.album_id]:[]);ids.forEach(id=>{if(albumTrackSets.has(String(id)))albumTrackSets.get(String(id)).add(String(tid))})});
@@ -91,7 +91,7 @@ const isAlbumEditionOf=(editionId,parentId)=>{
  const ea=canonicalArtistId(edition.primary_artist_id||edition.artist_id),pa=canonicalArtistId(parent.primary_artist_id||parent.artist_id);
  if(!ea||ea!==pa)return false;
  const et=normalizeAlbumFamilyTitle(edition.title),pt=normalizeAlbumFamilyTitle(parent.title);
- const hasCue=/\\b(?:deluxe|expanded|special|anniversary|bonus|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version|reloaded|scary hours|ep|single|cuffing season)\\b/i.test(edition.title||'');
+ const hasCue=/\b(?:deluxe|expanded|special|anniversary|bonus|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version|reloaded|scary hours|ep|single|cuffing season)\b/i.test(edition.title||'');
  if(!pt||!(et===pt||(hasCue&&et.startsWith(pt+' '))))return false;
  const etr=albumTrackSets.get(String(editionId))||new Set(),ptr=albumTrackSets.get(String(parentId))||new Set();
  let shared=0;etr.forEach(tid=>{if(ptr.has(String(tid)))shared++});
