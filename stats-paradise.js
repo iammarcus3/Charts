@@ -937,13 +937,15 @@
         }
       });
 
-      const editionSuffixPattern = /\b(deluxe|expanded|special|scary hours|bonus tracks?|anniversary|remaster(?:ed)?|reissue|edition|version)\b/i;
-      const normalizeAlbumFamilyTitle = value => String(value || "")
-        .toLowerCase()
-        .replace(/\([^)]*\)/g, " ")
-        .replace(/[’']/g, "")
-        .replace(/[^a-z0-9]+/g, " ")
-        .trim();
+      // Canonicalize edition labels the same way across the entire catalogue.
+      // Parenthesized labels are removed, and common unbracketed edition suffixes
+      // are normalized too (including "Scary Hours Edition").
+      const normalizeAlbumFamilyTitle = value => {
+        let title = String(value || "").toLowerCase().replace(/[’']/g, "");
+        title = title.replace(/\([^)]*\)|\[[^\]]*\]/g, " ");
+        title = title.replace(/\b(?:scary hours|deluxe|expanded|special|anniversary|bonus tracks?|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version)\b/gi, " ");
+        return title.replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
+      };
 
       const isEditionOf = (editionId, parentId) => {
         if (editionId === parentId) return false;
@@ -957,13 +959,10 @@
 
         const normalizedEdition = normalizeAlbumFamilyTitle(getAlbumTitle(edition));
         const normalizedParent = normalizeAlbumFamilyTitle(getAlbumTitle(parent));
-        if (!normalizedParent || normalizedEdition === normalizedParent ||
-            !normalizedEdition.startsWith(normalizedParent + " ")) return false;
+        if (!normalizedParent || normalizedEdition !== normalizedParent) return false;
 
-        const suffix = normalizedEdition.slice(normalizedParent.length).trim();
-        if (!editionSuffixPattern.test(getAlbumTitle(edition)) &&
-            !editionSuffixPattern.test(suffix)) return false;
-
+        // Matching title alone is not enough: require at least three shared
+        // canonical tracks so similarly named but unrelated albums stay separate.
         const editionTracks = state.albumTrackMap.get(String(editionId)) || new Set();
         const parentTracks = state.albumTrackMap.get(String(parentId)) || new Set();
         let sharedTracks = 0;
