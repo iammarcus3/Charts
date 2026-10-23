@@ -943,7 +943,7 @@
       const normalizeAlbumFamilyTitle = value => {
         let title = String(value || "").toLowerCase().replace(/[’']/g, "");
         title = title.replace(/\([^)]*\)|\[[^\]]*\]/g, " ");
-        title = title.replace(/\b(?:scary hours|deluxe|expanded|special|anniversary|bonus tracks?|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version)\b/gi, " ");
+        title = title.replace(/\b(?:scary hours|deluxe|expanded|special|anniversary|bonus tracks?|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version|reloaded|ep|single)\b/gi, " ");
         return title.replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
       };
 
@@ -959,7 +959,10 @@
 
         const normalizedEdition = normalizeAlbumFamilyTitle(getAlbumTitle(edition));
         const normalizedParent = normalizeAlbumFamilyTitle(getAlbumTitle(parent));
-        if (!normalizedParent || normalizedEdition !== normalizedParent) return false;
+        const editionHasReleaseCue = /\b(?:deluxe|expanded|special|anniversary|bonus|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version|reloaded|scary hours|ep|single|cuffing season)\b/i.test(getAlbumTitle(edition));
+        const sameTitleFamily = normalizedEdition === normalizedParent ||
+          (editionHasReleaseCue && normalizedEdition.startsWith(normalizedParent + " "));
+        if (!normalizedParent || !sameTitleFamily) return false;
 
         // Matching title alone is not enough: require at least three shared
         // canonical tracks so similarly named but unrelated albums stay separate.
