@@ -371,13 +371,13 @@
                         const trackId = String(event.track_id);
                         trackPlays.set(trackId, (trackPlays.get(trackId) || 0) + 1);
 
-                        const track = this.state.raw.tracks.get(trackId);
-                        if (!track) return;
-
-                        this.getTrackAlbumIds(track).forEach(albumId => {
-                            if (!eligibleAlbumIds.has(albumId)) return;
+                        // Count the play only against the release attached to this
+                        // scrobble. Do not multiply one listen across every release
+                        // that happens to contain the same recording.
+                        const albumId = String(event.album_id || '');
+                        if (albumId && eligibleAlbumIds.has(albumId)) {
                             albumPlays.set(albumId, (albumPlays.get(albumId) || 0) + 1);
-                        });
+                        }
                     });
 
                     // 1. Compile the Hot 100 first
