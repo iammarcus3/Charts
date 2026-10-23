@@ -106,7 +106,7 @@
     },
     albums: {
       title: "Album Archive",
-      description: "Catalogue eligibility, official debut dates and album-chart careers."
+      description: "Album chart careers, plus the number of tracks from each album that reached No. 1 or the Top 10."
     },
     artists: {
       title: "Artist Archive",
@@ -156,6 +156,8 @@
       ["latestRank", "Latest position"],
       ["peak", "Peak position"],
       ["weeksOnChart", "Weeks charted"],
+      ["numberOneTracks", "No. 1 tracks"],
+      ["top10Tracks", "Top 10 tracks"],
       ["weeksAtNo1", "No. 1 weeks"],
       ["reentryCount", "Re-entries"],
       ["trackCount", "Distinct tracks"],
@@ -1389,6 +1391,25 @@
       };
     });
 
+    const songRecordById = new Map(state.songRecords.map(record => [String(record.id), record]));
+    const albumTrackAchievements = new Map();
+
+    state.eligibleAlbumIds.forEach(albumId => {
+      albumTrackAchievements.set(String(albumId), { no1Tracks: 0, top10Tracks: 0 });
+    });
+
+    state.trackToAlbums.forEach((albumIds, trackId) => {
+      const songRecord = songRecordById.get(String(trackId));
+      if (!songRecord || songRecord.peak == null) return;
+
+      albumIds.forEach(albumId => {
+        const achievement = albumTrackAchievements.get(String(albumId));
+        if (!achievement) return;
+        if (songRecord.peak === 1) achievement.no1Tracks++;
+        if (songRecord.peak <= 10) achievement.top10Tracks++;
+      });
+    });
+
     state.albumRecords = [...state.eligibleAlbumIds].map(albumId => {
       const id = String(albumId);
       const album = state.albums.get(id);
@@ -1433,6 +1454,8 @@
         officialDebuted: Boolean(activation),
         status,
         trackCount,
+        numberOneTracks: albumTrackAchievements.get(id)?.no1Tracks ?? 0,
+        top10Tracks: albumTrackAchievements.get(id)?.top10Tracks ?? 0,
 
         importTs: readTimestampFromItem(album, ["imported_at", "import_date", "added_at", "created_at"]),
         releaseTs: readTimestampFromItem(album, ["release_date", "released", "first_release_date", "releaseDate"]),
@@ -2552,6 +2575,8 @@
         ["debutDate", "Official debut"],
         ["firstRankedDate", "First Top 100"],
         ["latestRank", "Latest rank"],
+        ["numberOneTracks", "No. 1 tracks"],
+        ["top10Tracks", "Top 10 tracks"],
         ["weeksAtNo1", "No. 1 weeks"],
         ["reentryCount", "Re-entries"],
         ["periodUnitsSold", "Units sold"],
@@ -2623,7 +2648,7 @@
         weeksOnChart: 6, weeksAtNo1: 8, periodUnitsSold: 15, unitsSold: 14
       },
       albums: {
-        listRank: 4, status: 9, title: 14, artist: 10, trackCount: 4,
+        listRank: 4, status: 9, title: 14, artist: 10, numberOneTracks: 7, top10Tracks: 7, trackCount: 4,
         importDate: 7, releaseDate: 7, debutDate: 8, firstRankedDate: 8,
         latestRank: 5, weeksAtNo1: 6, reentryCount: 5,
         periodUnitsSold: 7, unitsSold: 6
