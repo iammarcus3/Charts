@@ -16,8 +16,14 @@ def _metadata_text(value: Any, fallback: str) -> str:
         # ZeroCharts exports can encode values as {"#TEXT": "...", "MBID": "..."}.
         for key in ("#text", "#TEXT", "text", "name", "title", "value"):
             candidate = value.get(key)
-            if candidate is not None and not isinstance(candidate, (dict, list)):
-                result = display_text(candidate, "")
+            if candidate is not None:
+                result = _metadata_text(candidate, "")
+                if result:
+                    return result
+        # Some exports wrap the display value inside another metadata object.
+        for candidate in value.values():
+            if isinstance(candidate, (dict, list)):
+                result = _metadata_text(candidate, "")
                 if result:
                     return result
         return fallback
