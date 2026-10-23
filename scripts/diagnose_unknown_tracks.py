@@ -1,7 +1,8 @@
 """Diagnostic for source rows that fall back to Unknown Track.
 
 This prints counts and a few field-level examples in CI so the importer can be
-fixed based on the actual ZeroCharts export schema rather than guesses.
+fixed based on the actual ZeroCharts export schema rather than guesses. Last.fm
+exports use the top-level `name` field for the track title.
 """
 import json
 from pathlib import Path
