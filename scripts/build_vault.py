@@ -236,6 +236,145 @@ def _fuzzy_track_candidates(tracks: dict[str, dict[str, Any]]) -> list[dict[str,
     candidates.sort(key=lambda c: (-c["similarity"], c["track_a_title"].casefold(), c["track_b_title"].casefold()))
     return candidates
 
+
+def _merge_approved_track_pairs(
+    tracks: dict[str, dict[str, Any]],
+    events: list[dict[str, Any]],
+    approved_pairs: list[dict[str, Any]],
+    prior_remap: dict[str, str],
+) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]], dict[str, str]]:
+    """Apply explicit user-approved track merges after automatic title matching.
+
+    Approved source IDs are resolved through the automatic merge map first. Missing
+    IDs fail the build instead of silently ignoring an approval.
+    """
+    parent: dict[str, str] = {track_id: track_id for track_id in tracks}
+
+    def find(track_id: str) -> str:
+        while parent[track_id] != track_id:
+            parent[track_id] = parent[parent[track_id]]
+            track_id = parent[track_id]
+        return track_id
+
+    def union(left_id: str, right_id: str) -> None:
+        left_root, right_root = find(left_id), find(right_id)
+        if left_root != right_root:
+            parent[max(left_root, right_root)] = min(left_root, right_root)
+
+    resolved_pairs: list[dict[str, Any]] = []
+    unresolved: list[dict[str, Any]] = []
+    for pair in approved_pairs:
+        if pair.get("approved") is not True or pair.get("entity_type") != "track":
+            continue
+        left_id = prior_remap.get(str(pair.get("track_a_id", "")), str(pair.get("track_a_id", "")))
+        right_id = prior_remap.get(str(pair.get("track_b_id", "")), str(pair.get("track_b_id", "")))
+        if left_id not in tracks or right_id not in tracks:
+            unresolved.append({
+                "track_a_id": pair.get("track_a_id"),
+                "track_b_id": pair.get("track_b_id"),
+                "resolved_track_a_id": left_id,
+                "resolved_track_b_id": right_id,
+                "reason": "approved_track_id_not_found_after_automatic_merge",
+            })
+            continue
+        if tracks[left_id].get("primary_artist_id") != tracks[right_id].get("primary_artist_id"):
+            unresolved.append({
+                "track_a_id": pair.get("track_a_id"),
+                "track_b_id": pair.get("track_b_id"),
+                "resolved_track_a_id": left_id,
+                "resolved_track_b_id": right_id,
+                "reason": "approved_pair_artist_mismatch",
+            })
+            continue
+        resolved_pairs.append({**pair, "resolved_track_a_id": left_id, "resolved_track_b_id": right_id})
+        union(left_id, right_id)
+
+    if unresolved:
+        raise RuntimeError(
+            "Approved track merges could not be applied safely: "
+            + json.dumps(unresolved[:10], ensure_ascii=False)
+        )
+
+    components: dict[str, list[str]] = defaultdict(list)
+    for track_id in tracks:
+        components[find(track_id)].append(track_id)
+
+    event_counts: dict[str, int] = defaultdict(int)
+    for event in events:
+        if event.get("track_id"):
+            event_counts[str(event["track_id"])] += 1
+
+    remap: dict[str, str] = {}
+    merged: dict[str, dict[str, Any]] = {}
+    report: list[dict[str, Any]] = []
+    for members in components.values():
+        canonical_id = min(
+            members,
+            key=lambda tid: (
+                len(str(tracks[tid].get("normalized_title") or normalize_text(tracks[tid].get("title", "")))),
+                -event_counts.get(tid, 0),
+                str(tracks[tid].get("normalized_title", "")),
+                tid,
+            ),
+        )
+        canonical = dict(tracks[canonical_id])
+        canonical["album_ids"] = list(canonical.get("album_ids", []))
+        canonical["aliases"] = list(canonical.get("aliases", []))
+        source_titles: list[str] = []
+        for member_id in members:
+            remap[member_id] = canonical_id
+            member = tracks[member_id]
+            for album_id in member.get("album_ids", []):
+                if album_id not in canonical["album_ids"]:
+                    canonical["album_ids"].append(album_id)
+            for title in [member.get("title"), *member.get("aliases", []), *member.get("source_titles", [])]:
+                if title and title not in source_titles:
+                    source_titles.append(title)
+                if title and title != canonical.get("title") and title not in canonical["aliases"]:
+                    canonical["aliases"].append(title)
+        canonical["album_ids"] = sorted(canonical["album_ids"])
+        if canonical["album_ids"]:
+            canonical["album_id"] = canonical["album_ids"][0]
+        canonical["source_titles"] = sorted(source_titles, key=str.casefold)
+        merged[canonical_id] = canonical
+
+        if len(members) > 1:
+            member_set = set(members)
+            approved_memberships = [
+                pair for pair in resolved_pairs
+                if pair["resolved_track_a_id"] in member_set and pair["resolved_track_b_id"] in member_set
+            ]
+            report.append({
+                "canonical_track_id": canonical_id,
+                "canonical_title": canonical.get("title", "Unknown Track"),
+                "artist_id": canonical.get("primary_artist_id"),
+                "source_track_ids_merged": sorted(members),
+                "source_titles_merged": canonical["source_titles"],
+                "approved_pairs_applied": [
+                    {
+                        "track_a_id": pair.get("track_a_id"),
+                        "track_a_title": pair.get("track_a_title"),
+                        "track_b_id": pair.get("track_b_id"),
+                        "track_b_title": pair.get("track_b_title"),
+                        "similarity": pair.get("similarity"),
+                    }
+                    for pair in approved_memberships
+                ],
+                "action": "merged_by_explicit_user_approval",
+            })
+
+    for event in events:
+        old_id = str(event.get("track_id", ""))
+        if old_id in remap:
+            event["track_id"] = remap[old_id]
+            timestamp = event.get("timestamp")
+            if timestamp is not None and str(timestamp).strip():
+                event["event_id"] = generate_event_id(event["track_id"], timestamp)
+
+    report.sort(key=lambda row: (str(row["canonical_title"]).casefold(), row["canonical_track_id"]))
+    return merged, report, remap
+
+
 def build() -> dict[str, Any]:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     VAULT_DIR.mkdir(parents=True, exist_ok=True)
@@ -293,10 +432,25 @@ def build() -> dict[str, Any]:
                         existing["aliases"].append(alias)
         all_events.extend(events)
 
-    # Canonicalize high-similarity song records before linking albums or validating events.
+    # Canonicalize high-similarity records, then apply explicit user-approved pairs.
     all_tracks, song_merge_report, track_id_remap = _merge_similar_tracks(all_tracks, all_events, 0.90)
+    approved_manifest_path = Path("config/approved_track_merges.json")
+    if approved_manifest_path.exists():
+        with approved_manifest_path.open("r", encoding="utf-8") as handle:
+            approved_manifest = json.load(handle)
+        approved_pairs = approved_manifest.get("approved_pairs", [])
+    else:
+        approved_pairs = []
+    all_tracks, approved_merge_report, approved_track_remap = _merge_approved_track_pairs(
+        all_tracks, all_events, approved_pairs, track_id_remap
+    )
     for album in all_albums.values():
-        album["track_ids"] = sorted({track_id_remap.get(tid, tid) for tid in album.get("track_ids", [])})
+        album["track_ids"] = sorted({
+            approved_track_remap.get(track_id_remap.get(tid, tid), track_id_remap.get(tid, tid))
+            for tid in album.get("track_ids", [])
+        })
+    song_merge_report.extend(approved_merge_report)
+    song_merge_report.sort(key=lambda row: (str(row["canonical_title"]).casefold(), row["canonical_track_id"]))
 
     # Ensure bidirectional album/track relationships are complete.
     for album in all_albums.values():
@@ -382,13 +536,16 @@ def build() -> dict[str, Any]:
         "duplicate_events_removed": duplicate_event_count,
         "fuzzy_candidates_for_review": len(fuzzy_candidates),
         "song_families_merged": len(song_merge_report),
+        "approved_track_merge_families": len(approved_merge_report),
+        "approved_track_pairs_loaded": len(approved_pairs),
         "album_families_consolidated": len(album_family_report),
         "notes": [
             "All parenthesized (...) and bracketed [...] album-title annotations are removed for album-family matching; source titles are preserved.",
             "Original release titles and edition labels are preserved in album source_titles and edition_labels and reports/album_family_merges.json.",
             "Distinct canonical track IDs are unioned across editions, preserving unique deluxe bonus tracks without double-counting repeated tracks.",
             "Same-artist song titles with normalized SequenceMatcher similarity of 90% or higher are automatically merged; aliases and source titles are preserved.",
-            "Similarity candidates from 80% up to but below 90% are reported for review and are not auto-merged.",
+            "Similarity candidates from 80% up to but below 90% are reported for review and are not auto-merged unless listed in config/approved_track_merges.json.",
+            "Explicitly approved track pairs are merged on every build; original titles remain aliases and listening events and album relationships are remapped to the canonical track ID.",
         ],
     }
 
