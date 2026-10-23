@@ -223,9 +223,15 @@
     // --- UTILITIES ---
     function escapeHTML(str) { return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
     function formatNumber(num) { return new Intl.NumberFormat('en-US').format(num || 0); }
-    function getArtistName(idRef) {
-      if (!idRef) return 'Unknown Artist';
+    function canonicalArtistId(idRef) {
+      if (!idRef) return null;
       const id = Array.isArray(idRef) ? idRef[0] : idRef;
+      const obj = state.raw.artists.get(String(id));
+      return obj?.canonical_artist_id ? String(obj.canonical_artist_id) : String(id);
+    }
+    function getArtistName(idRef) {
+      const id = canonicalArtistId(idRef);
+      if (!id) return 'Unknown Artist';
       const obj = state.raw.artists.get(String(id));
       return (obj && (obj.name || obj.title)) ? (obj.name || obj.title) : 'Unknown Artist';
     }
@@ -312,7 +318,7 @@
         let entries = [];
         trackPlays.forEach((plays, id) => {
           const track = state.raw.tracks.get(id);
-          if (track) entries.push({ id, plays, title: track.title, artistId: track.primary_artist_id || track.artist_id });
+          if (track) entries.push({ id, plays, title: track.title, artistId: canonicalArtistId(track.primary_artist_id || track.artist_id) });
         });
 
         entries.sort((a, b) => b.plays - a.plays || a.title.localeCompare(b.title));
@@ -355,7 +361,7 @@
       const track = state.raw.tracks.get(trackId);
       if (!track) return showError("Track not found in the vault.");
 
-      const artistId = track.primary_artist_id || track.artist_id;
+      const artistId = canonicalArtistId(track.primary_artist_id || track.artist_id);
       const artistName = getArtistName(artistId);
       
       document.getElementById('title').textContent = track.title || 'Unknown Track';
