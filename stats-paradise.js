@@ -835,7 +835,7 @@
 
         events.push({
           trackId,
-          albumId: sourceEvent.album_id ?? sourceEvent.albumId ?? sourceEvent.album_id,
+          albumId: sourceEvent.album_id ?? sourceEvent.albumId ?? (typeof sourceEvent.album === "object" ? sourceEvent.album?.id : sourceEvent.album),
           timestamp,
           weekStart: getWeekStartMs(timestamp)
         });
