@@ -77,7 +77,7 @@ def ingest_zerocharts_file(filepath: str | Path):
             continue
         raw_artist = _first_nonempty(item, ("artist", "artist_name", "album_artist"), "Unknown Artist")
         raw_album = _first_nonempty(item, ("album", "album_title", "release"), "Unknown Album")
-        raw_track = _first_nonempty(item, ("track", "track_name", "title"), "Unknown Track")
+        raw_track = _first_nonempty(item, ("track", "track_name", "title", "name"), "Unknown Track")
         timestamp = item.get("timestamp", item.get("played_at", item.get("date")))
 
         artist_id = generate_deterministic_id("artist", raw_artist)
