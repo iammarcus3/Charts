@@ -141,6 +141,31 @@
         <div class="stat-sub">Total official appearances</div>
       </div>
       <div class="stat-card">
+        <div class="stat-label">Weeks at No. 1</div>
+        <div class="stat-value" id="stat-weeks-no1">-</div>
+        <div class="stat-sub">Weeks ranked #1 on the album chart</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Weeks in Top 10</div>
+        <div class="stat-value" id="stat-weeks-top10">-</div>
+        <div class="stat-sub">Weeks ranked in the album chart's Top 10</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Top 10 Tracks</div>
+        <div class="stat-value" id="stat-top10-tracks">-</div>
+        <div class="stat-sub">Tracks that reached the song chart's Top 10</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">No. 1 Hits</div>
+        <div class="stat-value" id="stat-no1-hits">-</div>
+        <div class="stat-sub">Tracks that reached #1 on the song chart</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">All-Time Best-Selling Rank</div>
+        <div class="stat-value" id="stat-alltime-rank">-</div>
+        <div class="stat-sub">Rank among the 250 highest-selling albums</div>
+      </div>
+      <div class="stat-card">
         <div class="stat-label">Career Units Sold</div>
         <div class="stat-value" id="stat-units">-</div>
         <div class="stat-sub">YourHot100 derived units</div>
@@ -153,25 +178,6 @@
       <div class="table-wrap">
         <table>
           <tbody id="tracklist-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- CHART HISTORY -->
-    <h2 class="section-title">Official Chart History</h2>
-    <div class="panel">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>WEEK COMMENCING</th>
-              <th>RANK</th>
-              <th>MOVEMENT</th>
-              <th>UNITS SOLD</th>
-              <th>STATUS</th>
-            </tr>
-          </thead>
-          <tbody id="history-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -220,7 +226,7 @@
 
     const state = {
       raw: { tracks: null, albums: null, artists: null, history: null },
-      snapshots: { albums: {}, dates: {} },
+      snapshots: { albums: {}, songs: {}, dates: {} },
       minOffset: 0,
       eligibleAlbumIds: new Set(),
       albumTrackCounts: new Map()
@@ -337,6 +343,7 @@
       state.minOffset = minOffset;
 
       const historyTracker = {};
+      const songHistoryTracker = {};
       for (let offset = minOffset; offset <= 0; offset++) {
         const events = weeklyEvents.get(offset) || [];
         const startMs = latestStart + (offset * WEEK_MS);
@@ -364,7 +371,34 @@
         });
 
         entries.sort((a, b) => b.units_sold - a.units_sold || b.plays - a.plays || a.title.localeCompare(b.title));
-        
+
+        // Build the matching weekly song chart so this album can count its own Top 10 and No. 1 tracks.
+        const trackPlays = new Map();
+        events.forEach(ev => {
+          const trackId = String(ev.track_id);
+          if (state.raw.tracks.has(trackId)) trackPlays.set(trackId, (trackPlays.get(trackId) || 0) + 1);
+        });
+        let songEntries = [];
+        trackPlays.forEach((plays, id) => {
+          const track = state.raw.tracks.get(id);
+          if (track) songEntries.push({ id, plays, title: track.title || "Unknown Track" });
+        });
+        songEntries.sort((a, b) => b.plays - a.plays || a.title.localeCompare(b.title));
+        songEntries = songEntries.slice(0, 100).map((e, i) => ({
+          ...e,
+          units_sold: (e.plays * 50000) + (pointsForRank(i + 1) * 500)
+        }));
+        songEntries.sort((a, b) => b.units_sold - a.units_sold || b.plays - a.plays || a.title.localeCompare(b.title));
+        state.snapshots.songs[offset] = songEntries.map((e, i) => {
+          const rank = i + 1;
+          const prior = songHistoryTracker[e.id] || { weeks: 0, peak: 101, lastSeen: null, lastRank: null };
+          const isNew = prior.weeks === 0;
+          const isReentry = !isNew && prior.lastSeen !== offset - 1;
+          const previousRank = (!isNew && !isReentry) ? prior.lastRank : null;
+          songHistoryTracker[e.id] = { weeks: prior.weeks + 1, peak: Math.min(prior.peak, rank), lastSeen: offset, lastRank: rank };
+          return { ...e, rank, previous_rank: previousRank, is_new: isNew, is_reentry: isReentry };
+        });
+
         state.snapshots.albums[offset] = entries.map((e, i) => {
           const rank = i + 1;
           const trk = historyTracker[e.id] || { peak: 101, weeks: 0, lastSeen: null, lastRank: null };
@@ -430,13 +464,14 @@
 
       // Calculate Stats from Snapshots
       let currentRank = '-', peakRank = 101, peakDate = null, careerUnits = 0, highestUnits = 0;
-      let highestUnitsDate = null, debutDate = null;
-      const historyRows = [];
+      let highestUnitsDate = null, debutDate = null, weeksAtNo1 = 0, weeksTop10 = 0;
       const annualSales = new Map();
+      const allTimeAlbumUnits = new Map();
 
       for (let offset = 0; offset >= state.minOffset; offset--) {
         const weekAlbums = state.snapshots.albums[offset];
         if (!weekAlbums) continue;
+        weekAlbums.forEach(a => allTimeAlbumUnits.set(a.id, (allTimeAlbumUnits.get(a.id) || 0) + a.units_sold));
         const entry = weekAlbums.find(a => a.id === albumId);
         
         if (entry) {
@@ -450,20 +485,12 @@
 
           if (entry.units_sold > highestUnits) { highestUnits = entry.units_sold; highestUnitsDate = dateStr; }
           if (entry.rank < peakRank) { peakRank = entry.rank; peakDate = dateStr; }
+          if (entry.rank === 1) weeksAtNo1++;
+          if (entry.rank <= 10) weeksTop10++;
 
           const yData = annualSales.get(year) || { units: 0, weeks: 0 };
           annualSales.set(year, { units: yData.units + entry.units_sold, weeks: yData.weeks + 1 });
 
-          const move = formatMovement(entry.rank, entry.previous_rank, entry.is_reentry);
-          historyRows.push(`
-            <tr>
-              <td>${dateStr}</td>
-              <td class="rank-cell">#${entry.rank}</td>
-              <td class="${move.class}">${move.text}</td>
-              <td>${formatNumber(entry.units_sold)}</td>
-              <td style="color: var(--muted);">${entry.rank === 1 ? '👑 No. 1' : (entry.rank <= 10 ? '⭐ Top 10' : '')}</td>
-            </tr>
-          `);
         }
       }
 
@@ -471,13 +498,32 @@
       document.getElementById('stat-current').textContent = currentRank !== '-' ? `#${currentRank}` : '-';
       document.getElementById('stat-peak').textContent = peakRank !== 101 ? `#${peakRank}` : '-';
       document.getElementById('stat-peak-sub').textContent = peakDate ? `Week of ${peakDate}` : 'N/A';
-      document.getElementById('stat-weeks').textContent = formatNumber(historyRows.length);
+      document.getElementById('stat-weeks').textContent = formatNumber(annualSales.size ? [...annualSales.values()].reduce((sum, row) => sum + row.weeks, 0) : 0);
+      document.getElementById('stat-weeks-no1').textContent = formatNumber(weeksAtNo1);
+      document.getElementById('stat-weeks-top10').textContent = formatNumber(weeksTop10);
       document.getElementById('stat-units').textContent = formatNumber(careerUnits);
+
+      const albumTrackIds = new Set(trackIds.map(String));
+      const trackBestRanks = new Map();
+      const trackNo1Ids = new Set();
+      for (let offset = state.minOffset; offset <= 0; offset++) {
+        (state.snapshots.songs[offset] || []).forEach(song => {
+          if (!albumTrackIds.has(String(song.id))) return;
+          trackBestRanks.set(String(song.id), Math.min(trackBestRanks.get(String(song.id)) || 101, song.rank));
+          if (song.rank === 1) trackNo1Ids.add(String(song.id));
+        });
+      }
+      document.getElementById('stat-top10-tracks').textContent = formatNumber([...trackBestRanks.values()].filter(rank => rank <= 10).length);
+      document.getElementById('stat-no1-hits').textContent = formatNumber(trackNo1Ids.size);
+
+      const allTimeRankedAlbums = [...allTimeAlbumUnits.entries()]
+        .sort((a, b) => b[1] - a[1] || String(state.raw.albums.get(a[0])?.title || '').localeCompare(String(state.raw.albums.get(b[0])?.title || '')));
+      const allTimeIndex = allTimeRankedAlbums.findIndex(([id]) => id === albumId);
+      document.getElementById('stat-alltime-rank').textContent = allTimeIndex >= 0 && allTimeIndex < 250 ? `#${allTimeIndex + 1} / 250` : '—';
+
 
       document.getElementById('sales-best').textContent = formatNumber(highestUnits);
       document.getElementById('sales-best-date').textContent = highestUnitsDate ? `Week of ${highestUnitsDate}` : '';
-      document.getElementById('history-tbody').innerHTML = historyRows.length > 0 ? historyRows.join('') : '<tr><td colspan="5">No chart history.</td></tr>';
-
       // Annual Table
       let bestYear = '-', bestYUnits = 0;
       const aTbody = document.getElementById('annual-sales-tbody');
