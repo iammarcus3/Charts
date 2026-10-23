@@ -2747,7 +2747,9 @@
     "id": "1b18aaa2bd8eb15f5956e523",
     "name": "Q Marsden",
     "normalized_name": "q marsden",
-    "aliases": []
+    "aliases": [
+      "Q"
+    ]
   },
   {
     "id": "1b1f3c660e2d19bb82c4895b",
@@ -24406,9 +24408,12 @@
   },
   {
     "id": "ebe016675a9ad389cc9f08e0",
-    "name": "Q",
-    "normalized_name": "q",
-    "aliases": []
+    "name": "Q Marsden",
+    "normalized_name": "q marsden",
+    "aliases": [
+      "Q"
+    ],
+    "canonical_artist_id": "1b18aaa2bd8eb15f5956e523"
   },
   {
     "id": "ebe81ddd2eedf31cefa5695b",
