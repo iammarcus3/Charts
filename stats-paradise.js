@@ -918,18 +918,76 @@
       const chartingSongIds = new Set(songs.map(entry => String(entry.id)));
 
       // One-time activation on the first qualifying simultaneous three-track week.
+      // Expanded/deluxe editions belong to the original album family and must not
+      // create a second official debut when the parent already debuted or qualifies now.
+      const qualifyingAlbumDebuts = [];
+
       state.eligibleAlbumIds.forEach(albumId => {
         const id = String(albumId);
         if (state.debutedAlbumIds.has(id)) return;
 
         const trackIds = state.albumTrackMap.get(id) || new Set();
         let simultaneousTracks = 0;
-
         trackIds.forEach(trackId => {
           if (chartingSongIds.has(String(trackId))) simultaneousTracks++;
         });
 
-        if (simultaneousTracks < CONFIG.MIN_ALBUM_TRACKS) return;
+        if (simultaneousTracks >= CONFIG.MIN_ALBUM_TRACKS) {
+          qualifyingAlbumDebuts.push({ id, simultaneousTracks });
+        }
+      });
+
+      const editionSuffixPattern = /\b(deluxe|expanded|special|scary hours|bonus tracks?|anniversary|remaster(?:ed)?|reissue|edition|version)\b/i;
+      const normalizeAlbumFamilyTitle = value => String(value || "")
+        .toLowerCase()
+        .replace(/\([^)]*\)/g, " ")
+        .replace(/[’']/g, "")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+
+      const isEditionOf = (editionId, parentId) => {
+        if (editionId === parentId) return false;
+        const edition = state.albums.get(String(editionId));
+        const parent = state.albums.get(String(parentId));
+        if (!edition || !parent) return false;
+
+        const editionArtist = getLeadAlbumArtistId(edition);
+        const parentArtist = getLeadAlbumArtistId(parent);
+        if (!editionArtist || !parentArtist || String(editionArtist) !== String(parentArtist)) return false;
+
+        const normalizedEdition = normalizeAlbumFamilyTitle(getAlbumTitle(edition));
+        const normalizedParent = normalizeAlbumFamilyTitle(getAlbumTitle(parent));
+        if (!normalizedParent || normalizedEdition === normalizedParent ||
+            !normalizedEdition.startsWith(normalizedParent + " ")) return false;
+
+        const suffix = normalizedEdition.slice(normalizedParent.length).trim();
+        if (!editionSuffixPattern.test(getAlbumTitle(edition)) &&
+            !editionSuffixPattern.test(suffix)) return false;
+
+        const editionTracks = state.albumTrackMap.get(String(editionId)) || new Set();
+        const parentTracks = state.albumTrackMap.get(String(parentId)) || new Set();
+        let sharedTracks = 0;
+        editionTracks.forEach(trackId => {
+          if (parentTracks.has(String(trackId))) sharedTracks++;
+        });
+        return sharedTracks >= CONFIG.MIN_ALBUM_TRACKS;
+      };
+
+      // Parent albums first; IDs must not determine which edition gets the debut.
+      qualifyingAlbumDebuts.sort((a, b) =>
+        getAlbumTitle(state.albums.get(a.id)).length -
+        getAlbumTitle(state.albums.get(b.id)).length
+      );
+
+      qualifyingAlbumDebuts.forEach(candidate => {
+        const { id, simultaneousTracks } = candidate;
+        const parentAlreadyDebuted = [...state.debutedAlbumIds].some(parentId =>
+          isEditionOf(id, String(parentId))
+        );
+        const parentQualifiesNow = qualifyingAlbumDebuts.some(parent =>
+          isEditionOf(id, parent.id)
+        );
+        if (parentAlreadyDebuted || parentQualifiesNow) return;
 
         state.debutedAlbumIds.add(id);
         state.albumDebuts.set(id, {
