@@ -4,22 +4,22 @@
     "FUZZY_REVIEW_THRESHOLD": 0.8
   },
   "record_counts": {
-    "artists": 4388,
-    "eligible_albums": 1136,
-    "ineligible_releases": 7675,
-    "all_albums": 8811,
-    "tracks": 14819,
-    "listening_events": 232526,
-    "fuzzy_candidates_for_review": 0,
-    "song_families_merged": 312
+    "artists": 4384,
+    "eligible_albums": 1085,
+    "ineligible_releases": 7720,
+    "all_albums": 8805,
+    "tracks": 14611,
+    "listening_events": 230026,
+    "fuzzy_candidates_for_review": 259,
+    "song_families_merged": 106
   },
   "deduplication": {
-    "duplicate_events_removed": 194,
+    "duplicate_events_removed": 4,
     "method": "exact canonical track_id + exact non-empty timestamp",
-    "fuzzy_metadata_matches_auto_merged": 312,
+    "fuzzy_metadata_matches_auto_merged": 106,
     "track_similarity_auto_merge_threshold": 0.9,
     "album_family_consolidation": "all bracketed and parenthesized album-title annotations stripped for family matching; canonical track IDs unioned across family",
-    "album_families_consolidated": 1582
+    "album_families_consolidated": 1581
   },
   "build_status": "success"
 }
