@@ -1,4 +1,5 @@
 """Import ZeroCharts scrobbles into normalized, deterministic records."""
+# Artist corrections are mirrored in the raw source by the build workflow.
 # Rebuild after reverting the unsafe approved-track merge changes.
 from __future__ import annotations
 
