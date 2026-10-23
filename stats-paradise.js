@@ -2109,29 +2109,28 @@ const mostAlbumUnits = best(albums, item => item.unitsSold);
         longestAlbumNo1.id
       );
     }
+if (mostAlbumNo1Weeks) {
+  add(
+    "Most album weeks at No. 1",
+    `${mostAlbumNo1Weeks.weeksAtNo1} weeks`,
+    mostAlbumNo1Weeks.title,
+    mostAlbumNo1Weeks.artist,
+    mostAlbumNo1Weeks.weeksAtNo1,
+    "Album",
+    mostAlbumNo1Weeks.id
+  );
+}
 
-    if (mostAlbumNo1Weeks) {
-      add(
-        "Most album weeks at No. 1",
-        `${mostAlbumNo1Weeks.weeksAtNo1} weeks`,
-        mostAlbumNo1.title,
-        mostAlbumNo1.artist,
-        mostAlbumNo1.weeksAtNo1,
-        "Album",
-        mostAlbumNo1.id
-      );
-    }
-
-    if (longestAlbumRun) {
-      add(
-        "Longest album chart run",
-        `${longestAlbumRun.maxChartStreak} weeks`,
-        longestAlbumRun.title,
-        longestAlbumRun.artist,
-        longestAlbumRun.maxChartStreak,
-        "Album",
-        longestAlbumRun.id
-      );
+if (longestAlbumRun) {
+  add(
+    "Longest album chart run",
+    `${longestAlbumRun.maxChartStreak} weeks`,
+    longestAlbumRun.title,
+    longestAlbumRun.artist,
+    longestAlbumRun.maxChartStreak,
+    "Album",
+    longestAlbumRun.id
+  );
     }
 
     if (mostAlbumUnits) {
