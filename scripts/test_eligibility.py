@@ -129,7 +129,7 @@ class TestAlbumEligibility(unittest.TestCase):
             if line.strip()
         ]
         song_one_events = [event for event in history if event["track_id"] == next(
-            track["id"] for track in json.loads((self.vault_dir / "tracks.json").read_text(encoding="utf-8")).values()
+            track["id"] for track in json.loads((self.vault_dir / "tracks.json").read_text(encoding="utf-8"))
             if track["title"] == "Song One"
         )]
         self.assertEqual(len(song_one_events), 2)
