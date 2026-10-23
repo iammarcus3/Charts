@@ -292,7 +292,7 @@
                 if (!editionArtist || editionArtist !== parentArtist) return false;
                 const editionTitle = this.normalizeAlbumFamilyTitle(edition.title);
                 const parentTitle = this.normalizeAlbumFamilyTitle(parent.title);
-                const editionHasReleaseCue = /\\b(?:deluxe|expanded|special|anniversary|bonus|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version|reloaded|scary hours|ep|single|cuffing season)\\b/i.test(edition.title || '');
+                const editionHasReleaseCue = /\b(?:deluxe|expanded|special|anniversary|bonus|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version|reloaded|scary hours|ep|single|cuffing season)\b/i.test(edition.title || '');
                 const sameTitleFamily = editionTitle === parentTitle ||
                     (editionHasReleaseCue && editionTitle.startsWith(parentTitle + ' '));
                 if (!parentTitle || !sameTitleFamily) return false;
