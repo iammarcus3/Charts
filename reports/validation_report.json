@@ -4,18 +4,15 @@
   "raw_files_failed": 0,
   "integrity_issue_count": 0,
   "invalid_event_count": 0,
-  "duplicate_events_removed": 194,
-  "fuzzy_candidates_for_review": 0,
-  "song_families_merged": 312,
-  "approved_track_merge_families": 206,
-  "approved_track_pairs_loaded": 259,
-  "album_families_consolidated": 1582,
+  "duplicate_events_removed": 4,
+  "fuzzy_candidates_for_review": 259,
+  "song_families_merged": 106,
+  "album_families_consolidated": 1581,
   "notes": [
     "All parenthesized (...) and bracketed [...] album-title annotations are removed for album-family matching; source titles are preserved.",
     "Original release titles and edition labels are preserved in album source_titles and edition_labels and reports/album_family_merges.json.",
     "Distinct canonical track IDs are unioned across editions, preserving unique deluxe bonus tracks without double-counting repeated tracks.",
     "Same-artist song titles with normalized SequenceMatcher similarity of 90% or higher are automatically merged; aliases and source titles are preserved.",
-    "Similarity candidates from 80% up to but below 90% are reported for review and are not auto-merged unless listed in config/approved_track_merges.json.",
-    "Explicitly approved track pairs are merged on every build; original titles remain aliases and listening events and album relationships are remapped to the canonical track ID."
+    "Similarity candidates from 80% up to but below 90% are reported for review and are not auto-merged."
   ]
 }
