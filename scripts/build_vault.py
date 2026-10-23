@@ -430,8 +430,8 @@ def build() -> dict[str, Any]:
         "deduplication": {
             "duplicate_events_removed": duplicate_event_count,
             "method": "exact canonical track_id + exact non-empty timestamp",
-            "fuzzy_metadata_matches_auto_merged": len(song_merge_report),
-            "track_similarity_auto_merge_threshold": 0.90,
+            "fuzzy_metadata_matches_auto_merged": 0,
+            "track_similarity_auto_merge_threshold": None,
             "album_family_consolidation": "all bracketed and parenthesized album-title annotations stripped for family matching; canonical track IDs unioned across family",
             "album_families_consolidated": len(album_family_report),
         },
