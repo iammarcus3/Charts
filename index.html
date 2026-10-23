@@ -289,7 +289,10 @@
                 if (!editionArtist || editionArtist !== parentArtist) return false;
                 const editionTitle = this.normalizeAlbumFamilyTitle(edition.title);
                 const parentTitle = this.normalizeAlbumFamilyTitle(parent.title);
-                if (!editionTitle || editionTitle !== parentTitle) return false;
+                const editionHasReleaseCue = /\\b(?:deluxe|expanded|special|anniversary|bonus|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version|reloaded|scary hours|ep|single|cuffing season)\\b/i.test(edition.title || '');
+                const sameTitleFamily = editionTitle === parentTitle ||
+                    (editionHasReleaseCue && editionTitle.startsWith(parentTitle + ' '));
+                if (!parentTitle || !sameTitleFamily) return false;
                 const editionTracks = this.state.albumTrackCounts?.get(editionKey) || new Set();
                 const parentTracks = this.state.albumTrackCounts?.get(parentKey) || new Set();
                 let sharedTracks = 0;
