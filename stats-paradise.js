@@ -121,8 +121,8 @@
       description: "Recorded song and album No. 1 achievements."
     },
     debuts: {
-      title: "Album Debuts & Returns",
-      description: "Official album debut weeks and album re-entries only. Eligible albums without an official debut remain in the Album Archive."
+      title: "Album Debuts",
+      description: "First official debut week for each album only. Album re-entries are not included; eligible albums without an official debut remain in the Album Archive."
     },
     periods: {
       title: "Yearly & Monthly Performance",
@@ -192,10 +192,10 @@
       ["albumTitle", "Album title"]
     ],
     debuts: [
-      ["dateTs", "Official debut / return date"],
-      ["status", "Event"],
-      ["rank", "Position"],
-      ["unitsSold", "Units sold"],
+      ["dateTs", "Official debut date"],
+      ["status", "Debut status"],
+      ["rank", "Debut position"],
+      ["unitsSold", "Debut-week units"],
       ["title", "Album"],
       ["artist", "Lead artist"]
     ],
@@ -1033,7 +1033,6 @@
     const weeklyRecords = [];
     const numberOneRecords = [];
     const songEvents = [];
-    const albumReentryEvents = [];
     const exitRecords = [];
 
     let previousSnapshot = null;
@@ -1197,19 +1196,6 @@
           };
         }
 
-        if (entryStatus === "Re-entry") {
-          albumReentryEvents.push({
-            dateTs: weekStart,
-            date: formatDate(weekStart),
-            type: "Album",
-            status: entryStatus,
-            title: entry.title,
-            artist: entry.artist,
-            rank: entry.rank,
-            unitsSold: entry.unitsSold,
-            id
-          });
-        }
       });
 
       // Only assert exits between adjacent observed calendar weeks.
@@ -1442,11 +1428,10 @@
       });
     });
 
-    // Include album returns, but never song debuts or song/album exits.
-    state.debutRecords = [
-      ...officialAlbumEvents,
-      ...albumReentryEvents
-    ].filter(event => event.type === "Album")
+    // Debuts means first official album-debut week only. No re-entries,
+    // song debuts, or chart exits are included in this archive.
+    state.debutRecords = officialAlbumEvents
+      .filter(event => event.type === "Album")
       .sort((a, b) => b.dateTs - a.dateTs);
 
     state.exitRecords = exitRecords;
@@ -2520,12 +2505,12 @@
         ["albumUnits", "Album units sold"]
       ],
       debuts: [
-        ["date", "Official debut / return date"],
-        ["status", "Event"],
-        ["rank", "Position"],
+        ["date", "Official debut date"],
+        ["status", "Debut status"],
+        ["rank", "Debut position"],
         ["title", "Album"],
         ["artist", "Lead artist"],
-        ["unitsSold", "Units sold"],
+        ["unitsSold", "Debut-week units"],
         ["simultaneousTracks", "Tracks at debut"]
       ],
       periods: [
