@@ -351,11 +351,12 @@
 
         const albumPlays = new Map();
         events.forEach(ev => {
-            const track = state.raw.tracks.get(String(ev.track_id));
-            if (!track) return;
-            getTrackAlbumIds(track).forEach(albumId => {
-                if (eligibleAlbumIds.has(albumId)) albumPlays.set(albumId, (albumPlays.get(albumId) || 0) + 1);
-            });
+            // A scrobble belongs to the release recorded on that event, not every
+            // release that contains the same track.
+            const albumId = String(ev.album_id || '');
+            if (albumId && eligibleAlbumIds.has(albumId)) {
+                albumPlays.set(albumId, (albumPlays.get(albumId) || 0) + 1);
+            }
         });
 
         let entries = [];
