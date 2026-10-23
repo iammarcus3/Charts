@@ -116,6 +116,26 @@ class TestAlbumEligibility(unittest.TestCase):
         self.assertEqual(ineligible[0]["track_count"], 2)
         self.assertEqual(len(tracks), 2)
 
+    def test_scrobble_counts_only_for_its_source_release(self):
+        self.build_from_scrobbles([
+            self.play("Artist", "Full Album", "Song One", "2026-01-01T10:00:00"),
+            self.play("Artist", "Full Album", "Song Two", "2026-01-01T10:01:00"),
+            self.play("Artist", "Full Album", "Song Three", "2026-01-01T10:02:00"),
+            self.play("Artist", "Separate Single", "Song One", "2026-01-01T10:03:00"),
+        ])
+        history = [
+            json.loads(line)
+            for line in (self.vault_dir / "listening_history.jsonl").read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        song_one_events = [event for event in history if event["track_id"] == next(
+            track["id"] for track in json.loads((self.vault_dir / "tracks.json").read_text(encoding="utf-8")).values()
+            if track["title"] == "Song One"
+        )]
+        self.assertEqual(len(song_one_events), 2)
+        self.assertTrue(all(event.get("album_id") for event in song_one_events))
+        self.assertEqual(len({event["album_id"] for event in song_one_events}), 2)
+
     def test_same_recording_can_belong_to_multiple_releases(self):
         _, albums, ineligible, tracks = self.build_from_scrobbles([
             self.play("Artist", "Deluxe Album", "Song One", "2026-01-01"),
