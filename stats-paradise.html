@@ -10,12 +10,12 @@
       color-scheme: dark;
       --bg: #09090f;
       --panel: #11111b;
-      --panel-2: #171725;
+      --panel2: #171725;
       --border: #28283a;
       --text: #f5f5fb;
       --muted: #9999b2;
       --accent: #b9a5ff;
-      --accent-2: #f0a8df;
+      --accent2: #f0a8df;
       --green: #65d6a0;
       --red: #ff858e;
       --yellow: #f3d17a;
@@ -26,24 +26,26 @@
     * { box-sizing: border-box; }
 
     html {
-      scroll-behavior: smooth;
       background: var(--bg);
+      color: var(--text);
+      scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
+      min-width: 0;
       color: var(--text);
       background:
-        radial-gradient(ellipse at 0% 0%, rgb(123 86 210 / 12%), transparent 38rem),
+        radial-gradient(ellipse at 0 0, rgb(123 86 210 / 12%), transparent 38rem),
         radial-gradient(ellipse at 100% 5%, rgb(230 100 175 / 8%), transparent 34rem),
         var(--bg);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
-      line-height: 1.5;
+      font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     button, input, select { font: inherit; }
-    button, select, input { color: var(--text); }
+    button, input, select { color: var(--text); }
+    button { cursor: pointer; }
 
     a {
       color: var(--accent);
@@ -63,13 +65,13 @@
     .shell {
       width: min(1800px, 100%);
       margin: 0 auto;
-      padding: 26px clamp(14px, 3vw, 42px) 60px;
+      padding: 24px clamp(12px, 3vw, 42px) 52px;
     }
 
     .hero {
       position: relative;
       overflow: hidden;
-      padding: clamp(24px, 4vw, 48px);
+      padding: clamp(23px, 4vw, 46px);
       border: 1px solid var(--border);
       border-radius: 24px;
       background:
@@ -84,54 +86,51 @@
       position: absolute;
       width: 250px;
       height: 250px;
-      right: -80px;
-      top: -120px;
+      right: -100px;
+      top: -130px;
       border-radius: 50%;
       background: rgb(185 165 255 / 13%);
-      filter: blur(4px);
       pointer-events: none;
     }
 
     .eyebrow {
       color: var(--accent);
-      font-size: .75rem;
-      font-weight: 800;
+      font-size: .74rem;
+      font-weight: 850;
       letter-spacing: .19em;
       text-transform: uppercase;
     }
 
     h1 {
-      margin: 7px 0 12px;
-      font-size: clamp(2.2rem, 6vw, 4.8rem);
+      margin: 8px 0 12px;
+      font-size: clamp(2.25rem, 6vw, 4.6rem);
       line-height: 1;
       letter-spacing: -.055em;
     }
 
     .hero p {
-      max-width: 760px;
+      max-width: 800px;
       margin: 0;
       color: var(--muted);
     }
 
     .hero-meta {
       display: flex;
-      align-items: center;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 24px;
+      margin-top: 22px;
     }
 
     .pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
       max-width: 100%;
       padding: 6px 11px;
       border: 1px solid var(--border);
       border-radius: 999px;
       background: rgb(255 255 255 / 3%);
       color: var(--muted);
-      font-size: .78rem;
+      font-size: .77rem;
       overflow-wrap: anywhere;
     }
 
@@ -139,24 +138,24 @@
     .pill.warn { color: var(--yellow); }
     .pill.bad { color: var(--red); }
 
-    .section-title {
-      margin: 30px 0 14px;
+    .section-heading {
       display: flex;
       align-items: end;
       justify-content: space-between;
-      gap: 18px;
+      gap: 16px;
+      margin: 28px 0 14px;
     }
 
-    .section-title h2 {
+    .section-heading h2 {
       margin: 0;
       font-size: clamp(1.2rem, 2vw, 1.65rem);
       letter-spacing: -.035em;
     }
 
-    .section-title p {
-      color: var(--muted);
+    .section-heading p {
       margin: 5px 0 0;
-      font-size: .86rem;
+      color: var(--muted);
+      font-size: .85rem;
     }
 
     .stats-grid {
@@ -165,9 +164,7 @@
       gap: 12px;
     }
 
-    .stat-card,
-    .record-card,
-    .panel {
+    .stat-card, .record-card, .panel {
       min-width: 0;
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -175,26 +172,27 @@
       box-shadow: var(--shadow);
     }
 
-    .stat-card { padding: 18px; }
+    .stat-card { padding: 17px; }
 
-    .stat-label {
+    .stat-label, .record-label {
       color: var(--muted);
-      font-size: .78rem;
-      font-weight: 700;
-      letter-spacing: .04em;
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .045em;
       overflow-wrap: anywhere;
     }
 
     .stat-value {
       margin-top: 8px;
-      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
       font-weight: 850;
       letter-spacing: -.045em;
+      line-height: 1.2;
       overflow-wrap: anywhere;
     }
 
-    .stat-note {
-      margin-top: 4px;
+    .stat-note, .record-detail {
+      margin-top: 5px;
       color: var(--muted);
       font-size: .78rem;
       overflow-wrap: anywhere;
@@ -204,39 +202,39 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin: 25px 0 14px;
+      margin: 24px 0 14px;
     }
 
-    .nav button,
-    .action-button {
-      padding: 10px 14px;
+    .nav button, .action-button, .period-button {
+      min-width: 0;
+      padding: 9px 13px;
       border: 1px solid var(--border);
       border-radius: 11px;
       background: var(--panel);
       color: var(--muted);
       font-weight: 750;
-      cursor: pointer;
-      transition: background .15s ease, color .15s ease, border-color .15s ease;
+      transition: color .15s ease, border-color .15s ease;
     }
 
     .nav button:hover,
-    .action-button:hover {
+    .action-button:hover,
+    .period-button:hover {
       color: var(--text);
       border-color: #555570;
     }
 
-    .nav button.active {
+    .nav button.active, .period-button.active {
       color: #171020;
       border-color: transparent;
-      background: linear-gradient(105deg, var(--accent), var(--accent-2));
+      background: linear-gradient(105deg, var(--accent), var(--accent2));
     }
 
     .filters {
       display: grid;
-      grid-template-columns: minmax(180px, 2fr) repeat(3, minmax(130px, 1fr));
+      grid-template-columns: minmax(180px, 2fr) repeat(3, minmax(125px, 1fr));
       gap: 10px;
       margin: 14px 0;
-      padding: 14px;
+      padding: 13px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--panel);
@@ -251,18 +249,17 @@
 
     .field label {
       color: var(--muted);
-      font-size: .73rem;
+      font-size: .72rem;
       font-weight: 800;
       letter-spacing: .06em;
       text-transform: uppercase;
     }
 
-    .field input,
-    .field select {
+    .field input, .field select {
       width: 100%;
       min-width: 0;
       min-height: 42px;
-      padding: 9px 11px;
+      padding: 9px 10px;
       border: 1px solid var(--border);
       border-radius: 10px;
       background: #0b0b13;
@@ -275,7 +272,7 @@
       margin-bottom: 14px;
     }
 
-    .date-filters[hidden] { display: none; }
+    [hidden] { display: none !important; }
 
     .panel { padding: clamp(12px, 2vw, 22px); }
 
@@ -300,17 +297,18 @@
       font-size: .82rem;
     }
 
-    .table-actions {
+    .table-actions, .period-switch {
       display: flex;
       flex-wrap: wrap;
       gap: 7px;
-      flex-shrink: 0;
     }
 
-    .action-button {
+    .action-button, .period-button {
       padding: 8px 10px;
       font-size: .78rem;
     }
+
+    .period-switch { margin: 0 0 14px; }
 
     .result-count {
       margin-bottom: 10px;
@@ -318,30 +316,31 @@
       font-size: .82rem;
     }
 
-    .table-wrap { min-width: 0; width: 100%; }
+    .table-wrap { width: 100%; min-width: 0; }
 
     table {
       width: 100%;
+      table-layout: fixed;
       border-collapse: separate;
       border-spacing: 0;
-      table-layout: fixed;
-      font-size: .84rem;
+      font-size: .82rem;
     }
 
     thead th {
       position: sticky;
       top: 0;
-      z-index: 2;
-      padding: 12px 9px;
-      background: #1b1b2b;
+      z-index: 5;
+      padding: 11px 8px;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
+      background: #1b1b2b;
       color: #d4d1e8;
+      font-size: .70rem;
       text-align: left;
-      font-size: .72rem;
-      letter-spacing: .035em;
-      overflow-wrap: anywhere;
+      letter-spacing: .025em;
       white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: normal;
     }
 
     thead th:first-child {
@@ -355,7 +354,7 @@
     }
 
     tbody td {
-      padding: 12px 9px;
+      padding: 11px 8px;
       border-bottom: 1px solid #222234;
       vertical-align: top;
       overflow-wrap: anywhere;
@@ -375,20 +374,19 @@
       display: block;
       margin-top: 3px;
       color: var(--muted);
-      font-size: .76rem;
+      font-size: .75rem;
       overflow-wrap: anywhere;
     }
 
     .rank {
       color: var(--accent);
       font-weight: 900;
-      white-space: nowrap;
     }
 
     .trend-up { color: var(--green); font-weight: 800; }
     .trend-down { color: var(--red); font-weight: 800; }
-    .trend-neutral { color: var(--muted); }
     .trend-new { color: var(--accent); font-weight: 800; }
+    .trend-neutral { color: var(--muted); }
 
     .records-grid {
       display: grid;
@@ -401,25 +399,11 @@
       overflow-wrap: anywhere;
     }
 
-    .record-card .record-label {
-      color: var(--muted);
-      font-size: .77rem;
-      font-weight: 800;
-      letter-spacing: .035em;
-      text-transform: uppercase;
-    }
-
-    .record-card .record-value {
-      margin: 10px 0 5px;
-      font-size: 1.35rem;
+    .record-value {
+      margin: 9px 0 4px;
+      font-size: 1.28rem;
       font-weight: 850;
       letter-spacing: -.035em;
-      overflow-wrap: anywhere;
-    }
-
-    .record-card .record-detail {
-      color: var(--muted);
-      font-size: .82rem;
       overflow-wrap: anywhere;
     }
 
@@ -428,75 +412,58 @@
       padding: 13px 15px;
       border: 1px solid var(--border);
       border-radius: 12px;
-      color: var(--muted);
       background: rgb(255 255 255 / 2%);
+      color: var(--muted);
       font-size: .82rem;
     }
 
     .notice strong { color: var(--text); }
 
+    .empty, .loading {
+      padding: 40px 14px;
+      color: var(--muted);
+      text-align: center;
+    }
+
     .error-box {
-      margin-top: 20px;
-      padding: 17px;
+      margin-top: 18px;
+      padding: 16px;
       border: 1px solid rgb(255 133 142 / 45%);
       border-radius: 12px;
-      color: #ffc1c5;
       background: rgb(255 133 142 / 7%);
+      color: #ffc1c5;
       overflow-wrap: anywhere;
     }
 
-    .loading {
-      padding: 50px 16px;
-      text-align: center;
-      color: var(--muted);
-    }
-
-    .empty {
-      padding: 36px 14px;
-      text-align: center;
-      color: var(--muted);
-    }
-
     .footer {
-      margin-top: 28px;
+      margin-top: 26px;
       color: #797991;
-      font-size: .76rem;
+      font-size: .75rem;
       text-align: center;
     }
 
-    @media (min-width: 651px) {
-      table th, table td {
-        white-space: normal;
-        overflow-wrap: anywhere;
-        word-break: normal;
-      }
-
-      .table-wrap { overflow: visible; }
-    }
-
-    @media (max-width: 1000px) {
+    @media (max-width: 1100px) {
       .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .records-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 650px) {
-      .shell { padding: 12px 10px 36px; }
-      .hero { padding: 23px 18px; border-radius: 17px; }
+      .shell { padding: 12px 10px 34px; }
+      .hero { padding: 22px 17px; border-radius: 17px; }
       .stats-grid { gap: 8px; }
-      .stat-card { padding: 13px; }
+      .stat-card { padding: 12px; }
       .filters { grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
       .filters .field:first-child { grid-column: 1 / -1; }
       .date-filters { grid-template-columns: 1fr 1fr; }
-      .section-title { align-items: start; flex-direction: column; }
+      .section-heading { align-items: start; flex-direction: column; }
       .records-grid { grid-template-columns: 1fr; }
       .table-heading { flex-direction: column; }
       .table-actions { width: 100%; }
       .nav { gap: 6px; }
-      .nav button { flex: 1 1 auto; padding: 9px 10px; font-size: .8rem; }
+      .nav button { flex: 1 1 auto; padding: 9px; font-size: .78rem; }
 
-      /* Mobile tables become labelled cards without horizontal scrolling. */
-      .table-wrap { overflow: visible; }
+      /* Mobile: table rows become labelled cards, not horizontal tables. */
       table, tbody, tr, td { display: block; width: 100%; }
       thead {
         position: absolute;
@@ -507,18 +474,22 @@
         white-space: nowrap;
       }
 
-      tbody { display: grid; grid-template-columns: 1fr; gap: 10px; }
+      tbody {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
 
       tbody tr {
+        overflow: hidden;
         border: 1px solid var(--border);
         border-radius: 12px;
         background: var(--panel);
-        overflow: hidden;
       }
 
       tbody td {
         display: grid;
-        grid-template-columns: minmax(88px, 35%) minmax(0, 1fr);
+        grid-template-columns: minmax(88px, 34%) minmax(0, 1fr);
         gap: 10px;
         padding: 10px 11px;
         border-bottom: 1px solid #252538;
@@ -529,9 +500,8 @@
       tbody td::before {
         content: attr(data-label);
         color: var(--muted);
-        font-size: .72rem;
+        font-size: .70rem;
         font-weight: 800;
-        letter-spacing: .025em;
         overflow-wrap: anywhere;
       }
     }
@@ -551,34 +521,33 @@
       <div class="eyebrow">YourHot100 · Chart Archive</div>
       <h1>Stats Paradise</h1>
       <p>
-        The records room for your personal charts. Explore song and album
-        histories, No. 1 runs, debuts, re-entries, artist achievements and
-        chart-week archives in one independent dashboard.
+        Your complete chart-history records room: songs, albums, artists,
+        weekly history, No. 1 reigns, debuts, returns and all-time achievements.
       </p>
       <div class="hero-meta">
-        <span class="pill">Independent stats app</span>
+        <span class="pill">Standalone application</span>
         <span class="pill">Friday–Thursday chart weeks</span>
-        <span class="pill">Maximum 200 rows per table</span>
+        <span class="pill">Up to 200 rows per view</span>
         <span id="data-status" class="pill warn">Loading Music Vault…</span>
       </div>
     </header>
 
-    <section aria-labelledby="overview-heading">
-      <div class="section-title">
+    <section aria-labelledby="archive-heading">
+      <div class="section-heading">
         <div>
-          <h2 id="overview-heading">Your chart universe</h2>
-          <p id="archive-description">Reading the Music Vault archive.</p>
+          <h2 id="archive-heading">Your chart universe</h2>
+          <p id="archive-description">Preparing the available archive.</p>
         </div>
       </div>
       <div id="summary-cards" class="stats-grid">
         <div class="stat-card">
-          <div class="stat-label">Status</div>
+          <div class="stat-label">Archive status</div>
           <div class="stat-value">…</div>
         </div>
       </div>
     </section>
 
-    <nav class="nav" aria-label="Stats Paradise sections" id="section-nav">
+    <nav id="section-nav" class="nav" aria-label="Stats Paradise sections">
       <button type="button" data-view="overview" class="active">Overview</button>
       <button type="button" data-view="songs">Songs</button>
       <button type="button" data-view="albums">Albums</button>
@@ -586,21 +555,23 @@
       <button type="button" data-view="weeks">Weekly History</button>
       <button type="button" data-view="numberones">No. 1 Archive</button>
       <button type="button" data-view="debuts">Debuts & Returns</button>
-      <button type="button" data-view="records">Records</button>
+      <button type="button" data-view="periods">Yearly & Monthly</button>
+      <button type="button" data-view="records">Record Book</button>
     </nav>
 
-    <section id="browser-section" aria-label="Search and filter records">
+    <section id="browser-section" aria-label="Search and filters">
       <div class="filters">
         <div class="field">
           <label for="search-input">Search this section</label>
-          <input id="search-input" type="search" placeholder="Search title, artist, date…" autocomplete="off">
+          <input id="search-input" type="search"
+            placeholder="Search title, artist, event…" autocomplete="off">
         </div>
         <div class="field">
-          <label for="time-mode">Date filter</label>
+          <label for="time-mode">Date range</label>
           <select id="time-mode">
             <option value="all">All available history</option>
-            <option value="year">Choose a year</option>
-            <option value="custom">Custom date range</option>
+            <option value="year">Selected year</option>
+            <option value="custom">Custom dates</option>
             <option value="recent6">Latest six months</option>
             <option value="previous6">Previous six months</option>
           </select>
@@ -608,7 +579,7 @@
         <div class="field">
           <label for="year-select">Year</label>
           <select id="year-select" disabled>
-            <option value="">All years</option>
+            <option value="">Choose year</option>
           </select>
         </div>
         <div class="field">
@@ -617,7 +588,7 @@
         </div>
       </div>
 
-      <div class="date-filters" id="custom-date-filters" hidden>
+      <div id="custom-date-filters" class="date-filters" hidden>
         <div class="field">
           <label for="date-from">From</label>
           <input id="date-from" type="date">
@@ -641,13 +612,27 @@
       <div class="table-heading">
         <div>
           <h2 id="content-title">Overview</h2>
-          <p id="content-description">Highlights from the available chart archive.</p>
+          <p id="content-description">Highlights from your chart archive.</p>
         </div>
         <div class="table-actions">
-          <button type="button" class="action-button" id="reset-filters">Reset filters</button>
-          <button type="button" class="action-button" id="export-csv">Export visible rows</button>
+          <button type="button" class="action-button" id="reset-filters">
+            Reset filters
+          </button>
+          <button type="button" class="action-button" id="export-csv">
+            Export visible rows
+          </button>
         </div>
       </div>
+
+      <div id="period-switch" class="period-switch" hidden>
+        <button class="period-button active" type="button" data-period="year">
+          Yearly
+        </button>
+        <button class="period-button" type="button" data-period="month">
+          Monthly
+        </button>
+      </div>
+
       <div id="view-content">
         <div class="loading">Compiling chart history…</div>
       </div>
@@ -656,15 +641,16 @@
     <div id="error-container" aria-live="polite"></div>
 
     <div class="notice">
-      <strong>How to read this archive:</strong> historical rows are reconstructed
-      from the available Music Vault listening history using the existing
-      YourHot100 derived-sales model. Units sold are modelled chart statistics,
-      not independently verified retail figures. Missing source weeks are not
-      filled with invented chart results.
+      <strong>Methodology:</strong> units sold are YourHot100-derived model
+      values, not independently verified retail sales. Album eligibility is
+      based on at least three distinct canonical catalogue tracks. The first
+      simultaneous three-track Hot 100 week records the official album debut;
+      later album-chart eligibility follows the normal YourHot100 album model.
+      Missing source weeks are not invented.
     </div>
 
     <footer class="footer">
-      Stats Paradise · YourHot100 · A standalone chart-history companion
+      Stats Paradise · YourHot100 · Independent chart-statistics companion
     </footer>
   </main>
 </body>
