@@ -270,6 +270,35 @@
                 return track?.album_id ? [String(track.album_id)] : [];
             },
 
+            normalizeAlbumFamilyTitle(value) {
+                let title = String(value || '').toLowerCase().replace(/[’']/g, '');
+                title = title.replace(/\([^)]*\)|\[[^\]]*\]/g, ' ');
+                title = title.replace(/\b(?:scary hours|deluxe|expanded|special|anniversary|bonus tracks?|remaster(?:ed)?|reissue|collector(?:'s)?|complete|legacy|edition|version)\b/gi, ' ');
+                return title.replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
+            },
+
+            isAlbumEditionOf(editionId, parentId) {
+                const editionKey = String(editionId);
+                const parentKey = String(parentId);
+                if (editionKey === parentKey) return false;
+                const edition = this.state.raw.albums.get(editionKey);
+                const parent = this.state.raw.albums.get(parentKey);
+                if (!edition || !parent) return false;
+                const editionArtist = this.canonicalArtistId(edition.primary_artist_id || edition.artist_id);
+                const parentArtist = this.canonicalArtistId(parent.primary_artist_id || parent.artist_id);
+                if (!editionArtist || editionArtist !== parentArtist) return false;
+                const editionTitle = this.normalizeAlbumFamilyTitle(edition.title);
+                const parentTitle = this.normalizeAlbumFamilyTitle(parent.title);
+                if (!editionTitle || editionTitle !== parentTitle) return false;
+                const editionTracks = this.state.albumTrackCounts?.get(editionKey) || new Set();
+                const parentTracks = this.state.albumTrackCounts?.get(parentKey) || new Set();
+                let sharedTracks = 0;
+                editionTracks.forEach(trackId => {
+                    if (parentTracks.has(String(trackId))) sharedTracks++;
+                });
+                return sharedTracks >= MIN_ALBUM_TRACKS;
+            },
+
             buildAllSnapshots() {
                 const history = this.state.raw.history;
                 if (!history || history.length === 0) {
@@ -362,28 +391,43 @@
                         });
                     });
 
-                    chartingTracksPerAlbum.forEach((trackSet, albumId) => {
-                        // Record only the first qualifying week for this album.
-                        if (
-                            trackSet.size >= MIN_ALBUM_TRACKS &&
-                            !this.state.debutedAlbums.has(String(albumId))
-                        ) {
-                            const id = String(albumId);
-                            this.state.debutedAlbums.add(id);
+                    // Identify every album that qualifies this week before recording debuts.
+                    // This lets us suppress deluxe/expanded editions even when their IDs differ.
+                    const qualifyingAlbumIds = [...chartingTracksPerAlbum.entries()]
+                        .filter(([albumId, trackSet]) =>
+                            this.state.eligibleAlbumIds.has(String(albumId)) &&
+                            trackSet.size >= MIN_ALBUM_TRACKS
+                        )
+                        .map(([albumId]) => String(albumId));
 
-                            const album = this.state.raw.albums.get(id);
-                            if (album) {
-                                if (!this.state.officialAlbumDebutsByOffset[offset]) {
-                                    this.state.officialAlbumDebutsByOffset[offset] = [];
-                                }
+                    // Prefer the base/original release in each same-artist album family.
+                    qualifyingAlbumIds.sort((a, b) => {
+                        const albumA = this.state.raw.albums.get(a);
+                        const albumB = this.state.raw.albums.get(b);
+                        return String(albumA?.title || '').length - String(albumB?.title || '').length;
+                    });
 
-                                this.state.officialAlbumDebutsByOffset[offset].push({
-                                    id,
-                                    title: album.title || 'Unknown Album',
-                                    artist: this.getArtistName(album.primary_artist_id || album.artist_id)
-                                });
-                            }
+                    qualifyingAlbumIds.forEach(id => {
+                        if (this.state.debutedAlbums.has(id)) return;
+                        const isEdition = [...this.state.eligibleAlbumIds].some(parentId => {
+                            const parentKey = String(parentId);
+                            if (parentKey === id) return false;
+                            if (!this.state.debutedAlbums.has(parentKey) && !qualifyingAlbumIds.includes(parentKey)) return false;
+                            return this.isAlbumEditionOf(id, parentKey);
+                        });
+                        if (isEdition) return;
+
+                        this.state.debutedAlbums.add(id);
+                        const album = this.state.raw.albums.get(id);
+                        if (!album) return;
+                        if (!this.state.officialAlbumDebutsByOffset[offset]) {
+                            this.state.officialAlbumDebutsByOffset[offset] = [];
                         }
+                        this.state.officialAlbumDebutsByOffset[offset].push({
+                            id,
+                            title: album.title || 'Unknown Album',
+                            artist: this.getArtistName(album.primary_artist_id || album.artist_id)
+                        });
                     });
 
                     // 3. Compile Top 100 Albums, allowing only officially debuted albums
