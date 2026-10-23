@@ -1,7 +1,8 @@
 """Build a normalized Music Vault from raw ZeroCharts listening-history JSON files.
 
-Bracketed album variants are consolidated into parent album families, and same-artist
-track titles with >=90% normalized text similarity are automatically canonicalized.
+Bracketed album variants are consolidated into parent album families. Track identities
+are based on exact normalized artist/title keys only; fuzzy title similarity is never
+automatically used to merge distinct songs or versions.
 """
 from __future__ import annotations
 
@@ -293,8 +294,11 @@ def build() -> dict[str, Any]:
                         existing["aliases"].append(alias)
         all_events.extend(events)
 
-    # Canonicalize high-similarity song records before linking albums or validating events.
-    all_tracks, song_merge_report, track_id_remap = _merge_similar_tracks(all_tracks, all_events, 0.90)
+    # Do not fuzzy-merge similar song titles: versions, remixes, edits and bonus tracks
+    # can have very similar names but must remain separate chart entries. Exact normalized
+    # artist/title duplicates already share a deterministic ID in import_data.py.
+    song_merge_report: list[dict[str, Any]] = []
+    track_id_remap = {track_id: track_id for track_id in all_tracks}
     for album in all_albums.values():
         album["track_ids"] = sorted({track_id_remap.get(tid, tid) for tid in album.get("track_ids", [])})
 
@@ -387,7 +391,7 @@ def build() -> dict[str, Any]:
             "All parenthesized (...) and bracketed [...] album-title annotations are removed for album-family matching; source titles are preserved.",
             "Original release titles and edition labels are preserved in album source_titles and edition_labels and reports/album_family_merges.json.",
             "Distinct canonical track IDs are unioned across editions, preserving unique deluxe bonus tracks without double-counting repeated tracks.",
-            "Same-artist song titles with normalized SequenceMatcher similarity of 90% or higher are automatically merged; aliases and source titles are preserved.",
+            "Track identity uses exact normalized artist/title keys only; fuzzy title-similarity candidates are reported for review and never auto-merged.",
             "Similarity candidates from 80% up to but below 90% are reported for review and are not auto-merged.",
         ],
     }
