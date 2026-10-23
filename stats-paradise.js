@@ -2026,10 +2026,11 @@
     const mostSongUnits = best(songs, item => item.unitsSold);
     const longestSongRunNo1 = best(songs, item => item.weeksAtNo1);
 
-    const longestAlbumNo1 = best(albums, item => item.maxNo1Streak);
-    const mostAlbumNo1Weeks = best(albums, item => item.weeksAtNo1);
-    const longestAlbumRun = best(albums, item => item.maxChartStreak);
-    const mostAlbumUnits = best(albums, item => item.unitsSold);
+   const longestAlbumNo1 = best(albums, item => item.maxNo1Streak);
+const mostAlbumNo1Weeks = best(albums, item => item.weeksAtNo1);
+const mostAlbumNo1 = mostAlbumNo1Weeks;
+const longestAlbumRun = best(albums, item => item.maxChartStreak);
+const mostAlbumUnits = best(albums, item => item.unitsSold);
 
     const artistMostSongNo1 = best(artists, item => item.songNo1Count);
     const artistMostSongs = best(artists, item => item.songCount);
