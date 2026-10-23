@@ -144,6 +144,9 @@ def ingest_zerocharts_file(filepath: str | Path):
             "event_id": event_id,
             "timestamp": timestamp,
             "track_id": track_id,
+            # Preserve the release attached to this specific scrobble. A track can
+            # appear on multiple releases, but one play must not count for every one.
+            "album_id": album_id,
             "source_provenance": filepath.name,
         })
 
