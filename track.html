@@ -365,7 +365,12 @@
       const excluded = new Set(['seen live','favorites','favourite','favourites','favorite','spotify','all','albums i own','my music','beautiful','awesome','love','great','amazing','male vocalists','female vocalists','under 2000 listeners','under 1000 listeners','00s','90s','80s','70s','60s','50s','2020s','2010s']);
       const normalize = tag => String(tag || '').trim().toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
       const valid = tag => tag.length > 1 && !excluded.has(tag.toLowerCase()) && !/^\d{2,4}s?$/.test(tag.toLowerCase()) && !/^under \d+ listeners$/.test(tag.toLowerCase());
-      const trackArtist = track => getArtistName(track.artist_id ?? track.primary_artist_id ?? track.artist_ids?.[0]);
+      const trackArtist = track => {
+        let ref = track?.artist_id ?? track?.primary_artist_id ?? track?.artist_ids?.[0];
+        if (Array.isArray(ref)) ref = ref[0];
+        const artist = ref != null ? state.raw.artists.get(String(ref)) : null;
+        return artist?.name || artist?.title || track?.artist || track?.artist_name || 'Unknown Artist';
+      };
       const unique = new Map();
       const weekly = new Map();
       for (const event of state.raw.history) {
