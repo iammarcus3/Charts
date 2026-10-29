@@ -86,6 +86,10 @@
     tbody tr:hover { background: rgb(255 255 255 / 2%); }
     
     .rank-cell { font-weight: 900; font-size: 1.1rem; }
+    .peak-table { text-align: center; }
+    .peak-table th:first-child, .peak-table td:first-child { text-align: left; font-weight: 900; }
+    .peak-table tbody td { font-size: 1.05rem; font-weight: 800; }
+    .peak-table tbody tr:hover { background: transparent; }
     .trend { font-weight: 700; font-size: .85rem; }
     .t-up { color: var(--green); }
     .t-down { color: var(--red); }
@@ -150,21 +154,21 @@
     <h2 class="section-title">Career Milestones</h2>
     <div class="stats-grid" id="milestones-grid"></div>
 
-    <!-- COMPLETE WEEKLY CHART HISTORY -->
-    <h2 class="section-title">Official Chart History</h2>
+    <!-- CAREER PEAKS -->
+    <h2 class="section-title">Chart Peaks</h2>
     <div class="panel">
       <div class="table-wrap">
-        <table>
+        <table class="peak-table">
           <thead>
             <tr>
-              <th>WEEK COMMENCING</th>
-              <th>RANK</th>
-              <th>MOVEMENT</th>
-              <th>UNITS SOLD</th>
-              <th>STATUS</th>
+              <th></th>
+              <th>Hot 100</th>
+              <th>POP</th>
+              <th>RNB</th>
+              <th>ROCK</th>
             </tr>
           </thead>
-          <tbody id="history-tbody"></tbody>
+          <tbody id="peak-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -434,7 +438,14 @@
       document.getElementById('sales-best').textContent = formatNumber(highestUnits);
       document.getElementById('sales-best-date').textContent = highestUnitsDate ? `Week of ${highestUnitsDate}` : '';
       document.getElementById('sales-avg').textContent = historyRows.length > 0 ? formatNumber(Math.round(careerUnits / historyRows.length)) : '0';
-      document.getElementById('history-tbody').innerHTML = historyRows.length > 0 ? historyRows.join('') : '<tr><td colspan="5">No chart history.</td></tr>';
+      document.getElementById('peak-tbody').innerHTML = `
+        <tr>
+          <td>Peak</td>
+          <td>${peakRank !== 101 ? '#' + peakRank : '-'}</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>`;
 
       // Annual Table
       let bestYear = '-', bestYUnits = 0;
