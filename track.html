@@ -159,14 +159,8 @@
     <div class="panel">
       <div class="table-wrap">
         <table class="peak-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Hot 100</th>
-              <th>POP</th>
-              <th>RNB</th>
-              <th>ROCK</th>
-            </tr>
+          <thead id="peak-thead">
+            <tr><th></th><th>Hot 100</th></tr>
           </thead>
           <tbody id="peak-tbody"></tbody>
         </table>
@@ -221,7 +215,9 @@
     const state = {
       raw: { tracks: null, albums: null, artists: null, history: null },
       snapshots: { songs: {}, dates: {} },
-      minOffset: 0
+      minOffset: 0,
+      genrePeaks: new Map(),
+      genreNames: []
     };
 
     // --- UTILITIES ---
@@ -353,12 +349,112 @@
 
       try {
         await loadVault();
+        await buildGenrePeakData(trackId);
         renderTrack(trackId);
         document.getElementById('loading-overlay').style.display = 'none';
         document.getElementById('app-shell').style.display = 'block';
       } catch (err) {
         showError(err.message);
       }
+    }
+
+    // Genre chart engine mirrors genres.html: Last.fm tags, at least 2 valid tags,
+    // up to 10 tags per track, weekly plays ranking, Top 30 eligibility.
+    async function buildGenrePeakData(targetTrackId) {
+      const LASTFM_KEY = LASTFM_API_KEY;
+      const excluded = new Set(['seen live','favorites','favourite','favourites','favorite','spotify','all','albums i own','my music','beautiful','awesome','love','great','amazing','male vocalists','female vocalists','under 2000 listeners','under 1000 listeners','00s','90s','80s','70s','60s','50s','2020s','2010s']);
+      const normalize = tag => String(tag || '').trim().toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+      const valid = tag => tag.length > 1 && !excluded.has(tag.toLowerCase()) && !/^\d{2,4}s?$/.test(tag.toLowerCase()) && !/^under \d+ listeners$/.test(tag.toLowerCase());
+      const trackArtist = track => getArtistName(track.primary_artist_id || track.artist_id);
+      const unique = new Map();
+      const weekly = new Map();
+      for (const event of state.raw.history) {
+        const id = String(event.track_id);
+        const track = state.raw.tracks.get(id);
+        if (!track) continue;
+        if (!unique.has(id)) unique.set(id, {id, title: track.title || track.name || 'Unknown Track', artist: trackArtist(track)});
+        const week = getWeekStartMs(event.timestamp);
+        if (!weekly.has(week)) weekly.set(week, new Map());
+        const counts = weekly.get(week);
+        counts.set(id, (counts.get(id) || 0) + 1);
+      }
+
+      const tagCache = new Map();
+      async function getGenres(item) {
+        const key = String(item.id || '') + '|' + String(item.artist || '').toLowerCase() + '|' + String(item.title || '').toLowerCase();
+        if (tagCache.has(key)) return tagCache.get(key);
+        let cached;
+        try { cached = JSON.parse(localStorage.getItem('genre-tags-v2:' + key) || 'null'); } catch {}
+        if (Array.isArray(cached)) { tagCache.set(key, cached); return cached; }
+        async function request(method, params) {
+          const url = new URL('https://ws.audioscrobbler.com/2.0/');
+          Object.entries({...params, method, api_key: LASTFM_KEY, format:'json'}).forEach(([k,v])=>url.searchParams.set(k,v));
+          const response = await fetch(url);
+          if (!response.ok) throw new Error('Last.fm request failed');
+          const data = await response.json();
+          if (data.error) throw new Error(data.message || 'Last.fm error');
+          return data;
+        }
+        function cleanTags(raw) {
+          return (raw || []).map(t=>({name:normalize(t.name),weight:Number(t.count)||0}))
+            .filter(t=>valid(t.name)).sort((a,b)=>b.weight-a.weight);
+        }
+        let tags = [];
+        try {
+          try { const data = await request('track.getTopTags',{artist:item.artist,track:item.title}); tags=cleanTags(data.toptags?.tag); } catch {}
+          if (tags.length < 2) {
+            try {
+              const data = await request('artist.getTopTags',{artist:item.artist});
+              for (const tag of cleanTags(data.toptags?.tag)) if (!tags.some(t=>t.name.toLowerCase()===tag.name.toLowerCase())) tags.push(tag);
+            } catch {}
+          }
+          const seen = new Set();
+          tags = tags.filter(t=>{const k=t.name.toLowerCase();if(seen.has(k))return false;seen.add(k);return true;}).slice(0,10);
+        } catch {}
+        tagCache.set(key,tags);
+        try { localStorage.setItem('genre-tags-v2:' + key, JSON.stringify(tags)); } catch {}
+        return tags;
+      }
+
+      const allItems = [...unique.values()];
+      const tagsById = new Map();
+      const overlayText = document.querySelector('#loading-overlay p');
+      for (let i=0; i<allItems.length; i+=4) {
+        const batch = allItems.slice(i,i+4);
+        const results = await Promise.all(batch.map(getGenres));
+        batch.forEach((item,j)=>tagsById.set(item.id,results[j]));
+        if (overlayText) overlayText.textContent = 'Preparing genre chart peaks… ' + Math.min(i+batch.length,allItems.length) + '/' + allItems.length;
+        if (i+4 < allItems.length) await new Promise(resolve=>setTimeout(resolve,250));
+      }
+
+      const peaks = new Map();
+      const qualifyingGenres = new Set();
+      for (const [week, counts] of weekly) {
+        const chartByGenre = new Map();
+        for (const [id, plays] of counts) {
+          const tags = tagsById.get(id) || [];
+          if (tags.length < 2) continue;
+          const item = unique.get(id);
+          for (const tag of tags.slice(0,10)) {
+            if (!chartByGenre.has(tag.name)) chartByGenre.set(tag.name,[]);
+            chartByGenre.get(tag.name).push({id, title:item.title, plays});
+          }
+        }
+        for (const [genre, list] of chartByGenre) {
+          list.sort((a,b)=>b.plays-a.plays || a.title.localeCompare(b.title));
+          if (list.length >= 30) qualifyingGenres.add(genre);
+          const top = list.slice(0,30);
+          top.forEach((song,index)=>{
+            if (!peaks.has(song.id)) peaks.set(song.id,new Map());
+            const byGenre = peaks.get(song.id);
+            byGenre.set(genre, Math.min(byGenre.get(genre) || Infinity, index+1));
+          });
+        }
+      }
+      state.genrePeaks = peaks;
+      state.genreNames = [...qualifyingGenres].sort((a,b)=>a.localeCompare(b));
+      const thead = document.getElementById('peak-thead');
+      thead.innerHTML = '<tr><th></th><th>Hot 100</th>' + state.genreNames.map(name=>'<th>' + escapeHTML(name) + '</th>').join('') + '</tr>';
     }
 
     function renderTrack(trackId) {
@@ -438,14 +534,9 @@
       document.getElementById('sales-best').textContent = formatNumber(highestUnits);
       document.getElementById('sales-best-date').textContent = highestUnitsDate ? `Week of ${highestUnitsDate}` : '';
       document.getElementById('sales-avg').textContent = historyRows.length > 0 ? formatNumber(Math.round(careerUnits / historyRows.length)) : '0';
-      document.getElementById('peak-tbody').innerHTML = `
-        <tr>
-          <td>Peak</td>
-          <td>${peakRank !== 101 ? '#' + peakRank : '-'}</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>`;
+      const genrePeakMap = state.genrePeaks.get(String(trackId)) || new Map();
+      document.getElementById('peak-tbody').innerHTML = '<tr><td>Peak</td><td>' + (peakRank !== 101 ? '#' + peakRank : '—') + '</td>' +
+        state.genreNames.map(name => '<td>' + (genrePeakMap.has(name) ? '#' + genrePeakMap.get(name) : '—') + '</td>').join('') + '</tr>';
 
       // Annual Table
       let bestYear = '-', bestYUnits = 0;
