@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 RAW_DIR = Path("raw/listening_history")
+# Safe, repeatable repair: only a verified trailing literal escape is removed.
 
 
 def load_and_repair(path: Path):
