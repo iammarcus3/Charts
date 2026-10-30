@@ -451,4 +451,4 @@ def build() -> dict[str, Any]:
 if __name__ == "__main__":
     build()
 
-
+# Trigger a diagnostic rebuild so failed validation reports are captured in Actions.
