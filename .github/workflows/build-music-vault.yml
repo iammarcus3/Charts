@@ -138,3 +138,23 @@ jobs:
             echo "Push raced with another main commit; rebuilding from latest main (attempt $attempt/3)."
           done
           exit 1
+
+      - name: Print Vault Validation Diagnostics
+        if: always()
+        run: |
+          for report in reports/validation_report.json reports/input_errors.json reports/integrity_issues.json reports/invalid_events.json; do
+            if [ -f "$report" ]; then
+              echo "===== $report ====="
+              cat "$report"
+            else
+              echo "===== $report not generated ====="
+            fi
+          done
+
+      - name: Upload Vault Validation Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vault-validation-diagnostics
+          path: reports/
+          if-no-files-found: ignore
