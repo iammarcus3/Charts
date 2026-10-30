@@ -7,12 +7,13 @@ on:
   workflow_dispatch: # Allows you to manually trigger the update anytime
 
 permissions:
-  contents: write # Grants the action permission to push the updated file back to the repo
+  contents: write
+  actions: write # Allows this workflow to dispatch the Music Vault builder
 
 jobs:
   update-scrobbles:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -33,3 +34,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
           GITHUB_BRANCH: main
+
+      - name: Trigger Music Vault Build
+        # Commits made with GITHUB_TOKEN do not trigger push-based workflows.
+        # Explicit workflow_dispatch is the supported handoff to the next workflow.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method POST \
+            repos/${{ github.repository }}/actions/workflows/build-music-vault.yml/dispatches \
+            -f ref=main
