@@ -2011,6 +2011,16 @@
   },
   {
     "entity_type": "track",
+    "artist_id": "39a692e5ae8b3d6a8341e20d",
+    "track_a_id": "457c54bec379867289cf1f3d",
+    "track_a_title": "Father Figure (2010 Remastered Version)",
+    "track_b_id": "8f64852e5a455b776d26534e",
+    "track_b_title": "Heal The Pain (2010 Remastered Version)",
+    "similarity": 0.8108,
+    "action": "review_only_below_auto_merge_threshold"
+  },
+  {
+    "entity_type": "track",
     "artist_id": "e3180e310b54bb07866b78f3",
     "track_a_id": "9ce80c65e8ac5a9d41c06c0f",
     "track_a_title": "It's All Coming Back to Me Now",

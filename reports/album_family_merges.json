@@ -189,6 +189,20 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "55384d81dcc118e92ad6042b",
+    "canonical_title": "2014 Forest Hills Drive",
+    "primary_artist_id": "395ca333c6932bb5e747dd0c",
+    "source_titles_merged": [
+      "2014 Forest Hills Drive",
+      "2014 Forest Hills Drive (10 Year Anniversary Edition)"
+    ],
+    "edition_labels_merged": [
+      "2014 Forest Hills Drive (10 Year Anniversary Edition)"
+    ],
+    "distinct_canonical_track_count": 12,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "1631dd7afbddd356c3fa51f2",
     "canonical_title": "21",
     "primary_artist_id": "5444cdd6a2cff34b63dd073b",
@@ -1246,8 +1260,8 @@
     "canonical_title": "AmaPiano Volume 4",
     "primary_artist_id": "4db0f575b0e8853c40823d65",
     "source_titles_merged": [
-      "AmaPiano Volume 4",
-      "Amapiano Volume 4"
+      "Amapiano Volume 4",
+      "AmaPiano Volume 4"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -1378,8 +1392,8 @@
     "canonical_title": "Anti - MusicFire.in",
     "primary_artist_id": "5e568be58fcbab5cdbc5fd89",
     "source_titles_merged": [
-      "Anti - MusicFire.in",
-      "Anti - Musicfire.in"
+      "Anti - Musicfire.in",
+      "Anti - MusicFire.in"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -3120,7 +3134,7 @@
     "edition_labels_merged": [
       "BROWN (The Chocolate Edition)"
     ],
-    "distinct_canonical_track_count": 34,
+    "distinct_canonical_track_count": 35,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -3922,8 +3936,8 @@
     "canonical_title": "Confessions II",
     "primary_artist_id": "8a28af176378f7b9dc69e715",
     "source_titles_merged": [
-      "Confessions II",
-      "CONFESSIONS II"
+      "CONFESSIONS II",
+      "Confessions II"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -3961,8 +3975,8 @@
     "canonical_title": "Cool Relax",
     "primary_artist_id": "438a144b0be1cc5153b3fd33",
     "source_titles_merged": [
-      "COOL RELAX",
-      "Cool Relax"
+      "Cool Relax",
+      "COOL RELAX"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -4208,7 +4222,7 @@
       "CRYSALIS (CODA)",
       "CRYSALIS [Clean]"
     ],
-    "distinct_canonical_track_count": 18,
+    "distinct_canonical_track_count": 19,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -4443,8 +4457,8 @@
     "canonical_title": "Dangerously In Love",
     "primary_artist_id": "160b28fbcb18cf650db5f12a",
     "source_titles_merged": [
-      "Dangerously In Love",
-      "Dangerously in Love"
+      "Dangerously in Love",
+      "Dangerously In Love"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -4514,7 +4528,7 @@
     "edition_labels_merged": [
       "Daydream (30th Anniversary Edition)"
     ],
-    "distinct_canonical_track_count": 13,
+    "distinct_canonical_track_count": 14,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -4989,12 +5003,13 @@
     "canonical_title": "Dracula",
     "primary_artist_id": "6a04fe32c5591d975c66e38a",
     "source_titles_merged": [
+      "Dracula",
       "Dracula (Remix)"
     ],
     "edition_labels_merged": [
       "Dracula (Remix)"
     ],
-    "distinct_canonical_track_count": 1,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -6134,6 +6149,19 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "906ec12b555ad6f76a0f759a",
+    "canonical_title": "Flower In A Hurricane",
+    "primary_artist_id": "5070fee1fb52092a338ae9fa",
+    "source_titles_merged": [
+      "Flower In A Hurricane (feat. Tame Impala, SZA, King Gizzard & the Lizard Wizard) [from GTAVI]"
+    ],
+    "edition_labels_merged": [
+      "Flower In A Hurricane (feat. Tame Impala, SZA, King Gizzard & the Lizard Wizard) [from GTAVI]"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "4427ee8bbcdd3e5dc963ee74",
     "canonical_title": "Flowers",
     "primary_artist_id": "7e1457ffe697432bee3fb4a4",
@@ -7123,7 +7151,7 @@
     "edition_labels_merged": [
       "good kid, m.A.A.d city (Deluxe)"
     ],
-    "distinct_canonical_track_count": 6,
+    "distinct_canonical_track_count": 7,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -9529,6 +9557,20 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "5ce4f8d79a3c8aebbd040da7",
+    "canonical_title": "Kehlani - Single",
+    "primary_artist_id": "753bd876122701f87632fc9c",
+    "source_titles_merged": [
+      "KEHLANI (REMIX) [feat. Kehlani] - Single",
+      "Kehlani - Single"
+    ],
+    "edition_labels_merged": [
+      "KEHLANI (REMIX) [feat. Kehlani] - Single"
+    ],
+    "distinct_canonical_track_count": 2,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "1f5d0299a9a60971d135df23",
     "canonical_title": "Kevin Lyttle",
     "primary_artist_id": "fa248f731cc24c7fdaed69b1",
@@ -9625,8 +9667,8 @@
     "canonical_title": "Kiss All The Time. Disco, Occasionally.",
     "primary_artist_id": "5262dc458929bbef3f0e1420",
     "source_titles_merged": [
-      "Kiss All The Time. Disco, Occasionally.",
-      "Kiss All the Time. Disco, Occasionally."
+      "Kiss All the Time. Disco, Occasionally.",
+      "Kiss All The Time. Disco, Occasionally."
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -10324,6 +10366,19 @@
     ],
     "edition_labels_merged": [
       "Live the Music (Gold Edition)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "cd1b949b45fac7765161f4f2",
+    "canonical_title": "LK99+",
+    "primary_artist_id": "d882eb32cd6748fcd5962cf5",
+    "source_titles_merged": [
+      "LK99+ DELUXE"
+    ],
+    "edition_labels_merged": [
+      "LK99+ DELUXE"
     ],
     "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -11750,6 +11805,20 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "59fe9223dbc94cddc1a3a2b2",
+    "canonical_title": "My Way",
+    "primary_artist_id": "bf2e51e0ef29f405495dd012",
+    "source_titles_merged": [
+      "My Way",
+      "My Way (25th Anniversary Edition)"
+    ],
+    "edition_labels_merged": [
+      "My Way (25th Anniversary Edition)"
+    ],
+    "distinct_canonical_track_count": 6,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "4b63b0ace3b5765d990b4501",
     "canonical_title": "Nasty XXX Remix",
     "primary_artist_id": "10100cdc05ed5af685e2b792",
@@ -12022,6 +12091,19 @@
     ],
     "edition_labels_merged": [
       "Night Call (Deluxe)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "9ccaae9d08a0e56c9d23e654",
+    "canonical_title": "Nights In The Sun",
+    "primary_artist_id": "dd2d7e29c205ae2e0af77eea",
+    "source_titles_merged": [
+      "Nights In The Sun (N.I.T.S)"
+    ],
+    "edition_labels_merged": [
+      "Nights In The Sun (N.I.T.S)"
     ],
     "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -14206,6 +14288,19 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "0f6f59161ee7dbe773bd3429",
+    "canonical_title": "Ready To Die",
+    "primary_artist_id": "599cf80dc165ba6bf7f0b092",
+    "source_titles_merged": [
+      "Ready To Die (The Remaster)"
+    ],
+    "edition_labels_merged": [
+      "Ready To Die (The Remaster)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "264ce0b626da7d7a03efa209",
     "canonical_title": "Ready to Die",
     "primary_artist_id": "55dff6000cac58d014a134c8",
@@ -15245,8 +15340,8 @@
     "canonical_title": "Set It Off",
     "primary_artist_id": "0c9205b178526ab06d6f41f0",
     "source_titles_merged": [
-      "Set It Off",
-      "SET IT OFF"
+      "SET IT OFF",
+      "Set It Off"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -15970,8 +16065,8 @@
     "canonical_title": "Solace",
     "primary_artist_id": "3c0cdf63735b97ba26e7fc40",
     "source_titles_merged": [
-      "Solace",
-      "SOLACE"
+      "SOLACE",
+      "Solace"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -16186,6 +16281,45 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "32943ed7542ef32295a0caf9",
+    "canonical_title": "Spooky Season",
+    "primary_artist_id": "ecf123f380c8309e9ee44004",
+    "source_titles_merged": [
+      "Spooky Season (DJ Mix)"
+    ],
+    "edition_labels_merged": [
+      "Spooky Season (DJ Mix)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "ae64a6c9e55ab97ce307c63b",
+    "canonical_title": "Spooky Season",
+    "primary_artist_id": "be14c72e8d7b7bfbf61b5947",
+    "source_titles_merged": [
+      "Spooky Season (DJ Mix)"
+    ],
+    "edition_labels_merged": [
+      "Spooky Season (DJ Mix)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "b1f89c33a7b5dd5240f042e6",
+    "canonical_title": "Spooky Season",
+    "primary_artist_id": "0136c222bc67e0b736508a89",
+    "source_titles_merged": [
+      "Spooky Season (DJ Mix)"
+    ],
+    "edition_labels_merged": [
+      "Spooky Season (DJ Mix)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "958d07fbbf234720089615d6",
     "canonical_title": "SQUID GAME",
     "primary_artist_id": "54c8c42fed300c893d719a14",
@@ -16278,8 +16412,8 @@
     "canonical_title": "Stereo Driver",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "source_titles_merged": [
-      "Stereo Driver",
-      "STEREO DRIVER"
+      "STEREO DRIVER",
+      "Stereo Driver"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -17188,8 +17322,8 @@
     "canonical_title": "The Best Of Anita Baker",
     "primary_artist_id": "1fbdda766b54a1bf97ee4cf7",
     "source_titles_merged": [
-      "The Best Of Anita Baker",
-      "The Best of Anita Baker"
+      "The Best of Anita Baker",
+      "The Best Of Anita Baker"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -17677,8 +17811,8 @@
     "primary_artist_id": "7d09e007f4cb7bd27b2b618b",
     "source_titles_merged": [
       "THE IDOL",
-      "the idol",
-      "The Idol"
+      "The Idol",
+      "the idol"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -19587,8 +19721,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "e869d7cdcc903a167b3ff93e",
     "source_titles_merged": [
-      "Waiting to Exhale",
       "Waiting To Exhale",
+      "Waiting to Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [
@@ -19643,8 +19777,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "52a2c160a0104e1b0a9a53d1",
     "source_titles_merged": [
-      "Waiting to Exhale",
       "Waiting To Exhale",
+      "Waiting to Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [

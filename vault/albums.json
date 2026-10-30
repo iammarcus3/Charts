@@ -269,6 +269,7 @@
     "normalized_title": "daydream",
     "primary_artist_id": "2fc8ae64f34795cde74ada7e",
     "track_ids": [
+      "13692ca6f0c897e077d963d7",
       "259eb2a366488819c8d0923e",
       "2d94d4c6c529271706db7fc0",
       "54dd0e4af80ed02c771767eb",
@@ -2751,6 +2752,7 @@
       "e665165e8488f5235d681cfb",
       "e68c73198834798d9e157c03",
       "ecbf852436400e11b9414b5a",
+      "f047142f099eed8555a4910f",
       "f6da1dff63761e77c455a1ed",
       "ff14b6a44962c3cc20e95744"
     ],
@@ -5957,6 +5959,7 @@
     "track_ids": [
       "27849ae6dad9e2439fa21ef9",
       "38c9c36e6dad274dd47a9e53",
+      "3c2bf2cc0bf8ae6f6fb48efb",
       "89836c63b0044bed8ebef3e3",
       "e25b72904c1836bf32dd45c9",
       "e3052ae84fd3c2c3a4d53b32",
@@ -6603,6 +6606,22 @@
     ],
     "source_titles": [
       "Pain Is Love"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "44ec7f8ad914477d271d6d5e",
+    "title": "ATTITUDE ERA!",
+    "normalized_title": "attitude era",
+    "primary_artist_id": "1356ee388d0a9de3ccf35363",
+    "track_ids": [
+      "36a6d598f95e5e290a5e4308",
+      "c16d3703c5190abf7403de2a",
+      "fb76c47abdd3d0e8e30ef991"
+    ],
+    "source_titles": [
+      "ATTITUDE ERA!"
     ],
     "edition_labels": [],
     "canonicalization_rule": "bracketed_album_family"
@@ -7361,8 +7380,10 @@
       "1a4a22c9949c183ff4a0021c",
       "1d1626717790e41b82591e31",
       "365c894992acb4006e46a501",
+      "4158440e745e0a50adaab746",
       "4e1bc67f6f3d10d37a68ff8f",
       "5646fe3d64eb82657d902752",
+      "b0404efb2aedeec2572be32e",
       "b67226c323508172df963600",
       "ddfbee407f558758d4384cce"
     ],
@@ -8426,6 +8447,22 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "5518e8950a11769118c558ee",
+    "title": "From Q, With Love",
+    "normalized_title": "from q with love",
+    "primary_artist_id": "e183561ca9144cf22efa97f6",
+    "track_ids": [
+      "2e06bacc5ffe05f35fc9c20d",
+      "7bd77fda979e8bd5b2ea0233",
+      "87472090a10a61e769abca91"
+    ],
+    "source_titles": [
+      "From Q, With Love"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "55384d81dcc118e92ad6042b",
     "title": "2014 Forest Hills Drive",
     "normalized_title": "2014 forest hills drive",
@@ -8445,9 +8482,12 @@
       "f0c591259089fce5295f8255"
     ],
     "source_titles": [
-      "2014 Forest Hills Drive"
+      "2014 Forest Hills Drive",
+      "2014 Forest Hills Drive (10 Year Anniversary Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "2014 Forest Hills Drive (10 Year Anniversary Edition)"
+    ],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -8878,9 +8918,12 @@
       "ffc51f2478be69812bd07f61"
     ],
     "source_titles": [
-      "My Way"
+      "My Way",
+      "My Way (25th Anniversary Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "My Way (25th Anniversary Edition)"
+    ],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -10205,6 +10248,22 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "69f69b356eaf01ecb0a787ac",
+    "title": "Frequency Of Love",
+    "normalized_title": "frequency of love",
+    "primary_artist_id": "6b0cc863f3ebe86de1d33905",
+    "track_ids": [
+      "66ddfe439207a706945da395",
+      "b6e66a64fa057d646c99184b",
+      "f268ab6e0f83eca68d0a2ad3"
+    ],
+    "source_titles": [
+      "Frequency Of Love"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "6a1095ef46acbf9164ecf203",
     "title": "COWBOY CARTER",
     "normalized_title": "cowboy carter",
@@ -11131,6 +11190,30 @@
     ],
     "source_titles": [
       "Piano Hub"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "757dcd7d2d75b845467a5389",
+    "title": "We'll Never Be This Young Again",
+    "normalized_title": "we ll never be this young again",
+    "primary_artist_id": "9e776f6e544deb88e991c7a3",
+    "track_ids": [
+      "0db144fc598a33edbd93195b",
+      "185ffe36ac31db3702d74ebb",
+      "1a14f39927dc2d664718ec81",
+      "1dc0600a6b2649a9854d67c7",
+      "3016fffe8ae0b559b26fc397",
+      "3814dcd6c24dae095cd888b0",
+      "452155cc3b598517d2334e93",
+      "cda0f81b9d28f1d8b7935c06",
+      "d09b99266fb112e0f12d0de8",
+      "d68f265ff2b69ccdef05c207",
+      "efdfae44fa6197e792c40fec"
+    ],
+    "source_titles": [
+      "We'll Never Be This Young Again"
     ],
     "edition_labels": [],
     "canonicalization_rule": "bracketed_album_family"
@@ -13319,6 +13402,7 @@
     "normalized_title": "solace and the vices",
     "primary_artist_id": "e23860970a15ccd8f27a6183",
     "track_ids": [
+      "1181cb88860ec7016581d104",
       "58b1043975c2454d02fe2f77",
       "78afa4e1b418e457f4c3509b",
       "a0dc31ff6895a8374511727b"
@@ -14290,6 +14374,22 @@
     ],
     "source_titles": [
       "The Idol"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "9701844a1df4da586e2d243b",
+    "title": "PRIMA",
+    "normalized_title": "prima",
+    "primary_artist_id": "bd5bba952d365b3cf6a92c18",
+    "track_ids": [
+      "0d8a021127db547488cba447",
+      "3632c272184dd388d7e6f274",
+      "8d511a84f2c824621e522db5"
+    ],
+    "source_titles": [
+      "PRIMA"
     ],
     "edition_labels": [],
     "canonicalization_rule": "bracketed_album_family"
@@ -15478,6 +15578,22 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "a7ceb549969cf33b2a02f8cb",
+    "title": "Maid Of Honour",
+    "normalized_title": "maid of honour",
+    "primary_artist_id": "92b4cfdb6782e6fec393332f",
+    "track_ids": [
+      "1477510b8370140dccddc1bb",
+      "81b3037ff5202cc138fc0d52",
+      "e6990d532c91d2977ec5d197"
+    ],
+    "source_titles": [
+      "Maid Of Honour"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "a8ed5ef921586068e4f68bdf",
     "title": "Never Too Much: Greatest Hits",
     "normalized_title": "never too much greatest hits",
@@ -16200,7 +16316,8 @@
       "4ecea04d02d21fec12df8137",
       "6a7be3e165819e4e600210c8",
       "744af45b1c1b79ce05f03cfd",
-      "94bc67f40a26f87d5df939da"
+      "94bc67f40a26f87d5df939da",
+      "cf30d98685a2acca3540775c"
     ],
     "source_titles": [
       "good kid, m.A.A.d city (Deluxe)",
@@ -16810,6 +16927,7 @@
     "normalized_title": "crysalis",
     "primary_artist_id": "150bd356fdd48f75b9fa93e9",
     "track_ids": [
+      "0fdfe6c7dfc426de6e25b9f2",
       "1c4243f001befee22e8c9490",
       "1c5c74d9f1e0e0d11f9936f3",
       "26af421fe1832cc4bb05fc64",
@@ -19045,6 +19163,30 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "d03f9010314b896c2be95487",
+    "title": "Ladies & Gentlemen",
+    "normalized_title": "ladies and gentlemen",
+    "primary_artist_id": "39a692e5ae8b3d6a8341e20d",
+    "track_ids": [
+      "0306b8ed3d1712bdccfcee0e",
+      "22a7b6b654cf2ce8ddd4fb28",
+      "457c54bec379867289cf1f3d",
+      "4d08f615eabf8394423d86e7",
+      "5746672b3005d0cff1a6ed7d",
+      "5fd75b4c1325f3b496353c2b",
+      "8f64852e5a455b776d26534e",
+      "c28e025252163d57068a1930",
+      "c8a7357381cc1d5945d7a365",
+      "f3590fad894ba205b2deba09",
+      "fa578b66ba4761e034613b9e"
+    ],
+    "source_titles": [
+      "Ladies & Gentlemen"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "d0491aaed9ea0554662be6dd",
     "title": "Scorpion Kings",
     "normalized_title": "scorpion kings",
@@ -20324,7 +20466,8 @@
     "track_ids": [
       "88d5d2a4afbeaf6a60d720ee",
       "96745af51553bc66009e7a59",
-      "a57025708d3867ff3bcd7418"
+      "a57025708d3867ff3bcd7418",
+      "e4444ad5299141715cce2c6d"
     ],
     "source_titles": [
       "The Jungle Is The Only Way Out"
@@ -23153,6 +23296,7 @@
     "normalized_title": "londra",
     "primary_artist_id": "7b9a8d04961b833d8a9ab453",
     "track_ids": [
+      "435a05d34a6a641fd3e83e55",
       "844867db0ad8c2a70faea0d7",
       "d5f249d81937a0e8544d1667",
       "dc1b2ab308856bddd79baa1e"

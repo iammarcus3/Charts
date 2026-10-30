@@ -108,6 +108,12 @@
     "aliases": []
   },
   {
+    "id": "0136c222bc67e0b736508a89",
+    "name": "Beyoncé, Dolly Parton & Rihanna",
+    "normalized_name": "beyonce dolly parton and rihanna",
+    "aliases": []
+  },
+  {
     "id": "0159a8771e4dcd2a24a14e0c",
     "name": "Michelle Williams",
     "normalized_name": "michelle williams",
@@ -1636,6 +1642,12 @@
     "aliases": []
   },
   {
+    "id": "103dc259261d60dcef568a30",
+    "name": "House of Amapiano",
+    "normalized_name": "house of amapiano",
+    "aliases": []
+  },
+  {
     "id": "104c55ec30e57e9f6352a862",
     "name": "DON’T LOOK UP",
     "normalized_name": "don t look up",
@@ -2163,6 +2175,12 @@
     "id": "15bb21c1545ae2d52a21ef85",
     "name": "Shekhinah",
     "normalized_name": "shekhinah",
+    "aliases": []
+  },
+  {
+    "id": "15cf38a5a914727b72f6baa1",
+    "name": "Devin Donnell",
+    "normalized_name": "devin donnell",
     "aliases": []
   },
   {
@@ -7596,6 +7614,12 @@
     "aliases": []
   },
   {
+    "id": "47cdeac73756d8024eb96be4",
+    "name": "Odeal & Jorja Smith",
+    "normalized_name": "odeal and jorja smith",
+    "aliases": []
+  },
+  {
     "id": "47cfd0afc51166ff799df6a5",
     "name": "Chlöe, Timbaland",
     "normalized_name": "chloe timbaland",
@@ -8544,6 +8568,12 @@
     "aliases": []
   },
   {
+    "id": "5070fee1fb52092a338ae9fa",
+    "name": "Justice",
+    "normalized_name": "justice",
+    "aliases": []
+  },
+  {
     "id": "508aef2390b2fd8421f953fa",
     "name": "Zandimaz, Nokwazi",
     "normalized_name": "zandimaz nokwazi",
@@ -8964,6 +8994,12 @@
     "aliases": []
   },
   {
+    "id": "53bc2c456cb9c7ff547cf03a",
+    "name": "2021 Citroen C3",
+    "normalized_name": "2021 citroen c3",
+    "aliases": []
+  },
+  {
     "id": "53c030cd42b8e97f1387ce3e",
     "name": "Dj Cndo",
     "normalized_name": "dj cndo",
@@ -9239,6 +9275,12 @@
     "id": "55ff35970a386a6215456032",
     "name": "Steve Lacy, Cecile Believe",
     "normalized_name": "steve lacy cecile believe",
+    "aliases": []
+  },
+  {
+    "id": "560a24565a886b9e5f3227fe",
+    "name": "George Michael & Elton John",
+    "normalized_name": "george michael and elton john",
     "aliases": []
   },
   {
@@ -9575,6 +9617,12 @@
     "id": "5950736783fa9d163df83c66",
     "name": "Nicki Minaj & Skillibeng",
     "normalized_name": "nicki minaj and skillibeng",
+    "aliases": []
+  },
+  {
+    "id": "599cf80dc165ba6bf7f0b092",
+    "name": "Notorious B.I.G.",
+    "normalized_name": "notorious b i g",
     "aliases": []
   },
   {
@@ -10268,6 +10316,12 @@
     "aliases": []
   },
   {
+    "id": "5fc5b90ce3b7b2b00bb6a043",
+    "name": "Citroen C3 Shine 1.2 PureTech Turbo 81kW",
+    "normalized_name": "citroen c3 shine 1 2 puretech turbo 81kw",
+    "aliases": []
+  },
+  {
     "id": "5fe916cc6640f779bd98c0c6",
     "name": "Chuckie031, SIR Linho",
     "normalized_name": "chuckie031 sir linho",
@@ -10433,6 +10487,12 @@
     "id": "616cd82be82cf6b02255da18",
     "name": "Meditation Healing Therapy",
     "normalized_name": "meditation healing therapy",
+    "aliases": []
+  },
+  {
+    "id": "6174d3ac09d120aa861ffec1",
+    "name": "MfanaTouchLine",
+    "normalized_name": "mfanatouchline",
     "aliases": []
   },
   {
@@ -11230,6 +11290,12 @@
     "aliases": []
   },
   {
+    "id": "6950bd83122ed72ae7654e0e",
+    "name": "Gotts Street Park & Pip Millett",
+    "normalized_name": "gotts street park and pip millett",
+    "aliases": []
+  },
+  {
     "id": "696247ef4f9b5f31a85599a0",
     "name": "God's Property",
     "normalized_name": "god s property",
@@ -11948,6 +12014,12 @@
     "aliases": []
   },
   {
+    "id": "706e3dcae33b104530ad6aea",
+    "name": "Amber Navran",
+    "normalized_name": "amber navran",
+    "aliases": []
+  },
+  {
     "id": "7076ac1584de3f5df44f724b",
     "name": "Anke Richards",
     "normalized_name": "anke richards",
@@ -12469,6 +12541,12 @@
     "id": "7552da0b4e1bc8d984d5fb90",
     "name": "Angus & Julia Stone & Julia Stone",
     "normalized_name": "angus and julia stone and julia stone",
+    "aliases": []
+  },
+  {
+    "id": "75648ef5381c693a55e7485b",
+    "name": "Alex Vaughn",
+    "normalized_name": "alex vaughn",
     "aliases": []
   },
   {
@@ -13059,6 +13137,12 @@
     "id": "7b912fd0783cb1cd6052c88e",
     "name": "Dimples",
     "normalized_name": "dimples",
+    "aliases": []
+  },
+  {
+    "id": "7b9656aa8e827bbfea8eefef",
+    "name": "Master Peace",
+    "normalized_name": "master peace",
     "aliases": []
   },
   {
@@ -13918,6 +14002,12 @@
     "aliases": []
   },
   {
+    "id": "834aa68b721ef170dd50c772",
+    "name": "Patchwork Inc.",
+    "normalized_name": "patchwork inc",
+    "aliases": []
+  },
+  {
     "id": "834ac136cde1d20a45e49403",
     "name": "RealestK",
     "normalized_name": "realestk",
@@ -14374,6 +14464,12 @@
     "aliases": []
   },
   {
+    "id": "8804bc6f24bc119c82920f6e",
+    "name": "Laila! & Teezo Touchdown",
+    "normalized_name": "laila and teezo touchdown",
+    "aliases": []
+  },
+  {
     "id": "8805db1e4d1acad84b82a0cc",
     "name": "HILLARI",
     "normalized_name": "hillari",
@@ -14455,6 +14551,12 @@
     "id": "8903ecb2cbcf40603c5aadec",
     "name": "Catie Turner",
     "normalized_name": "catie turner",
+    "aliases": []
+  },
+  {
+    "id": "890b01cde9fb26435643f1cd",
+    "name": "Owen Saward",
+    "normalized_name": "owen saward",
     "aliases": []
   },
   {
@@ -14719,6 +14821,12 @@
     "id": "8b9090f2b5660374e32dcd80",
     "name": "Ravyn Lenae, Steve Lacy",
     "normalized_name": "ravyn lenae steve lacy",
+    "aliases": []
+  },
+  {
+    "id": "8ba296b97efa4d8e05e67416",
+    "name": "ruva",
+    "normalized_name": "ruva",
     "aliases": []
   },
   {
@@ -16654,6 +16762,12 @@
     "aliases": []
   },
   {
+    "id": "9e85e4d9cb508df3187430ee",
+    "name": "Neya",
+    "normalized_name": "neya",
+    "aliases": []
+  },
+  {
     "id": "9e90c37cced89c941ca667cb",
     "name": "Joocy",
     "normalized_name": "joocy",
@@ -18197,6 +18311,12 @@
     "id": "ad32d4e52bd1205e9d782847",
     "name": "The Tremeloes",
     "normalized_name": "the tremeloes",
+    "aliases": []
+  },
+  {
+    "id": "ad331a1daa157316f24c0897",
+    "name": "MfanaTouchline & Blxckie",
+    "normalized_name": "mfanatouchline and blxckie",
     "aliases": []
   },
   {
@@ -19875,6 +19995,18 @@
     "id": "bdc76effb6496d904b4a82be",
     "name": "Ariana Grande & Troye Sivan",
     "normalized_name": "ariana grande and troye sivan",
+    "aliases": []
+  },
+  {
+    "id": "bdf9e3b1951bc4d8b236cfb2",
+    "name": "NEW Facelifted Omoda C5 LUX",
+    "normalized_name": "new facelifted omoda c5 lux",
+    "aliases": []
+  },
+  {
+    "id": "be14c72e8d7b7bfbf61b5947",
+    "name": "Tame Impala & Dua Lipa",
+    "normalized_name": "tame impala and dua lipa",
     "aliases": []
   },
   {
@@ -22577,6 +22709,12 @@
     "aliases": []
   },
   {
+    "id": "d882eb32cd6748fcd5962cf5",
+    "name": "Leven Kali, DESTIN CONRAD & Ambré",
+    "normalized_name": "leven kali destin conrad and ambre",
+    "aliases": []
+  },
+  {
     "id": "d88bea7b1726ec709b12ef78",
     "name": "Dodji",
     "normalized_name": "dodji",
@@ -22628,6 +22766,12 @@
     "id": "d91d8f814802c75b9b50ee83",
     "name": "Washed Out",
     "normalized_name": "washed out",
+    "aliases": []
+  },
+  {
+    "id": "d936df1cac97f0796db9a8b4",
+    "name": "Brown Eyed Girl",
+    "normalized_name": "brown eyed girl",
     "aliases": []
   },
   {
@@ -23987,6 +24131,12 @@
     "aliases": []
   },
   {
+    "id": "e70d65a79fd4fb67633594fc",
+    "name": "Brainstory",
+    "normalized_name": "brainstory",
+    "aliases": []
+  },
+  {
     "id": "e70f953ebe4826b405e4e8a7",
     "name": "Koffee Brown",
     "normalized_name": "koffee brown",
@@ -24351,6 +24501,12 @@
     "aliases": []
   },
   {
+    "id": "eab36872dbfe251879e8c1c3",
+    "name": "Tae Leon",
+    "normalized_name": "tae leon",
+    "aliases": []
+  },
+  {
     "id": "eae53fa211b3c717a57b989e",
     "name": "Logistics",
     "normalized_name": "logistics",
@@ -24524,6 +24680,12 @@
     "id": "ecd6f2cb575a24e57bb0270d",
     "name": "Hunter Rose",
     "normalized_name": "hunter rose",
+    "aliases": []
+  },
+  {
+    "id": "ecf123f380c8309e9ee44004",
+    "name": "Supermini, Andrew Lloyd Webber & Lady Gaga",
+    "normalized_name": "supermini andrew lloyd webber and lady gaga",
     "aliases": []
   },
   {
@@ -24722,6 +24884,12 @@
     "id": "ef3a2932de3b0a2d0b23caaf",
     "name": "Sonotherapy",
     "normalized_name": "sonotherapy",
+    "aliases": []
+  },
+  {
+    "id": "ef3e206e628bb671f56bc104",
+    "name": "OSA",
+    "normalized_name": "osa",
     "aliases": []
   },
   {
@@ -26246,6 +26414,12 @@
     "id": "fe46fff5e1c63e9c00b40fdf",
     "name": "Glass Animals",
     "normalized_name": "glass animals",
+    "aliases": []
+  },
+  {
+    "id": "fe4cfb17db864f4fbac74192",
+    "name": "Love, Tumi",
+    "normalized_name": "love tumi",
     "aliases": []
   },
   {

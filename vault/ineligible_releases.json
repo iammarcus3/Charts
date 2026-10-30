@@ -2104,6 +2104,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "0d989122b797375dee7e67fb",
+    "title": "88",
+    "primary_artist_id": "1465655af815d9f0dae7bc04",
+    "track_count": 1,
+    "track_ids": [
+      "eeba19de78e1fc6b47fb9dfe"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "281b8811fc0cc1cd7f3ed23b",
     "title": "888 Hz Attract and Manifest Money",
     "primary_artist_id": "dfc782956d83f160ec573bd1",
@@ -5787,17 +5797,6 @@
     "track_count": 1,
     "track_ids": [
       "be505bf8fc15616d4fa207d4"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "44ec7f8ad914477d271d6d5e",
-    "title": "ATTITUDE ERA!",
-    "primary_artist_id": "1356ee388d0a9de3ccf35363",
-    "track_count": 2,
-    "track_ids": [
-      "36a6d598f95e5e290a5e4308",
-      "fb76c47abdd3d0e8e30ef991"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -12563,6 +12562,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "a41f57c57c3d01f0371dc6f1",
+    "title": "Coldest",
+    "primary_artist_id": "2d7ad673e6fd2a90df69b4f5",
+    "track_count": 1,
+    "track_ids": [
+      "1167dce5d77d7b182a9597af"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "aad88fa06a0e5f5d2a8ff37f",
     "title": "Collection",
     "primary_artist_id": "23d5ea0ddcfde93cc236afcd",
@@ -16228,9 +16237,10 @@
     "id": "81a2ad4674fa57571a6537e0",
     "title": "Dracula",
     "primary_artist_id": "6a04fe32c5591d975c66e38a",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
-      "11510d650fc85426e5ada65c"
+      "11510d650fc85426e5ada65c",
+      "527ef4bec9e18362642d7369"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -18509,8 +18519,9 @@
     "id": "cc25b951edc4a4de956d945d",
     "title": "Fearless",
     "primary_artist_id": "a99c7a4e9ba62842eca3651a",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "3a8e3f0f3f65e017032c02a8",
       "918ba6de3acc30abf9c18fb5"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -18614,6 +18625,16 @@
     "track_count": 1,
     "track_ids": [
       "5ce1564dd0b195763df7585e"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "a4522f24f30b409607b38618",
+    "title": "Feels",
+    "primary_artist_id": "9e85e4d9cb508df3187430ee",
+    "track_count": 1,
+    "track_ids": [
+      "efc5a7e993ebec1e848138f4"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -19284,6 +19305,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "906ec12b555ad6f76a0f759a",
+    "title": "Flower In A Hurricane",
+    "primary_artist_id": "5070fee1fb52092a338ae9fa",
+    "track_count": 1,
+    "track_ids": [
+      "ba9b0b9f7e3a3fc0a8ba2f44"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "4427ee8bbcdd3e5dc963ee74",
     "title": "Flowers",
     "primary_artist_id": "7e1457ffe697432bee3fb4a4",
@@ -19462,6 +19493,16 @@
     "track_count": 1,
     "track_ids": [
       "22573ed227c3a34877d9331b"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "afc6677e9e97c23ab1fde405",
+    "title": "For A Good Time...",
+    "primary_artist_id": "47cdeac73756d8024eb96be4",
+    "track_count": 1,
+    "track_ids": [
+      "d38690322711eb34579dc4ac"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -19792,6 +19833,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "baa02e34aafbaff6a03bd163",
+    "title": "Foul",
+    "primary_artist_id": "6f558793c529f638c056d121",
+    "track_count": 1,
+    "track_ids": [
+      "8f8707a168b8178fb17d165f"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "b6c699344e3774a15c657292",
     "title": "Found",
     "primary_artist_id": "36c7633610c19f6d0f2ca715",
@@ -20045,17 +20096,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "69f69b356eaf01ecb0a787ac",
-    "title": "Frequency Of Love",
-    "primary_artist_id": "6b0cc863f3ebe86de1d33905",
-    "track_count": 2,
-    "track_ids": [
-      "66ddfe439207a706945da395",
-      "f268ab6e0f83eca68d0a2ad3"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "04ef29efbfd1e533e8a5f022",
     "title": "Fresh Cream",
     "primary_artist_id": "9615aab7e5e9ceaa09b9a27e",
@@ -20158,13 +20198,12 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "5518e8950a11769118c558ee",
-    "title": "From Q, With Love",
-    "primary_artist_id": "e183561ca9144cf22efa97f6",
-    "track_count": 2,
+    "id": "1f1b807c64b1fdfdbe53ffc7",
+    "title": "from RUVA to El Roi",
+    "primary_artist_id": "8ba296b97efa4d8e05e67416",
+    "track_count": 1,
     "track_ids": [
-      "7bd77fda979e8bd5b2ea0233",
-      "87472090a10a61e769abca91"
+      "61dd8cf37221efc2f8230706"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -23266,6 +23305,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "0e9cf1047c8fc56c9b376ed5",
+    "title": "Hard To Get",
+    "primary_artist_id": "890b01cde9fb26435643f1cd",
+    "track_count": 1,
+    "track_ids": [
+      "f952319303ef0de9aeb07589"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "23759bee81af74c14af89e1f",
     "title": "HARD TRUTHS",
     "primary_artist_id": "cbaf1d690dae4e6b0a77d6b5",
@@ -24983,6 +25032,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "cd16108d1d22b82a78708167",
+    "title": "HONEY BROWN",
+    "primary_artist_id": "15cf38a5a914727b72f6baa1",
+    "track_count": 1,
+    "track_ids": [
+      "83f7a99e463a354477fe1444"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "a950defbd67e7cfd2c91c5f7",
     "title": "Honey EP",
     "primary_artist_id": "2fc8ae64f34795cde74ada7e",
@@ -25288,6 +25347,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "54be64520578ed76eeca9456",
+    "title": "House of Amapiano",
+    "primary_artist_id": "103dc259261d60dcef568a30",
+    "track_count": 1,
+    "track_ids": [
+      "cf5041f2877f994e29696fc1"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "7d53af883595a143bd65c468",
     "title": "House of Hits Vol 3 - EP",
     "primary_artist_id": "9d23bec344655a2209cf4a6d",
@@ -25328,12 +25397,42 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "5edb7e66eedc4d1210734d5b",
+    "title": "House Party Chronicles",
+    "primary_artist_id": "6174d3ac09d120aa861ffec1",
+    "track_count": 1,
+    "track_ids": [
+      "c3a5e8a48dace83a18943ca8"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "7c2361e9296ff6dd9272cd5c",
+    "title": "House Party Chronicles",
+    "primary_artist_id": "ad331a1daa157316f24c0897",
+    "track_count": 1,
+    "track_ids": [
+      "555a81ef4586795db19ede5a"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "7fa5b69375684a47b57a4ae4",
     "title": "House with No Mirrors - Single",
     "primary_artist_id": "830809f0cbe4e4cc6e4eed62",
     "track_count": 1,
     "track_ids": [
       "58e8b744c905d1075f4c8449"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "1b9de4551dfcebaf125975bd",
+    "title": "Housewife",
+    "primary_artist_id": "fa48bc0f8a679713c33aced1",
+    "track_count": 1,
+    "track_ids": [
+      "728154011bc918bc035d0fb9"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -26233,6 +26332,26 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "e53cde75c8c89c720889f1e8",
+    "title": "I Love You",
+    "primary_artist_id": "455f6c701d4a90b241277089",
+    "track_count": 1,
+    "track_ids": [
+      "310300a9cdfc5d15089dbd43"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "b3e4883ae887bf70f4ae59c4",
+    "title": "I Love You - Single",
+    "primary_artist_id": "455f6c701d4a90b241277089",
+    "track_count": 1,
+    "track_ids": [
+      "310300a9cdfc5d15089dbd43"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "50385b42cc613a17627f678f",
     "title": "I Love You Daddy - Single",
     "primary_artist_id": "f60ee7e0822901753251fe30",
@@ -27072,6 +27191,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "340afd26b46d52e7ff6404fd",
+    "title": "if i don’t love you, who will ?",
+    "primary_artist_id": "7b9656aa8e827bbfea8eefef",
+    "track_count": 1,
+    "track_ids": [
+      "75d84ac1048a3f0af2ad23b0"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "bf27552b7b9c99ec6178ff1d",
     "title": "If I Ever Fall In Love",
     "primary_artist_id": "64dc66fc5470b5f4a8b8c44e",
@@ -27279,6 +27408,17 @@
     "track_count": 1,
     "track_ids": [
       "7d8f94b6820ff46308c1da23"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "a0edec4735808e7233365b57",
+    "title": "IKUMKANI",
+    "primary_artist_id": "531f96ad5de5fc04780c529f",
+    "track_count": 2,
+    "track_ids": [
+      "3167780d8eedfd7c4035e94e",
+      "a55243f3634112028ff7477f"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -28412,6 +28552,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "2cda16731b2178650c7feba8",
+    "title": "IT MUST BE LOVE",
+    "primary_artist_id": "9382ae19e52e6bd5239a7057",
+    "track_count": 1,
+    "track_ids": [
+      "fd22087a607a281b4a84fe8c"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "4c78e399c1cf5a9cfe379507",
     "title": "It Must Be Magic",
     "primary_artist_id": "f8d64a2b3aa23461495c69b6",
@@ -28759,6 +28909,16 @@
     "track_count": 1,
     "track_ids": [
       "a26c0e0a661735f599247340"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "768ccbc55960ffbc6c988077",
+    "title": "Izinja Zam: Vol. I",
+    "primary_artist_id": "652b0b1ef913938489b6ac21",
+    "track_count": 1,
+    "track_ids": [
+      "470fb6786b8dbe5570dc4cca"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -29666,6 +29826,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "33d56c38c59e9860d34fcad5",
+    "title": "Juicy",
+    "primary_artist_id": "6b0cc863f3ebe86de1d33905",
+    "track_count": 1,
+    "track_ids": [
+      "eea5917445903a67123e540f"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "3a77c5c0bf862dd2bd190d6f",
     "title": "JUICY",
     "primary_artist_id": "2da719b39c464760260d1fa9",
@@ -29805,6 +29975,16 @@
     "track_count": 1,
     "track_ids": [
       "5f69e0ec724b1ebd9e7dc7a6"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "95e49aba63f7888b302f2795",
+    "title": "Just Friends",
+    "primary_artist_id": "455f6c701d4a90b241277089",
+    "track_count": 1,
+    "track_ids": [
+      "74d7d46626ddc196ab642c44"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -30305,8 +30485,9 @@
     "id": "5ce4f8d79a3c8aebbd040da7",
     "title": "Kehlani - Single",
     "primary_artist_id": "753bd876122701f87632fc9c",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
+      "4dbbafb50fae3dd4a95b44f1",
       "8d4f0f7d0ee9ebd2899004e8"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
@@ -30676,6 +30857,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "727303b57f9756f7244dc701",
+    "title": "Knock on the Orange Door",
+    "primary_artist_id": "706e3dcae33b104530ad6aea",
+    "track_count": 1,
+    "track_ids": [
+      "ea8e584d6c437b88b40db0cb"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "3dc03fe41cecdb3d83a7c631",
     "title": "Know What You Need",
     "primary_artist_id": "f0928997314766a496aa4969",
@@ -30980,13 +31171,12 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "d03f9010314b896c2be95487",
+    "id": "08f30660639d3ce0a74e3879",
     "title": "Ladies & Gentlemen",
-    "primary_artist_id": "39a692e5ae8b3d6a8341e20d",
-    "track_count": 2,
+    "primary_artist_id": "560a24565a886b9e5f3227fe",
+    "track_count": 1,
     "track_ids": [
-      "0306b8ed3d1712bdccfcee0e",
-      "c28e025252163d57068a1930"
+      "1e2a2bb949a85298f4ba65a8"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -31424,6 +31614,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "09648625c27f88861615390b",
+    "title": "Leave Me",
+    "primary_artist_id": "fe4cfb17db864f4fbac74192",
+    "track_count": 1,
+    "track_ids": [
+      "6954e6de45145e94edc719ab"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "08e18311818ef81fdfdfd594",
     "title": "Leave the Door Open",
     "primary_artist_id": "cf3e92f42e66850d79a81298",
@@ -31535,6 +31735,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "e051d6ab696113d664d5e672",
+    "title": "Legendary Love",
+    "primary_artist_id": "455f6c701d4a90b241277089",
+    "track_count": 1,
+    "track_ids": [
+      "310300a9cdfc5d15089dbd43"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "1eb521b2565e490e76d057b8",
     "title": "Legends",
     "primary_artist_id": "5c86392c14eafa7c07488322",
@@ -31593,6 +31803,16 @@
     "track_ids": [
       "8a786689613acad8da799d3c",
       "a57c38b0adca07c3603731f1"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "ea1f162a96197c7bba4b0a5f",
+    "title": "Lemon Cars",
+    "primary_artist_id": "ce153ca5ff7b5b05b71e95a1",
+    "track_count": 1,
+    "track_ids": [
+      "64d596c0cada125b9bc41459"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -32387,6 +32607,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "9e867ad8ffc4e6e092084ba1",
+    "title": "Limpopo Champions League",
+    "primary_artist_id": "044f755d1d2b64984ded1b12",
+    "track_count": 1,
+    "track_ids": [
+      "2b89febd574e3cf3f5727047"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "93d414c9c22cee97967909a1",
     "title": "Lisa Fischer",
     "primary_artist_id": "892d7a8778859540fb566355",
@@ -32555,6 +32785,16 @@
     "track_count": 1,
     "track_ids": [
       "0f4fe139400ff746f72d3e90"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "cd1b949b45fac7765161f4f2",
+    "title": "LK99+",
+    "primary_artist_id": "d882eb32cd6748fcd5962cf5",
+    "track_count": 1,
+    "track_ids": [
+      "f99ec1deb74bafe22a47e4f6"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -34541,17 +34781,6 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
-    "id": "a7ceb549969cf33b2a02f8cb",
-    "title": "Maid Of Honour",
-    "primary_artist_id": "92b4cfdb6782e6fec393332f",
-    "track_count": 2,
-    "track_ids": [
-      "1477510b8370140dccddc1bb",
-      "81b3037ff5202cc138fc0d52"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
     "id": "eec9991518bbab394cfea08e",
     "title": "Mail on Sunday",
     "primary_artist_id": "a2befc37724bfd6c9500b4c2",
@@ -35616,6 +35845,16 @@
     "track_count": 1,
     "track_ids": [
       "79471304e35e4024e5256078"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "33650c8701c2932aea61dfde",
+    "title": "Miami",
+    "primary_artist_id": "dd2d7e29c205ae2e0af77eea",
+    "track_count": 1,
+    "track_ids": [
+      "06daf0ba2eb74b6103e975d4"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -37495,6 +37734,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "9334466d03a21bdd377cc45a",
+    "title": "N E B U L A",
+    "primary_artist_id": "ef3e206e628bb671f56bc104",
+    "track_count": 1,
+    "track_ids": [
+      "7162289ae362715bfaa073a7"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "adb79d8dec5cd4d977518d3d",
     "title": "N.E. Love Songs - EP",
     "primary_artist_id": "3fd8c890ee7864427880fc16",
@@ -37675,6 +37924,17 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "da6155178f3cde149cf82afb",
+    "title": "Ndaba",
+    "primary_artist_id": "838ebe99eaaa57c538a54d19",
+    "track_count": 2,
+    "track_ids": [
+      "01bd1b157be770ceac95926f",
+      "608275821bfb41dcac00f011"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "a233999b135ccc10d108fb67",
     "title": "Ndikhokhele",
     "primary_artist_id": "cd31c2e39b49a9e18544816a",
@@ -37761,6 +38021,16 @@
     "track_count": 1,
     "track_ids": [
       "53ca8e57be5dbaca34a7047d"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "040173a0b4323e1fb6420f8f",
+    "title": "never be like you",
+    "primary_artist_id": "d936df1cac97f0796db9a8b4",
+    "track_count": 1,
+    "track_ids": [
+      "ab845359e56d8a022c7fcb77"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -38416,6 +38686,16 @@
     "track_count": 1,
     "track_ids": [
       "4b0527fc79e2ad6eea228fcf"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "9ccaae9d08a0e56c9d23e654",
+    "title": "Nights In The Sun",
+    "primary_artist_id": "dd2d7e29c205ae2e0af77eea",
+    "track_count": 1,
+    "track_ids": [
+      "3f256c7bed7e51484f24b442"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -39790,6 +40070,16 @@
     "track_ids": [
       "9a259d96cedeaecfe95cf5b3",
       "acc8a0a0ee17f4a2a9706c1c"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "0d86a40db2900b3d1306a9a2",
+    "title": "Oakland Baby",
+    "primary_artist_id": "123b5318352bcba651d8aff5",
+    "track_count": 1,
+    "track_ids": [
+      "141c23dd13389b7b5d20b115"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -42021,6 +42311,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "0b626b5b25276bee1ac835d2",
+    "title": "Phases III - EP",
+    "primary_artist_id": "f2daafae24ebddb880f43407",
+    "track_count": 1,
+    "track_ids": [
+      "f02e59fbba0b2236dfb8dec3"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "03560bbc491d8b472cd6a999",
     "title": "Phezulu",
     "primary_artist_id": "6f96bcd9158a08d095c6b386",
@@ -42845,6 +43145,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "31f346c95d089aa18b83074d",
+    "title": "Popstar",
+    "primary_artist_id": "10100cdc05ed5af685e2b792",
+    "track_count": 1,
+    "track_ids": [
+      "e8730108d0f5409ad8c45c49"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "852b8d644c793043f126ed1f",
     "title": "POPSTAR - Single",
     "primary_artist_id": "84103aab7d8a4105d9a40936",
@@ -43224,16 +43534,6 @@
     "track_count": 1,
     "track_ids": [
       "10749837b79a3d871709a93f"
-    ],
-    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
-  },
-  {
-    "id": "9701844a1df4da586e2d243b",
-    "title": "PRIMA",
-    "primary_artist_id": "bd5bba952d365b3cf6a92c18",
-    "track_count": 1,
-    "track_ids": [
-      "0d8a021127db547488cba447"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -44371,6 +44671,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "0f6f59161ee7dbe773bd3429",
+    "title": "Ready To Die",
+    "primary_artist_id": "599cf80dc165ba6bf7f0b092",
+    "track_count": 1,
+    "track_ids": [
+      "ee3e67208ffbae0943d1c0e3"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "e5646a11ba16ff6ba4deff26",
     "title": "Ready To Die (The O.G. Edition",
     "primary_artist_id": "55dff6000cac58d014a134c8",
@@ -44480,6 +44790,16 @@
     "track_count": 1,
     "track_ids": [
       "1df34c0cc09d4cff92314e96"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "b7f25e2dae4e51effd1d61e1",
+    "title": "REAL, Vol. 1",
+    "primary_artist_id": "a2e171f0496934b4ffc92547",
+    "track_count": 1,
+    "track_ids": [
+      "ef2de567a937f9fb78d9f668"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -44899,6 +45219,17 @@
     "track_count": 1,
     "track_ids": [
       "4d1e33f32765196e59449d45"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "d024ca1d42e42768cd0eca55",
+    "title": "Rendezvous",
+    "primary_artist_id": "150bd356fdd48f75b9fa93e9",
+    "track_count": 2,
+    "track_ids": [
+      "3e50446aa588bbb3839339c2",
+      "ed2f1a0c11c82b3fe135b69d"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -47506,6 +47837,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "c37a91e1abb29e51b4b616a9",
+    "title": "Shoebox Days",
+    "primary_artist_id": "e70d65a79fd4fb67633594fc",
+    "track_count": 1,
+    "track_ids": [
+      "218b216ea7e7674b694948ac"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "dd8a71f0ffa1fb3dc280c3b2",
     "title": "Shontelligence",
     "primary_artist_id": "e7aea3cd48a88f691eea5085",
@@ -49455,6 +49796,26 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "409940afc576845703ba39f8",
+    "title": "Somewhere Between",
+    "primary_artist_id": "6950bd83122ed72ae7654e0e",
+    "track_count": 1,
+    "track_ids": [
+      "f7893617199aa9641549d752"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "6752f96515fd118e2656970c",
+    "title": "SOMEWHERE NEW / WHAT NOW",
+    "primary_artist_id": "cbaf1d690dae4e6b0a77d6b5",
+    "track_count": 1,
+    "track_ids": [
+      "c3275de17bac1840f67be8bf"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "947b8537df253831d568c2cc",
     "title": "Somewhere Over The Rainbow: The Best of Israel Kamakawiwo'ole",
     "primary_artist_id": "0beac71ed793ad21fb131c4a",
@@ -50193,6 +50554,36 @@
     "track_count": 1,
     "track_ids": [
       "e79a6f3bbce27aec99df0d65"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "32943ed7542ef32295a0caf9",
+    "title": "Spooky Season",
+    "primary_artist_id": "ecf123f380c8309e9ee44004",
+    "track_count": 1,
+    "track_ids": [
+      "08df257e8a11e44946f5050f"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "ae64a6c9e55ab97ce307c63b",
+    "title": "Spooky Season",
+    "primary_artist_id": "be14c72e8d7b7bfbf61b5947",
+    "track_count": 1,
+    "track_ids": [
+      "0011bce2a1f050e6e23edac0"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "b1f89c33a7b5dd5240f042e6",
+    "title": "Spooky Season",
+    "primary_artist_id": "0136c222bc67e0b736508a89",
+    "track_count": 1,
+    "track_ids": [
+      "e73c9b3dbb919c71c1495784"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -51726,9 +52117,10 @@
     "id": "8f66849b1f5d67472a9ee2a9",
     "title": "Suspension Of Disbelief",
     "primary_artist_id": "fe243d6b4e3a114f25d3ef4b",
-    "track_count": 1,
+    "track_count": 2,
     "track_ids": [
-      "5ffd7880d2396fcb9e400cf6"
+      "5ffd7880d2396fcb9e400cf6",
+      "a857311dbbe9fb9b8c955ff9"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -55017,6 +55409,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "534604996b6fc4d47a01b7c4",
+    "title": "The Hurtbook",
+    "primary_artist_id": "75648ef5381c693a55e7485b",
+    "track_count": 1,
+    "track_ids": [
+      "5a8dd4a9df202c5f76c8848c"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "b623edf98f63ef417c4f6c38",
     "title": "The Icon Is Love",
     "primary_artist_id": "9347ff34accb19c649779333",
@@ -57535,6 +57937,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "f812dd135a0dd80a9e5c2f16",
+    "title": "Thot Shit - Single",
+    "primary_artist_id": "bbcbb8a477c59541c709e676",
+    "track_count": 1,
+    "track_ids": [
+      "193ebb77da4c7fbab8393ce5"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "9220a6a1e26f2b60058b1483",
     "title": "Thotiana",
     "primary_artist_id": "7de3e4deb55054f7ebc3cc49",
@@ -59043,6 +59455,16 @@
     "track_count": 1,
     "track_ids": [
       "44f4d238b5699d8fbe37d3aa"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "2d58f6affedfc9b077585e09",
+    "title": "Triune",
+    "primary_artist_id": "eab36872dbfe251879e8c1c3",
+    "track_count": 1,
+    "track_ids": [
+      "8741354bda124602dacab833"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -62552,6 +62974,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "2c07b64389e051fe9f9e8e6c",
+    "title": "Unknown Album",
+    "primary_artist_id": "bdf9e3b1951bc4d8b236cfb2",
+    "track_count": 1,
+    "track_ids": [
+      "3ccecdaa3daea82a1353e73f"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "2cb5db2cab4eb44c1c3b1280",
     "title": "Unknown Album",
     "primary_artist_id": "0ffb57efc4167e3c7edf33f2",
@@ -64942,6 +65374,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "5d47e2993862100c6f8e4a12",
+    "title": "Unknown Album",
+    "primary_artist_id": "53bc2c456cb9c7ff547cf03a",
+    "track_count": 1,
+    "track_ids": [
+      "8567a991ca82ff12c4ea4c61"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "5d6678a84585282b240ff0b9",
     "title": "Unknown Album",
     "primary_artist_id": "76301e3043b0554e8057ba6a",
@@ -65444,6 +65886,16 @@
     "track_count": 1,
     "track_ids": [
       "56daca2e74b152221c125806"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "67549fb941fbd09ea62cf0e3",
+    "title": "Unknown Album",
+    "primary_artist_id": "5fc5b90ce3b7b2b00bb6a043",
+    "track_count": 1,
+    "track_ids": [
+      "c8f47cf93caecff36278974d"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -73093,6 +73545,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "256f639cc8f0d81761cd10de",
+    "title": "V",
+    "primary_artist_id": "67739860365566d5bba51e3f",
+    "track_count": 1,
+    "track_ids": [
+      "bb331f0bc916063445efcad6"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "33013d8a54628e77e4bee8cb",
     "title": "V.A Artist Day",
     "primary_artist_id": "23a265e810fa5f1c4587fed1",
@@ -74340,6 +74802,16 @@
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
   {
+    "id": "37b832eeb609062447de098e",
+    "title": "Wassup - Single",
+    "primary_artist_id": "9e776f6e544deb88e991c7a3",
+    "track_count": 1,
+    "track_ids": [
+      "3498f87fbc14d216bc168958"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
     "id": "8212b92ebbb257e06d05c4e4",
     "title": "WASTELAND",
     "primary_artist_id": "f8526e704b99f8740fa5ae80",
@@ -74760,6 +75232,16 @@
     "track_count": 1,
     "track_ids": [
       "cfa6a8bb689c7e1c2732122e"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "f0af8d5676821255c44dcc36",
+    "title": "We'll Never Be This Young Again",
+    "primary_artist_id": "8804bc6f24bc119c82920f6e",
+    "track_count": 1,
+    "track_ids": [
+      "cafab771f5931b54bffa240d"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
@@ -75244,6 +75726,16 @@
     "track_count": 1,
     "track_ids": [
       "0610e5b8db6104582c04745a"
+    ],
+    "exclusion_reason": "Fewer than 3 distinct canonical tracks"
+  },
+  {
+    "id": "ae769f86d11e1cbe5a6e443b",
+    "title": "Whatever Makes You Happy b/w Last Forever",
+    "primary_artist_id": "834aa68b721ef170dd50c772",
+    "track_count": 1,
+    "track_ids": [
+      "8052f0b574239f3c33dc1f6f"
     ],
     "exclusion_reason": "Fewer than 3 distinct canonical tracks"
   },
