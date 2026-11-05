@@ -2,8 +2,8 @@ name: Fetch New Last.fm Scrobbles
 
 on:
   schedule:
-    # Runs at 00:00 UTC every Friday
-    - cron: '0 0 * * 5'
+    # Runs at 22:30 UTC every Thursday (00:30 Friday, South Africa time)
+    - cron: '30 22 * * 4'
   workflow_dispatch: # Allows you to manually trigger the update anytime
 
 permissions:
