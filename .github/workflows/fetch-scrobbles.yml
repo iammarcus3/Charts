@@ -19,6 +19,7 @@ concurrency:
   group: fetch-lastfm-scrobbles
   cancel-in-progress: false
 
+# The fetch script retries transient GitHub API errors and recovers ambiguous writes.
 permissions:
   contents: write
   actions: write # Allows this workflow to dispatch the Music Vault builder
