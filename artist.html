@@ -58,14 +58,29 @@ async function fetchLastFmArtistImage(artistName){
   const url=new URL('https://ws.audioscrobbler.com/2.0/');
   url.search=new URLSearchParams({method:'artist.getInfo',artist:artistName,autocorrect:'1',api_key:LASTFM_API_KEY,format:'json'});
   const response=await fetch(url);
-  if(!response.ok)return '';
-  const data=await response.json();
-  const images=data?.artist?.image;
-  if(!Array.isArray(images))return '';
-  const usable=images.filter(x=>safe(x?.['#text'])&&!x['#text'].includes('/2a96cbd8b46e442fc41c2b86b821562f.png'));
-  const preferred=usable.find(x=>x.size==='mega')||usable.find(x=>x.size==='extralarge')||usable.find(x=>x.size==='large')||usable[usable.length-1];
-  return preferred?.['#text']||'';
- }catch(error){console.warn('Last.fm artist image lookup failed:',error);return ''}
+  if(response.ok){
+   const data=await response.json();
+   const images=data?.artist?.image;
+   if(Array.isArray(images)){
+    const usable=images.filter(x=>safe(x?.['#text'])&&!x['#text'].includes('/2a96cbd8b46e442fc41c2b86b821562f.png'));
+    const preferred=usable.find(x=>x.size==='mega')||usable.find(x=>x.size==='extralarge')||usable.find(x=>x.size==='large')||usable[usable.length-1];
+    if(preferred?.['#text'])return preferred['#text'];
+   }
+  }
+ }catch(error){console.warn('Last.fm artist image lookup failed:',error)}
+ // Last.fm often omits artist images; use a Wikipedia page thumbnail as a fallback.
+ try{
+  const url=new URL('https://en.wikipedia.org/w/api.php');
+  url.search=new URLSearchParams({action:'query',generator:'search',gsrsearch:artistName+' musician',gsrnamespace:'0',gsrlimit:'1',prop:'pageimages',piprop:'thumbnail',pithumbsize:'600',format:'json',origin:'*'});
+  const response=await fetch(url);
+  if(response.ok){
+   const data=await response.json();
+   const page=Object.values(data?.query?.pages||{})[0];
+   const thumbnail=page?.thumbnail?.source;
+   if(safe(thumbnail))return thumbnail;
+  }
+ }catch(error){console.warn('Wikipedia artist image fallback failed:',error)}
+ return '';
 }
 async function loadArtistPortrait(){
  const portrait=$('portrait');
