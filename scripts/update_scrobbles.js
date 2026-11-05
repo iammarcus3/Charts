@@ -54,39 +54,70 @@ function scrobbleKey(scrobble) {
   ].join("|");
 }
 
+const RETRYABLE_GITHUB_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function githubRequest(url, options = {}) {
   if (!GITHUB_TOKEN) {
     throw new Error("Missing GITHUB_TOKEN environment variable.");
   }
 
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      Accept: "application/vnd.github+json",
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      "X-GitHub-Api-Version": "2022-11-28",
-      ...(options.headers || {}),
-    },
-  });
+  let lastError;
 
-  const text = await response.text();
-  let data;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+          "X-GitHub-Api-Version": "2022-11-28",
+          ...(options.headers || {}),
+        },
+      });
 
-  try {
-    data = text ? JSON.parse(text) : {};
-  } catch {
-    throw new Error(`GitHub returned invalid JSON (HTTP ${response.status}).`);
+      const text = await response.text();
+      let data = {};
+
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        if (response.ok) {
+          throw new Error(`GitHub returned invalid JSON (HTTP ${response.status}).`);
+        }
+      }
+
+      if (response.ok) return data;
+
+      const error = new Error(
+        `GitHub request failed (${response.status}): ${
+          data.message || text || "Unknown error"
+        }`
+      );
+      error.status = response.status;
+
+      if (!RETRYABLE_GITHUB_STATUSES.has(response.status) || attempt === 3) {
+        throw error;
+      }
+
+      lastError = error;
+    } catch (error) {
+      if (error.status && !RETRYABLE_GITHUB_STATUSES.has(error.status)) {
+        throw error;
+      }
+      if (attempt === 3) throw error;
+      lastError = error;
+    }
+
+    const waitMs = Math.min(8000, 1000 * (2 ** attempt));
+    console.warn(`GitHub API request failed; retrying in ${waitMs}ms (attempt ${attempt + 1}/4).`);
+    await delay(waitMs);
   }
 
-  if (!response.ok) {
-    throw new Error(
-      `GitHub request failed (${response.status}): ${
-        data.message || text || "Unknown error"
-      }`
-    );
-  }
-
-  return data;
+  throw lastError || new Error("GitHub API request failed after retries.");
 }
 
 async function readExistingFile() {
@@ -216,24 +247,77 @@ async function fetchNewScrobbles(from) {
 }
 
 async function saveToGitHub(payload, sha) {
-  const body = {
-    message: "chore: update Last.fm listening history",
-    content: Buffer.from(
-      JSON.stringify(payload, null, 2),
-      "utf8"
-    ).toString("base64"),
-    branch: BRANCH,
+  const makeBody = (data, currentSha) => {
+    const body = {
+      message: "chore: update Last.fm listening history",
+      content: Buffer.from(
+        JSON.stringify(data, null, 2),
+        "utf8"
+      ).toString("base64"),
+      branch: BRANCH,
+    };
+    if (currentSha) body.sha = currentSha;
+    return body;
   };
 
-  if (sha) body.sha = sha;
-
-  return githubRequest(GITHUB_API, {
+  const put = (body) => githubRequest(GITHUB_API, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
   });
+
+  try {
+    return await put(makeBody(payload, sha));
+  } catch (error) {
+    // A 5xx response can be returned after GitHub has already accepted a PUT.
+    // Re-read the file before retrying so an ambiguous response cannot create
+    // a duplicate write or overwrite a newer concurrent update.
+    const recoverable = error.status === 409 || RETRYABLE_GITHUB_STATUSES.has(error.status);
+    if (!recoverable) throw error;
+
+    const latest = await readExistingFile();
+    if (!Array.isArray(latest.data.scrobbles)) throw error;
+
+    const latestKeys = new Set(latest.data.scrobbles.map(scrobbleKey));
+    const payloadKeys = payload.scrobbles.map(scrobbleKey);
+
+    if (payloadKeys.every((key) => latestKeys.has(key))) {
+      console.log("GitHub already contains the complete Last.fm history payload.");
+      return latest;
+    }
+
+    // Merge any records written by another run before retrying with the fresh SHA.
+    const mergedScrobbles = [...latest.data.scrobbles];
+    for (const scrobble of payload.scrobbles) {
+      const key = scrobbleKey(scrobble);
+      if (!latestKeys.has(key)) {
+        latestKeys.add(key);
+        mergedScrobbles.push(scrobble);
+      }
+    }
+    mergedScrobbles.sort((a, b) => (getTimestamp(a) ?? 0) - (getTimestamp(b) ?? 0));
+
+    const timestamps = mergedScrobbles
+      .map(getTimestamp)
+      .filter((timestamp) => timestamp !== null);
+    const recoveredPayload = {
+      ...latest.data,
+      ...payload,
+      scrobbles: mergedScrobbles,
+      total: mergedScrobbles.length,
+      range: {
+        ...(latest.data.range || {}),
+        from: timestamps.length ? new Date(Math.min(...timestamps) * 1000).toISOString() : null,
+        to: timestamps.length ? new Date(Math.max(...timestamps) * 1000).toISOString() : null,
+      },
+      exported_at: payload.exported_at,
+    };
+
+    console.warn("Retrying Last.fm history save using the latest GitHub file SHA.");
+    return put(makeBody(recoveredPayload, latest.sha));
+  }
 }
 
 async function main() {
