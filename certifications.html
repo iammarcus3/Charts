@@ -28,7 +28,7 @@
 </header>
 <section class="mb-8 rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/30 via-zinc-950 to-black p-5 sm:p-7">
 <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5"><div><div class="text-xs uppercase tracking-[.22em] text-amber-400 font-bold">Most recent completed chart week</div><h2 class="text-2xl sm:text-3xl font-black mt-1">This Week’s Certifications</h2><p id="week-label" class="text-sm text-zinc-500 mt-1">New milestones earned in the last completed Friday–Thursday week</p></div><span id="week-count" class="text-xs text-amber-200 border border-amber-500/30 rounded-full px-3 py-1.5">0 new certifications</span></div>
-<div id="this-week" class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-3 scroll-smooth" style="scrollbar-width:thin"><div class="text-sm text-zinc-500">Calculating this week’s milestones…</div><div class="text-sm text-zinc-500">Calculating this week’s milestones…</div></div>
+<div id="this-week" class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-3 scroll-smooth" style="scrollbar-width:thin"><div class="text-sm text-zinc-500">Calculating this week’s milestones…</div></div>
 </section>
 <section class="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-8">
 <div class="stat"><div class="text-xs uppercase tracking-widest text-zinc-500 font-bold">Certified titles</div><div id="stat-total" class="text-3xl font-black mt-2">—</div><div class="text-xs text-zinc-500 mt-1">Songs + albums</div></div>
@@ -134,9 +134,10 @@ const plat=certified.filter(x=>x.units>=1000000).length;
 const diamond=certified.filter(x=>x.units>=10000000).length;
 $('stat-total').textContent=fmt(certified.length);$('stat-gold').textContent=fmt(gold);$('stat-plat').textContent=fmt(plat);$('stat-diamond').textContent=fmt(diamond);
 const currentTrackingWeekStart=weekStartNow();
-const completedWeekStart=currentTrackingWeekStart-7*24*60*60;
-const completedWeekEnd=currentTrackingWeekStart;
-$('week-label').textContent='Friday, '+dateLabel(completedWeekStart)+' – Thursday, '+dateLabel(completedWeekEnd-1)+' · new Gold, Platinum and Diamond milestones';
+const availableCompletedWeeks=[...weekly.keys()].filter(w=>w<currentTrackingWeekStart).sort((a,b)=>a-b);
+const completedWeekStart=availableCompletedWeeks.length?availableCompletedWeeks[availableCompletedWeeks.length-1]:currentTrackingWeekStart-7*24*60*60;
+const completedWeekEnd=completedWeekStart+7*24*60*60;
+$('week-label').textContent='Friday, '+dateLabel(completedWeekStart)+' – Thursday, '+dateLabel(completedWeekEnd-1)+' · latest completed tracking week with data';
 const weeklyMilestones=certified.flatMap(x=>(x.milestones||[]).filter(m=>m.date>=completedWeekStart&&m.date<completedWeekEnd).map(m=>({...x,weekMilestone:m}))).sort((a,b)=>(b.weekMilestone.date||0)-(a.weekMilestone.date||0)||b.weekMilestone.units-a.weekMilestone.units);
 $('week-count').textContent=weeklyMilestones.length+' new certification'+(weeklyMilestones.length===1?'':'s');
 $('this-week').innerHTML=weeklyMilestones.map(x=>'<article class="flex-none w-[280px] sm:w-[320px] snap-start flex gap-3 items-center bg-black/40 border border-zinc-800 rounded-xl p-3"><div class="art w-16 h-16 rounded-lg shrink-0">'+lastfmImageMarkup(x)+'</div><div class="min-w-0 flex-1"><div class="text-[10px] uppercase tracking-widest text-amber-400 font-bold">'+(x.kind==='album'?'Album':'Song')+' · '+dateLabel(x.weekMilestone.date)+'</div><div class="font-bold truncate mt-1">'+esc(x.title)+'</div><div class="text-xs text-zinc-500 truncate">'+esc(x.artist||'Unknown artist')+'</div><div class="text-sm font-black mt-1 '+(x.weekMilestone.key==='gold'?'text-amber-300':x.weekMilestone.key==='diamond'?'text-cyan-200':'text-slate-200')+'">'+esc(x.weekMilestone.name)+' · '+fmt(x.weekMilestone.units)+' units</div></div></article>').join('')||'<div class="flex-none w-full rounded-xl border border-dashed border-zinc-800 p-6 text-sm text-zinc-500">No new certifications were earned during this completed Friday–Thursday tracking week.</div>';
