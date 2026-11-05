@@ -463,13 +463,13 @@
         // even when they fall outside the ranked album Top 100. These units count
         // toward career/annual sales, but do not create a ranked chart week.
         const debutCandidates = [...albumPlays]
-          .filter(([id, plays]) => state.debutedAlbums.has(String(id)) &&
-            state.albumDebutDates.get(String(id)) === startMs && Number(plays) > 0)
+          .filter(([id, plays]) => state.debutedAlbums.has(String(id)) && Number(plays) > 0)
           .map(([id, plays]) => ({ id: String(id), plays: Number(plays), title: state.raw.albums.get(String(id))?.title || 'Unknown' }))
           .sort((a, b) => b.plays - a.plays || a.title.localeCompare(b.title));
         state.snapshots.albumDebutUnits[offset] = new Map();
         debutCandidates.forEach((candidate, index) => {
-          if (index >= 100 || entries.some(entry => String(entry.id) === candidate.id)) return;
+          if (index >= 100 || state.albumDebutDates.get(candidate.id) !== startMs ||
+              entries.some(entry => String(entry.id) === candidate.id)) return;
           const units = FORMULAS.albumUnits(candidate.plays, pointsForRank(index + 1));
           state.snapshots.albumDebutUnits[offset].set(candidate.id, units);
         });
