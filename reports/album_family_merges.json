@@ -274,8 +274,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "0f82792eefe3cbf090481849",
     "source_titles_merged": [
-      "3 Am",
-      "3 AM"
+      "3 AM",
+      "3 Am"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -286,8 +286,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "f6e0a45440a790e7ff61ad04",
     "source_titles_merged": [
-      "3 Am",
-      "3 AM"
+      "3 AM",
+      "3 Am"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -298,8 +298,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "dcae62d84e1cf925a05af41f",
     "source_titles_merged": [
-      "3 Am",
-      "3 AM"
+      "3 AM",
+      "3 Am"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -1260,8 +1260,8 @@
     "canonical_title": "AmaPiano Volume 4",
     "primary_artist_id": "4db0f575b0e8853c40823d65",
     "source_titles_merged": [
-      "Amapiano Volume 4",
-      "AmaPiano Volume 4"
+      "AmaPiano Volume 4",
+      "Amapiano Volume 4"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -2562,6 +2562,19 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "3cf6dc31c22022897dc1b8db",
+    "canonical_title": "Big Tyme",
+    "primary_artist_id": "bb050a8fa9f5799f69d97a8e",
+    "source_titles_merged": [
+      "Big Tyme (Expanded Edition)"
+    ],
+    "edition_labels_merged": [
+      "Big Tyme (Expanded Edition)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "97b9daa0d79838d6e8998afd",
     "canonical_title": "bigger than you",
     "primary_artist_id": "a30bc71b4b05b059886a112c",
@@ -2965,6 +2978,20 @@
       "Born This Way (International Special Edition Version)"
     ],
     "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "56b53365dd4a5cebb9ca80a8",
+    "canonical_title": "Born to Do It",
+    "primary_artist_id": "31810042fec68f6640669116",
+    "source_titles_merged": [
+      "Born to Do It",
+      "Born to Do It (25th Anniversary)"
+    ],
+    "edition_labels_merged": [
+      "Born to Do It (25th Anniversary)"
+    ],
+    "distinct_canonical_track_count": 11,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -4027,6 +4054,19 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "40c086e061fa1a5f3a693c96",
+    "canonical_title": "CRASH",
+    "primary_artist_id": "b08953f090b7a8097646267a",
+    "source_titles_merged": [
+      "CRASH (Deluxe)"
+    ],
+    "edition_labels_merged": [
+      "CRASH (Deluxe)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "f89834d7caac052e357965b7",
     "canonical_title": "Crash! Boom! Bang!",
     "primary_artist_id": "bcab32514336249855aa4c78",
@@ -4513,6 +4553,19 @@
     ],
     "edition_labels_merged": [
       "Dawn FM (Alternate World)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "ef2a689e65f4b66b28ea6f62",
+    "canonical_title": "Day and Night",
+    "primary_artist_id": "b841e4876ddc4505999afff7",
+    "source_titles_merged": [
+      "Day and Night (Continued)"
+    ],
+    "edition_labels_merged": [
+      "Day and Night (Continued)"
     ],
     "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -5108,6 +5161,19 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "b882cedc88489215f9c4431a",
+    "canonical_title": "Duets: The Final Chapter",
+    "primary_artist_id": "55dff6000cac58d014a134c8",
+    "source_titles_merged": [
+      "Duets: The Final Chapter (20th Anniversary Deluxe)"
+    ],
+    "edition_labels_merged": [
+      "Duets: The Final Chapter (20th Anniversary Deluxe)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "257f4d2574b82cc91fb8c45f",
     "canonical_title": "DUMMY BOY",
     "primary_artist_id": "2b9a64d141d7a8f0667a0147",
@@ -5559,6 +5625,19 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "49a0351ce07a658af3dfed60",
+    "canonical_title": "Everybody - Single",
+    "primary_artist_id": "f6e0a45440a790e7ff61ad04",
+    "source_titles_merged": [
+      "Everybody (40th Anniversary) - Single"
+    ],
+    "edition_labels_merged": [
+      "Everybody (40th Anniversary) - Single"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "28ff37727dda316a59c6d877",
     "canonical_title": "Everybody Mad - Single",
     "primary_artist_id": "3d4c26e2584ff9675baa5906",
@@ -5602,8 +5681,8 @@
     "canonical_title": "EVERYTHING IS LOVE",
     "primary_artist_id": "d4b4d6c3df118803e75af84b",
     "source_titles_merged": [
-      "Everything is Love",
-      "EVERYTHING IS LOVE"
+      "EVERYTHING IS LOVE",
+      "Everything is Love"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 5,
@@ -6873,7 +6952,7 @@
     "edition_labels_merged": [
       "Girls Need Love (Girls Mix)"
     ],
-    "distinct_canonical_track_count": 1,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -7800,8 +7879,8 @@
     "canonical_title": "History - Past, Present And Future - Book I",
     "primary_artist_id": "296c92c1f42e7111ebe867e3",
     "source_titles_merged": [
-      "History - Past, Present And Future - Book I",
       "HIStory - Past, Present and Future - Book I",
+      "History - Past, Present And Future - Book I",
       "HIStory: Past, Present and Future, Book I"
     ],
     "edition_labels_merged": [],
@@ -9115,10 +9194,13 @@
     "primary_artist_id": "4ce1d714e124aaef797cb5b5",
     "source_titles_merged": [
       "J. Lo",
-      "J.Lo"
+      "J.Lo",
+      "J.Lo (25th Anniversary Edition)"
     ],
-    "edition_labels_merged": [],
-    "distinct_canonical_track_count": 4,
+    "edition_labels_merged": [
+      "J.Lo (25th Anniversary Edition)"
+    ],
+    "distinct_canonical_track_count": 5,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -9406,7 +9488,7 @@
       "Just Like You (Bonus Track Version)",
       "Just Like You (International Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 13,
+    "distinct_canonical_track_count": 14,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -10045,7 +10127,7 @@
     "edition_labels_merged": [
       "Let's Get It On (Deluxe Edition)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13746,6 +13828,20 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "31f346c95d089aa18b83074d",
+    "canonical_title": "Popstar",
+    "primary_artist_id": "10100cdc05ed5af685e2b792",
+    "source_titles_merged": [
+      "Popstar",
+      "Popstar [Explicit]"
+    ],
+    "edition_labels_merged": [
+      "Popstar [Explicit]"
+    ],
+    "distinct_canonical_track_count": 2,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "852b8d644c793043f126ed1f",
     "canonical_title": "POPSTAR - Single",
     "primary_artist_id": "84103aab7d8a4105d9a40936",
@@ -13777,12 +13873,14 @@
     "primary_artist_id": "f2ecd660a31b873f0547540a",
     "source_titles_merged": [
       "Popular",
+      "Popular (From The Idol Vol. 1 (Music from the HBO Original Series))",
       "Popular (Music from the HBO Original Series)"
     ],
     "edition_labels_merged": [
+      "Popular (From The Idol Vol. 1 (Music from the HBO Original Series))",
       "Popular (Music from the HBO Original Series)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -14717,6 +14815,19 @@
     ],
     "edition_labels_merged": [
       "Running Blind (From \"Liberated / Music For the Movement Vol. 3\")"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "e3e09568810daea2ed35aa28",
+    "canonical_title": "Rush",
+    "primary_artist_id": "506e01cff2431776c6acd286",
+    "source_titles_merged": [
+      "Rush (Remixes)"
+    ],
+    "edition_labels_merged": [
+      "Rush (Remixes)"
     ],
     "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -16139,7 +16250,7 @@
       "Songs From The Big Chair (Super Deluxe Edition)",
       "Songs From the Big Chair (Super Deluxe)"
     ],
-    "distinct_canonical_track_count": 1,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16412,8 +16523,8 @@
     "canonical_title": "Stereo Driver",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "source_titles_merged": [
-      "Stereo Driver",
-      "STEREO DRIVER"
+      "STEREO DRIVER",
+      "Stereo Driver"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -16424,8 +16535,8 @@
     "canonical_title": "Stereo Driver - Single",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "source_titles_merged": [
-      "STEREO DRIVER - Single",
-      "Stereo Driver - Single"
+      "Stereo Driver - Single",
+      "STEREO DRIVER - Single"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -16800,9 +16911,11 @@
     "canonical_title": "Sweet Dreams",
     "primary_artist_id": "29106168142688cb02a56590",
     "source_titles_merged": [
+      "Sweet Dreams (Are Made of This)",
       "Sweet Dreams (Are Made of This) [Deluxe Edition]"
     ],
     "edition_labels_merged": [
+      "Sweet Dreams (Are Made of This)",
       "Sweet Dreams (Are Made of This) [Deluxe Edition]"
     ],
     "distinct_canonical_track_count": 1,
@@ -17318,6 +17431,20 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "b9d9513174b2a0118b911649",
+    "canonical_title": "The Beautiful & Damned",
+    "primary_artist_id": "3f3b933e4e2bc61150727fc8",
+    "source_titles_merged": [
+      "The Beautiful & Damned",
+      "The Beautiful & Damned (Deluxe Edition)"
+    ],
+    "edition_labels_merged": [
+      "The Beautiful & Damned (Deluxe Edition)"
+    ],
+    "distinct_canonical_track_count": 2,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "3a1fadbe5289cb82e4b2409a",
     "canonical_title": "The Best Of Anita Baker",
     "primary_artist_id": "1fbdda766b54a1bf97ee4cf7",
@@ -17810,9 +17937,9 @@
     "canonical_title": "the idol",
     "primary_artist_id": "7d09e007f4cb7bd27b2b618b",
     "source_titles_merged": [
+      "The Idol",
       "THE IDOL",
-      "the idol",
-      "The Idol"
+      "the idol"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -18951,12 +19078,12 @@
     "canonical_title": "Trolls World Tour",
     "primary_artist_id": "a487c95e88214cd938d1ad66",
     "source_titles_merged": [
-      "Trolls World Tour (Original Motion Picture Soundtrack)",
-      "TROLLS World Tour (Original Motion Picture Soundtrack)"
+      "TROLLS World Tour (Original Motion Picture Soundtrack)",
+      "Trolls World Tour (Original Motion Picture Soundtrack)"
     ],
     "edition_labels_merged": [
-      "Trolls World Tour (Original Motion Picture Soundtrack)",
-      "TROLLS World Tour (Original Motion Picture Soundtrack)"
+      "TROLLS World Tour (Original Motion Picture Soundtrack)",
+      "Trolls World Tour (Original Motion Picture Soundtrack)"
     ],
     "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -18990,6 +19117,19 @@
       "Troublemaker [feat. Flo Rida] - EP"
     ],
     "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "2c09b9dc080b4e3046544cff",
+    "canonical_title": "True",
+    "primary_artist_id": "e3592dd932d517aee5e31639",
+    "source_titles_merged": [
+      "True (Special Edition)"
+    ],
+    "edition_labels_merged": [
+      "True (Special Edition)"
+    ],
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -19721,8 +19861,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "e869d7cdcc903a167b3ff93e",
     "source_titles_merged": [
-      "Waiting To Exhale",
       "Waiting to Exhale",
+      "Waiting To Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [
@@ -19777,8 +19917,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "52a2c160a0104e1b0a9a53d1",
     "source_titles_merged": [
-      "Waiting To Exhale",
       "Waiting to Exhale",
+      "Waiting To Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [
@@ -20672,7 +20812,7 @@
     "edition_labels_merged": [
       "Wildheart (Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -21042,7 +21182,7 @@
       "Year of the Gentleman (Bonus Track Edition)",
       "Year of the Gentleman (Deluxe Edition)"
     ],
-    "distinct_canonical_track_count": 1,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {

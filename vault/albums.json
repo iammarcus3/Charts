@@ -1132,6 +1132,22 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "0bc93585f9508901dd078b77",
+    "title": "Not 4 Sale",
+    "normalized_title": "not 4 sale",
+    "primary_artist_id": "61d527e34ae9c0e675ffc159",
+    "track_ids": [
+      "27bcf3300ff70f27bef7b252",
+      "86ff742fb509fd8b7da214b5",
+      "9f9b48301274db91161b0d6d"
+    ],
+    "source_titles": [
+      "Not 4 Sale"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "0c9b3034ce072a111b92c7a7",
     "title": "DS4EVER",
     "normalized_title": "ds4ever",
@@ -3920,6 +3936,7 @@
     "normalized_title": "the miseducation of lauryn hill",
     "primary_artist_id": "0908aab56722d9a7959a530c",
     "track_ids": [
+      "2acba4c59215b6778e3fec81",
       "3bafeee0a5ac98db585bbd4a",
       "7648b5ef3650b9a4fba02767",
       "7a8a0bd7d18de6a6c2055501",
@@ -4822,6 +4839,25 @@
     ],
     "edition_labels": [
       "Night Call (Deluxe)"
+    ],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "3ab598ff1e71cc2bae087df7",
+    "title": "Wildheart",
+    "normalized_title": "wildheart",
+    "primary_artist_id": "441eecdd2bd60095fa5272ce",
+    "track_ids": [
+      "0a4692b507d0cc36f524dd74",
+      "63428b68e7b6248a5a470677",
+      "b07346e141d5b8391e10b5f9"
+    ],
+    "source_titles": [
+      "Wildheart",
+      "Wildheart (Deluxe Version)"
+    ],
+    "edition_labels": [
+      "Wildheart (Deluxe Version)"
     ],
     "canonicalization_rule": "bracketed_album_family"
   },
@@ -7111,9 +7147,12 @@
       "defe0dc8ca25ef3a395a22ce"
     ],
     "source_titles": [
-      "Born to Do It"
+      "Born to Do It",
+      "Born to Do It (25th Anniversary)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Born to Do It (25th Anniversary)"
+    ],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -15414,6 +15453,25 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "cc21ca38a7792470bba8e850",
+    "title": "Let's Get It On",
+    "normalized_title": "let s get it on",
+    "primary_artist_id": "3d9c76a29977519674245f05",
+    "track_ids": [
+      "336c0c1d9a8602eddfccfadc",
+      "807acb17196e010a034063f6",
+      "f44aa402bf9d189e2a6dcd7b"
+    ],
+    "source_titles": [
+      "Let's Get It On (Deluxe Edition)",
+      "Let's Get It On"
+    ],
+    "edition_labels": [
+      "Let's Get It On (Deluxe Edition)"
+    ],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "cc2b38b146b67fd10ee0017b",
     "title": "SOS Deluxe: LANA",
     "normalized_title": "sos deluxe lana",
@@ -15492,6 +15550,27 @@
       "Mama's Gun"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "ccb58ee2952c72722d3648d6",
+    "title": "Popular",
+    "normalized_title": "popular",
+    "primary_artist_id": "f2ecd660a31b873f0547540a",
+    "track_ids": [
+      "1b156ec05adb50434e441fdc",
+      "33b6cbddfeed0d5a03967ce8",
+      "8f2a5c2ee2003f61c0a2cf43"
+    ],
+    "source_titles": [
+      "Popular (Music from the HBO Original Series)",
+      "Popular",
+      "Popular (From The Idol Vol. 1 (Music from the HBO Original Series))"
+    ],
+    "edition_labels": [
+      "Popular (Music from the HBO Original Series)",
+      "Popular (From The Idol Vol. 1 (Music from the HBO Original Series))"
+    ],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -16390,7 +16469,8 @@
     "track_ids": [
       "399c20f3d6a44b48f28742de",
       "59a34e6c4274baa18f887411",
-      "b05907e8c92b0fb0ca5ec4a7"
+      "b05907e8c92b0fb0ca5ec4a7",
+      "e25a2ecb327ebeb5dcfb89bd"
     ],
     "source_titles": [
       "BUBBA"
@@ -16815,6 +16895,7 @@
     "primary_artist_id": "533605a00267e3f2af700075",
     "track_ids": [
       "25c3768247c2bdda6b0f594a",
+      "4991cbc3fdb7f693d47575e7",
       "a949da254c8252913987a7aa",
       "bdcec7f58be109ace3f1700c"
     ],
@@ -17087,6 +17168,22 @@
     ],
     "source_titles": [
       "ASTROWORLD"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "e051d6ab696113d664d5e672",
+    "title": "Legendary Love",
+    "normalized_title": "legendary love",
+    "primary_artist_id": "455f6c701d4a90b241277089",
+    "track_ids": [
+      "310300a9cdfc5d15089dbd43",
+      "5474804e0f82d84c8917689f",
+      "74d7d46626ddc196ab642c44"
+    ],
+    "source_titles": [
+      "Legendary Love"
     ],
     "edition_labels": [],
     "canonicalization_rule": "bracketed_album_family"
@@ -18297,15 +18394,19 @@
     "primary_artist_id": "4ce1d714e124aaef797cb5b5",
     "track_ids": [
       "25a33ce3e81a7d3d8cfc3a3f",
+      "35861699adbc94de844db5b2",
       "5ad3a26817c9896379e47682",
       "9dc1bd32b4927067243b024c",
       "be731ca61eaa98761e3bb622"
     ],
     "source_titles": [
       "J.Lo",
-      "J. Lo"
+      "J. Lo",
+      "J.Lo (25th Anniversary Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "J.Lo (25th Anniversary Edition)"
+    ],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -18522,10 +18623,12 @@
     "normalized_title": "more than a woman",
     "primary_artist_id": "52a2c160a0104e1b0a9a53d1",
     "track_ids": [
+      "2288eed6c14b78a8e19ce657",
       "63b80a42dfb2162cf2d0b90e",
       "8f265ec00b3bd55d6f044271",
       "ab941509c881592d7e7a9a93",
       "ccda44c743c88d3931b8d5d2",
+      "d0b5692a7afcc436e7480b47",
       "faa8bbd09fb61b6eb4d8636b"
     ],
     "source_titles": [
@@ -18892,6 +18995,7 @@
       "8ca6e4bd9d8bf8788880c3d2",
       "91d9ff5b12eb73e0677ee1fe",
       "9a29d847d9dd399f8df83604",
+      "b0230349be5e26406d119ed1",
       "da108781aa2350cb5046840e",
       "fc9521ba24efacd2e0533532"
     ],

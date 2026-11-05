@@ -341,6 +341,16 @@
   },
   {
     "entity_type": "track",
+    "artist_id": "ce680ea5ed10e6dbb919354a",
+    "track_a_id": "9a29d847d9dd399f8df83604",
+    "track_a_title": "Let It Go (feat. Missy Elliott & Lil' Kim)",
+    "track_b_id": "d7ec48acc72d56c278e13c32",
+    "track_b_title": "Let It Go (radio edit) (feat. Missy Elliott & Lil' Kim)",
+    "similarity": 0.8791,
+    "action": "review_only_below_auto_merge_threshold"
+  },
+  {
+    "entity_type": "track",
     "artist_id": "face9982b73a73f2641eff24",
     "track_a_id": "dc0e490665b7274050392636",
     "track_a_title": "I Specialize In Love (12\" Version)",
@@ -557,6 +567,16 @@
     "track_b_id": "d60131e0f87c8037cfb85b17",
     "track_b_title": "The Birds, Pt. 1",
     "similarity": 0.8667,
+    "action": "review_only_below_auto_merge_threshold"
+  },
+  {
+    "entity_type": "track",
+    "artist_id": "0966b80719759034b7d1c9f5",
+    "track_a_id": "21dbf8c0587351419b82365b",
+    "track_a_title": "Ebasini (feat. Tman Xpress, Visca, Ceeka RSA & Sjavasdadeejay)",
+    "track_b_id": "363acd3262b4558c15f8eae8",
+    "track_b_title": "Ebasini (feat. Tman Xpress, Visca, Ceeka RSA, Sjavasdadeejayj & Al Xapo)",
+    "similarity": 0.8661,
     "action": "review_only_below_auto_merge_threshold"
   },
   {
@@ -1411,6 +1431,16 @@
   },
   {
     "entity_type": "track",
+    "artist_id": "b1d37ab641c4d521a43a9d3b",
+    "track_a_id": "f62f0fe145ed97ec6f2976c4",
+    "track_a_title": "Girls Need Love (Girls Mix)",
+    "track_b_id": "8a930d2bbe8c5a87416444d7",
+    "track_b_title": "Girls Need Love (Girls Mix) (feat. Tyla)",
+    "similarity": 0.8333,
+    "action": "review_only_below_auto_merge_threshold"
+  },
+  {
+    "entity_type": "track",
     "artist_id": "f6e0a45440a790e7ff61ad04",
     "track_a_id": "fa3608d3913cd0bc96016dce",
     "track_a_title": "Into the Groove (Edit)",
@@ -1886,6 +1916,16 @@
     "track_a_title": "Check On It (Homecoming Live)",
     "track_b_id": "1d2eb4536790449f476693ac",
     "track_b_title": "Love On Top (Homecoming Live)",
+    "similarity": 0.8148,
+    "action": "review_only_below_auto_merge_threshold"
+  },
+  {
+    "entity_type": "track",
+    "artist_id": "2dabe221ac8f5d04bfb0e0aa",
+    "track_a_id": "889980194e5d7b8b0d5b9499",
+    "track_a_title": "Everybody Wants to Rule the World",
+    "track_b_id": "34c3cc29fbd6293ea1b830c4",
+    "track_b_title": "Everybody Wants To Rule The World (Single Version)",
     "similarity": 0.8148,
     "action": "review_only_below_auto_merge_threshold"
   },
