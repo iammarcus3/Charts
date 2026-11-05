@@ -1,6 +1,11 @@
 name: Fetch New Last.fm Scrobbles
 
 on:
+  # Run immediately when this workflow is changed, allowing configuration fixes
+  # to be verified through the real fetch-and-build pipeline.
+  push:
+    paths:
+      - '.github/workflows/fetch-scrobbles.yml'
   schedule:
     # Primary run: 01:10 Friday in South Africa (SAST).
     - cron: '10 23 * * 4'
