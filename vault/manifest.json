@@ -5,9 +5,9 @@
   },
   "record_counts": {
     "artists": 4416,
-    "eligible_albums": 1097,
-    "ineligible_releases": 7761,
-    "all_albums": 8858,
+    "eligible_albums": 899,
+    "ineligible_releases": 6546,
+    "all_albums": 7445,
     "tracks": 14807,
     "listening_events": 233313,
     "fuzzy_candidates_for_review": 275,
