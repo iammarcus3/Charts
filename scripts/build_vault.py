@@ -294,6 +294,14 @@ def build() -> dict[str, Any]:
                         existing["aliases"].append(alias)
         all_events.extend(events)
 
+    # Unknown Album is a prohibited placeholder and must never enter the published vault.
+    banned_album_ids = {
+        album_id for album_id, album in all_albums.items()
+        if str(album.get("title", "")).strip().casefold() == "unknown album"
+    }
+    for album_id in banned_album_ids:
+        all_albums.pop(album_id, None)
+
     # Do not fuzzy-merge similar song titles: versions, remixes, edits and bonus tracks
     # can have very similar names but must remain separate chart entries. Exact normalized
     # artist/title duplicates already share a deterministic ID in import_data.py.
