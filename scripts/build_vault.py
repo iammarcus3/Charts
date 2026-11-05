@@ -302,6 +302,18 @@ def build() -> dict[str, Any]:
     for album_id in banned_album_ids:
         all_albums.pop(album_id, None)
 
+    # The banned placeholder is not a real release. Remove its album attribution
+    # from tracks and individual plays, but preserve every listening event and
+    # the canonical track itself. The raw source file remains unchanged for audit.
+    for track in all_tracks.values():
+        track["album_ids"] = [
+            album_id for album_id in track.get("album_ids", [])
+            if album_id not in banned_album_ids
+        ]
+    for event in all_events:
+        if event.get("album_id") in banned_album_ids:
+            event.pop("album_id", None)
+
     # Do not fuzzy-merge similar song titles: versions, remixes, edits and bonus tracks
     # can have very similar names but must remain separate chart entries. Exact normalized
     # artist/title duplicates already share a deterministic ID in import_data.py.
