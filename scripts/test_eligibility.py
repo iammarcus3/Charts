@@ -218,5 +218,27 @@ class TestAlbumEligibility(unittest.TestCase):
         self.assertNotEqual(tracks[0]["title"], "Unknown Track")
 
 
+    def test_unknown_album_placeholder_is_removed_without_losing_play(self):
+        manifest, albums, ineligible, tracks = self.build_from_scrobbles([
+            self.play("Artist", "Unknown Album", "Song One", "2026-01-01T10:00:00"),
+        ])
+
+        self.assertEqual(albums, [])
+        self.assertEqual(ineligible, [])
+        self.assertEqual(len(tracks), 1)
+        self.assertEqual(tracks[0]["album_ids"], [])
+        self.assertNotIn("album_id", tracks[0])
+
+        history = [
+            json.loads(line)
+            for line in (self.vault_dir / "listening_history.jsonl").read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        self.assertEqual(len(history), 1)
+        self.assertEqual(history[0]["track_id"], tracks[0]["id"])
+        self.assertNotIn("album_id", history[0])
+        self.assertEqual(manifest["record_counts"]["listening_events"], 1)
+
+
 if __name__ == "__main__":
     unittest.main()
