@@ -231,7 +231,7 @@
 
     const state = {
       raw: { tracks: null, albums: null, artists: null, history: null },
-      snapshots: { albums: {}, songs: {}, dates: {} },
+      snapshots: { albums: {}, songs: {}, dates: {}, albumDebutUnits: {} },
       minOffset: 0,
       eligibleAlbumIds: new Set(),
       albumTrackCounts: new Map()
@@ -280,8 +280,9 @@
     }
     function getTrackAlbumIds(track) {
       const ids = Array.isArray(track?.album_ids) ? track.album_ids : [];
-      if (ids.length) return [...new Set(ids.map(String))];
-      return track?.album_id ? [String(track.album_id)] : [];
+      if (ids.length) return [...new Set(ids.map(x => String(typeof x === 'object' ? (x.id ?? x.album_id ?? '') : x)).filter(Boolean))];
+      const fallback = track?.album_id ?? track?.primary_album_id;
+      return fallback ? [String(typeof fallback === 'object' ? (fallback.id ?? fallback.album_id ?? '') : fallback)].filter(Boolean) : [];
     }
 
     function normalizeAlbumFamilyTitle(value) {
@@ -341,7 +342,9 @@
       // 1. Establish Album Eligibility
       const albumTrackSets = new Map();
       state.raw.albums.forEach((album, albumId) => {
-          albumTrackSets.set(String(albumId), new Set((Array.isArray(album.track_ids) ? album.track_ids : []).map(String).filter(t => state.raw.tracks.has(t))));
+          const rawTrackIds = album.track_ids || album.tracks || [];
+          const trackIds = Array.isArray(rawTrackIds) ? rawTrackIds : [rawTrackIds];
+          albumTrackSets.set(String(albumId), new Set(trackIds.map(x => String(typeof x === 'object' ? (x.id ?? x.track_id ?? '') : x)).filter(t => state.raw.tracks.has(t))));
       });
       state.raw.tracks.forEach((track, trackId) => {
           getTrackAlbumIds(track).forEach(albumId => {
@@ -456,6 +459,21 @@
 
         entries.sort((a, b) => b.units_sold - a.units_sold || b.plays - a.plays || a.title.localeCompare(b.title));
 
+        // Match the artist page: officially debuting albums receive debut-week units
+        // even when they fall outside the ranked album Top 100. These units count
+        // toward career/annual sales, but do not create a ranked chart week.
+        const debutCandidates = [...albumPlays]
+          .filter(([id, plays]) => state.debutedAlbums.has(String(id)) &&
+            state.albumDebutDates.get(String(id)) === startMs && Number(plays) > 0)
+          .map(([id, plays]) => ({ id: String(id), plays: Number(plays), title: state.raw.albums.get(String(id))?.title || 'Unknown' }))
+          .sort((a, b) => b.plays - a.plays || a.title.localeCompare(b.title));
+        state.snapshots.albumDebutUnits[offset] = new Map();
+        debutCandidates.forEach((candidate, index) => {
+          if (index >= 100 || entries.some(entry => String(entry.id) === candidate.id)) return;
+          const units = FORMULAS.albumUnits(candidate.plays, pointsForRank(index + 1));
+          state.snapshots.albumDebutUnits[offset].set(candidate.id, units);
+        });
+
         // Build the matching weekly song chart so this album can count its own Top 10 and No. 1 tracks.
         const trackPlays = new Map();
         events.forEach(ev => {
@@ -557,7 +575,14 @@
         if (!weekAlbums) continue;
         weekAlbums.forEach(a => allTimeAlbumUnits.set(a.id, (allTimeAlbumUnits.get(a.id) || 0) + a.units_sold));
         const entry = weekAlbums.find(a => a.id === albumId);
-        
+        const debutOnlyUnits = state.snapshots.albumDebutUnits[offset]?.get(String(albumId)) || 0;
+        if (debutOnlyUnits) {
+          careerUnits += debutOnlyUnits;
+          const debutYear = new Date(state.snapshots.dates[offset].start).getFullYear();
+          const yData = annualSales.get(debutYear) || { units: 0, weeks: 0 };
+          annualSales.set(debutYear, { units: yData.units + debutOnlyUnits, weeks: yData.weeks });
+        }
+
         if (entry) {
           const dateObj = new Date(state.snapshots.dates[offset].start);
           const dateStr = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
@@ -595,7 +620,7 @@
         (state.snapshots.albums[officialDebutOffset] || []).find(item => item.id === albumId);
       document.getElementById('sales-debut').textContent = officialDebutMs == null
         ? '—'
-        : formatNumber(officialDebutEntry?.units_sold || 0);
+        : formatNumber(officialDebutEntry?.units_sold || state.snapshots.albumDebutUnits[officialDebutOffset]?.get(String(albumId)) || 0);
 
       // Populate UI
       document.getElementById('stat-current').textContent = currentRank !== '-' ? `#${currentRank}` : '-';
