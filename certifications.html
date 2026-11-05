@@ -56,7 +56,7 @@ const $=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('en-US');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeImg=u=>u&&/^https?:\/\//i.test(u)?u:'';
-let allItems=[],kind='all';
+let allItems=[],kind='all',weekly=new Map();
 function tierFor(units){if(units>=10000000)return {name:'Diamond',key:'diamond',class:'diamond',icon:'ph-diamond'};if(units>=1000000)return {name:Math.floor(units/1000000)+'× Platinum',key:'platinum',class:'platinum',icon:'ph-seal-check'};if(units>=500000)return {name:'Gold',key:'gold',class:'metal',icon:'ph-medal'};return null}
 function plaque(t){return '<div class="plaque '+t.class+'"><div class="text-[10px] font-black tracking-[.3em] uppercase opacity-75">YourHot100</div><i class="ph '+t.icon+' text-4xl block my-2"></i><div class="text-xl sm:text-2xl font-black uppercase tracking-wider">'+esc(t.name)+'</div><div class="text-[9px] tracking-[.22em] font-bold mt-1 opacity-75">CERTIFIED UNITS SOLD</div></div>'}
 function normalizeMap(d){if(Array.isArray(d))return new Map(d.filter(x=>x&&x.id).map(x=>[String(x.id),x]));return new Map(Object.entries(d||{}))}
@@ -82,7 +82,7 @@ const albumTrackSets=new Map();
 albums.forEach((a,id)=>albumTrackSets.set(String(id),new Set((Array.isArray(a.track_ids)?a.track_ids:[]).map(String).filter(tid=>tracks.has(tid)))));
 tracks.forEach((t,tid)=>{const ids=Array.isArray(t.album_ids)&&t.album_ids.length?[...new Set(t.album_ids.map(String))]:(t.album_id?[String(t.album_id)]:[]);ids.forEach(id=>{if(albumTrackSets.has(String(id)))albumTrackSets.get(String(id)).add(String(tid))})});
 const eligible=new Set([...albumTrackSets].filter(([id,set])=>set.size>=3).map(([id])=>id));
-const weekly=new Map(), weekMs=7*24*60*60*1000;
+weekly.clear();const weekMs=7*24*60*60*1000;
 // Match the main chart engine: chart weeks start on Friday (UTC).
 const weekStart=ts=>{const d=new Date(ts*1000);const day=(d.getUTCDay()+2)%7;return Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-day)/1000};
 const isAlbumEditionOf=(editionId,parentId)=>{
