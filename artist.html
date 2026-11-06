@@ -39,7 +39,7 @@ function build(){
  // Match Stats Paradise: an officially debuted album receives its debut-week
  // units even when it falls outside the ranked album Top 100.
  const debutCandidates=[...ac].filter(([id,count])=>debuted.has(String(id))&&Number(count)>0).map(([id,count])=>({id:String(id),count:Number(count),title:albums.get(String(id))?.title||'Unknown'})).sort((a,b)=>b.count-a.count||a.title.localeCompare(b.title));
- debutCandidates.forEach((candidate,index)=>{if(debutWeek.get(candidate.id)!==w||index>=100||albs.has(candidate.id))return;const units=candidate.count*5000+points(index+1)*500;debutUnits.set(candidate.id,units);const obj=albums.get(candidate.id);albs.set(candidate.id,{id:candidate.id,title:obj?.title||'Unknown',obj,artistId:lead(obj),weeks:[],peak:101,no1:0,top10:0,units,debut:w,current:null,lastWeek:null,lastRank:null,unrankedDebut:true})});
+ debutCandidates.forEach((candidate,index)=>{if(debutWeek.get(candidate.id)!==w||albs.has(candidate.id))return;const rankPoints=index<100?points(index+1):0,units=candidate.count*5000+rankPoints*500;debutUnits.set(candidate.id,units);const obj=albums.get(candidate.id);albs.set(candidate.id,{id:candidate.id,title:obj?.title||'Unknown',obj,artistId:lead(obj),weeks:[],peak:101,no1:0,top10:0,units,debut:w,current:null,lastWeek:null,lastRank:null,unrankedDebut:true})});
  });
  songs.forEach(x=>{x.current=x.lastWeek===latestWeek?x.lastRank:null});albs.forEach(x=>{x.current=x.lastWeek===latestWeek?x.lastRank:null;x.debut=debutWeek.get(x.id)??x.debut});
  artistRecords=songs;albumRecords=albs;
