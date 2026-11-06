@@ -468,9 +468,10 @@
           .sort((a, b) => b.plays - a.plays || a.title.localeCompare(b.title));
         state.snapshots.albumDebutUnits[offset] = new Map();
         debutCandidates.forEach((candidate, index) => {
-          if (index >= 100 || state.albumDebutDates.get(candidate.id) !== startMs ||
+          if (state.albumDebutDates.get(candidate.id) !== startMs ||
               entries.some(entry => String(entry.id) === candidate.id)) return;
-          const units = FORMULAS.albumUnits(candidate.plays, pointsForRank(index + 1));
+          const rankPoints = index < 100 ? pointsForRank(index + 1) : 0;
+          const units = FORMULAS.albumUnits(candidate.plays, rankPoints);
           state.snapshots.albumDebutUnits[offset].set(candidate.id, units);
         });
 
