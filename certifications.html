@@ -99,9 +99,10 @@ const isAlbumEditionOf=(editionId,parentId)=>{
 };
 for(const e of history){const w=weekStart(e.ts);if(!weekly.has(w))weekly.set(w,[]);weekly.get(w).push(e)}
 const accumulated=new Map(), firstMilestone=new Map(), debutedAlbums=new Set();
-const addWeek=(id,title,artist,kind,plays,units,art,date)=>{
-let x=accumulated.get(kind+':'+id);if(!x){x={id,title,artist,kind,plays:0,units:0,art,date:null,href:'index.html',milestones:[]};accumulated.set(kind+':'+id,x)}
-const old=x.units;x.plays+=plays;x.units+=units;x.art=x.art||art;x.date=date;
+const pointsForRank=rank=>rank===1?100:rank===2?98:Math.max(1,Math.round(98-((rank-2)*97/98)));
+const addWeek=(id,title,artist,kind,plays,points,units,art,date)=>{
+let x=accumulated.get(kind+':'+id);if(!x){x={id,title,artist,kind,plays:0,points:0,units:0,art,date:null,href:'index.html',milestones:[]};accumulated.set(kind+':'+id,x)}
+const old=x.units;x.plays+=plays;x.points+=points;x.units+=units;x.art=x.art||art;x.date=date;
 const thresholds=[{units:500000,name:'Gold',key:'gold'},{units:1000000,name:'Platinum',key:'platinum'}];
 for(let n=2;n<10;n++)thresholds.push({units:n*1000000,name:n+'× Platinum',key:'platinum'});
 thresholds.push({units:10000000,name:'Diamond',key:'diamond'});
@@ -111,16 +112,16 @@ for(const milestone of thresholds){if(old<milestone.units&&x.units>=milestone.un
 for(const [week,events] of [...weekly.entries()].sort((a,b)=>a[0]-b[0])){
 const songCounts=new Map(),albumCounts=new Map(),trackAlbums=new Map();
 for(const e of events){const tid=String(e.track_id);songCounts.set(tid,(songCounts.get(tid)||0)+1);const aid=String(e.album_id||'');if(aid&&eligible.has(aid))albumCounts.set(aid,(albumCounts.get(aid)||0)+1)}
-const songs=[...songCounts].filter(([id])=>tracks.has(id)).map(([id,plays])=>({id,plays,t:tracks.get(id)})).sort((a,b)=>b.plays-a.plays||String(a.t.title||'').localeCompare(String(b.t.title||''))).slice(0,100);
-const hotIds=new Set(songs.map(x=>x.id));
-for(const s of songs){const units=s.plays*5000,t=s.t;addWeek(s.id,t.title||'Unknown Song',artistName(t.primary_artist_id||t.artist_id),'song',s.plays,units,imageUrl(t),week)}
+const songs=[...songCounts].filter(([id])=>tracks.has(id)).map(([id,plays])=>({id,plays,t:tracks.get(id)})).sort((a,b)=>b.plays-a.plays||String(a.t.title||'').localeCompare(String(b.t.title||'')));
+const hotIds=new Set(songs.slice(0,100).map(x=>x.id));
+for(let i=0;i<songs.length;i++){const row=songs[i],points=i<100?pointsForRank(i+1):0,units=row.plays*50000+points*500,t=row.t;addWeek(row.id,t.title||'Unknown Song',artistName(t.primary_artist_id||t.artist_id),'song',row.plays,points,units,imageUrl(t),week)}
 const chartingByAlbum=new Map();
 for(const tid of hotIds){const t=tracks.get(tid);const ids=Array.isArray(t.album_ids)&&t.album_ids.length?[...new Set(t.album_ids.map(String))]:(t.album_id?[String(t.album_id)]:[]);ids.forEach(aid=>{if(!eligible.has(aid))return;if(!chartingByAlbum.has(aid))chartingByAlbum.set(aid,new Set());chartingByAlbum.get(aid).add(tid)})}
 const qualifying=[...chartingByAlbum.entries()].filter(([id,set])=>eligible.has(String(id))&&set.size>=3).map(([id])=>String(id));
 qualifying.sort((a,b)=>String(albums.get(a)?.title||'').length-String(albums.get(b)?.title||'').length);
 for(const id of qualifying){if(debutedAlbums.has(id))continue;const edition=eligible.size>0&&[...eligible].some(parentId=>{const p=String(parentId);if(p===id)return false;if(!debutedAlbums.has(p)&&!qualifying.includes(p))return false;return isAlbumEditionOf(id,p)});if(!edition)debutedAlbums.add(id)}
-const albumRows=[...albumCounts].filter(([id])=>debutedAlbums.has(id)&&albums.has(id)).map(([id,plays])=>({id,plays,a:albums.get(id)})).sort((a,b)=>b.plays-a.plays||String(a.a.title||'').localeCompare(String(b.a.title||''))).slice(0,100);
-for(let i=0;i<albumRows.length;i++){const row=albumRows[i],units=row.plays*500,a=row.a;let art=imageUrl(a);if(!art){const tid=(a.track_ids||[]).find(id=>tracks.has(String(id)));const t=tracks.get(String(tid));art=imageUrl(t)}addWeek(row.id,a.title||'Unknown Album',artistName(a.primary_artist_id||a.artist_id),'album',row.plays,units,art,week)}
+const albumRows=[...albumCounts].filter(([id])=>debutedAlbums.has(id)&&albums.has(id)).map(([id,plays])=>({id,plays,a:albums.get(id)})).sort((a,b)=>b.plays-a.plays||String(a.a.title||'').localeCompare(String(b.a.title||'')));
+for(let i=0;i<albumRows.length;i++){const row=albumRows[i],points=i<100?pointsForRank(i+1):0,units=row.plays*5000+points*500,a=row.a;let art=imageUrl(a);if(!art){const tid=(a.track_ids||[]).find(id=>tracks.has(String(id)));const t=tracks.get(String(tid));art=imageUrl(t)}addWeek(row.id,a.title||'Unknown Album',artistName(a.primary_artist_id||a.artist_id),'album',row.plays,points,units,art,week)}
 }
 allItems=[...accumulated.values()].map(x=>({...x,cert:tierFor(x.units),date:firstMilestone.get(x.kind+':'+x.id)||x.date})).filter(x=>x.cert).sort((a,b)=>b.units-a.units);
 $('status').innerHTML='<span class="text-emerald-400">●</span> Vault connected';
