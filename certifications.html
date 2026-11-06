@@ -122,7 +122,7 @@ qualifying.sort((a,b)=>String(albums.get(a)?.title||'').length-String(albums.get
 for(const id of qualifying){if(debutedAlbums.has(id))continue;const edition=eligible.size>0&&[...eligible].some(parentId=>{const p=String(parentId);if(p===id)return false;if(!debutedAlbums.has(p)&&!qualifying.includes(p))return false;return isAlbumEditionOf(id,p)});if(!edition)debutedAlbums.add(id)}
 const chartedAlbumRows=[...albumCounts].filter(([id])=>debutedAlbums.has(id)&&albums.has(id)).map(([id,plays])=>({id,plays,a:albums.get(id)})).sort((a,b)=>b.plays-a.plays||String(a.a.title||'').localeCompare(String(b.a.title||'')));
 const albumRanks=new Map(chartedAlbumRows.slice(0,100).map((row,i)=>[row.id,i+1]));
-const albumRows=[...albumCounts].filter(([id])=>albums.has(id)).map(([id,plays])=>({id,plays,a:albums.get(id)})).sort((a,b)=>b.plays-a.plays||String(a.a.title||'').localeCompare(String(b.a.title||'')));
+const albumRows=[...albumCounts].filter(([id])=>debutedAlbums.has(id)&&albums.has(id)).map(([id,plays])=>({id,plays,a:albums.get(id)})).sort((a,b)=>b.plays-a.plays||String(a.a.title||'').localeCompare(String(b.a.title||'')));
 for(const row of albumRows){const rank=albumRanks.get(row.id),points=rank?pointsForRank(rank):0,units=row.plays*5000+points*500,a=row.a;let art=imageUrl(a);if(!art){const tid=(a.track_ids||[]).find(id=>tracks.has(String(id)));const t=tracks.get(String(tid));art=imageUrl(t)}addWeek(row.id,a.title||'Unknown Album',artistName(a.primary_artist_id||a.artist_id),'album',row.plays,points,units,art,week)}
 }
 allItems=[...accumulated.values()].map(x=>({...x,cert:tierFor(x.units),date:firstMilestone.get(x.kind+':'+x.id)||x.date})).filter(x=>x.cert).sort((a,b)=>b.units-a.units);
