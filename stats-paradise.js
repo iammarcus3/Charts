@@ -767,13 +767,15 @@
       item => item.id === String(albumId)
     );
 
-    if (activityIndex < 0 || activityIndex >= CONFIG.HOT100_SIZE) {
-      return null;
-    }
+    if (activityIndex < 0) return null;
+
+    const rankScore = activityIndex < CONFIG.HOT100_SIZE
+      ? rankScoreForRank(activityIndex + 1)
+      : 0;
 
     return (
       candidates[activityIndex].activityCount * CONFIG.ALBUM_UNIT_FACTOR +
-      rankScoreForRank(activityIndex + 1) * CONFIG.RANK_UNIT_FACTOR
+      rankScore * CONFIG.RANK_UNIT_FACTOR
     );
   }
 
