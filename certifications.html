@@ -99,10 +99,9 @@ const isAlbumEditionOf=(editionId,parentId)=>{
 };
 for(const e of history){const w=weekStart(e.ts);if(!weekly.has(w))weekly.set(w,[]);weekly.get(w).push(e)}
 const accumulated=new Map(), firstMilestone=new Map(), debutedAlbums=new Set();
-const pointsForRank=rank=>rank===1?100:rank===2?98:Math.max(1,Math.round(98-((rank-2)*97/98)));
-const addWeek=(id,title,artist,kind,plays,points,units,art,date)=>{
-let x=accumulated.get(kind+':'+id);if(!x){x={id,title,artist,kind,plays:0,points:0,units:0,art,date:null,href:'index.html',milestones:[]};accumulated.set(kind+':'+id,x)}
-const old=x.units;x.plays+=plays;x.points=points;x.units+=units;x.art=x.art||art;x.date=date;
+const addWeek=(id,title,artist,kind,plays,units,art,date)=>{
+let x=accumulated.get(kind+':'+id);if(!x){x={id,title,artist,kind,plays:0,units:0,art,date:null,href:'index.html',milestones:[]};accumulated.set(kind+':'+id,x)}
+const old=x.units;x.plays+=plays;x.units+=units;x.art=x.art||art;x.date=date;
 const thresholds=[{units:500000,name:'Gold',key:'gold'},{units:1000000,name:'Platinum',key:'platinum'}];
 for(let n=2;n<10;n++)thresholds.push({units:n*1000000,name:n+'× Platinum',key:'platinum'});
 thresholds.push({units:10000000,name:'Diamond',key:'diamond'});
@@ -114,14 +113,14 @@ const songCounts=new Map(),albumCounts=new Map(),trackAlbums=new Map();
 for(const e of events){const tid=String(e.track_id);songCounts.set(tid,(songCounts.get(tid)||0)+1);const aid=String(e.album_id||'');if(aid&&eligible.has(aid))albumCounts.set(aid,(albumCounts.get(aid)||0)+1)}
 const songs=[...songCounts].filter(([id])=>tracks.has(id)).map(([id,plays])=>({id,plays,t:tracks.get(id)})).sort((a,b)=>b.plays-a.plays||String(a.t.title||'').localeCompare(String(b.t.title||''))).slice(0,100);
 const hotIds=new Set(songs.map(x=>x.id));
-for(const s of songs){const p=pointsForRank(songs.indexOf(s)+1),units=s.plays*50000+p*500,t=s.t;addWeek(s.id,t.title||'Unknown Song',artistName(t.primary_artist_id||t.artist_id),'song',s.plays,p,units,imageUrl(t),week)}
+for(const s of songs){const units=s.plays*5000,t=s.t;addWeek(s.id,t.title||'Unknown Song',artistName(t.primary_artist_id||t.artist_id),'song',s.plays,units,imageUrl(t),week)}
 const chartingByAlbum=new Map();
 for(const tid of hotIds){const t=tracks.get(tid);const ids=Array.isArray(t.album_ids)&&t.album_ids.length?[...new Set(t.album_ids.map(String))]:(t.album_id?[String(t.album_id)]:[]);ids.forEach(aid=>{if(!eligible.has(aid))return;if(!chartingByAlbum.has(aid))chartingByAlbum.set(aid,new Set());chartingByAlbum.get(aid).add(tid)})}
 const qualifying=[...chartingByAlbum.entries()].filter(([id,set])=>eligible.has(String(id))&&set.size>=3).map(([id])=>String(id));
 qualifying.sort((a,b)=>String(albums.get(a)?.title||'').length-String(albums.get(b)?.title||'').length);
 for(const id of qualifying){if(debutedAlbums.has(id))continue;const edition=eligible.size>0&&[...eligible].some(parentId=>{const p=String(parentId);if(p===id)return false;if(!debutedAlbums.has(p)&&!qualifying.includes(p))return false;return isAlbumEditionOf(id,p)});if(!edition)debutedAlbums.add(id)}
 const albumRows=[...albumCounts].filter(([id])=>debutedAlbums.has(id)&&albums.has(id)).map(([id,plays])=>({id,plays,a:albums.get(id)})).sort((a,b)=>b.plays-a.plays||String(a.a.title||'').localeCompare(String(b.a.title||''))).slice(0,100);
-for(let i=0;i<albumRows.length;i++){const row=albumRows[i],p=pointsForRank(i+1),units=row.plays*5000+p*500,a=row.a;let art=imageUrl(a);if(!art){const tid=(a.track_ids||[]).find(id=>tracks.has(String(id)));const t=tracks.get(String(tid));art=imageUrl(t)}addWeek(row.id,a.title||'Unknown Album',artistName(a.primary_artist_id||a.artist_id),'album',row.plays,p,units,art,week)}
+for(let i=0;i<albumRows.length;i++){const row=albumRows[i],units=row.plays*500,a=row.a;let art=imageUrl(a);if(!art){const tid=(a.track_ids||[]).find(id=>tracks.has(String(id)));const t=tracks.get(String(tid));art=imageUrl(t)}addWeek(row.id,a.title||'Unknown Album',artistName(a.primary_artist_id||a.artist_id),'album',row.plays,units,art,week)}
 }
 allItems=[...accumulated.values()].map(x=>({...x,cert:tierFor(x.units),date:firstMilestone.get(x.kind+':'+x.id)||x.date})).filter(x=>x.cert).sort((a,b)=>b.units-a.units);
 $('status').innerHTML='<span class="text-emerald-400">●</span> Vault connected';
@@ -146,7 +145,7 @@ $('hall').innerHTML=certified.slice(0,3).map((x,i)=>'<article class="bg-black/50
 let list=certified.filter(x=>(kind==='all'||x.kind===kind)&&((x.title+' '+x.artist).toLowerCase().includes($('search').value.toLowerCase()))&&($('tier').value==='all'||($('tier').value==='gold'?x.units>=500000&&x.units<1000000:$('tier').value==='platinum'?x.units>=1000000:x.units>=10000000)));
 if($('sort').value==='title')list.sort((a,b)=>a.title.localeCompare(b.title));else list.sort((a,b)=>b.units-a.units);
 $('result-count').textContent=fmt(list.length)+' titles';
-$('results').innerHTML=list.map(x=>'<article class="entry"><div class="art w-[60px] h-[60px] rounded-lg">'+lastfmImageMarkup(x)+'</div><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-1"><span class="text-[10px] uppercase tracking-widest font-bold text-zinc-500">'+(x.kind==='album'?'Album':'Song')+'</span><span class="text-[10px] rounded-full border border-zinc-700 px-2 py-0.5 text-zinc-300">'+esc(x.cert.name)+'</span></div><h3 class="font-bold truncate">'+esc(x.title)+'</h3><p class="text-sm text-zinc-500 truncate">'+esc(x.artist||'Unknown artist')+'</p><p class="text-xs text-zinc-600 mt-1">'+(x.date?'First certification: '+dateLabel(x.date):'Certification date not yet recorded')+'</p><div class="flex flex-wrap gap-1 mt-2">'+(x.milestones||[]).map(m=>'<span title="'+esc(m.name)+' · '+dateLabel(m.date)+'" class="text-[10px] rounded border border-zinc-800 px-2 py-1 text-zinc-500">'+esc(m.name)+' · '+dateLabel(m.date)+'</span>').join('')+'</div></div><div class="entry-side text-right"><div class="text-lg font-black">'+fmt(x.units)+'</div><div class="text-[10px] text-zinc-500 uppercase tracking-widest">Units sold</div><div class="text-xs text-zinc-600 mt-1">'+fmt(x.plays)+' plays · '+x.points+' pts</div></div></article>').join('')||'<div class="text-center py-12 border border-dashed border-zinc-800 rounded-xl text-zinc-500">No titles match these filters.</div>';
+$('results').innerHTML=list.map(x=>'<article class="entry"><div class="art w-[60px] h-[60px] rounded-lg">'+lastfmImageMarkup(x)+'</div><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-1"><span class="text-[10px] uppercase tracking-widest font-bold text-zinc-500">'+(x.kind==='album'?'Album':'Song')+'</span><span class="text-[10px] rounded-full border border-zinc-700 px-2 py-0.5 text-zinc-300">'+esc(x.cert.name)+'</span></div><h3 class="font-bold truncate">'+esc(x.title)+'</h3><p class="text-sm text-zinc-500 truncate">'+esc(x.artist||'Unknown artist')+'</p><p class="text-xs text-zinc-600 mt-1">'+(x.date?'First certification: '+dateLabel(x.date):'Certification date not yet recorded')+'</p><div class="flex flex-wrap gap-1 mt-2">'+(x.milestones||[]).map(m=>'<span title="'+esc(m.name)+' · '+dateLabel(m.date)+'" class="text-[10px] rounded border border-zinc-800 px-2 py-1 text-zinc-500">'+esc(m.name)+' · '+dateLabel(m.date)+'</span>').join('')+'</div></div><div class="entry-side text-right"><div class="text-lg font-black">'+fmt(x.units)+'</div><div class="text-[10px] text-zinc-500 uppercase tracking-widest">Units sold</div><div class="text-xs text-zinc-600 mt-1">'+fmt(x.plays)+' plays</div></div></article>').join('')||'<div class="text-center py-12 border border-dashed border-zinc-800 rounded-xl text-zinc-500">No titles match these filters.</div>';
 loadVisibleArtworks();
 }
 document.querySelectorAll('[data-kind]').forEach(b=>b.addEventListener('click',()=>{kind=b.dataset.kind;document.querySelectorAll('[data-kind]').forEach(x=>x.classList.toggle('active',x===b));render()}));
