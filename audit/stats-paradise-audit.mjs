@@ -67,6 +67,28 @@ for (const track of chartedTracks) {
   }
 }
 
+const tylaDirect2026 = { songUnits: 0, albumUnits: 0, songAppearances: 0, albumAppearances: 0, weeks: [] };
+for (const snapshot of state.snapshots) {
+  if (snapshot.weekStart < Date.UTC(2026,0,1) || snapshot.weekStart > Date.UTC(2026,11,31,23,59,59,999)) continue;
+  let weekSongs = 0, weekAlbums = 0;
+  for (const entry of snapshot.songs) if ((entry.artistIds || []).map(String).includes(tylaId)) {
+    tylaDirect2026.songUnits += Number(entry.unitsSold || 0);
+    tylaDirect2026.songAppearances++;
+    weekSongs++;
+  }
+  for (const entry of snapshot.albums) if (String(entry.leadArtistId || "") === tylaId) {
+    tylaDirect2026.albumUnits += Number(entry.unitsSold || 0);
+    tylaDirect2026.albumAppearances++;
+    weekAlbums++;
+  }
+  if (weekSongs || weekAlbums) tylaDirect2026.weeks.push({week:new Date(snapshot.weekStart).toISOString().slice(0,10),songs:weekSongs,albums:weekAlbums});
+}
+const tylaNullDebuts2026 = [...state.albumDebuts.entries()].filter(([albumId,a]) =>
+  a.weekStart >= Date.UTC(2026,0,1) && a.weekStart <= Date.UTC(2026,11,31,23,59,59,999) &&
+  String(api.getLeadAlbumArtistId(state.albums.get(String(albumId))) || "") === tylaId &&
+  (a.unitsSold == null || !Number.isFinite(Number(a.unitsSold)))
+).map(([albumId,a])=>({albumId,title:state.albums.get(String(albumId))?.title,week:new Date(a.weekStart).toISOString().slice(0,10),unitsSold:a.unitsSold}));
+const mariahRelated = artists.filter(a=>a.name.toLowerCase().includes("mariah")).map(a=>({id:a.id,name:a.name,units:a.unitsSold}));
 const summary = {
   source: {
     vaultArtists: state.artists.size, tracks: state.tracks.size, albums: state.albums.size,
@@ -97,6 +119,9 @@ const summary = {
   tyla: {
     row: byName("Tyla") ?? null,
     year2026: yearBoard.find(x=>x.id===tylaId) ?? null,
+    rawPeriodIndexValue: yearIndex.artistUnits.has(tylaId) ? yearIndex.artistUnits.get(tylaId) : "MISSING",
+    direct2026: tylaDirect2026,
+    nullDebuts2026: tylaNullDebuts2026,
     careerRank: rank([...artists].sort((a,b)=>b.unitsSold-a.unitsSold),tylaId),
     periodUnitsAllTime: Number(allTimeIndex.artistUnits.get(tylaId) ?? 0),
     periodUnits2026: Number(yearIndex.artistUnits.get(tylaId) ?? 0),
@@ -114,6 +139,7 @@ const summary = {
     periodUnits2026: Number(yearIndex.artistUnits.get(weekndId) ?? 0),
     yearrank2026: rank(yearBoard,weekndId)
   },
+  mariahRelated,
   top20Career: [...artists].sort((a,b)=>b.unitsSold-a.unitsSold).slice(0,20).map(a=>({name:a.name,units:a.unitsSold,songs:a.songUnitsSold,albums:a.albumUnitsSold,id:a.id})),
   top20Year2026: yearBoard.slice(0,20)
 };
