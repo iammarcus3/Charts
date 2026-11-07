@@ -101,7 +101,7 @@ def split_featured_artist(artist: Any) -> tuple[str, list[str]]:
     guests_text = match.group(1).strip()
     guests = [
         display_text(part, "")
-        for part in re.split(r"\s*(?:,|&|\band\b|\bx\b)\s*", guests_text, flags=re.IGNORECASE)
+        for part in re.split(r"\s*(?:,|&)\s*", guests_text, flags=re.IGNORECASE)
     ]
     return lead or value, [guest for guest in guests if guest]
 
@@ -117,7 +117,7 @@ def featured_artists_in_title(title: Any) -> list[str]:
     suffix = suffix.rstrip(" )]")
     guests = [
         display_text(part, "")
-        for part in re.split(r"\s*(?:,|&|\band\b|\bx\b)\s*", suffix, flags=re.IGNORECASE)
+        for part in re.split(r"\s*(?:,|&)\s*", suffix, flags=re.IGNORECASE)
     ]
     return [guest for guest in guests if guest]
 
