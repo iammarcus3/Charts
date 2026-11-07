@@ -113,7 +113,7 @@
     },
     artists: {
       title: "Artist Archive",
-      description: "Period and career chart-derived units across observed weeks, credited songs, lead albums and rank movement."
+      description: "Current six-month artist leaderboard ranked by units sold, with movement against the previous six-month leaderboard."
     },
     weeks: {
       title: "Weekly History",
@@ -1897,6 +1897,8 @@
       return artist;
     });
 
+    // Rank each six-month leaderboard independently by total units sold.
+    // Movement compares the resulting positions, not the change in units.
     const currentBoard = records
       .filter(artist => artist.recentUnits > 0)
       .sort((a, b) =>
@@ -2458,7 +2460,8 @@
     const defaults = {
       songs: "periodUnitsSold",
       albums: "periodUnitsSold",
-      artists: "periodUnitsSold",
+      // Default to the actual latest six-month leaderboard position.
+      artists: "currentSixMonthRank",
       weeks: "dateTs",
       numberones: "dateTs",
       debuts: "dateTs",
@@ -2663,7 +2666,7 @@
         return `<span class="rank-arrow trend-down" role="img" aria-label="Rank declined" title="Rank declined">↓</span>`;
       }
 
-      return `<span class="rank-arrow trend-neutral" role="img" aria-label="Rank unchanged" title="Rank unchanged">→</span>`;
+      return `<span class="rank-arrow trend-neutral" role="img" aria-label="Rank unchanged" title="Rank unchanged">—</span>`;
     }
 
     const text = String(label || "").toLowerCase();
@@ -3104,6 +3107,7 @@
       button.setAttribute("aria-current", active ? "page" : "false");
     });
 
+    ui.direction.value = view === "artists" ? "asc" : "desc";
     configureSortMenu(true);
     renderContent();
   }
