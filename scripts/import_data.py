@@ -153,7 +153,7 @@ def ingest_zerocharts_file(filepath: str | Path):
         # (Remix, Live, Radio Edit, Instrumental, Remaster, etc.) remain in the title.
         track_artist_name, track_title = _canonical_track_identity(raw_artist, raw_track)
         lead_artist_name, artist_featured_names = split_featured_artist(track_artist_name)
-        canonical_title = canonical_track_title(track_title)
+        canonical_title = canonical_track_title(track_title, lead_artist_name)
         featured_names = []
         for name in [*artist_featured_names, *featured_artists_in_title(track_title)]:
             if name and normalize_text(name) != normalize_text(lead_artist_name):
