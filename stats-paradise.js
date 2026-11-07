@@ -66,6 +66,8 @@
     tracks: new Map(),
     albums: new Map(),
     artists: new Map(),
+    artistNameIndex: new Map(),
+    trackArtistIdsCache: new Map(),
     artistIndependence: null,
     events: [],
 
@@ -475,26 +477,7 @@
         : key;
     }
 
-    const lower = key.toLowerCase();
-
-    for (const [id, artist] of state.artists) {
-      const name = String(artist?.name ?? artist?.title ?? "")
-        .trim()
-        .toLowerCase();
-      const aliases = Array.isArray(artist?.aliases) ? artist.aliases : [];
-      const aliasMatches = aliases.some(alias =>
-        String(alias ?? "").trim().toLowerCase() === lower
-      );
-
-      if ((name && name === lower) || aliasMatches) {
-        const canonicalId = artist?.canonical_artist_id;
-        return canonicalId != null && state.artists.has(String(canonicalId))
-          ? String(canonicalId)
-          : String(id);
-      }
-    }
-
-    return null;
+    return state.artistNameIndex.get(key.toLowerCase()) ?? null;
   }
 
   // Distinguish genuine solo artist records from fragments accidentally
@@ -561,6 +544,11 @@
   function getTrackArtistIds(track) {
     if (!track) return [];
 
+    const trackId = track.id == null ? null : String(track.id);
+    if (trackId && state.trackArtistIdsCache.has(trackId)) {
+      return [...state.trackArtistIdsCache.get(trackId)];
+    }
+
     const ids = [];
 
     // The canonical vault stores the full credited cast in
@@ -610,6 +598,7 @@
       });
     }
 
+    if (trackId) state.trackArtistIdsCache.set(trackId, [...ids]);
     return ids;
   }
 
@@ -873,6 +862,28 @@
     state.tracks = parseMap(await responses[0].json());
     state.albums = parseMap(await responses[1].json());
     state.artists = parseMap(await responses[2].json());
+
+    // Build the normalized name/alias index once. Resolving every credited
+    // artist by scanning all 5,000+ catalogue entries on every chart-week
+    // made the archive needlessly expensive to rebuild.
+    state.artistNameIndex = new Map();
+    state.artists.forEach((artist, id) => {
+      const canonicalId = artist?.canonical_artist_id != null &&
+        state.artists.has(String(artist.canonical_artist_id))
+        ? String(artist.canonical_artist_id)
+        : String(id);
+      const names = [
+        artist?.name ?? artist?.title,
+        ...(Array.isArray(artist?.aliases) ? artist.aliases : [])
+      ];
+      names.forEach(value => {
+        const key = String(value ?? "").trim().toLowerCase();
+        if (key && !state.artistNameIndex.has(key)) {
+          state.artistNameIndex.set(key, canonicalId);
+        }
+      });
+    });
+    state.trackArtistIdsCache = new Map();
 
     const historyText = await responses[3].text();
     const lines = historyText.split(/\r?\n/).filter(Boolean);
