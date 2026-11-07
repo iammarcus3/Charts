@@ -2207,7 +2207,7 @@
           id, title: getAlbumTitle(album), artist: getArtistName(leadId),
           leadArtistId: leadId
         }, "Album");
-        record.units = activation.unitsSold == null ? 0 : Number(activation.unitsSold);
+        record.units = activation.unitsSold == null ? null : Number(activation.unitsSold);
       } else {
         const record = albums.get(String(id));
         const rankedOnDebut = snapshots.some(snapshot =>
@@ -2250,7 +2250,7 @@
     const aWeeks = best(albumList.filter(x => x.weeks), x => x.weeks);
     const aPeak = best(albumList.filter(x => x.weeks), x => 101 - x.peak);
     const aReentries = best(albumList.filter(x => x.reentries), x => x.reentries);
-    const aUnits = best(albumList, x => x.units);
+    const aUnits = best(albumList.filter(x => x.units != null), x => x.units);
     const aTop20 = best(albumList.filter(x => x.top20), x => x.top20);
     const aTop40 = best(albumList.filter(x => x.top40), x => x.top40);
     const aTop50 = best(albumList.filter(x => x.top50), x => x.top50);
