@@ -591,7 +591,8 @@
       track.artist_names ??
       track.artists ??
       track.artist_credits ??
-      track.artist;
+      track.artist ??
+      track.artist_name;
 
     if (!Array.isArray(credits)) {
       credits = typeof credits === "string" && credits.trim()
@@ -619,7 +620,8 @@
       track?.artist_names ??
       track?.artist_credits ??
       track?.artists ??
-      track?.artist;
+      track?.artist ??
+      track?.artist_name;
 
     if (!Array.isArray(credits)) {
       credits = typeof credits === "string"
