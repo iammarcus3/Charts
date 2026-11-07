@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "canonical_track_id": "75e1fae6c82b96281bea9076",
+    "canonical_title": "MUTT",
+    "artist_id": "8dc7f9eb105e8908f2476590",
+    "source_track_ids_merged": [
+      "75e1fae6c82b96281bea9076"
+    ],
+    "source_titles_merged": [
+      "MUTT",
+      "MUTT (CB REMIX)",
+      "MUTT (feat. Chris Brown) [CB REMIX]"
+    ],
+    "action": "explicitly_approved_leon_thomas_chris_brown_mutt_family"
+  }
+]

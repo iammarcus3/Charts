@@ -67040,7 +67040,6 @@
     "title": "MUTT",
     "normalized_title": "mutt",
     "primary_artist_id": "8dc7f9eb105e8908f2476590",
-    "album_id": "31e63debf6532201f2d288a8",
     "album_ids": [
       "31e63debf6532201f2d288a8",
       "7fa40a93d020de2a63a2fbcc",
@@ -67050,7 +67049,13 @@
     "aliases": [
       "MUTT (CB REMIX)",
       "MUTT (feat. Chris Brown) [CB REMIX]"
-    ]
+    ],
+    "source_titles": [
+      "MUTT",
+      "MUTT (CB REMIX)",
+      "MUTT (feat. Chris Brown) [CB REMIX]"
+    ],
+    "album_id": "31e63debf6532201f2d288a8"
   },
   {
     "id": "75e4f0623df5c131c4cccb1d",
