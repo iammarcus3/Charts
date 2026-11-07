@@ -275,6 +275,37 @@ class TestAlbumEligibility(unittest.TestCase):
         self.assertEqual(tracks[0]["title"], "Warm Water (Snakehips Remix)")
         self.assertEqual(len(tracks[0]["aliases"]), 1)
 
+    def test_co_billed_and_featured_artist_variants_share_canonical_track(self):
+        manifest, albums, ineligible, tracks = self.build_from_scrobbles([
+            self.play("Jenevieve", "CRYSALIS", "Waiting Room (feat. Jordan Ward)", "2026-03-25T10:00:00"),
+            self.play("Jenevieve & Jordan Ward", "Waiting Room Single", "Waiting Room", "2026-03-25T10:01:00"),
+            self.play("Jenevieve, Jordan Ward", "Waiting Room - Single", "Waiting Room", "2026-03-25T10:02:00"),
+        ])
+
+        waiting_room = [track for track in tracks if track["title"] == "Waiting Room"]
+        self.assertEqual(len(waiting_room), 1)
+        self.assertEqual(waiting_room[0]["primary_artist_id"], next(
+            artist["id"] for artist in json.loads(
+                (self.vault_dir / "artists.json").read_text(encoding="utf-8")
+            ) if artist["name"] == "Jenevieve"
+        ))
+        self.assertEqual(len(waiting_room[0]["credited_artist_ids"]), 2)
+        self.assertEqual(len(waiting_room[0]["album_ids"]), 3)
+
+        history = [
+            json.loads(line)
+            for line in (self.vault_dir / "listening_history.jsonl").read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        self.assertEqual(len([event for event in history if event["track_id"] == waiting_room[0]["id"]]), 3)
+
+    def test_joint_artist_credit_is_not_merged_without_featured_credit_evidence(self):
+        _, _, _, tracks = self.build_from_scrobbles([
+            self.play("Artist One", "Solo Release", "Shared Title", "2026-01-01T10:00:00"),
+            self.play("Artist One & Artist Two", "Joint Release", "Shared Title", "2026-01-02T10:00:00"),
+        ])
+        self.assertEqual(len([track for track in tracks if track["title"] == "Shared Title"]), 2)
+
     def test_meaningful_recording_versions_remain_separate(self):
         _, _, _, tracks = self.build_from_scrobbles([
             self.play("Lead Artist", "Release", "Same Song", "2026-01-01T10:00:00"),
