@@ -208,6 +208,121 @@ def generate_event_id(track_id: str, timestamp: Any) -> str:
     return generate_deterministic_id("event", track_id, str(timestamp).strip())
 
 
+def _merge_approved_mutt_family(
+    artists: dict[str, dict[str, Any]],
+    albums: dict[str, dict[str, Any]],
+    tracks: dict[str, dict[str, Any]],
+    events: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Consolidate the explicitly approved Leon Thomas / Chris Brown MUTT family.
+
+    This is an exact, opt-in metadata rule, not fuzzy matching: the original MUTT
+    and the CB Remix metadata variants become one jointly credited chart entity.
+    Other MUTT remixes, including the Freddie Gibbs remix, remain separate.
+    """
+    approved_titles = {
+        "mutt",
+        "mutt cb remix",
+        "mutt feat chris brown cb remix",
+    }
+    approved_artist_names = {
+        "leon thomas",
+        "leon thomas and chris brown",
+        "leon thomas chris brown",
+        "leon thomas feat chris brown",
+    }
+    eligible_artist_ids = {
+        artist_id for artist_id, artist in artists.items()
+        if normalize_text(artist.get("name", "")) in approved_artist_names
+    }
+    source_ids = sorted(
+        track_id for track_id, track in tracks.items()
+        if str(track.get("primary_artist_id", "")) in eligible_artist_ids
+        and normalize_text(track.get("title", "")) in approved_titles
+    )
+    if not source_ids:
+        return []
+
+    canonical_artist_name = "Leon Thomas & Chris Brown"
+    canonical_artist_id = generate_deterministic_id("artist", canonical_artist_name)
+    artists.setdefault(canonical_artist_id, {
+        "id": canonical_artist_id,
+        "name": canonical_artist_name,
+        "normalized_name": normalize_text(canonical_artist_name),
+        "aliases": [],
+    })
+    canonical_track_id = generate_deterministic_id(
+        "track", canonical_artist_name, "MUTT"
+    )
+
+    album_ids: set[str] = set()
+    aliases: set[str] = set()
+    for track_id in source_ids:
+        track = tracks[track_id]
+        album_ids.update(str(x) for x in track.get("album_ids", []) if x)
+        if track.get("album_id"):
+            album_ids.add(str(track["album_id"]))
+        for title in [track.get("title"), *track.get("aliases", [])]:
+            if title and title != "MUTT":
+                aliases.add(str(title))
+
+    # Include an already-canonical record if this rule is run again.
+    existing = tracks.get(canonical_track_id)
+    if existing:
+        album_ids.update(str(x) for x in existing.get("album_ids", []) if x)
+        if existing.get("album_id"):
+            album_ids.add(str(existing["album_id"]))
+        aliases.update(
+            str(x) for x in [existing.get("title"), *existing.get("aliases", [])]
+            if x and x != "MUTT"
+        )
+
+    for track_id in source_ids:
+        if track_id != canonical_track_id:
+            tracks.pop(track_id, None)
+
+    canonical = {
+        "id": canonical_track_id,
+        "title": "MUTT",
+        "normalized_title": "mutt",
+        "primary_artist_id": canonical_artist_id,
+        "album_ids": sorted(album_ids),
+        "aliases": sorted(aliases, key=str.casefold),
+        "source_titles": ["MUTT", *sorted(aliases, key=str.casefold)],
+    }
+    if canonical["album_ids"]:
+        canonical["album_id"] = canonical["album_ids"][0]
+    tracks[canonical_track_id] = canonical
+
+    remap = {track_id: canonical_track_id for track_id in source_ids}
+    for album in albums.values():
+        ids = album.get("track_ids", [])
+        if not isinstance(ids, list):
+            ids = [ids]
+        album["track_ids"] = sorted({
+            remap.get(str(x.get("id", x.get("track_id", "")) if isinstance(x, dict) else x),
+                      str(x.get("id", x.get("track_id", "")) if isinstance(x, dict) else x))
+            for x in ids
+        })
+
+    for event in events:
+        old_id = str(event.get("track_id", ""))
+        if old_id in remap:
+            event["track_id"] = canonical_track_id
+            timestamp = event.get("timestamp")
+            if timestamp is not None and str(timestamp).strip():
+                event["event_id"] = generate_event_id(canonical_track_id, timestamp)
+
+    return [{
+        "canonical_track_id": canonical_track_id,
+        "canonical_title": "MUTT",
+        "artist_id": canonical_artist_id,
+        "source_track_ids_merged": source_ids,
+        "source_titles_merged": ["MUTT", *sorted(aliases, key=str.casefold)],
+        "action": "explicitly_approved_leon_thomas_chris_brown_mutt_family",
+    }]
+
+
 def _fuzzy_track_candidates(tracks: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     """Report near-matches below the automatic 90% merge threshold for auditing."""
     by_artist: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -294,6 +409,12 @@ def build() -> dict[str, Any]:
                         existing["aliases"].append(alias)
         all_events.extend(events)
 
+    # Apply the explicitly approved MUTT consolidation before event deduplication,
+    # chart generation, and album/track relationship validation.
+    approved_track_merges = _merge_approved_mutt_family(
+        all_artists, all_albums, all_tracks, all_events
+    )
+
     # Unknown Album is a prohibited placeholder and must never enter the published vault.
     banned_album_ids = {
         album_id for album_id, album in all_albums.items()
@@ -317,7 +438,7 @@ def build() -> dict[str, Any]:
     # Do not fuzzy-merge similar song titles: versions, remixes, edits and bonus tracks
     # can have very similar names but must remain separate chart entries. Exact normalized
     # artist/title duplicates already share a deterministic ID in import_data.py.
-    song_merge_report: list[dict[str, Any]] = []
+    song_merge_report: list[dict[str, Any]] = approved_track_merges
     track_id_remap = {track_id: track_id for track_id in all_tracks}
     for album in all_albums.values():
         album["track_ids"] = sorted({track_id_remap.get(tid, tid) for tid in album.get("track_ids", [])})
@@ -411,7 +532,8 @@ def build() -> dict[str, Any]:
             "All parenthesized (...) and bracketed [...] album-title annotations are removed for album-family matching; source titles are preserved.",
             "Original release titles and edition labels are preserved in album source_titles and edition_labels and reports/album_family_merges.json.",
             "Distinct canonical track IDs are unioned across editions, preserving unique deluxe bonus tracks without double-counting repeated tracks.",
-            "Track identity uses exact normalized artist/title keys only; fuzzy title-similarity candidates are reported for review and never auto-merged.",
+            "Track identity uses exact normalized artist/title keys, with explicitly approved track-family overrides applied before charting.",
+            "The Leon Thomas / Chris Brown MUTT family is consolidated to one jointly credited MUTT track; unrelated remixes remain separate.",
             "Similarity candidates from 80% up to but below 90% are reported for review and are not auto-merged.",
         ],
     }
