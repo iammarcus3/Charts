@@ -369,6 +369,77 @@ def _fuzzy_track_candidates(tracks: dict[str, dict[str, Any]]) -> list[dict[str,
     candidates.sort(key=lambda c: (-c["similarity"], c["track_a_title"].casefold(), c["track_b_title"].casefold()))
     return candidates
 
+def _cross_artist_exact_title_candidates(
+    tracks: dict[str, dict[str, Any]],
+    artists: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Find exact-title track identities split across different artist-credit records.
+
+    This is deliberately a review report, not an automatic merge: common song titles
+    can belong to unrelated recordings. Credit overlap and co-billed name components
+    raise confidence but do not by themselves prove recording identity.
+    """
+    import re
+
+    def credit_names(track: dict[str, Any]) -> set[str]:
+        ids = set(track.get("credited_artist_ids", []))
+        if track.get("primary_artist_id"):
+            ids.add(track["primary_artist_id"])
+        names: set[str] = set()
+        for artist_id in ids:
+            name = str(artists.get(artist_id, {}).get("name", "")).strip()
+            if not name:
+                continue
+            for part in re.split(r"\\s*(?:,|&|\\band\\b)\\s*", name):
+                normalized = normalize_text(part)
+                if normalized:
+                    names.add(normalized)
+        return names
+
+    by_title: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for track in tracks.values():
+        title = str(track.get("normalized_title") or normalize_text(track.get("title", "")))
+        if title and len(title) >= 4:
+            by_title[title].append(track)
+
+    candidates: list[dict[str, Any]] = []
+    for title, title_tracks in by_title.items():
+        title_tracks.sort(key=lambda item: str(item.get("id", "")))
+        if len(title_tracks) < 2:
+            continue
+        for index, left in enumerate(title_tracks):
+            left_credits = credit_names(left)
+            for right in title_tracks[index + 1:]:
+                if left.get("primary_artist_id") == right.get("primary_artist_id"):
+                    continue
+                right_credits = credit_names(right)
+                overlap = sorted(left_credits & right_credits)
+                candidates.append({
+                    "entity_type": "track",
+                    "match_type": "exact_title_cross_artist_credit",
+                    "normalized_title": title,
+                    "track_a_id": left["id"],
+                    "track_a_title": left.get("title", ""),
+                    "track_a_primary_artist_id": left.get("primary_artist_id"),
+                    "track_a_credit_names": sorted(left_credits),
+                    "track_b_id": right["id"],
+                    "track_b_title": right.get("title", ""),
+                    "track_b_primary_artist_id": right.get("primary_artist_id"),
+                    "track_b_credit_names": sorted(right_credits),
+                    "shared_artist_credits": overlap,
+                    "confidence_hint": "shared_artist_credit" if overlap else "same_title_only",
+                    "action": "review_recording_identity_no_automatic_merge",
+                })
+
+    candidates.sort(key=lambda row: (
+        0 if row["shared_artist_credits"] else 1,
+        row["normalized_title"],
+        row["track_a_id"],
+        row["track_b_id"],
+    ))
+    return candidates
+
+
 def build() -> dict[str, Any]:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     VAULT_DIR.mkdir(parents=True, exist_ok=True)
@@ -541,7 +612,7 @@ def build() -> dict[str, Any]:
             })
     ineligible_releases.sort(key=lambda row: (str(row["title"]).casefold(), row["id"]))
 
-    fuzzy_candidates = _fuzzy_track_candidates(all_tracks)
+    fuzzy_candidates = _fuzzy_track_candidates(all_tracks)\n    cross_artist_candidates = _cross_artist_exact_title_candidates(all_tracks, all_artists)
     album_family_report = []
     for album in all_albums.values():
         source_titles = sorted(set(album.get("source_titles", [])), key=str.casefold)
@@ -565,7 +636,7 @@ def build() -> dict[str, Any]:
         "integrity_issue_count": len(integrity_issues),
         "invalid_event_count": len(invalid_events),
         "duplicate_events_removed": duplicate_event_count,
-        "fuzzy_candidates_for_review": len(fuzzy_candidates),
+        "fuzzy_candidates_for_review": len(fuzzy_candidates),\n        "cross_artist_exact_title_candidates_for_review": len(cross_artist_candidates),
         "song_families_merged": len(song_merge_report),
         "album_families_consolidated": len(album_family_report),
         "notes": [
@@ -582,7 +653,7 @@ def build() -> dict[str, Any]:
     _atomic_write_json(REPORTS_DIR / "input_errors.json", input_errors)
     _atomic_write_json(REPORTS_DIR / "integrity_issues.json", integrity_issues)
     _atomic_write_json(REPORTS_DIR / "invalid_events.json", invalid_events)
-    _atomic_write_json(REPORTS_DIR / "duplicate_candidates.json", fuzzy_candidates)
+    _atomic_write_json(REPORTS_DIR / "duplicate_candidates.json", fuzzy_candidates)\n    _atomic_write_json(REPORTS_DIR / "cross_artist_duplicate_candidates.json", cross_artist_candidates)
     _atomic_write_json(REPORTS_DIR / "song_merges.json", song_merge_report)
     _atomic_write_json(REPORTS_DIR / "album_family_merges.json", album_family_report)
     _atomic_write_json(REPORTS_DIR / "validation_report.json", validation)
