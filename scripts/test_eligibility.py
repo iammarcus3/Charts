@@ -265,6 +265,16 @@ class TestAlbumEligibility(unittest.TestCase):
         self.assertEqual(tracks[0]["title"], "Same Song [Radio Edit]")
         self.assertEqual(len(tracks[0]["credited_artist_ids"]), 2)
 
+    def test_redundant_artist_prefix_in_title_is_normalized(self):
+        _, _, _, tracks = self.build_from_scrobbles([
+            self.play("Banks", "Release", "Warm Water (Snakehips Remix)", "2026-01-01T10:00:00"),
+            self.play("Banks", "Release", "Banks - Warm Water (Snakehips Remix)", "2026-01-02T10:00:00"),
+        ])
+
+        self.assertEqual(len(tracks), 1)
+        self.assertEqual(tracks[0]["title"], "Warm Water (Snakehips Remix)")
+        self.assertEqual(len(tracks[0]["aliases"]), 1)
+
     def test_meaningful_recording_versions_remain_separate(self):
         _, _, _, tracks = self.build_from_scrobbles([
             self.play("Lead Artist", "Release", "Same Song", "2026-01-01T10:00:00"),
