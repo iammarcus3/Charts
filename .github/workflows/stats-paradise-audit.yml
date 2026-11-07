@@ -1,0 +1,25 @@
+name: Stats Paradise data audit
+on:
+  push:
+    paths:
+      - "audit/**"
+      - ".github/workflows/stats-paradise-audit.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run production Stats Paradise calculations against the complete vault
+        run: node audit/stats-paradise-audit.mjs
+      - name: Upload read-only audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: stats-paradise-audit
+          path: stats-paradise-audit.json
+          retention-days: 7
