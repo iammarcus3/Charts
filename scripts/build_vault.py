@@ -424,6 +424,9 @@ def build() -> dict[str, Any]:
                 for alias in [track.get("title"), *track.get("aliases", [])]:
                     if alias and alias != existing["title"] and alias not in existing.setdefault("aliases", []):
                         existing["aliases"].append(alias)
+                for credited_id in track.get("credited_artist_ids", []):
+                    if credited_id not in existing.setdefault("credited_artist_ids", [existing.get("primary_artist_id")]):
+                        existing["credited_artist_ids"].append(credited_id)
         all_events.extend(events)
 
     # Apply the explicitly approved MUTT consolidation before event deduplication,
