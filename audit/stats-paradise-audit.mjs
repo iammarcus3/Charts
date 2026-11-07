@@ -46,6 +46,27 @@ const yearBoard = [...yearIndex.artistUnits.entries()]
   .map(([id, units]) => ({ id, name: api.getArtistName(id), units: Number(units || 0) }))
   .sort((a,b) => b.units-a.units || a.name.localeCompare(b.name));
 const rank = (list,id) => { const i=list.findIndex(x=>x.id===id); return i<0?null:i+1; };
+const allTimeBoard = [...allTimeIndex.artistUnits.entries()]
+  .map(([id, units]) => ({ id, name: api.getArtistName(id), units: Number(units || 0) }))
+  .sort((a,b) => b.units-a.units || a.name.localeCompare(b.name));
+const rawPlayCounts = new Map();
+const rawTrackSets = new Map();
+const creditCache = new Map();
+for (const event of state.events) {
+  let ids = creditCache.get(event.trackId);
+  if (!ids) {
+    ids = api.getTrackArtistIds(state.tracks.get(event.trackId));
+    creditCache.set(event.trackId, ids);
+  }
+  for (const id of ids) {
+    rawPlayCounts.set(id, (rawPlayCounts.get(id) || 0) + 1);
+    if (!rawTrackSets.has(id)) rawTrackSets.set(id, new Set());
+    rawTrackSets.get(id).add(event.trackId);
+  }
+}
+const rawPlayBoard = [...rawPlayCounts.entries()]
+  .map(([id, plays]) => ({id,name:api.getArtistName(id),plays,tracks:rawTrackSets.get(id)?.size||0}))
+  .sort((a,b)=>b.plays-a.plays||a.name.localeCompare(b.name));
 
 const chartTrackIds = new Set(state.snapshots.flatMap(s=>s.songs.map(e=>String(e.id))));
 const chartedTracks = [...chartTrackIds].map(id=>state.tracks.get(id)).filter(Boolean);
@@ -124,7 +145,11 @@ const summary = {
   mariah: {
     row: byName("Mariah Carey") ?? null,
     year2026: yearBoard.find(x=>x.id===mariahId) ?? null,
-    careerRank: rank([...artists].sort((a,b)=>b.unitsSold-a.unitsSold),mariahId),
+    careerRank: rank(allTimeBoard,mariahId),
+    allTimeTableRank: rank(allTimeBoard,mariahId),
+    year2026TableRank: rank(yearBoard,mariahId),
+    rawListeningPlays: rawPlayCounts.get(mariahId) || 0,
+    rawListeningTracks: rawTrackSets.get(mariahId)?.size || 0,
     periodUnitsAllTime: Number(allTimeIndex.artistUnits.get(mariahId) ?? 0),
     periodUnits2026: Number(yearIndex.artistUnits.get(mariahId) ?? 0),
     rank2026: rank(yearBoard,mariahId),
@@ -139,7 +164,10 @@ const summary = {
     rawPeriodIndexValue: yearIndex.artistUnits.has(tylaId) ? yearIndex.artistUnits.get(tylaId) : "MISSING",
     direct2026: tylaDirect2026,
     nullDebuts2026: tylaNullDebuts2026,
-    careerRank: rank([...artists].sort((a,b)=>b.unitsSold-a.unitsSold),tylaId),
+    careerRank: rank(allTimeBoard,tylaId),
+    year2026TableRank: rank(yearBoard,tylaId),
+    rawListeningPlays: rawPlayCounts.get(tylaId) || 0,
+    rawListeningTracks: rawTrackSets.get(tylaId)?.size || 0,
     periodUnitsAllTime: Number(allTimeIndex.artistUnits.get(tylaId) ?? 0),
     periodUnits2026: Number(yearIndex.artistUnits.get(tylaId) ?? 0),
     yearrank2026: rank(yearBoard,tylaId),
@@ -151,17 +179,23 @@ const summary = {
   weeknd: {
     row: byName("The Weeknd") ?? null,
     year2026: yearBoard.find(x=>x.id===weekndId) ?? null,
-    careerRank: rank([...artists].sort((a,b)=>b.unitsSold-a.unitsSold),weekndId),
+    careerRank: rank(allTimeBoard,weekndId),
+    rawListeningPlays: rawPlayCounts.get(weekndId) || 0,
+    rawListeningTracks: rawTrackSets.get(weekndId)?.size || 0,
     periodUnitsAllTime: Number(allTimeIndex.artistUnits.get(weekndId) ?? 0),
     periodUnits2026: Number(yearIndex.artistUnits.get(weekndId) ?? 0),
     yearrank2026: rank(yearBoard,weekndId)
   },
   mariahRelated,
-  top20Career: [...artists].sort((a,b)=>b.unitsSold-a.unitsSold).slice(0,20).map(a=>({name:a.name,units:a.unitsSold,songs:a.songUnitsSold,albums:a.albumUnitsSold,id:a.id})),
+  rawPlayTop20: rawPlayBoard.slice(0,20),
+  top20Career: allTimeBoard.slice(0,20).map(a=>{const r=byName(a.name);return {name:a.name,units:a.units,songs:r?.songUnitsSold,albums:r?.albumUnitsSold,id:a.id};}),
   top20Year2026: yearBoard.slice(0,20)
 };
 if (!byName("Mariah Carey")) throw new Error("Mariah Carey is missing from the production artist archive.");
 if (!byName("Tyla")) throw new Error("Tyla is missing from the production artist archive.");
+if (rank(allTimeBoard,mariahId) > 250 || rank(yearBoard,mariahId) > 250 || rank(yearBoard,tylaId) > 250) {
+  throw new Error("Mariah Carey or Tyla is outside the visible top-250 artist table after period filtering.");
+}
 if (!(Number(yearIndex.artistUnits.get(tylaId) ?? 0) > 0)) {
   throw new Error("Tyla has chart activity in 2026 but the production year filter still returns zero units.");
 }
