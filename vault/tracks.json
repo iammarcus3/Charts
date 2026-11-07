@@ -67040,6 +67040,10 @@
     "title": "MUTT",
     "normalized_title": "mutt",
     "primary_artist_id": "8dc7f9eb105e8908f2476590",
+    "credited_artist_ids": [
+      "33acd5889a8911e920fb7257",
+      "61d4861e9764f699ba10fdbe"
+    ],
     "album_ids": [
       "31e63debf6532201f2d288a8",
       "7fa40a93d020de2a63a2fbcc",
