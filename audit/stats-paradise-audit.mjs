@@ -59,6 +59,17 @@ const chartArtistIds = new Set(state.snapshots.flatMap(s=>[
   ...s.albums.map(e=>e.leadArtistId).filter(Boolean)
 ]).map(String));
 const missingIds = [...chartArtistIds].filter(id=>!artists.some(a=>a.id===id));
+const nullDebutArtistIdsAllTime = new Set();
+const nullDebutArtistIds2026 = new Set();
+for (const [albumId, activation] of state.albumDebuts) {
+  if (activation.unitsSold != null) continue;
+  const leadId = api.getLeadAlbumArtistId(state.albums.get(String(albumId)));
+  if (!leadId) continue;
+  nullDebutArtistIdsAllTime.add(String(leadId));
+  if (new Date(activation.weekStart).getUTCFullYear() === 2026) {
+    nullDebutArtistIds2026.add(String(leadId));
+  }
+}
 const unresolvedChartCredits = [];
 for (const track of chartedTracks) {
   const ids = api.getTrackArtistIds(track);
@@ -102,7 +113,13 @@ const summary = {
     referencedButMissingRows: missingIds.length,
     missingIds,
     unresolvedChartCreditTrackCount: unresolvedChartCredits.length,
-    unresolvedChartCredits: unresolvedChartCredits.slice(0,50)
+    unresolvedChartCredits: unresolvedChartCredits.slice(0,50),
+    nullUnitDebutArtistsAffected: {
+      allHistoryCount: nullDebutArtistIdsAllTime.size,
+      allHistory: [...nullDebutArtistIdsAllTime].map(id=>api.getArtistName(id)).sort(),
+      year2026Count: nullDebutArtistIds2026.size,
+      year2026: [...nullDebutArtistIds2026].map(id=>api.getArtistName(id)).sort()
+    }
   },
   mariah: {
     row: byName("Mariah Carey") ?? null,
