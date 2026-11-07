@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - "audit/**"
+      - "stats-paradise.js"
+      - "stats-paradise.html"
       - ".github/workflows/stats-paradise-audit.yml"
   workflow_dispatch:
 permissions:
