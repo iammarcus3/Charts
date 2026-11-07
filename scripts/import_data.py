@@ -225,6 +225,74 @@ def ingest_zerocharts_file(filepath: str | Path):
             "source_provenance": filepath.name,
         })
 
+
+    # Reconcile co-billed artist strings with an independently observed lead-artist
+    # recording only when the lead record explicitly credits every additional artist.
+    # This avoids guessing that all joint-billed acts are featured-artist variants.
+    by_title: dict[str, list[str]] = {}
+    for candidate_id, candidate in tracks.items():
+        by_title.setdefault(candidate.get("normalized_title", ""), []).append(candidate_id)
+
+    for candidate_id, candidate in list(tracks.items()):
+        candidate_artist = artists.get(candidate.get("primary_artist_id"), {}).get("name", "")
+        artist_parts = [
+            part.strip()
+            for part in __import__("re").split(r"\\s*(?:,|&)\\s*", candidate_artist)
+            if part.strip()
+        ]
+        if len(artist_parts) < 2:
+            continue
+
+        lead_name, guest_names = artist_parts[0], artist_parts[1:]
+        lead_id = generate_deterministic_id("artist", lead_name)
+        guest_ids = [generate_deterministic_id("artist", name) for name in guest_names]
+        if not all(guest_id in artists for guest_id in guest_ids):
+            continue
+
+        canonical_id = None
+        for possible_id in by_title.get(candidate.get("normalized_title", ""), []):
+            if possible_id == candidate_id:
+                continue
+            possible = tracks.get(possible_id)
+            if not possible or possible.get("primary_artist_id") != lead_id:
+                continue
+            explicit_credits = set(possible.get("credited_artist_ids", []))
+            if all(guest_id in explicit_credits for guest_id in guest_ids):
+                canonical_id = possible_id
+                break
+
+        if not canonical_id:
+            continue
+
+        canonical = tracks[canonical_id]
+        for guest_id in guest_ids:
+            if guest_id not in canonical.setdefault("credited_artist_ids", [lead_id]):
+                canonical["credited_artist_ids"].append(guest_id)
+        for alias in [candidate.get("title"), *candidate.get("aliases", [])]:
+            if alias and alias != canonical.get("title") and alias not in canonical.setdefault("aliases", []):
+                canonical["aliases"].append(alias)
+        for album_id in candidate.get("album_ids", []):
+            if album_id not in canonical.setdefault("album_ids", []):
+                canonical["album_ids"].append(album_id)
+            album = albums.get(album_id)
+            if album:
+                album["track_ids"] = [
+                    canonical_id if track_id == candidate_id else track_id
+                    for track_id in album.get("track_ids", [])
+                ]
+                album["track_ids"] = list(dict.fromkeys(album["track_ids"]))
+
+        for event in events:
+            if event.get("track_id") == candidate_id:
+                event["track_id"] = canonical_id
+                timestamp_value = event.get("timestamp")
+                if timestamp_value is not None and str(timestamp_value).strip():
+                    event["event_id"] = generate_deterministic_id(
+                        "event", canonical_id, str(timestamp_value).strip()
+                    )
+
+        del tracks[candidate_id]
+
     return artists, albums, tracks, events
 
 
