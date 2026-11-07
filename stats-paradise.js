@@ -539,26 +539,22 @@
     const expanded = [];
     parts.forEach(part => {
       const partId = resolveArtistId(part);
-      if (partId && hasIndependentArtistCatalogue(partId)) {
+      if (partId) {
         expanded.push(...expandArtistCreditId(partId, depth + 1));
-      } else if (!partId && part.includes(",")) {
-        // Some source artist identities contain nested comma-separated
-        // collaborations, e.g. "Freeway, Jay-Z & Mariah Carey".
+      } else if (part.includes(",")) {
+        // Resolve nested comma-separated collaborators even when one or
+        // more of them has no separate lead-track or lead-album catalogue.
         part.split(",").map(value => value.trim()).filter(Boolean).forEach(nested => {
           const nestedId = resolveArtistId(nested);
-          if (nestedId && hasIndependentArtistCatalogue(nestedId)) {
-            expanded.push(...expandArtistCreditId(nestedId, depth + 1));
-          }
+          if (nestedId) expanded.push(...expandArtistCreditId(nestedId, depth + 1));
         });
       }
     });
 
     const uniqueExpanded = [...new Set(expanded)];
 
-    // A collaboration credit must not disappear just because only one
-    // credited performer has an independently indexed catalogue. Keep every
-    // recognized individual artist; fall back to the combined identity only
-    // when none of the components can be resolved.
+    // Preserve every individually recognized collaborator. Do not require
+    // each performer to have a separate lead catalogue: guest credits count too.
     return uniqueExpanded.length ? uniqueExpanded : [id];
   }
 
