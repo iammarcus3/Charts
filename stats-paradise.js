@@ -892,19 +892,30 @@
           sourceEvent.trackId ??
           sourceEvent.track;
 
+        const rawAlbumId =
+          sourceEvent.album_id ??
+          sourceEvent.albumId ??
+          sourceEvent.album;
+
         if (timestamp == null || rawId == null) continue;
 
         const trackId = String(
           typeof rawId === "object"
-            ? rawId.id ?? rawId.track_id ?? ""
+            ? rawId.id ?? rawId.track_id ?? rawId.trackId ?? ""
             : rawId
         );
+
+        const albumId = rawAlbumId == null
+          ? null
+          : typeof rawAlbumId === "object"
+            ? rawAlbumId.id ?? rawAlbumId.album_id ?? rawAlbumId.albumId ?? null
+            : rawAlbumId;
 
         if (!trackId) continue;
 
         events.push({
           trackId,
-          albumId: sourceEvent.album_id ?? sourceEvent.albumId ?? (typeof sourceEvent.album === "object" ? sourceEvent.album?.id : sourceEvent.album),
+          albumId: albumId == null ? null : String(albumId),
           timestamp,
           weekStart: getWeekStartMs(timestamp)
         });
@@ -1958,6 +1969,43 @@
       });
 
       record.unitsSold = record.songUnitsSold + record.albumUnitsSold;
+    });
+
+    // An official album debut can earn debut-week units even when it falls
+    // outside the ranked Album Top 100. Include those units in the same
+    // calendar period as the debut, but never count a ranked debut twice.
+    const snapshotsByWeek = new Map(
+      state.snapshots.map(snapshot => [snapshot.weekStart, snapshot])
+    );
+
+    state.albumDebuts.forEach((activation, albumId) => {
+      if (
+        activation.weekStart < (periodMode === "year"
+          ? Date.UTC(Number(new Date(activation.weekStart).getUTCFullYear()), 0, 1)
+          : Date.UTC(
+              new Date(activation.weekStart).getUTCFullYear(),
+              new Date(activation.weekStart).getUTCMonth(),
+              1
+            )) ||
+        activation.unitsSold == null
+      ) return;
+
+      const date = new Date(activation.weekStart);
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+      const key = periodMode === "year" ? String(year) : `${year}-${month}`;
+      const record = records.get(key);
+      if (!record) return;
+
+      const snapshot = snapshotsByWeek.get(activation.weekStart);
+      const rankedThatWeek = Boolean(
+        snapshot?.albums.some(entry => String(entry.id) === String(albumId))
+      );
+      if (rankedThatWeek) return;
+
+      const units = Number(activation.unitsSold);
+      record.albumUnitsSold += units;
+      record.unitsSold += units;
     });
 
     return [...records.values()].sort((a, b) => b.dateTs - a.dateTs);
