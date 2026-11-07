@@ -1979,16 +1979,7 @@
     );
 
     state.albumDebuts.forEach((activation, albumId) => {
-      if (
-        activation.weekStart < (periodMode === "year"
-          ? Date.UTC(Number(new Date(activation.weekStart).getUTCFullYear()), 0, 1)
-          : Date.UTC(
-              new Date(activation.weekStart).getUTCFullYear(),
-              new Date(activation.weekStart).getUTCMonth(),
-              1
-            )) ||
-        activation.unitsSold == null
-      ) return;
+      if (activation.unitsSold == null) return;
 
       const date = new Date(activation.weekStart);
       const year = date.getUTCFullYear();
