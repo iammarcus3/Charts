@@ -2309,6 +2309,10 @@
 
     // Do not double-count a debut-week album already present in that chart.
     state.albumDebuts.forEach((activation, albumId) => {
+      // Match calculateArtistRecords(): a debut with unknown/null units must
+      // contribute nothing. Passing null to addUnits() would poison the
+      // artist's entire period total and hide later chart activity.
+      if (activation.unitsSold == null) return;
       if (activation.weekStart < from || activation.weekStart > to) return;
 
       const snapshot = snapshotsByWeek.get(activation.weekStart);
