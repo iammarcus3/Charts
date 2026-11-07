@@ -510,8 +510,8 @@
     if (!name) return [id];
 
     let parts = [];
-    if (/\\s*(?:&|\\band\\b)\\s*/i.test(name)) {
-      parts = name.split(/\\s*(?:&|\\band\\b)\\s*/i).filter(Boolean);
+    if (/\s*(?:&|\band\b)\s*/i.test(name)) {
+      parts = name.split(/\s*(?:&|\band\b)\s*/i).filter(Boolean);
     } else if (name.includes(",")) {
       parts = name.split(",").map(part => part.trim()).filter(Boolean);
     }
