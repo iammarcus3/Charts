@@ -71,3 +71,59 @@ def canonical_album_title(title: Any) -> str:
 
 
 
+
+
+# Track identity rules intentionally differ from display metadata. Featured-artist
+# annotations are credits, not part of the recording title; version labels such as
+# Remix, Live, Radio Edit, Instrumental and Remaster are retained.
+_FEATURE_SUFFIX_RE = re.compile(
+    r"\\s*[\\(\\[]\\s*(?:feat(?:uring)?|ft)\\.?\\s+[^\\)\\]]+[\\)\\]]\\s*$|"
+    r"\\s+(?:feat(?:uring)?|ft)\\.?\\s+.+$",
+    re.IGNORECASE,
+)
+_ARTIST_FEATURE_RE = re.compile(
+    r"\\s+(?:feat(?:uring)?|ft)\\.?\\s+(.+)$",
+    re.IGNORECASE,
+)
+
+
+def split_featured_artist(artist: Any) -> tuple[str, list[str]]:
+    """Split an explicit featured-artist suffix from the lead artist credit.
+
+    Collaboration separators without an explicit feat./ft. marker are preserved:
+    'A & B' can be a jointly billed act and must not be guessed into a solo lead.
+    """
+    value = display_text(artist, "")
+    match = _ARTIST_FEATURE_RE.search(value)
+    if not match:
+        return value, []
+    lead = value[:match.start()].strip()
+    guests_text = match.group(1).strip()
+    guests = [
+        display_text(part, "")
+        for part in re.split(r"\\s*(?:,|&|\\band\\b|\\bx\\b)\\s*", guests_text, flags=re.IGNORECASE)
+    ]
+    return lead or value, [guest for guest in guests if guest]
+
+
+def featured_artists_in_title(title: Any) -> list[str]:
+    """Extract guest credits from a title suffix without treating them as title text."""
+    value = display_text(title, "")
+    match = _FEATURE_SUFFIX_RE.search(value)
+    if not match:
+        return []
+    suffix = value[match.start():]
+    suffix = re.sub(r"^[\\s\\(\\[]*(?:feat(?:uring)?|ft)\\.?\\s+", "", suffix, flags=re.IGNORECASE)
+    suffix = suffix.rstrip(" )]")
+    guests = [
+        display_text(part, "")
+        for part in re.split(r"\\s*(?:,|&|\\band\\b|\\bx\\b)\\s*", suffix, flags=re.IGNORECASE)
+    ]
+    return [guest for guest in guests if guest]
+
+
+def canonical_track_title(title: Any) -> str:
+    """Remove only featured-credit suffixes; preserve meaningful recording/version labels."""
+    value = display_text(title, "Unknown Track")
+    value = _FEATURE_SUFFIX_RE.sub("", value).strip()
+    return value or display_text(title, "Unknown Track")
