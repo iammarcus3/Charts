@@ -2560,7 +2560,7 @@
     ui.year.value = "";
     ui.dateFrom.value = "";
     ui.dateTo.value = "";
-    ui.direction.value = "desc";
+    ui.direction.value = state.currentView === "artists" ? "asc" : "desc";
     ui.customDates.hidden = true;
     ui.year.disabled = true;
     state.sortTouched = false;
