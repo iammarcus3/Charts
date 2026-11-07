@@ -557,7 +557,7 @@
       }
     }
   </style>
-  <script defer src="stats-paradise.js?v=20261107-artist-credit-sync-3"></script>
+  <script defer src="stats-paradise.js?v=20261107-record-book-year-filter-1"></script>
 </head>
 <body>
   <main class="shell">
@@ -662,6 +662,13 @@
           <button type="button" class="action-button" id="reset-filters">Reset filters</button>
           <button type="button" class="action-button" id="export-csv">Export visible rows</button>
         </div>
+      </div>
+
+      <div id="record-year-filter" class="field" style="max-width:240px;margin-bottom:14px" hidden>
+        <label for="record-year-select">Record Book period</label>
+        <select id="record-year-select">
+          <option value="all">All Time</option>
+        </select>
       </div>
 
       <div id="period-switch" class="period-switch" hidden>
