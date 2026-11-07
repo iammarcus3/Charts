@@ -572,7 +572,7 @@ def build() -> dict[str, Any]:
             "All parenthesized (...) and bracketed [...] album-title annotations are removed for album-family matching; source titles are preserved.",
             "Original release titles and edition labels are preserved in album source_titles and edition_labels and reports/album_family_merges.json.",
             "Distinct canonical track IDs are unioned across editions, preserving unique deluxe bonus tracks without double-counting repeated tracks.",
-            "Track identity uses exact normalized artist/title keys, with explicitly approved track-family overrides applied before charting.",
+            "Track identity uses canonical lead-artist/title keys; explicit feat./ft./featuring/with credits and redundant matching artist prefixes are normalized into credits/aliases, while recording-version labels are preserved.",
             "The Leon Thomas / Chris Brown MUTT family is consolidated to one jointly credited MUTT track; unrelated remixes remain separate.",
             "Similarity candidates from 80% up to but below 90% are reported for review and are not auto-merged.",
         ],
