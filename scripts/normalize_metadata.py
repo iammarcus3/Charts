@@ -77,12 +77,12 @@ def canonical_album_title(title: Any) -> str:
 # annotations are credits, not part of the recording title; version labels such as
 # Remix, Live, Radio Edit, Instrumental and Remaster are retained.
 _FEATURE_SUFFIX_RE = re.compile(
-    r"\\s*[\\(\\[]\\s*(?:feat(?:uring)?|ft)\\.?\\s+[^\\)\\]]+[\\)\\]]\\s*$|"
-    r"\\s+(?:feat(?:uring)?|ft)\\.?\\s+.+$",
+    r"\s*[\(\[]\s*(?:feat(?:uring)?|ft)\.?\s+[^\)\]]+[\)\]]\s*$|"
+    r"\s+(?:feat(?:uring)?|ft)\.?\s+.+$",
     re.IGNORECASE,
 )
 _ARTIST_FEATURE_RE = re.compile(
-    r"\\s+(?:feat(?:uring)?|ft)\\.?\\s+(.+)$",
+    r"\s+(?:feat(?:uring)?|ft)\.?\s+(.+)$",
     re.IGNORECASE,
 )
 
@@ -101,7 +101,7 @@ def split_featured_artist(artist: Any) -> tuple[str, list[str]]:
     guests_text = match.group(1).strip()
     guests = [
         display_text(part, "")
-        for part in re.split(r"\\s*(?:,|&|\\band\\b|\\bx\\b)\\s*", guests_text, flags=re.IGNORECASE)
+        for part in re.split(r"\s*(?:,|&|\band\b|\bx\b)\s*", guests_text, flags=re.IGNORECASE)
     ]
     return lead or value, [guest for guest in guests if guest]
 
@@ -113,11 +113,11 @@ def featured_artists_in_title(title: Any) -> list[str]:
     if not match:
         return []
     suffix = value[match.start():]
-    suffix = re.sub(r"^[\\s\\(\\[]*(?:feat(?:uring)?|ft)\\.?\\s+", "", suffix, flags=re.IGNORECASE)
+    suffix = re.sub(r"^[\s\(\[]*(?:feat(?:uring)?|ft)\.?\s+", "", suffix, flags=re.IGNORECASE)
     suffix = suffix.rstrip(" )]")
     guests = [
         display_text(part, "")
-        for part in re.split(r"\\s*(?:,|&|\\band\\b|\\bx\\b)\\s*", suffix, flags=re.IGNORECASE)
+        for part in re.split(r"\s*(?:,|&|\band\b|\bx\b)\s*", suffix, flags=re.IGNORECASE)
     ]
     return [guest for guest in guests if guest]
 
