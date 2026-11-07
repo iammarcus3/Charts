@@ -25,6 +25,8 @@ MUTT_VARIANT_TITLES = {
 MUTT_SOURCE_ARTISTS = {
     "leon thomas",
     "leon thomas and chris brown",
+    "leon thomas chris brown",
+    "leon thomas feat chris brown",
 }
 
 
