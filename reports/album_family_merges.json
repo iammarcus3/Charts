@@ -274,8 +274,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "0f82792eefe3cbf090481849",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -286,8 +286,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "f6e0a45440a790e7ff61ad04",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -298,8 +298,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "dcae62d84e1cf925a05af41f",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -2815,8 +2815,8 @@
     "canonical_title": "Blue Lights In The Basement",
     "primary_artist_id": "d7ef2790e9f724b1325b983f",
     "source_titles_merged": [
-      "Blue Lights in the Basement",
-      "Blue Lights In The Basement"
+      "Blue Lights In The Basement",
+      "Blue Lights in the Basement"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -3963,8 +3963,8 @@
     "canonical_title": "Confessions II",
     "primary_artist_id": "8a28af176378f7b9dc69e715",
     "source_titles_merged": [
-      "CONFESSIONS II",
-      "Confessions II"
+      "Confessions II",
+      "CONFESSIONS II"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -8986,8 +8986,8 @@
     "canonical_title": "Isimo",
     "primary_artist_id": "3066eac9ce20209493ec670d",
     "source_titles_merged": [
-      "Isimo",
-      "iSimo"
+      "iSimo",
+      "Isimo"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -11723,8 +11723,8 @@
     "canonical_title": "MUSIC",
     "primary_artist_id": "4ea5a76f09ac137cd2c3dfff",
     "source_titles_merged": [
-      "MUSIC",
-      "Music"
+      "Music",
+      "MUSIC"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -11757,7 +11757,7 @@
       "MUTT (CB REMIX)",
       "Mutt (Remix)"
     ],
-    "distinct_canonical_track_count": 13,
+    "distinct_canonical_track_count": 11,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16176,8 +16176,8 @@
     "canonical_title": "Solace",
     "primary_artist_id": "3c0cdf63735b97ba26e7fc40",
     "source_titles_merged": [
-      "Solace",
-      "SOLACE"
+      "SOLACE",
+      "Solace"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -16523,8 +16523,8 @@
     "canonical_title": "Stereo Driver",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "source_titles_merged": [
-      "Stereo Driver",
-      "STEREO DRIVER"
+      "STEREO DRIVER",
+      "Stereo Driver"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -16535,8 +16535,8 @@
     "canonical_title": "Stereo Driver - Single",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "source_titles_merged": [
-      "Stereo Driver - Single",
-      "STEREO DRIVER - Single"
+      "STEREO DRIVER - Single",
+      "Stereo Driver - Single"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -17449,8 +17449,8 @@
     "canonical_title": "The Best Of Anita Baker",
     "primary_artist_id": "1fbdda766b54a1bf97ee4cf7",
     "source_titles_merged": [
-      "The Best of Anita Baker",
-      "The Best Of Anita Baker"
+      "The Best Of Anita Baker",
+      "The Best of Anita Baker"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -17938,8 +17938,8 @@
     "primary_artist_id": "7d09e007f4cb7bd27b2b618b",
     "source_titles_merged": [
       "The Idol",
-      "THE IDOL",
-      "the idol"
+      "the idol",
+      "THE IDOL"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -20536,8 +20536,8 @@
     "canonical_title": "When It's All Said And Done... Take Time",
     "primary_artist_id": "4f970bf3f9ccbf95aab1f5fc",
     "source_titles_merged": [
-      "When It's All Said and Done... Take Time",
-      "When It's All Said And Done... Take Time"
+      "When It's All Said And Done... Take Time",
+      "When It's All Said and Done... Take Time"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 6,

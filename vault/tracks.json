@@ -9623,17 +9623,6 @@
     ]
   },
   {
-    "id": "1066c5e095eb7af6c593e4b2",
-    "title": "MUTT (feat. Chris Brown) [CB REMIX]",
-    "normalized_title": "mutt feat chris brown cb remix",
-    "primary_artist_id": "33acd5889a8911e920fb7257",
-    "album_id": "31e63debf6532201f2d288a8",
-    "album_ids": [
-      "31e63debf6532201f2d288a8",
-      "868a6f290a4338573c8f2d3c"
-    ]
-  },
-  {
     "id": "10675b743ae71c834f447b46",
     "title": "Anything",
     "normalized_title": "anything",
@@ -20581,17 +20570,6 @@
     "normalized_title": "how they caught ted bundy",
     "primary_artist_id": "8b73514bc891e8761a9f435b",
     "album_ids": []
-  },
-  {
-    "id": "23b91195d9cdcb6023e04b89",
-    "title": "MUTT (CB REMIX)",
-    "normalized_title": "mutt cb remix",
-    "primary_artist_id": "33acd5889a8911e920fb7257",
-    "album_id": "31e63debf6532201f2d288a8",
-    "album_ids": [
-      "31e63debf6532201f2d288a8",
-      "868a6f290a4338573c8f2d3c"
-    ]
   },
   {
     "id": "23ba4e51ea66a530589c164e",
@@ -47611,17 +47589,6 @@
     ]
   },
   {
-    "id": "534a3daebdf5703722f3ccd4",
-    "title": "MUTT",
-    "normalized_title": "mutt",
-    "primary_artist_id": "33acd5889a8911e920fb7257",
-    "album_id": "868a6f290a4338573c8f2d3c",
-    "album_ids": [
-      "868a6f290a4338573c8f2d3c",
-      "99b7d68d7aa23a95f0025a14"
-    ]
-  },
-  {
     "id": "534da32753c87dad06ac22e8",
     "title": "No Love (Feat. Nicki Minaj) [Remix]",
     "normalized_title": "no love feat nicki minaj remix",
@@ -67066,6 +67033,23 @@
     "album_id": "101516f09851157b83c8bcb2",
     "album_ids": [
       "101516f09851157b83c8bcb2"
+    ]
+  },
+  {
+    "id": "75e1fae6c82b96281bea9076",
+    "title": "MUTT",
+    "normalized_title": "mutt",
+    "primary_artist_id": "8dc7f9eb105e8908f2476590",
+    "album_id": "31e63debf6532201f2d288a8",
+    "album_ids": [
+      "31e63debf6532201f2d288a8",
+      "7fa40a93d020de2a63a2fbcc",
+      "868a6f290a4338573c8f2d3c",
+      "99b7d68d7aa23a95f0025a14"
+    ],
+    "aliases": [
+      "MUTT (CB REMIX)",
+      "MUTT (feat. Chris Brown) [CB REMIX]"
     ]
   },
   {
@@ -144872,16 +144856,6 @@
     "album_id": "93cfb01d02c93f0352503bce",
     "album_ids": [
       "93cfb01d02c93f0352503bce"
-    ]
-  },
-  {
-    "id": "feb0e27886507bcfe17c1bf1",
-    "title": "MUTT (CB REMIX)",
-    "normalized_title": "mutt cb remix",
-    "primary_artist_id": "8dc7f9eb105e8908f2476590",
-    "album_id": "7fa40a93d020de2a63a2fbcc",
-    "album_ids": [
-      "7fa40a93d020de2a63a2fbcc"
     ]
   },
   {

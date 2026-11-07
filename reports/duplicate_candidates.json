@@ -521,16 +521,6 @@
   },
   {
     "entity_type": "track",
-    "artist_id": "33acd5889a8911e920fb7257",
-    "track_a_id": "23b91195d9cdcb6023e04b89",
-    "track_a_title": "MUTT (CB REMIX)",
-    "track_b_id": "759248cbe26cae97af7c1fb5",
-    "track_b_title": "MUTT (Remix)",
-    "similarity": 0.8696,
-    "action": "review_only_below_auto_merge_threshold"
-  },
-  {
-    "entity_type": "track",
     "artist_id": "d4b4d6c3df118803e75af84b",
     "track_a_id": "3b563f50aea8d05e839d8681",
     "track_a_title": "Partition (Homecoming Live)",

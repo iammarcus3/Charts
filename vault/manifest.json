@@ -8,9 +8,9 @@
     "eligible_albums": 904,
     "ineligible_releases": 6606,
     "all_albums": 7510,
-    "tracks": 14890,
+    "tracks": 14887,
     "listening_events": 234045,
-    "fuzzy_candidates_for_review": 279,
+    "fuzzy_candidates_for_review": 278,
     "song_families_merged": 0
   },
   "deduplication": {
