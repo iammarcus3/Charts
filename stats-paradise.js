@@ -177,7 +177,6 @@
       ["leaderboardRank", "Leaderboard rank"],
       ["periodUnitsSold", "Units sold"],
       ["unitsSold", "Career units sold"],
-      ["recentUnits", "Latest six-month units"],
       ["songNo1Count", "Distinct No. 1 songs"],
       ["songCount", "Songs charted"],
       ["albumCount", "Lead albums charted"],
