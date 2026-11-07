@@ -2347,6 +2347,40 @@
     return { songUnits, albumUnits, artistUnits };
   }
 
+  function leaderboardName(view, id) {
+    if (view === "songs") return state.tracks.get(String(id))?.title || String(id);
+    if (view === "albums") return state.albums.get(String(id))?.title || String(id);
+    return getArtistName(String(id)) || String(id);
+  }
+  function rankUnitsMap(unitsMap, view) {
+    const ranked = [...unitsMap.entries()].filter(([, units]) => Number.isFinite(Number(units)) && Number(units) > 0)
+      .sort((a, b) => Number(b[1]) - Number(a[1]) || leaderboardName(view, a[0]).localeCompare(leaderboardName(view, b[0])));
+    return new Map(ranked.map(([id], index) => [String(id), index + 1]));
+  }
+  // Both boards use total units within the selected filter; only the cutoff differs.
+  function buildFilteredLeaderboardRanks(view, bounds) {
+    const oldSnapshot = findSnapshotOnOrBefore(state.currentSixMonthStart);
+    const oldEnd = oldSnapshot ? Math.min(bounds.to, oldSnapshot.weekStart) : -Infinity;
+    const currentEnd = Math.min(bounds.to, state.latestWeekStart);
+    const currentIndex = buildPeriodUnitsIndex(bounds.from, currentEnd);
+    const oldIndex = oldEnd >= bounds.from ? buildPeriodUnitsIndex(bounds.from, oldEnd) : { songUnits: new Map(), albumUnits: new Map(), artistUnits: new Map() };
+    const key = view === "songs" ? "songUnits" : view === "albums" ? "albumUnits" : "artistUnits";
+    return { current: rankUnitsMap(currentIndex[key], view), previous: rankUnitsMap(oldIndex[key], view) };
+  }
+  function applyLeaderboardMovement(row, ranks) {
+    const id = String(row.id);
+    row.leaderboardRank = ranks.current.get(id) ?? null;
+    row.previousLeaderboardRank = ranks.previous.get(id) ?? null;
+    row.leaderboardMovementValue = null;
+    if (row.leaderboardRank == null) row.leaderboardMovement = row.previousLeaderboardRank != null ? "Exited" : "No rank";
+    else if (row.previousLeaderboardRank == null) row.leaderboardMovement = "New";
+    else {
+      const change = row.previousLeaderboardRank - row.leaderboardRank;
+      row.leaderboardMovementValue = change;
+      row.leaderboardMovement = change > 0 ? "Up" : change < 0 ? "Down" : "Unchanged";
+    }
+    return row;
+  }
   function rowMatchesDate(row, bounds = getPeriodBounds()) {
     if (
       bounds.mode === "all" ||
@@ -2408,26 +2442,15 @@
       return baseRows.filter(row => rowMatchesDate(row, bounds));
     }
 
-    const index = buildPeriodUnitsIndex(bounds.from, bounds.to);
-
+    const index = buildPeriodUnitsIndex(bounds.from, Math.min(bounds.to, state.latestWeekStart));
+    const ranks = buildFilteredLeaderboardRanks(state.currentView, bounds);
     return baseRows.map(row => {
       const id = String(row.id);
       let periodUnitsSold;
-
-      if (state.currentView === "songs") {
-        periodUnitsSold = index.songUnits.has(id) ? index.songUnits.get(id) : 0;
-      } else if (state.currentView === "albums") {
-        if (index.albumUnits.has(id)) {
-          periodUnitsSold = index.albumUnits.get(id);
-        } else {
-          // An eligible but inactive album has no sold units in this period.
-          periodUnitsSold = row.officialDebuted || row.unitsSold != null ? 0 : null;
-        }
-      } else {
-        periodUnitsSold = index.artistUnits.has(id) ? index.artistUnits.get(id) : 0;
-      }
-
-      return { ...row, periodUnitsSold };
+      if (state.currentView === "songs") periodUnitsSold = index.songUnits.has(id) ? index.songUnits.get(id) : 0;
+      else if (state.currentView === "albums") periodUnitsSold = index.albumUnits.has(id) ? index.albumUnits.get(id) : (row.officialDebuted || row.unitsSold != null ? 0 : null);
+      else periodUnitsSold = index.artistUnits.has(id) ? index.artistUnits.get(id) : 0;
+      return applyLeaderboardMovement({ ...row, periodUnitsSold }, ranks);
     }).filter(row => rowMatchesDate(row, bounds));
   }
 
@@ -2458,10 +2481,9 @@
 
   function defaultSortField() {
     const defaults = {
-      songs: "periodUnitsSold",
-      albums: "periodUnitsSold",
-      // Default to the actual latest six-month leaderboard position.
-      artists: "currentSixMonthRank",
+      songs: "leaderboardRank",
+      albums: "leaderboardRank",
+      artists: "leaderboardRank",
       weeks: "dateTs",
       numberones: "dateTs",
       debuts: "dateTs",
@@ -2560,7 +2582,7 @@
     ui.year.value = "";
     ui.dateFrom.value = "";
     ui.dateTo.value = "";
-    ui.direction.value = state.currentView === "artists" ? "asc" : "desc";
+    ui.direction.value = ["songs", "albums", "artists"].includes(state.currentView) ? "asc" : "desc";
     ui.customDates.hidden = true;
     ui.year.disabled = true;
     state.sortTouched = false;
@@ -2700,7 +2722,7 @@
   function getColumns(view) {
     const columns = {
       songs: [
-        ["listRank", "List #"],
+        ["leaderboardRank", "Leaderboard rank"],
         ["latestRank", "Chart rank"],
         ["title", "Song"],
         ["artist", "Artist"],
@@ -2711,7 +2733,7 @@
         ["unitsSold", "Career units"]
       ],
       albums: [
-        ["listRank", "List #"],
+        ["leaderboardRank", "Leaderboard rank"],
         ["status", "Album status"],
         ["title", "Album"],
         ["artist", "Lead artist"],
@@ -2729,8 +2751,7 @@
         ["unitsSold", "Career units"]
       ],
       artists: [
-        ["listRank", "List #"],
-        ["currentSixMonthRank", "Leaderboard rank"],
+        ["leaderboardRank", "Leaderboard rank"],
         ["name", "Artist"],
         ["songCount", "Songs"],
         ["songNo1Count", "No. 1 songs"],
@@ -2790,17 +2811,17 @@
   function columnWidth(view, key) {
     const widths = {
       songs: {
-        listRank: 5, latestRank: 9, title: 20, artist: 17, peak: 6,
+        leaderboardRank: 10, latestRank: 9, title: 20, artist: 17, peak: 6,
         weeksOnChart: 6, weeksAtNo1: 8, periodUnitsSold: 15, unitsSold: 14
       },
       albums: {
-        listRank: 4, status: 9, title: 14, artist: 10, numberOneTracks: 7, top10Tracks: 7, trackCount: 4,
+        leaderboardRank: 8, status: 9, title: 14, artist: 10, numberOneTracks: 7, top10Tracks: 7, trackCount: 4,
         importDate: 7, releaseDate: 7, debutDate: 8, firstRankedDate: 8,
         latestRank: 5, weeksAtNo1: 6, reentryCount: 5,
         periodUnitsSold: 7, unitsSold: 6
       },
       artists: {
-        listRank: 5, currentSixMonthRank: 12, name: 24, songCount: 8,
+        leaderboardRank: 12, name: 24, songCount: 8,
         songNo1Count: 10, albumCount: 9, periodUnitsSold: 16, unitsSold: 16
       }
     };
@@ -2870,13 +2891,8 @@
       return renderRankCell(row.latestRank, row.movementValue, row.movement);
     }
 
-    if (key === "currentSixMonthRank") {
-      return renderRankCell(
-        row.currentSixMonthRank,
-        row.rankMovementValue,
-        row.rankMovement,
-        true
-      );
+    if (key === "leaderboardRank") {
+      return renderRankCell(row.leaderboardRank, row.leaderboardMovementValue, row.leaderboardMovement, true);
     }
 
     if (key === "rank" || key === "peak") {
