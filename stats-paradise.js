@@ -496,12 +496,56 @@
     return null;
   }
 
+  // Expand a catalogue artist identity that represents multiple credited
+  // performers into the individual artist identities already present in the
+  // catalogue. Exact solo/group names remain intact when their components do
+  // not resolve to multiple separate artist records.
+  function expandArtistCreditId(value, depth = 0) {
+    const id = resolveArtistId(value);
+    if (!id) return [];
+    if (depth >= 4) return [id];
+
+    const artist = state.artists.get(String(id));
+    const name = String(artist?.name ?? artist?.title ?? "").trim();
+    if (!name) return [id];
+
+    let parts = [];
+    if (/\\s*(?:&|\\band\\b)\\s*/i.test(name)) {
+      parts = name.split(/\\s*(?:&|\\band\\b)\\s*/i).filter(Boolean);
+    } else if (name.includes(",")) {
+      parts = name.split(",").map(part => part.trim()).filter(Boolean);
+    }
+
+    if (parts.length < 2) return [id];
+
+    const expanded = [];
+    parts.forEach(part => {
+      const partId = resolveArtistId(part);
+      if (partId) {
+        expanded.push(...expandArtistCreditId(partId, depth + 1));
+      } else if (part.includes(",")) {
+        // Some source artist identities contain nested comma-separated
+        // collaborations, e.g. "Freeway, Jay-Z & Mariah Carey".
+        part.split(",").map(value => value.trim()).filter(Boolean).forEach(nested => {
+          const nestedId = resolveArtistId(nested);
+          if (nestedId) expanded.push(...expandArtistCreditId(nestedId, depth + 1));
+        });
+      }
+    });
+
+    const uniqueExpanded = [...new Set(expanded)];
+    return uniqueExpanded.length >= 2 ? uniqueExpanded : [id];
+  }
+
   function getTrackArtistIds(track) {
     if (!track) return [];
 
     const ids = [];
 
+    // The canonical vault stores the full credited cast in
+    // credited_artist_ids. Older field names remain supported as fallbacks.
     let rawIds =
+      track.credited_artist_ids ??
       track.artist_ids ??
       track.artists_ids ??
       track.artistIds ??
@@ -515,10 +559,13 @@
       }
     }
 
-    asArray(rawIds).forEach(value => {
-      const id = resolveArtistId(value);
-      if (id && !ids.includes(id)) ids.push(id);
-    });
+    const addCredit = value => {
+      expandArtistCreditId(value).forEach(id => {
+        if (id && !ids.includes(id)) ids.push(id);
+      });
+    };
+
+    asArray(rawIds).forEach(addCredit);
 
     let credits =
       track.artist_names ??
@@ -527,21 +574,19 @@
       track.artist;
 
     if (!Array.isArray(credits)) {
-      credits = typeof credits === "string"
-        ? credits.split(/,\s*|\s+(?:feat\.?|ft\.?|&|x)\s+/i).filter(Boolean)
+      credits = typeof credits === "string" && credits.trim()
+        ? [credits.trim()]
         : [];
     }
 
-    credits.forEach(value => {
-      const id = resolveArtistId(value);
-      if (id && !ids.includes(id)) ids.push(id);
-    });
+    credits.forEach(addCredit);
 
-    const leadId = resolveArtistId(
-      track.primary_artist_id ?? track.artist_id
-    );
-
-    if (leadId && !ids.includes(leadId)) ids.unshift(leadId);
+    const leadId = track.primary_artist_id ?? track.artist_id;
+    if (leadId != null) {
+      expandArtistCreditId(leadId).forEach(id => {
+        if (id && !ids.includes(id)) ids.unshift(id);
+      });
+    }
 
     return ids;
   }
