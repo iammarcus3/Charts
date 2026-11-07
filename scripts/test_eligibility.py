@@ -254,6 +254,17 @@ class TestAlbumEligibility(unittest.TestCase):
         self.assertEqual(len(tracks[0]["album_ids"]), 3)
         self.assertEqual(len(tracks[0]["aliases"]), 2)
 
+    def test_featured_credit_before_version_label_is_normalized(self):
+        _, _, _, tracks = self.build_from_scrobbles([
+            self.play("Lead Artist", "Release", "Same Song [Radio Edit]", "2026-01-01T10:00:00"),
+            self.play("Lead Artist", "Release", "Same Song (feat. Guest Artist) [Radio Edit]", "2026-01-02T10:00:00"),
+            self.play("Lead Artist", "Release", "Same Song (with Guest Artist) [Radio Edit]", "2026-01-03T10:00:00"),
+        ])
+
+        self.assertEqual(len(tracks), 1)
+        self.assertEqual(tracks[0]["title"], "Same Song [Radio Edit]")
+        self.assertEqual(len(tracks[0]["credited_artist_ids"]), 2)
+
     def test_meaningful_recording_versions_remain_separate(self):
         _, _, _, tracks = self.build_from_scrobbles([
             self.play("Lead Artist", "Release", "Same Song", "2026-01-01T10:00:00"),
