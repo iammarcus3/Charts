@@ -245,6 +245,22 @@ def _merge_approved_mutt_family(
 
     canonical_artist_name = "Leon Thomas & Chris Brown"
     canonical_artist_id = generate_deterministic_id("artist", canonical_artist_name)
+    # Keep the collaboration as the track's billing identity while explicitly
+    # recording both individual artist credits for every artist-facing page.
+    leon_artist_id = generate_deterministic_id("artist", "Leon Thomas")
+    chris_artist_id = generate_deterministic_id("artist", "Chris Brown")
+    artists.setdefault(leon_artist_id, {
+        "id": leon_artist_id,
+        "name": "Leon Thomas",
+        "normalized_name": normalize_text("Leon Thomas"),
+        "aliases": [],
+    })
+    artists.setdefault(chris_artist_id, {
+        "id": chris_artist_id,
+        "name": "Chris Brown",
+        "normalized_name": normalize_text("Chris Brown"),
+        "aliases": [],
+    })
     artists.setdefault(canonical_artist_id, {
         "id": canonical_artist_id,
         "name": canonical_artist_name,
@@ -286,6 +302,7 @@ def _merge_approved_mutt_family(
         "title": "MUTT",
         "normalized_title": "mutt",
         "primary_artist_id": canonical_artist_id,
+        "credited_artist_ids": [leon_artist_id, chris_artist_id],
         "album_ids": sorted(album_ids),
         "aliases": sorted(aliases, key=str.casefold),
         "source_titles": ["MUTT", *sorted(aliases, key=str.casefold)],
