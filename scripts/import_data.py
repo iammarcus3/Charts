@@ -14,10 +14,33 @@ from normalize_metadata import (
 
 ARTIST_ALIASES = {"q": "Q Marsden"}
 
+# Explicitly approved track-family corrections. These are intentionally narrow:
+# only the Leon Thomas / Chris Brown MUTT metadata variants are consolidated.
+# Other MUTT remixes (including the Freddie Gibbs remix) remain distinct.
+MUTT_VARIANT_TITLES = {
+    "mutt",
+    "mutt cb remix",
+    "mutt feat chris brown cb remix",
+}
+MUTT_SOURCE_ARTISTS = {
+    "leon thomas",
+    "leon thomas and chris brown",
+}
+
 
 def _canonical_artist(value: str) -> str:
     """Apply explicitly confirmed artist-name corrections before IDs are generated."""
     return ARTIST_ALIASES.get(normalize_text(value), value)
+
+
+def _canonical_track_identity(raw_artist: str, raw_track: str) -> tuple[str, str]:
+    """Return approved canonical track artist/title without changing album ownership."""
+    if (
+        normalize_text(raw_artist) in MUTT_SOURCE_ARTISTS
+        and normalize_text(raw_track) in MUTT_VARIANT_TITLES
+    ):
+        return "Leon Thomas & Chris Brown", "MUTT"
+    return raw_artist, raw_track
 
 
 def _metadata_text(value: Any, fallback: str) -> str:
@@ -122,13 +145,26 @@ def ingest_zerocharts_file(filepath: str | Path):
         if raw_album != canonical_album and raw_album not in album["edition_labels"]:
             album["edition_labels"].append(raw_album)
 
-        track_id = generate_deterministic_id("track", raw_artist, raw_track)
+        # Track identity/credit may be corrected independently of album ownership.
+        # This keeps the original release attribution intact while approved featured
+        # contributions are represented on the unified track itself.
+        track_artist_name, track_title = _canonical_track_identity(raw_artist, raw_track)
+        track_artist_id = generate_deterministic_id("artist", track_artist_name)
+        if track_artist_id not in artists:
+            artists[track_artist_id] = {
+                "id": track_artist_id,
+                "name": track_artist_name,
+                "normalized_name": normalize_text(track_artist_name),
+                "aliases": [],
+            }
+
+        track_id = generate_deterministic_id("track", track_artist_name, track_title)
         if track_id not in tracks:
             tracks[track_id] = {
                 "id": track_id,
-                "title": raw_track,
-                "normalized_title": normalize_text(raw_track),
-                "primary_artist_id": artist_id,
+                "title": track_title,
+                "normalized_title": normalize_text(track_title),
+                "primary_artist_id": track_artist_id,
                 "album_id": album_id,  # backward compatibility
                 "album_ids": [],
             }
