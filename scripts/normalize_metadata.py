@@ -77,15 +77,15 @@ def canonical_album_title(title: Any) -> str:
 # annotations are credits, not part of the recording title; version labels such as
 # Remix, Live, Radio Edit, Instrumental and Remaster are retained.
 _FEATURE_TITLE_ANNOTATION_RE = re.compile(
-    r"[\\(\\[]\\s*(?:(?:feat(?:uring)?|ft)\\.?|with)\\s+([^\\)\\]]+)[\\)\\]]",
+    r"[\(\[]\s*(?:(?:feat(?:uring)?|ft)\.?|with)\s+([^\)\]]+)[\)\]]",
     re.IGNORECASE,
 )
 _FEATURE_SUFFIX_RE = re.compile(
-    r"\\s+(?:feat(?:uring)?|ft)\\.?\\s+.+$",
+    r"\s+(?:feat(?:uring)?|ft)\.?\s+.+$",
     re.IGNORECASE,
 )
 _ARTIST_FEATURE_RE = re.compile(
-    r"\\s+(?:feat(?:uring)?|ft)\\.?\\s+(.+)$",
+    r"\s+(?:feat(?:uring)?|ft)\.?\s+(.+)$",
     re.IGNORECASE,
 )
 
@@ -115,13 +115,13 @@ def featured_artists_in_title(title: Any) -> list[str]:
     for match in _FEATURE_TITLE_ANNOTATION_RE.finditer(value):
         guests.extend(
             display_text(part, "")
-            for part in re.split(r"\\s*(?:,|&)\\s*", match.group(1))
+            for part in re.split(r"\s*(?:,|&)\s*", match.group(1))
         )
     suffix = _FEATURE_SUFFIX_RE.search(value)
     if suffix:
         guests.extend(
             display_text(part, "")
-            for part in re.split(r"\\s*(?:,|&)\\s*", suffix.group(0).strip().split(None, 1)[1])
+            for part in re.split(r"\s*(?:,|&)\s*", suffix.group(0).strip().split(None, 1)[1])
         )
     unique: list[str] = []
     for guest in guests:
