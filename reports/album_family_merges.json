@@ -274,8 +274,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "0f82792eefe3cbf090481849",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -286,8 +286,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "f6e0a45440a790e7ff61ad04",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -298,8 +298,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "dcae62d84e1cf925a05af41f",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -682,7 +682,7 @@
     "edition_labels_merged": [
       "About Time (Extended Vinyl Reissue)"
     ],
-    "distinct_canonical_track_count": 12,
+    "distinct_canonical_track_count": 11,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -709,7 +709,7 @@
     "edition_labels_merged": [
       "Ace Of Spades (Reshuffle) - Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -831,7 +831,7 @@
       "Akanamali (feat. Samthing Soweto) - Single",
       "Akanamali (feat. Samthing Soweto)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -860,7 +860,7 @@
       "All Eyez On Me (Book 1)",
       "All Eyez On Me (Remastered)"
     ],
-    "distinct_canonical_track_count": 22,
+    "distinct_canonical_track_count": 14,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -940,7 +940,7 @@
     "edition_labels_merged": [
       "All Me (feat. Keyshia Cole) - Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -968,7 +968,7 @@
       "All My Friends (feat. Tinashe & Chance The Rapper) - Single",
       "All My Friends (feat. Tinashe & Chance The Rapper)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -995,7 +995,7 @@
     "edition_labels_merged": [
       "All Of My Love (feat. Smokey Robinson)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1009,7 +1009,7 @@
     "edition_labels_merged": [
       "All Of My Love (feat. Smokey Robinson)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1036,7 +1036,7 @@
     "edition_labels_merged": [
       "All or Nothing (Bonus Track Version)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1051,7 +1051,7 @@
       "All the Way Up (feat. French Montana & Infared) - Single",
       "All the Way Up (feat. French Montana & Infared)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1226,7 +1226,7 @@
     "edition_labels_merged": [
       "Amaneighbour (feat. Reece Madlisa, Zuma & ThackzinDJ) - Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1260,8 +1260,8 @@
     "canonical_title": "AmaPiano Volume 4",
     "primary_artist_id": "4db0f575b0e8853c40823d65",
     "source_titles_merged": [
-      "AmaPiano Volume 4",
-      "Amapiano Volume 4"
+      "Amapiano Volume 4",
+      "AmaPiano Volume 4"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -1384,7 +1384,7 @@
     "edition_labels_merged": [
       "ANTI (Deluxe)"
     ],
-    "distinct_canonical_track_count": 18,
+    "distinct_canonical_track_count": 16,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1528,7 +1528,7 @@
     "edition_labels_merged": [
       "Ashanti (Deluxe Edition)"
     ],
-    "distinct_canonical_track_count": 5,
+    "distinct_canonical_track_count": 4,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1694,7 +1694,7 @@
       "B'Day (Deluxe Edition)",
       "B'Day Deluxe Edition"
     ],
-    "distinct_canonical_track_count": 21,
+    "distinct_canonical_track_count": 18,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1785,7 +1785,7 @@
     "edition_labels_merged": [
       "Back of My Mind (Apple Music Edition)"
     ],
-    "distinct_canonical_track_count": 6,
+    "distinct_canonical_track_count": 5,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1881,7 +1881,7 @@
       "Bad Boy's 10th Anniversary... The Hits"
     ],
     "edition_labels_merged": [],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1893,7 +1893,7 @@
       "Bad Boy's 10th Anniversary... The Hits"
     ],
     "edition_labels_merged": [],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -1974,7 +1974,7 @@
       "Bambelela (feat. Sje Konka) - Single",
       "Bambelela (feat. Sje Konka)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -2157,7 +2157,7 @@
     "edition_labels_merged": [
       "Beam Me Up Scotty (Remastered)"
     ],
-    "distinct_canonical_track_count": 27,
+    "distinct_canonical_track_count": 26,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -2222,7 +2222,7 @@
     "edition_labels_merged": [
       "Before I Self-Destruct (Bonus Track Version)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -2249,7 +2249,7 @@
     "edition_labels_merged": [
       "Believe For It (feat. Lauren Daigle)"
     ],
-    "distinct_canonical_track_count": 4,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -2372,7 +2372,7 @@
       "BEYONCÉ (Platinum Edition)",
       "BEYONCÉ [Platinum Edition]"
     ],
-    "distinct_canonical_track_count": 22,
+    "distinct_canonical_track_count": 19,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -2530,7 +2530,7 @@
       "Bheka Mina Ngedwa (feat. Tsiki XII) - Single",
       "Bheka Mina Ngedwa (feat. Tsiki XII)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -2815,8 +2815,8 @@
     "canonical_title": "Blue Lights In The Basement",
     "primary_artist_id": "d7ef2790e9f724b1325b983f",
     "source_titles_merged": [
-      "Blue Lights in the Basement",
-      "Blue Lights In The Basement"
+      "Blue Lights In The Basement",
+      "Blue Lights in the Basement"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -2859,7 +2859,7 @@
     "edition_labels_merged": [
       "Body Go (with Tyla)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -2964,7 +2964,7 @@
     "edition_labels_merged": [
       "Born Sinner (Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 9,
+    "distinct_canonical_track_count": 7,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -3463,7 +3463,7 @@
     "edition_labels_merged": [
       "Caracal (Deluxe)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -3640,7 +3640,7 @@
     "edition_labels_merged": [
       "channel ORANGE (Explicit Version)"
     ],
-    "distinct_canonical_track_count": 20,
+    "distinct_canonical_track_count": 17,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -3746,7 +3746,7 @@
     "edition_labels_merged": [
       "Chris Brown (Expanded Edition)"
     ],
-    "distinct_canonical_track_count": 19,
+    "distinct_canonical_track_count": 18,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -3838,7 +3838,7 @@
     "edition_labels_merged": [
       "Club Classics, Vol. One (10th anniversary edition)"
     ],
-    "distinct_canonical_track_count": 4,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -3906,9 +3906,9 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "0380ac318e91c75af75abe61",
+    "canonical_album_id": "691df48857f085a9e483db46",
     "canonical_title": "Come to Me - Single",
-    "primary_artist_id": "b3ee0023324d5b3090efaf4d",
+    "primary_artist_id": "dfe5088f11daffb54ad56ae9",
     "source_titles_merged": [
       "Come to Me - Single (feat. Nicole Scherzinger)"
     ],
@@ -3963,8 +3963,8 @@
     "canonical_title": "Confessions II",
     "primary_artist_id": "8a28af176378f7b9dc69e715",
     "source_titles_merged": [
-      "CONFESSIONS II",
-      "Confessions II"
+      "Confessions II",
+      "CONFESSIONS II"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -4289,7 +4289,7 @@
     "edition_labels_merged": [
       "Ctrl (Deluxe)"
     ],
-    "distinct_canonical_track_count": 13,
+    "distinct_canonical_track_count": 12,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -4489,7 +4489,7 @@
       "Dangerous Woman (Deluxe)",
       "Dangerous Woman (Tenth Anniversary Edition)"
     ],
-    "distinct_canonical_track_count": 8,
+    "distinct_canonical_track_count": 7,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -4497,11 +4497,11 @@
     "canonical_title": "Dangerously In Love",
     "primary_artist_id": "160b28fbcb18cf650db5f12a",
     "source_titles_merged": [
-      "Dangerously In Love",
-      "Dangerously in Love"
+      "Dangerously in Love",
+      "Dangerously In Love"
     ],
     "edition_labels_merged": [],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -4541,7 +4541,7 @@
     "edition_labels_merged": [
       "Dawn FM (Alternate World)"
     ],
-    "distinct_canonical_track_count": 19,
+    "distinct_canonical_track_count": 17,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -4903,7 +4903,7 @@
     "edition_labels_merged": [
       "Division (Deluxe)"
     ],
-    "distinct_canonical_track_count": 14,
+    "distinct_canonical_track_count": 13,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -4942,7 +4942,7 @@
     "edition_labels_merged": [
       "Do It (with Missy Elliott)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -4981,7 +4981,7 @@
     "edition_labels_merged": [
       "Don't Look Any Further (Expanded Edition)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -5184,7 +5184,7 @@
     "edition_labels_merged": [
       "DUMMY BOY (Revised)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -5226,7 +5226,7 @@
     "edition_labels_merged": [
       "E=MC2 (Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 9,
+    "distinct_canonical_track_count": 8,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -5475,7 +5475,7 @@
     "edition_labels_merged": [
       "Encore (Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 6,
+    "distinct_canonical_track_count": 5,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -5568,7 +5568,7 @@
     "edition_labels_merged": [
       "eternal sunshine (slightly deluxe)"
     ],
-    "distinct_canonical_track_count": 20,
+    "distinct_canonical_track_count": 19,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -5681,8 +5681,8 @@
     "canonical_title": "EVERYTHING IS LOVE",
     "primary_artist_id": "d4b4d6c3df118803e75af84b",
     "source_titles_merged": [
-      "Everything is Love",
-      "EVERYTHING IS LOVE"
+      "EVERYTHING IS LOVE",
+      "Everything is Love"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 5,
@@ -5912,8 +5912,8 @@
     "canonical_title": "Fear Of Flying",
     "primary_artist_id": "7bce3bfee0283bf64306adcb",
     "source_titles_merged": [
-      "Fear Of Flying",
       "Fear of Flying",
+      "Fear Of Flying",
       "Fear Of Flying (Expanded Edition)"
     ],
     "edition_labels_merged": [
@@ -6144,7 +6144,7 @@
     "edition_labels_merged": [
       "Finally Over It (The Afterparty)"
     ],
-    "distinct_canonical_track_count": 23,
+    "distinct_canonical_track_count": 19,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -6198,7 +6198,7 @@
       "Fkn Around (feat. Megan Thee Stallion) - Single",
       "Fkn Around (feat. Megan Thee Stallion)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -6276,7 +6276,7 @@
     "edition_labels_merged": [
       "Fly Girl (feat. Missy Elliott)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -6394,7 +6394,7 @@
     "edition_labels_merged": [
       "Fortune (Expanded Edition)"
     ],
-    "distinct_canonical_track_count": 7,
+    "distinct_canonical_track_count": 6,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -6605,7 +6605,7 @@
     "edition_labels_merged": [
       "Funk 55 (feat. Ceeka RSA, Chley)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -6619,7 +6619,7 @@
     "edition_labels_merged": [
       "Funk 55 (feat. Ceeka RSA, Chley)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -6671,7 +6671,7 @@
     "edition_labels_merged": [
       "Future Nostalgia (The Moonlight Edition)"
     ],
-    "distinct_canonical_track_count": 10,
+    "distinct_canonical_track_count": 9,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -6783,7 +6783,7 @@
       "Get Rich or Die Tryin'"
     ],
     "edition_labels_merged": [],
-    "distinct_canonical_track_count": 16,
+    "distinct_canonical_track_count": 15,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -6952,7 +6952,7 @@
     "edition_labels_merged": [
       "Girls Need Love (Girls Mix)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -6995,9 +6995,9 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "df908f40d671757a040fd1fe",
+    "canonical_album_id": "5ca71a4fe095172f603ce6cc",
     "canonical_title": "Give It Up To Me",
-    "primary_artist_id": "a93471dba2f22c187e51fb48",
+    "primary_artist_id": "3353e1bb22d865e9fb6cd5bd",
     "source_titles_merged": [
       "(When You Gonna) Give It Up To Me"
     ],
@@ -7008,9 +7008,9 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "fa0add8ba8b51ed597fed416",
+    "canonical_album_id": "64e9717bd6529abe00ee9898",
     "canonical_title": "Give It Up to Me - Single",
-    "primary_artist_id": "a93471dba2f22c187e51fb48",
+    "primary_artist_id": "3353e1bb22d865e9fb6cd5bd",
     "source_titles_merged": [
       "(When You Gonna) Give It Up to Me - Single"
     ],
@@ -7230,7 +7230,7 @@
     "edition_labels_merged": [
       "good kid, m.A.A.d city (Deluxe)"
     ],
-    "distinct_canonical_track_count": 7,
+    "distinct_canonical_track_count": 6,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -7296,7 +7296,7 @@
     "edition_labels_merged": [
       "Graffiti (Expanded Edition)"
     ],
-    "distinct_canonical_track_count": 12,
+    "distinct_canonical_track_count": 11,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -7510,7 +7510,7 @@
       "Hard Candy (Deluxe Digital)",
       "Hard Candy (Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -7669,7 +7669,7 @@
     "edition_labels_merged": [
       "Heartbreak on a Full Moon (Deluxe Edition): Cuffing Season - 12 Days of Christmas"
     ],
-    "distinct_canonical_track_count": 36,
+    "distinct_canonical_track_count": 34,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -7780,7 +7780,7 @@
       "Hey Daddy (Daddy's Home)",
       "Hey Daddy (Daddy's Home) (Feat. Plies)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -7879,8 +7879,8 @@
     "canonical_title": "History - Past, Present And Future - Book I",
     "primary_artist_id": "296c92c1f42e7111ebe867e3",
     "source_titles_merged": [
-      "History - Past, Present And Future - Book I",
       "HIStory - Past, Present and Future - Book I",
+      "History - Past, Present And Future - Book I",
       "HIStory: Past, Present and Future, Book I"
     ],
     "edition_labels_merged": [],
@@ -7896,7 +7896,7 @@
       "HIStory: Past, Present and Future, Book I"
     ],
     "edition_labels_merged": [],
-    "distinct_canonical_track_count": 31,
+    "distinct_canonical_track_count": 30,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -7943,6 +7943,7 @@
     "canonical_title": "Hoodstar",
     "primary_artist_id": "e6d7f317d5c75a01a38d4a4f",
     "source_titles_merged": [
+      "Hoodstar",
       "Hoodstar (Deluxe Edition)"
     ],
     "edition_labels_merged": [
@@ -8005,7 +8006,7 @@
       "Hot Girl Summer (feat. Nicki Minaj & Ty Dolla $ign) - Single",
       "Hot Girl Summer (feat. Nicki Minaj & Ty Dolla $ign)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8019,7 +8020,7 @@
     "edition_labels_merged": [
       "Hot Pink (Video Deluxe)"
     ],
-    "distinct_canonical_track_count": 15,
+    "distinct_canonical_track_count": 13,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8201,7 +8202,7 @@
     "edition_labels_merged": [
       "Hurry Up Tomorrow (Video Album)"
     ],
-    "distinct_canonical_track_count": 29,
+    "distinct_canonical_track_count": 22,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8344,7 +8345,7 @@
       "I Don't Mind (Feat. Juicy J) - Single",
       "I Don't Mind (feat. Juicy J)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8410,7 +8411,7 @@
       "I Miss You (feat. Julia Michaels) - Single",
       "I Miss You (feat. Julia Michaels)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8804,7 +8805,7 @@
       "Imali Eningi (feat. Xolani) - Single",
       "Imali Eningi (feat. Xolani)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8818,7 +8819,7 @@
     "edition_labels_merged": [
       "In a Perfect World... (Bonus Track Version)"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8880,7 +8881,7 @@
     "edition_labels_merged": [
       "In Your Eyes (Remix)"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8897,7 +8898,7 @@
       "In Your Eyes (Remix) [feat. Doja Cat]-Single",
       "In Your Eyes (Remix) [feat. Kenny G] - Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8924,7 +8925,7 @@
     "edition_labels_merged": [
       "Indigo (Extended)"
     ],
-    "distinct_canonical_track_count": 23,
+    "distinct_canonical_track_count": 21,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8939,7 +8940,7 @@
       "Ingane Yabantu (feat. Rusell Zuma) - Single",
       "Ingane Yabantu (feat. Russell Zuma) - Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -8986,8 +8987,8 @@
     "canonical_title": "Isimo",
     "primary_artist_id": "3066eac9ce20209493ec670d",
     "source_titles_merged": [
-      "Isimo",
-      "iSimo"
+      "iSimo",
+      "Isimo"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -9131,7 +9132,7 @@
     "edition_labels_merged": [
       "Iyamemeza (feat. Drip Gogo & The Lowkeys)"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -9146,7 +9147,7 @@
       "Iyamemeza (feat. Drip Gogo & The Lowkeys) - Single",
       "Iyamemeza (feat. Drip Gogo & The Lowkeys)-Single"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -9200,7 +9201,7 @@
     "edition_labels_merged": [
       "J.Lo (25th Anniversary Edition)"
     ],
-    "distinct_canonical_track_count": 5,
+    "distinct_canonical_track_count": 4,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -9284,7 +9285,7 @@
     "edition_labels_merged": [
       "Jealous Ones Still Envy (J.O.S.E)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -9431,7 +9432,7 @@
     "edition_labels_merged": [
       "Jordin Sparks (Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -9488,7 +9489,7 @@
       "Just Like You (Bonus Track Version)",
       "Just Like You (International Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 14,
+    "distinct_canonical_track_count": 13,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -9554,7 +9555,7 @@
     "edition_labels_merged": [
       "K.T.S.E. (Video Album)"
     ],
-    "distinct_canonical_track_count": 5,
+    "distinct_canonical_track_count": 4,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -9568,7 +9569,7 @@
     "edition_labels_merged": [
       "Kaleidoscope Dream (Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 4,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -10412,20 +10413,6 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "10d1bcbf3467219671ea4432",
-    "canonical_title": "Live In New Orleans",
-    "primary_artist_id": "ca905a2fcde69cdc3937fec9",
-    "source_titles_merged": [
-      "Live In New Orleans",
-      "Live In New Orleans (Expanded Edition)"
-    ],
-    "edition_labels_merged": [
-      "Live In New Orleans (Expanded Edition)"
-    ],
-    "distinct_canonical_track_count": 1,
-    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
-  },
-  {
     "canonical_album_id": "21a9c420f6e0390def30fe20",
     "canonical_title": "Live In New Orleans",
     "primary_artist_id": "e7494f6357c6b61041d00da1",
@@ -10628,7 +10615,7 @@
       "Loud (Explicit Version)",
       "Loud (Japan Version)"
     ],
-    "distinct_canonical_track_count": 15,
+    "distinct_canonical_track_count": 13,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11041,7 +11028,7 @@
     "edition_labels_merged": [
       "Made For Me (with Mariah Carey)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11081,7 +11068,7 @@
     "edition_labels_merged": [
       "Made in Lagos: Deluxe Edition"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11309,7 +11296,7 @@
       "Me. I Am Mariah…The Elusive Chanteuse (Deluxe)",
       "Me. I Am Mariah…The Elusive Chanteuse - Deluxe"
     ],
-    "distinct_canonical_track_count": 7,
+    "distinct_canonical_track_count": 4,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11584,7 +11571,7 @@
     "edition_labels_merged": [
       "More (Internet Album w/Bonus Track)"
     ],
-    "distinct_canonical_track_count": 14,
+    "distinct_canonical_track_count": 13,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11688,7 +11675,7 @@
     "edition_labels_merged": [
       "Mr. Smith (Deluxe Edition)"
     ],
-    "distinct_canonical_track_count": 4,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11723,8 +11710,8 @@
     "canonical_title": "MUSIC",
     "primary_artist_id": "4ea5a76f09ac137cd2c3dfff",
     "source_titles_merged": [
-      "MUSIC",
-      "Music"
+      "Music",
+      "MUSIC"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -11757,7 +11744,7 @@
       "MUTT (CB REMIX)",
       "Mutt (Remix)"
     ],
-    "distinct_canonical_track_count": 11,
+    "distinct_canonical_track_count": 10,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11810,7 +11797,7 @@
     "edition_labels_merged": [
       "My Everything (Deluxe)"
     ],
-    "distinct_canonical_track_count": 6,
+    "distinct_canonical_track_count": 5,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11841,7 +11828,7 @@
       "My Life II...The Journey Continues (Act 1) (Deluxe)",
       "My Life II...The Journey Continues (Act 1) [Deluxe]"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11870,7 +11857,7 @@
       "My Own Way (Deluxe Edition)",
       "My Own Way (Deluxe)"
     ],
-    "distinct_canonical_track_count": 6,
+    "distinct_canonical_track_count": 5,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11897,7 +11884,7 @@
     "edition_labels_merged": [
       "My Way (25th Anniversary Edition)"
     ],
-    "distinct_canonical_track_count": 6,
+    "distinct_canonical_track_count": 5,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -11978,7 +11965,7 @@
     "edition_labels_merged": [
       "NEVER ENOUGH (Bonus Version)"
     ],
-    "distinct_canonical_track_count": 15,
+    "distinct_canonical_track_count": 13,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -12216,7 +12203,7 @@
       "Nine Track Mind (Special Edition)",
       "Nine Track Mind Deluxe"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -12257,7 +12244,7 @@
       "No Flag (feat. Nicki Minaj, 21 Savage & Offset) - Single",
       "No Flag (feat. Nicki Minaj, 21 Savage & Offset)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -12283,7 +12270,7 @@
     "edition_labels_merged": [
       "No Love (Remix)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -12338,7 +12325,7 @@
     "edition_labels_merged": [
       "No Mercy (Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -12474,7 +12461,7 @@
     "edition_labels_merged": [
       "NOT ALL HEROES WEAR CAPES (Deluxe)"
     ],
-    "distinct_canonical_track_count": 4,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -12553,7 +12540,7 @@
       "Nothing Was the Same (Deluxe)",
       "Nothing Was the Same - Deluxe"
     ],
-    "distinct_canonical_track_count": 7,
+    "distinct_canonical_track_count": 6,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -12787,7 +12774,7 @@
     "edition_labels_merged": [
       "O.N.I.F.C. (Deluxe)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -12814,7 +12801,7 @@
     "edition_labels_merged": [
       "Octane [Clean]"
     ],
-    "distinct_canonical_track_count": 20,
+    "distinct_canonical_track_count": 18,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13365,7 +13352,7 @@
     "edition_labels_merged": [
       "PARTYMOBILE (Chopped Not Slopped)"
     ],
-    "distinct_canonical_track_count": 4,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13502,7 +13489,7 @@
     "edition_labels_merged": [
       "Persuasive (with SZA)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13602,7 +13589,7 @@
       "Pink Friday (Deluxe)",
       "Pink Friday (Roman Reloaded) [Deluxe Edition]"
     ],
-    "distinct_canonical_track_count": 17,
+    "distinct_canonical_track_count": 14,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13630,7 +13617,7 @@
       "Pink Friday ... Roman Reloaded (Deluxe)",
       "Pink Friday ... Roman Reloaded - Deluxe"
     ],
-    "distinct_canonical_track_count": 8,
+    "distinct_canonical_track_count": 6,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13644,7 +13631,7 @@
     "edition_labels_merged": [
       "Pink Friday 2 (Gag City PLUTO Edition)"
     ],
-    "distinct_canonical_track_count": 32,
+    "distinct_canonical_track_count": 24,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13660,7 +13647,7 @@
       "Pink Friday: Roman Reloaded the Re-Up (Booklet Version)",
       "Pink Friday: Roman Reloaded The Re-Up (Explicit Version)"
     ],
-    "distinct_canonical_track_count": 29,
+    "distinct_canonical_track_count": 24,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13700,7 +13687,7 @@
     "edition_labels_merged": [
       "Planet Her (Deluxe)"
     ],
-    "distinct_canonical_track_count": 18,
+    "distinct_canonical_track_count": 17,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13741,7 +13728,7 @@
     "edition_labels_merged": [
       "Player (feat. Chris Brown)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13795,7 +13782,7 @@
       "poison (feat. the weeknd) - single",
       "Poison (feat. The Weeknd)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13880,7 +13867,7 @@
       "Popular (From The Idol Vol. 1 (Music from the HBO Original Series))",
       "Popular (Music from the HBO Original Series)"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -13909,7 +13896,7 @@
     "edition_labels_merged": [
       "Positions (Deluxe)"
     ],
-    "distinct_canonical_track_count": 15,
+    "distinct_canonical_track_count": 12,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -14067,7 +14054,7 @@
     "edition_labels_merged": [
       "Pure Surprise (feat. DKP) - EP"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -14195,7 +14182,7 @@
       "Queen (Deluxe)",
       "Queen (Target Deluxe Edition)"
     ],
-    "distinct_canonical_track_count": 27,
+    "distinct_canonical_track_count": 20,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -14327,7 +14314,7 @@
     "edition_labels_merged": [
       "RATHER BE ALONE (feat. Halle)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -14425,7 +14412,7 @@
       "Real Friends (feat. Swae Lee) - Single",
       "Real Friends (feat. Swae Lee)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -14452,7 +14439,7 @@
     "edition_labels_merged": [
       "Rebound (feat. Ceeka RSA)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -14466,7 +14453,7 @@
     "edition_labels_merged": [
       "Rebound (feat. Ceeka RSA)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -14669,7 +14656,7 @@
       "RIP Indo Hisashi-EP"
     ],
     "edition_labels_merged": [],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -14683,7 +14670,7 @@
     "edition_labels_merged": [
       "Rise of an Empire (Deluxe Edition)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -14753,19 +14740,6 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "41eb43be2f6be477b7ebfac2",
-    "canonical_title": "Royalty",
-    "primary_artist_id": "26a421597db5abeda5bdea2e",
-    "source_titles_merged": [
-      "Royalty (Deluxe Version)"
-    ],
-    "edition_labels_merged": [
-      "Royalty (Deluxe Version)"
-    ],
-    "distinct_canonical_track_count": 1,
-    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
-  },
-  {
     "canonical_album_id": "c68dd4eb110649e543e69853",
     "canonical_title": "Royalty",
     "primary_artist_id": "61d4861e9764f699ba10fdbe",
@@ -14776,7 +14750,7 @@
     "edition_labels_merged": [
       "Royalty (Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 16,
+    "distinct_canonical_track_count": 17,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -15204,7 +15178,7 @@
     "edition_labels_merged": [
       "Scenic Drive (The Tape)"
     ],
-    "distinct_canonical_track_count": 15,
+    "distinct_canonical_track_count": 9,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -15243,7 +15217,7 @@
     "edition_labels_merged": [
       "Scorpion Kings (Live)"
     ],
-    "distinct_canonical_track_count": 6,
+    "distinct_canonical_track_count": 4,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -15257,7 +15231,7 @@
     "edition_labels_merged": [
       "Scorpion Kings (Live)"
     ],
-    "distinct_canonical_track_count": 8,
+    "distinct_canonical_track_count": 7,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -15313,7 +15287,7 @@
     "edition_labels_merged": [
       "Secrets (Remix Package)"
     ],
-    "distinct_canonical_track_count": 17,
+    "distinct_canonical_track_count": 16,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -15451,8 +15425,8 @@
     "canonical_title": "Set It Off",
     "primary_artist_id": "0c9205b178526ab06d6f41f0",
     "source_titles_merged": [
-      "SET IT OFF",
-      "Set It Off"
+      "Set It Off",
+      "SET IT OFF"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -15520,7 +15494,7 @@
       "Sfikile-EP"
     ],
     "edition_labels_merged": [],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -15664,7 +15638,7 @@
     "edition_labels_merged": [
       "Shea Butter Baby (Remix EP)"
     ],
-    "distinct_canonical_track_count": 10,
+    "distinct_canonical_track_count": 9,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -15678,7 +15652,7 @@
     "edition_labels_merged": [
       "Shock Value Deluxe Version (International Version)"
     ],
-    "distinct_canonical_track_count": 4,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -15745,7 +15719,7 @@
     "edition_labels_merged": [
       "Show Me Love (with Tyla)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -15801,9 +15775,9 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "a9389e160ee17fa39bc1b956",
+    "canonical_album_id": "28fab075e8744e234b4ed628",
     "canonical_title": "Silky Soul",
-    "primary_artist_id": "af5e9d214fd377b1218ac730",
+    "primary_artist_id": "e7494f6357c6b61041d00da1",
     "source_titles_merged": [
       "Silky Soul",
       "Silky Soul (feat. Frankie Beverly)"
@@ -15867,9 +15841,9 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
-    "canonical_album_id": "8663dfb8c433d97183cab0b4",
+    "canonical_album_id": "76aca7eba7ef2697fc40fbe2",
     "canonical_title": "Single",
-    "primary_artist_id": "ae50175eba60eee96af0718b",
+    "primary_artist_id": "84103aab7d8a4105d9a40936",
     "source_titles_merged": [
       "Single [TakTaraneh.Com]"
     ],
@@ -15903,7 +15877,7 @@
     "edition_labels_merged": [
       "Sirens (Deluxe Version)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16036,7 +16010,7 @@
     "edition_labels_merged": [
       "Slow Down (feat. Lucky Daye)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16063,7 +16037,7 @@
     "edition_labels_merged": [
       "Slow Down (feat. Lucky Daye) - Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16234,7 +16208,7 @@
       "Sondela (feat. Yumbs, Raspy, Blxckie, Riky Rick & Tshego) - Single",
       "Sondela (feat. Yumbs, Raspy, Blxckie, Riky Rick & Tshego)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16296,7 +16270,7 @@
       "Souled Out (Deluxe Edition)",
       "Souled Out (Deluxe)"
     ],
-    "distinct_canonical_track_count": 5,
+    "distinct_canonical_track_count": 4,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16310,7 +16284,7 @@
     "edition_labels_merged": [
       "Soweto (with Don Toliver, Rema and Tempoe)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16475,7 +16449,7 @@
     "edition_labels_merged": [
       "Starboy (Deluxe)"
     ],
-    "distinct_canonical_track_count": 27,
+    "distinct_canonical_track_count": 21,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16523,8 +16497,8 @@
     "canonical_title": "Stereo Driver",
     "primary_artist_id": "1b18aaa2bd8eb15f5956e523",
     "source_titles_merged": [
-      "STEREO DRIVER",
-      "Stereo Driver"
+      "Stereo Driver",
+      "STEREO DRIVER"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -16714,7 +16688,7 @@
     "edition_labels_merged": [
       "Sugar Sweet (feat. Shenseea & Kehlani)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16821,7 +16795,7 @@
       "Supernatural (Legacy Edition)",
       "Supernatural (Remastered)"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16889,7 +16863,7 @@
       "Swalla (feat. Nicki Minaj & Ty Dolla $ign) - Single",
       "Swalla (feat. Nicki Minaj & Ty Dolla $ign)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -16997,7 +16971,7 @@
       "Take Care (Deluxe Version)",
       "Take Care (Deluxe)"
     ],
-    "distinct_canonical_track_count": 12,
+    "distinct_canonical_track_count": 10,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17078,7 +17052,7 @@
     "edition_labels_merged": [
       "Talk That Talk (Deluxe)"
     ],
-    "distinct_canonical_track_count": 12,
+    "distinct_canonical_track_count": 11,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17107,7 +17081,7 @@
       "Tap In (feat. Post Malone, DaBaby & Jack Harlow) - Single",
       "Tap In (feat. Post Malone, DaBaby & Jack Harlow)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17148,7 +17122,7 @@
       "Taste (feat. Offset) - Single",
       "Taste (feat. Offset)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17441,7 +17415,7 @@
     "edition_labels_merged": [
       "The Beautiful & Damned (Deluxe Edition)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17449,11 +17423,23 @@
     "canonical_title": "The Best Of Anita Baker",
     "primary_artist_id": "1fbdda766b54a1bf97ee4cf7",
     "source_titles_merged": [
-      "The Best Of Anita Baker",
-      "The Best of Anita Baker"
+      "The Best of Anita Baker",
+      "The Best Of Anita Baker"
     ],
     "edition_labels_merged": [],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "b8daae1b722c4582e36fc855",
+    "canonical_title": "The Best of Brandy",
+    "primary_artist_id": "a40410fb3a4705c23a02b3fb",
+    "source_titles_merged": [
+      "The Best of Brandy",
+      "The Best Of Brandy"
+    ],
+    "edition_labels_merged": [],
+    "distinct_canonical_track_count": 7,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17494,7 +17480,7 @@
     "edition_labels_merged": [
       "The Best of Keith Sweat: Make You Sweat (Remastered)"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17508,7 +17494,7 @@
     "edition_labels_merged": [
       "The Best of Keith Sweat: Make You Sweat (Remastered)"
     ],
-    "distinct_canonical_track_count": 24,
+    "distinct_canonical_track_count": 23,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17516,11 +17502,11 @@
     "canonical_title": "The Best Of Me",
     "primary_artist_id": "0bb09d501196085da8de130a",
     "source_titles_merged": [
-      "The Best Of Me",
-      "The Best of Me"
+      "The Best of Me",
+      "The Best Of Me"
     ],
     "edition_labels_merged": [],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17671,7 +17657,7 @@
       "The Emancipation of Mimi (International Jewel)",
       "The Emancipation of Mimi (Ultra Platinum Edition)"
     ],
-    "distinct_canonical_track_count": 22,
+    "distinct_canonical_track_count": 19,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17742,7 +17728,7 @@
       "The Fighting Temptations (Music From The Motion Picture)",
       "The Fighting Temptations (Music from the Motion Picture)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17937,8 +17923,8 @@
     "canonical_title": "the idol",
     "primary_artist_id": "7d09e007f4cb7bd27b2b618b",
     "source_titles_merged": [
-      "the idol",
       "THE IDOL",
+      "the idol",
       "The Idol"
     ],
     "edition_labels_merged": [],
@@ -18059,7 +18045,7 @@
     "edition_labels_merged": [
       "The Idol Episode 4 (Music from the HBO Original Series)"
     ],
-    "distinct_canonical_track_count": 3,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -18295,7 +18281,7 @@
       "The Pinkprint (International Deluxe Explicit)",
       "The Pinkprint (Tenth Anniversary Edition)"
     ],
-    "distinct_canonical_track_count": 32,
+    "distinct_canonical_track_count": 25,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -18448,7 +18434,7 @@
       "The Thrill of It All (Special Edition)",
       "The Thrill of It All (Special Video Edition)"
     ],
-    "distinct_canonical_track_count": 12,
+    "distinct_canonical_track_count": 11,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -18540,7 +18526,7 @@
     "edition_labels_merged": [
       "The Velvet Rope (Deluxe Edition)"
     ],
-    "distinct_canonical_track_count": 44,
+    "distinct_canonical_track_count": 38,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -18659,7 +18645,7 @@
     "edition_labels_merged": [
       "This Is What You Came For (feat. Rihanna)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -18674,7 +18660,7 @@
       "This Is What You Came For (feat. Rihanna) - Single",
       "This Is What You Came For (feat. Rihanna)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -18845,7 +18831,7 @@
     "edition_labels_merged": [
       "Timeless (Remix)"
     ],
-    "distinct_canonical_track_count": 4,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -19070,7 +19056,7 @@
     "edition_labels_merged": [
       "Trilogy (Original Version)"
     ],
-    "distinct_canonical_track_count": 33,
+    "distinct_canonical_track_count": 31,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -19247,8 +19233,8 @@
     "primary_artist_id": "660c70a28002cfa16b883f3e",
     "source_titles_merged": [
       "TYLA",
-      "Tyla +",
-      "TYLA +"
+      "TYLA +",
+      "Tyla +"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -19362,7 +19348,7 @@
       "Umsebenzi Wethu, Vol. 2"
     ],
     "edition_labels_merged": [],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -19389,7 +19375,7 @@
     "edition_labels_merged": [
       "UMSHISO (Main Mix)"
     ],
-    "distinct_canonical_track_count": 4,
+    "distinct_canonical_track_count": 2,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -19422,7 +19408,7 @@
       "Unapologetic (Edited Version)",
       "Unapologetic - Deluxe"
     ],
-    "distinct_canonical_track_count": 20,
+    "distinct_canonical_track_count": 17,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -19801,7 +19787,7 @@
       "Wadibusa (feat. OHP Sage, Pcee, & Djy Biza)",
       "Wadibusa (feat. Royal MusiQ, OHP Sage, & Pcee)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -19861,8 +19847,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "e869d7cdcc903a167b3ff93e",
     "source_titles_merged": [
-      "Waiting to Exhale",
       "Waiting To Exhale",
+      "Waiting to Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [
@@ -20017,7 +20003,7 @@
       "Wamuhle (feat. Da Muziqal Chef & De Mthuda) - Single",
       "Wamuhle (feat. Da Muziqal Chef & De Mthuda)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -20099,7 +20085,7 @@
       "WAP (feat. Megan Thee Stallion) - Single",
       "WAP (feat. Megan Thee Stallion)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -20166,7 +20152,7 @@
       "Wasting Time (feat. Drake) - Single",
       "Wasting Time (feat. Drake)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -20327,7 +20313,7 @@
       "We Go Up (feat. Fivio Foreign) - Single",
       "We Go Up (feat. Fivio Foreign)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -20449,7 +20435,7 @@
       "What You Want (feat. The Weeknd) - Single",
       "What You Want (feat. The Weeknd)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -20581,7 +20567,7 @@
     "edition_labels_merged": [
       "Whitney Houston (The Deluxe Anniversary Edition)"
     ],
-    "distinct_canonical_track_count": 12,
+    "distinct_canonical_track_count": 10,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -20784,7 +20770,7 @@
       "Wild Side (feat. Cardi B) - Single",
       "Wild Side (feat. Cardi B)-Single"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -21020,7 +21006,7 @@
     "edition_labels_merged": [
       "worst behaviour (feat. Kehlani)"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
