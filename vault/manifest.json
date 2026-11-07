@@ -8,13 +8,13 @@
     "eligible_albums": 853,
     "ineligible_releases": 6640,
     "all_albums": 7493,
-    "tracks": 14188,
-    "listening_events": 233969,
-    "fuzzy_candidates_for_review": 224,
+    "tracks": 13863,
+    "listening_events": 233118,
+    "fuzzy_candidates_for_review": 223,
     "song_families_merged": 1
   },
   "deduplication": {
-    "duplicate_events_removed": 77,
+    "duplicate_events_removed": 928,
     "method": "exact canonical track_id + exact non-empty timestamp",
     "fuzzy_metadata_matches_auto_merged": 0,
     "track_similarity_auto_merge_threshold": null,

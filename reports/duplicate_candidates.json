@@ -1061,16 +1061,6 @@
   },
   {
     "entity_type": "track",
-    "artist_id": "ad8828fe16502b988408d1db",
-    "track_a_id": "ee04bb9977a0ceace5b4a5ad",
-    "track_a_title": "Dancing With A Stranger",
-    "track_b_id": "35553675875fcbc662370af5",
-    "track_b_title": "Dancing with a Stranger (Acoustic)",
-    "similarity": 0.8364,
-    "action": "review_only_below_auto_merge_threshold"
-  },
-  {
-    "entity_type": "track",
     "artist_id": "9acd02baf4a278e29addc3ad",
     "track_a_id": "dffd1c24cf1baffe4c1fa24a",
     "track_a_title": "I'll never find someone like",
