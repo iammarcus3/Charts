@@ -1645,24 +1645,34 @@
     const latest = state.snapshots[state.snapshots.length - 1];
     if (!latest) return;
 
-    // Compare latest observed chart ranks to the closest observed snapshot
-    // on or before six calendar months earlier.
+    // The current side of the comparison MUST come from the latest observed
+    // weekly snapshot, never a record's all-time last-known chart position.
+    const latestSongRanks = new Map(
+      (latest.songs || []).map(entry => [String(entry.id), Number(entry.rank)])
+    );
+    const latestAlbumRanks = new Map(
+      (latest.albums || []).map(entry => [String(entry.id), Number(entry.rank)])
+    );
+
+    // Compare against the closest observed Friday chart week on or before
+    // the calendar date six months before the latest chart week.
     const comparison = findSnapshotOnOrBefore(state.currentSixMonthStart);
 
     const oldSongRanks = new Map(
-      (comparison?.songs || []).map(entry => [String(entry.id), entry.rank])
+      (comparison?.songs || []).map(entry => [String(entry.id), Number(entry.rank)])
     );
-
     const oldAlbumRanks = new Map(
-      (comparison?.albums || []).map(entry => [String(entry.id), entry.rank])
+      (comparison?.albums || []).map(entry => [String(entry.id), Number(entry.rank)])
     );
 
     state.songRecords.forEach(record => {
+      const currentRank = latestSongRanks.get(String(record.id));
       const oldRank = oldSongRanks.get(String(record.id));
+      record.latestRank = Number.isInteger(currentRank) ? currentRank : null;
       record.movementValue = null;
 
       if (record.latestRank == null) {
-        record.movement = "Not currently charting";
+        record.movement = "Exited";
       } else if (oldRank == null) {
         record.movement = record.firstChartDate >= state.currentSixMonthStart
           ? "New"
@@ -1678,13 +1688,17 @@
     });
 
     state.albumRecords.forEach(record => {
+      const currentRank = latestAlbumRanks.get(String(record.id));
       const oldRank = oldAlbumRanks.get(String(record.id));
+      record.latestRank = record.officialDebuted && Number.isInteger(currentRank)
+        ? currentRank
+        : null;
       record.movementValue = null;
 
       if (!record.officialDebuted) {
         record.movement = "Not debuted";
       } else if (record.latestRank == null) {
-        record.movement = "Not currently ranked";
+        record.movement = "Exited";
       } else if (oldRank == null) {
         record.movement = record.debutTs >= state.currentSixMonthStart
           ? "New"
@@ -2666,7 +2680,12 @@
       ? formatLeaderboardPosition(rank)
       : formatPosition(rank);
 
-    if (rank == null) return `<span class="rank-cell"><span class="rank">—</span></span>`;
+    if (rank == null) {
+      const status = String(movementLabel || "").toLowerCase() === "exited"
+        ? "Exited"
+        : "—";
+      return `<span class="rank-cell"><span class="rank">${status}</span></span>`;
+    }
 
     return `
       <span class="rank-cell">
