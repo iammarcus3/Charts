@@ -76,16 +76,18 @@ def canonical_album_title(title: Any) -> str:
 # Track identity rules intentionally differ from display metadata. Featured-artist
 # annotations are credits, not part of the recording title; version labels such as
 # Remix, Live, Radio Edit, Instrumental and Remaster are retained.
+_FEATURE_TITLE_ANNOTATION_RE = re.compile(
+    r"[\\(\\[]\\s*(?:(?:feat(?:uring)?|ft)\\.?|with)\\s+([^\\)\\]]+)[\\)\\]]",
+    re.IGNORECASE,
+)
 _FEATURE_SUFFIX_RE = re.compile(
-    r"\s*[\(\[]\s*(?:feat(?:uring)?|ft)\.?\s+[^\)\]]+[\)\]]\s*$|"
-    r"\s+(?:feat(?:uring)?|ft)\.?\s+.+$",
+    r"\\s+(?:feat(?:uring)?|ft)\\.?\\s+.+$",
     re.IGNORECASE,
 )
 _ARTIST_FEATURE_RE = re.compile(
-    r"\s+(?:feat(?:uring)?|ft)\.?\s+(.+)$",
+    r"\\s+(?:feat(?:uring)?|ft)\\.?\\s+(.+)$",
     re.IGNORECASE,
 )
-
 
 def split_featured_artist(artist: Any) -> tuple[str, list[str]]:
     """Split an explicit featured-artist suffix from the lead artist credit.
@@ -107,23 +109,30 @@ def split_featured_artist(artist: Any) -> tuple[str, list[str]]:
 
 
 def featured_artists_in_title(title: Any) -> list[str]:
-    """Extract guest credits from a title suffix without treating them as title text."""
+    """Extract explicit featured-credit annotations wherever they appear in a title."""
     value = display_text(title, "")
-    match = _FEATURE_SUFFIX_RE.search(value)
-    if not match:
-        return []
-    suffix = value[match.start():]
-    suffix = re.sub(r"^[\s\(\[]*(?:feat(?:uring)?|ft)\.?\s+", "", suffix, flags=re.IGNORECASE)
-    suffix = suffix.rstrip(" )]")
-    guests = [
-        display_text(part, "")
-        for part in re.split(r"\s*(?:,|&)\s*", suffix, flags=re.IGNORECASE)
-    ]
-    return [guest for guest in guests if guest]
-
+    guests: list[str] = []
+    for match in _FEATURE_TITLE_ANNOTATION_RE.finditer(value):
+        guests.extend(
+            display_text(part, "")
+            for part in re.split(r"\\s*(?:,|&)\\s*", match.group(1))
+        )
+    suffix = _FEATURE_SUFFIX_RE.search(value)
+    if suffix:
+        guests.extend(
+            display_text(part, "")
+            for part in re.split(r"\\s*(?:,|&)\\s*", suffix.group(0).strip().split(None, 1)[1])
+        )
+    unique: list[str] = []
+    for guest in guests:
+        if guest and normalize_text(guest) not in {normalize_text(x) for x in unique}:
+            unique.append(guest)
+    return unique
 
 def canonical_track_title(title: Any) -> str:
-    """Remove only featured-credit suffixes; preserve meaningful recording/version labels."""
-    value = display_text(title, "Unknown Track")
+    """Remove featured-credit annotations while preserving recording/version labels."""
+    original = display_text(title, "Unknown Track")
+    value = _FEATURE_TITLE_ANNOTATION_RE.sub("", original)
     value = _FEATURE_SUFFIX_RE.sub("", value).strip()
-    return value or display_text(title, "Unknown Track")
+    value = _SPACE_RE.sub(" ", value).strip(" -–—")
+    return value or original
