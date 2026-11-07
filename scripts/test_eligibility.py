@@ -240,5 +240,41 @@ class TestAlbumEligibility(unittest.TestCase):
         self.assertEqual(manifest["record_counts"]["listening_events"], 1)
 
 
+
+    def test_featured_credit_location_variants_share_one_track(self):
+        _, _, _, tracks = self.build_from_scrobbles([
+            self.play("Lead Artist feat Guest Artist", "Release A", "Same Song", "2026-01-01T10:00:00"),
+            self.play("Lead Artist", "Release B", "Same Song (feat. Guest Artist)", "2026-01-02T10:00:00"),
+            self.play("Lead Artist", "Release C", "Same Song featuring Guest Artist", "2026-01-03T10:00:00"),
+        ])
+
+        self.assertEqual(len(tracks), 1)
+        self.assertEqual(tracks[0]["title"], "Same Song")
+        self.assertEqual(len(tracks[0]["credited_artist_ids"]), 2)
+        self.assertEqual(len(tracks[0]["album_ids"]), 3)
+        self.assertEqual(len(tracks[0]["aliases"]), 2)
+
+    def test_meaningful_recording_versions_remain_separate(self):
+        _, _, _, tracks = self.build_from_scrobbles([
+            self.play("Lead Artist", "Release", "Same Song", "2026-01-01T10:00:00"),
+            self.play("Lead Artist", "Release", "Same Song (Radio Edit)", "2026-01-02T10:00:00"),
+            self.play("Lead Artist", "Release", "Same Song (Live)", "2026-01-03T10:00:00"),
+            self.play("Lead Artist", "Release", "Same Song (Remix)", "2026-01-04T10:00:00"),
+        ])
+
+        self.assertEqual(len(tracks), 4)
+        self.assertEqual(
+            {track["title"] for track in tracks},
+            {"Same Song", "Same Song (Radio Edit)", "Same Song (Live)", "Same Song (Remix)"},
+        )
+
+    def test_jointly_billed_artist_names_are_not_guessed_as_featured_credits(self):
+        _, _, _, tracks = self.build_from_scrobbles([
+            self.play("Artist One & Artist Two", "Release", "Collaboration Song", "2026-01-01T10:00:00"),
+            self.play("Artist One", "Release", "Collaboration Song", "2026-01-02T10:00:00"),
+        ])
+
+        self.assertEqual(len(tracks), 2)
+
 if __name__ == "__main__":
     unittest.main()
