@@ -129,10 +129,19 @@ def featured_artists_in_title(title: Any) -> list[str]:
             unique.append(guest)
     return unique
 
-def canonical_track_title(title: Any) -> str:
-    """Remove featured-credit annotations while preserving recording/version labels."""
+def canonical_track_title(title: Any, lead_artist: Any = None) -> str:
+    """Remove featured-credit/artist-prefix metadata while preserving version labels."""
     original = display_text(title, "Unknown Track")
     value = _FEATURE_TITLE_ANNOTATION_RE.sub("", original)
     value = _FEATURE_SUFFIX_RE.sub("", value).strip()
     value = _SPACE_RE.sub(" ", value).strip(" -–—")
+
+    # Some exports prefix the title with its artist (e.g. 'Banks - Warm Water').
+    # Strip that prefix only when it exactly matches the parsed lead-artist name.
+    artist_key = normalize_text(lead_artist)
+    title_key = normalize_text(value)
+    if artist_key and title_key.startswith(artist_key + " "):
+        value = value[len(display_text(lead_artist, "")):].lstrip(" -–—:")
+        value = _SPACE_RE.sub(" ", value).strip()
+
     return value or original
