@@ -3125,7 +3125,7 @@
       button.setAttribute("aria-current", active ? "page" : "false");
     });
 
-    ui.direction.value = view === "artists" ? "asc" : "desc";
+    ui.direction.value = ["songs", "albums", "artists"].includes(view) ? "asc" : "desc";
     configureSortMenu(true);
     renderContent();
   }
