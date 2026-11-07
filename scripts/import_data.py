@@ -111,26 +111,27 @@ def ingest_zerocharts_file(filepath: str | Path):
         if not isinstance(item, dict):
             continue
         raw_artist = _canonical_artist(_first_nonempty(item, ("artist", "artist_name", "album_artist"), "Unknown Artist"))
+        album_artist_name, _ = split_featured_artist(raw_artist)
         raw_album = _first_nonempty(item, ("album", "album_title", "release"), "Unknown Album")
         raw_track = _first_nonempty(item, ("track", "track_name", "title", "name"), "Unknown Track")
         timestamp = item.get("timestamp", item.get("played_at", item.get("date")))
 
-        artist_id = generate_deterministic_id("artist", raw_artist)
-        artist_key = normalize_text(raw_artist)
+        artist_id = generate_deterministic_id("artist", album_artist_name)
+        artist_key = normalize_text(album_artist_name)
         if artist_id not in artists:
             artists[artist_id] = {
                 "id": artist_id,
-                "name": raw_artist,
+                "name": album_artist_name,
                 "normalized_name": artist_key,
                 "aliases": [],
             }
-        elif raw_artist != artists[artist_id]["name"] and raw_artist not in artists[artist_id]["aliases"]:
-            artists[artist_id]["aliases"].append(raw_artist)
+        elif album_artist_name != artists[artist_id]["name"] and album_artist_name not in artists[artist_id]["aliases"]:
+            artists[artist_id]["aliases"].append(album_artist_name)
 
         # Remove bracketed/parenthesized album annotations for family matching.
         # Preserve original release names for auditability and bonus-track recovery.
         canonical_album = canonical_album_title(raw_album)
-        album_id = generate_deterministic_id("album", raw_artist, canonical_album)
+        album_id = generate_deterministic_id("album", album_artist_name, canonical_album)
         if album_id not in albums:
             albums[album_id] = {
                 "id": album_id,
