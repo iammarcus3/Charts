@@ -66,6 +66,7 @@
     tracks: new Map(),
     albums: new Map(),
     artists: new Map(),
+    artistIndependence: null,
     events: [],
 
     albumTrackMap: new Map(),
@@ -496,10 +497,27 @@
     return null;
   }
 
+  // Distinguish genuine solo artist records from fragments accidentally
+  // created by splitting group names such as "Earth, Wind & Fire".
+  function hasIndependentArtistCatalogue(id) {
+    if (!state.artistIndependence) {
+      const counts = new Map();
+      const add = value => {
+        const resolved = resolveArtistId(value);
+        if (resolved) counts.set(resolved, (counts.get(resolved) || 0) + 1);
+      };
+
+      state.tracks.forEach(track => add(track.primary_artist_id ?? track.artist_id));
+      state.albums.forEach(album => add(album.primary_artist_id ?? album.artist_id));
+      state.artistIndependence = counts;
+    }
+
+    return (state.artistIndependence.get(String(id)) || 0) > 0;
+  }
+
   // Expand a catalogue artist identity that represents multiple credited
-  // performers into the individual artist identities already present in the
-  // catalogue. Exact solo/group names remain intact when their components do
-  // not resolve to multiple separate artist records.
+  // performers, but only when at least two components have independent
+  // catalogue evidence (a solo primary-track or lead-album record).
   function expandArtistCreditId(value, depth = 0) {
     const id = resolveArtistId(value);
     if (!id) return [];
@@ -521,14 +539,16 @@
     const expanded = [];
     parts.forEach(part => {
       const partId = resolveArtistId(part);
-      if (partId) {
+      if (partId && hasIndependentArtistCatalogue(partId)) {
         expanded.push(...expandArtistCreditId(partId, depth + 1));
-      } else if (part.includes(",")) {
+      } else if (!partId && part.includes(",")) {
         // Some source artist identities contain nested comma-separated
         // collaborations, e.g. "Freeway, Jay-Z & Mariah Carey".
         part.split(",").map(value => value.trim()).filter(Boolean).forEach(nested => {
           const nestedId = resolveArtistId(nested);
-          if (nestedId) expanded.push(...expandArtistCreditId(nestedId, depth + 1));
+          if (nestedId && hasIndependentArtistCatalogue(nestedId)) {
+            expanded.push(...expandArtistCreditId(nestedId, depth + 1));
+          }
         });
       }
     });
