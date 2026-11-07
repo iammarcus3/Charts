@@ -237,7 +237,7 @@ def ingest_zerocharts_file(filepath: str | Path):
         candidate_artist = artists.get(candidate.get("primary_artist_id"), {}).get("name", "")
         artist_parts = [
             part.strip()
-            for part in __import__("re").split(r"\\s*(?:,|&)\\s*", candidate_artist)
+            for part in __import__("re").split(r"\s*(?:,|&)\s*", candidate_artist)
             if part.strip()
         ]
         if len(artist_parts) < 2:
