@@ -142,6 +142,7 @@
       ["title", "Title"]
     ],
     songs: [
+      ["leaderboardRank", "Leaderboard rank"],
       ["periodUnitsSold", "Units sold"],
       ["unitsSold", "Career units sold"],
       ["latestRank", "Latest position"],
@@ -154,6 +155,7 @@
       ["artist", "Artist"]
     ],
     albums: [
+      ["leaderboardRank", "Leaderboard rank"],
       ["periodUnitsSold", "Units sold"],
       ["unitsSold", "Career units sold"],
       ["latestRank", "Latest position"],
@@ -172,6 +174,7 @@
       ["artist", "Lead artist"]
     ],
     artists: [
+      ["leaderboardRank", "Leaderboard rank"],
       ["periodUnitsSold", "Units sold"],
       ["unitsSold", "Career units sold"],
       ["recentUnits", "Latest six-month units"],
@@ -179,7 +182,6 @@
       ["songCount", "Songs charted"],
       ["albumCount", "Lead albums charted"],
       ["no1Weeks", "No. 1 weeks"],
-      ["currentSixMonthRank", "Recent leaderboard position"],
       ["name", "Artist name"]
     ],
     weeks: [
@@ -2348,7 +2350,7 @@
   }
 
   function leaderboardName(view, id) {
-    if (view === "songs") return state.tracks.get(String(id))?.title || String(id);
+    if (view === "songs") return getTrackTitle(state.tracks.get(String(id))) || String(id);
     if (view === "albums") return state.albums.get(String(id))?.title || String(id);
     return getArtistName(String(id)) || String(id);
   }
