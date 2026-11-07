@@ -432,23 +432,25 @@ def build() -> dict[str, Any]:
         all_artists, all_albums, all_tracks, all_events
     )
 
-    # Fail closed if the approved MUTT family ever fragments again. This guard
-    # runs before chart inputs are written, so a bad rebuild cannot publish splits.
-    mutt_artist_id = generate_deterministic_id("artist", "Leon Thomas & Chris Brown")
-    mutt_tracks = [
-        track for track in all_tracks.values()
-        if track.get("primary_artist_id") == mutt_artist_id
-        and normalize_text(track.get("title", "")) == "mutt"
-    ]
-    if len(mutt_tracks) != 1:
-        raise RuntimeError(
-            "MUTT consolidation validation failed: expected exactly one "
-            f"Leon Thomas & Chris Brown MUTT track, found {len(mutt_tracks)}."
-        )
-    mutt_track_id = mutt_tracks[0]["id"]
-    mutt_event_count = sum(1 for event in all_events if event.get("track_id") == mutt_track_id)
-    if mutt_event_count == 0:
-        raise RuntimeError("MUTT consolidation validation failed: canonical track has no listening events.")
+    # Fail closed if an approved MUTT source family is present but does not
+    # consolidate to exactly one canonical track. Small isolated unit-test
+    # fixtures and future datasets without this song must still build normally.
+    if approved_track_merges:
+        mutt_artist_id = generate_deterministic_id("artist", "Leon Thomas & Chris Brown")
+        mutt_tracks = [
+            track for track in all_tracks.values()
+            if track.get("primary_artist_id") == mutt_artist_id
+            and normalize_text(track.get("title", "")) == "mutt"
+        ]
+        if len(mutt_tracks) != 1:
+            raise RuntimeError(
+                "MUTT consolidation validation failed: expected exactly one "
+                f"Leon Thomas & Chris Brown MUTT track, found {len(mutt_tracks)}."
+            )
+        mutt_track_id = mutt_tracks[0]["id"]
+        mutt_event_count = sum(1 for event in all_events if event.get("track_id") == mutt_track_id)
+        if mutt_event_count == 0:
+            raise RuntimeError("MUTT consolidation validation failed: canonical track has no listening events.")
 
     # Unknown Album is a prohibited placeholder and must never enter the published vault.
     banned_album_ids = {
