@@ -85,7 +85,7 @@ const summary = {
     row: byName("Mariah Carey") ?? null,
     year2026: yearBoard.find(x=>x.id===mariahId) ?? null,
     careerRank: rank([...artists].sort((a,b)=>b.unitsSold-a.unitsSold),mariahId),
-    2026Rank: rank(yearBoard,mariahId),
+    rank2026: rank(yearBoard,mariahId),
     leadTracksInVault: mariahLeadTracks.length,
     leadAlbumsInVault: mariahLeadAlbums.length,
     chartedLeadTracks: mariahLeadTracks.filter(t=>chartTrackIds.has(String(t.id))).length,
@@ -95,7 +95,7 @@ const summary = {
     row: byName("Tyla") ?? null,
     year2026: yearBoard.find(x=>x.id===tylaId) ?? null,
     careerRank: rank([...artists].sort((a,b)=>b.unitsSold-a.unitsSold),tylaId),
-    year2026Rank: rank(yearBoard,tylaId),
+    yearrank2026: rank(yearBoard,tylaId),
     leadTracksInVault: tylaLeadTracks.length,
     leadAlbumsInVault: tylaLeadAlbums.length,
     chartedLeadTracks: tylaLeadTracks.filter(t=>chartTrackIds.has(String(t.id))).length,
@@ -105,7 +105,7 @@ const summary = {
     row: byName("The Weeknd") ?? null,
     year2026: yearBoard.find(x=>x.id===weekndId) ?? null,
     careerRank: rank([...artists].sort((a,b)=>b.unitsSold-a.unitsSold),weekndId),
-    year2026Rank: rank(yearBoard,weekndId)
+    yearrank2026: rank(yearBoard,weekndId)
   },
   top20Career: [...artists].sort((a,b)=>b.unitsSold-a.unitsSold).slice(0,20).map(a=>({name:a.name,units:a.unitsSold,songs:a.songUnitsSold,albums:a.albumUnitsSold,id:a.id})),
   top20Year2026: yearBoard.slice(0,20)
