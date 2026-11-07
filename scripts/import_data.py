@@ -8,7 +8,8 @@ from pathlib import Path
 from typing import Any
 
 from normalize_metadata import (
-    canonical_album_title, display_text, generate_deterministic_id, normalize_text,
+    canonical_album_title, canonical_track_title, display_text, featured_artists_in_title,
+    generate_deterministic_id, normalize_text, split_featured_artist,
 )
 
 
@@ -147,26 +148,48 @@ def ingest_zerocharts_file(filepath: str | Path):
         if raw_album != canonical_album and raw_album not in album["edition_labels"]:
             album["edition_labels"].append(raw_album)
 
-        # Track identity/credit may be corrected independently of album ownership.
-        # This keeps the original release attribution intact while approved featured
-        # contributions are represented on the unified track itself.
+        # Canonical recording identity separates lead artist/title from featured credits.
+        # Only explicit feat./ft. annotations are moved into credits; version labels
+        # (Remix, Live, Radio Edit, Instrumental, Remaster, etc.) remain in the title.
         track_artist_name, track_title = _canonical_track_identity(raw_artist, raw_track)
-        track_artist_id = generate_deterministic_id("artist", track_artist_name)
+        lead_artist_name, artist_featured_names = split_featured_artist(track_artist_name)
+        canonical_title = canonical_track_title(track_title)
+        featured_names = []
+        for name in [*artist_featured_names, *featured_artists_in_title(track_title)]:
+            if name and normalize_text(name) != normalize_text(lead_artist_name):
+                if normalize_text(name) not in {normalize_text(x) for x in featured_names}:
+                    featured_names.append(name)
+
+        track_artist_id = generate_deterministic_id("artist", lead_artist_name)
         if track_artist_id not in artists:
             artists[track_artist_id] = {
                 "id": track_artist_id,
-                "name": track_artist_name,
-                "normalized_name": normalize_text(track_artist_name),
+                "name": lead_artist_name,
+                "normalized_name": normalize_text(lead_artist_name),
                 "aliases": [],
             }
 
-        track_id = generate_deterministic_id("track", track_artist_name, track_title)
+        credited_artist_ids = [track_artist_id]
+        for featured_name in featured_names:
+            featured_id = generate_deterministic_id("artist", featured_name)
+            if featured_id not in artists:
+                artists[featured_id] = {
+                    "id": featured_id,
+                    "name": featured_name,
+                    "normalized_name": normalize_text(featured_name),
+                    "aliases": [],
+                }
+            if featured_id not in credited_artist_ids:
+                credited_artist_ids.append(featured_id)
+
+        track_id = generate_deterministic_id("track", lead_artist_name, canonical_title)
         if track_id not in tracks:
             tracks[track_id] = {
                 "id": track_id,
-                "title": track_title,
-                "normalized_title": normalize_text(track_title),
+                "title": canonical_title,
+                "normalized_title": normalize_text(canonical_title),
                 "primary_artist_id": track_artist_id,
+                "credited_artist_ids": credited_artist_ids,
                 "album_id": album_id,  # backward compatibility
                 "album_ids": [],
             }
@@ -174,6 +197,10 @@ def ingest_zerocharts_file(filepath: str | Path):
             track = tracks[track_id]
             if raw_track != track["title"] and raw_track not in track.setdefault("aliases", []):
                 track["aliases"].append(raw_track)
+            existing_credits = track.setdefault("credited_artist_ids", [track_artist_id])
+            for credited_id in credited_artist_ids:
+                if credited_id not in existing_credits:
+                    existing_credits.append(credited_id)
 
         track = tracks[track_id]
         if album_id not in track["album_ids"]:
