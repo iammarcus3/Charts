@@ -111,7 +111,7 @@
     },
     artists: {
       title: "Artist Archive",
-      description: "Period and career units, credited songs, lead albums and rank movement."
+      description: "Period and career chart-derived units across observed weeks, credited songs, lead albums and rank movement."
     },
     weeks: {
       title: "Weekly History",
@@ -2084,7 +2084,7 @@
     if (artistMostTop10) add("Most Top 10 songs in one week", `${artistMostTop10.maxTop10SongsInWeek} songs`, artistMostTop10.name, "Artist", artistMostTop10.maxTop10SongsInWeek, "Artist", artistMostTop10.id);
     if (artistMostAlbumNo1) add("Most lead-album No. 1 weeks", `${artistMostAlbumNo1.albumNo1Weeks} weeks`, artistMostAlbumNo1.name, "Lead album artist", artistMostAlbumNo1.albumNo1Weeks, "Artist", artistMostAlbumNo1.id);
     if (artistMostDistinctNo1Albums) add("Most distinct No. 1 albums", `${artistMostDistinctNo1Albums.albumNo1Count} albums`, artistMostDistinctNo1Albums.name, "Lead album artist", artistMostDistinctNo1Albums.albumNo1Count, "Artist", artistMostDistinctNo1Albums.id);
-    if (artistMostUnits) add("Highest combined artist units sold", formatUnits(artistMostUnits.unitsSold), artistMostUnits.name, "Song credits plus lead-album credits", artistMostUnits.unitsSold, "Artist", artistMostUnits.id);
+    if (artistMostUnits) add("Highest combined chart-derived artist units", formatUnits(artistMostUnits.unitsSold), artistMostUnits.name, "Song credits plus lead-album credits across observed chart weeks; not real-world lifetime sales", artistMostUnits.unitsSold, "Artist", artistMostUnits.id);
 
     const debutsByYear = new Map();
 
@@ -2657,7 +2657,7 @@
         ["songNo1Count", "No. 1 songs"],
         ["albumCount", "Lead albums"],
         ["periodUnitsSold", "Units sold"],
-        ["unitsSold", "Career units"]
+        ["unitsSold", "Career chart units"]
       ],
       weeks: [
         ["date", "Chart week"],
