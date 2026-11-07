@@ -554,7 +554,12 @@
     });
 
     const uniqueExpanded = [...new Set(expanded)];
-    return uniqueExpanded.length >= 2 ? uniqueExpanded : [id];
+
+    // A collaboration credit must not disappear just because only one
+    // credited performer has an independently indexed catalogue. Keep every
+    // recognized individual artist; fall back to the combined identity only
+    // when none of the components can be resolved.
+    return uniqueExpanded.length ? uniqueExpanded : [id];
   }
 
   function getTrackArtistIds(track) {
