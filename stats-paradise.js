@@ -2059,7 +2059,7 @@
         weeks: 0, no1: 0, top10: 0, top20: 0, top40: 0, top50: 0,
         units: 0, peak: 101, chartStreak: 0, maxChartStreak: 0,
         no1Streak: 0, maxNo1Streak: 0, reentries: 0, lastWeek: null,
-        bestWeek: null, type
+        bestWeek: null, firstWeek: null, firstNo1Week: null, type
       });
       return map.get(id);
     };
@@ -2087,6 +2087,7 @@
         currentSongIds.add(id);
         const consecutive = record.lastWeek != null &&
           record.lastWeek + CONFIG.WEEK_MS === snapshot.weekStart;
+        if (record.firstWeek == null) record.firstWeek = snapshot.weekStart;
         if (record.lastWeek != null && previousSnapshot &&
             previousSnapshot.weekStart + CONFIG.WEEK_MS === snapshot.weekStart &&
             !previousSnapshot.songs.some(old => String(old.id) === id)) {
@@ -2100,6 +2101,7 @@
         record.peak = Math.min(record.peak, Number(entry.rank));
         if (entry.rank === 1) {
           record.no1++;
+          if (record.firstNo1Week == null) record.firstNo1Week = snapshot.weekStart;
           record.no1Streak = consecutive && record._lastNo1Week === snapshot.weekStart - CONFIG.WEEK_MS
             ? record.no1Streak + 1 : 1;
           record._lastNo1Week = snapshot.weekStart;
@@ -2138,6 +2140,7 @@
         currentAlbumIds.add(id);
         const consecutive = record.lastWeek != null &&
           record.lastWeek + CONFIG.WEEK_MS === snapshot.weekStart;
+        if (record.firstWeek == null) record.firstWeek = snapshot.weekStart;
         if (record.lastWeek != null && previousSnapshot &&
             previousSnapshot.weekStart + CONFIG.WEEK_MS === snapshot.weekStart &&
             !previousSnapshot.albums.some(old => String(old.id) === id)) {
@@ -2151,6 +2154,7 @@
         record.peak = Math.min(record.peak, Number(entry.rank));
         if (entry.rank === 1) {
           record.no1++;
+          if (record.firstNo1Week == null) record.firstNo1Week = snapshot.weekStart;
           record.no1Streak = consecutive && record._lastNo1Week === snapshot.weekStart - CONFIG.WEEK_MS
             ? record.no1Streak + 1 : 1;
           record._lastNo1Week = snapshot.weekStart;
@@ -2191,7 +2195,13 @@
       const album = state.albums.get(String(id));
       const leadId = getLeadAlbumArtistId(album);
       const artist = addArtist(leadId);
-      if (artist && activation.unitsSold != null) artist.units += Number(activation.unitsSold);
+      const rankedOnDebut = snapshots.some(snapshot =>
+        snapshot.weekStart === activation.weekStart &&
+        snapshot.albums.some(entry => String(entry.id) === String(id))
+      );
+      if (artist && activation.unitsSold != null && !rankedOnDebut) {
+        artist.units += Number(activation.unitsSold);
+      }
       if (!albums.has(String(id))) {
         const record = getEntity(albums, {
           id, title: getAlbumTitle(album), artist: getArtistName(leadId),
@@ -2254,7 +2264,9 @@
     })).sort((a, b) => b.activation.simultaneousTracks - a.activation.simultaneousTracks)[0];
     const debutRank = [...debuts].filter(([, x]) => x.rank != null)
       .sort((a, b) => a[1].rank - b[1].rank)[0];
-    const fastestNo1 = best(albumList.filter(x => x.peak === 1 && x.weeks), x => -x.weeks);
+    const fastestNo1 = best(albumList.filter(x => x.firstNo1Week != null && x.firstWeek != null), x =>
+      -((x.firstNo1Week - x.firstWeek) / CONFIG.WEEK_MS + 1)
+    );
     const artistNo1Songs = best(artistList.filter(x => x.no1Songs.size), x => x.no1Songs.size);
     const artistSongs = best(artistList.filter(x => x.songs.size), x => x.songs.size);
     const artistTop10 = best(artistList.filter(x => x.maxTop10SongsInWeek), x => x.maxTop10SongsInWeek);
@@ -2282,7 +2294,10 @@
     if (aTop40) add("Most album Top 40 weeks", aTop40.top40 + " weeks", aTop40.title, aTop40.artist, aTop40.top40, "Album", aTop40.id);
     if (aTop50) add("Most album Top 50 weeks", aTop50.top50 + " weeks", aTop50.title, aTop50.artist, aTop50.top50, "Album", aTop50.id);
     if (aBestWeek) add("Highest single-week album units sold", formatUnits(aBestWeek.bestWeek.unitsSold), aBestWeek.title, aBestWeek.artist, aBestWeek.bestWeek.unitsSold, "Album", aBestWeek.id);
-    if (fastestNo1) add("Fastest album to reach No. 1", fastestNo1.weeks + " chart weeks", fastestNo1.title, fastestNo1.artist, 1 / fastestNo1.weeks, "Album", fastestNo1.id);
+    if (fastestNo1) {
+      const weeksToNo1 = Math.round((fastestNo1.firstNo1Week - fastestNo1.firstWeek) / CONFIG.WEEK_MS) + 1;
+      add("Fastest album to reach No. 1", weeksToNo1 + " chart weeks", fastestNo1.title, fastestNo1.artist, 1 / weeksToNo1, "Album", fastestNo1.id);
+    }
     if (debutRank) add("Highest official album debut position", formatPosition(debutRank[1].rank), getAlbumTitle(state.albums.get(String(debutRank[0]))), getArtistName(getLeadAlbumArtistId(state.albums.get(String(debutRank[0])))), 101 - debutRank[1].rank, "Album", debutRank[0]);
 
     const debutCounts = new Map();
@@ -2866,6 +2881,7 @@
     ui.search.value = "";
     ui.timeMode.value = "all";
     ui.year.value = "";
+    if (ui.recordYear) ui.recordYear.value = "all";
     ui.dateFrom.value = "";
     ui.dateTo.value = "";
     ui.direction.value = ["songs", "albums", "artists"].includes(state.currentView) ? "asc" : "desc";
