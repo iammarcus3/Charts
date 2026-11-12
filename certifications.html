@@ -61,7 +61,8 @@ function tierFor(units){if(units>=10000000)return {name:'Diamond',key:'diamond',
 function plaque(t){return '<div class="plaque '+t.class+'"><div class="text-[10px] font-black tracking-[.3em] uppercase opacity-75">YourHot100</div><i class="ph '+t.icon+' text-4xl block my-2"></i><div class="text-xl sm:text-2xl font-black uppercase tracking-wider">'+esc(t.name)+'</div><div class="text-[9px] tracking-[.22em] font-bold mt-1 opacity-75">CERTIFIED UNITS SOLD</div></div>'}
 function normalizeMap(d){if(Array.isArray(d))return new Map(d.filter(x=>x&&x.id).map(x=>[String(x.id),x]));return new Map(Object.entries(d||{}))}
 function timestamp(v){if(v&&typeof v==='object')v=v.uts??v.timestamp??v.played_at??v.date??v['#text'];if(v==null)return null;let n=Number(v);if(Number.isFinite(n)){if(n>1e12)n/=1000;return n}let d=Date.parse(v);return Number.isFinite(d)?d/1000:null}
-function dateLabel(ts){return ts?new Date(ts*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}):'Date unavailable'}
+const SA_OFFSET_SECONDS=2*60*60;
+function dateLabel(ts){return ts?new Date((ts+SA_OFFSET_SECONDS)*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}):'Date unavailable'}
 function imageUrl(obj){if(!obj)return '';const candidates=[obj.lastfm_image,obj.lastfm_image_url,obj.artwork_url,obj.image_url,obj.cover_url,obj.image,obj.images];for(const v of candidates){if(typeof v==='string'&&safeImg(v))return v;if(Array.isArray(v)){for(const im of v){const u=typeof im==='string'?im:(im?.url||im?.['#text']||im?.text);if(safeImg(u))return u}}if(v&&typeof v==='object'){const u=v.url||v['#text']||v.text;if(safeImg(u))return u}}return '';}
 const LASTFM_API_KEY="ed9c6dcac73ea1adcd3750efeea9b822";const artworkCache=new Map();
 function lastfmImageMarkup(x){const src=safeImg(x.art)||'https://placehold.co/300x300/18181b/71717a?text=YourHot100';return '<img src="'+esc(src)+'" data-artist="'+esc(x.artist||'')+'" data-track="'+(x.kind==='song'?esc(x.title||''):'')+'" data-album="'+(x.kind==='album'?esc(x.title||''):'')+'" class="dynamic-artwork" alt="'+esc(x.title||'Artwork')+'" onerror="this.onerror=null;this.src=\'https://placehold.co/300x300/18181b/71717a?text=No+Artwork\'">'}
@@ -87,7 +88,7 @@ async function loadVisibleReleaseDates(){
  }));
 }
 async function loadVisibleArtworks(){await Promise.all([...document.querySelectorAll('.dynamic-artwork')].map(async img=>{if(img.dataset.artLoaded)return;img.dataset.artLoaded='1';const url=await fetchLastFmImage(img.dataset.artist,img.dataset.album,img.dataset.track);if(url&&img.isConnected)img.src=url}))}
-function weekStartNow(){const d=new Date();d.setUTCHours(0,0,0,0);const day=(d.getUTCDay()+2)%7;d.setUTCDate(d.getUTCDate()-day);return d.getTime()/1000;}
+function weekStartNow(){const d=new Date(Date.now()+SA_OFFSET_SECONDS*1000);d.setUTCHours(0,0,0,0);const daysSinceFriday=(d.getUTCDay()+2)%7;d.setUTCDate(d.getUTCDate()+(7-daysSinceFriday)%7);return d.getTime()/1000-SA_OFFSET_SECONDS;}
 async function load(){
 try{
 const paths=['vault/tracks.json','vault/albums.json','vault/artists.json','vault/listening_history.jsonl'];
@@ -103,8 +104,8 @@ albums.forEach((a,id)=>albumTrackSets.set(String(id),new Set((Array.isArray(a.tr
 tracks.forEach((t,tid)=>{const ids=Array.isArray(t.album_ids)&&t.album_ids.length?[...new Set(t.album_ids.map(String))]:(t.album_id?[String(t.album_id)]:[]);ids.forEach(id=>{if(albumTrackSets.has(String(id)))albumTrackSets.get(String(id)).add(String(tid))})});
 const eligible=new Set([...albumTrackSets].filter(([id,set])=>set.size>=3).map(([id])=>id));
 weekly.clear();const weekMs=7*24*60*60*1000;
-// Match the main chart engine: chart weeks start on Friday (UTC).
-const weekStart=ts=>{const d=new Date(ts*1000);const day=(d.getUTCDay()+2)%7;return Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-day)/1000};
+// Tracking weeks run Friday–Thursday in South African time (UTC+2).
+const weekStart=ts=>{const d=new Date((ts+SA_OFFSET_SECONDS)*1000);const daysSinceFriday=(d.getUTCDay()+2)%7;return Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-daysSinceFriday)/1000-SA_OFFSET_SECONDS};
 const isAlbumEditionOf=(editionId,parentId)=>{
  const edition=albums.get(String(editionId)),parent=albums.get(String(parentId));
  if(!edition||!parent||String(editionId)===String(parentId))return false;
