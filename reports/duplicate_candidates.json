@@ -371,6 +371,16 @@
   },
   {
     "entity_type": "track",
+    "artist_id": "08d74b2accfcb37686fcc6b6",
+    "track_a_id": "54aeeea44962e197bdf9b476",
+    "track_a_title": "The Raiders - Chez Gaye Special | Best of South African Music",
+    "track_b_id": "1dd26bb7a554b688cd1b249a",
+    "track_b_title": "The Raiders - Raiders Special | Best of South African Music",
+    "similarity": 0.875,
+    "action": "review_only_below_auto_merge_threshold"
+  },
+  {
+    "entity_type": "track",
     "artist_id": "130ac7ed557c1d0a6c7d163b",
     "track_a_id": "6c5a38e09687bd7d6493831c",
     "track_a_title": "If I Could Turn Back the Hands of Time",

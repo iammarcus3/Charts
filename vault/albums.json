@@ -2773,9 +2773,12 @@
       "f29d3b177b42bd7449f73a3e"
     ],
     "source_titles": [
-      "Gloria"
+      "Gloria",
+      "Gloria (Special Edition)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "Gloria (Special Edition)"
+    ],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -4026,6 +4029,28 @@
       "MUTT Deluxe: HEEL"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "31f346c95d089aa18b83074d",
+    "title": "Popstar",
+    "normalized_title": "popstar",
+    "primary_artist_id": "10100cdc05ed5af685e2b792",
+    "track_ids": [
+      "24b019dfdab0eaa6a35a706a",
+      "32adcd1e02848ba9584fd015",
+      "4b6ea5b92b46440b667cbe29",
+      "c214d0ee0fb95ea6cf5238dc",
+      "c7f2db8506ae385b6bd7138f",
+      "e8730108d0f5409ad8c45c49"
+    ],
+    "source_titles": [
+      "Popstar",
+      "Popstar [Explicit]"
+    ],
+    "edition_labels": [
+      "Popstar [Explicit]"
+    ],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -9540,6 +9565,7 @@
     "primary_artist_id": "ba4e218797df4f08244287ce",
     "track_ids": [
       "04930917ce8ca5a93cf17097",
+      "3e9fd79c8144b9c18c9a4dfe",
       "67dc54eed65937190bb4e81f",
       "72ac5b861d422683b6d55be4",
       "80e2abf58eb61d6ce67ce407"
@@ -9924,12 +9950,16 @@
     "primary_artist_id": "4ff05100ef6d1dd6d187807c",
     "track_ids": [
       "08049d0c44ae05a4a292c249",
+      "1354d942686751125f5e7d72",
       "1ce0421243176766a5b9e1e1",
       "4c86043a5f3cba5db3fec87d",
+      "4d30462d3d6b612d0700d233",
       "71e629f99dfaece5e250b65b",
       "853d507defdf128f9f8c7470",
+      "8cbed60f6b57f2caba55f01f",
       "ab3f783297bdbfbd8a069950",
-      "d0031b2eb6b215556fd644b5"
+      "d0031b2eb6b215556fd644b5",
+      "f4f7b10bd9d02a77330bf739"
     ],
     "source_titles": [
       "Gentlewoman"
@@ -10982,6 +11012,22 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "91706384e92abdd8f09e5cc7",
+    "title": "Tha Carter III",
+    "normalized_title": "tha carter iii",
+    "primary_artist_id": "e909a088d3df8e923087b901",
+    "track_ids": [
+      "52107830b56a2d3da6695835",
+      "79329be46ae023cd977dc3de",
+      "88b32386c545833d0edc3ad0"
+    ],
+    "source_titles": [
+      "Tha Carter III"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "919e40b5167d6e36ea600c48",
     "title": "Die Lit",
     "normalized_title": "die lit",
@@ -11401,7 +11447,9 @@
     "track_ids": [
       "0d8a021127db547488cba447",
       "3632c272184dd388d7e6f274",
-      "8d511a84f2c824621e522db5"
+      "40e55cc10e1a1b7a91e4f1da",
+      "8d511a84f2c824621e522db5",
+      "8ee50a0f86718340bf9ffc6a"
     ],
     "source_titles": [
       "PRIMA"
@@ -11772,6 +11820,46 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "9c361e24317b6b9be04e073e",
+    "title": "CONFESSIONS II: Instrumentals",
+    "normalized_title": "confessions ii instrumentals",
+    "primary_artist_id": "f6e0a45440a790e7ff61ad04",
+    "track_ids": [
+      "0342429053cb4b92c31b067b",
+      "06a7acfd9d41f0d054c5e157",
+      "0ea1e44ae11aa2979181b18f",
+      "3ed9400fe9c8b4c0a42ae0c9",
+      "51195d298365e98c07dd4361",
+      "52609975794bb7e130b6f4b4",
+      "6231326b9ee6d15acad29921",
+      "623a46a2e616b7322d02abd4",
+      "6c7a7aaeda7a3a9abea6eb7f",
+      "855f05c39da1251733c12279",
+      "872c87fdc5285aa60f8cab36",
+      "985d9f17194db30ba8d7c740",
+      "9c0e10fd12e0734196c18f64",
+      "ab76e1b7d8efd1610a009cdb",
+      "ae8dcedbd4a4f01a3af5e6b8",
+      "b0a800e1d8812364b4e00ab6",
+      "c1fef0288864375af08f4bac",
+      "caf910dc82b7c55e76e19f90",
+      "da677f0f360e8a934e46fc82",
+      "e3fba66409ff4c254c0f62a2",
+      "e55a6a114f589cc1567e0603",
+      "edccf618b519bd78ecc64af8",
+      "f10fb80fabe6d37fa5d41ad8",
+      "f554c48c0f03d3e2b937c534",
+      "f7f705cda64c60b5caa4cd9c",
+      "f8156d612241c80beb20697b",
+      "fb49cdb5aa36c383ca6059ef"
+    ],
+    "source_titles": [
+      "CONFESSIONS II: Instrumentals"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "9c89982d3143414ae13539a6",
     "title": "Life Is A Song Worth Singing",
     "normalized_title": "life is a song worth singing",
@@ -11826,6 +11914,23 @@
       "Sailing Soul(s)",
       "Sailing Soul(s) [2021 Bonus Tracks Edition]"
     ],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "9ce1c8023bf0e132f33c5b42",
+    "title": "Currents",
+    "normalized_title": "currents",
+    "primary_artist_id": "6a04fe32c5591d975c66e38a",
+    "track_ids": [
+      "05fbecc5be0717fc456b0b0c",
+      "911826e6e8abc5e4b6a62602",
+      "dd9926bc4b33c6281a63cfc9",
+      "fbb4fc82c2d32e391dc533d5"
+    ],
+    "source_titles": [
+      "Currents"
+    ],
+    "edition_labels": [],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -13018,6 +13123,7 @@
     "track_ids": [
       "055fc9611d9fa20e930435ba",
       "0ec41dbd4407445bd7ab11ae",
+      "840fdaa544822a4d163805e5",
       "ed6790d45cb4d662b03eb51d"
     ],
     "source_titles": [
@@ -13036,16 +13142,19 @@
       "41d6cc87d420ce8c49b67364",
       "7cd002eda78733e0fd0a2bbc",
       "9faa1c8aa4872f45a05ca938",
+      "a01eb9e6b3c3c6718fb06989",
       "a06999d2f782a93777a99ee3",
       "b343788339571afe141ef482"
     ],
     "source_titles": [
       "Pink Friday ... Roman Reloaded (Deluxe)",
-      "Pink Friday ... Roman Reloaded - Deluxe"
+      "Pink Friday ... Roman Reloaded - Deluxe",
+      "Pink Friday ... Roman Reloaded (Deluxe Edition)"
     ],
     "edition_labels": [
       "Pink Friday ... Roman Reloaded (Deluxe)",
-      "Pink Friday ... Roman Reloaded - Deluxe"
+      "Pink Friday ... Roman Reloaded - Deluxe",
+      "Pink Friday ... Roman Reloaded (Deluxe Edition)"
     ],
     "canonicalization_rule": "bracketed_album_family"
   },
