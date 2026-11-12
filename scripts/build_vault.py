@@ -612,7 +612,8 @@ def build() -> dict[str, Any]:
             })
     ineligible_releases.sort(key=lambda row: (str(row["title"]).casefold(), row["id"]))
 
-    fuzzy_candidates = _fuzzy_track_candidates(all_tracks)\n    cross_artist_candidates = _cross_artist_exact_title_candidates(all_tracks, all_artists)
+    fuzzy_candidates = _fuzzy_track_candidates(all_tracks)
+    cross_artist_candidates = _cross_artist_exact_title_candidates(all_tracks, all_artists)
     album_family_report = []
     for album in all_albums.values():
         source_titles = sorted(set(album.get("source_titles", [])), key=str.casefold)
@@ -636,7 +637,8 @@ def build() -> dict[str, Any]:
         "integrity_issue_count": len(integrity_issues),
         "invalid_event_count": len(invalid_events),
         "duplicate_events_removed": duplicate_event_count,
-        "fuzzy_candidates_for_review": len(fuzzy_candidates),\n        "cross_artist_exact_title_candidates_for_review": len(cross_artist_candidates),
+        "fuzzy_candidates_for_review": len(fuzzy_candidates),
+        "cross_artist_exact_title_candidates_for_review": len(cross_artist_candidates),
         "song_families_merged": len(song_merge_report),
         "album_families_consolidated": len(album_family_report),
         "notes": [
@@ -653,7 +655,8 @@ def build() -> dict[str, Any]:
     _atomic_write_json(REPORTS_DIR / "input_errors.json", input_errors)
     _atomic_write_json(REPORTS_DIR / "integrity_issues.json", integrity_issues)
     _atomic_write_json(REPORTS_DIR / "invalid_events.json", invalid_events)
-    _atomic_write_json(REPORTS_DIR / "duplicate_candidates.json", fuzzy_candidates)\n    _atomic_write_json(REPORTS_DIR / "cross_artist_duplicate_candidates.json", cross_artist_candidates)
+    _atomic_write_json(REPORTS_DIR / "duplicate_candidates.json", fuzzy_candidates)
+    _atomic_write_json(REPORTS_DIR / "cross_artist_duplicate_candidates.json", cross_artist_candidates)
     _atomic_write_json(REPORTS_DIR / "song_merges.json", song_merge_report)
     _atomic_write_json(REPORTS_DIR / "album_family_merges.json", album_family_report)
     _atomic_write_json(REPORTS_DIR / "validation_report.json", validation)
