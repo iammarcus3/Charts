@@ -3142,23 +3142,23 @@
     if (!album) return "";
     const candidates = [album.lastfm_image, album.lastfm_image_url, album.artwork_url, album.image_url, album.cover_url, album.image, album.images];
     for (const value of candidates) {
-      if (typeof value === "string" && /^https?:\\/\\//i.test(value)) return value;
+      if (typeof value === "string" && /^https?:\/\//i.test(value)) return value;
       if (Array.isArray(value)) {
         for (const image of value) {
           const url = typeof image === "string" ? image : image?.url ?? image?.["#text"] ?? image?.text;
-          if (typeof url === "string" && /^https?:\\/\\//i.test(url)) return url;
+          if (typeof url === "string" && /^https?:\/\//i.test(url)) return url;
         }
       }
       if (value && typeof value === "object") {
         const url = value.url ?? value["#text"] ?? value.text;
-        if (typeof url === "string" && /^https?:\\/\\//i.test(url)) return url;
+        if (typeof url === "string" && /^https?:\/\//i.test(url)) return url;
       }
     }
     return "";
   }
 
   async function fetchLastFmAlbumArtwork(artist, album) {
-    const clean = value => String(value || "").replace(/-/g, " ").replace(/\\s+/g, " ").trim();
+    const clean = value => String(value || "").replace(/-/g, " ").replace(/\s+/g, " ").trim();
     const cacheKey = clean(artist).toLowerCase() + "|" + clean(album).toLowerCase();
     if (albumArtworkRequests.has(cacheKey)) return albumArtworkRequests.get(cacheKey);
 
@@ -3176,7 +3176,7 @@
         const image = images.find(item => item.size === "extralarge" && item["#text"]) ||
           [...images].reverse().find(item => item["#text"]);
         const url = image?.["#text"] || null;
-        return typeof url === "string" && /^https?:\\/\\//i.test(url) ? url : null;
+        return typeof url === "string" && /^https?:\/\//i.test(url) ? url : null;
       } catch (_) {
         return null;
       }
@@ -3219,7 +3219,7 @@
     if (key === "albumArtwork") {
       const album = state.albums.get(String(row.id));
       const cached = getAlbumArtworkUrl(album);
-      return `<img class="album-archive-art"
+      return `<img class="album-archive-art" style="width:52px;height:52px;object-fit:cover;border-radius:7px;display:block"
         src="${escapeHTML(cached || "https://placehold.co/96x96/18181b/71717a?text=Album")}"
         data-artist="${escapeHTML(row.artist || "")}"
         data-album="${escapeHTML(row.title || "")}"
