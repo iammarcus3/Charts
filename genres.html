@@ -17,7 +17,7 @@
 <main class="mx-auto max-w-7xl px-4 py-6 md:px-10">
 <div class="mb-6 grid gap-4 md:grid-cols-[1fr_2fr]">
 <section class="rounded-lg border border-zinc-800 bg-zinc-950 p-5"><p class="text-xs font-bold uppercase tracking-widest text-zinc-500">Chart week</p><h2 id="week" class="mt-2 text-xl font-black">Loading…</h2><p id="status" class="mt-2 text-sm text-zinc-400">Loading your listening vault…</p></section>
-<section class="rounded-lg border border-zinc-800 bg-zinc-950 p-5"><label for="genre" class="mb-2 block text-xs font-bold uppercase tracking-widest text-zinc-500">Choose a genre</label><select id="genre" class="w-full rounded border border-zinc-700 bg-zinc-900 px-3 py-3 font-semibold text-white"><option>Loading tags…</option></select><p class="mt-2 text-xs text-zinc-500">Last.fm tags are grouped into the 10 selected genres. Songs need 2–10 unique tags; a genre appears only when it has at least 30 songs. Tags are cached in this browser.</p></section>
+<section class="rounded-lg border border-zinc-800 bg-zinc-950 p-5"><label for="genre" class="mb-2 block text-xs font-bold uppercase tracking-widest text-zinc-500">Choose a genre</label><select id="genre" class="w-full rounded border border-zinc-700 bg-zinc-900 px-3 py-3 font-semibold text-white"><option>Loading tags…</option></select><p class="mt-2 text-xs text-zinc-500">Last.fm tags are grouped into the 10 selected genres. Songs need 2–10 unique tags; a genre appears only when it has at least 30 songs. Tags are cached when browser storage is available.</p></section>
 </div>
 <div class="mb-4 flex items-end justify-between gap-3"><div><h2 id="chart-title" class="text-2xl font-black">Top 30</h2><p id="chart-subtitle" class="mt-1 text-sm text-zinc-500">Ranked by plays in the selected week</p></div><span class="rounded border border-zinc-800 px-3 py-1 text-xs font-bold uppercase tracking-wider text-zinc-400">Top 30</span></div>
 <div id="chart" class="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950"><div class="p-10 text-center text-zinc-500">Preparing chart…</div></div>
@@ -83,21 +83,70 @@ const items=[...plays.values()];const tagsByTrack=new Map();let done=0;for(let i
 const charts=new Map();let eligible=0;for(const item of items){const tags=tagsByTrack.get(item.id)||[];if(tags.length<2||tags.length>10)continue;eligible++;for(const genre of genreCategories(tags)){if(!charts.has(genre))charts.set(genre,new Map());charts.get(genre).set(item.id,{...item,genres:tags.map(t=>t.name),genreTags:tags.filter(t=>genreCategories([t]).includes(genre)).map(t=>t.name)})}}
 for(const [genre,map] of charts){const ranked=[...map.values()].sort((a,b)=>b.plays-a.plays||a.title.localeCompare(b.title)).slice(0,TOP_N);ranked.forEach((song,i)=>{song.genreRank=i+1;song.genre=genre})}
 
-// Build the previous week's genre ranks using the same eligibility and ranking rules,
- // so each row can show movement like the main Hot 100 chart.
-const previousStart=start-WEEK_MS;
-const previousEvents=state.history.filter(e=>weekStart(e.timestamp)===previousStart);
-const previousPlays=new Map();
-for(const e of previousEvents){const id=String(e.track_id);if(!state.tracks.has(id))continue;const track=state.tracks.get(id);if(!previousPlays.has(id))previousPlays.set(id,{id,title:trackTitle(track),artist:trackArtist(track),plays:0});previousPlays.get(id).plays++}
-const previousItems=[...previousPlays.values()];
-const previousTags=new Map();
-for(let i=0;i<previousItems.length;i+=4){const batch=previousItems.slice(i,i+4);const res=await Promise.all(batch.map(item=>lastfmTrackGenres(item)));batch.forEach((item,j)=>previousTags.set(item.id,res[j]));if(i+4<previousItems.length)await new Promise(r=>setTimeout(r,200))}
+// Rebuild earlier weekly Top 30s from the complete listening history.
+// The immediately preceding available chart week supplies movement; all earlier weeks
+// determine whether a song is genuinely NEW or a RE-ENTRY.
+const previousStart=state.weeks.filter(w=>w<start).pop()??null;
 const previousRanks=new Map();
-const previousCharts=new Map();
-for(const item of previousItems){const tags=previousTags.get(item.id)||[];if(tags.length<2||tags.length>10)continue;for(const genre of genreCategories(tags)){if(!previousCharts.has(genre))previousCharts.set(genre,[]);previousCharts.get(genre).push(item)}}
-for(const [genre,list] of previousCharts){list.sort((a,b)=>b.plays-a.plays||a.title.localeCompare(b.title)).slice(0,TOP_N).forEach((song,i)=>previousRanks.set(genre+'|'+song.id,i+1))}
-for(const [genre,map] of charts){const ranked=[...map.values()].sort((a,b)=>b.plays-a.plays||a.title.localeCompare(b.title)).slice(0,TOP_N);ranked.forEach((song,i)=>{song.genreRank=i+1;song.genre=genre;song.previousRank=previousRanks.get(genre+'|'+song.id)||null;song.isNew=!song.previousRank&&previousEvents.length>0})}
+const historicalAppearances=new Set();
+const historicalWeeks=new Map();
+const historicalItems=new Map();
+for(const event of state.history){
+ const eventWeek=weekStart(event.timestamp);
+ if(eventWeek>=start)continue;
+ const id=String(event.track_id);
+ if(!state.tracks.has(id))continue;
+ if(!historicalWeeks.has(eventWeek))historicalWeeks.set(eventWeek,new Map());
+ const weekItems=historicalWeeks.get(eventWeek);
+ if(!weekItems.has(id)){
+  const track=state.tracks.get(id);
+  weekItems.set(id,{id,title:trackTitle(track),artist:trackArtist(track),plays:0});
+  if(!historicalItems.has(id))historicalItems.set(id,weekItems.get(id));
+ }
+ weekItems.get(id).plays++;
+}
+const historyTags=new Map(tagsByTrack);
+const historicalTrackItems=[...historicalItems.values()];
+let historyDone=0;
+for(let i=0;i<historicalTrackItems.length;i+=4){
+ const batch=historicalTrackItems.slice(i,i+4);
+ const results=await Promise.all(batch.map(item=>lastfmTrackGenres(item)));
+ batch.forEach((item,j)=>historyTags.set(item.id,results[j]));
+ historyDone+=batch.length;
+ $('status').textContent='Checking previous chart history · '+historyDone+'/'+historicalTrackItems.length+' unique tracks';
+ if(i+4<historicalTrackItems.length)await new Promise(r=>setTimeout(r,180));
+}
+for(const historicalWeek of [...historicalWeeks.keys()].sort((x,y)=>x-y)){
+ const genreLists=new Map();
+ for(const item of historicalWeeks.get(historicalWeek).values()){
+  const tags=historyTags.get(item.id)||[];
+  if(tags.length<2||tags.length>10)continue;
+  for(const genre of genreCategories(tags)){
+   if(!genreLists.has(genre))genreLists.set(genre,[]);
+   genreLists.get(genre).push(item);
+  }
+ }
+ for(const [genre,list] of genreLists){
+  list.sort((x,y)=>y.plays-x.plays||x.title.localeCompare(y.title)).slice(0,TOP_N).forEach((song,index)=>{
+   const key=genre+'|'+song.id;
+   historicalAppearances.add(key);
+   if(historicalWeek===previousStart)previousRanks.set(key,index+1);
+  });
+ }
+}
+for(const [genre,map] of charts){
+ const ranked=[...map.values()].sort((x,y)=>y.plays-x.plays||x.title.localeCompare(y.title)).slice(0,TOP_N);
+ ranked.forEach((song,index)=>{
+  const key=genre+'|'+song.id;
+  song.genreRank=index+1;
+  song.genre=genre;
+  song.previousRank=previousRanks.get(key)||null;
+  song.hasChartedBefore=historicalAppearances.has(key);
+  song.isNew=!song.hasChartedBefore;
+  song.isReEntry=song.hasChartedBefore&&!song.previousRank;
+ });
+}
 state.genreCharts=charts;const genres=GENRE_ORDER.filter(genre=>(charts.get(genre)?.size||0)>=TOP_N);const sel=$('genre'),old=$('genre').value;sel.innerHTML=genres.length?genres.map(g=>'<option value="'+esc(g)+'">'+esc(g)+'</option>').join(''):'<option value="">No genres with a full Top 30 this week</option>';if(genres.includes(old))sel.value=old;else if(genres.includes('Pop'))sel.value='Pop';renderChart();$('status').textContent=events.length.toLocaleString()+' listening events · '+eligible.toLocaleString()+' songs with 2–10 tags · '+(items.length-eligible).toLocaleString()+' songs excluded (fewer than 2 tags) · '+genres.length+' selected genres with a full Top 30.'}finally{state.busy=false}}
-function renderChart(){const genre=$('genre').value;const map=state.genreCharts.get(genre);$('chart-title').textContent=(genre||'Genre')+' Top 30';$('chart-subtitle').textContent='Ranked by plays during '+$('week').textContent;if(!map||!map.size){$('chart').innerHTML='<div class="p-8 text-center text-zinc-500">No tracks found for this genre in this week.</div>';return}const rows=[...map.values()].sort((a,b)=>b.plays-a.plays||a.title.localeCompare(b.title)).slice(0,TOP_N);$('chart').innerHTML='<div class="grid grid-cols-[44px_1fr_80px] gap-3 border-b border-zinc-800 bg-zinc-900/70 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-zinc-500 sm:grid-cols-[56px_1fr_110px]"><div class="text-center">Rank</div><div>Song / Artist</div><div class="text-right">Plays</div></div>'+rows.map((t,i)=>{const prev=t.previousRank;let movement;if(t.isNew)movement='<div class="flex items-center justify-center gap-1 text-blue-400 font-bold text-[10px]"><i class="ph-fill ph-star"></i> NEW</div>';else if(!prev)movement='<div class="flex items-center justify-center gap-1 text-zinc-600 font-bold text-[10px]"><i class="ph-bold ph-minus"></i> 0</div>';else if(i+1<prev)movement='<div class="flex items-center justify-center gap-1 text-green-500 font-bold text-[10px]"><i class="ph-bold ph-arrow-up"></i> '+(prev-(i+1))+'</div>';else if(i+1>prev)movement='<div class="flex items-center justify-center gap-1 text-red-500 font-bold text-[10px]"><i class="ph-bold ph-arrow-down"></i> '+((i+1)-prev)+'</div>';else movement='<div class="flex items-center justify-center gap-1 text-zinc-600 font-bold text-[10px]"><i class="ph-bold ph-minus"></i> 0</div>';return '<div class="row grid grid-cols-[44px_1fr_80px] items-center gap-3 border-b border-zinc-900 px-4 py-3 sm:grid-cols-[56px_1fr_110px]"><div class="flex flex-col items-center gap-1"><div class="text-2xl font-black '+(i<3?'text-white':'text-zinc-500')+'">'+(i+1)+'</div>'+movement+'</div><div class="min-w-0"><div class="truncate font-bold text-white">'+esc(t.title)+'</div><div class="truncate text-sm text-zinc-400">'+esc(t.artist)+'</div></div><div class="text-right font-bold tabular-nums">'+t.plays.toLocaleString()+'</div></div>'}).join('')}
+function renderChart(){const genre=$('genre').value;const map=state.genreCharts.get(genre);$('chart-title').textContent=(genre||'Genre')+' Top 30';$('chart-subtitle').textContent='Ranked by plays during '+$('week').textContent;if(!map||!map.size){$('chart').innerHTML='<div class="p-8 text-center text-zinc-500">No tracks found for this genre in this week.</div>';return}const rows=[...map.values()].sort((a,b)=>b.plays-a.plays||a.title.localeCompare(b.title)).slice(0,TOP_N);$('chart').innerHTML='<div class="grid grid-cols-[44px_1fr_80px] gap-3 border-b border-zinc-800 bg-zinc-900/70 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-zinc-500 sm:grid-cols-[56px_1fr_110px]"><div class="text-center">Rank</div><div>Song / Artist</div><div class="text-right">Plays</div></div>'+rows.map((t,i)=>{const prev=t.previousRank;let movement;if(t.isNew)movement='<div class="flex items-center justify-center gap-1 text-blue-400 font-bold text-[10px]"><i class="ph-fill ph-star"></i> NEW</div>';else if(t.isReEntry)movement='<div class="flex items-center justify-center gap-1 text-amber-400 font-bold text-[10px]"><i class="ph-bold ph-arrow-u-up-left"></i> RE-ENTRY</div>';else if(!prev)movement='<div class="flex items-center justify-center gap-1 text-zinc-600 font-bold text-[10px]"><i class="ph-bold ph-minus"></i> 0</div>';else if(i+1<prev)movement='<div class="flex items-center justify-center gap-1 text-green-500 font-bold text-[10px]"><i class="ph-bold ph-arrow-up"></i> '+(prev-(i+1))+'</div>';else if(i+1>prev)movement='<div class="flex items-center justify-center gap-1 text-red-500 font-bold text-[10px]"><i class="ph-bold ph-arrow-down"></i> '+((i+1)-prev)+'</div>';else movement='<div class="flex items-center justify-center gap-1 text-zinc-600 font-bold text-[10px]"><i class="ph-bold ph-minus"></i> 0</div>';return '<div class="row grid grid-cols-[44px_1fr_80px] items-center gap-3 border-b border-zinc-900 px-4 py-3 sm:grid-cols-[56px_1fr_110px]"><div class="flex flex-col items-center gap-1"><div class="text-2xl font-black '+(i<3?'text-white':'text-zinc-500')+'">'+(i+1)+'</div>'+movement+'</div><div class="min-w-0"><div class="truncate font-bold text-white">'+esc(t.title)+'</div><div class="truncate text-sm text-zinc-400">'+esc(t.artist)+'</div></div><div class="text-right font-bold tabular-nums">'+t.plays.toLocaleString()+'</div></div>'}).join('')}
 $('prev').addEventListener('click',()=>{if(state.offset>0){state.offset--;renderWeek()}});$('next').addEventListener('click',()=>{if(state.offset<state.weeks.length-1){state.offset++;renderWeek()}});$('genre').addEventListener('change',renderChart);load();
 </script></body></html>
