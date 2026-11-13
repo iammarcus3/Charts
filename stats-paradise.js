@@ -3036,7 +3036,7 @@
       ],
       albums: [
         ["leaderboardRank", "Leaderboard rank"],
-        ["status", "Album status"],
+        ["albumArtwork", "Album art"],
         ["title", "Album"],
         ["artist", "Lead artist"],
         ["trackCount", "Tracks"],
@@ -3117,7 +3117,7 @@
         weeksOnChart: 6, weeksAtNo1: 8, periodUnitsSold: 15, unitsSold: 14
       },
       albums: {
-        leaderboardRank: 8, status: 9, title: 14, artist: 10, numberOneTracks: 7, top10Tracks: 7, trackCount: 4,
+        leaderboardRank: 8, albumArtwork: 8, title: 14, artist: 10, numberOneTracks: 7, top10Tracks: 7, trackCount: 4,
         importDate: 7, releaseDate: 7, debutDate: 8, firstRankedDate: 8,
         latestRank: 5, weeksAtNo1: 6, reentryCount: 5,
         periodUnitsSold: 7, unitsSold: 6
@@ -3134,11 +3134,98 @@
     return columns.length ? 100 / columns.length : 100;
   }
 
+
+  const LASTFM_API_KEY = "ed9c6dcac73ea1adcd3750efeea9b822";
+  const albumArtworkRequests = new Map();
+
+  function getAlbumArtworkUrl(album) {
+    if (!album) return "";
+    const candidates = [album.lastfm_image, album.lastfm_image_url, album.artwork_url, album.image_url, album.cover_url, album.image, album.images];
+    for (const value of candidates) {
+      if (typeof value === "string" && /^https?:\\/\\//i.test(value)) return value;
+      if (Array.isArray(value)) {
+        for (const image of value) {
+          const url = typeof image === "string" ? image : image?.url ?? image?.["#text"] ?? image?.text;
+          if (typeof url === "string" && /^https?:\\/\\//i.test(url)) return url;
+        }
+      }
+      if (value && typeof value === "object") {
+        const url = value.url ?? value["#text"] ?? value.text;
+        if (typeof url === "string" && /^https?:\\/\\//i.test(url)) return url;
+      }
+    }
+    return "";
+  }
+
+  async function fetchLastFmAlbumArtwork(artist, album) {
+    const clean = value => String(value || "").replace(/-/g, " ").replace(/\\s+/g, " ").trim();
+    const cacheKey = clean(artist).toLowerCase() + "|" + clean(album).toLowerCase();
+    if (albumArtworkRequests.has(cacheKey)) return albumArtworkRequests.get(cacheKey);
+
+    const request = (async () => {
+      try {
+        const params = new URLSearchParams({
+          method: "album.getInfo", api_key: LASTFM_API_KEY, format: "json",
+          artist: clean(artist), album: clean(album)
+        });
+        const response = await fetch("https://ws.audioscrobbler.com/2.0/?" + params.toString());
+        if (!response.ok) return null;
+        const data = await response.json();
+        const images = data?.album?.image;
+        if (!Array.isArray(images)) return null;
+        const image = images.find(item => item.size === "extralarge" && item["#text"]) ||
+          [...images].reverse().find(item => item["#text"]);
+        const url = image?.["#text"] || null;
+        return typeof url === "string" && /^https?:\\/\\//i.test(url) ? url : null;
+      } catch (_) {
+        return null;
+      }
+    })();
+
+    albumArtworkRequests.set(cacheKey, request);
+    return request;
+  }
+
+  function loadVisibleAlbumArtwork() {
+    const images = [...ui.content.querySelectorAll("img.album-archive-art[data-album]")];
+    if (!images.length) return;
+    const load = async image => {
+      if (image.dataset.loaded === "true") return;
+      image.dataset.loaded = "true";
+      const url = await fetchLastFmAlbumArtwork(image.dataset.artist, image.dataset.album);
+      if (url && image.isConnected) image.src = url;
+    };
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          observer.unobserve(entry.target);
+          load(entry.target);
+        });
+      }, { rootMargin: "180px" });
+      images.forEach(image => observer.observe(image));
+    } else {
+      images.slice(0, 30).forEach(load);
+    }
+  }
+
   function renderCell(row, column) {
     const key = column.key;
 
     if (key === "listRank") {
       return `<span class="rank">${escapeHTML("#" + formatNumber(row.listRank))}</span>`;
+    }
+
+    if (key === "albumArtwork") {
+      const album = state.albums.get(String(row.id));
+      const cached = getAlbumArtworkUrl(album);
+      return `<img class="album-archive-art"
+        src="${escapeHTML(cached || "https://placehold.co/96x96/18181b/71717a?text=Album")}"
+        data-artist="${escapeHTML(row.artist || "")}"
+        data-album="${escapeHTML(row.title || "")}"
+        alt="${escapeHTML((row.title || "Album") + " artwork")}"
+        loading="lazy"
+        onerror="this.onerror=null;this.src='https://placehold.co/96x96/18181b/71717a?text=No+Art'">`;
     }
 
     if (key === "title") {
@@ -3289,6 +3376,8 @@
         </table>
       </div>
     `;
+
+    if (state.currentView === "albums") loadVisibleAlbumArtwork();
   }
 
   function renderOverview() {
