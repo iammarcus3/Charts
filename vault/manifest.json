@@ -4,12 +4,12 @@
     "FUZZY_REVIEW_THRESHOLD": 0.8
   },
   "record_counts": {
-    "artists": 5505,
+    "artists": 5506,
     "eligible_albums": 857,
     "ineligible_releases": 6668,
     "all_albums": 7525,
-    "tracks": 13920,
-    "listening_events": 233834,
+    "tracks": 13921,
+    "listening_events": 270752,
     "fuzzy_candidates_for_review": 224,
     "song_families_merged": 1
   },
