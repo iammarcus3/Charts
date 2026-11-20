@@ -773,6 +773,12 @@
     "aliases": []
   },
   {
+    "id": "0642eab8d31695e726862007",
+    "name": "ShyBully",
+    "normalized_name": "shybully",
+    "aliases": []
+  },
+  {
     "id": "064dee233fd6f7484a0dfece",
     "name": "Brandy ( When You Touch Me",
     "normalized_name": "brandy when you touch me",
@@ -848,6 +854,12 @@
     "id": "0708259c963f943bd86c647a",
     "name": "Benji Lewis",
     "normalized_name": "benji lewis",
+    "aliases": []
+  },
+  {
+    "id": "0711294eff4ff91930788ddb",
+    "name": "Thee Heart Tones",
+    "normalized_name": "thee heart tones",
     "aliases": []
   },
   {
@@ -2839,6 +2851,12 @@
     "aliases": []
   },
   {
+    "id": "16794183140015c1353dc4da",
+    "name": "moi je",
+    "normalized_name": "moi je",
+    "aliases": []
+  },
+  {
     "id": "167b6295bd4a3e622b2330f2",
     "name": "Kali Uchis, Jorja Smith",
     "normalized_name": "kali uchis jorja smith",
@@ -4713,6 +4731,12 @@
     "aliases": []
   },
   {
+    "id": "245f257ec97b688e8820c83b",
+    "name": "SunandMoon, Ogi & Anoop",
+    "normalized_name": "sunandmoon ogi and anoop",
+    "aliases": []
+  },
+  {
     "id": "2469699850752c7a954859b4",
     "name": "Myztro",
     "normalized_name": "myztro",
@@ -4739,6 +4763,12 @@
     "aliases": [
       "Victoria Monét, Khalid, & SG Lewis"
     ]
+  },
+  {
+    "id": "24b84e54ababb7b17c04975c",
+    "name": "Madonna & Cyndi",
+    "normalized_name": "madonna and cyndi",
+    "aliases": []
   },
   {
     "id": "24c7eff3ee5356009c8efc2f",
@@ -6475,6 +6505,12 @@
     "aliases": []
   },
   {
+    "id": "315c1f4a331f445ce41c2fe0",
+    "name": "Eloise",
+    "normalized_name": "eloise",
+    "aliases": []
+  },
+  {
     "id": "3177d72ae54c92071de48f40",
     "name": "PJ",
     "normalized_name": "pj",
@@ -6893,6 +6929,12 @@
     "aliases": []
   },
   {
+    "id": "3467ddfda631853bb214ed1d",
+    "name": "Jalen Ngonda",
+    "normalized_name": "jalen ngonda",
+    "aliases": []
+  },
+  {
     "id": "3483d91c456718cc5b695cd0",
     "name": "G Herbo",
     "normalized_name": "g herbo",
@@ -7258,6 +7300,12 @@
     "aliases": []
   },
   {
+    "id": "36f8f9121291e24f118da08a",
+    "name": "Jackson Homer",
+    "normalized_name": "jackson homer",
+    "aliases": []
+  },
+  {
     "id": "3703c19f8f20ce864d999f16",
     "name": "Travis Scott & SoFaygo",
     "normalized_name": "travis scott and sofaygo",
@@ -7471,6 +7519,12 @@
     "id": "38d68a89664943c6e3b66586",
     "name": "Soothe My Soul",
     "normalized_name": "soothe my soul",
+    "aliases": []
+  },
+  {
+    "id": "38d7320fb6a013d4b7920753",
+    "name": "Shakes & Les & Mdeshkayro",
+    "normalized_name": "shakes and les and mdeshkayro",
     "aliases": []
   },
   {
@@ -8066,6 +8120,12 @@
     "aliases": []
   },
   {
+    "id": "3d547d4bfc9a623f41e865cf",
+    "name": "Mangoli",
+    "normalized_name": "mangoli",
+    "aliases": []
+  },
+  {
     "id": "3d5a00d6b30d4730f1e59ea4",
     "name": "Does the Past Still Exist?",
     "normalized_name": "does the past still exist",
@@ -8580,6 +8640,12 @@
     "aliases": []
   },
   {
+    "id": "41aeb406cfebcd0a421023f1",
+    "name": "BowAsWell",
+    "normalized_name": "bowaswell",
+    "aliases": []
+  },
+  {
     "id": "41b1b5bb96fc2f5c31766e67",
     "name": "Mano",
     "normalized_name": "mano",
@@ -8709,6 +8775,12 @@
     "id": "42a3482a4531ce45de6ec7da",
     "name": "Justice, Tame Impala, SZA & Grand Theft Auto VI",
     "normalized_name": "justice tame impala sza and grand theft auto vi",
+    "aliases": []
+  },
+  {
+    "id": "42abd6cc58e093b5c44457e1",
+    "name": "Shakes & Les & MDU aka TRP",
+    "normalized_name": "shakes and les and mdu aka trp",
     "aliases": []
   },
   {
@@ -10488,6 +10560,12 @@
     "aliases": []
   },
   {
+    "id": "5047e6113e049c2ea47b8921",
+    "name": "Niko Rubio",
+    "normalized_name": "niko rubio",
+    "aliases": []
+  },
+  {
     "id": "504c8f4cdf1c2a3b66db764d",
     "name": "Monger",
     "normalized_name": "monger",
@@ -10803,6 +10881,12 @@
     "id": "52303e0f4e44af41a26ec1c3",
     "name": "Nate Ruess",
     "normalized_name": "nate ruess",
+    "aliases": []
+  },
+  {
+    "id": "523474bd5aba556f2ddb37c2",
+    "name": "Shakes & Les & Amukelani M",
+    "normalized_name": "shakes and les and amukelani m",
     "aliases": []
   },
   {
@@ -12166,6 +12250,12 @@
     "aliases": []
   },
   {
+    "id": "5caaf7cea3b0e6aafb4cb428",
+    "name": "Shakes & Les & Mellow & Sleazy",
+    "normalized_name": "shakes and les and mellow and sleazy",
+    "aliases": []
+  },
+  {
     "id": "5cb1393fcea2d0e0b2942def",
     "name": "Azealia Banks",
     "normalized_name": "azealia banks",
@@ -12898,6 +12988,12 @@
     "aliases": []
   },
   {
+    "id": "61ae5cee5d9093261ab0bd4a",
+    "name": "Anycia",
+    "normalized_name": "anycia",
+    "aliases": []
+  },
+  {
     "id": "61bd27563c47b04a0a085909",
     "name": "FreddieJacksonVEVO",
     "normalized_name": "freddiejacksonvevo",
@@ -13297,6 +13393,12 @@
     "id": "64f39bb8790e28f627f93dec",
     "name": "Dladla Mshunqisi & Tipcee",
     "normalized_name": "dladla mshunqisi and tipcee",
+    "aliases": []
+  },
+  {
+    "id": "65054e7f410fa4d137b6868d",
+    "name": "The Charities",
+    "normalized_name": "the charities",
     "aliases": []
   },
   {
@@ -14166,6 +14268,12 @@
     "aliases": []
   },
   {
+    "id": "6c823c2d81f22cd7777d6798",
+    "name": "Hyunjin",
+    "normalized_name": "hyunjin",
+    "aliases": []
+  },
+  {
     "id": "6c9fd40ce99d91415bd8adbc",
     "name": "Samara Cyn",
     "normalized_name": "samara cyn",
@@ -14729,6 +14837,12 @@
     "id": "710e8475596075be18a9db23",
     "name": "Ghassan Kanafani and the Lod airport massacre",
     "normalized_name": "ghassan kanafani and the lod airport massacre",
+    "aliases": []
+  },
+  {
+    "id": "7116e4b2158493eb4043c1cd",
+    "name": "Rocco",
+    "normalized_name": "rocco",
     "aliases": []
   },
   {
@@ -15382,6 +15496,12 @@
     "aliases": []
   },
   {
+    "id": "761e0d708f58fa0b0412c315",
+    "name": "Maz B",
+    "normalized_name": "maz b",
+    "aliases": []
+  },
+  {
     "id": "7622585ef426db7aa4278df6",
     "name": "Dice Soho",
     "normalized_name": "dice soho",
@@ -16008,6 +16128,12 @@
     "aliases": []
   },
   {
+    "id": "7b38b1ed3fd37b5ed1e08c39",
+    "name": "Mariah Carey & Channel Tres",
+    "normalized_name": "mariah carey and channel tres",
+    "aliases": []
+  },
+  {
     "id": "7b3915c5d286baabd149b7d5",
     "name": "BobbyBass",
     "normalized_name": "bobbybass",
@@ -16577,6 +16703,12 @@
     "id": "7f1ea307fc2a2df9e4bfbc71",
     "name": "Kiddominant",
     "normalized_name": "kiddominant",
+    "aliases": []
+  },
+  {
+    "id": "7f2399f333e994bf11ae7aa3",
+    "name": "Skroef28",
+    "normalized_name": "skroef28",
     "aliases": []
   },
   {
@@ -18344,6 +18476,12 @@
     ]
   },
   {
+    "id": "8d53d2692ceb44884903fe7d",
+    "name": "Mustard & Travis Scott",
+    "normalized_name": "mustard and travis scott",
+    "aliases": []
+  },
+  {
     "id": "8d623c34766110a060cded15",
     "name": "Dreamhouse",
     "normalized_name": "dreamhouse",
@@ -18737,6 +18875,12 @@
     "id": "8fdfbdca2ef9dedeef2fbf01",
     "name": "Kimbra",
     "normalized_name": "kimbra",
+    "aliases": []
+  },
+  {
+    "id": "8fefe0b8aef33413de5207e0",
+    "name": "Shakes & Les & Mphoet",
+    "normalized_name": "shakes and les and mphoet",
     "aliases": []
   },
   {
@@ -19255,6 +19399,12 @@
     "id": "9382ae19e52e6bd5239a7057",
     "name": "Noah Guy",
     "normalized_name": "noah guy",
+    "aliases": []
+  },
+  {
+    "id": "93833c36fae24cbba893bf48",
+    "name": "ota brown",
+    "normalized_name": "ota brown",
     "aliases": []
   },
   {
@@ -20258,6 +20408,12 @@
     "aliases": []
   },
   {
+    "id": "9aa69bde845d98cc6c01b23c",
+    "name": "Emotional Oranges & Anycia",
+    "normalized_name": "emotional oranges and anycia",
+    "aliases": []
+  },
+  {
     "id": "9ab2a18f748e6961910e8797",
     "name": "Plies",
     "normalized_name": "plies",
@@ -20686,6 +20842,12 @@
     "aliases": []
   },
   {
+    "id": "9e4a261ba5149df9a8d699fb",
+    "name": "Disco Lines & Tinashe",
+    "normalized_name": "disco lines and tinashe",
+    "aliases": []
+  },
+  {
     "id": "9e72e3b9701b8fbe8a7a5b36",
     "name": "Soulidified",
     "normalized_name": "soulidified",
@@ -20794,6 +20956,12 @@
     "aliases": []
   },
   {
+    "id": "9f7e0eebea672df5c4e1db6d",
+    "name": "Macabre Plaza",
+    "normalized_name": "macabre plaza",
+    "aliases": []
+  },
+  {
     "id": "9f8335b988e6a07a6062d73e",
     "name": "Lil Bow Wow",
     "normalized_name": "lil bow wow",
@@ -20845,6 +21013,12 @@
     "id": "9ff5fdbbd21830d4aec6d6bb",
     "name": "Jungle, Channel Tres, Josh Lloyd Watson, Lydia Kitto, Sheldon Young",
     "normalized_name": "jungle channel tres josh lloyd watson lydia kitto sheldon young",
+    "aliases": []
+  },
+  {
+    "id": "a01e6e143d8590d3a69f3dea",
+    "name": "Shakes & Les & Tycoon",
+    "normalized_name": "shakes and les and tycoon",
     "aliases": []
   },
   {
@@ -21193,6 +21367,12 @@
     "id": "a2befc37724bfd6c9500b4c2",
     "name": "Flo Rida",
     "normalized_name": "flo rida",
+    "aliases": []
+  },
+  {
+    "id": "a2d5a4b92552192c1e6f517f",
+    "name": "iogi",
+    "normalized_name": "iogi",
     "aliases": []
   },
   {
@@ -22666,6 +22846,12 @@
     "aliases": []
   },
   {
+    "id": "ad53ea4f61069ffcbd9cdca2",
+    "name": "De Rose",
+    "normalized_name": "de rose",
+    "aliases": []
+  },
+  {
     "id": "ad57e3ed08e17dd1bb946767",
     "name": "Bb trickz",
     "normalized_name": "bb trickz",
@@ -22723,6 +22909,12 @@
     "id": "ade98a259117edfc73b8d11c",
     "name": "Jessie J, Ariana Grande & Nicki Minaj",
     "normalized_name": "jessie j ariana grande and nicki minaj",
+    "aliases": []
+  },
+  {
+    "id": "adf642cf3037f9c8c056f9e3",
+    "name": "Spicephonic",
+    "normalized_name": "spicephonic",
     "aliases": []
   },
   {
@@ -24210,6 +24402,12 @@
     "aliases": []
   },
   {
+    "id": "ba6daea844274963ea8856fd",
+    "name": "Dabeull & Rude Jude",
+    "normalized_name": "dabeull and rude jude",
+    "aliases": []
+  },
+  {
     "id": "ba7c6bc5eabf5d19222100f9",
     "name": "100 Things Science Still Can’t Explain",
     "normalized_name": "100 things science still can t explain",
@@ -25386,6 +25584,12 @@
     "aliases": []
   },
   {
+    "id": "c3cc8968eac7af5188e19bcb",
+    "name": "Tom Misch",
+    "normalized_name": "tom misch",
+    "aliases": []
+  },
+  {
     "id": "c3d2ec0714cee179eb4c25ae",
     "name": "Spirit Banger",
     "normalized_name": "spirit banger",
@@ -26201,6 +26405,12 @@
     "id": "c981d91e15c83eb65edf972c",
     "name": "Euphonik",
     "normalized_name": "euphonik",
+    "aliases": []
+  },
+  {
+    "id": "c9b080dfb7bb1c1f37550eb1",
+    "name": "JaeyBxrd",
+    "normalized_name": "jaeybxrd",
     "aliases": []
   },
   {
@@ -27793,6 +28003,12 @@
     "aliases": []
   },
   {
+    "id": "d5e62563677e8fc7646b3d5b",
+    "name": "Catpack",
+    "normalized_name": "catpack",
+    "aliases": []
+  },
+  {
     "id": "d5f50934634f2126991cfd5e",
     "name": "Joe Turner",
     "normalized_name": "joe turner",
@@ -27844,6 +28060,12 @@
     "id": "d62d9dcffa2cb25d203d758c",
     "name": "Bassie, M-Touch, Ranger & Amaza",
     "normalized_name": "bassie m touch ranger and amaza",
+    "aliases": []
+  },
+  {
+    "id": "d63eb8b052bf9e7f34737f82",
+    "name": "LiIM",
+    "normalized_name": "liim",
     "aliases": []
   },
   {
@@ -28224,6 +28446,12 @@
     "id": "d8fb086d8c434a6d24d51108",
     "name": "Kulud",
     "normalized_name": "kulud",
+    "aliases": []
+  },
+  {
+    "id": "d9023678849736cfb83db297",
+    "name": "N T S A K O XVI",
+    "normalized_name": "n t s a k o xvi",
     "aliases": []
   },
   {
@@ -30379,6 +30607,12 @@
     "aliases": []
   },
   {
+    "id": "ea0cfb48bc522af51f1eb611",
+    "name": "Olympia Vitalis",
+    "normalized_name": "olympia vitalis",
+    "aliases": []
+  },
+  {
     "id": "ea189dfcce00fc2f688604c0",
     "name": "Jacquees",
     "normalized_name": "jacquees",
@@ -31709,6 +31943,12 @@
     "aliases": []
   },
   {
+    "id": "f52457d288aaca0bfcda5b8b",
+    "name": "Djy Vino",
+    "normalized_name": "djy vino",
+    "aliases": []
+  },
+  {
     "id": "f52d24806dd75c4d881c7e8b",
     "name": "Yung Lean",
     "normalized_name": "yung lean",
@@ -32163,6 +32403,12 @@
     "aliases": []
   },
   {
+    "id": "f8a020dc2c534000a9ae9b82",
+    "name": "Jitwam",
+    "normalized_name": "jitwam",
+    "aliases": []
+  },
+  {
     "id": "f8a95f09f4c7827d5db0513d",
     "name": "Bongeziwe Mabandla",
     "normalized_name": "bongeziwe mabandla",
@@ -32612,6 +32858,12 @@
     "id": "fbb5fc4d4ab2df51e022f6c8",
     "name": "Drake & Central Cee",
     "normalized_name": "drake and central cee",
+    "aliases": []
+  },
+  {
+    "id": "fbb628f34c69b031f633acb9",
+    "name": "Akira Ræ",
+    "normalized_name": "akira ræ",
     "aliases": []
   },
   {

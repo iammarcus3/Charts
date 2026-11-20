@@ -4,12 +4,12 @@
     "FUZZY_REVIEW_THRESHOLD": 0.8
   },
   "record_counts": {
-    "artists": 5506,
-    "eligible_albums": 857,
-    "ineligible_releases": 6668,
-    "all_albums": 7525,
-    "tracks": 13921,
-    "listening_events": 270752,
+    "artists": 5548,
+    "eligible_albums": 861,
+    "ineligible_releases": 6733,
+    "all_albums": 7594,
+    "tracks": 14010,
+    "listening_events": 271339,
     "fuzzy_candidates_for_review": 224,
     "song_families_merged": 1
   },
@@ -19,7 +19,7 @@
     "fuzzy_metadata_matches_auto_merged": 0,
     "track_similarity_auto_merge_threshold": null,
     "album_family_consolidation": "all bracketed and parenthesized album-title annotations stripped for family matching; canonical track IDs unioned across family",
-    "album_families_consolidated": 1606
+    "album_families_consolidated": 1616
   },
   "build_status": "success"
 }

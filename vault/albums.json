@@ -2774,10 +2774,12 @@
     ],
     "source_titles": [
       "Gloria",
-      "Gloria (Special Edition)"
+      "Gloria (Special Edition)",
+      "Gloria (Apple Music Edition)"
     ],
     "edition_labels": [
-      "Gloria (Special Edition)"
+      "Gloria (Special Edition)",
+      "Gloria (Apple Music Edition)"
     ],
     "canonicalization_rule": "bracketed_album_family"
   },
@@ -4037,12 +4039,20 @@
     "normalized_title": "popstar",
     "primary_artist_id": "10100cdc05ed5af685e2b792",
     "track_ids": [
+      "10a003ac84197773e6be29a8",
+      "12a94e2e2438a149e81a59da",
       "24b019dfdab0eaa6a35a706a",
       "32adcd1e02848ba9584fd015",
       "4b6ea5b92b46440b667cbe29",
+      "53ba33e89453d904f54bbf06",
+      "5ea2d7f8cdf19f825823c71c",
       "c214d0ee0fb95ea6cf5238dc",
       "c7f2db8506ae385b6bd7138f",
-      "e8730108d0f5409ad8c45c49"
+      "c801c0d8ed3c7a651cbfe387",
+      "d0e7a40f47fe59a5b3f1fdb1",
+      "dbf4e17be463165f4e4ca78b",
+      "e8730108d0f5409ad8c45c49",
+      "f1127091793d62f1ced0e989"
     ],
     "source_titles": [
       "Popstar",
@@ -5348,6 +5358,22 @@
     "edition_labels": [
       "Merry Christmas (Deluxe Anniversary Edition)"
     ],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "450fe092bbd9c24d313b5ad6",
+    "title": "Groovinhos Kitchen 2",
+    "normalized_title": "groovinhos kitchen 2",
+    "primary_artist_id": "4cb2840342e43c75255151f1",
+    "track_ids": [
+      "0b79a10d538bf1552c9505da",
+      "0f4ae6fb0c51f35e02a5f1a4",
+      "c3ea0190617bbc302ddc8a3e"
+    ],
+    "source_titles": [
+      "Groovinhos Kitchen 2"
+    ],
+    "edition_labels": [],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -8228,7 +8254,9 @@
     "normalized_title": "frequency of love",
     "primary_artist_id": "6b0cc863f3ebe86de1d33905",
     "track_ids": [
+      "0af3af4f8c88324018905906",
       "421961147e37a2b9ae247702",
+      "471be17b784dca22af78c60d",
       "66ddfe439207a706945da395",
       "f5859f0682fc9f9f71395100"
     ],
@@ -8996,6 +9024,22 @@
     "canonicalization_rule": "bracketed_album_family"
   },
   {
+    "id": "768497df135b9f0cc3729534",
+    "title": "TAYO",
+    "normalized_title": "tayo",
+    "primary_artist_id": "1689ae6d12245089e0923b9d",
+    "track_ids": [
+      "0ba0f5fbc43814c84c2e5b95",
+      "8e3f6c43d7c68d743864e7ac",
+      "e99bdcafc372f212d3753a36"
+    ],
+    "source_titles": [
+      "TAYO"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
     "id": "7693222a34de912d4108738d",
     "title": "Apolonio",
     "normalized_title": "apolonio",
@@ -9299,14 +9343,18 @@
     "primary_artist_id": "92b4cfdb6782e6fec393332f",
     "track_ids": [
       "3a5210f700161799add14ccb",
+      "76b5b69fc747f2e8eba9ab53",
       "dda95fe05bf1be1c6bdf040c",
       "efd3490e1da8ada197fcadaf",
       "f5aaede27b4d1564b50eee87"
     ],
     "source_titles": [
-      "Habibti"
+      "Habibti",
+      "HABIBTI (FOMO)"
     ],
-    "edition_labels": [],
+    "edition_labels": [
+      "HABIBTI (FOMO)"
+    ],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -10263,6 +10311,22 @@
     ],
     "source_titles": [
       "ACCESS ALL AREAS"
+    ],
+    "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "87bba6620e4a77e1e00862de",
+    "title": "Son of Spergy",
+    "normalized_title": "son of spergy",
+    "primary_artist_id": "2b39f9db0a8ce6a1203ef2e7",
+    "track_ids": [
+      "921d74ab6d5366dfaceb894b",
+      "a2991f975d379cdefd42f8fe",
+      "c771c84a83363d7a36a0c429"
+    ],
+    "source_titles": [
+      "Son of Spergy"
     ],
     "edition_labels": [],
     "canonicalization_rule": "bracketed_album_family"
@@ -11924,6 +11988,7 @@
     "track_ids": [
       "05fbecc5be0717fc456b0b0c",
       "911826e6e8abc5e4b6a62602",
+      "c8bad36dd33002f1d7939d92",
       "dd9926bc4b33c6281a63cfc9",
       "fbb4fc82c2d32e391dc533d5"
     ],
@@ -12127,6 +12192,24 @@
       "iSimo"
     ],
     "edition_labels": [],
+    "canonicalization_rule": "bracketed_album_family"
+  },
+  {
+    "id": "a0eb6f779abd9e7376799bd9",
+    "title": "3two",
+    "normalized_title": "3two",
+    "primary_artist_id": "e0d341324a866ff61caca449",
+    "track_ids": [
+      "5c8a0100b39e793359d5e97f",
+      "977fee03c6939c466492764e",
+      "9fe733c1e716fbfa2a2febf1"
+    ],
+    "source_titles": [
+      "3two (EP)"
+    ],
+    "edition_labels": [
+      "3two (EP)"
+    ],
     "canonicalization_rule": "bracketed_album_family"
   },
   {
@@ -15115,6 +15198,7 @@
     "primary_artist_id": "4ff05100ef6d1dd6d187807c",
     "track_ids": [
       "8df426362d47b1c6a16d490c",
+      "a3e90ae20c2d6e73ab64fdb2",
       "b19e72705827d5e7a9357273",
       "bb8c3caa0e7ee3299689f710"
     ],
@@ -16338,9 +16422,19 @@
     "normalized_title": "legendary love",
     "primary_artist_id": "455f6c701d4a90b241277089",
     "track_ids": [
+      "089ce0b5091f4fdb588144df",
+      "0e5eacec578463f095c53b68",
+      "0fa1e81a90b58dad33c57642",
+      "2327bf219e7cefa88c5bba39",
+      "2f780620c8db21875df2fd47",
       "310300a9cdfc5d15089dbd43",
+      "452d2624188407137aacf6c3",
+      "486a84d2b38f24d55fa77c29",
       "5474804e0f82d84c8917689f",
-      "74d7d46626ddc196ab642c44"
+      "66f9b0fad4fd67654aeead4e",
+      "74d7d46626ddc196ab642c44",
+      "7594216bb7d6b52f6feee516",
+      "9d94a41096f7a30856fc31a1"
     ],
     "source_titles": [
       "Legendary Love"
