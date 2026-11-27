@@ -274,8 +274,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "0f82792eefe3cbf090481849",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -286,8 +286,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "f6e0a45440a790e7ff61ad04",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -298,8 +298,8 @@
     "canonical_title": "3 AM",
     "primary_artist_id": "dcae62d84e1cf925a05af41f",
     "source_titles_merged": [
-      "3 AM",
-      "3 Am"
+      "3 Am",
+      "3 AM"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -1217,6 +1217,19 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "9aa22153ba661ef2a21ee6c4",
+    "canonical_title": "Ama Gear",
+    "primary_artist_id": "5b98d0828ce8788ed929c307",
+    "source_titles_merged": [
+      "Ama Gear (Edit) [feat. MK Productions]"
+    ],
+    "edition_labels_merged": [
+      "Ama Gear (Edit) [feat. MK Productions]"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "d58a046be2ddfd46be778aa1",
     "canonical_title": "Ama Roto - EP",
     "primary_artist_id": "43690a7f58e87d3ccc22d7dc",
@@ -1299,8 +1312,8 @@
     "canonical_title": "AmaPiano Volume 4",
     "primary_artist_id": "4db0f575b0e8853c40823d65",
     "source_titles_merged": [
-      "AmaPiano Volume 4",
-      "Amapiano Volume 4"
+      "Amapiano Volume 4",
+      "AmaPiano Volume 4"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 2,
@@ -1431,8 +1444,8 @@
     "canonical_title": "Anti - MusicFire.in",
     "primary_artist_id": "5e568be58fcbab5cdbc5fd89",
     "source_titles_merged": [
-      "Anti - MusicFire.in",
-      "Anti - Musicfire.in"
+      "Anti - Musicfire.in",
+      "Anti - MusicFire.in"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 3,
@@ -2868,8 +2881,8 @@
     "canonical_title": "Blue Lights In The Basement",
     "primary_artist_id": "d7ef2790e9f724b1325b983f",
     "source_titles_merged": [
-      "Blue Lights In The Basement",
-      "Blue Lights in the Basement"
+      "Blue Lights in the Basement",
+      "Blue Lights In The Basement"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -4043,8 +4056,8 @@
     "canonical_title": "Confessions II",
     "primary_artist_id": "8a28af176378f7b9dc69e715",
     "source_titles_merged": [
-      "Confessions II",
-      "CONFESSIONS II"
+      "CONFESSIONS II",
+      "Confessions II"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -5774,8 +5787,8 @@
     "canonical_title": "EVERYTHING IS LOVE",
     "primary_artist_id": "d4b4d6c3df118803e75af84b",
     "source_titles_merged": [
-      "Everything is Love",
-      "EVERYTHING IS LOVE"
+      "EVERYTHING IS LOVE",
+      "Everything is Love"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 5,
@@ -8015,8 +8028,8 @@
     "canonical_title": "History - Past, Present And Future - Book I",
     "primary_artist_id": "296c92c1f42e7111ebe867e3",
     "source_titles_merged": [
-      "History - Past, Present And Future - Book I",
       "HIStory - Past, Present and Future - Book I",
+      "History - Past, Present And Future - Book I",
       "HIStory: Past, Present and Future, Book I"
     ],
     "edition_labels_merged": [],
@@ -8199,6 +8212,19 @@
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
+    "canonical_album_id": "ca6554c12e06c0a0315c6d45",
+    "canonical_title": "Hot Together",
+    "primary_artist_id": "236e6b91ee12c5ee923867fb",
+    "source_titles_merged": [
+      "Hot Together (Expanded Edition)"
+    ],
+    "edition_labels_merged": [
+      "Hot Together (Expanded Edition)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
     "canonical_album_id": "e7fbae2de91f999ac7add6f1",
     "canonical_title": "Hotel Cabana",
     "primary_artist_id": "eb6c1d681c5675683593fb7d",
@@ -8359,8 +8385,8 @@
     "canonical_title": "HURRY UP TOMORROW",
     "primary_artist_id": "03b159383844f399c130860b",
     "source_titles_merged": [
-      "Hurry Up Tomorrow",
-      "HURRY UP TOMORROW"
+      "HURRY UP TOMORROW",
+      "Hurry Up Tomorrow"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -8399,8 +8425,8 @@
     "canonical_title": "HURRY UP TOMORROW",
     "primary_artist_id": "18408e4b94f5e92f93f8f86b",
     "source_titles_merged": [
-      "Hurry Up Tomorrow",
       "HURRY UP TOMORROW",
+      "Hurry Up Tomorrow",
       "Hurry Up Tomorrow (Video Album)"
     ],
     "edition_labels_merged": [
@@ -9162,8 +9188,8 @@
     "canonical_title": "Isimo",
     "primary_artist_id": "3066eac9ce20209493ec670d",
     "source_titles_merged": [
-      "iSimo",
-      "Isimo"
+      "Isimo",
+      "iSimo"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -9925,8 +9951,8 @@
     "canonical_title": "Kiss All The Time. Disco, Occasionally.",
     "primary_artist_id": "5262dc458929bbef3f0e1420",
     "source_titles_merged": [
-      "Kiss All the Time. Disco, Occasionally.",
-      "Kiss All The Time. Disco, Occasionally."
+      "Kiss All The Time. Disco, Occasionally.",
+      "Kiss All the Time. Disco, Occasionally."
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 9,
@@ -10337,12 +10363,13 @@
     "canonical_title": "Levels",
     "primary_artist_id": "9a55df591db1b269f4f2c59d",
     "source_titles_merged": [
+      "Levels",
       "Levels (explicit)"
     ],
     "edition_labels_merged": [
       "Levels (explicit)"
     ],
-    "distinct_canonical_track_count": 1,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -17642,8 +17669,8 @@
     "canonical_title": "The Best Of Anita Baker",
     "primary_artist_id": "1fbdda766b54a1bf97ee4cf7",
     "source_titles_merged": [
-      "The Best Of Anita Baker",
-      "The Best of Anita Baker"
+      "The Best of Anita Baker",
+      "The Best Of Anita Baker"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -17654,8 +17681,8 @@
     "canonical_title": "The Best of Brandy",
     "primary_artist_id": "a40410fb3a4705c23a02b3fb",
     "source_titles_merged": [
-      "The Best Of Brandy",
-      "The Best of Brandy"
+      "The Best of Brandy",
+      "The Best Of Brandy"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 7,
@@ -17721,8 +17748,8 @@
     "canonical_title": "The Best Of Me",
     "primary_artist_id": "0bb09d501196085da8de130a",
     "source_titles_merged": [
-      "The Best of Me",
-      "The Best Of Me"
+      "The Best Of Me",
+      "The Best of Me"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -17776,6 +17803,19 @@
     ],
     "edition_labels_merged": [
       "The Bodyguard (Original Soundtrack Album)"
+    ],
+    "distinct_canonical_track_count": 1,
+    "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
+  },
+  {
+    "canonical_album_id": "2ae75018b508e70c08fec963",
+    "canonical_title": "The Boss",
+    "primary_artist_id": "3d0a34e0587ca556e245cb32",
+    "source_titles_merged": [
+      "The Boss (Expanded Edition)"
+    ],
+    "edition_labels_merged": [
+      "The Boss (Expanded Edition)"
     ],
     "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -17853,14 +17893,18 @@
     "canonical_title": "The E.N.D.",
     "primary_artist_id": "12decdb4f6448629dd0625be",
     "source_titles_merged": [
+      "The E.N.D. (The Energy Never Dies)",
       "The E.N.D. (The Energy Never Dies) [Deluxe Version]",
-      "The E.N.D. (The Energy Never Dies) [Deluxe]"
+      "The E.N.D. (The Energy Never Dies) [Deluxe]",
+      "THE E.N.D. (THE ENERGY NEVER DIES) [International Version]"
     ],
     "edition_labels_merged": [
+      "The E.N.D. (The Energy Never Dies)",
       "The E.N.D. (The Energy Never Dies) [Deluxe Version]",
-      "The E.N.D. (The Energy Never Dies) [Deluxe]"
+      "The E.N.D. (The Energy Never Dies) [Deluxe]",
+      "THE E.N.D. (THE ENERGY NEVER DIES) [International Version]"
     ],
-    "distinct_canonical_track_count": 2,
+    "distinct_canonical_track_count": 3,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
   },
   {
@@ -18142,9 +18186,9 @@
     "canonical_title": "the idol",
     "primary_artist_id": "7d09e007f4cb7bd27b2b618b",
     "source_titles_merged": [
-      "THE IDOL",
       "The Idol",
-      "the idol"
+      "the idol",
+      "THE IDOL"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -19283,12 +19327,12 @@
     "canonical_title": "Trolls World Tour",
     "primary_artist_id": "a487c95e88214cd938d1ad66",
     "source_titles_merged": [
-      "TROLLS World Tour (Original Motion Picture Soundtrack)",
-      "Trolls World Tour (Original Motion Picture Soundtrack)"
+      "Trolls World Tour (Original Motion Picture Soundtrack)",
+      "TROLLS World Tour (Original Motion Picture Soundtrack)"
     ],
     "edition_labels_merged": [
-      "TROLLS World Tour (Original Motion Picture Soundtrack)",
-      "Trolls World Tour (Original Motion Picture Soundtrack)"
+      "Trolls World Tour (Original Motion Picture Soundtrack)",
+      "TROLLS World Tour (Original Motion Picture Soundtrack)"
     ],
     "distinct_canonical_track_count": 1,
     "action": "merged_bracketed_or_edition_variant_into_parent_album_family"
@@ -19452,8 +19496,8 @@
     "primary_artist_id": "660c70a28002cfa16b883f3e",
     "source_titles_merged": [
       "TYLA",
-      "Tyla +",
-      "TYLA +"
+      "TYLA +",
+      "Tyla +"
     ],
     "edition_labels_merged": [],
     "distinct_canonical_track_count": 1,
@@ -20122,8 +20166,8 @@
     "canonical_title": "Waiting to Exhale",
     "primary_artist_id": "52a2c160a0104e1b0a9a53d1",
     "source_titles_merged": [
-      "Waiting to Exhale",
       "Waiting To Exhale",
+      "Waiting to Exhale",
       "Waiting to Exhale (Original Soundtrack Album)"
     ],
     "edition_labels_merged": [

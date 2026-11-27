@@ -1505,6 +1505,12 @@
     "aliases": []
   },
   {
+    "id": "0bd8892a3b42f535d7f23acb",
+    "name": "Daul",
+    "normalized_name": "daul",
+    "aliases": []
+  },
+  {
     "id": "0bdfdf657f886f803efa1997",
     "name": "Belko Wood",
     "normalized_name": "belko wood",
@@ -2998,6 +3004,12 @@
     "id": "17514371a9533713a053cb9d",
     "name": "Tyler Perry’s Beauty in Black",
     "normalized_name": "tyler perry s beauty in black",
+    "aliases": []
+  },
+  {
+    "id": "17520e17febc778bfab17a6a",
+    "name": "Sports",
+    "normalized_name": "sports",
     "aliases": []
   },
   {
@@ -5796,6 +5808,12 @@
     "id": "2bf24035cbc444759625060a",
     "name": "Seal",
     "normalized_name": "seal",
+    "aliases": []
+  },
+  {
+    "id": "2bf42eeae4928884d80cdf76",
+    "name": "Temper City",
+    "normalized_name": "temper city",
     "aliases": []
   },
   {
@@ -8880,6 +8898,12 @@
     "aliases": []
   },
   {
+    "id": "436eddda60401cb1ce0a4a05",
+    "name": "Bernard Wright",
+    "normalized_name": "bernard wright",
+    "aliases": []
+  },
+  {
     "id": "438548d3b43c5460a548c6c5",
     "name": "paranoyaboi",
     "normalized_name": "paranoyaboi",
@@ -8995,6 +9019,12 @@
     "id": "4414b495caa2884a6ae2a95d",
     "name": "Adekunle GOLD",
     "normalized_name": "adekunle gold",
+    "aliases": []
+  },
+  {
+    "id": "4416e064501276c9a732308e",
+    "name": "Q-Mark, TpZee & Afriikan Papi",
+    "normalized_name": "q mark tpzee and afriikan papi",
     "aliases": []
   },
   {
@@ -11536,6 +11566,12 @@
     "aliases": []
   },
   {
+    "id": "56c01b7de6594dc550ddb024",
+    "name": "Funky Qla, Zaba & Kususa",
+    "normalized_name": "funky qla zaba and kususa",
+    "aliases": []
+  },
+  {
     "id": "56c95f2009a7ce76e2806f8e",
     "name": "Jaheim",
     "normalized_name": "jaheim",
@@ -11958,6 +11994,12 @@
     "aliases": []
   },
   {
+    "id": "5acf3dfdfa6c0a3c436aceb1",
+    "name": "Vigro Deep, Zee Nxumalo & Ch'cco",
+    "normalized_name": "vigro deep zee nxumalo and ch cco",
+    "aliases": []
+  },
+  {
     "id": "5ad9b9167bd1440bea4dbe45",
     "name": "Shimza & Cuebur",
     "normalized_name": "shimza and cuebur",
@@ -12069,6 +12111,12 @@
     "id": "5b9210387e6207488b38237b",
     "name": "BRS Kash",
     "normalized_name": "brs kash",
+    "aliases": []
+  },
+  {
+    "id": "5b98d0828ce8788ed929c307",
+    "name": "Dlala Thukzin, Funky Qla & Zee Nxumalo",
+    "normalized_name": "dlala thukzin funky qla and zee nxumalo",
     "aliases": []
   },
   {
@@ -15682,6 +15730,12 @@
     "aliases": []
   },
   {
+    "id": "774b11901566b299087bfaaf",
+    "name": "Robert Glasper",
+    "normalized_name": "robert glasper",
+    "aliases": []
+  },
+  {
     "id": "774f02fec15df75f20b2f88e",
     "name": "Captain Blu",
     "normalized_name": "captain blu",
@@ -18334,6 +18388,12 @@
     "aliases": []
   },
   {
+    "id": "8b9d32a246146ae1260c6b26",
+    "name": "j-hope",
+    "normalized_name": "j hope",
+    "aliases": []
+  },
+  {
     "id": "8ba296b97efa4d8e05e67416",
     "name": "ruva",
     "normalized_name": "ruva",
@@ -20008,6 +20068,12 @@
     "aliases": []
   },
   {
+    "id": "97dd947dd7fc1850d925d1e7",
+    "name": "Charli Taft",
+    "normalized_name": "charli taft",
+    "aliases": []
+  },
+  {
     "id": "97ec694d20b38af86de4ce00",
     "name": "DJ Khaled, Rihanna, Bryson Tiller",
     "normalized_name": "dj khaled rihanna bryson tiller",
@@ -20890,6 +20956,12 @@
     "aliases": []
   },
   {
+    "id": "9eb9fc3342a052c9580bed1e",
+    "name": "Funky Qla & Sino Msolo",
+    "normalized_name": "funky qla and sino msolo",
+    "aliases": []
+  },
+  {
     "id": "9ed099063d43a5c1cd321bc9",
     "name": "benny blanco, Halsey & Khalid",
     "normalized_name": "benny blanco halsey and khalid",
@@ -21585,6 +21657,12 @@
     "id": "a4174d25fa21ca8f23c94ce6",
     "name": "Zadok",
     "normalized_name": "zadok",
+    "aliases": []
+  },
+  {
+    "id": "a417c54f52abbb80f6b2797c",
+    "name": "De Mthuda & Sir Trill",
+    "normalized_name": "de mthuda and sir trill",
     "aliases": []
   },
   {
@@ -24224,6 +24302,12 @@
     "aliases": []
   },
   {
+    "id": "b8a2d4742716e66b1be9474f",
+    "name": "Dlala Thukzin, Froote, Nitefreak & Dj Cliad",
+    "normalized_name": "dlala thukzin froote nitefreak and dj cliad",
+    "aliases": []
+  },
+  {
     "id": "b8a9161aba383db3a58258b6",
     "name": "Saint Levant",
     "normalized_name": "saint levant",
@@ -25872,6 +25956,12 @@
     "aliases": []
   },
   {
+    "id": "c582526c27a854e5f0d9058a",
+    "name": "Simmy & Zee Nxumalo",
+    "normalized_name": "simmy and zee nxumalo",
+    "aliases": []
+  },
+  {
     "id": "c5876dc468e12a989aa091e1",
     "name": "Dr. Hook",
     "normalized_name": "dr hook",
@@ -27160,6 +27250,12 @@
     "aliases": []
   },
   {
+    "id": "ceec3011cd21326fe9df89be",
+    "name": "Don Toliver & Speedy",
+    "normalized_name": "don toliver and speedy",
+    "aliases": []
+  },
+  {
     "id": "cf2136cdc959938b9149af3b",
     "name": "Uncle Waffles, Ice Beats Slide, Sbuda Maleather • From Smart Shuffle",
     "normalized_name": "uncle waffles ice beats slide sbuda maleather from smart shuffle",
@@ -27433,6 +27529,12 @@
     "id": "d176f7422192c035825899c9",
     "name": "Keith Urban",
     "normalized_name": "keith urban",
+    "aliases": []
+  },
+  {
+    "id": "d17e0162f6844f298eb231a7",
+    "name": "Sun City & Izzy Perri",
+    "normalized_name": "sun city and izzy perri",
     "aliases": []
   },
   {
@@ -29279,6 +29381,12 @@
     "aliases": []
   },
   {
+    "id": "dfbcfa6cbacf6433c6119d9e",
+    "name": "Adriano Celentano",
+    "normalized_name": "adriano celentano",
+    "aliases": []
+  },
+  {
     "id": "dfc6a094209cbd476f8764d3",
     "name": "Parker Ighile",
     "normalized_name": "parker ighile",
@@ -30703,6 +30811,12 @@
     "aliases": []
   },
   {
+    "id": "eab35d791b9a6f477bb8b1e9",
+    "name": "Argento Dust",
+    "normalized_name": "argento dust",
+    "aliases": []
+  },
+  {
     "id": "eab36872dbfe251879e8c1c3",
     "name": "Tae Leon",
     "normalized_name": "tae leon",
@@ -31928,6 +32042,12 @@
     "id": "f4d9167d247603904490d29b",
     "name": "Alewya",
     "normalized_name": "alewya",
+    "aliases": []
+  },
+  {
+    "id": "f4e367b6409ac3882d4c2aba",
+    "name": "MK Productions",
+    "normalized_name": "mk productions",
     "aliases": []
   },
   {
